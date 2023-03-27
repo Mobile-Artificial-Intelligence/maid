@@ -7,6 +7,11 @@ To run this app, you need to download the 7B llama model from Meta for research 
 
 Additionally, you can fine-tune the ouput with preprompts to improve its performance.
 
+## Working demo
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/jdw7oABjTeQ/0.jpg)](https://www.youtube.com/watch?v=jdw7oABjTeQ)
+Click on the image to view the video on YouTube.
+It shows a OnePlus 7 with 8Gb running Sherpa without speed up.
+
 ## Usage
 To use this app, follow these steps:
 
