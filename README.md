@@ -1,16 +1,22 @@
-# sherpa
+# Demo App for llama.cpp Model
+This app is a demo of the llama.cpp model that tries to recreate an offline chatbot, working similar to OpenAI's ChatGPT. The source code for this app is available on GitHub.
 
-A new Flutter project.
+The app was developed using Flutter and implements ggerganov/llama.cpp, recompiled to work on mobiles. Please note that Meta officially distributes the LLaMA models, and they will not be provided by the app developers.
 
-## Getting Started
+To run this app, you need to download the 7B llama model from Meta for research purposes. You should rename it to `ggml-model.bin` and place it in your device's download folder.
 
-This project is a starting point for a Flutter application.
+Additionally, you can fine-tune the ouput with preprompts to improve its performance.
 
-A few resources to get you started if this is your first Flutter project:
+## Usage
+To use this app, follow these steps:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Download the `ggml-model.bin` from Meta for research purposes.
+2. Rename the downloaded file to `ggml-model.bin`.
+3. Place the file in your device's download folder.
+4. Run the app on your mobile device.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Disclaimer
+Please note that the llama.cpp models are owned and officially distributed by Meta. This app only serves as a demo for the model's capabilities and functionality. The developers of this app do not provide the LLaMA models and are not responsible for any issues related to their usage.
+
+
+
