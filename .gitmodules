@@ -1,0 +1,3 @@
+[submodule "src/llama.cpp"]
+	path = src/llama.cpp
+	url = git@github.com:Bip-Rep/llama.cpp.git
