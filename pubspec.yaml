@@ -64,7 +64,7 @@ ffigen:
     entry-points:
       # - "src/llama.cpp/utils.h"
       # - "src/llama.cpp/ggml.cpp"
-      - "src/llama.cpp.bak/llama.h"
+      - "src/llama.cpp/llama.h"
 # The following section is specific to Flutter packages.
 flutter:
 
