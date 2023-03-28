@@ -618,7 +618,6 @@ class ParsingDemand {
   ParsingDemand({
     this.lib1,
     this.libWindows,
-    this.libWindows,
     required this.lib2,
     required this.rootIsolateToken,
     required this.promptPassed,

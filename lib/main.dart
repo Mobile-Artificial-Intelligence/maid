@@ -455,7 +455,7 @@ class _MyHomePageState extends State<MyHomePage> {
       fileState = FileState.opening;
     });
 
-    var filePath = await ModelFilePath.getFilePath();
+    var filePath = await ModelFilePath.getFilePath(); // getting file path
 
     if (filePath == null) {
       print("file not found");
