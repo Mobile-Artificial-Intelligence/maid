@@ -158,9 +158,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _cancel() {
     lib?.cancel(
-      // printLnLog: printLnLog,
-      // printLog: printLog,
-    );
+        // printLnLog: printLnLog,
+        // printLog: printLog,
+        );
   }
 
   @override
@@ -172,22 +172,29 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void getRam() async {
-    int? deviceMemory = await SystemInfoPlus.physicalMemory;
-    int deviceMemoryGB = (deviceMemory ?? 0) ~/ 1024 + 1;
+    if (Platform.isWindows == false) {
+      int? deviceMemory = await SystemInfoPlus.physicalMemory;
+      int deviceMemoryGB = (deviceMemory ?? 0) ~/ 1024 + 1;
 
-    setState(() {
-      _ram = "${deviceMemoryGB}GB";
-      if (deviceMemoryGB <= 6) {
-        _ram += " (WARNING ! May not be enough)";
-      } else {
-        _ram += " (Should be enough)";
-      }
-      color = deviceMemoryGB > 6
-          ? Colors.green
-          : deviceMemoryGB > 4
-          ? Colors.orange
-          : Colors.red;
-    });
+      setState(() {
+        _ram = "${deviceMemoryGB}GB";
+        if (deviceMemoryGB <= 6) {
+          _ram += " (WARNING ! May not be enough)";
+        } else {
+          _ram += " (Should be enough)";
+        }
+        color = deviceMemoryGB > 6
+            ? Colors.green
+            : deviceMemoryGB > 4
+                ? Colors.orange
+                : Colors.red;
+      });
+    } else {
+      setState(() {
+        _ram = " Can't get RAM on Windows";
+        color = Colors.red;
+      });
+    }
   }
 
   showPrepromptAlert() async {
@@ -375,10 +382,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   const SelectableText(
                       "This app is a demo of the llama.cpp model.\n\n"
-                          "You can find the source code of this app on GitHub\n\n"
-                          'It was made on Flutter using an implementation of ggerganov/llama.cpp recompiled to work on mobiles\n\n'
-                          'The LLaMA models are officially distributed by Meta and will never be provided by us\n\n'
-                          'It was made by Maxime GUERIN and Thibaut LEAUX from the french company Bip-Rep based in Lyon (France)'),
+                      "You can find the source code of this app on GitHub\n\n"
+                      'It was made on Flutter using an implementation of ggerganov/llama.cpp recompiled to work on mobiles\n\n'
+                      'The LLaMA models are officially distributed by Meta and will never be provided by us\n\n'
+                      'It was made by Maxime GUERIN and Thibaut LEAUX from the french company Bip-Rep based in Lyon (France)'),
                   const SizedBox(
                     height: 20,
                   ),
@@ -591,7 +598,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           const Text(
                             'Please download the 7B ggml-model-q4 from the official link meta provided you.\n'
-                                'Then open it.\n',
+                            'Then open it.\n',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.red),
                           ),
@@ -752,9 +759,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border:
-                                            Border.all(color: Colors.black),
+                                                Border.all(color: Colors.black),
                                             borderRadius:
-                                            BorderRadius.circular(5),
+                                                BorderRadius.circular(5),
                                             color: Colors.black,
                                           ),
                                           child: Padding(
@@ -825,7 +832,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 shape: const CircleBorder(),
                                 padding: const EdgeInsets.all(0),
                                 backgroundColor:
-                                Colors.blueGrey.withOpacity(0.5),
+                                    Colors.blueGrey.withOpacity(0.5),
                               ),
                               onPressed: () {
                                 Clipboard.setData(ClipboardData(text: result));

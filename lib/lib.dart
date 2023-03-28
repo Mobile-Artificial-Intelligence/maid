@@ -127,6 +127,19 @@ class Lib {
     return DynamicLibrary.open(file.path);
   }
 
+  static Future<DynamicLibrary> loadDllWindows(
+      String fileName, ByteData byteData) async {
+    final buffer = byteData.buffer;
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    File file = await File(
+            '$tempPath/${DateTime.now().millisecondsSinceEpoch}$fileName')
+        .writeAsBytes(
+            buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+    print('size of file ${file.lengthSync()}');
+    return DynamicLibrary.open(file.path);
+  }
+
   static Future<DynamicLibrary> loadDllDart(String fileName) async {
     return DynamicLibrary.open(fileName);
   }
@@ -197,11 +210,13 @@ class Lib {
   }) async {
     ByteData lib2 = await rootBundle.load('assets/libs/libllama.so');
     ByteData? lib1;
-
     try {
       lib1 = await rootBundle.load('assets/libs/libggml.so');
     } catch (e) {}
-
+    ByteData? libWindows;
+    try {
+      libWindows = await rootBundle.load('assets/libs/llama.dll');
+    } catch (e) {}
     RootIsolateToken? token = ServicesBinding.rootIsolateToken;
     mainSendPort = mainReceivePort.sendPort;
     _isolate = await runZonedGuarded<Future>(
@@ -216,6 +231,7 @@ class Lib {
         isolateSendPort?.send(ParsingDemand(
           // lib1: lib1,
           lib2: lib2,
+          libWindows: libWindows,
           rootIsolateToken: token,
           promptPassed: promptPassed,
           stopToken: stopToken,
@@ -285,7 +301,9 @@ class Lib {
         ? await loadDllAndroid("libllama.so", parsingDemand.lib2)
         : (Platform.isIOS
             ? DynamicLibrary.executable()
-            : await Lib.loadDllDart("libllama.so"));
+            : (Platform.isWindows
+                ? await loadDllWindows("llama.dll", parsingDemand.libWindows!)
+                : DynamicLibrary.executable()));
     var prompt = parsingDemand.promptPassed;
 
     log(
@@ -476,28 +494,24 @@ class Lib {
               .llama_token_to_str(ctx, id)
               .cast<Utf8>()
               .toDartString();
-          if (Platform.isAndroid || Platform.isIOS) {
-            logInline(str);
-            ttlString += str;
-            if (ttlString.length >= stopTokenLength &&
-                ttlString.length > prompt.length &&
-                stopTokenLength > 0) {
-              var lastPartTtlString = ttlString
-                  .trim()
-                  .substring(ttlString.trim().length - stopTokenLength - 1)
-                  .toLowerCase()
-                  .replaceAll(' ', '');
-              log('lastPartTtlString = $lastPartTtlString , stopTokenTrimed = $stopTokenTrimed');
-              if (lastPartTtlString == stopTokenTrimed.toLowerCase()) {
-                log('is_interacting = true');
-                interaction = Completer();
-                break;
-              }
+          logInline(str);
+          ttlString += str;
+          if (ttlString.length >= stopTokenLength &&
+              ttlString.length > prompt.length &&
+              stopTokenLength > 0) {
+            var lastPartTtlString = ttlString
+                .trim()
+                .substring(ttlString.trim().length - stopTokenLength - 1)
+                .toLowerCase()
+                .replaceAll(' ', '');
+            log('lastPartTtlString = $lastPartTtlString , stopTokenTrimed = $stopTokenTrimed');
+            if (lastPartTtlString == stopTokenTrimed.toLowerCase()) {
+              log('is_interacting = true');
+              interaction = Completer();
+              break;
             }
-            //end of the ttlString size of stopTokenLength
-          } else {
-            stdout.write(str);
           }
+          //end of the ttlString size of stopTokenLength
         }
       }
 
@@ -594,6 +608,7 @@ class MessageNewPrompt {
 class ParsingDemand {
   ByteData? lib1;
   ByteData lib2;
+  ByteData? libWindows;
   RootIsolateToken? rootIsolateToken;
   String promptPassed;
 
@@ -601,6 +616,7 @@ class ParsingDemand {
 
   ParsingDemand({
     this.lib1,
+    this.libWindows,
     required this.lib2,
     required this.rootIsolateToken,
     required this.promptPassed,
