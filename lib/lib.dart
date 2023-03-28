@@ -141,6 +141,7 @@ class Lib {
   }
 
   static Future<DynamicLibrary> loadDllDart(String fileName) async {
+    print('loadDllDart $fileName');
     return DynamicLibrary.open(fileName);
   }
 
@@ -616,6 +617,7 @@ class ParsingDemand {
 
   ParsingDemand({
     this.lib1,
+    this.libWindows,
     this.libWindows,
     required this.lib2,
     required this.rootIsolateToken,
