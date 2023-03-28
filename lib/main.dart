@@ -2,9 +2,11 @@
 
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sherpa/ModelFilePath.dart';
 import 'package:sherpa/lib.dart';
 import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -84,9 +86,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool inProgress = false;
 
-  FileState fileState = FileState.notSearched;
+  FileState fileState = FileState.notFound;
 
   TextEditingController reversePromptController = TextEditingController();
+
   // Memory? _memory;
 
   bool showLog = false;
@@ -155,9 +158,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _cancel() {
     lib?.cancel(
-        // printLnLog: printLnLog,
-        // printLog: printLog,
-        );
+      // printLnLog: printLnLog,
+      // printLog: printLog,
+    );
   }
 
   @override
@@ -165,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     initDefaultPrompts();
     getRam();
-    testFile();
+    testFileExisting();
   }
 
   void getRam() async {
@@ -182,8 +185,8 @@ class _MyHomePageState extends State<MyHomePage> {
       color = deviceMemoryGB > 6
           ? Colors.green
           : deviceMemoryGB > 4
-              ? Colors.orange
-              : Colors.red;
+          ? Colors.orange
+          : Colors.red;
     });
   }
 
@@ -269,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           actions: [
             TextButton(
-              child: Text("OK",
+              child: const Text("OK",
                   style: TextStyle(
                     color: Colors.cyan,
                   )),
@@ -324,7 +327,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           actions: [
             TextButton(
-              child: Text(
+              child: const Text(
                 "OK",
                 style: TextStyle(
                   color: Colors.cyan,
@@ -372,10 +375,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   const SelectableText(
                       "This app is a demo of the llama.cpp model.\n\n"
-                      "You can find the source code of this app on GitHub\n\n"
-                      'It was made on Flutter using an implementation of ggerganov/llama.cpp recompiled to work on mobiles\n\n'
-                      'The LLaMA models are officially distributed by Meta and will never be provided by us\n\n'
-                      'It was made by Maxime GUERIN and Thibaut LEAUX from the french company Bip-Rep based in Lyon (France)'),
+                          "You can find the source code of this app on GitHub\n\n"
+                          'It was made on Flutter using an implementation of ggerganov/llama.cpp recompiled to work on mobiles\n\n'
+                          'The LLaMA models are officially distributed by Meta and will never be provided by us\n\n'
+                          'It was made by Maxime GUERIN and Thibaut LEAUX from the french company Bip-Rep based in Lyon (France)'),
                   const SizedBox(
                     height: 20,
                   ),
@@ -438,25 +441,33 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
     reversePromptController.text = 'User :';
-
   }
 
-  void testFile() async {
-    var downloadDirectory = await Lib.getDownloadPath();
-    print(downloadDirectory);
-    if (downloadDirectory == null) {
+  void openFile() async {
+    setState(() {
+      fileState = FileState.opening;
+    });
+
+    var filePath = await ModelFilePath.getFilePath();
+
+    if (filePath == null) {
+      print("file not found");
       setState(() {
         fileState = FileState.notFound;
       });
       return;
     }
-    var file = File("${downloadDirectory.path}/ggml-model.bin");
+
+    var file = File(filePath);
     if (!file.existsSync()) {
+      print("file not found 2");
       setState(() {
         fileState = FileState.notFound;
       });
+      ModelFilePath.deleteModelFile();
       return;
     }
+
     setState(() {
       fileState = FileState.found;
     });
@@ -466,6 +477,19 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       prePrompt = "";
     });
+  }
+
+  void testFileExisting() async {
+    var found = await ModelFilePath.filePathExists();
+    if (found) {
+      setState(() {
+        fileState = FileState.found;
+      });
+    } else {
+      setState(() {
+        fileState = FileState.notFound;
+      });
+    }
   }
 
   @override
@@ -562,13 +586,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Wrap(
-                        children: const [
-                          Text(
-                            'ggml-model.bin file not found in the download folder of your device\n'
-                            'Please download the 7B ggml-model-q4 from the official link meta provided you\n.'
-                            'Then rename your model ggml-model.bin\n',
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          const Text(
+                            'Please download the 7B ggml-model-q4 from the official link meta provided you.\n'
+                                'Then open it.\n',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.red),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              openFile();
+                            },
+                            child: const Text(
+                              "Open file",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ],
                       ),
@@ -581,6 +615,35 @@ class _MyHomePageState extends State<MyHomePage> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                const Text("Change Model"),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: ElevatedButton(
+                                        onPressed: () async {
+                                          await ModelFilePath.deleteModelFile();
+                                          setState(() {
+                                            fileState = FileState.notFound;
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          padding: const EdgeInsets.all(0.0),
+                                        ),
+                                        child: const Text(
+                                          "X",
+                                          style: TextStyle(color: Colors.white),
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
                             Wrap(
                               alignment: WrapAlignment.center,
                               crossAxisAlignment: WrapCrossAlignment.center,
@@ -689,9 +752,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border:
-                                                Border.all(color: Colors.black),
+                                            Border.all(color: Colors.black),
                                             borderRadius:
-                                                BorderRadius.circular(5),
+                                            BorderRadius.circular(5),
                                             color: Colors.black,
                                           ),
                                           child: Padding(
@@ -712,6 +775,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                     ],
+                    const Text(
+                      "Chat now !",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     Stack(
                       children: [
                         //top right button to copy the result
@@ -756,7 +825,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 shape: const CircleBorder(),
                                 padding: const EdgeInsets.all(0),
                                 backgroundColor:
-                                    Colors.blueGrey.withOpacity(0.5),
+                                Colors.blueGrey.withOpacity(0.5),
                               ),
                               onPressed: () {
                                 Clipboard.setData(ClipboardData(text: result));
@@ -828,8 +897,28 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ],
-                  if (fileState == FileState.notSearched)
-                    const CircularProgressIndicator(),
+                  if (fileState == FileState.opening)
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: const [
+                            Text(
+                              "Opening file...\nPlease wait a minute...",
+                              textAlign: TextAlign.center,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -848,5 +937,5 @@ class _MyHomePageState extends State<MyHomePage> {
 enum FileState {
   notFound,
   found,
-  notSearched,
+  opening,
 }

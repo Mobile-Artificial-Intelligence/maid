@@ -8,10 +8,12 @@ import 'dart:ffi' as ffi;
 import 'dart:isolate';
 import 'dart:math';
 import 'package:ffi/ffi.dart';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sherpa/ModelFilePath.dart';
 
 import 'package:sherpa/generated_bindings_llama.dart';
 
@@ -151,39 +153,6 @@ class Lib {
     return vector;
   }
 
-  static Future<Directory?> getDownloadPath() async {
-    Directory? directory;
-    try {
-      //ask for permission
-      if (Platform.isAndroid) {
-        await Permission.storage.request();
-        var status = await Permission.storage.request();
-        if (!status.isGranted) {
-          print("Permission denied : $status");
-          return null;
-          // We didn't ask for permission yet or the permission has been denied before but not permanently.
-        }
-      }
-      if (Platform.isIOS) {
-        directory = await getApplicationDocumentsDirectory();
-        var newFolder = Directory('${directory.path}/Download');
-        if (newFolder.existsSync() == false) {
-          newFolder.createSync();
-        }
-        directory = newFolder;
-      } else {
-        directory = Directory('/storage/emulated/0/Download');
-        // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
-        // ignore: avoid_slow_async_io
-        if (!await directory.exists())
-          directory = await getExternalStorageDirectory();
-      }
-    } catch (err, stack) {
-      print("Cannot get download folder path");
-    }
-    return directory;
-  }
-
   static parserIsolateFunction(
     SendPort mainSendPort,
   ) async {
@@ -300,7 +269,6 @@ class Lib {
     required SendPort mainSendPort,
     required String stopToken,
   }) async {
-    bool shouldEnd = false;
     interaction.complete();
     String ttlString = "";
     var stopTokenTrimed = stopToken.trim().replaceAll(' ', '');
@@ -324,13 +292,6 @@ class Lib {
       "llama loaded",
     );
 
-    var downloadDirectory = await getDownloadPath();
-    // var downloadDirectory = await getApplicationSupportDirectory();
-    print(downloadDirectory?.path);
-    if (downloadDirectory == null) {
-      log("no download directory");
-      return;
-    }
     // DynamicLibrary main = await loadDll("libmain.so");
 
     // NativeLibrary ggmlAutobinded = NativeLibrary(ggml);
@@ -387,25 +348,20 @@ class Lib {
     var ret = llamaBinded.llama_context_default_params();
     log("trying main DONE $ret");
 
-    // var ctx = llamaBinded.llama_init_from_file(
-    //     "ggml-model.bin".toNativeUtf8().cast<Char>(), ret);
-
-    //test if file exists
-    var fileModel = File("${downloadDirectory.path}/ggml-model.bin");
-    log("file path : ${fileModel.path} size : ${fileModel.lengthSync()}");
-    // log(await fileModel.openRead().first);
-    if (!await fileModel.exists()) {
-      log("file does not exist");
+    var filePath = await ModelFilePath.getFilePath();
+    if (filePath == null) {
+      log("no filePath");
       return;
-    } else {
-      log("file exists");
     }
+
     var ctx = llamaBinded.llama_init_from_file(
-        fileModel.path.toNativeUtf8().cast<Char>(), ret);
+        filePath.toNativeUtf8().cast<Char>(), ret);
     if (ctx == nullptr) {
       log("context is null ");
+
       return;
     }
+
     log("context created");
 
     log(' test info  : ${(llamaBinded.llama_print_system_info()).cast<Utf8>().toDartString()}');
@@ -631,6 +587,7 @@ class MessageCanPrompt {
 
 class MessageNewPrompt {
   final String prompt;
+
   MessageNewPrompt(this.prompt);
 }
 
