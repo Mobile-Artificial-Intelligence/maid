@@ -406,6 +406,7 @@ class Lib {
     log("trying main DONE $ret");
 
     var filePath = await ModelFilePath.getFilePath();
+    print("filePath : $filePath");
     if (filePath == null) {
       log("no filePath");
       return;
@@ -413,8 +414,9 @@ class Lib {
 
     var ctx = llamaBinded.llama_init_from_file(
         filePath.toNativeUtf8().cast<Char>(), ret);
-    if (ctx == nullptr || ctx.cast<Utf8>().toDartString() != 0) {
-      log("context is null , error : ${CreationContextError(ctx.cast<Int64>().value).toString()}");
+    if (ctx == nullptr || ctx.cast<Int64>().value != 0) {
+      log("context error : ${CreationContextError(ctx.cast<Int64>().value).toString()}");
+      llamaBinded.llama_free(ctx);
       return;
     }
 

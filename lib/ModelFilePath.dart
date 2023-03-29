@@ -6,17 +6,15 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ModelFilePath {
-
-  static Future <String?>getFilePath() async {
-
+  static Future<String?> getFilePath() async {
     var prefs = await SharedPreferences.getInstance();
     if (prefs.getString('path') != null) {
       var path = prefs.getString('path')!;
       return path;
     }
 
+    await Permission.storage.request();
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      withReadStream: true,
       type: FileType.custom,
       allowedExtensions: ['bin'],
     );
@@ -41,6 +39,4 @@ class ModelFilePath {
       prefs.remove('path');
     });
   }
-
-
 }
