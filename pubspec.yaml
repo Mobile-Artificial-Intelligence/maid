@@ -45,6 +45,7 @@ dependencies:
   device_info_plus: ^8.1.0
 
 dev_dependencies:
+  msix: ^3.9.1
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.12.0"
