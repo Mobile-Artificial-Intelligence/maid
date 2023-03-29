@@ -18,20 +18,6 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  int add(
-    int a,
-    int b,
-  ) {
-    return _add(
-      a,
-      b,
-    );
-  }
-
-  late final _addPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>('add');
-  late final _add = _addPtr.asFunction<int Function(int, int)>();
-
   llama_context_params llama_context_default_params() {
     return _llama_context_default_params();
   }
@@ -118,20 +104,6 @@ class NativeLibrary {
   late final _llama_eval = _llama_evalPtr.asFunction<
       int Function(ffi.Pointer<llama_context>, ffi.Pointer<llama_token>, int,
           int, int)>();
-
-  bool freePointer(
-    ffi.Pointer<ffi.Void> ptr,
-  ) {
-    return _freePointer(
-      ptr,
-    );
-  }
-
-  late final _freePointerPtr =
-      _lookup<ffi.NativeFunction<ffi.Bool Function(ffi.Pointer<ffi.Void>)>>(
-          'freePointer');
-  late final _freePointer =
-      _freePointerPtr.asFunction<bool Function(ffi.Pointer<ffi.Void>)>();
 
   int llama_tokenize(
     ffi.Pointer<llama_context> ctx,

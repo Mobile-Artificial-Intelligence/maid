@@ -28,6 +28,44 @@ typedef Ggml_time_init = Void Function();
 typedef Ggml_time_initDart = void Function();
 typedef _wrappedPrint_C = Void Function(Pointer<Char> a);
 
+class CreationContextError {
+  int code;
+  CreationContextError(this.code);
+
+  @override
+  String toString() {
+    switch (code) {
+      case 1:
+        return 'failed to open file';
+      case 2:
+        return 'invalid model file (too old, regenerate your model files!)';
+      case 3:
+        return 'invalid model file (bad magic)';
+      case 4:
+        return 'invalid model file  (unsupported format version';
+      case 6:
+        return 'invalid model file  (bad f16 value )';
+      case 7:
+        return 'ggml_init() failed';
+      case 8:
+        return 'unknown tensor in model file';
+      case 9:
+      case 10:
+      case 15:
+      case 16:
+        return 'tensor has wrong size in model file';
+      case 11:
+      case 12:
+      case 13:
+        return 'tensor  has wrong shape in model';
+      case 14:
+        return 'unknown ftype %d in model file';
+      default:
+        return 'unknown error';
+    }
+  }
+}
+
 class Vector<T extends NativeType> {
   Pointer<T> pointer;
   int length;
@@ -375,9 +413,8 @@ class Lib {
 
     var ctx = llamaBinded.llama_init_from_file(
         filePath.toNativeUtf8().cast<Char>(), ret);
-    if (ctx == nullptr) {
-      log("context is null ");
-
+    if (ctx == nullptr || ctx.cast<Utf8>().toDartString() != 0) {
+      log("context is null , error : ${CreationContextError(ctx.cast<Int64>().value).toString()}");
       return;
     }
 
