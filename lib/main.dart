@@ -172,26 +172,33 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void getRam() async {
-    if (Platform.isWindows == false) {
-      int? deviceMemory = await SystemInfoPlus.physicalMemory;
-      int deviceMemoryGB = (deviceMemory ?? 0) ~/ 1024 + 1;
+    try {
+      if (Platform.isWindows == false) {
+        int? deviceMemory = await SystemInfoPlus.physicalMemory;
+        int deviceMemoryGB = (deviceMemory ?? 0) ~/ 1024 + 1;
 
+        setState(() {
+          _ram = "${deviceMemoryGB}GB";
+          if (deviceMemoryGB <= 6) {
+            _ram += " (WARNING ! May not be enough)";
+          } else {
+            _ram += " (Should be enough)";
+          }
+          color = deviceMemoryGB > 6
+              ? Colors.green
+              : deviceMemoryGB > 4
+                  ? Colors.orange
+                  : Colors.red;
+        });
+      } else {
+        setState(() {
+          _ram = " Can't get RAM on Windows";
+          color = Colors.red;
+        });
+      }
+    } catch (e) {
       setState(() {
-        _ram = "${deviceMemoryGB}GB";
-        if (deviceMemoryGB <= 6) {
-          _ram += " (WARNING ! May not be enough)";
-        } else {
-          _ram += " (Should be enough)";
-        }
-        color = deviceMemoryGB > 6
-            ? Colors.green
-            : deviceMemoryGB > 4
-                ? Colors.orange
-                : Colors.red;
-      });
-    } else {
-      setState(() {
-        _ram = " Can't get RAM on Windows";
+        _ram = " Can't get RAM";
         color = Colors.red;
       });
     }

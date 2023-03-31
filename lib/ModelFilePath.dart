@@ -12,8 +12,9 @@ class ModelFilePath {
       var path = prefs.getString('path')!;
       return path;
     }
-
-    await Permission.storage.request();
+    try {
+      await Permission.storage.request();
+    } catch (e) {}
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['bin'],

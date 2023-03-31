@@ -247,15 +247,12 @@ class Lib {
     required void Function() done,
     required String stopToken,
   }) async {
-    ByteData lib2 = await rootBundle.load('assets/libs/libllama.so');
-    ByteData? lib1;
-    try {
-      lib1 = await rootBundle.load('assets/libs/libggml.so');
-    } catch (e) {}
+    ByteData libAndroid = await rootBundle.load('assets/libs/libllama.so');
     ByteData? libWindows;
     try {
       libWindows = await rootBundle.load('assets/libs/llama.dll');
     } catch (e) {}
+
     RootIsolateToken? token = ServicesBinding.rootIsolateToken;
     mainSendPort = mainReceivePort.sendPort;
     _isolate = await runZonedGuarded<Future>(
@@ -269,7 +266,7 @@ class Lib {
         isolateSendPort = message;
         isolateSendPort?.send(ParsingDemand(
           // lib1: lib1,
-          lib2: lib2,
+          libAndroid: libAndroid,
           libWindows: libWindows,
           rootIsolateToken: token,
           promptPassed: promptPassed,
@@ -332,17 +329,16 @@ class Lib {
     if (parsingDemand.rootIsolateToken == null) return;
     BackgroundIsolateBinaryMessenger.ensureInitialized(
         parsingDemand.rootIsolateToken!);
-    if (Platform.isAndroid && parsingDemand.lib1 != null) {
-      await loadDllAndroid("libggml.so", parsingDemand.lib1!);
-    }
 
     DynamicLibrary llama = Platform.isAndroid
-        ? await loadDllAndroid("libllama.so", parsingDemand.lib2)
+        ? await loadDllAndroid("libllama.so", parsingDemand.libAndroid)
         : (Platform.isIOS
             ? DynamicLibrary.executable()
             : (Platform.isWindows
                 ? await loadDllWindows("llama.dll", parsingDemand.libWindows!)
-                : DynamicLibrary.executable()));
+                : (Platform.isMacOS
+                    ? DynamicLibrary.executable()
+                    : DynamicLibrary.executable())));
     var prompt = parsingDemand.promptPassed;
 
     log(
@@ -646,8 +642,7 @@ class MessageNewPrompt {
 }
 
 class ParsingDemand {
-  ByteData? lib1;
-  ByteData lib2;
+  ByteData libAndroid;
   ByteData? libWindows;
   RootIsolateToken? rootIsolateToken;
   String promptPassed;
@@ -655,9 +650,8 @@ class ParsingDemand {
   String stopToken;
 
   ParsingDemand({
-    this.lib1,
-    this.libWindows,
-    required this.lib2,
+    required this.libWindows,
+    required this.libAndroid,
     required this.rootIsolateToken,
     required this.promptPassed,
     required this.stopToken,
