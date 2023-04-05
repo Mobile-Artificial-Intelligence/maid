@@ -138,8 +138,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _exec() {
-    //close the keyboard
-    FocusScope.of(context).unfocus();
+    //close the keyboard if on mobile
+    if (Platform.isAndroid || Platform.isIOS) {
+      FocusScope.of(context).unfocus();
+    }
     setState(() {
       inProgress = true;
     });
