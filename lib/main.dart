@@ -771,7 +771,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ElevatedButton(
-                                          onPressed: paramsLlama.resetAll,
+                                          onPressed: () {
+                                            paramsLlama.resetAll(setState);
+                                          },
                                           child: const Text(
                                             "Reset All",
                                             style: TextStyle(
@@ -978,57 +980,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     decoration:
                                                         const InputDecoration(
                                                       hintText: 'top_p',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: ConstrainedBox(
-                                              constraints: const BoxConstraints(
-                                                maxWidth: 150,
-                                              ),
-                                              child: Wrap(
-                                                children: [
-                                                  const Text(
-                                                    'temp:',
-                                                  ),
-                                                  TextField(
-                                                    controller: paramsLlama
-                                                        .tempController,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      hintText: 'temp',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: ConstrainedBox(
-                                              constraints: const BoxConstraints(
-                                                maxWidth: 150,
-                                              ),
-                                              child: Wrap(
-                                                children: [
-                                                  const Text(
-                                                    'repeat_penalty:',
-                                                  ),
-                                                  TextField(
-                                                    controller: paramsLlama
-                                                        .repeat_penaltyController,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      hintText:
-                                                          'repeat_penalty',
                                                     ),
                                                   ),
                                                 ],
@@ -1732,15 +1683,18 @@ class ParamsLlama {
     });
   }
 
-  void resetAll() {
-    memory_f16 = false;
-    random_prompt = false;
-    use_color = false;
-    interactive = true;
-    interactive_start = false;
-    instruct = true;
-    ignore_eos = false;
-    perplexity = false;
+  void resetAll(void Function(VoidCallback fn) setState) async {
+    setState(() {
+      memory_f16 = false;
+      random_prompt = false;
+      use_color = false;
+      interactive = true;
+      interactive_start = false;
+      instruct = true;
+      ignore_eos = false;
+      perplexity = false;
+    });
+
     seedController.text = "-1";
     n_threadsController.text = "4";
     n_predictController.text = "512";
