@@ -136,6 +136,8 @@ extension VectorIntExtension on Vector<Int> {
 class Lib {
   Isolate? _isolate;
 
+  static bool stopGeneration = false;
+
   Lib();
 
   Pointer<Pointer<Char>> strListToPointer(List<String> strings) {
@@ -224,6 +226,10 @@ class Lib {
             stopToken: message.stopToken,
             mainSendPort: mainSendPort,
           );
+        }
+        if (message is MessageStopGeneration) {
+          log("[isolate] Stopping generation");
+          stopGeneration = true;
         }
       });
     } catch (e) {
@@ -378,8 +384,8 @@ class Lib {
 
     var gptParams = malloc.allocate<gpt_params>(sizeOf<gpt_params>());
     gptParams.ref.seed = -1; // RNG seed
-    gptParams.ref.n_threads = 4;
-    gptParams.ref.n_predict = 256; // new tokens to predict
+    gptParams.ref.n_threads = 32;
+    gptParams.ref.n_predict = 512; // new tokens to predict
     gptParams.ref.repeat_last_n = 64; // last n tokens to penalize
     gptParams.ref.n_parts =
         -1; // amount of model parts (-1 = determine from model dimensions)
@@ -462,7 +468,8 @@ class Lib {
     int n_past = 0;
     log('before while loop');
     while ((remaining_tokens > 0 || gptParams.ref.interactive)) {
-      log('wile : $remaining_tokens');
+      log('remaining tokens : $remaining_tokens');
+      log('stopGeneration : $stopGeneration');
       if (embd.length > 0) {
         if (llamaBinded.llama_eval(ctx, embd.pointer, embd.length, n_past,
                 gptParams.ref.n_threads) >
@@ -473,7 +480,11 @@ class Lib {
       }
       n_past += embd.length;
       embd.clear();
-
+      if (stopGeneration) {
+        log('stop Generation initiated by user');
+        interaction = Completer();
+        stopGeneration = false;
+      }
       if (embd_inp.length <= input_consumed) {
         // out of user input, sample next token
         var top_k = gptParams.ref.top_k;
@@ -553,12 +564,11 @@ class Lib {
               break;
             }
           }
-          //end of the ttlString size of stopTokenLength
         }
       }
 
       if (params.interactive && embd_inp.length <= input_consumed) {
-        log('params.interactive && embd_inp.length <= input_consumed');
+        log('params.interactive && embd_inp.length <= input_consumed && interaction.isCompleted == ${interaction.isCompleted}');
         // malloc.free(pointer);
         // malloc.free(pointer);
 
@@ -575,6 +585,7 @@ class Lib {
           // logInline(stopTokenTrimed);
           mainSendPort.send(MessageCanPrompt());
           String buffer = await interaction.future;
+          stopGeneration = false;
           // logInline(stopTokenTrimed + '\n');
 
           logInline(buffer);
@@ -597,7 +608,6 @@ class Lib {
 
       // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
       if (params.interactive && remaining_tokens <= 0) {
-        log("befire compltere");
         remaining_tokens = params.n_predict;
         interaction = Completer();
       }
@@ -620,9 +630,13 @@ class Lib {
   void main() {}
 
   void cancel() {
-    _isolate?.kill(priority: Isolate.immediate);
-    _isolate = null;
+    print('cancel. isolateSendPort is null ? ${isolateSendPort == null}');
+    isolateSendPort?.send(MessageStopGeneration());
   }
+}
+
+class MessageStopGeneration {
+  MessageStopGeneration();
 }
 
 class MessageFromIsolate {

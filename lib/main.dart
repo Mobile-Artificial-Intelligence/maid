@@ -877,33 +877,51 @@ class _MyHomePageState extends State<MyHomePage> {
                             labelText: 'Prompt',
                             suffixIcon: Padding(
                               padding: const EdgeInsets.only(right: 4.0),
-                              child: ElevatedButton(
-                                onPressed: (inProgress) ? null : _exec,
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 5),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    if (!inProgress)
-                                      const Icon(
-                                        Icons.send_sharp,
-                                        color: Colors.white,
-                                      ),
-                                    if (inProgress)
-                                      const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: (inProgress) ? null : _exec,
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (!inProgress)
+                                          const Icon(
+                                            Icons.send_sharp,
                                             color: Colors.white,
                                           ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
+                                        if (inProgress)
+                                          const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: SizedBox(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  if (inProgress)
+                                  ElevatedButton(
+                                    onPressed: _cancel,
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                    ),
+                                    child: const Icon(
+                                      Icons.stop,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
