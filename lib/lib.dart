@@ -16,6 +16,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sherpa/ModelFilePath.dart';
 
 import 'package:sherpa/generated_bindings_llama.dart';
+import 'package:sherpa/main.dart';
 
 // import 'package:sherpa/generated_bindings.dart';
 // import 'package:sherpa/llama_bindings.dart';
@@ -251,7 +252,7 @@ class Lib {
     required void Function(String log) printLog,
     required String promptPassed,
     required void Function() done,
-    required String stopToken,
+    required String stopToken, required ParamsLlama paramsLlama,
   }) async {
     ByteData libAndroid = await rootBundle.load('assets/libs/libllama.so');
     ByteData? libWindows;
@@ -280,6 +281,7 @@ class Lib {
           rootIsolateToken: token,
           promptPassed: promptPassed,
           stopToken: stopToken,
+          paramsLlama: paramsLlama,
         ));
       } else if (message is MessageEndFromIsolate) {
         printLnLog("MessageEndFromIsolate : ${message.message}");
@@ -383,28 +385,35 @@ class Lib {
     // print("initialize found : ${main.providesSymbol('initialize')}");
 
     var gptParams = malloc.allocate<gpt_params>(sizeOf<gpt_params>());
-    gptParams.ref.seed = -1; // RNG seed
-    gptParams.ref.n_threads = 32;
-    gptParams.ref.n_predict = 512; // new tokens to predict
-    gptParams.ref.repeat_last_n = 64; // last n tokens to penalize
-    gptParams.ref.n_parts =
-        -1; // amount of model parts (-1 = determine from model dimensions)
-    gptParams.ref.n_ctx = 512; // context size
-    gptParams.ref.top_k = 40;
-    gptParams.ref.top_p = 0.9;
-    gptParams.ref.temp = 0.80;
-    gptParams.ref.repeat_penalty = 1.10;
-    gptParams.ref.n_batch = 8; // batch size for prompt processing
-    gptParams.ref.memory_f16 = false; // use f16 instead of f32 for memory kv
-    gptParams.ref.random_prompt =
-        false; // do not randomize prompt if none provided
-    gptParams.ref.use_color =
-        false; // use color to distinguish generations and inputs
-    gptParams.ref.interactive = true; // interactive mode
-    gptParams.ref.interactive_start = false; // wait for user input immediately
-    gptParams.ref.instruct = true; // instruction mode (used for Alpaca models)
-    gptParams.ref.ignore_eos = false; // do not stop generating after eos
-    gptParams.ref.perplexity = false;
+    gptParams.ref.seed = int.parse(parsingDemand.paramsLlama.seedController.text);
+    gptParams.ref.n_threads = int.parse(
+        parsingDemand.paramsLlama.n_threadsController.text); // number of threads
+    gptParams.ref.n_predict = int.parse(
+        parsingDemand.paramsLlama.n_predictController.text); // number of predictions
+    gptParams.ref.repeat_last_n = int.parse(
+        parsingDemand.paramsLlama.repeat_last_nController.text); // repeat last n tokens
+    gptParams.ref.n_parts = int.parse(
+        parsingDemand.paramsLlama.n_partsController.text); // number of parts
+    gptParams.ref.n_ctx = int.parse(
+        parsingDemand.paramsLlama.n_ctxController.text); // number of tokens in context
+    gptParams.ref.top_k = int.parse(
+        parsingDemand.paramsLlama.top_kController.text); // top k sampling
+    gptParams.ref.top_p = double.parse(
+        parsingDemand.paramsLlama.top_pController.text); // top p sampling
+    gptParams.ref.temp = double.parse(
+        parsingDemand.paramsLlama.tempController.text); // temperature
+    gptParams.ref.repeat_penalty = double.parse(
+        parsingDemand.paramsLlama.repeat_penaltyController.text); // repeat penalty
+    gptParams.ref.n_batch = int.parse(
+        parsingDemand.paramsLlama.n_batchController.text); // number of batches
+    gptParams.ref.memory_f16 = parsingDemand.paramsLlama.memory_f16;
+    gptParams.ref.random_prompt = parsingDemand.paramsLlama.random_prompt;
+    gptParams.ref.use_color = parsingDemand.paramsLlama.use_color;
+    gptParams.ref.interactive = parsingDemand.paramsLlama.interactive;
+    gptParams.ref.interactive_start = parsingDemand.paramsLlama.interactive_start;
+    gptParams.ref.instruct = parsingDemand.paramsLlama.instruct;
+    gptParams.ref.ignore_eos = parsingDemand.paramsLlama.ignore_eos;
+    gptParams.ref.perplexity = parsingDemand.paramsLlama.perplexity;
     var params = gptParams.ref;
     log("main found : ${llama.providesSymbol('llama_context_default_params')}");
 
@@ -667,8 +676,8 @@ class ParsingDemand {
   ByteData? libLinux;
   RootIsolateToken? rootIsolateToken;
   String promptPassed;
-
   String stopToken;
+  ParamsLlama paramsLlama;
 
   ParsingDemand({
     required this.libWindows,
@@ -677,6 +686,7 @@ class ParsingDemand {
     required this.promptPassed,
     required this.libLinux,
     required this.stopToken,
+    required this.paramsLlama,
   });
 }
 

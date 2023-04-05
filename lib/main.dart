@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String _ram = "\nCalcul en cours...";
   Color color = Colors.black;
+  ParamsLlama paramsLlama = ParamsLlama();
 
   var promptController = TextEditingController();
 
@@ -94,10 +95,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool showLog = false;
   bool showParams = false;
+  bool showParamsFineTune = false;
 
   toggleShowLog() {
     setState(() {
       showLog = !showLog;
+    });
+  }
+
+  toggleShowFineTune() {
+    setState(() {
+      showParamsFineTune = !showParamsFineTune;
     });
   }
 
@@ -138,6 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (lib == null) {
       lib = Lib();
       lib?.executeBinary(
+        paramsLlama: paramsLlama,
         printLnLog: printLnLog,
         printLog: printResult,
         promptPassed: prePrompt +
@@ -147,9 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
         stopToken: reversePromptController.text,
       );
     } else {
-      lib?.newPromp(" " +
-          promptController.text.trim() +
-          (promptController.text.isEmpty ? "" : "\n"));
+      lib?.newPromp(" ${promptController.text.trim()}${promptController.text.isEmpty ? "" : "\n"}");
     }
     setState(() {
       promptController.text = "";
@@ -508,17 +515,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //test if the ggml-model.bin file is present
-    // if (!File("assets/ggml-model.bin").existsSync()) {
-    //   return Scaffold(
-    //     appBar: AppBar(
-    //       title: const Text("LLaMA"),
-    //     ),
-    //     body: const Center(
-    //       child: Text("ggml-model.bin file not found"),
-    //     ),
-    //   );
-    // }
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -558,400 +554,909 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          showParams = !showParams;
-                        });
-                      },
-                      child: const Icon(
-                        Icons.settings,
-                        color: Colors.white,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 700,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const SizedBox(
+                        height: 20,
                       ),
-                    ),
-                  ),
-                  if (showParams)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Wrap(
-                        children: [
-                          const Text(
-                            'Your RAM:',
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              showParams = !showParams;
+                            });
+                          },
+                          child: const Icon(
+                            Icons.settings,
+                            color: Colors.white,
                           ),
-                          Text(
-                            _ram,
-                            style: TextStyle(
-                                color: color, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (fileState == FileState.notFound)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          const Text(
-                            'Please download the 7B ggml-model-q4 from the official link meta provided you.\n'
-                            'Then open it.\n',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              openFile();
-                            },
-                            child: const Text(
-                              "Open file",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (fileState == FileState.found) ...[
-                    //textInputPrompt
-
-                    if (showParams) ...[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Wrap(
-                              alignment: WrapAlignment.center,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                const Text("Change Model"),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                    width: 30,
-                                    height: 30,
-                                    child: ElevatedButton(
-                                        onPressed: () async {
-                                          await ModelFilePath.deleteModelFile();
-                                          setState(() {
-                                            fileState = FileState.notFound;
-                                          });
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
-                                          padding: const EdgeInsets.all(0.0),
-                                        ),
-                                        child: const Text(
-                                          "X",
-                                          style: TextStyle(color: Colors.white),
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Wrap(
-                              alignment: WrapAlignment.center,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                    onPressed: showPrepromptAlert,
-                                    child: const Text(
-                                      "Pre-Prompt",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                    width: 30,
-                                    height: 30,
-                                    child: ElevatedButton(
-                                        onPressed: deletePreprompt,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
-                                          padding: const EdgeInsets.all(0.0),
-                                        ),
-                                        child: const Text(
-                                          "X",
-                                          style: TextStyle(color: Colors.white),
-                                        )),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      maxHeight: 200,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SingleChildScrollView(
-                                        child: SelectableText(
-                                          "Pre-Prompt : $prePrompt",
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                keyboardType: TextInputType.multiline,
-                                maxLines: 1,
-                                expands: false,
-                                controller: reversePromptController,
-                                decoration: InputDecoration(
-                                  border: const OutlineInputBorder(),
-                                  labelStyle: const TextStyle(
-                                    color: Colors.cyan,
-                                  ),
-                                  labelText: 'Reverse Prompt',
-                                  suffixIcon: IconButton(
-                                      onPressed: () {
-                                        reversePromptController.clear();
-                                      },
-                                      icon: const Icon(Icons.clear)),
-                                ),
-                              ),
-                            ),
-                          ],
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: toggleShowLog,
-                        child: Text(
-                          showLog ? "Hide Log" : "Show Log",
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      if (showLog)
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.cyan),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Column(
+                      if (showParams)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Wrap(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(top: 8.0),
-                                child: Text("Log"),
+                              const Text(
+                                'Your RAM:',
                               ),
-                              ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxHeight: 200,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SingleChildScrollView(
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: Colors.black,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              log,
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                              Text(
+                                _ram,
+                                style: TextStyle(
+                                    color: color, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (fileState == FileState.notFound)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            alignment: WrapAlignment.center,
+                            children: [
+                              const Text(
+                                'Please download the 7B ggml-model-q4 from the official link meta provided you.\n'
+                                'Then open it.\n',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  openFile();
+                                },
+                                child: const Text(
+                                  "Open file",
+                                  style: TextStyle(color: Colors.white),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                    ],
-                    const Text(
-                      "Chat now !",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Stack(
-                      children: [
-                        //top right button to copy the result
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxHeight: 200,
-                          ),
-                          child: Padding(
+                      if (fileState == FileState.found) ...[
+
+                        if (showParams) ...[
+
+                          Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: SingleChildScrollView(
-                              controller: _consoleScrollController,
-                              child: SizedBox(
-                                width: double.infinity,
+                            child: Column(
+                              children: [
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    const Text("Change Model"),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SizedBox(
+                                        width: 30,
+                                        height: 30,
+                                        child: ElevatedButton(
+                                            onPressed: () async {
+                                              await ModelFilePath.deleteModelFile();
+                                              setState(() {
+                                                fileState = FileState.notFound;
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                              padding: const EdgeInsets.all(0.0),
+                                            ),
+                                            child: const Text(
+                                              "X",
+                                              style: TextStyle(color: Colors.white),
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                        onPressed: showPrepromptAlert,
+                                        child: const Text(
+                                          "Pre-Prompt",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SizedBox(
+                                        width: 30,
+                                        height: 30,
+                                        child: ElevatedButton(
+                                            onPressed: deletePreprompt,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                              padding: const EdgeInsets.all(0.0),
+                                            ),
+                                            child: const Text(
+                                              "X",
+                                              style: TextStyle(color: Colors.white),
+                                            )),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(
+                                          maxHeight: 200,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SingleChildScrollView(
+                                            child: SelectableText(
+                                              "Pre-Prompt : $prePrompt",
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: 1,
+                                    expands: false,
+                                    controller: reversePromptController,
+                                    decoration: InputDecoration(
+                                      border: const OutlineInputBorder(),
+                                      labelStyle: const TextStyle(
+                                        color: Colors.cyan,
+                                      ),
+                                      labelText: 'Reverse Prompt',
+                                      suffixIcon: IconButton(
+                                          onPressed: () {
+                                            reversePromptController.clear();
+                                          },
+                                          icon: const Icon(Icons.clear)),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              onPressed: toggleShowFineTune,
+                              child: Text(
+                                showParamsFineTune ? "Hide Params" : "Show Params",
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          if (showParamsFineTune)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Colors.black,
+                                  child: Wrap(
+                                    children: [
+                                      //ParamsLlama(),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'seed (-1 for random):',
+                                              ),
+                                              TextField(
+                                                controller: paramsLlama.seedController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'seed',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'n_threads:',
+                                              ),
+                                              TextField(
+                                                controller:
+                                                    paramsLlama.n_threadsController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'n_threads',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'n_predict:',
+                                              ),
+                                              TextField(
+                                                controller:
+                                                    paramsLlama.n_predictController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'n_predict',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'repeat_last_n:',
+                                              ),
+                                              TextField(
+                                                controller:
+                                                    paramsLlama.repeat_last_nController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'repeat_last_n',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'n_parts (-1 for auto):',
+                                              ),
+                                              TextField(
+                                                controller: paramsLlama.n_partsController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'n_parts',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'n_ctx:',
+                                              ),
+                                              TextField(
+                                                controller: paramsLlama.n_ctxController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'n_ctx',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'top_k:',
+                                              ),
+                                              TextField(
+                                                controller: paramsLlama.top_kController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'top_k',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'top_p:',
+                                              ),
+                                              TextField(
+                                                controller: paramsLlama.top_pController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'top_p',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'temp:',
+                                              ),
+                                              TextField(
+                                                controller: paramsLlama.tempController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'temp',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'repeat_penalty:',
+                                              ),
+                                              TextField(
+                                                controller:
+                                                    paramsLlama.repeat_penaltyController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'repeat_penalty',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'temp:',
+                                              ),
+                                              TextField(
+                                                controller: paramsLlama.tempController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'temp',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'repeat_penalty:',
+                                              ),
+                                              TextField(
+                                                controller:
+                                                    paramsLlama.repeat_penaltyController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'repeat_penalty',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            children: [
+                                              const Text(
+                                                'batch_size:',
+                                              ),
+                                              TextField(
+                                                controller: paramsLlama.n_batchController,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  hintText: 'batch_size',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment: WrapCrossAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'memory_f16:',
+                                              ),
+                                              Checkbox(value: paramsLlama.memory_f16, onChanged: (value) {
+                                                setState(() {
+                                                  paramsLlama.memory_f16 = value!;
+                                                });
+                                              }),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment: WrapCrossAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'random_prompt:',
+                                              ),
+                                              Checkbox(value: paramsLlama.random_prompt, onChanged: (value) {
+                                                setState(() {
+                                                  paramsLlama.random_prompt = value!;
+                                                });
+                                              }),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      // Padding(
+                                      //   padding: const EdgeInsets.all(8.0),
+                                      //   child: ConstrainedBox(
+                                      //     constraints: const BoxConstraints(
+                                      //       maxWidth: 150,
+                                      //     ),
+                                      //     child: Wrap(
+                                      //       alignment: WrapAlignment.center,
+                                      //       crossAxisAlignment: WrapCrossAlignment.center,
+                                      //       children: [
+                                      //         const Text(
+                                      //           'use_color:',
+                                      //         ),
+                                      //         Checkbox(value: paramsLlama.use_color, onChanged: (value) {
+                                      //           setState(() {
+                                      //             paramsLlama.use_color = value!;
+                                      //           });
+                                      //         }),
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment: WrapCrossAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'interactive:',
+                                              ),
+                                              Checkbox(value: paramsLlama.interactive, onChanged: (value) {
+                                                setState(() {
+                                                  paramsLlama.interactive = value!;
+                                                });
+                                              }),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment: WrapCrossAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'interactive_start:',
+                                              ),
+                                              Checkbox(value: paramsLlama.interactive_start, onChanged: (value) {
+                                                setState(() {
+                                                  paramsLlama.interactive_start = value!;
+                                                });
+                                              }),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment: WrapCrossAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'instruct:',
+                                              ),
+                                              Checkbox(value: paramsLlama.instruct, onChanged: (value) {
+                                                setState(() {
+                                                  paramsLlama.instruct = value!;
+                                                });
+                                              }),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment: WrapCrossAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'ignore_eos:',
+                                              ),
+                                              Checkbox(value: paramsLlama.ignore_eos, onChanged: (value) {
+                                                setState(() {
+                                                  paramsLlama.ignore_eos = value!;
+                                                });
+                                              }),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 150,
+                                          ),
+                                          child: Wrap(
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment: WrapCrossAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'perplexity:',
+                                              ),
+                                              Checkbox(value: paramsLlama.perplexity, onChanged: (value) {
+                                                setState(() {
+                                                  paramsLlama.perplexity = value!;
+                                                });
+                                              }),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ElevatedButton(
+                            onPressed: toggleShowLog,
+                            child: Text(
+                              showLog ? "Hide Log" : "Show Log",
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          if (showLog)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Column(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(top: 8.0),
+                                      child: Text("Log"),
                                     ),
+                                    ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        maxHeight: 200,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SingleChildScrollView(
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  border:
+                                                      Border.all(color: Colors.black),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.black,
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    log,
+                                                    style: const TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                        const Text(
+                          "Chat now !",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Stack(
+                          children: [
+                            //top right button to copy the result
+                            ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                maxHeight: 200,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SingleChildScrollView(
+                                  controller: _consoleScrollController,
+                                  child: SizedBox(
+                                    width: double.infinity,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: SelectableText(
-                                        result,
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.black),
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: Colors.black,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: SelectableText(
+                                            result,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        if (result.isNotEmpty)
-                          Positioned(
-                            top: 12,
-                            right: 8,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: const CircleBorder(),
-                                padding: const EdgeInsets.all(0),
-                                backgroundColor:
-                                    Colors.blueGrey.withOpacity(0.5),
-                              ),
-                              onPressed: () {
-                                Clipboard.setData(ClipboardData(text: result));
-                                //delete the toast if it is already present
-                                ScaffoldMessenger.of(context)
-                                    .removeCurrentSnackBar();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Text copied to clipboard"),
+                            if (result.isNotEmpty)
+                              Positioned(
+                                top: 12,
+                                right: 8,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(0),
+                                    backgroundColor:
+                                        Colors.blueGrey.withOpacity(0.5),
                                   ),
-                                );
-                              },
-                              child: Icon(
-                                Icons.copy,
-                                color: Colors.white.withOpacity(0.5),
+                                  onPressed: () {
+                                    Clipboard.setData(ClipboardData(text: result));
+                                    //delete the toast if it is already present
+                                    ScaffoldMessenger.of(context)
+                                        .removeCurrentSnackBar();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("Text copied to clipboard"),
+                                      ),
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.copy,
+                                    color: Colors.white.withOpacity(0.5),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        TextField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: 3,
-                          expands: false,
-                          controller: promptController,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelStyle: const TextStyle(
-                              color: Colors.cyan,
-                            ),
-                            labelText: 'Prompt',
-                            suffixIcon: Padding(
-                              padding: const EdgeInsets.only(right: 4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: (inProgress) ? null : _exec,
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        if (!inProgress)
-                                          const Icon(
-                                            Icons.send_sharp,
-                                            color: Colors.white,
-                                          ),
-                                        if (inProgress)
-                                          const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: SizedBox(
-                                              height: 20,
-                                              width: 20,
-                                              child: CircularProgressIndicator(
+                          ],
+                        ),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            TextField(
+                              keyboardType: TextInputType.multiline,
+                              // maxLines: 3,
+                              //on enter send the message
+                              onSubmitted: (value) {
+                                _exec();
+                              },
+                              expands: false,
+                              controller: promptController,
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                labelStyle: const TextStyle(
+                                  color: Colors.cyan,
+                                ),
+                                labelText: 'Prompt',
+                                suffixIcon: Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: (inProgress) ? null : _exec,
+                                        style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 5),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            if (!inProgress)
+                                              const Icon(
+                                                Icons.send_sharp,
                                                 color: Colors.white,
                                               ),
-                                            ),
+                                            if (inProgress)
+                                              const Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: SizedBox(
+                                                  height: 20,
+                                                  width: 20,
+                                                  child: CircularProgressIndicator(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      if (inProgress)
+                                        ElevatedButton(
+                                          onPressed: _cancel,
+                                          style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 5),
                                           ),
-                                      ],
-                                    ),
+                                          child: const Icon(
+                                            Icons.stop,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 5),
-                                  if (inProgress)
-                                  ElevatedButton(
-                                    onPressed: _cancel,
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
-                                    ),
-                                    child: const Icon(
-                                      Icons.stop,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                  if (fileState == FileState.opening)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: const [
-                            Text(
-                              "Opening file...\nPlease wait a minute...",
-                              textAlign: TextAlign.center,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                ],
+                      ],
+                      if (fileState == FileState.opening)
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: const [
+                                Text(
+                                  "Opening file...\nPlease wait a minute...",
+                                  textAlign: TextAlign.center,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -970,4 +1475,46 @@ enum FileState {
   notFound,
   found,
   opening,
+}
+
+class ParamsLlama {
+  // int seed = -1; // RNG seed
+  // int n_threads = 32;
+  // int n_predict = 512; // new tokens to predict
+  // int repeat_last_n = 64; // last n tokens to penalize
+  // int n_parts =
+  //     -1; // amount of model parts (-1 = determine from model dimensions)
+  // int n_ctx = 512; // context size
+  // int top_k = 40;
+  // double top_p = 0.9;
+  // double temp = 0.80;
+  // double repeat_penalty = 1.10;
+  // int n_batch = 8; // batch size for prompt processing
+  bool memory_f16 = false; // use f16 instead of f32 for memory kv
+  bool random_prompt = false; // do not randomize prompt if none provided
+  bool use_color = false; // use color to distinguish generations and inputs
+  bool interactive = true; // interactive mode
+  bool interactive_start = false; // wait for user input immediately
+  bool instruct = true; // instruction mode (used for Alpaca models)
+  bool ignore_eos = false; // do not stop generating after eos
+  bool perplexity = false;
+
+  TextEditingController seedController = TextEditingController()..text = "-1";
+  TextEditingController n_threadsController = TextEditingController()
+    ..text = "4";
+  TextEditingController n_predictController = TextEditingController()
+    ..text = "512";
+  TextEditingController repeat_last_nController = TextEditingController()
+    ..text = "64";
+  TextEditingController n_partsController = TextEditingController()
+    ..text = "-1";
+  TextEditingController n_ctxController = TextEditingController()..text = "512";
+  TextEditingController top_kController = TextEditingController()..text = "40";
+  TextEditingController top_pController = TextEditingController()..text = "0.9";
+  TextEditingController tempController = TextEditingController()..text = "0.80";
+  TextEditingController repeat_penaltyController = TextEditingController()
+    ..text = "1.10";
+  TextEditingController n_batchController = TextEditingController()..text = "8";
+
+  ParamsLlama();
 }
