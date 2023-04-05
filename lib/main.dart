@@ -156,7 +156,8 @@ class _MyHomePageState extends State<MyHomePage> {
         stopToken: reversePromptController.text,
       );
     } else {
-      lib?.newPromp(" ${promptController.text.trim()}${promptController.text.isEmpty ? "" : "\n"}");
+      lib?.newPromp(
+          " ${promptController.text.trim()}${promptController.text.isEmpty ? "" : "\n"}");
     }
     setState(() {
       promptController.text = "";
@@ -623,9 +624,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       if (fileState == FileState.found) ...[
-
                         if (showParams) ...[
-
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -642,18 +641,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                         height: 30,
                                         child: ElevatedButton(
                                             onPressed: () async {
-                                              await ModelFilePath.deleteModelFile();
+                                              await ModelFilePath
+                                                  .deleteModelFile();
                                               setState(() {
                                                 fileState = FileState.notFound;
                                               });
                                             },
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.red,
-                                              padding: const EdgeInsets.all(0.0),
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
                                             ),
                                             child: const Text(
                                               "X",
-                                              style: TextStyle(color: Colors.white),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             )),
                                       ),
                                     ),
@@ -681,11 +683,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                             onPressed: deletePreprompt,
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.red,
-                                              padding: const EdgeInsets.all(0.0),
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
                                             ),
                                             child: const Text(
                                               "X",
-                                              style: TextStyle(color: Colors.white),
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             )),
                                       ),
                                     ),
@@ -739,7 +743,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: ElevatedButton(
                               onPressed: toggleShowFineTune,
                               child: Text(
-                                showParamsFineTune ? "Hide Params" : "Show Params",
+                                showParamsFineTune
+                                    ? "Hide Params"
+                                    : "Show Params",
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),
@@ -762,6 +768,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ElevatedButton(
+                                          onPressed: paramsLlama.resetAll,
+                                          child: const Text(
+                                            "Reset All",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                       Wrap(
                                         children: [
                                           //ParamsLlama(),
@@ -777,9 +796,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'seed (-1 for random):',
                                                   ),
                                                   TextField(
-                                                    controller: paramsLlama.seedController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .seedController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'seed',
                                                     ),
                                                   ),
@@ -799,10 +821,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'n_threads:',
                                                   ),
                                                   TextField(
-                                                    controller:
-                                                        paramsLlama.n_threadsController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .n_threadsController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'n_threads',
                                                     ),
                                                   ),
@@ -822,10 +846,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'n_predict:',
                                                   ),
                                                   TextField(
-                                                    controller:
-                                                        paramsLlama.n_predictController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .n_predictController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'n_predict',
                                                     ),
                                                   ),
@@ -845,10 +871,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'repeat_last_n:',
                                                   ),
                                                   TextField(
-                                                    controller:
-                                                        paramsLlama.repeat_last_nController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .repeat_last_nController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'repeat_last_n',
                                                     ),
                                                   ),
@@ -868,9 +896,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'n_parts (-1 for auto):',
                                                   ),
                                                   TextField(
-                                                    controller: paramsLlama.n_partsController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .n_partsController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'n_parts',
                                                     ),
                                                   ),
@@ -890,9 +921,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'n_ctx:',
                                                   ),
                                                   TextField(
-                                                    controller: paramsLlama.n_ctxController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .n_ctxController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'n_ctx',
                                                     ),
                                                   ),
@@ -912,9 +946,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'top_k:',
                                                   ),
                                                   TextField(
-                                                    controller: paramsLlama.top_kController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .top_kController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'top_k',
                                                     ),
                                                   ),
@@ -934,9 +971,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'top_p:',
                                                   ),
                                                   TextField(
-                                                    controller: paramsLlama.top_pController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .top_pController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'top_p',
                                                     ),
                                                   ),
@@ -956,9 +996,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'temp:',
                                                   ),
                                                   TextField(
-                                                    controller: paramsLlama.tempController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .tempController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'temp',
                                                     ),
                                                   ),
@@ -978,11 +1021,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'repeat_penalty:',
                                                   ),
                                                   TextField(
-                                                    controller:
-                                                        paramsLlama.repeat_penaltyController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
-                                                      hintText: 'repeat_penalty',
+                                                    controller: paramsLlama
+                                                        .repeat_penaltyController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      hintText:
+                                                          'repeat_penalty',
                                                     ),
                                                   ),
                                                 ],
@@ -1001,9 +1047,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'temp:',
                                                   ),
                                                   TextField(
-                                                    controller: paramsLlama.tempController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .tempController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'temp',
                                                     ),
                                                   ),
@@ -1023,11 +1072,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'repeat_penalty:',
                                                   ),
                                                   TextField(
-                                                    controller:
-                                                        paramsLlama.repeat_penaltyController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
-                                                      hintText: 'repeat_penalty',
+                                                    controller: paramsLlama
+                                                        .repeat_penaltyController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      hintText:
+                                                          'repeat_penalty',
                                                     ),
                                                   ),
                                                 ],
@@ -1046,9 +1098,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     'batch_size:',
                                                   ),
                                                   TextField(
-                                                    controller: paramsLlama.n_batchController,
-                                                    keyboardType: TextInputType.number,
-                                                    decoration: const InputDecoration(
+                                                    controller: paramsLlama
+                                                        .n_batchController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
                                                       hintText: 'batch_size',
                                                     ),
                                                   ),
@@ -1064,16 +1119,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                               child: Wrap(
                                                 alignment: WrapAlignment.center,
-                                                crossAxisAlignment: WrapCrossAlignment.center,
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
                                                 children: [
                                                   const Text(
                                                     'memory_f16:',
                                                   ),
-                                                  Checkbox(value: paramsLlama.memory_f16, onChanged: (value) {
-                                                    setState(() {
-                                                      paramsLlama.memory_f16 = value!;
-                                                    });
-                                                  }),
+                                                  Checkbox(
+                                                      value: paramsLlama
+                                                          .memory_f16,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          paramsLlama
+                                                                  .memory_f16 =
+                                                              value!;
+                                                        });
+                                                        paramsLlama
+                                                            .saveBoolToSharedPrefs(
+                                                                'memory_f16',
+                                                                value!);
+                                                      }),
                                                 ],
                                               ),
                                             ),
@@ -1086,42 +1151,30 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                               child: Wrap(
                                                 alignment: WrapAlignment.center,
-                                                crossAxisAlignment: WrapCrossAlignment.center,
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
                                                 children: [
                                                   const Text(
                                                     'random_prompt:',
                                                   ),
-                                                  Checkbox(value: paramsLlama.random_prompt, onChanged: (value) {
-                                                    setState(() {
-                                                      paramsLlama.random_prompt = value!;
-                                                    });
-                                                  }),
+                                                  Checkbox(
+                                                      value: paramsLlama
+                                                          .random_prompt,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          paramsLlama
+                                                                  .random_prompt =
+                                                              value!;
+                                                        });
+                                                        paramsLlama
+                                                            .saveBoolToSharedPrefs(
+                                                                'random_prompt',
+                                                                value!);
+                                                      }),
                                                 ],
                                               ),
                                             ),
                                           ),
-                                          // Padding(
-                                          //   padding: const EdgeInsets.all(8.0),
-                                          //   child: ConstrainedBox(
-                                          //     constraints: const BoxConstraints(
-                                          //       maxWidth: 150,
-                                          //     ),
-                                          //     child: Wrap(
-                                          //       alignment: WrapAlignment.center,
-                                          //       crossAxisAlignment: WrapCrossAlignment.center,
-                                          //       children: [
-                                          //         const Text(
-                                          //           'use_color:',
-                                          //         ),
-                                          //         Checkbox(value: paramsLlama.use_color, onChanged: (value) {
-                                          //           setState(() {
-                                          //             paramsLlama.use_color = value!;
-                                          //           });
-                                          //         }),
-                                          //       ],
-                                          //     ),
-                                          //   ),
-                                          // ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: ConstrainedBox(
@@ -1130,16 +1183,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                               child: Wrap(
                                                 alignment: WrapAlignment.center,
-                                                crossAxisAlignment: WrapCrossAlignment.center,
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
                                                 children: [
                                                   const Text(
                                                     'interactive:',
                                                   ),
-                                                  Checkbox(value: paramsLlama.interactive, onChanged: (value) {
-                                                    setState(() {
-                                                      paramsLlama.interactive = value!;
-                                                    });
-                                                  }),
+                                                  Checkbox(
+                                                      value: paramsLlama
+                                                          .interactive,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          paramsLlama
+                                                                  .interactive =
+                                                              value!;
+                                                        });
+                                                        paramsLlama
+                                                            .saveBoolToSharedPrefs(
+                                                                'interactive',
+                                                                value!);
+                                                      }),
                                                 ],
                                               ),
                                             ),
@@ -1152,16 +1215,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                               child: Wrap(
                                                 alignment: WrapAlignment.center,
-                                                crossAxisAlignment: WrapCrossAlignment.center,
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
                                                 children: [
                                                   const Text(
                                                     'interactive_start:',
                                                   ),
-                                                  Checkbox(value: paramsLlama.interactive_start, onChanged: (value) {
-                                                    setState(() {
-                                                      paramsLlama.interactive_start = value!;
-                                                    });
-                                                  }),
+                                                  Checkbox(
+                                                      value: paramsLlama
+                                                          .interactive_start,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          paramsLlama
+                                                                  .interactive_start =
+                                                              value!;
+                                                        });
+                                                        paramsLlama
+                                                            .saveBoolToSharedPrefs(
+                                                                'interactive_start',
+                                                                value!);
+                                                      }),
                                                 ],
                                               ),
                                             ),
@@ -1174,16 +1247,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                               child: Wrap(
                                                 alignment: WrapAlignment.center,
-                                                crossAxisAlignment: WrapCrossAlignment.center,
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
                                                 children: [
                                                   const Text(
-                                                    'instruct:',
+                                                    'instruct (Chat4all and Alpaca):',
                                                   ),
-                                                  Checkbox(value: paramsLlama.instruct, onChanged: (value) {
-                                                    setState(() {
-                                                      paramsLlama.instruct = value!;
-                                                    });
-                                                  }),
+                                                  Checkbox(
+                                                      value:
+                                                          paramsLlama.instruct,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          paramsLlama.instruct =
+                                                              value!;
+                                                        });
+                                                        paramsLlama
+                                                            .saveBoolToSharedPrefs(
+                                                                'instruct',
+                                                                value!);
+                                                      }),
                                                 ],
                                               ),
                                             ),
@@ -1196,16 +1278,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                               child: Wrap(
                                                 alignment: WrapAlignment.center,
-                                                crossAxisAlignment: WrapCrossAlignment.center,
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
                                                 children: [
                                                   const Text(
                                                     'ignore_eos:',
                                                   ),
-                                                  Checkbox(value: paramsLlama.ignore_eos, onChanged: (value) {
-                                                    setState(() {
-                                                      paramsLlama.ignore_eos = value!;
-                                                    });
-                                                  }),
+                                                  Checkbox(
+                                                      value: paramsLlama
+                                                          .ignore_eos,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          paramsLlama
+                                                                  .ignore_eos =
+                                                              value!;
+                                                        });
+                                                        paramsLlama
+                                                            .saveBoolToSharedPrefs(
+                                                                'ignore_eos',
+                                                                value!);
+                                                      }),
                                                 ],
                                               ),
                                             ),
@@ -1218,16 +1310,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                               child: Wrap(
                                                 alignment: WrapAlignment.center,
-                                                crossAxisAlignment: WrapCrossAlignment.center,
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
                                                 children: [
                                                   const Text(
                                                     'perplexity:',
                                                   ),
-                                                  Checkbox(value: paramsLlama.perplexity, onChanged: (value) {
-                                                    setState(() {
-                                                      paramsLlama.perplexity = value!;
-                                                    });
-                                                  }),
+                                                  Checkbox(
+                                                      value: paramsLlama
+                                                          .perplexity,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          paramsLlama
+                                                                  .perplexity =
+                                                              value!;
+                                                        });
+                                                        paramsLlama
+                                                            .saveBoolToSharedPrefs(
+                                                                'perplexity',
+                                                                value!);
+                                                      }),
                                                 ],
                                               ),
                                             ),
@@ -1270,17 +1372,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                           child: SizedBox(
                                             width: double.infinity,
                                             child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                  border:
-                                                      Border.all(color: Colors.black),
+                                                  border: Border.all(
+                                                      color: Colors.black),
                                                   borderRadius:
                                                       BorderRadius.circular(5),
                                                   color: Colors.black,
                                                 ),
                                                 child: Padding(
-                                                  padding: const EdgeInsets.all(8.0),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
                                                   child: Text(
                                                     log,
                                                     style: const TextStyle(
@@ -1321,8 +1425,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.black),
-                                          borderRadius: BorderRadius.circular(5),
+                                          border:
+                                              Border.all(color: Colors.black),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
                                           color: Colors.black,
                                         ),
                                         child: Padding(
@@ -1351,13 +1457,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                         Colors.blueGrey.withOpacity(0.5),
                                   ),
                                   onPressed: () {
-                                    Clipboard.setData(ClipboardData(text: result));
+                                    Clipboard.setData(
+                                        ClipboardData(text: result));
                                     //delete the toast if it is already present
                                     ScaffoldMessenger.of(context)
                                         .removeCurrentSnackBar();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text("Text copied to clipboard"),
+                                        content:
+                                            Text("Text copied to clipboard"),
                                       ),
                                     );
                                   },
@@ -1413,7 +1521,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 child: SizedBox(
                                                   height: 20,
                                                   width: 20,
-                                                  child: CircularProgressIndicator(
+                                                  child:
+                                                      CircularProgressIndicator(
                                                     color: Colors.white,
                                                   ),
                                                 ),
@@ -1472,11 +1581,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _exec,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 }
@@ -1488,18 +1592,6 @@ enum FileState {
 }
 
 class ParamsLlama {
-  // int seed = -1; // RNG seed
-  // int n_threads = 32;
-  // int n_predict = 512; // new tokens to predict
-  // int repeat_last_n = 64; // last n tokens to penalize
-  // int n_parts =
-  //     -1; // amount of model parts (-1 = determine from model dimensions)
-  // int n_ctx = 512; // context size
-  // int top_k = 40;
-  // double top_p = 0.9;
-  // double temp = 0.80;
-  // double repeat_penalty = 1.10;
-  // int n_batch = 8; // batch size for prompt processing
   bool memory_f16 = false; // use f16 instead of f32 for memory kv
   bool random_prompt = false; // do not randomize prompt if none provided
   bool use_color = false; // use color to distinguish generations and inputs
@@ -1526,5 +1618,162 @@ class ParamsLlama {
     ..text = "1.10";
   TextEditingController n_batchController = TextEditingController()..text = "8";
 
-  ParamsLlama();
+  ParamsLlama() {
+    initFromSharedPrefs();
+    addListeners();
+  }
+
+  void initFromSharedPrefs() async {
+    var prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey("memory_f16")) {
+      memory_f16 = prefs.getBool("memory_f16")!;
+    }
+    if (prefs.containsKey("random_prompt")) {
+      random_prompt = prefs.getBool("random_prompt")!;
+    }
+    if (prefs.containsKey("use_color")) {
+      use_color = prefs.getBool("use_color")!;
+    }
+    if (prefs.containsKey("interactive")) {
+      interactive = prefs.getBool("interactive")!;
+    }
+    if (prefs.containsKey("interactive_start")) {
+      interactive_start = prefs.getBool("interactive_start")!;
+    }
+    if (prefs.containsKey("instruct")) {
+      instruct = prefs.getBool("instruct")!;
+    }
+    if (prefs.containsKey("ignore_eos")) {
+      ignore_eos = prefs.getBool("ignore_eos")!;
+    }
+    if (prefs.containsKey("perplexity")) {
+      perplexity = prefs.getBool("perplexity")!;
+    }
+    if (prefs.containsKey("seed")) {
+      seedController.text = prefs.getString("seed")!;
+    }
+    if (prefs.containsKey("n_threads")) {
+      n_threadsController.text = prefs.getString("n_threads")!;
+    }
+    if (prefs.containsKey("n_predict")) {
+      n_predictController.text = prefs.getString("n_predict")!;
+    }
+    if (prefs.containsKey("repeat_last_n")) {
+      repeat_last_nController.text = prefs.getString("repeat_last_n")!;
+    }
+    if (prefs.containsKey("n_parts")) {
+      n_partsController.text = prefs.getString("n_parts")!;
+    }
+    if (prefs.containsKey("n_ctx")) {
+      n_ctxController.text = prefs.getString("n_ctx")!;
+    }
+    if (prefs.containsKey("top_k")) {
+      top_kController.text = prefs.getString("top_k")!;
+    }
+    if (prefs.containsKey("top_p")) {
+      top_pController.text = prefs.getString("top_p")!;
+    }
+    if (prefs.containsKey("temp")) {
+      tempController.text = prefs.getString("temp")!;
+    }
+    if (prefs.containsKey("repeat_penalty")) {
+      repeat_penaltyController.text = prefs.getString("repeat_penalty")!;
+    }
+    if (prefs.containsKey("n_batch")) {
+      n_batchController.text = prefs.getString("n_batch")!;
+    }
+  }
+
+  void addListeners() {
+    seedController.addListener(() {
+      saveStringToSharedPrefs("seed", seedController.text);
+    });
+    n_threadsController.addListener(() {
+      saveStringToSharedPrefs("n_threads", n_threadsController.text);
+    });
+    n_predictController.addListener(() {
+      saveStringToSharedPrefs("n_predict", n_predictController.text);
+    });
+    repeat_last_nController.addListener(() {
+      saveStringToSharedPrefs("repeat_last_n", repeat_last_nController.text);
+    });
+    n_partsController.addListener(() {
+      saveStringToSharedPrefs("n_parts", n_partsController.text);
+    });
+    n_ctxController.addListener(() {
+      saveStringToSharedPrefs("n_ctx", n_ctxController.text);
+    });
+    top_kController.addListener(() {
+      saveStringToSharedPrefs("top_k", top_kController.text);
+    });
+    top_pController.addListener(() {
+      saveStringToSharedPrefs("top_p", top_pController.text);
+    });
+    tempController.addListener(() {
+      saveStringToSharedPrefs("temp", tempController.text);
+    });
+    repeat_penaltyController.addListener(() {
+      saveStringToSharedPrefs("repeat_penalty", repeat_penaltyController.text);
+    });
+    n_batchController.addListener(() {
+      saveStringToSharedPrefs("n_batch", n_batchController.text);
+    });
+  }
+
+  void saveStringToSharedPrefs(String s, String text) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString(s, text);
+    });
+  }
+
+  void saveBoolToSharedPrefs(String s, bool value) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool(s, value);
+    });
+  }
+
+  void resetAll() {
+    memory_f16 = false;
+    random_prompt = false;
+    use_color = false;
+    interactive = true;
+    interactive_start = false;
+    instruct = true;
+    ignore_eos = false;
+    perplexity = false;
+    seedController.text = "-1";
+    n_threadsController.text = "4";
+    n_predictController.text = "512";
+    repeat_last_nController.text = "64";
+    n_partsController.text = "-1";
+    n_ctxController.text = "512";
+    top_kController.text = "40";
+    top_pController.text = "0.9";
+    tempController.text = "0.80";
+    repeat_penaltyController.text = "1.10";
+    n_batchController.text = "8";
+    saveAll();
+  }
+
+  void saveAll() {
+    saveBoolToSharedPrefs("memory_f16", memory_f16);
+    saveBoolToSharedPrefs("random_prompt", random_prompt);
+    saveBoolToSharedPrefs("use_color", use_color);
+    saveBoolToSharedPrefs("interactive", interactive);
+    saveBoolToSharedPrefs("interactive_start", interactive_start);
+    saveBoolToSharedPrefs("instruct", instruct);
+    saveBoolToSharedPrefs("ignore_eos", ignore_eos);
+    saveBoolToSharedPrefs("perplexity", perplexity);
+    saveStringToSharedPrefs("seed", seedController.text);
+    saveStringToSharedPrefs("n_threads", n_threadsController.text);
+    saveStringToSharedPrefs("n_predict", n_predictController.text);
+    saveStringToSharedPrefs("repeat_last_n", repeat_last_nController.text);
+    saveStringToSharedPrefs("n_parts", n_partsController.text);
+    saveStringToSharedPrefs("n_ctx", n_ctxController.text);
+    saveStringToSharedPrefs("top_k", top_kController.text);
+    saveStringToSharedPrefs("top_p", top_pController.text);
+    saveStringToSharedPrefs("temp", tempController.text);
+    saveStringToSharedPrefs("repeat_penalty", repeat_penaltyController.text);
+    saveStringToSharedPrefs("n_batch", n_batchController.text);
+  }
 }
