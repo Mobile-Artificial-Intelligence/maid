@@ -252,7 +252,8 @@ class Lib {
     required void Function(String log) printLog,
     required String promptPassed,
     required void Function() done,
-    required String stopToken, required ParamsLlamaValuesOnly paramsLlamaValuesOnly,
+    required String stopToken,
+    required ParamsLlamaValuesOnly paramsLlamaValuesOnly,
   }) async {
     ByteData libAndroid = await rootBundle.load('assets/libs/libllama.so');
     ByteData? libWindows;
@@ -390,30 +391,38 @@ class Lib {
         parsingDemand.paramsLlamaValuesOnly.n_threads); // number of threads
     gptParams.ref.n_predict = int.parse(
         parsingDemand.paramsLlamaValuesOnly.n_predict); // number of predictions
-    gptParams.ref.repeat_last_n = int.parse(
-        parsingDemand.paramsLlamaValuesOnly.repeat_last_n); // repeat last n tokens
+    gptParams.ref.repeat_last_n = int.parse(parsingDemand
+        .paramsLlamaValuesOnly.repeat_last_n); // repeat last n tokens
     gptParams.ref.n_parts = int.parse(
         parsingDemand.paramsLlamaValuesOnly.n_parts); // number of parts
-    gptParams.ref.n_ctx = int.parse(
-        parsingDemand.paramsLlamaValuesOnly.n_ctx); // number of tokens in context
-    gptParams.ref.top_k = int.parse(
-        parsingDemand.paramsLlamaValuesOnly.top_k); // top k sampling
+    gptParams.ref.n_ctx = int.parse(parsingDemand
+        .paramsLlamaValuesOnly.n_ctx); // number of tokens in context
+    gptParams.ref.top_k =
+        int.parse(parsingDemand.paramsLlamaValuesOnly.top_k); // top k sampling
     gptParams.ref.top_p = double.parse(
         parsingDemand.paramsLlamaValuesOnly.top_p); // top p sampling
-    gptParams.ref.temp = double.parse(
-        parsingDemand.paramsLlamaValuesOnly.temp); // temperature
+    gptParams.ref.temp =
+        double.parse(parsingDemand.paramsLlamaValuesOnly.temp); // temperature
     gptParams.ref.repeat_penalty = double.parse(
         parsingDemand.paramsLlamaValuesOnly.repeat_penalty); // repeat penalty
     gptParams.ref.n_batch = int.parse(
         parsingDemand.paramsLlamaValuesOnly.n_batch); // number of batches
     gptParams.ref.memory_f16 = parsingDemand.paramsLlamaValuesOnly.memory_f16;
-    gptParams.ref.random_prompt = parsingDemand.paramsLlamaValuesOnly.random_prompt;
+    gptParams.ref.random_prompt =
+        parsingDemand.paramsLlamaValuesOnly.random_prompt;
     gptParams.ref.use_color = parsingDemand.paramsLlamaValuesOnly.use_color;
     gptParams.ref.interactive = parsingDemand.paramsLlamaValuesOnly.interactive;
-    gptParams.ref.interactive_start = parsingDemand.paramsLlamaValuesOnly.interactive_start;
+    gptParams.ref.interactive_start =
+        parsingDemand.paramsLlamaValuesOnly.interactive_start;
     gptParams.ref.instruct = parsingDemand.paramsLlamaValuesOnly.instruct;
     gptParams.ref.ignore_eos = parsingDemand.paramsLlamaValuesOnly.ignore_eos;
     gptParams.ref.perplexity = parsingDemand.paramsLlamaValuesOnly.perplexity;
+
+    gptParams.ref.use_mlock = false; // use mlock to keep model in memory
+    gptParams.ref.mem_test = false; // compute maximum memory usage
+    gptParams.ref.verbose_prompt =
+        false; // print prompt tokens before generation
+
     var params = gptParams.ref;
     log("main found : ${llama.providesSymbol('llama_context_default_params')}");
 
@@ -431,7 +440,8 @@ class Lib {
 
     var ctx = llamaBinded.llama_init_from_file(
         filePath.toNativeUtf8().cast<Char>(), ret);
-    if (ctx == nullptr || ctx.cast<Int64>().value != 0) {
+    // || ctx.cast<Int64>().value != 0
+    if (ctx == nullptr) {
       log("context error : ${CreationContextError(ctx.cast<Int64>().value).toString()}");
       llamaBinded.llama_free(ctx);
       return;
