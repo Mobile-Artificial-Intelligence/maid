@@ -1553,18 +1553,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                       const SizedBox(width: 5),
-                                      if (inProgress)
-                                        ElevatedButton(
-                                          onPressed: _cancel,
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 5),
-                                          ),
-                                          child: const Icon(
-                                            Icons.stop,
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                      // if (inProgress)
+                                      //   ElevatedButton(
+                                      //     onPressed: _cancel,
+                                      //     style: ElevatedButton.styleFrom(
+                                      //       padding: const EdgeInsets.symmetric(
+                                      //           horizontal: 5, vertical: 5),
+                                      //     ),
+                                      //     child: const Icon(
+                                      //       Icons.stop,
+                                      //       color: Colors.white,
+                                      //     ),
+                                      //   ),
                                     ],
                                   ),
                                 ),
