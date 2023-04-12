@@ -106,6 +106,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+msix_config:
+  display_name: Sherpa
+  publisher_display_name: Bip-Rep
+  identity_name: com.biprep.sherpa
+  msix_version: 2.1.0.0
+  logo_path: assets/sherpa.png
 flutter_icons:
   android: "launcher_icon"
   ios: true
