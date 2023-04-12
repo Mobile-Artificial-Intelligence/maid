@@ -422,6 +422,9 @@ class Lib {
     gptParams.ref.mem_test = false; // compute maximum memory usage
     gptParams.ref.verbose_prompt =
         false; // print prompt tokens before generation
+    gptParams.ref.n_keep = 0;
+    gptParams.ref.embedding = false;
+    gptParams.ref.use_mmap = true;
 
     var params = gptParams.ref;
     log("main found : ${llama.providesSymbol('llama_context_default_params')}");

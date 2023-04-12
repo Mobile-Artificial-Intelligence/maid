@@ -604,6 +604,12 @@ class gpt_params extends ffi.Struct {
   external int n_ctx;
 
   @ffi.Int32()
+  external int n_batch;
+
+  @ffi.Int32()
+  external int n_keep;
+
+  @ffi.Int32()
   external int top_k;
 
   @ffi.Float()
@@ -614,9 +620,6 @@ class gpt_params extends ffi.Struct {
 
   @ffi.Float()
   external double repeat_penalty;
-
-  @ffi.Int32()
-  external int n_batch;
 
   @ffi.Int()
   external int std;
@@ -634,6 +637,9 @@ class gpt_params extends ffi.Struct {
   external bool interactive;
 
   @ffi.Bool()
+  external bool embedding;
+
+  @ffi.Bool()
   external bool interactive_start;
 
   @ffi.Bool()
@@ -644,6 +650,9 @@ class gpt_params extends ffi.Struct {
 
   @ffi.Bool()
   external bool perplexity;
+
+  @ffi.Bool()
+  external bool use_mmap;
 
   @ffi.Bool()
   external bool use_mlock;
