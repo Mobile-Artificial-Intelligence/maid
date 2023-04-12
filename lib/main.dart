@@ -149,72 +149,70 @@ class _MyHomePageState extends State<MyHomePage> {
       lib = Lib();
       lib?.executeBinary(
         //
-      // class ParamsLlamaValuesOnly {
-      // bool memory_f16;
-      // bool random_prompt;
-      // bool use_color;
-      // bool interactive;
-      // bool interactive_start;
-      // bool instruct;
-      // bool ignore_eos;
-      // bool perplexity;
-      // String seed;
-      // String n_threads;
-      // String n_predict;
-      // String repeat_last_n;
-      // String n_parts;
-      // String n_ctx;
-      // String top_k;
-      // String top_p;
-      // String temp;
-      // String repeat_penalty;
-      // String n_batch;
-      //
-      // ParamsLlamaValuesOnly({
-      // required this.memory_f16,
-      // required this.random_prompt,
-      // required this.use_color,
-      // required this.interactive,
-      // required this.interactive_start,
-      // required this.instruct,
-      // required this.ignore_eos,
-      // required this.perplexity,
-      // required this.seed,
-      // required this.n_threads,
-      // required this.n_predict,
-      // required this.repeat_last_n,
-      // required this.n_parts,
-      // required this.n_ctx,
-      // required this.top_k,
-      // required this.top_p,
-      // required this.temp,
-      // required this.repeat_penalty,
-      // required this.n_batch,
-      // });
-      // }
+        // class ParamsLlamaValuesOnly {
+        // bool memory_f16;
+        // bool random_prompt;
+        // bool use_color;
+        // bool interactive;
+        // bool interactive_start;
+        // bool instruct;
+        // bool ignore_eos;
+        // bool perplexity;
+        // String seed;
+        // String n_threads;
+        // String n_predict;
+        // String repeat_last_n;
+        // String n_parts;
+        // String n_ctx;
+        // String top_k;
+        // String top_p;
+        // String temp;
+        // String repeat_penalty;
+        // String n_batch;
+        //
+        // ParamsLlamaValuesOnly({
+        // required this.memory_f16,
+        // required this.random_prompt,
+        // required this.use_color,
+        // required this.interactive,
+        // required this.interactive_start,
+        // required this.instruct,
+        // required this.ignore_eos,
+        // required this.perplexity,
+        // required this.seed,
+        // required this.n_threads,
+        // required this.n_predict,
+        // required this.repeat_last_n,
+        // required this.n_parts,
+        // required this.n_ctx,
+        // required this.top_k,
+        // required this.top_p,
+        // required this.temp,
+        // required this.repeat_penalty,
+        // required this.n_batch,
+        // });
+        // }
 
-      paramsLlamaValuesOnly: ParamsLlamaValuesOnly(
-        memory_f16: paramsLlama.memory_f16,
-        random_prompt: paramsLlama.random_prompt,
-        use_color: paramsLlama.use_color,
-        interactive: paramsLlama.interactive,
-        interactive_start: paramsLlama.interactive_start,
-        instruct: paramsLlama.instruct,
-        ignore_eos: paramsLlama.ignore_eos,
-        perplexity: paramsLlama.perplexity,
-        seed: paramsLlama.seedController.text,
-        n_threads: paramsLlama.n_threadsController.text,
-        n_predict: paramsLlama.n_predictController.text,
-        repeat_last_n: paramsLlama.repeat_last_nController.text,
-        n_parts: paramsLlama.n_partsController.text,
-        n_ctx: paramsLlama.n_ctxController.text,
-        top_k: paramsLlama.top_kController.text,
-        top_p: paramsLlama.top_pController.text,
-        temp: paramsLlama.tempController.text,
-        repeat_penalty: paramsLlama.repeat_penaltyController.text,
-        n_batch: paramsLlama.n_batchController.text,
-
-
+        paramsLlamaValuesOnly: ParamsLlamaValuesOnly(
+          memory_f16: paramsLlama.memory_f16,
+          random_prompt: paramsLlama.random_prompt,
+          use_color: paramsLlama.use_color,
+          interactive: paramsLlama.interactive,
+          interactive_start: paramsLlama.interactive_start,
+          instruct: paramsLlama.instruct,
+          ignore_eos: paramsLlama.ignore_eos,
+          perplexity: paramsLlama.perplexity,
+          seed: paramsLlama.seedController.text,
+          n_threads: paramsLlama.n_threadsController.text,
+          n_predict: paramsLlama.n_predictController.text,
+          repeat_last_n: paramsLlama.repeat_last_nController.text,
+          n_parts: paramsLlama.n_partsController.text,
+          n_ctx: paramsLlama.n_ctxController.text,
+          top_k: paramsLlama.top_kController.text,
+          top_p: paramsLlama.top_pController.text,
+          temp: paramsLlama.tempController.text,
+          repeat_penalty: paramsLlama.repeat_penaltyController.text,
+          n_batch: paramsLlama.n_batchController.text,
         ),
         printLnLog: printLnLog,
         printLog: printResult,
@@ -245,6 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     initDefaultPrompts();
     getRam();
+
     testFileExisting();
   }
 
@@ -571,6 +570,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void testFileExisting() async {
+    if (Platform.isIOS) {
+      (await SharedPreferences.getInstance()).remove('path');
+    }
     var found = await ModelFilePath.filePathExists();
     if (found) {
       setState(() {

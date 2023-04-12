@@ -14,6 +14,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		B887E529C709DDB7FE3429DC /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 652FE908FBF0A57B77AA3672 /* Pods_Runner.framework */; };
+		EA87EA0A29E6D804006612C0 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA87EA0929E6D804006612C0 /* Accelerate.framework */; };
 		EABFBD0829CF368200A59BE7 /* libllama.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EABFBD0729CF368200A59BE7 /* libllama.dylib */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA87EA0929E6D804006612C0 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		EABFBD0729CF368200A59BE7 /* libllama.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libllama.dylib; path = ../packages/llama/ios/Frameworks/libllama.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -43,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA87EA0A29E6D804006612C0 /* Accelerate.framework in Frameworks */,
 				EABFBD0829CF368200A59BE7 /* libllama.dylib in Frameworks */,
 				B887E529C709DDB7FE3429DC /* Pods_Runner.framework in Frameworks */,
 			);
@@ -64,6 +67,7 @@
 		7A49A9CB5FC8B961223D9D0D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EA87EA0929E6D804006612C0 /* Accelerate.framework */,
 				EABFBD0729CF368200A59BE7 /* libllama.dylib */,
 				652FE908FBF0A57B77AA3672 /* Pods_Runner.framework */,
 			);

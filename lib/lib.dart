@@ -434,6 +434,13 @@ class Lib {
     var ret = llamaBinded.llama_context_default_params();
     log("trying main DONE $ret");
 
+    ret.n_ctx = params.n_ctx;
+    ret.n_parts = params.n_parts;
+    ret.seed = params.seed;
+    ret.f16_kv = params.memory_f16;
+    ret.use_mmap = params.use_mmap;
+    ret.use_mlock = params.use_mlock;
+
     var filePath = await ModelFilePath.getFilePath();
     print("filePath : $filePath");
     if (filePath == null) {

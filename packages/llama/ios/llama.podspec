@@ -16,9 +16,11 @@ A new Flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '9.0'
-  s.vendored_libraries = 'Frameworks/libllama.dylib'
-
-  # Flutter.framework does not contain a i386 slice.
+  
+  s.libraries = ["c++"]
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+  s.vendored_libraries = 'Frameworks/libllama.dylib'
+  s.xcconfig = { 'OTHER_LDFLAGS' => '-framework Accelerate' }
+  s.pod_target_xcconfig = { "OTHER_LDFLAGS" => "-force_load $(PODS_TARGET_SRCROOT)/Frameworks/libllama.dylib" }
   s.swift_version = '5.0'
 end
