@@ -1,9 +1,17 @@
 # Demo App for llama.cpp Model
 This app is a demo of the llama.cpp model that tries to recreate an offline chatbot, working similar to OpenAI's ChatGPT. The source code for this app is available on GitHub.
 
+# Now it works with Vicuna !!!
+You can use the latest models on the app.
+
+# Works on multiple devices :
+Windows, mac and android !
+[Releases page](https://github.com/Bip-Rep/sherpa/releases)
+
+
 The app was developed using Flutter and implements ggerganov/llama.cpp, recompiled to work on mobiles. Please note that Meta officially distributes the LLaMA models, and they will not be provided by the app developers.
 
-To run this app, you need to download the 7B llama model from Meta for research purposes. You should rename it to `ggml-model.bin` and place it in your device's download folder.
+To run this app, you need to download the 7B llama model from Meta for research purposes. You can choose the target model (should be a xxx.bin) from the app.
 
 Additionally, you can fine-tune the ouput with preprompts to improve its performance.
 
