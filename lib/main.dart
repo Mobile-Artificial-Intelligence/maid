@@ -131,9 +131,16 @@ class _MyHomePageState extends State<MyHomePage> {
     scrollDown();
   }
 
+  bool canStop = false;
   void done() {
     setState(() {
       inProgress = false;
+    });
+  }
+
+  void canUseStop() {
+    setState(() {
+      canStop = true;
     });
   }
 
@@ -220,6 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
             promptController.text.trim() +
             (promptController.text.isEmpty ? "" : "\n"),
         done: done,
+        canStop: canUseStop,
         stopToken: reversePromptController.text,
       );
     } else {
@@ -1434,9 +1442,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           children: [
                             //top right button to copy the result
                             ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxHeight: 200,
-                              ),
+                              constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.height - 200),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SingleChildScrollView(
@@ -1553,18 +1561,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                       const SizedBox(width: 5),
-                                      // if (inProgress)
-                                      //   ElevatedButton(
-                                      //     onPressed: _cancel,
-                                      //     style: ElevatedButton.styleFrom(
-                                      //       padding: const EdgeInsets.symmetric(
-                                      //           horizontal: 5, vertical: 5),
-                                      //     ),
-                                      //     child: const Icon(
-                                      //       Icons.stop,
-                                      //       color: Colors.white,
-                                      //     ),
-                                      //   ),
+                                      if (canStop && inProgress)
+                                        ElevatedButton(
+                                          onPressed: _cancel,
+                                          style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 5),
+                                          ),
+                                          child: const Icon(
+                                            Icons.stop,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
