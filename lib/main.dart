@@ -77,6 +77,12 @@ class _MyHomePageState extends State<MyHomePage> {
   String prePrompt = "";
 
   List<String> defaultPrePrompts = [
+    '### Assistant: Hello, I\'m Sherpa, your personal assistant. I can write, complex mails, code and even songs\n'
+        '### Human: Hello how are you ?\n'
+        '### Assistant: I\'m fine, thank you. How are you ?\n'
+        '### Human: I\'m fine too, thanks.\n'
+        '### Assistant: That\'s good to hear\n'
+        '### Human:',
     'Sherpa : Hello, I\'m Sherpa, your personal assistant. I can write, complex mails, code and even songs\n'
         'User : Hello how are you ?\n'
         'Sherpa : I\'m fine, thank you. How are you ?\n'
@@ -330,7 +336,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                 setState(() {
                                   this.prePrompt = prePrompt;
                                 });
-
+                                SharedPreferences.getInstance().then((prefs) {
+                                  prefs.setString(
+                                      "defaultPrePrompt", prePrompt);
+                                });
                                 Navigator.of(contextAlert).pop();
                               },
                               trailing: ElevatedButton(
@@ -533,12 +542,21 @@ class _MyHomePageState extends State<MyHomePage> {
       await prefs.setStringList("prePrompts", defaultPrePrompts);
     }
     var prePrompts = await getPrePrompts();
-    if (prePrompts.isNotEmpty) {
-      setState(() {
-        prePrompt = prePrompts[0];
-      });
+    var defaultPrePrompt = prefs.getString("defaultPrePrompt");
+    if (defaultPrePrompt != null) {
+      prePrompt = defaultPrePrompt;
+    } else if (prePrompts.isNotEmpty) {
+      prePrompt = prePrompts[0];
     }
-    reversePromptController.text = 'User :';
+    setState(() {});
+    if (prefs.containsKey("reversePrompt")) {
+      reversePromptController.text = prefs.getString("reversePrompt") ?? "";
+    } else {
+      reversePromptController.text = 'User :';
+    }
+    reversePromptController.addListener(() {
+      prefs.setString("reversePrompt", reversePromptController.text);
+    });
   }
 
   void openFile() async {

@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2.2.0+7
+version: 2.2.1+8
 
 environment:
   sdk: '>=2.19.4 <3.0.0'
@@ -110,7 +110,7 @@ msix_config:
   display_name: Sherpa
   publisher_display_name: Bip-Rep
   identity_name: com.biprep.sherpa
-  msix_version: 2.2.0.0
+  msix_version: 2.2.1.0
   logo_path: assets/sherpa.png
 flutter_icons:
   android: "launcher_icon"
