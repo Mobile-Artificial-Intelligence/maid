@@ -77,18 +77,18 @@ class _MyHomePageState extends State<MyHomePage> {
   String prePrompt = "";
 
   List<String> defaultPrePrompts = [
-    '### Assistant: Hello, I\'m Sherpa, your personal assistant. I can write, complex mails, code and even songs\n'
-        '### Human: Hello how are you ?\n'
-        '### Assistant: I\'m fine, thank you. How are you ?\n'
-        '### Human: I\'m fine too, thanks.\n'
-        '### Assistant: That\'s good to hear\n'
-        '### Human:',
-    'Sherpa : Hello, I\'m Sherpa, your personal assistant. I can write, complex mails, code and even songs\n'
-        'User : Hello how are you ?\n'
-        'Sherpa : I\'m fine, thank you. How are you ?\n'
-        'User : I\'m fine too, thanks.\n'
-        'Sherpa : That\'s good to hear\n'
-        'User :',
+    'Transcript of a dialog, where the User interacts with an Assistant named Bob. Bob is helpful, kind, honest, good at writing, and never fails to answer the User\'s requests immediately and with precision.\n\n'
+      'User: Hello, Bob.\n'
+      'Bob: Hello. How may I help you today?\n'
+      'User: Please tell me the largest city in Europe.\n'
+      'Bob: Sure. The largest city in Europe is Moscow, the capital of Russia.\n'
+      'User:',
+    'Sherpa: Hello, I\'m Sherpa, your personal assistant. I can write, complex mails, code and even songs\n'
+        'User: Hello how are you ?\n'
+        'Sherpa: I\'m fine, thank you. How are you ?\n'
+        'User: I\'m fine too, thanks.\n'
+        'Sherpa: That\'s good to hear\n'
+        'User:',
   ];
 
   bool inProgress = false;
@@ -552,7 +552,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (prefs.containsKey("reversePrompt")) {
       reversePromptController.text = prefs.getString("reversePrompt") ?? "";
     } else {
-      reversePromptController.text = 'User :';
+      reversePromptController.text = 'User:';
     }
     reversePromptController.addListener(() {
       prefs.setString("reversePrompt", reversePromptController.text);
