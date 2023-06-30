@@ -15,7 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sherpa/ModelFilePath.dart';
 
-import 'package:sherpa/generated_bindings_llama.dart';
+import 'package:sherpa/generated_bindings_llamasherpa.dart';
 import 'package:sherpa/main.dart';
 
 // import 'package:sherpa/generated_bindings.dart';
@@ -164,18 +164,6 @@ class Lib {
 
 //     return res;
 // }
-  static Vector<llama_token> tokenize(NativeLibrary llamaBinded,
-      Pointer<llama_context> ctx, String text, bool add_bos) {
-    var resLength = text.length + (add_bos ? 1 : 0);
-    var res = malloc.allocate<llama_token>(sizeOf<llama_token>() * resLength);
-    var vector = Vector(res, resLength);
-    var n = llamaBinded.llama_tokenize(
-        ctx, text.toNativeUtf8().cast<Char>(), res, resLength, add_bos);
-    assert(n >= 0);
-    vector.length = n;
-
-    return vector;
-  }
 
   static parserIsolateFunction(
     SendPort mainSendPort,
@@ -291,113 +279,32 @@ class Lib {
 
   static Completer interaction = Completer();
 
+  static void showOutput(Pointer<Char> output) {
+    logInline(output.cast<Utf8>().toDartString());
+  }
+
   binaryIsolate({
     required ParsingDemand parsingDemand,
     required SendPort mainSendPort,
     required String stopToken,
   }) async {
     interaction.complete();
-    String ttlString = "";
-    var stopTokenTrimed = stopToken.trim().replaceAll(' ', '');
-    int stopTokenLength = stopTokenTrimed.length;
     mainPort = mainSendPort;
     if (parsingDemand.rootIsolateToken == null) return;
     BackgroundIsolateBinaryMessenger.ensureInitialized(
         parsingDemand.rootIsolateToken!);
 
-    DynamicLibrary llama =
+    DynamicLibrary llamasherpa =
         Platform.isMacOS || Platform.isIOS
           ? DynamicLibrary.process() // macos and ios
           : (DynamicLibrary.open(
               Platform.isWindows // windows
-                ? 'llama.dll'
-                : 'libllama.so')); // android and linux
-    var prompt = parsingDemand.promptPassed;
+                ? 'llamasherpa.dll'
+                : 'libllamasherpa.so')); // android and linux
 
     log(
-      "llama loaded",
+      "llamasherpa loaded",
     );
-
-    // DynamicLibrary main = await loadDll("libmain.so");
-
-    // NativeLibrary ggmlAutobinded = NativeLibrary(ggml);
-    NativeLibrary llamaBinded = NativeLibrary(llama);
-    // NativeLibrary mainBinded = NativeLibrary(main);
-
-    // print("1${llama.providesSymbol('add')}");
-    // print("2${llama.providesSymbol('llama_free')}");
-    // print("3${llama.providesSymbol('llama_hparams')}");
-    // print("4${llama.providesSymbol('llama_model_load')}");
-
-    // print("5${ggml.providesSymbol('ggml_time_init')}");
-    // final chat = llama.lookupFunction<ChatLaunch, ChatLaunchDart>('add');
-
-    // dev.log('calling native function');
-    // final result = chat(2, 15);
-    // dev.log('result is $result'); // 42
-
-    // print("trying lookup ggml_time_init");
-    // ggmlAutobinded.ggml_time_init();
-
-    // print("ggml_time_init done");
-
-    // print("initialize found : ${main.providesSymbol('initialize')}");
-
-    var gptParams = malloc.allocate<gpt_params>(sizeOf<gpt_params>());
-    gptParams.ref.seed = int.parse(parsingDemand.paramsLlamaValuesOnly.seed);
-    gptParams.ref.n_threads = int.parse(
-        parsingDemand.paramsLlamaValuesOnly.n_threads); // number of threads
-    gptParams.ref.n_predict = int.parse(
-        parsingDemand.paramsLlamaValuesOnly.n_predict); // number of predictions
-    gptParams.ref.repeat_last_n = int.parse(parsingDemand
-        .paramsLlamaValuesOnly.repeat_last_n); // repeat last n tokens
-    gptParams.ref.n_parts = int.parse(
-        parsingDemand.paramsLlamaValuesOnly.n_parts); // number of parts
-    gptParams.ref.n_ctx = int.parse(parsingDemand
-        .paramsLlamaValuesOnly.n_ctx); // number of tokens in context
-    gptParams.ref.top_k =
-        int.parse(parsingDemand.paramsLlamaValuesOnly.top_k); // top k sampling
-    gptParams.ref.top_p = double.parse(
-        parsingDemand.paramsLlamaValuesOnly.top_p); // top p sampling
-    gptParams.ref.temp =
-        double.parse(parsingDemand.paramsLlamaValuesOnly.temp); // temperature
-    gptParams.ref.repeat_penalty = double.parse(
-        parsingDemand.paramsLlamaValuesOnly.repeat_penalty); // repeat penalty
-    gptParams.ref.n_batch = int.parse(
-        parsingDemand.paramsLlamaValuesOnly.n_batch); // number of batches
-    gptParams.ref.memory_f16 = parsingDemand.paramsLlamaValuesOnly.memory_f16;
-    gptParams.ref.random_prompt =
-        parsingDemand.paramsLlamaValuesOnly.random_prompt;
-    gptParams.ref.use_color = parsingDemand.paramsLlamaValuesOnly.use_color;
-    gptParams.ref.interactive = parsingDemand.paramsLlamaValuesOnly.interactive;
-    gptParams.ref.interactive_start =
-        parsingDemand.paramsLlamaValuesOnly.interactive_start;
-    gptParams.ref.instruct = parsingDemand.paramsLlamaValuesOnly.instruct;
-    gptParams.ref.ignore_eos = parsingDemand.paramsLlamaValuesOnly.ignore_eos;
-    gptParams.ref.perplexity = parsingDemand.paramsLlamaValuesOnly.perplexity;
-
-    gptParams.ref.use_mlock = false; // use mlock to keep model in memory
-    gptParams.ref.mem_test = false; // compute maximum memory usage
-    gptParams.ref.verbose_prompt =
-        false; // print prompt tokens before generation
-    gptParams.ref.n_keep = 0;
-    gptParams.ref.embedding = false;
-    gptParams.ref.use_mmap = true;
-
-    var params = gptParams.ref;
-    log("main found : ${llama.providesSymbol('llama_context_default_params')}");
-
-    log("trying main");
-
-    var ret = llamaBinded.llama_context_default_params();
-    log("trying main DONE $ret");
-
-    ret.n_ctx = params.n_ctx;
-    ret.n_parts = params.n_parts;
-    ret.seed = params.seed;
-    ret.f16_kv = params.memory_f16;
-    ret.use_mmap = params.use_mmap;
-    ret.use_mlock = params.use_mlock;
 
     var filePath = await ModelFilePath.getFilePath();
     print("filePath : $filePath");
@@ -406,222 +313,26 @@ class Lib {
       return;
     }
 
-    var ctx = llamaBinded.llama_init_from_file(
-        filePath.toNativeUtf8().cast<Char>(), ret);
-    // || ctx.cast<Int64>().value != 0
-    if (ctx == nullptr) {
-      log("context error : ${CreationContextError(ctx.cast<Int64>().value).toString()}");
-      llamaBinded.llama_free(ctx);
-      return;
+    var prompt = parsingDemand.promptPassed;
+    interaction = Completer();
+
+    Pointer<show_output_cb> show_output = Pointer.fromFunction(showOutput);
+
+    NativeLibrary llamasherpaBinded = NativeLibrary(llamasherpa);
+    var ret = llamasherpaBinded.llamasherpa_start(filePath.toNativeUtf8().cast<Char>(), prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
+      // process the prompt
+      llamasherpaBinded.llamasherpa_continue("".toNativeUtf8().cast<Char>(), show_output);
+
+    while (true) {
+      // ask for user input
+      mainSendPort?.send(MessageCanPrompt());
+      String buffer = await interaction.future;
+      interaction = Completer();
+      // process user input
+      llamasherpaBinded.llamasherpa_continue(buffer.toNativeUtf8().cast<Char>(), show_output);
     }
 
-    log("context created");
-
-    log(' test info  : ${(llamaBinded.llama_print_system_info()).cast<Utf8>().toDartString()}');
-    var nbInt = 1;
-    var pointerInt = malloc.allocate<Int>(nbInt);
-    pointerInt[0] = 1;
-    log(' ret eval  : ${llamaBinded.llama_eval(ctx, pointerInt, nbInt, 0, nbInt)}');
-
-    var embd_inp = tokenize(llamaBinded, ctx, ' $prompt', true);
-    if (embd_inp.length < 0) {
-      log("error embd_inp");
-      return;
-    }
-    log('embd_inp ${embd_inp.length}');
-
-    var n_ctx = llamaBinded.llama_n_ctx(ctx);
-    log('n_ctx ${n_ctx}');
-
-    gptParams.ref.n_predict =
-        min(gptParams.ref.n_predict, n_ctx - embd_inp.length);
-
-    var inp_pfx = tokenize(llamaBinded, ctx, "\n\n### Instruction:\n\n", true);
-    var inp_sfx = tokenize(llamaBinded, ctx, "\n\n### Response:\n\n", false);
-    var user_token = tokenize(llamaBinded, ctx, "\n$stopTokenTrimed", true);
-    var llama_token_newline = tokenize(llamaBinded, ctx, "\n", false);
-
-    var embd = Vector<Int>(nullptr, 0);
-
-    int last_n_size = gptParams.ref.repeat_last_n;
-    var last_n_tokens = Vector(
-        malloc.allocate<llama_token>(sizeOf<llama_token>() * last_n_size),
-        last_n_size);
-    last_n_tokens.fillWithValue(0);
-
-    int input_consumed = 0;
-    bool input_noecho = false;
-
-    int remaining_tokens = gptParams.ref.n_predict;
-    int n_past = 0;
-    log('before while loop');
-    mainSendPort.send(MessageCanStop());
-
-    while ((remaining_tokens > 0 || gptParams.ref.interactive)) {
-      log('remaining tokens : $remaining_tokens');
-      log('stopGeneration : $stopGeneration');
-      if (embd.length > 0) {
-        if (llamaBinded.llama_eval(ctx, embd.pointer, embd.length, n_past,
-                gptParams.ref.n_threads) >
-            0) {
-          log("error llama_eval");
-          return;
-        }
-        await Future.delayed(Duration(milliseconds: 1));
-      }
-      n_past += embd.length;
-      embd.clear();
-      if (stopGeneration) {
-        interaction = Completer();
-        stopGeneration = false;
-        embd.insertVectorAtEnd(user_token);
-      }
-      if (embd_inp.length <= input_consumed &&
-          interaction.isCompleted == true) {
-        // out of user input, sample next token
-        var top_k = gptParams.ref.top_k;
-        var top_p = gptParams.ref.top_p;
-        var temp = gptParams.ref.temp;
-        var repeat_penalty = gptParams.ref.repeat_penalty;
-
-        int id = 0;
-        var logits = llamaBinded.llama_get_logits(ctx);
-
-        if (params.ignore_eos) {
-          // set the logit of the eos token to zero to avoid sampling it
-          // logits[logits.size() - n_vocab + EOS_TOKEN_ID] = 0;
-          // TODO: this does not work of params.logits_all == true
-          assert(params.perplexity == false);
-          logits[llamaBinded.llama_token_eos()] = 0;
-        }
-
-        id = llamaBinded.llama_sample_top_p_top_k(ctx, last_n_tokens.pointer,
-            last_n_tokens.length, top_k, top_p, temp, repeat_penalty);
-
-        last_n_tokens.erase(0);
-        last_n_tokens.push_back(id);
-
-        // if (id == llamaBinded.llama_token_eos() && params.interactive) {
-        //   id = llama_token_newline.begin().value;
-        //   if (stopTokenTrimed.isNotEmpty) {
-        //     // tokenize and inject first reverse prompt
-        //     var first_antiprompt =
-        //         tokenize(llamaBinded, ctx, stopTokenTrimed, false);
-        //     embd_inp.insertVectorAtEnd(first_antiprompt);
-        //   }
-        // }
-
-        // add it to the context
-        embd.push_back(id);
-
-        // echo this to console
-        input_noecho = false;
-
-        // decrement remaining sampling budget
-        --remaining_tokens;
-      } else {
-        // some user input remains from prompt or interaction, forward it to processing
-        while (embd_inp.length > input_consumed) {
-          embd.push_back(embd_inp.pointer[input_consumed]);
-          last_n_tokens.erase(0);
-          last_n_tokens.push_back(embd_inp.pointer[input_consumed]);
-          ++input_consumed;
-          if (embd.length >= params.n_batch) {
-            break;
-          }
-        }
-      }
-      log('input_noecho = $input_noecho   embd.length = ${embd.length}');
-      if (!input_noecho) {
-        for (int i = 0; i < embd.length; ++i) {
-          try {
-            int id = embd.pointer[i];
-            var str = llamaBinded
-                .llama_token_to_str(ctx, id)
-                .cast<Utf8>()
-                .toDartString();
-            logInline(str);
-            ttlString += str;
-            if (ttlString.length >= stopTokenLength &&
-                ttlString.length > prompt.length &&
-                stopTokenLength > 0) {
-              var lastPartTtlString = ttlString
-                  .trim()
-                  .substring(ttlString.trim().length - stopTokenLength - 1)
-                  .toLowerCase()
-                  .replaceAll(' ', '')
-                  .trim();
-              log('lastPartTtlString = $lastPartTtlString , stopTokenTrimed = ${stopTokenTrimed.toLowerCase()}, equal = ${lastPartTtlString == stopTokenTrimed.toLowerCase()}');
-              if (lastPartTtlString == stopTokenTrimed.toLowerCase()) {
-                log('is_interacting = true');
-                interaction = Completer();
-                break;
-              }
-            }
-          } catch (e) {
-            interaction = Completer();
-          }
-        }
-      }
-
-      if (params.interactive && embd_inp.length <= input_consumed) {
-        log('params.interactive && embd_inp.length <= input_consumed && interaction.isCompleted == ${interaction.isCompleted}');
-        // malloc.free(pointer);
-        // malloc.free(pointer);
-
-        log('${ttlString.length} ${prompt.length} ${stopTokenLength}');
-
-        if (interaction.isCompleted == false) {
-          // potentially set color to indicate we are taking user input
-
-          // if (params.instruct) {
-          //   input_consumed = embd_inp.length;
-          //   embd_inp.insertVectorAtEnd(inp_pfx);
-          // }
-
-          // logInline(stopTokenTrimed);
-          mainSendPort.send(MessageCanPrompt());
-          String buffer = await interaction.future;
-          stopGeneration = false;
-          // logInline(stopTokenTrimed + '\n');
-
-          logInline(buffer);
-          ttlString += buffer;
-          // done taking input, reset color
-
-          var line_inp = tokenize(llamaBinded, ctx, buffer, false);
-          embd_inp.insertVectorAtEnd(line_inp);
-
-          if (params.instruct) {
-            embd_inp.insertVectorAtEnd(inp_sfx);
-          }
-
-          remaining_tokens -= line_inp.length;
-          log(remaining_tokens.toString());
-
-          input_noecho = true; // do not echo this again
-        }
-      }
-
-      // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
-      if (params.interactive && remaining_tokens <= 0) {
-        remaining_tokens = params.n_predict;
-        interaction = Completer();
-      }
-    }
-    log('');
-    //unload everything from memory
-    //llamaBinded.llama_free works for ctx only
-    llamaBinded.llama_free(ctx);
-
-    //
-
-    //other free
-    malloc.free(embd_inp.pointer);
-    malloc.free(embd.pointer);
-    malloc.free(last_n_tokens.pointer);
-    malloc.free(ctx);
-    mainSendPort.send(MessageEndFromIsolate('ENDED !'));
+    llamasherpaBinded.llamasherpa_exit();
   }
 
   void main() {}

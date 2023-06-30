@@ -60,12 +60,12 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 ffigen:
-  output: lib/generated_bindings_llama.dart
+  output: lib/generated_bindings_llamasherpa.dart
   headers:
     entry-points:
       # - "src/llama.cpp/utils.h"
       # - "src/llama.cpp/ggml.cpp"
-      - "src/llama.cpp/llama.h"
+      - "src/llamasherpa/llamasherpa.h"
 # The following section is specific to Flutter packages.
 flutter:
 

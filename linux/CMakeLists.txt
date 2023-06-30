@@ -139,4 +139,5 @@ endif()
 
 set(BUILD_SHARED_LIBS ON)
 add_subdirectory(./llama.cpp)
-install(FILES ${PROJECT_BINARY_DIR}/llama.cpp/libllama.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
+add_subdirectory(./llamasherpa)
+install(FILES ${PROJECT_BINARY_DIR}/llamasherpa/libllamasherpa.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)

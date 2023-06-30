@@ -703,8 +703,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             alignment: WrapAlignment.center,
                             children: [
                               const Text(
-                                'Please download the 7B ggml-model-q4 from the official link meta provided you.\n'
-                                'Then open it.\n',
+                                'Please download a compatible GGML model.\n'
+                                'Then open it here.\n',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.red),
                               ),

@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.9)
+project(llamasherpa VERSION 1.0.0 DESCRIPTION "llamasherpa")
+add_library(llamasherpa SHARED llamasherpa.cpp)
+target_include_directories(llamasherpa PRIVATE ../llama.cpp)
+target_link_libraries(llamasherpa llama)
