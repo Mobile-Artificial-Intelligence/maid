@@ -155,37 +155,6 @@ class Lib {
     return pointerPointer;
   }
 
-  static Future<DynamicLibrary> loadDllAndroid(
-      String fileName, ByteData byteData) async {
-    final buffer = byteData.buffer;
-
-    Directory tempDir = await getApplicationDocumentsDirectory();
-    String tempPath = tempDir.path;
-
-    File file = await File('$tempPath/${fileName}').writeAsBytes(
-        buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-    print('size of file ${file.lengthSync()}');
-    return DynamicLibrary.open(file.path);
-  }
-
-  static Future<DynamicLibrary> loadDllWindows(
-      String fileName, ByteData byteData) async {
-    final buffer = byteData.buffer;
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
-    File file = await File(
-            '$tempPath/${DateTime.now().millisecondsSinceEpoch}$fileName')
-        .writeAsBytes(
-            buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-    print('size of file ${file.lengthSync()}');
-    return DynamicLibrary.open(file.path);
-  }
-
-  static Future<DynamicLibrary> loadDllDart(String fileName) async {
-    print('loadDllDart $fileName');
-    return DynamicLibrary.open(fileName);
-  }
-
 //   std::vector<llama_token> llama_tokenize(struct llama_context * ctx, const  gptParams.ref. & text,  gptParams.ref. add_bos) {
 //     // initialize to prompt numer of chars, since n_tokens <= n_prompt_chars
 //     std::vector<llama_token> res(text.size() + (int)add_bos);
@@ -259,15 +228,6 @@ class Lib {
     required String stopToken,
     required ParamsLlamaValuesOnly paramsLlamaValuesOnly,
   }) async {
-    ByteData libAndroid = await rootBundle.load('assets/libs/libllama.so');
-    ByteData? libWindows;
-    try {
-      libWindows = await rootBundle.load('assets/libs/llama.dll');
-    } catch (e) {}
-    ByteData? libLinux;
-    try {
-      libLinux = await rootBundle.load('assets/libs/libllama_linux.so');
-    } catch (e) {}
     RootIsolateToken? token = ServicesBinding.rootIsolateToken;
     mainSendPort = mainReceivePort.sendPort;
     _isolate = await runZonedGuarded<Future>(
@@ -280,9 +240,6 @@ class Lib {
       if (message is SendPort) {
         isolateSendPort = message;
         isolateSendPort?.send(ParsingDemand(
-          libLinux: libLinux,
-          libAndroid: libAndroid,
-          libWindows: libWindows,
           rootIsolateToken: token,
           promptPassed: promptPassed,
           stopToken: stopToken,
@@ -348,18 +305,13 @@ class Lib {
     BackgroundIsolateBinaryMessenger.ensureInitialized(
         parsingDemand.rootIsolateToken!);
 
-    DynamicLibrary llama = Platform.isAndroid
-        ? await loadDllAndroid("libllama.so", parsingDemand.libAndroid)
-        : (Platform.isIOS
-            ? DynamicLibrary.executable()
-            : (Platform.isWindows
-                ? await loadDllWindows("llama.dll", parsingDemand.libWindows!)
-                : (Platform.isMacOS
-                    ? DynamicLibrary.executable()
-                    : (Platform.isLinux
-                        ? await loadDllWindows(
-                            "libllama_linux.so", parsingDemand.libLinux!)
-                        : DynamicLibrary.executable()))));
+    DynamicLibrary llama =
+        Platform.isMacOS || Platform.isIOS
+          ? DynamicLibrary.process() // macos and ios
+          : (DynamicLibrary.open(
+              Platform.isWindows // windows
+                ? 'llama.dll'
+                : 'libllama.so')); // android and linux
     var prompt = parsingDemand.promptPassed;
 
     log(
@@ -711,20 +663,14 @@ class MessageNewPrompt {
 }
 
 class ParsingDemand {
-  ByteData libAndroid;
-  ByteData? libWindows;
-  ByteData? libLinux;
   RootIsolateToken? rootIsolateToken;
   String promptPassed;
   String stopToken;
   ParamsLlamaValuesOnly paramsLlamaValuesOnly;
 
   ParsingDemand({
-    required this.libWindows,
-    required this.libAndroid,
     required this.rootIsolateToken,
     required this.promptPassed,
-    required this.libLinux,
     required this.stopToken,
     required this.paramsLlamaValuesOnly,
   });

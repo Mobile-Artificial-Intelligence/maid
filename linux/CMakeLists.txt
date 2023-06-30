@@ -136,3 +136,7 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
   install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
     COMPONENT Runtime)
 endif()
+
+set(BUILD_SHARED_LIBS ON)
+add_subdirectory(./llama.cpp)
+install(FILES ${PROJECT_BINARY_DIR}/llama.cpp/libllama.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
