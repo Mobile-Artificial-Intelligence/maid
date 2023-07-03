@@ -211,6 +211,7 @@ class Lib {
     required void Function(String log) printLnLog,
     required void Function(String log) printLog,
     required String promptPassed,
+    required String firstInteraction,
     required void Function() done,
     required void Function() canStop,
     required String stopToken,
@@ -230,6 +231,7 @@ class Lib {
         isolateSendPort?.send(ParsingDemand(
           rootIsolateToken: token,
           promptPassed: promptPassed,
+          firstInteraction: firstInteraction,
           stopToken: stopToken,
           paramsLlamaValuesOnly: paramsLlamaValuesOnly,
         ));
@@ -314,6 +316,7 @@ class Lib {
     }
 
     var prompt = parsingDemand.promptPassed;
+    var firstInteraction = parsingDemand.firstInteraction;
     interaction = Completer();
 
     Pointer<show_output_cb> show_output = Pointer.fromFunction(showOutput);
@@ -322,6 +325,11 @@ class Lib {
     var ret = llamasherpaBinded.llamasherpa_start(filePath.toNativeUtf8().cast<Char>(), prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
       // process the prompt
       llamasherpaBinded.llamasherpa_continue("".toNativeUtf8().cast<Char>(), show_output);
+
+    // if first line of conversation was provided, pass it now
+    if (firstInteraction.isNotEmpty) {
+      llamasherpaBinded.llamasherpa_continue(firstInteraction.toNativeUtf8().cast<Char>(), show_output);
+    }
 
     while (true) {
       // ask for user input
@@ -376,12 +384,14 @@ class MessageNewPrompt {
 class ParsingDemand {
   RootIsolateToken? rootIsolateToken;
   String promptPassed;
+  String firstInteraction;
   String stopToken;
   ParamsLlamaValuesOnly paramsLlamaValuesOnly;
 
   ParsingDemand({
     required this.rootIsolateToken,
     required this.promptPassed,
+    required this.firstInteraction,
     required this.stopToken,
     required this.paramsLlamaValuesOnly,
   });

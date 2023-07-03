@@ -229,8 +229,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         printLnLog: printLnLog,
         printLog: printResult,
-        promptPassed: prePrompt +
-            promptController.text.trim() +
+        promptPassed: prePrompt,
+        firstInteraction: promptController.text.trim() +
             (promptController.text.isEmpty ? "" : "\n"),
         done: done,
         canStop: canUseStop,
