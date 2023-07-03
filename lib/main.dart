@@ -538,10 +538,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initDefaultPrompts() async {
     var prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey("prePrompts")) {
-      await prefs.setStringList("prePrompts", defaultPrePrompts);
-    }
     var prePrompts = await getPrePrompts();
+    if (prePrompts.isEmpty) {
+      await prefs.setStringList("prePrompts", defaultPrePrompts);
+      prePrompts = defaultPrePrompts;
+    }
     var defaultPrePrompt = prefs.getString("defaultPrePrompt");
     if (defaultPrePrompt != null) {
       prePrompt = defaultPrePrompt;
