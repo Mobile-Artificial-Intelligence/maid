@@ -467,6 +467,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return prePrompts;
   }
 
+  void showSettings() {
+    //showDialog(context: context, builder: builder)
+  }
+
   void showInfosAlert() {
     showDialog(
       context: context,
@@ -621,12 +625,17 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Colors.grey.shade800,  // Set a solid color here
           ),
         ),
-        title: Text(widget.title),
+        title: GestureDetector(
+          onTap: () {
+            showInfosAlert();
+          },
+          child: Text(widget.title),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_circle_outline),
+            icon: const Icon(Icons.settings),
             onPressed: () {
-              openFile();
+              openFile(); // showSettings();
             },
           ),
         ],
