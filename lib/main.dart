@@ -23,12 +23,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Sherpa',
+      title: 'Maid',
       theme: MyThemes().getTheme(),
       // ThemeData(
       //   colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple)
       //       .copyWith(background: Colors.grey.shade800)),
-      home: const MyHomePage(title: 'Sherpa'),
+      home: const MyHomePage(title: 'Maid'),
     );
   }
 }
@@ -618,22 +618,15 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: <Color>[
-                Colors.purple.shade900.withAlpha(900),
-                Colors.cyan.shade900.withAlpha(900),
-              ],
-            ),
+            color: Colors.grey.shade800,  // Set a solid color here
           ),
         ),
         title: Text(widget.title),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline),
+            icon: const Icon(Icons.add_circle_outline),
             onPressed: () {
-              showInfosAlert();
+              openFile();
             },
           ),
         ],
@@ -692,31 +685,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _ram,
                                 style: TextStyle(
                                     color: color, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      if (fileState == FileState.notFound)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            alignment: WrapAlignment.center,
-                            children: [
-                              const Text(
-                                'Please download a compatible GGML model.\n'
-                                'Then open it here.\n',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.red),
-                              ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  openFile();
-                                },
-                                child: const Text(
-                                  "Open file",
-                                  style: TextStyle(color: Colors.white),
-                                ),
                               ),
                             ],
                           ),
