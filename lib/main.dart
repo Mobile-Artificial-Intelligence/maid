@@ -468,7 +468,48 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void showSettings() {
-    //showDialog(context: context, builder: builder)
+    showDialog(
+      context: context, 
+      builder: (BuildContext contextAlert) {
+        return AlertDialog(
+          title: const Text("Settings"),
+          content: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxHeight: 300,
+            ),
+            child: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  const Text("RAM :"),
+                  Text(
+                    _ram,
+                    style: TextStyle(
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      openFile();
+                    },
+                    child: const Text(
+                      "Load Model",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void showInfosAlert() {
@@ -516,15 +557,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text("OK"),
-              onPressed: () {
-                Navigator.of(contextAlert).pop();
-              },
-            ),
-          ],
+          )
         );
       },
     );
@@ -565,6 +598,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void openFile() async {
+    if (fileState != FileState.notFound) {
+      await ModelFilePath.deleteModelFile();
+      setState(() {
+        fileState = FileState.notFound;
+      });
+    }
+    
     setState(() {
       fileState = FileState.opening;
     });
@@ -585,7 +625,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         fileState = FileState.notFound;
       });
-      ModelFilePath.deleteModelFile();
+      await ModelFilePath.deleteModelFile();
       return;
     }
 
@@ -635,7 +675,7 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              openFile(); // showSettings();
+              showSettings();
             },
           ),
         ],
@@ -682,60 +722,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       ),
-                      if (showParams)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Wrap(
-                            children: [
-                              const Text(
-                                'Your RAM:',
-                              ),
-                              Text(
-                                _ram,
-                                style: TextStyle(
-                                    color: color, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
                       if (fileState == FileState.found) ...[
                         if (showParams) ...[
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Wrap(
-                                  alignment: WrapAlignment.center,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    const Text("Change Model"),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: ElevatedButton(
-                                            onPressed: () async {
-                                              await ModelFilePath
-                                                  .deleteModelFile();
-                                              setState(() {
-                                                fileState = FileState.notFound;
-                                              });
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.red,
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                            ),
-                                            child: const Text(
-                                              "X",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            )),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                                 Wrap(
                                   alignment: WrapAlignment.center,
                                   crossAxisAlignment: WrapCrossAlignment.center,
