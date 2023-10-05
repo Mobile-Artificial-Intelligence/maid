@@ -10,7 +10,6 @@ import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:maid/pages/home_page.dart';
-import 'package:maid/pages/settings_page.dart';
 
 class ParamsLlama {
   bool memory_f16 = false; // use f16 instead of f32 for memory kv

@@ -12,7 +12,6 @@ import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:maid/pages/home_page.dart';
-import 'package:maid/pages/settings_page.dart';
 
 void main() {
   runApp(const MaidApp());
