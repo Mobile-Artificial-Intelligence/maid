@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "sherpa" "\0"
+            VALUE "FileDescription", "maid" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "sherpa" "\0"
+            VALUE "InternalName", "maid" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "sherpa.exe" "\0"
-            VALUE "ProductName", "sherpa" "\0"
+            VALUE "OriginalFilename", "maid.exe" "\0"
+            VALUE "ProductName", "maid" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

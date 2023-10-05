@@ -4,7 +4,7 @@
 #endif
 
 #include "llama.h"
-#include "llamasherpa.h"
+#include "llamamaid.h"
 
 #include <cassert>
 #include <cinttypes>
@@ -107,7 +107,7 @@ static int n_consumed         = 0;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
-int llamasherpa_start(const char *model_path, const char *_prompt, const char *_antiprompt, show_output_cb *show_output) {
+int llamamaid_start(const char *model_path, const char *_prompt, const char *_antiprompt, show_output_cb *show_output) {
 
     llama_init_backend(false);
     antiprompt = _antiprompt;
@@ -189,7 +189,7 @@ int llamasherpa_start(const char *model_path, const char *_prompt, const char *_
     return 0;
 }
 
-int llamasherpa_continue(const char *input, show_output_cb *show_output) {
+int llamamaid_continue(const char *input, show_output_cb *show_output) {
     std::string buffer(input);
 
     // Add tokens to embd only if the input buffer is non-empty
@@ -403,7 +403,7 @@ int llamasherpa_continue(const char *input, show_output_cb *show_output) {
     return 0;
 }
 
-void llamasherpa_exit(void) {
+void llamamaid_exit(void) {
     llama_print_timings(ctx);
     llama_free(ctx);
     llama_free_model(model);

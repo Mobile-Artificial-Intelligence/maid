@@ -9,10 +9,10 @@
 
 typedef void show_output_cb(const char *);
 
-EXPORT int llamasherpa_start(const char *model_path, const char *_prompt, const char *_antiprompt, show_output_cb *show_output);
+EXPORT int llamamaid_start(const char *model_path, const char *_prompt, const char *_antiprompt, show_output_cb *show_output);
 
-EXPORT int llamasherpa_continue(const char *input, show_output_cb *show_output);
+EXPORT int llamamaid_continue(const char *input, show_output_cb *show_output);
 
-EXPORT void llamasherpa_exit(void);
+EXPORT void llamamaid_exit(void);
 
 #endif

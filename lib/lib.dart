@@ -13,14 +13,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sherpa/ModelFilePath.dart';
-import 'package:sherpa/llama_params.dart';
+import 'package:maid/ModelFilePath.dart';
+import 'package:maid/llama_params.dart';
 
-import 'package:sherpa/generated_bindings_llamasherpa.dart';
-import 'package:sherpa/main.dart';
+import 'package:maid/generated_bindings_llamamaid.dart';
+import 'package:maid/main.dart';
 
-// import 'package:sherpa/generated_bindings.dart';
-// import 'package:sherpa/llama_bindings.dart';
+// import 'package:maid/generated_bindings.dart';
+// import 'package:maid/llama_bindings.dart';
 
 //declaration of functions
 typedef ChatLaunch = Int Function(Int, Int);
@@ -297,16 +297,16 @@ class Lib {
     BackgroundIsolateBinaryMessenger.ensureInitialized(
         parsingDemand.rootIsolateToken!);
 
-    DynamicLibrary llamasherpa =
+    DynamicLibrary llamamaid =
         Platform.isMacOS || Platform.isIOS
           ? DynamicLibrary.process() // macos and ios
           : (DynamicLibrary.open(
               Platform.isWindows // windows
-                ? 'llamasherpa.dll'
-                : 'libllamasherpa.so')); // android and linux
+                ? 'llamamaid.dll'
+                : 'libllamamaid.so')); // android and linux
 
     log(
-      "llamasherpa loaded",
+      "llamamaid loaded",
     );
 
     var filePath = await ModelFilePath.getFilePath();
@@ -322,14 +322,14 @@ class Lib {
 
     Pointer<show_output_cb> show_output = Pointer.fromFunction(showOutput);
 
-    NativeLibrary llamasherpaBinded = NativeLibrary(llamasherpa);
-    var ret = llamasherpaBinded.llamasherpa_start(filePath.toNativeUtf8().cast<Char>(), prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
+    NativeLibrary llamamaidBinded = NativeLibrary(llamamaid);
+    var ret = llamamaidBinded.llamamaid_start(filePath.toNativeUtf8().cast<Char>(), prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
       // process the prompt
-      llamasherpaBinded.llamasherpa_continue("".toNativeUtf8().cast<Char>(), show_output);
+      llamamaidBinded.llamamaid_continue("".toNativeUtf8().cast<Char>(), show_output);
 
     // if first line of conversation was provided, pass it now
     if (firstInteraction.isNotEmpty) {
-      llamasherpaBinded.llamasherpa_continue(firstInteraction.toNativeUtf8().cast<Char>(), show_output);
+      llamamaidBinded.llamamaid_continue(firstInteraction.toNativeUtf8().cast<Char>(), show_output);
     }
 
     while (true) {
@@ -338,10 +338,10 @@ class Lib {
       String buffer = await interaction.future;
       interaction = Completer();
       // process user input
-      llamasherpaBinded.llamasherpa_continue(buffer.toNativeUtf8().cast<Char>(), show_output);
+      llamamaidBinded.llamamaid_continue(buffer.toNativeUtf8().cast<Char>(), show_output);
     }
 
-    llamasherpaBinded.llamasherpa_exit();
+    llamamaidBinded.llamamaid_exit();
   }
 
   void main() {}

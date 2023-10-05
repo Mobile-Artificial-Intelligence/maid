@@ -1,6 +1,6 @@
 {
-    "name": "sherpa",
-    "short_name": "sherpa",
+    "name": "maid",
+    "short_name": "maid",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",

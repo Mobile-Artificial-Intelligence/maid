@@ -4,9 +4,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sherpa/ModelFilePath.dart';
-import 'package:sherpa/lib.dart';
-import 'package:sherpa/llama_params.dart';
+import 'package:maid/ModelFilePath.dart';
+import 'package:maid/lib.dart';
+import 'package:maid/llama_params.dart';
 import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,11 +41,11 @@ class _MyHomePageState extends State<MyHomePage> {
       'User: Please tell me the largest city in Europe.\n'
       'Bob: Sure. The largest city in Europe is Moscow, the capital of Russia.\n'
       'User:',
-    'Sherpa: Hello, I\'m Sherpa, your personal assistant. I can write, complex mails, code and even songs\n'
+    'Maid: Hello, I\'m Maid, your personal assistant. I can write, complex mails, code and even songs\n'
         'User: Hello how are you ?\n'
-        'Sherpa: I\'m fine, thank you. How are you ?\n'
+        'Maid: I\'m fine, thank you. How are you ?\n'
         'User: I\'m fine too, thanks.\n'
-        'Sherpa: That\'s good to hear\n'
+        'Maid: That\'s good to hear\n'
         'User:',
   ];
 
