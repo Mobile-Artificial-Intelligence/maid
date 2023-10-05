@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/ModelFilePath.dart';
 import 'package:maid/lib.dart';
+import 'package:maid/model.dart';
 import 'package:maid/llama_params.dart';
 import 'package:maid/widgets/settings_widget.dart';
 import 'package:system_info_plus/system_info_plus.dart';
@@ -21,40 +22,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Model model = Model();
+  
   String log = "";
   String result = "";
   Lib? lib;
 
-  String _ram = "\nCalcul en cours...";
   Color color = Colors.black;
-  ParamsLlama paramsLlama = ParamsLlama();
-
-  var promptController = TextEditingController();
 
   final ScrollController _consoleScrollController = ScrollController();
-
-  String prePrompt = "";
-
-  List<String> defaultPrePrompts = [
-    'Transcript of a dialog, where the User interacts with an Assistant named Bob. Bob is helpful, kind, honest, good at writing, and never fails to answer the User\'s requests immediately and with precision.\n\n'
-      'User: Hello, Bob.\n'
-      'Bob: Hello. How may I help you today?\n'
-      'User: Please tell me the largest city in Europe.\n'
-      'Bob: Sure. The largest city in Europe is Moscow, the capital of Russia.\n'
-      'User:',
-    'Maid: Hello, I\'m Maid, your personal assistant. I can write, complex mails, code and even songs\n'
-        'User: Hello how are you ?\n'
-        'Maid: I\'m fine, thank you. How are you ?\n'
-        'User: I\'m fine too, thanks.\n'
-        'Maid: That\'s good to hear\n'
-        'User:',
-  ];
-
-  bool inProgress = false;
-
-  FileState fileState = FileState.notFound;
-
-  TextEditingController reversePromptController = TextEditingController();
 
   // Memory? _memory;
 
@@ -99,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool canStop = false;
   void done() {
     setState(() {
-      inProgress = false;
+      model.inProgress = false;
     });
   }
 
@@ -115,92 +91,47 @@ class _MyHomePageState extends State<MyHomePage> {
       FocusScope.of(context).unfocus();
     }
     setState(() {
-      inProgress = true;
+      model.inProgress = true;
     });
     if (lib == null) {
       lib = Lib();
       lib?.executeBinary(
-        //
-        // class ParamsLlamaValuesOnly {
-        // bool memory_f16;
-        // bool random_prompt;
-        // bool use_color;
-        // bool interactive;
-        // bool interactive_start;
-        // bool instruct;
-        // bool ignore_eos;
-        // bool perplexity;
-        // String seed;
-        // String n_threads;
-        // String n_predict;
-        // String repeat_last_n;
-        // String n_parts;
-        // String n_ctx;
-        // String top_k;
-        // String top_p;
-        // String temp;
-        // String repeat_penalty;
-        // String n_batch;
-        //
-        // ParamsLlamaValuesOnly({
-        // required this.memory_f16,
-        // required this.random_prompt,
-        // required this.use_color,
-        // required this.interactive,
-        // required this.interactive_start,
-        // required this.instruct,
-        // required this.ignore_eos,
-        // required this.perplexity,
-        // required this.seed,
-        // required this.n_threads,
-        // required this.n_predict,
-        // required this.repeat_last_n,
-        // required this.n_parts,
-        // required this.n_ctx,
-        // required this.top_k,
-        // required this.top_p,
-        // required this.temp,
-        // required this.repeat_penalty,
-        // required this.n_batch,
-        // });
-        // }
-
         paramsLlamaValuesOnly: ParamsLlamaValuesOnly(
-          memory_f16: paramsLlama.memory_f16,
-          random_prompt: paramsLlama.random_prompt,
-          use_color: paramsLlama.use_color,
-          interactive: paramsLlama.interactive,
-          interactive_start: paramsLlama.interactive_start,
-          instruct: paramsLlama.instruct,
-          ignore_eos: paramsLlama.ignore_eos,
-          perplexity: paramsLlama.perplexity,
-          seed: paramsLlama.seedController.text,
-          n_threads: paramsLlama.n_threadsController.text,
-          n_predict: paramsLlama.n_predictController.text,
-          repeat_last_n: paramsLlama.repeat_last_nController.text,
-          n_parts: paramsLlama.n_partsController.text,
-          n_ctx: paramsLlama.n_ctxController.text,
-          top_k: paramsLlama.top_kController.text,
-          top_p: paramsLlama.top_pController.text,
-          temp: paramsLlama.tempController.text,
-          repeat_penalty: paramsLlama.repeat_penaltyController.text,
-          n_batch: paramsLlama.n_batchController.text,
+          memory_f16: model.paramsLlama.memory_f16,
+          random_prompt: model.paramsLlama.random_prompt,
+          use_color: model.paramsLlama.use_color,
+          interactive: model.paramsLlama.interactive,
+          interactive_start: model.paramsLlama.interactive_start,
+          instruct: model.paramsLlama.instruct,
+          ignore_eos: model.paramsLlama.ignore_eos,
+          perplexity: model.paramsLlama.perplexity,
+          seed: model.paramsLlama.seedController.text,
+          n_threads: model.paramsLlama.n_threadsController.text,
+          n_predict: model.paramsLlama.n_predictController.text,
+          repeat_last_n: model.paramsLlama.repeat_last_nController.text,
+          n_parts: model.paramsLlama.n_partsController.text,
+          n_ctx: model.paramsLlama.n_ctxController.text,
+          top_k: model.paramsLlama.top_kController.text,
+          top_p: model.paramsLlama.top_pController.text,
+          temp: model.paramsLlama.tempController.text,
+          repeat_penalty: model.paramsLlama.repeat_penaltyController.text,
+          n_batch: model.paramsLlama.n_batchController.text,
         ),
         printLnLog: printLnLog,
         printLog: printResult,
-        promptPassed: prePrompt,
-        firstInteraction: promptController.text.trim() +
-            (promptController.text.isEmpty ? "" : "\n"),
+        promptPassed: model.prePrompt,
+        firstInteraction: model.promptController.text.trim() +
+            (model.promptController.text.isEmpty ? "" : "\n"),
         done: done,
         canStop: canUseStop,
-        stopToken: reversePromptController.text,
+        stopToken: model.reversePromptController.text,
       );
     } else {
       lib?.newPromp(
-          " ${promptController.text.trim()}${promptController.text.isEmpty ? "" : "\n"}");
+          " ${model.promptController.text.trim()}${model.promptController.text.isEmpty ? "" : "\n"}");
     }
     setState(() {
-      promptController.text = "";
+      model.promptController.text = "";
     });
   }
 
@@ -211,50 +142,8 @@ class _MyHomePageState extends State<MyHomePage> {
         );
   }
 
-  @override
-  initState() {
-    super.initState();
-    initDefaultPrompts();
-    getRam();
-
-    testFileExisting();
-  }
-
-  void getRam() async {
-    try {
-      if (Platform.isWindows == false) {
-        int? deviceMemory = await SystemInfoPlus.physicalMemory;
-        int deviceMemoryGB = (deviceMemory ?? 0) ~/ 1024 + 1;
-
-        setState(() {
-          _ram = "${deviceMemoryGB}GB";
-          if (deviceMemoryGB <= 6) {
-            _ram += " (WARNING ! May not be enough)";
-          } else {
-            _ram += " (Should be enough)";
-          }
-          color = deviceMemoryGB > 6
-              ? Colors.green
-              : deviceMemoryGB > 4
-                  ? Colors.orange
-                  : Colors.red;
-        });
-      } else {
-        setState(() {
-          _ram = " Can't get RAM on Windows";
-          color = Colors.red;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _ram = " Can't get RAM";
-        color = Colors.red;
-      });
-    }
-  }
-
   showPrepromptAlert() async {
-    var prePrompts = await getPrePrompts();
+    var prePrompts = await model.getPrePrompts();
     showDialog(
       context: context,
       builder: (BuildContext contextAlert) {
@@ -293,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   )),
                               onTap: () {
                                 setState(() {
-                                  this.prePrompt = prePrompt;
+                                  model.prePrompt = prePrompt;
                                 });
                                 SharedPreferences.getInstance().then((prefs) {
                                   prefs.setString(
@@ -324,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () async {
                       await addPrePromptAlert();
                       //save prePrompt in shared preferences
-                      prePrompts.add(prePrompt);
+                      prePrompts.add(model.prePrompt);
                       Navigator.of(contextAlert).pop();
                     },
                     child: const Text("+",
@@ -344,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   )),
               onPressed: () {
                 setState(() {
-                  prePrompt = promptController.text;
+                  model.prePrompt = model.promptController.text;
                 });
                 Navigator.of(contextAlert).pop();
               },
@@ -401,11 +290,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               onPressed: () async {
                 setState(() {
-                  prePrompt = prePromptController.text;
+                  model.prePrompt = prePromptController.text;
                 });
                 //save prePrompt in shared preferences
-                var prePrompts = await getPrePrompts();
-                prePrompts.add(prePrompt);
+                var prePrompts = await model.getPrePrompts();
+                prePrompts.add(model.prePrompt);
                 var prefs = await SharedPreferences.getInstance();
                 prefs.setStringList("prePrompts", prePrompts);
                 Navigator.of(contextAlert).pop();
@@ -417,13 +306,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<List<String>> getPrePrompts() async {
-    var prefs = await SharedPreferences.getInstance();
-    List<String>? prePrompts = [];
-    if (prefs.containsKey("prePrompts")) {
-      prePrompts = prefs.getStringList("prePrompts") ?? [];
-    }
-    return prePrompts;
+  void deletePreprompt() {
+    setState(() {
+      model.prePrompt = "";
+    });
   }
 
   void showSettings() {
@@ -440,19 +326,19 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ListBody(
                 children: [
                   const Text("RAM :"),
-                  Text(
-                    _ram,
-                    style: TextStyle(
-                      color: color,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  //Text(
+                  //  _ram,
+                  //  style: TextStyle(
+                  //    color: color,
+                  //    fontWeight: FontWeight.bold,
+                  //  ),
+                  //),
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      openFile();
+                      model.openFile();
                     },
                     child: const Text(
                       "Load Model",
@@ -532,89 +418,6 @@ class _MyHomePageState extends State<MyHomePage> {
     prefs.setStringList("prePrompts", prePrompts);
   }
 
-  void initDefaultPrompts() async {
-    var prefs = await SharedPreferences.getInstance();
-    var prePrompts = await getPrePrompts();
-    if (prePrompts.isEmpty) {
-      await prefs.setStringList("prePrompts", defaultPrePrompts);
-      prePrompts = defaultPrePrompts;
-    }
-    var defaultPrePrompt = prefs.getString("defaultPrePrompt");
-    if (defaultPrePrompt != null) {
-      prePrompt = defaultPrePrompt;
-    } else if (prePrompts.isNotEmpty) {
-      prePrompt = prePrompts[0];
-    }
-    setState(() {});
-    if (prefs.containsKey("reversePrompt")) {
-      reversePromptController.text = prefs.getString("reversePrompt") ?? "";
-    } else {
-      reversePromptController.text = 'User:';
-    }
-    reversePromptController.addListener(() {
-      prefs.setString("reversePrompt", reversePromptController.text);
-    });
-  }
-
-  void openFile() async {
-    if (fileState != FileState.notFound) {
-      await ModelFilePath.deleteModelFile();
-      setState(() {
-        fileState = FileState.notFound;
-      });
-    }
-    
-    setState(() {
-      fileState = FileState.opening;
-    });
-
-    var filePath = await ModelFilePath.getFilePath(); // getting file path
-
-    if (filePath == null) {
-      print("file not found");
-      setState(() {
-        fileState = FileState.notFound;
-      });
-      return;
-    }
-
-    var file = File(filePath);
-    if (!file.existsSync()) {
-      print("file not found 2");
-      setState(() {
-        fileState = FileState.notFound;
-      });
-      await ModelFilePath.deleteModelFile();
-      return;
-    }
-
-    setState(() {
-      fileState = FileState.found;
-    });
-  }
-
-  void deletePreprompt() {
-    setState(() {
-      prePrompt = "";
-    });
-  }
-
-  void testFileExisting() async {
-    if (Platform.isIOS) {
-      (await SharedPreferences.getInstance()).remove('path');
-    }
-    var found = await ModelFilePath.filePathExists();
-    if (found) {
-      setState(() {
-        fileState = FileState.found;
-      });
-    } else {
-      setState(() {
-        fileState = FileState.notFound;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -681,7 +484,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       ),
-                      if (fileState == FileState.found) ...[
+                      if (model.fileState == FileState.found) ...[
                         if (showParams) ...[
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -729,7 +532,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: SingleChildScrollView(
                                             child: SelectableText(
-                                              "Pre-Prompt : $prePrompt",
+                                              "Pre-Prompt : ${model.prePrompt}",
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -746,7 +549,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     keyboardType: TextInputType.multiline,
                                     maxLines: 1,
                                     expands: false,
-                                    controller: reversePromptController,
+                                    controller: model.reversePromptController,
                                     decoration: InputDecoration(
                                       border: const OutlineInputBorder(),
                                       labelStyle: const TextStyle(
@@ -755,7 +558,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       labelText: 'Reverse Prompt',
                                       suffixIcon: IconButton(
                                           onPressed: () {
-                                            reversePromptController.clear();
+                                            model.reversePromptController.clear();
                                           },
                                           icon: const Icon(Icons.clear)),
                                     ),
@@ -786,7 +589,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: SettingsWidget(paramsLlama: paramsLlama),
+                                  child: SettingsWidget(model: model),
                                 ),
                               ),
                             ),
@@ -938,7 +741,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 _exec();
                               },
                               expands: false,
-                              controller: promptController,
+                              controller: model.promptController,
                               decoration: InputDecoration(
                                 border: const OutlineInputBorder(),
                                 labelStyle: const TextStyle(
@@ -951,7 +754,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       ElevatedButton(
-                                        onPressed: (inProgress) ? null : _exec,
+                                        onPressed: (model.inProgress) ? null : _exec,
                                         style: ElevatedButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 5, vertical: 5),
@@ -959,12 +762,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            if (!inProgress)
+                                            if (!model.inProgress)
                                               const Icon(
                                                 Icons.send_sharp,
                                                 color: Colors.white,
                                               ),
-                                            if (inProgress)
+                                            if (model.inProgress)
                                               const Padding(
                                                 padding: EdgeInsets.all(8.0),
                                                 child: SizedBox(
@@ -980,7 +783,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                       const SizedBox(width: 5),
-                                      if (canStop && inProgress)
+                                      if (canStop && model.inProgress)
                                         ElevatedButton(
                                           onPressed: _cancel,
                                           style: ElevatedButton.styleFrom(

@@ -3,24 +3,91 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/ModelFilePath.dart';
 import 'package:maid/lib.dart';
-import 'package:maid/llama_params.dart';
 import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsWidget extends StatefulWidget {
-  const SettingsWidget({super.key, required this.paramsLlama});
+  const SettingsWidget({super.key, required this.model});
 
-  final ParamsLlama paramsLlama;
+  final Model model;
 
   @override
   State<SettingsWidget> createState() => _SettingsWidgetState();
 }
 
 class _SettingsWidgetState extends State<SettingsWidget> {
-  ParamsLlama get paramsLlama => widget.paramsLlama;
+  Model get model => widget.model;
+
+  String _ram = "\nCalculating...";
+  Color color = Colors.black;
+
+  void getRam() async {
+    try {
+      if (Platform.isWindows == false) {
+        int? deviceMemory = await SystemInfoPlus.physicalMemory;
+        int deviceMemoryGB = (deviceMemory ?? 0) ~/ 1024 + 1;
+
+        setState(() {
+          _ram = "${deviceMemoryGB}GB";
+          if (deviceMemoryGB <= 6) {
+            _ram += " (WARNING ! May not be enough)";
+          } else {
+            _ram += " (Should be enough)";
+          }
+          color = deviceMemoryGB > 6
+              ? Colors.green
+              : deviceMemoryGB > 4
+                  ? Colors.orange
+                  : Colors.red;
+        });
+      } else {
+        setState(() {
+          _ram = " Can't get RAM on Windows";
+          color = Colors.red;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _ram = " Can't get RAM";
+        color = Colors.red;
+      });
+    }
+  }
+
+  void deletePreprompt() {
+    setState(() {
+      model.prePrompt = "";
+    });
+  }
+
+  void testFileExisting() async {
+    if (Platform.isIOS) {
+      (await SharedPreferences.getInstance()).remove('path');
+    }
+    var found = await ModelFilePath.filePathExists();
+    if (found) {
+      setState(() {
+        model.fileState = FileState.found;
+      });
+    } else {
+      setState(() {
+        model.fileState = FileState.notFound;
+      });
+    }
+  }
+
+  @override
+  initState() {
+    super.initState();
+    model.initDefaultPrompts();
+    getRam();
+
+    testFileExisting();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +103,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
             onPressed: () {
-              paramsLlama.resetAll(setState);
+              model.paramsLlama.resetAll(setState);
             },
             child: const Text(
               "Reset All",
@@ -49,7 +116,29 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         ),
         Wrap(
           children: [
-            //ParamsLlama(),
+            const Text("RAM :"),
+                  Text(
+                    _ram,
+                    style: TextStyle(
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      model.openFile();
+                    },
+                    child: const Text(
+                      "Load Model",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ConstrainedBox(
@@ -62,7 +151,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'seed (-1 for random):',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .seedController,
                       keyboardType:
                           TextInputType.number,
@@ -87,7 +176,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'n_threads:',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .n_threadsController,
                       keyboardType:
                           TextInputType.number,
@@ -112,7 +201,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'n_predict:',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .n_predictController,
                       keyboardType:
                           TextInputType.number,
@@ -137,7 +226,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'repeat_last_n:',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .repeat_last_nController,
                       keyboardType:
                           TextInputType.number,
@@ -162,7 +251,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'n_parts (-1 for auto):',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .n_partsController,
                       keyboardType:
                           TextInputType.number,
@@ -187,7 +276,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'n_ctx:',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .n_ctxController,
                       keyboardType:
                           TextInputType.number,
@@ -212,7 +301,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'top_k:',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .top_kController,
                       keyboardType:
                           TextInputType.number,
@@ -237,7 +326,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'top_p:',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .top_pController,
                       keyboardType:
                           TextInputType.number,
@@ -262,7 +351,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'temp:',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .tempController,
                       keyboardType:
                           TextInputType.number,
@@ -287,7 +376,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'repeat_penalty:',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .repeat_penaltyController,
                       keyboardType:
                           TextInputType.number,
@@ -313,7 +402,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'batch_size:',
                     ),
                     TextField(
-                      controller: paramsLlama
+                      controller: model.paramsLlama
                           .n_batchController,
                       keyboardType:
                           TextInputType.number,
@@ -341,15 +430,15 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'memory_f16:',
                     ),
                     Checkbox(
-                        value: paramsLlama
+                        value: model.paramsLlama
                             .memory_f16,
                         onChanged: (value) {
                           setState(() {
-                            paramsLlama
+                            model.paramsLlama
                                     .memory_f16 =
                                 value!;
                           });
-                          paramsLlama
+                          model.paramsLlama
                               .saveBoolToSharedPrefs(
                                   'memory_f16',
                                   value!);
@@ -373,15 +462,15 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'random_prompt:',
                     ),
                     Checkbox(
-                        value: paramsLlama
+                        value: model.paramsLlama
                             .random_prompt,
                         onChanged: (value) {
                           setState(() {
-                            paramsLlama
+                            model.paramsLlama
                                     .random_prompt =
                                 value!;
                           });
-                          paramsLlama
+                          model.paramsLlama
                               .saveBoolToSharedPrefs(
                                   'random_prompt',
                                   value!);
@@ -405,15 +494,15 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'interactive:',
                     ),
                     Checkbox(
-                        value: paramsLlama
+                        value: model.paramsLlama
                             .interactive,
                         onChanged: (value) {
                           setState(() {
-                            paramsLlama
+                            model.paramsLlama
                                     .interactive =
                                 value!;
                           });
-                          paramsLlama
+                          model.paramsLlama
                               .saveBoolToSharedPrefs(
                                   'interactive',
                                   value!);
@@ -437,15 +526,15 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'interactive_start:',
                     ),
                     Checkbox(
-                        value: paramsLlama
+                        value: model.paramsLlama
                             .interactive_start,
                         onChanged: (value) {
                           setState(() {
-                            paramsLlama
+                            model.paramsLlama
                                     .interactive_start =
                                 value!;
                           });
-                          paramsLlama
+                          model.paramsLlama
                               .saveBoolToSharedPrefs(
                                   'interactive_start',
                                   value!);
@@ -470,13 +559,13 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                     ),
                     Checkbox(
                         value:
-                            paramsLlama.instruct,
+                            model.paramsLlama.instruct,
                         onChanged: (value) {
                           setState(() {
-                            paramsLlama.instruct =
+                            model.paramsLlama.instruct =
                                 value!;
                           });
-                          paramsLlama
+                          model.paramsLlama
                               .saveBoolToSharedPrefs(
                                   'instruct',
                                   value!);
@@ -500,15 +589,15 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'ignore_eos:',
                     ),
                     Checkbox(
-                        value: paramsLlama
+                        value: model.paramsLlama
                             .ignore_eos,
                         onChanged: (value) {
                           setState(() {
-                            paramsLlama
+                            model.paramsLlama
                                     .ignore_eos =
                                 value!;
                           });
-                          paramsLlama
+                          model.paramsLlama
                               .saveBoolToSharedPrefs(
                                   'ignore_eos',
                                   value!);
@@ -532,15 +621,15 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                       'perplexity:',
                     ),
                     Checkbox(
-                        value: paramsLlama
+                        value: model.paramsLlama
                             .perplexity,
                         onChanged: (value) {
                           setState(() {
-                            paramsLlama
+                            model.paramsLlama
                                     .perplexity =
                                 value!;
                           });
-                          paramsLlama
+                          model.paramsLlama
                               .saveBoolToSharedPrefs(
                                   'perplexity',
                                   value!);
