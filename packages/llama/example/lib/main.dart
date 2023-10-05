@@ -5,17 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:llama/llama.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MaidApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MaidApp extends StatefulWidget {
+  const MaidApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MaidApp> createState() => _MaidAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MaidAppState extends State<MaidApp> {
   String _platformVersion = 'Unknown';
   final _llamaPlugin = Llama();
 

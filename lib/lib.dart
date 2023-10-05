@@ -14,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sherpa/ModelFilePath.dart';
+import 'package:sherpa/llama_params.dart';
 
 import 'package:sherpa/generated_bindings_llamasherpa.dart';
 import 'package:sherpa/main.dart';
@@ -401,4 +402,10 @@ class MessageEndFromIsolate {
   final String message;
 
   MessageEndFromIsolate(this.message);
+}
+
+enum FileState {
+  notFound,
+  found,
+  opening,
 }
