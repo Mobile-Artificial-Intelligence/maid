@@ -7,6 +7,7 @@ import 'package:maid/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/ModelFilePath.dart';
 import 'package:maid/lib.dart';
+import 'package:maid/llama_params.dart';
 import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -117,526 +118,138 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         Wrap(
           children: [
             const Text("RAM :"),
-                  Text(
-                    _ram,
-                    style: TextStyle(
-                      color: color,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      model.openFile();
-                    },
-                    child: const Text(
-                      "Load Model",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'seed (-1 for random):',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .seedController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'seed',
-                      ),
-                    ),
-                  ],
+            Text(
+              _ram,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                model.openFile();
+              },
+              child: const Text(
+                "Load Model",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'n_threads:',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .n_threadsController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'n_threads',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'seed (-1 for random):',
+              controller: model.paramsLlama.seedController,
+              hintText: 'seed',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'n_predict:',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .n_predictController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'n_predict',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'n_threads:',
+              controller: model.paramsLlama.n_threadsController,
+              hintText: 'n_threads',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'repeat_last_n:',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .repeat_last_nController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'repeat_last_n',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'n_predict:',
+              controller: model.paramsLlama.n_predictController,
+              hintText: 'n_predict',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'n_parts (-1 for auto):',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .n_partsController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'n_parts',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'repeat_last_n:',
+              controller: model.paramsLlama.repeat_last_nController,
+              hintText: 'repeat_last_n',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'n_ctx:',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .n_ctxController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'n_ctx',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'n_parts (-1 for auto):',
+              controller: model.paramsLlama.n_partsController,
+              hintText: 'n_parts',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'top_k:',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .top_kController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'top_k',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'n_ctx:',
+              controller: model.paramsLlama.n_ctxController,
+              hintText: 'n_ctx',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'top_p:',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .top_pController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'top_p',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'top_k:',
+              controller: model.paramsLlama.top_kController,
+              hintText: 'top_k',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'temp:',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .tempController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'temp',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'top_p:',
+              controller: model.paramsLlama.top_pController,
+              hintText: 'top_p',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'repeat_penalty:',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .repeat_penaltyController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText:
-                            'repeat_penalty',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'temp:',
+              controller: model.paramsLlama.tempController,
+              hintText: 'temp',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  children: [
-                    const Text(
-                      'batch_size:',
-                    ),
-                    TextField(
-                      controller: model.paramsLlama
-                          .n_batchController,
-                      keyboardType:
-                          TextInputType.number,
-                      decoration:
-                          const InputDecoration(
-                        hintText: 'batch_size',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'repeat_penalty:',
+              controller: model.paramsLlama.repeat_penaltyController,
+              hintText: 'repeat_penalty',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment:
-                      WrapCrossAlignment.center,
-                  children: [
-                    const Text(
-                      'memory_f16:',
-                    ),
-                    Checkbox(
-                        value: model.paramsLlama
-                            .memory_f16,
-                        onChanged: (value) {
-                          setState(() {
-                            model.paramsLlama
-                                    .memory_f16 =
-                                value!;
-                          });
-                          model.paramsLlama
-                              .saveBoolToSharedPrefs(
-                                  'memory_f16',
-                                  value!);
-                        }),
-                  ],
-                ),
-              ),
+            LlamaParamTextField(
+              labelText: 'batch_size:',
+              controller: model.paramsLlama.n_batchController,
+              hintText: 'batch_size',
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment:
-                      WrapCrossAlignment.center,
-                  children: [
-                    const Text(
-                      'random_prompt:',
-                    ),
-                    Checkbox(
-                        value: model.paramsLlama
-                            .random_prompt,
-                        onChanged: (value) {
-                          setState(() {
-                            model.paramsLlama
-                                    .random_prompt =
-                                value!;
-                          });
-                          model.paramsLlama
-                              .saveBoolToSharedPrefs(
-                                  'random_prompt',
-                                  value!);
-                        }),
-                  ],
-                ),
-              ),
+            LlamaParamCheckbox(
+              labelText: 'memory_f16:',
+              initialValue: model.paramsLlama.memory_f16,
+              onChanged: (value) {
+                model.paramsLlama.memory_f16 = value;
+                model.paramsLlama.saveBoolToSharedPrefs('memory_f16', value);
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment:
-                      WrapCrossAlignment.center,
-                  children: [
-                    const Text(
-                      'interactive:',
-                    ),
-                    Checkbox(
-                        value: model.paramsLlama
-                            .interactive,
-                        onChanged: (value) {
-                          setState(() {
-                            model.paramsLlama
-                                    .interactive =
-                                value!;
-                          });
-                          model.paramsLlama
-                              .saveBoolToSharedPrefs(
-                                  'interactive',
-                                  value!);
-                        }),
-                  ],
-                ),
-              ),
+            LlamaParamCheckbox(
+              labelText: 'random_prompt:',
+              initialValue: model.paramsLlama.random_prompt,
+              onChanged: (value) {
+                model.paramsLlama.random_prompt = value;
+                model.paramsLlama.saveBoolToSharedPrefs('random_prompt', value);
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment:
-                      WrapCrossAlignment.center,
-                  children: [
-                    const Text(
-                      'interactive_start:',
-                    ),
-                    Checkbox(
-                        value: model.paramsLlama
-                            .interactive_start,
-                        onChanged: (value) {
-                          setState(() {
-                            model.paramsLlama
-                                    .interactive_start =
-                                value!;
-                          });
-                          model.paramsLlama
-                              .saveBoolToSharedPrefs(
-                                  'interactive_start',
-                                  value!);
-                        }),
-                  ],
-                ),
-              ),
+            LlamaParamCheckbox(
+              labelText: 'interactive:',
+              initialValue: model.paramsLlama.interactive,
+              onChanged: (value) {
+                model.paramsLlama.interactive = value;
+                model.paramsLlama.saveBoolToSharedPrefs('interactive', value);
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment:
-                      WrapCrossAlignment.center,
-                  children: [
-                    const Text(
-                      'instruct (Chat4all and Alpaca):',
-                    ),
-                    Checkbox(
-                        value:
-                            model.paramsLlama.instruct,
-                        onChanged: (value) {
-                          setState(() {
-                            model.paramsLlama.instruct =
-                                value!;
-                          });
-                          model.paramsLlama
-                              .saveBoolToSharedPrefs(
-                                  'instruct',
-                                  value!);
-                        }),
-                  ],
-                ),
-              ),
+            LlamaParamCheckbox(
+              labelText: 'interactive_start:',
+              initialValue: model.paramsLlama.interactive_start,
+              onChanged: (value) {
+                model.paramsLlama.interactive_start = value;
+                model.paramsLlama.saveBoolToSharedPrefs('interactive_start', value);
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment:
-                      WrapCrossAlignment.center,
-                  children: [
-                    const Text(
-                      'ignore_eos:',
-                    ),
-                    Checkbox(
-                        value: model.paramsLlama
-                            .ignore_eos,
-                        onChanged: (value) {
-                          setState(() {
-                            model.paramsLlama
-                                    .ignore_eos =
-                                value!;
-                          });
-                          model.paramsLlama
-                              .saveBoolToSharedPrefs(
-                                  'ignore_eos',
-                                  value!);
-                        }),
-                  ],
-                ),
-              ),
+            LlamaParamCheckbox(
+              labelText: 'instruct (Chat4all and Alpaca):',
+              initialValue: model.paramsLlama.instruct,
+              onChanged: (value) {
+                model.paramsLlama.instruct = value;
+                model.paramsLlama.saveBoolToSharedPrefs('instruct', value);
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment:
-                      WrapCrossAlignment.center,
-                  children: [
-                    const Text(
-                      'perplexity:',
-                    ),
-                    Checkbox(
-                        value: model.paramsLlama
-                            .perplexity,
-                        onChanged: (value) {
-                          setState(() {
-                            model.paramsLlama
-                                    .perplexity =
-                                value!;
-                          });
-                          model.paramsLlama
-                              .saveBoolToSharedPrefs(
-                                  'perplexity',
-                                  value!);
-                        }),
-                  ],
-                ),
-              ),
+            LlamaParamCheckbox(
+              labelText: 'ignore_eos:',
+              initialValue: model.paramsLlama.ignore_eos,
+              onChanged: (value) {
+                model.paramsLlama.ignore_eos = value;
+                model.paramsLlama.saveBoolToSharedPrefs('ignore_eos', value);
+              },
+            ),
+            LlamaParamCheckbox(
+              labelText: 'perplexity:',
+              initialValue: model.paramsLlama.perplexity,
+              onChanged: (value) {
+                model.paramsLlama.perplexity = value;
+                model.paramsLlama.saveBoolToSharedPrefs('perplexity', value);
+              },
             ),
           ],
         ),
