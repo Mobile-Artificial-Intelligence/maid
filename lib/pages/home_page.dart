@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (lib == null) {
       lib = Lib();
       lib?.executeBinary(
-        paramsLlamaValuesOnly: ParamsLlamaValuesOnly(
+        paramsLlama: ParamsLlama(
           memory_f16: model.memory_f16,
           random_prompt: model.random_prompt,
           use_color: model.use_color,

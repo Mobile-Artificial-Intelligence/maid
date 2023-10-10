@@ -204,7 +204,7 @@ class Lib {
     required void Function() done,
     required void Function() canStop,
     required String stopToken,
-    required ParamsLlamaValuesOnly paramsLlamaValuesOnly,
+    required ParamsLlama paramsLlama,
   }) async {
     RootIsolateToken? token = ServicesBinding.rootIsolateToken;
     mainSendPort = mainReceivePort.sendPort;
@@ -222,7 +222,7 @@ class Lib {
           promptPassed: promptPassed,
           firstInteraction: firstInteraction,
           stopToken: stopToken,
-          paramsLlamaValuesOnly: paramsLlamaValuesOnly,
+          paramsLlama: paramsLlama,
         ));
       } else if (message is MessageEndFromIsolate) {
         printLnLog("MessageEndFromIsolate : ${message.message}");
@@ -327,8 +327,6 @@ class Lib {
       // process user input
       llamamaidBinded.llamamaid_continue(buffer.toNativeUtf8().cast<Char>(), show_output);
     }
-
-    llamamaidBinded.llamamaid_exit();
   }
 
   void main() {}
@@ -375,14 +373,14 @@ class ParsingDemand {
   String promptPassed;
   String firstInteraction;
   String stopToken;
-  ParamsLlamaValuesOnly paramsLlamaValuesOnly;
+  ParamsLlama paramsLlama;
 
   ParsingDemand({
     required this.rootIsolateToken,
     required this.promptPassed,
     required this.firstInteraction,
     required this.stopToken,
-    required this.paramsLlamaValuesOnly,
+    required this.paramsLlama,
   });
 }
 
@@ -390,6 +388,50 @@ class MessageEndFromIsolate {
   final String message;
 
   MessageEndFromIsolate(this.message);
+}
+
+class ParamsLlama {
+  bool memory_f16;
+  bool random_prompt;
+  bool use_color;
+  bool interactive;
+  bool interactive_start;
+  bool instruct;
+  bool ignore_eos;
+  bool perplexity;
+  String seed;
+  String n_threads;
+  String n_predict;
+  String repeat_last_n;
+  String n_parts;
+  String n_ctx;
+  String top_k;
+  String top_p;
+  String temp;
+  String repeat_penalty;
+  String n_batch;
+
+  ParamsLlama({
+    required this.memory_f16,
+    required this.random_prompt,
+    required this.use_color,
+    required this.interactive,
+    required this.interactive_start,
+    required this.instruct,
+    required this.ignore_eos,
+    required this.perplexity,
+    required this.seed,
+    required this.n_threads,
+    required this.n_predict,
+    required this.repeat_last_n,
+    required this.n_parts,
+    required this.n_ctx,
+    required this.top_k,
+    required this.top_p,
+    required this.temp,
+    required this.repeat_penalty,
+    required this.n_batch,
+  });
 }
 
 enum FileState {
