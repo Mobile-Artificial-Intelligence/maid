@@ -28,6 +28,8 @@ class _ChatWidgetState extends State<ChatWidget> {
   ResponseMessage newResponse = ResponseMessage();
   
   String log = "";
+  int historyLength = 0;
+  int responseLength = 0;
   Lib? lib;
 
   bool canStop = false;
@@ -38,6 +40,8 @@ class _ChatWidgetState extends State<ChatWidget> {
       FocusScope.of(context).unfocus();
     }
     setState(() {
+      historyLength = "${model.prePromptController.text.trim()} ${model.promptController.text.trim()}\n".length;
+      responseLength = 0;
       model.inProgress = true;
     });
     if (lib == null) {
@@ -107,8 +111,15 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   void printResult(String message) {
-    newResponse.addMessage(message);
-    scrollDown();
+    // for characters in message
+    for (int i = 0; i < message.length; i++) {
+      responseLength++;
+      if (responseLength > historyLength) {
+        newResponse.addMessage(message.substring(i));
+        scrollDown();
+        return;
+      }
+    }
   }
 
   void done() {
