@@ -18,6 +18,7 @@
 #include <vector>
 #include <unordered_set>
 #include <thread>
+#include <atomic>
 
 #if defined(_MSC_VER)
 #pragma warning(disable: 4244 4267) // possible loss of data
@@ -42,6 +43,7 @@ static int mirostat          = 0;
 static const float   mirostat_tau      = 5.00f;
 static const float   mirostat_eta      = 0.10f;
 static const bool penalize_nl = true;
+static std::atomic_bool stop_generation = false;
 
 int32_t get_num_physical_cores() {
 #ifdef __linux__
@@ -212,6 +214,11 @@ int llamamaid_continue(const char *input, show_output_cb *show_output) {
     }
 
     while (true) {
+        if (stop_generation.load()) {
+            stop_generation.store(false);  // reset for future use
+            return 0;  // or any other cleanup you want to do
+        }
+
         // predict
         if (embd.size() > 0) {
             // Note: n_ctx - 4 here is to match the logic for commandline prompt handling via
@@ -401,6 +408,10 @@ int llamamaid_continue(const char *input, show_output_cb *show_output) {
     }
 
     return 0;
+}
+
+void llamamaid_stop() {
+    stop_generation.store(true);
 }
 
 void llamamaid_exit(void) {

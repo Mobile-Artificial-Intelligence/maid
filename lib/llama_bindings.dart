@@ -60,14 +60,21 @@ class NativeLibrary {
   late final _llamamaid_continue = _llamamaid_continuePtr.asFunction<
       int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<show_output_cb>)>();
 
+  void llamamaid_stop() {
+    return _llamamaid_stop();
+  }
+
+  late final _llamamaid_stopPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('llamamaid_stop');
+  late final _llamamaid_stop = _llamamaid_stopPtr.asFunction<void Function()>();
+
   void llamamaid_exit() {
     return _llamamaid_exit();
   }
 
   late final _llamamaid_exitPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('llamamaid_exit');
-  late final _llamamaid_exit =
-      _llamamaid_exitPtr.asFunction<void Function()>();
+  late final _llamamaid_exit = _llamamaid_exitPtr.asFunction<void Function()>();
 }
 
 typedef show_output_cb
