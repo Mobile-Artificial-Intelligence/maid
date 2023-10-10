@@ -24,6 +24,7 @@ class Model {
 
   TextEditingController promptController = TextEditingController();
   TextEditingController reversePromptController = TextEditingController();
+  TextEditingController prePromptController = TextEditingController();
   TextEditingController seedController = TextEditingController()..text = "-1";
   TextEditingController n_threadsController = TextEditingController()..text = "4";
   TextEditingController n_predictController = TextEditingController()..text = "512";
@@ -40,23 +41,6 @@ class Model {
   var stringKeys = {};
 
   FileState fileState = FileState.notFound;
-
-  List<String> defaultPrePrompts = [
-    'Transcript of a dialog, where the User interacts with an Assistant named Bob. Bob is helpful, kind, honest, good at writing, and never fails to answer the User\'s requests immediately and with precision.\n\n'
-      'User: Hello, Bob.\n'
-      'Bob: Hello. How may I help you today?\n'
-      'User: Please tell me the largest city in Europe.\n'
-      'Bob: Sure. The largest city in Europe is Moscow, the capital of Russia.\n'
-      'User:',
-    'Maid: Hello, I\'m Maid, your personal assistant. I can write, complex mails, code and even songs\n'
-        'User: Hello how are you ?\n'
-        'Maid: I\'m fine, thank you. How are you ?\n'
-        'User: I\'m fine too, thanks.\n'
-        'Maid: That\'s good to hear\n'
-        'User:',
-  ];
-
-  String prePrompt = "";
 
   Model() {
     initKeys();
@@ -79,6 +63,7 @@ class Model {
 
     // Map for string values
     stringKeys = {
+      "pre_prompt": prePromptController,
       "seed": seedController,
       "n_threads": n_threadsController,
       "n_predict": n_predictController,
@@ -143,6 +128,7 @@ class Model {
       perplexity = false;
     });
 
+    prePromptController.text = "";
     seedController.text = "-1";
     n_threadsController.text = "4";
     n_predictController.text = "512";
@@ -166,6 +152,7 @@ class Model {
     saveBoolToSharedPrefs("instruct", instruct);
     saveBoolToSharedPrefs("ignore_eos", ignore_eos);
     saveBoolToSharedPrefs("perplexity", perplexity);
+    saveStringToSharedPrefs("pre_prompt", prePromptController.text);
     saveStringToSharedPrefs("seed", seedController.text);
     saveStringToSharedPrefs("n_threads", n_threadsController.text);
     saveStringToSharedPrefs("n_predict", n_predictController.text);
@@ -204,37 +191,5 @@ class Model {
     }
 
     fileState = FileState.found;
-  }
-
-  void initDefaultPrompts() async {
-    var prefs = await SharedPreferences.getInstance();
-    var prePrompts = await getPrePrompts();
-    if (prePrompts.isEmpty) {
-      await prefs.setStringList("prePrompts", defaultPrePrompts);
-      prePrompts = defaultPrePrompts;
-    }
-    var defaultPrePrompt = prefs.getString("defaultPrePrompt");
-    if (defaultPrePrompt != null) {
-      prePrompt = defaultPrePrompt;
-    } else if (prePrompts.isNotEmpty) {
-      prePrompt = prePrompts[0];
-    }
-    if (prefs.containsKey("reversePrompt")) {
-      reversePromptController.text = prefs.getString("reversePrompt") ?? "";
-    } else {
-      reversePromptController.text = 'User:';
-    }
-    reversePromptController.addListener(() {
-      prefs.setString("reversePrompt", reversePromptController.text);
-    });
-  }
-
-  Future<List<String>> getPrePrompts() async {
-    var prefs = await SharedPreferences.getInstance();
-    List<String>? prePrompts = [];
-    if (prefs.containsKey("prePrompts")) {
-      prePrompts = prefs.getStringList("prePrompts") ?? [];
-    }
-    return prePrompts;
   }
 }

@@ -60,7 +60,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
 
   void deletePreprompt() {
     setState(() {
-      model.prePrompt = "";
+      model.prePromptController.text = "";
     });
   }
 
@@ -83,7 +83,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   @override
   initState() {
     super.initState();
-    model.initDefaultPrompts();
     getRam();
 
     testFileExisting();
@@ -136,6 +135,17 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text('PrePrompt'),
+            subtitle: TextField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              controller: model.prePromptController,
+              decoration: InputDecoration(
+                hintText: 'PrePrompt',
               ),
             ),
           ),

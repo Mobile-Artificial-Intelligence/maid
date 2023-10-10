@@ -58,16 +58,16 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void printLnLog(String log) {
+  void printLnLog(String message) {
     setState(() {
-      this.log += "$log\n";
+      log += "$message\n";
     });
     scrollDown();
   }
 
-  void printResult(String log) {
+  void printResult(String message) {
     setState(() {
-      result += log;
+      result += message;
     });
     scrollDown();
   }
@@ -119,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         printLnLog: printLnLog,
         printLog: printResult,
-        promptPassed: model.prePrompt,
+        promptPassed: model.prePromptController.text,
         firstInteraction: model.promptController.text.trim() +
             (model.promptController.text.isEmpty ? "" : "\n"),
         done: done,
@@ -142,173 +142,9 @@ class _MyHomePageState extends State<MyHomePage> {
         );
   }
 
-  showPrepromptAlert() async {
-    var prePrompts = await model.getPrePrompts();
-    showDialog(
-      context: context,
-      builder: (BuildContext contextAlert) {
-        return AlertDialog(
-          title: const Text("Pre-Prompt"),
-          content: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxHeight: 300,
-            ),
-            child: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  for (var prePrompt in prePrompts)
-                    Wrap(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 1,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 1,
-                                ),
-                              ],
-                              color: Colors.white,
-                            ),
-                            child: ListTile(
-                              title: Text(prePrompt,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                  )),
-                              onTap: () {
-                                setState(() {
-                                  model.prePrompt = prePrompt;
-                                });
-                                SharedPreferences.getInstance().then((prefs) {
-                                  prefs.setString(
-                                      "defaultPrePrompt", prePrompt);
-                                });
-                                Navigator.of(contextAlert).pop();
-                              },
-                              trailing: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
-                                  padding: const EdgeInsets.all(0),
-                                ),
-                                onPressed: () {
-                                  deletePrompt(prePrompt);
-                                  Navigator.of(contextAlert).pop();
-                                },
-                                child: const Text(
-                                  "X",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await addPrePromptAlert();
-                      //save prePrompt in shared preferences
-                      prePrompts.add(model.prePrompt);
-                      Navigator.of(contextAlert).pop();
-                    },
-                    child: const Text("+",
-                        style: TextStyle(
-                          color: Colors.white,
-                        )),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text("OK",
-                  style: TextStyle(
-                    color: Colors.cyan,
-                  )),
-              onPressed: () {
-                setState(() {
-                  model.prePrompt = model.promptController.text;
-                });
-                Navigator.of(contextAlert).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  addPrePromptAlert() {
-    var prePromptController = TextEditingController();
-    return showDialog(
-      context: context,
-      builder: (BuildContext contextAlert) {
-        return AlertDialog(
-          title: const Text("Add a new Pre-Prompt"),
-          content: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxHeight: 300,
-            ),
-            child: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: 200,
-                    ),
-                    child: TextField(
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 3,
-                      expands: false,
-                      controller: prePromptController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelStyle: TextStyle(
-                          color: Colors.cyan,
-                        ),
-                        labelText: 'New Pre-Prompt',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text(
-                "OK",
-                style: TextStyle(
-                  color: Colors.cyan,
-                ),
-              ),
-              onPressed: () async {
-                setState(() {
-                  model.prePrompt = prePromptController.text;
-                });
-                //save prePrompt in shared preferences
-                var prePrompts = await model.getPrePrompts();
-                prePrompts.add(model.prePrompt);
-                var prefs = await SharedPreferences.getInstance();
-                prefs.setStringList("prePrompts", prePrompts);
-                Navigator.of(contextAlert).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void deletePreprompt() {
     setState(() {
-      model.prePrompt = "";
+      model.prePromptController.text = "";
     });
   }
 
@@ -363,23 +199,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void deletePrompt(String prePrompt) async {
-    var prefs = await SharedPreferences.getInstance();
-    List<String>? prePrompts = [];
-    if (prefs.containsKey("prePrompts")) {
-      prePrompts = prefs.getStringList("prePrompts") ?? [];
-    }
-    prePrompts.remove(prePrompt);
-    prefs.setStringList("prePrompts", prePrompts);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: Colors.grey.shade800,  // Set a solid color here
+            color: Colors.grey.shade900,  // Set a solid color here
           ),
         ),
         title: GestureDetector(
@@ -389,20 +215,13 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Text(widget.title),
         ),
       ),
-      endDrawer: SettingsWidget(model: model),
+      drawer: SettingsWidget(model: model),
       body: Stack(
         children: [
           Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.purple.shade900,
-                  Colors.cyan.shade900,
-                ],
-              ),
-            ),
+              color: Colors.grey.shade800, 
+            )
           ),
           SingleChildScrollView(
             child: Center(
@@ -438,59 +257,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Wrap(
-                                  alignment: WrapAlignment.center,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                        onPressed: showPrepromptAlert,
-                                        child: const Text(
-                                          "Pre-Prompt",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: ElevatedButton(
-                                            onPressed: deletePreprompt,
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.red,
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                            ),
-                                            child: const Text(
-                                              "X",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            )),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ConstrainedBox(
-                                        constraints: const BoxConstraints(
-                                          maxHeight: 200,
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: SingleChildScrollView(
-                                            child: SelectableText(
-                                              "Pre-Prompt : ${model.prePrompt}",
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: TextField(
