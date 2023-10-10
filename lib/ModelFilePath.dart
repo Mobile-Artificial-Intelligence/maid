@@ -35,7 +35,7 @@ class ModelFilePath {
     return false;
   }
 
-  static deleteModelFile() {
+  static detachModelFile() {
     SharedPreferences.getInstance().then((prefs) {
       prefs.remove('path');
     });

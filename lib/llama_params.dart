@@ -4,12 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:maid/ModelFilePath.dart';
-import 'package:maid/lib.dart';
-import 'package:system_info_plus/system_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import 'package:maid/pages/home_page.dart';
 
 class ParamsLlama {
   bool memory_f16 = false; // use f16 instead of f32 for memory kv
@@ -243,95 +237,5 @@ class ParamsLlamaValuesOnly {
     required this.repeat_penalty,
     required this.n_batch,
   });
-}
-
-class LlamaParamTextField extends StatefulWidget {
-  final String labelText;
-  final TextEditingController controller;
-  final String hintText;
-
-  LlamaParamTextField({
-    required this.labelText,
-    required this.controller,
-    required this.hintText,
-  });
-
-  @override
-  _LlamaParamTextFieldState createState() => _LlamaParamTextFieldState();
-}
-
-class _LlamaParamTextFieldState extends State<LlamaParamTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: 150,
-        ),
-        child: Wrap(
-          children: [
-            Text(
-              widget.labelText,
-            ),
-            TextField(
-              controller: widget.controller,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: widget.hintText,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class LlamaParamCheckbox extends StatefulWidget {
-  final String labelText;
-  final bool initialValue;
-  final Function(bool) onChanged;
-
-  LlamaParamCheckbox({
-    required this.labelText,
-    required this.initialValue,
-    required this.onChanged,
-  });
-
-  @override
-  _LlamaParamCheckboxState createState() => _LlamaParamCheckboxState();
-}
-
-class _LlamaParamCheckboxState extends State<LlamaParamCheckbox> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: 150,
-        ),
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Text(
-              widget.labelText,
-            ),
-            Checkbox(
-              value: widget.initialValue,
-              onChanged: (value) {
-                if (value != null) {
-                  widget.onChanged(value);
-                  setState(() {}); // If you need to rebuild the widget
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 

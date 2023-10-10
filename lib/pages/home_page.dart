@@ -22,6 +22,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+ 
   Model model = Model();
   
   String log = "";
@@ -433,15 +434,8 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           child: Text(widget.title),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              showSettings();
-            },
-          ),
-        ],
       ),
+      endDrawer: SettingsWidget(model: model),
       body: Stack(
         children: [
           Container(
@@ -579,20 +573,20 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
-                          if (showParamsFineTune)
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.cyan),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SettingsWidget(model: model),
-                                ),
-                              ),
-                            ),
+                          //if (showParamsFineTune)
+                          //  Padding(
+                          //    padding: const EdgeInsets.all(8.0),
+                          //    child: Container(
+                          //      decoration: BoxDecoration(
+                          //        border: Border.all(color: Colors.cyan),
+                          //        borderRadius: BorderRadius.circular(5),
+                          //      ),
+                          //      child: Padding(
+                          //        padding: const EdgeInsets.all(8.0),
+                          //        child: SettingsWidget(model: model), // SettingWidget is now a drawer
+                          //      ),
+                          //    ),
+                          //  ),
                           ElevatedButton(
                             onPressed: toggleShowLog,
                             child: Text(

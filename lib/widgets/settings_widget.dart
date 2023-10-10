@@ -92,17 +92,43 @@ class _SettingsWidgetState extends State<SettingsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          "Once you start a conversation, you cannot change the params.",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Text('Settings'),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
+          ElevatedButton(
+            onPressed: () {
+              model.openFile();
+            },
+            child: const Text(
+              "Load Model",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              const Text("RAM: "),
+              Expanded(
+                child: Text(
+                  _ram,
+                  style: TextStyle(
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          ElevatedButton(
             onPressed: () {
               model.paramsLlama.resetAll(setState);
             },
@@ -114,146 +140,94 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               ),
             ),
           ),
+          llamaParamSwitch(
+            'memory_f16:', model.paramsLlama.memory_f16, 'memory_f16'),
+          llamaParamSwitch(
+            'random_prompt:', model.paramsLlama.random_prompt, 'random_prompt'),
+          llamaParamSwitch(
+            'interactive:', model.paramsLlama.interactive, 'interactive'),
+          llamaParamSwitch(
+            'interactive_start:', model.paramsLlama.interactive_start, 'interactive_start'),
+          llamaParamSwitch(
+            'instruct (Chat4all and Alpaca):', model.paramsLlama.instruct, 'instruct'),
+          llamaParamSwitch(
+            'ignore_eos:', model.paramsLlama.ignore_eos, 'ignore_eos'),
+          llamaParamSwitch(
+            'perplexity:', model.paramsLlama.perplexity, 'perplexity'),
+          llamaParamTextField(
+            'seed (-1 for random):', model.paramsLlama.seedController, 'seed'),
+          llamaParamTextField(
+            'n_threads:', model.paramsLlama.n_threadsController, 'n_threads'),
+          llamaParamTextField(
+            'n_predict:', model.paramsLlama.n_predictController, 'n_predict'),
+          llamaParamTextField(
+            'repeat_last_n:', model.paramsLlama.repeat_last_nController, 'repeat_last_n'),
+          llamaParamTextField(
+            'n_parts (-1 for auto):', model.paramsLlama.n_partsController, 'n_parts'),
+          llamaParamTextField(
+            'n_ctx:', model.paramsLlama.n_ctxController, 'n_ctx'),
+          llamaParamTextField(
+            'top_k:', model.paramsLlama.top_kController, 'top_k'),
+          llamaParamTextField(
+            'top_p:', model.paramsLlama.top_pController, 'top_p'),
+          llamaParamTextField(
+            'temp:', model.paramsLlama.tempController, 'temp'),
+          llamaParamTextField(
+            'repeat_penalty:', model.paramsLlama.repeat_penaltyController, 'repeat_penalty'),
+          llamaParamTextField(
+            'batch_size:', model.paramsLlama.n_batchController, 'batch_size'),
+        ],
+      ),
+    );
+  }
+
+  Widget llamaParamTextField(String labelText, TextEditingController controller, String hintText) {
+    return ListTile(
+      title: Text(labelText),
+      subtitle: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
         ),
-        Wrap(
-          children: [
-            const Text("RAM :"),
-            Text(
-              _ram,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                model.openFile();
-              },
-              child: const Text(
-                "Load Model",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            LlamaParamTextField(
-              labelText: 'seed (-1 for random):',
-              controller: model.paramsLlama.seedController,
-              hintText: 'seed',
-            ),
-            LlamaParamTextField(
-              labelText: 'n_threads:',
-              controller: model.paramsLlama.n_threadsController,
-              hintText: 'n_threads',
-            ),
-            LlamaParamTextField(
-              labelText: 'n_predict:',
-              controller: model.paramsLlama.n_predictController,
-              hintText: 'n_predict',
-            ),
-            LlamaParamTextField(
-              labelText: 'repeat_last_n:',
-              controller: model.paramsLlama.repeat_last_nController,
-              hintText: 'repeat_last_n',
-            ),
-            LlamaParamTextField(
-              labelText: 'n_parts (-1 for auto):',
-              controller: model.paramsLlama.n_partsController,
-              hintText: 'n_parts',
-            ),
-            LlamaParamTextField(
-              labelText: 'n_ctx:',
-              controller: model.paramsLlama.n_ctxController,
-              hintText: 'n_ctx',
-            ),
-            LlamaParamTextField(
-              labelText: 'top_k:',
-              controller: model.paramsLlama.top_kController,
-              hintText: 'top_k',
-            ),
-            LlamaParamTextField(
-              labelText: 'top_p:',
-              controller: model.paramsLlama.top_pController,
-              hintText: 'top_p',
-            ),
-            LlamaParamTextField(
-              labelText: 'temp:',
-              controller: model.paramsLlama.tempController,
-              hintText: 'temp',
-            ),
-            LlamaParamTextField(
-              labelText: 'repeat_penalty:',
-              controller: model.paramsLlama.repeat_penaltyController,
-              hintText: 'repeat_penalty',
-            ),
-            LlamaParamTextField(
-              labelText: 'batch_size:',
-              controller: model.paramsLlama.n_batchController,
-              hintText: 'batch_size',
-            ),
-            LlamaParamCheckbox(
-              labelText: 'memory_f16:',
-              initialValue: model.paramsLlama.memory_f16,
-              onChanged: (value) {
-                model.paramsLlama.memory_f16 = value;
-                model.paramsLlama.saveBoolToSharedPrefs('memory_f16', value);
-              },
-            ),
-            LlamaParamCheckbox(
-              labelText: 'random_prompt:',
-              initialValue: model.paramsLlama.random_prompt,
-              onChanged: (value) {
-                model.paramsLlama.random_prompt = value;
-                model.paramsLlama.saveBoolToSharedPrefs('random_prompt', value);
-              },
-            ),
-            LlamaParamCheckbox(
-              labelText: 'interactive:',
-              initialValue: model.paramsLlama.interactive,
-              onChanged: (value) {
-                model.paramsLlama.interactive = value;
-                model.paramsLlama.saveBoolToSharedPrefs('interactive', value);
-              },
-            ),
-            LlamaParamCheckbox(
-              labelText: 'interactive_start:',
-              initialValue: model.paramsLlama.interactive_start,
-              onChanged: (value) {
-                model.paramsLlama.interactive_start = value;
-                model.paramsLlama.saveBoolToSharedPrefs('interactive_start', value);
-              },
-            ),
-            LlamaParamCheckbox(
-              labelText: 'instruct (Chat4all and Alpaca):',
-              initialValue: model.paramsLlama.instruct,
-              onChanged: (value) {
-                model.paramsLlama.instruct = value;
-                model.paramsLlama.saveBoolToSharedPrefs('instruct', value);
-              },
-            ),
-            LlamaParamCheckbox(
-              labelText: 'ignore_eos:',
-              initialValue: model.paramsLlama.ignore_eos,
-              onChanged: (value) {
-                model.paramsLlama.ignore_eos = value;
-                model.paramsLlama.saveBoolToSharedPrefs('ignore_eos', value);
-              },
-            ),
-            LlamaParamCheckbox(
-              labelText: 'perplexity:',
-              initialValue: model.paramsLlama.perplexity,
-              onChanged: (value) {
-                model.paramsLlama.perplexity = value;
-                model.paramsLlama.saveBoolToSharedPrefs('perplexity', value);
-              },
-            ),
-          ],
-        ),
-      ],
+      ),
+    );
+  }
+
+  Widget llamaParamSwitch(String title, bool initialValue, String key) {
+    return SwitchListTile(
+      title: Text(title),
+      value: initialValue,
+      onChanged: (value) {
+        setState(() {
+          switch (key) {
+            case 'memory_f16':
+              model.paramsLlama.memory_f16 = value;
+              break;
+            case 'random_prompt':
+              model.paramsLlama.random_prompt = value;
+              break;
+            case 'interactive':
+              model.paramsLlama.interactive = value;
+              break;
+            case 'interactive_start':
+              model.paramsLlama.interactive_start = value;
+              break;
+            case 'instruct':
+              model.paramsLlama.instruct = value;
+              break;
+            case 'ignore_eos':
+              model.paramsLlama.ignore_eos = value;
+              break;
+            case 'perplexity':
+              model.paramsLlama.perplexity = value;
+              break;
+            default:
+              break;
+          }
+          model.paramsLlama.saveBoolToSharedPrefs(key, value);
+        });
+      },
     );
   }
 }
+

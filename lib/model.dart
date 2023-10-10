@@ -38,7 +38,7 @@ class Model {
 
   void openFile() async {
     if (fileState != FileState.notFound) {
-      await ModelFilePath.deleteModelFile();
+      await ModelFilePath.detachModelFile();
       fileState = FileState.notFound;
     }
     
@@ -56,7 +56,7 @@ class Model {
     if (!file.existsSync()) {
       print("file not found 2");
       fileState = FileState.notFound;
-      await ModelFilePath.deleteModelFile();
+      await ModelFilePath.detachModelFile();
       return;
     }
 
