@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/ModelFilePath.dart';
 import 'package:maid/lib.dart';
 import 'package:maid/model.dart';
-import 'package:maid/llama_params.dart';
 import 'package:maid/widgets/settings_widget.dart';
 import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -98,25 +97,25 @@ class _MyHomePageState extends State<MyHomePage> {
       lib = Lib();
       lib?.executeBinary(
         paramsLlamaValuesOnly: ParamsLlamaValuesOnly(
-          memory_f16: model.paramsLlama.memory_f16,
-          random_prompt: model.paramsLlama.random_prompt,
-          use_color: model.paramsLlama.use_color,
-          interactive: model.paramsLlama.interactive,
-          interactive_start: model.paramsLlama.interactive_start,
-          instruct: model.paramsLlama.instruct,
-          ignore_eos: model.paramsLlama.ignore_eos,
-          perplexity: model.paramsLlama.perplexity,
-          seed: model.paramsLlama.seedController.text,
-          n_threads: model.paramsLlama.n_threadsController.text,
-          n_predict: model.paramsLlama.n_predictController.text,
-          repeat_last_n: model.paramsLlama.repeat_last_nController.text,
-          n_parts: model.paramsLlama.n_partsController.text,
-          n_ctx: model.paramsLlama.n_ctxController.text,
-          top_k: model.paramsLlama.top_kController.text,
-          top_p: model.paramsLlama.top_pController.text,
-          temp: model.paramsLlama.tempController.text,
-          repeat_penalty: model.paramsLlama.repeat_penaltyController.text,
-          n_batch: model.paramsLlama.n_batchController.text,
+          memory_f16: model.memory_f16,
+          random_prompt: model.random_prompt,
+          use_color: model.use_color,
+          interactive: model.interactive,
+          interactive_start: model.interactive_start,
+          instruct: model.instruct,
+          ignore_eos: model.ignore_eos,
+          perplexity: model.perplexity,
+          seed: model.seedController.text,
+          n_threads: model.n_threadsController.text,
+          n_predict: model.n_predictController.text,
+          repeat_last_n: model.repeat_last_nController.text,
+          n_parts: model.n_partsController.text,
+          n_ctx: model.n_ctxController.text,
+          top_k: model.top_kController.text,
+          top_p: model.top_pController.text,
+          temp: model.tempController.text,
+          repeat_penalty: model.repeat_penaltyController.text,
+          n_batch: model.n_batchController.text,
         ),
         printLnLog: printLnLog,
         printLog: printResult,
@@ -311,51 +310,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       model.prePrompt = "";
     });
-  }
-
-  void showSettings() {
-    showDialog(
-      context: context, 
-      builder: (BuildContext contextAlert) {
-        return AlertDialog(
-          title: const Text("Settings"),
-          content: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxHeight: 300,
-            ),
-            child: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  const Text("RAM :"),
-                  //Text(
-                  //  _ram,
-                  //  style: TextStyle(
-                  //    color: color,
-                  //    fontWeight: FontWeight.bold,
-                  //  ),
-                  //),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      model.openFile();
-                    },
-                    child: const Text(
-                      "Load Model",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   void showInfosAlert() {
@@ -561,32 +515,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              onPressed: toggleShowFineTune,
-                              child: Text(
-                                showParamsFineTune
-                                    ? "Hide Params"
-                                    : "Show Params",
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          //if (showParamsFineTune)
-                          //  Padding(
-                          //    padding: const EdgeInsets.all(8.0),
-                          //    child: Container(
-                          //      decoration: BoxDecoration(
-                          //        border: Border.all(color: Colors.cyan),
-                          //        borderRadius: BorderRadius.circular(5),
-                          //      ),
-                          //      child: Padding(
-                          //        padding: const EdgeInsets.all(8.0),
-                          //        child: SettingsWidget(model: model), // SettingWidget is now a drawer
-                          //      ),
-                          //    ),
-                          //  ),
                           ElevatedButton(
                             onPressed: toggleShowLog,
                             child: Text(

@@ -14,13 +14,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:maid/ModelFilePath.dart';
-import 'package:maid/llama_params.dart';
+import 'package:maid/model.dart';
 
 import 'package:maid/generated_bindings_llamamaid.dart';
 import 'package:maid/main.dart';
 
-// import 'package:maid/generated_bindings.dart';
-// import 'package:maid/llama_bindings.dart';
 
 //declaration of functions
 typedef ChatLaunch = Int Function(Int, Int);
@@ -156,16 +154,6 @@ class Lib {
     return pointerPointer;
   }
 
-//   std::vector<llama_token> llama_tokenize(struct llama_context * ctx, const  gptParams.ref. & text,  gptParams.ref. add_bos) {
-//     // initialize to prompt numer of chars, since n_tokens <= n_prompt_chars
-//     std::vector<llama_token> res(text.size() + (int)add_bos);
-//     int n = llama_tokenize(ctx, text.c_str(), res.data(), res.size(), add_bos);
-//     assert(n >= 0);
-//     res.resize(n);
-
-//     return res;
-// }
-
   static parserIsolateFunction(
     SendPort mainSendPort,
   ) async {
@@ -241,7 +229,6 @@ class Lib {
         completer.complete();
       } else if (message is MessageFromIsolate) {
         print("MessageFromIsolate : ${message.message}");
-        // printLnLog(message.message);
         printLog(message.message);
       } else if (message is MessageNewLineFromIsolate) {
         print("MessageNewLineFromIsolate : ${message.message}");

@@ -7,7 +7,6 @@ import 'package:maid/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/ModelFilePath.dart';
 import 'package:maid/lib.dart';
-import 'package:maid/llama_params.dart';
 import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -130,7 +129,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           ),
           ElevatedButton(
             onPressed: () {
-              model.paramsLlama.resetAll(setState);
+              model.resetAll(setState);
             },
             child: const Text(
               "Reset All",
@@ -141,41 +140,41 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             ),
           ),
           llamaParamSwitch(
-            'memory_f16:', model.paramsLlama.memory_f16, 'memory_f16'),
+            'memory_f16:', model.memory_f16, 'memory_f16'),
           llamaParamSwitch(
-            'random_prompt:', model.paramsLlama.random_prompt, 'random_prompt'),
+            'random_prompt:', model.random_prompt, 'random_prompt'),
           llamaParamSwitch(
-            'interactive:', model.paramsLlama.interactive, 'interactive'),
+            'interactive:', model.interactive, 'interactive'),
           llamaParamSwitch(
-            'interactive_start:', model.paramsLlama.interactive_start, 'interactive_start'),
+            'interactive_start:', model.interactive_start, 'interactive_start'),
           llamaParamSwitch(
-            'instruct (Chat4all and Alpaca):', model.paramsLlama.instruct, 'instruct'),
+            'instruct (Chat4all and Alpaca):', model.instruct, 'instruct'),
           llamaParamSwitch(
-            'ignore_eos:', model.paramsLlama.ignore_eos, 'ignore_eos'),
+            'ignore_eos:', model.ignore_eos, 'ignore_eos'),
           llamaParamSwitch(
-            'perplexity:', model.paramsLlama.perplexity, 'perplexity'),
+            'perplexity:', model.perplexity, 'perplexity'),
           llamaParamTextField(
-            'seed (-1 for random):', model.paramsLlama.seedController, 'seed'),
+            'seed (-1 for random):', model.seedController, 'seed'),
           llamaParamTextField(
-            'n_threads:', model.paramsLlama.n_threadsController, 'n_threads'),
+            'n_threads:', model.n_threadsController, 'n_threads'),
           llamaParamTextField(
-            'n_predict:', model.paramsLlama.n_predictController, 'n_predict'),
+            'n_predict:', model.n_predictController, 'n_predict'),
           llamaParamTextField(
-            'repeat_last_n:', model.paramsLlama.repeat_last_nController, 'repeat_last_n'),
+            'repeat_last_n:', model.repeat_last_nController, 'repeat_last_n'),
           llamaParamTextField(
-            'n_parts (-1 for auto):', model.paramsLlama.n_partsController, 'n_parts'),
+            'n_parts (-1 for auto):', model.n_partsController, 'n_parts'),
           llamaParamTextField(
-            'n_ctx:', model.paramsLlama.n_ctxController, 'n_ctx'),
+            'n_ctx:', model.n_ctxController, 'n_ctx'),
           llamaParamTextField(
-            'top_k:', model.paramsLlama.top_kController, 'top_k'),
+            'top_k:', model.top_kController, 'top_k'),
           llamaParamTextField(
-            'top_p:', model.paramsLlama.top_pController, 'top_p'),
+            'top_p:', model.top_pController, 'top_p'),
           llamaParamTextField(
-            'temp:', model.paramsLlama.tempController, 'temp'),
+            'temp:', model.tempController, 'temp'),
           llamaParamTextField(
-            'repeat_penalty:', model.paramsLlama.repeat_penaltyController, 'repeat_penalty'),
+            'repeat_penalty:', model.repeat_penaltyController, 'repeat_penalty'),
           llamaParamTextField(
-            'batch_size:', model.paramsLlama.n_batchController, 'batch_size'),
+            'batch_size:', model.n_batchController, 'batch_size'),
         ],
       ),
     );
@@ -201,30 +200,30 @@ class _SettingsWidgetState extends State<SettingsWidget> {
         setState(() {
           switch (key) {
             case 'memory_f16':
-              model.paramsLlama.memory_f16 = value;
+              model.memory_f16 = value;
               break;
             case 'random_prompt':
-              model.paramsLlama.random_prompt = value;
+              model.random_prompt = value;
               break;
             case 'interactive':
-              model.paramsLlama.interactive = value;
+              model.interactive = value;
               break;
             case 'interactive_start':
-              model.paramsLlama.interactive_start = value;
+              model.interactive_start = value;
               break;
             case 'instruct':
-              model.paramsLlama.instruct = value;
+              model.instruct = value;
               break;
             case 'ignore_eos':
-              model.paramsLlama.ignore_eos = value;
+              model.ignore_eos = value;
               break;
             case 'perplexity':
-              model.paramsLlama.perplexity = value;
+              model.perplexity = value;
               break;
             default:
               break;
           }
-          model.paramsLlama.saveBoolToSharedPrefs(key, value);
+          model.saveBoolToSharedPrefs(key, value);
         });
       },
     );
