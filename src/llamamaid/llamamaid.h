@@ -1,5 +1,5 @@
-#ifndef __LLAMASHERPA_H
-#define __LLAMASHERPA_H
+#ifndef __LLAMAMAID_H
+#define __LLAMAMAID_H
 
 #ifdef __cplusplus
 extern "C" {
