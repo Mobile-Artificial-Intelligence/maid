@@ -29,7 +29,6 @@ class _MyHomePageState extends State<MyHomePage> {
   ResponseMessage newResponse = ResponseMessage();
   
   String log = "";
-  final _responseStreamController = StreamController<String>.broadcast();
   Lib? lib;
 
   Color color = Colors.black;
@@ -198,12 +197,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  void dispose() {
-    _responseStreamController.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -257,6 +250,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(
                       onPressed: model.inProgress ? null : _exec,
                       child: const Text('Send'),
+                    ),
+                    ElevatedButton(
+                      onPressed: model.inProgress ? lib?.cancel : null,
+                      child: const Text('Stop'),
                     ),
                   ],
                 ),
