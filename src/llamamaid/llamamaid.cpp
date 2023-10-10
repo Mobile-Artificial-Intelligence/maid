@@ -43,7 +43,7 @@ static int mirostat          = 0;
 static const float   mirostat_tau      = 5.00f;
 static const float   mirostat_eta      = 0.10f;
 static const bool penalize_nl = true;
-static std::atomic_bool stop_generation = false;
+static std::atomic_bool stop_generation(false);
 
 int32_t get_num_physical_cores() {
 #ifdef __linux__
