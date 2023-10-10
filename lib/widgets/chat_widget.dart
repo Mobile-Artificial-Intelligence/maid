@@ -8,82 +8,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/lib.dart';
 import 'package:maid/model.dart';
 import 'package:maid/widgets/settings_widget.dart';
-import 'package:maid/widgets/message_widgets.dart';
 import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class ChatWidget extends StatefulWidget {
+  const ChatWidget({super.key, required this.model});
 
-  final String title;
+  final Model model;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ChatWidget> createState() => _ChatWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
- 
-  Model model = Model();
+class _ChatWidgetState extends State<ChatWidget> {
+  Model get model => widget.model;
+
+  final ScrollController _consoleScrollController = ScrollController();
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
   
   String log = "";
   Lib? lib;
 
-  Color color = Colors.black;
-
-  final ScrollController _consoleScrollController = ScrollController();
-
-  // Memory? _memory;
-
-  bool showLog = false;
-  bool showParams = false;
-  bool showParamsFineTune = false;
-
-  toggleShowLog() {
-    setState(() {
-      showLog = !showLog;
-    });
-  }
-
-  toggleShowFineTune() {
-    setState(() {
-      showParamsFineTune = !showParamsFineTune;
-    });
-  }
-
-  void scrollDown() {
-    _consoleScrollController.animateTo(
-      _consoleScrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 50),
-      curve: Curves.easeOut,
-    );
-  }
-
-  void printLnLog(String message) {
-    setState(() {
-      log += "$message\n";
-    });
-    scrollDown();
-  }
-
-  void printResult(String message) {
-    newResponse.addMessage(message);
-    scrollDown();
-  }
-
   bool canStop = false;
-  void done() {
-    setState(() {
-      model.inProgress = false;
-    });
-  }
-
-  void canUseStop() {
-    setState(() {
-      canStop = true;
-    });
-  }
 
   void _exec() {
     //close the keyboard if on mobile
@@ -144,75 +91,41 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void showInfosAlert() {
-    showDialog(
-      context: context,
-      builder: (BuildContext contextAlert) {
-        return AlertDialog(
-          title: const Text("Infos"),
-          content: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxHeight: 300,
-            ),
-            child: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  const SelectableText(
-                      "This app is a demo of the llama.cpp model.\n\n"
-                      "You can find the source code of this app on GitHub\n\n"
-                      'It was made on Flutter using an implementation of ggerganov/llama.cpp recompiled to work on mobiles\n\n'
-                      'The LLaMA models are officially distributed by Meta and will never be provided by us\n\n'
-                      'It was made by Maxime GUERIN and Thibaut LEAUX from the french company Bip-Rep based in Lyon (France)'),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(0),
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                    ),
-                    onPressed: () async {
-                      var url = 'https://bip-rep.com';
-                      if (await canLaunchUrl(Uri.parse(url))) {
-                        await launchUrl(Uri.parse(url));
-                      } else {
-                        throw 'Could not launch $url';
-                      }
-                    },
-                    child: Image.asset(
-                      "assets/biprep.jpg",
-                      width: 100,
-                      height: 100,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        );
-      },
+  void scrollDown() {
+    _consoleScrollController.animateTo(
+      _consoleScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 50),
+      curve: Curves.easeOut,
     );
+  }
+
+  void printLnLog(String message) {
+    setState(() {
+      log += "$message\n";
+    });
+    scrollDown();
+  }
+
+  void printResult(String message) {
+    newResponse.addMessage(message);
+    scrollDown();
+  }
+
+  void done() {
+    setState(() {
+      model.inProgress = false;
+    });
+  }
+
+  void canUseStop() {
+    setState(() {
+      canStop = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade900,  // Set a solid color here
-          ),
-        ),
-        title: GestureDetector(
-          onTap: () {
-            showInfosAlert();
-          },
-          child: Text(widget.title),
-        ),
-      ),
-      drawer: SettingsWidget(model: model),
-      body: Stack(
+    return Stack(
         children: [
           Container(
             decoration: BoxDecoration(
@@ -260,7 +173,75 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ],
+      );
+    }
+}
+
+class UserMessage extends StatelessWidget {
+  final String message;
+
+  UserMessage({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.blue[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(message),
       ),
     );
+  }
+}
+
+class ResponseMessage extends StatefulWidget {
+  final StreamController<String> messageController = StreamController<String>.broadcast();
+
+  void addMessage(String message) {
+    messageController.add(message);
+  }
+
+  @override
+  _ResponseMessageState createState() => _ResponseMessageState();
+}
+
+class _ResponseMessageState extends State<ResponseMessage> {
+  String _message = "";
+
+  @override
+  void initState() {
+    super.initState();
+    widget.messageController.stream.listen((textChunk) {
+      setState(() {
+        _message += textChunk;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.green[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(_message),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.messageController.close();
+    super.dispose();
   }
 }
