@@ -21,9 +21,6 @@ class MaidApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: MaidTheme().getTheme(),
-      // ThemeData(
-      //   colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple)
-      //       .copyWith(background: Colors.grey.shade800)),
       home: const MyHomePage(title: 'Maid'),
     );
   }

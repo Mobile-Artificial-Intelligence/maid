@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:maid/ModelFilePath.dart';
 import 'package:maid/lib.dart';
 import 'package:maid/model.dart';
 import 'package:maid/widgets/settings_widget.dart';
+import 'package:maid/widgets/message_widgets.dart';
 import 'package:system_info_plus/system_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -23,9 +25,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
  
   Model model = Model();
+  List<Widget> chatWidgets = [];
+  ResponseMessage newResponse = ResponseMessage();
   
   String log = "";
-  String result = "";
+  final _responseStreamController = StreamController<String>.broadcast();
   Lib? lib;
 
   Color color = Colors.black;
@@ -66,9 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void printResult(String message) {
-    setState(() {
-      result += message;
-    });
+    newResponse.addMessage(message);
     scrollDown();
   }
 
@@ -131,15 +133,11 @@ class _MyHomePageState extends State<MyHomePage> {
           " ${model.promptController.text.trim()}${model.promptController.text.isEmpty ? "" : "\n"}");
     }
     setState(() {
-      model.promptController.text = "";
+      chatWidgets.add(UserMessage(message: model.promptController.text.trim()));
+      newResponse = ResponseMessage();
+      chatWidgets.add(newResponse);
+      model.promptController.text = ""; // Clear the input field
     });
-  }
-
-  void _cancel() {
-    lib?.cancel(
-        // printLnLog: printLnLog,
-        // printLog: printLog,
-        );
   }
 
   void deletePreprompt() {
@@ -200,6 +198,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void dispose() {
+    _responseStreamController.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -220,282 +224,44 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey.shade800, 
-            )
+              color: Colors.grey.shade800,
+            ),
           ),
-          SingleChildScrollView(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 700,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              showParams = !showParams;
-                            });
-                          },
-                          child: const Icon(
-                            Icons.settings,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      if (model.fileState == FileState.found) ...[
-                        if (showParams) ...[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 1,
-                                    expands: false,
-                                    controller: model.reversePromptController,
-                                    decoration: InputDecoration(
-                                      border: const OutlineInputBorder(),
-                                      labelStyle: const TextStyle(
-                                        color: Colors.cyan,
-                                      ),
-                                      labelText: 'Reverse Prompt',
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            model.reversePromptController.clear();
-                                          },
-                                          icon: const Icon(Icons.clear)),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: toggleShowLog,
-                            child: Text(
-                              showLog ? "Hide Log" : "Show Log",
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          if (showLog)
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.cyan),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Column(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 8.0),
-                                      child: Text("Log"),
-                                    ),
-                                    ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                        maxHeight: 200,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: SingleChildScrollView(
-                                          child: SizedBox(
-                                            width: double.infinity,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: Colors.black),
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  color: Colors.black,
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    log,
-                                                    style: const TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                        ],
-                        const Text(
-                          "Chat now !",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Stack(
-                          children: [
-                            //top right button to copy the result
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                  maxHeight:
-                                      MediaQuery.of(context).size.height - 200),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SingleChildScrollView(
-                                  controller: _consoleScrollController,
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.black),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colors.black,
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: SelectableText(
-                                            result,
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (result.isNotEmpty)
-                              Positioned(
-                                top: 12,
-                                right: 8,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: const CircleBorder(),
-                                    padding: const EdgeInsets.all(0),
-                                    backgroundColor:
-                                        Colors.blueGrey.withOpacity(0.5),
-                                  ),
-                                  onPressed: () {
-                                    Clipboard.setData(
-                                        ClipboardData(text: result));
-                                    //delete the toast if it is already present
-                                    ScaffoldMessenger.of(context)
-                                        .removeCurrentSnackBar();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content:
-                                            Text("Text copied to clipboard"),
-                                      ),
-                                    );
-                                  },
-                                  child: Icon(
-                                    Icons.copy,
-                                    color: Colors.white.withOpacity(0.5),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            TextField(
-                              keyboardType: TextInputType.multiline,
-                              // maxLines: 3,
-                              //on enter send the message
-                              onSubmitted: (value) {
-                                _exec();
-                              },
-                              expands: false,
-                              controller: model.promptController,
-                              decoration: InputDecoration(
-                                border: const OutlineInputBorder(),
-                                labelStyle: const TextStyle(
-                                  color: Colors.cyan,
-                                ),
-                                labelText: 'Prompt',
-                                suffixIcon: Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: (model.inProgress) ? null : _exec,
-                                        style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 5, vertical: 5),
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            if (!model.inProgress)
-                                              const Icon(
-                                                Icons.send_sharp,
-                                                color: Colors.white,
-                                              ),
-                                            if (model.inProgress)
-                                              const Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: SizedBox(
-                                                  height: 20,
-                                                  width: 20,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      if (canStop && model.inProgress)
-                                        ElevatedButton(
-                                          onPressed: _cancel,
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 5),
-                                          ),
-                                          child: const Icon(
-                                            Icons.stop,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ],
-                  ),
+          Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  controller: _consoleScrollController,
+                  itemCount: chatWidgets.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return chatWidgets[index];
+                  },
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.multiline,
+                        onSubmitted: (value) => _exec(),
+                        controller: model.promptController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Prompt',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: model.inProgress ? null : _exec,
+                      child: const Text('Send'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
