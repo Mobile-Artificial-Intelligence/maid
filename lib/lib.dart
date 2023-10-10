@@ -301,14 +301,15 @@ class Lib {
     Pointer<show_output_cb> show_output = Pointer.fromFunction(showOutput);
 
     NativeLibrary llamamaidBinded = NativeLibrary(llamamaid);
-    var ret = llamamaidBinded.llamamaid_start(filePath.toNativeUtf8().cast<Char>(), prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
-      // process the prompt
-      llamamaidBinded.llamamaid_continue("".toNativeUtf8().cast<Char>(), show_output);
+    llamamaidBinded.llamamaid_start(filePath.toNativeUtf8().cast<Char>(), prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
 
+    print('FirstInteraction: $firstInteraction');
     // if first line of conversation was provided, pass it now
     if (firstInteraction.isNotEmpty) {
       llamamaidBinded.llamamaid_continue(firstInteraction.toNativeUtf8().cast<Char>(), show_output);
     }
+
+    print('FirstInteraction: $firstInteraction');
 
     while (true) {
       // ask for user input
@@ -318,8 +319,6 @@ class Lib {
       // process user input
       llamamaidBinded.llamamaid_continue(buffer.toNativeUtf8().cast<Char>(), show_output);
     }
-
-    llamamaidBinded.llamamaid_exit();
   }
 
   void cancel() {
