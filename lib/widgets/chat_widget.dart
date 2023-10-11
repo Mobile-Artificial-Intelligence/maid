@@ -185,29 +185,31 @@ class _ChatWidgetState extends State<ChatWidget> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        keyboardType: TextInputType.multiline,
-                        onSubmitted: (value) => _exec(),
-                        controller: model.promptController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Prompt',
-                        ),
-                      ),
+                child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  onSubmitted: (value) => _exec(),
+                  controller: model.promptController,
+                  cursorColor: Colors.blue, // Change this color as per your design
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0), // Rounded corners with 30.0 radius
                     ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: model.inProgress ? null : _exec,
-                      child: const Text('Send'),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: BorderSide(color: Colors.grey[400]!), // Color when TextField is enabled but not in focus
                     ),
-                    ElevatedButton(
-                      onPressed: model.inProgress ? lib?.cancel : null,
-                      child: const Text('Stop'),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(color: Colors.blue), // Color when TextField is in focus
                     ),
-                  ],
+                    labelText: 'Prompt',
+                    labelStyle: const TextStyle(color: Colors.grey), // Style for the label
+                    fillColor: const Color.fromARGB(255, 48, 48, 48),
+                    filled: true,
+                    isDense: true, // This makes the TextField height smaller
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                  ),
                 ),
               ),
             ],
