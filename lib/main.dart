@@ -22,20 +22,16 @@ class MaidApp extends StatelessWidget {
 }
 
 class MaidTheme {
-  static Color gradientColorA = const Color(0xFFFFFFFF);
-  static Color gradientColorB = const Color(0xFF000000);
-
   ThemeData getTheme() {
-    gradientColorA = const Color(0xFF000000);
-    gradientColorB = const Color(0xFFFFFFFF);
     return _darkTheme;
   }
 
   static final ThemeData _darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.grey[700],
+    scaffoldBackgroundColor: Colors.grey.shade800,
     colorScheme: ColorScheme.dark(
-      primary: Colors.cyan.shade700,
-      secondary: Colors.purple.shade900,
+      primary: Colors.grey.shade800,
+      secondary: Colors.grey.shade900,
+      tertiary: Colors.blue
     ),
   );
 }

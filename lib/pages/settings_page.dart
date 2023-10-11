@@ -48,7 +48,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: Colors.grey.shade900,  // Set a solid color here
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
         title: const Text('Settings'),
@@ -75,6 +75,12 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: () {
                 model.openFile();
               },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+              ),
               child: const Text(
                 "Load Model",
                 style: TextStyle(
@@ -88,6 +94,12 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: () {
                 model.resetAll(setState);
               },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+              ),
               child: const Text(
                 "Reset All",
                 style: TextStyle(
@@ -107,8 +119,17 @@ class _SettingsPageState extends State<SettingsPage> {
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 controller: model.prePromptController,
-                decoration: const InputDecoration(
-                  hintText: 'PrePrompt',
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  labelText: 'PrePrompt',
+                  labelStyle: const TextStyle(color: Colors.grey), // Style for the label
+                  fillColor: Theme.of(context).colorScheme.secondary,
+                  filled: true,
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
                 ),
               ),
             ),
@@ -122,6 +143,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       model.exampleResponseControllers.add(TextEditingController());
                     });
                   },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
                   child: const Text(
                     "Add Example",
                     style: TextStyle(
@@ -138,6 +165,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       model.exampleResponseControllers.removeLast();
                     });
                   },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
                   child: const Text(
                     "Remove Example",
                     style: TextStyle(
@@ -206,7 +239,16 @@ class _SettingsPageState extends State<SettingsPage> {
       subtitle: TextField(
         controller: controller,
         decoration: InputDecoration(
-          hintText: hintText,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: BorderSide.none,
+          ),
+          labelText: hintText,
+          labelStyle: const TextStyle(color: Colors.grey), // Style for the label
+          fillColor: Theme.of(context).colorScheme.secondary,
+          filled: true,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
         ),
       ),
     );

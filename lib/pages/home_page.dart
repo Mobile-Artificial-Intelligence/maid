@@ -159,7 +159,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: Colors.grey.shade900,  // Set a solid color here
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
         title: Text(widget.title),
@@ -169,7 +169,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey.shade800,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           Column(
@@ -192,25 +192,17 @@ class _MaidHomePageState extends State<MaidHomePage> {
                         keyboardType: TextInputType.multiline,
                         onSubmitted: (value) => _exec(),
                         controller: model.promptController,
-                        cursorColor: Colors.blue, // Change this color as per your design
+                        cursorColor: Theme.of(context).colorScheme.tertiary, // Change this color as per your design
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0), // Rounded corners with 30.0 radius
-                          ),
-                          enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide(color: Colors.grey[400]!), // Color when TextField is enabled but not in focus
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: const BorderSide(color: Colors.blue), // Color when TextField is in focus
+                            borderSide: BorderSide.none,
                           ),
                           labelText: 'Prompt',
                           labelStyle: const TextStyle(color: Colors.grey), // Style for the label
-                          fillColor: const Color.fromARGB(255, 48, 48, 48),
+                          fillColor: Theme.of(context).colorScheme.secondary,
                           filled: true,
-                          isDense: true, // This makes the TextField height smaller
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                         ),
                       ),
@@ -218,8 +210,8 @@ class _MaidHomePageState extends State<MaidHomePage> {
                     IconButton(
                       onPressed: _exec, 
                       iconSize: 50,
-                      icon: const Icon(Icons.arrow_circle_right, 
-                        color: Colors.blue, 
+                      icon: Icon(Icons.arrow_circle_right, 
+                        color: Theme.of(context).colorScheme.tertiary,
                       )
                     ),
                   ],
