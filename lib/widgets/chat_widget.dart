@@ -230,7 +230,7 @@ class UserMessage extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.blue[200],
+          color: Color.fromARGB(255, 0, 128, 255),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(message),
@@ -285,7 +285,7 @@ class _ResponseMessageState extends State<ResponseMessage> {
         margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.green[200],
+          color: const Color.fromARGB(255, 0, 128, 255),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(_message),
