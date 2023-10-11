@@ -42,12 +42,13 @@ class _ChatWidgetState extends State<ChatWidget> {
       FocusScope.of(context).unfocus();
     }
     setState(() {
+      print("=====================================");
       model.saveAll();
       model.compilePrePrompt();
       historyLength = model.prePrompt.trim().length + 
                       model.promptController.text.trim().length +
-                      model.responseAliasController.text.trim().length + 3; 
-      responseLength = 0;
+                      model.responseAliasController.text.trim().length + 3;
+      print("historyLength: $historyLength"); 
       model.inProgress = true;
     });
     if (lib == null) {
@@ -112,30 +113,36 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   void printResult(String message) {
+    String alias = model.userAliasController.text;
     int i = 0;
+
+    if (!model.inProgress) {
+      return;
+    }
 
     while (i < message.length) {
       responseLength++;
 
       if (responseLength > historyLength) {
-          // If the current character matches the expected character in the model text
-          if (message[i] == model.userAliasController.text[characterMatch]) {
-              print('------------->${model.userAliasController.text[characterMatch]}');
-              characterMatch++;
-
-              // If the entire model text is matched, reset the match position
-              if (characterMatch >= model.userAliasController.text.length) {
-                  characterMatch = 0;
-                  lib?.cancel();
-                  return;
-              }
-          } else {
-              // If there's a mismatch, add the remaining message to newResponse
-              newResponse.addMessage(message.substring(i - characterMatch));
-              scrollDown();
-              characterMatch = 0;
-              return;
+        // If the current character matches the expected character in the model text
+        if (message[i] == alias[characterMatch]) {
+          print('------------->${alias[characterMatch]}');
+          characterMatch++;
+        
+          // If the entire model text is matched, reset the match position
+          if (characterMatch >= alias.length) {
+            characterMatch = 0;
+            model.inProgress = false;
+            lib?.cancel();
+            return;
           }
+        } else {
+          // If there's a mismatch, add the remaining message to newResponse
+          newResponse.addMessage(message.substring(i - characterMatch));
+          scrollDown();
+          characterMatch = 0;
+          return;
+        }
       }
     
       i++;
@@ -143,7 +150,6 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   void done() {
-    print("Done");
     setState(() {
       model.inProgress = false;
     });

@@ -237,8 +237,6 @@ class Lib {
         printLog(message.message);
       } else if (message is MessageNewLineFromIsolate) {
         printLnLog(message.message);
-      } else if (message is MessageCanPrompt) {
-        done();
       } else if (message is MessageCanStop) {
         canStop();
       } else {
@@ -309,11 +307,7 @@ class Lib {
       llamamaidBinded.llamamaid_continue(firstInteraction.toNativeUtf8().cast<Char>(), show_output);
     }
 
-    print('FirstInteraction: $firstInteraction');
-
     while (true) {
-      // ask for user input
-      mainSendPort?.send(MessageCanPrompt());
       String buffer = await interaction.future;
       interaction = Completer();
       // process user input
