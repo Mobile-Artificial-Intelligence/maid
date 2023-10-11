@@ -40,7 +40,8 @@ class _ChatWidgetState extends State<ChatWidget> {
       FocusScope.of(context).unfocus();
     }
     setState(() {
-      historyLength = "${model.prePromptController.text.trim()} ${model.promptController.text.trim()}\n".length;
+      model.compilePrePrompt();
+      historyLength = "${model.prePrompt}${model.promptController.text.trim()}\n".length;
       responseLength = 0;
       model.inProgress = true;
     });
@@ -71,7 +72,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         ),
         printLnLog: printLnLog,
         printLog: printResult,
-        promptPassed: model.prePromptController.text,
+        promptPassed: model.prePrompt,
         firstInteraction: model.promptController.text.trim() +
             (model.promptController.text.isEmpty ? "" : "\n"),
         done: done,
@@ -87,12 +88,6 @@ class _ChatWidgetState extends State<ChatWidget> {
       newResponse = ResponseMessage();
       chatWidgets.add(newResponse);
       model.promptController.text = ""; // Clear the input field
-    });
-  }
-
-  void deletePreprompt() {
-    setState(() {
-      model.prePromptController.text = "";
     });
   }
 

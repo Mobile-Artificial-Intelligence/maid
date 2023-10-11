@@ -57,12 +57,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     }
   }
 
-  void deletePreprompt() {
-    setState(() {
-      model.prePromptController.text = "";
-    });
-  }
-
   void testFileExisting() async {
     if (Platform.isIOS) {
       (await SharedPreferences.getInstance()).remove('path');
@@ -113,7 +107,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             ],
           ),
           const SizedBox(height: 10.0),
-          Text(model.modelPath),
+          Text(model.modelName),
           ElevatedButton(
             onPressed: () {
               model.openFile();

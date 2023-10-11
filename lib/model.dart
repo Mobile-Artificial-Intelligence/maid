@@ -46,6 +46,7 @@ class Model {
 
   String modelName = "";
   String modelPath = "";
+  String prePrompt = "";
 
   FileState fileState = FileState.notFound;
 
@@ -198,5 +199,17 @@ class Model {
 
     print(modelPath);
     print(modelName);
+  }
+
+  void compilePrePrompt() {
+    prePrompt = prePromptController.text.isNotEmpty ? prePromptController.text.trim() : "";
+    for (var i = 0; i < examplePromptControllers.length; i++) {
+      var prompt = '${userAliasController.text.trim()} ${examplePromptControllers[i].text.trim()}';
+      var response = '${responseAliasController.text.trim()} ${exampleResponseControllers[i].text.trim()}';
+      if (prompt.isNotEmpty && response.isNotEmpty) {
+        prePrompt += "\n$prompt\n$response";
+      }
+    }
+    prePrompt += "\n${userAliasController.text.trim()} ";
   }
 }
