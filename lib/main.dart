@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:maid/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
 void main() {
@@ -19,19 +19,4 @@ class MaidApp extends StatelessWidget {
       home: const MaidHomePage(title: 'Maid'),
     );
   }
-}
-
-class MaidTheme {
-  ThemeData getTheme() {
-    return _darkTheme;
-  }
-
-  static final ThemeData _darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.grey.shade800,
-    colorScheme: ColorScheme.dark(
-      primary: Colors.grey.shade800,
-      secondary: Colors.grey.shade900,
-      tertiary: Colors.blue
-    ),
-  );
 }

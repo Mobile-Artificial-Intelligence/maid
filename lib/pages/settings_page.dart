@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maid/model.dart';
+import 'package:maid/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/lib.dart';
 import 'package:system_info_plus/system_info_plus.dart';
@@ -110,27 +111,16 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 15.0),
             llamaParamTextField(
-              'User alias:', model.userAliasController, 'User alias'),
+              'User alias:', model.userAliasController),
             llamaParamTextField(
-              'Response alias:', model.responseAliasController, 'Response alias'),
+              'Response alias:', model.responseAliasController),
             ListTile(
               title: const Text('PrePrompt:'),
               subtitle: TextField(
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 controller: model.prePromptController,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  labelText: 'PrePrompt',
-                  labelStyle: const TextStyle(color: Colors.grey), // Style for the label
-                  fillColor: Theme.of(context).colorScheme.secondary,
-                  filled: true,
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                ),
+                decoration: roundedInput('PrePrompt', context)
               ),
             ),
             Row(
@@ -185,8 +175,8 @@ class _SettingsPageState extends State<SettingsPage> {
               (model.examplePromptControllers.length == model.exampleResponseControllers.length) ? model.examplePromptControllers.length : 0,
               (index) => Column(
                 children: [
-                  llamaParamTextField('Example prompt:', model.examplePromptControllers[index], 'Example prompt'),
-                  llamaParamTextField('Example response:', model.exampleResponseControllers[index], 'Example response'),
+                  llamaParamTextField('Example prompt:', model.examplePromptControllers[index]),
+                  llamaParamTextField('Example response:', model.exampleResponseControllers[index]),
                 ],
               ),
             ),
@@ -206,50 +196,39 @@ class _SettingsPageState extends State<SettingsPage> {
               'perplexity:', model.perplexity, 'perplexity'),
             const SizedBox(height: 15.0),
             llamaParamTextField(
-              'seed (-1 for random):', model.seedController, 'seed'),
+              'seed (-1 for random):', model.seedController),
             llamaParamTextField(
-              'n_threads:', model.n_threadsController, 'n_threads'),
+              'n_threads:', model.n_threadsController),
             llamaParamTextField(
-              'n_predict:', model.n_predictController, 'n_predict'),
+              'n_predict:', model.n_predictController),
             llamaParamTextField(
-              'repeat_last_n:', model.repeat_last_nController, 'repeat_last_n'),
+              'repeat_last_n:', model.repeat_last_nController),
             llamaParamTextField(
-              'n_parts (-1 for auto):', model.n_partsController, 'n_parts'),
+              'n_parts (-1 for auto):', model.n_partsController),
             llamaParamTextField(
-              'n_ctx:', model.n_ctxController, 'n_ctx'),
+              'n_ctx:', model.n_ctxController),
             llamaParamTextField(
-              'top_k:', model.top_kController, 'top_k'),
+              'top_k:', model.top_kController),
             llamaParamTextField(
-              'top_p:', model.top_pController, 'top_p'),
+              'top_p:', model.top_pController),
             llamaParamTextField(
-              'temp:', model.tempController, 'temp'),
+              'temp:', model.tempController),
             llamaParamTextField(
-              'repeat_penalty:', model.repeat_penaltyController, 'repeat_penalty'),
+              'repeat_penalty:', model.repeat_penaltyController),
             llamaParamTextField(
-              'batch_size:', model.n_batchController, 'batch_size'),
+              'batch_size:', model.n_batchController),
           ],
         ),
       )
     );
   }
 
-  Widget llamaParamTextField(String labelText, TextEditingController controller, String hintText) {
+  Widget llamaParamTextField(String labelText, TextEditingController controller) {
     return ListTile(
       title: Text(labelText),
       subtitle: TextField(
         controller: controller,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            borderSide: BorderSide.none,
-          ),
-          labelText: hintText,
-          labelStyle: const TextStyle(color: Colors.grey), // Style for the label
-          fillColor: Theme.of(context).colorScheme.secondary,
-          filled: true,
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-        ),
+        decoration: roundedInput(labelText, context)
       ),
     );
   }

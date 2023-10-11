@@ -272,7 +272,11 @@ class Lib {
   static Completer interaction = Completer();
 
   static void showOutput(Pointer<Char> output) {
-    logInline(output.cast<Utf8>().toDartString());
+    try {
+      logInline(output.cast<Utf8>().toDartString());
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   binaryIsolate({

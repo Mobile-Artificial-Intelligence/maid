@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/lib.dart';
 import 'package:maid/model.dart';
+import 'package:maid/theme.dart';
 import 'package:maid/widgets/drawer_widget.dart';
 import 'package:maid/widgets/chat_widgets.dart';
 
@@ -193,18 +194,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                         onSubmitted: (value) => _exec(),
                         controller: model.promptController,
                         cursorColor: Theme.of(context).colorScheme.tertiary, // Change this color as per your design
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide.none,
-                          ),
-                          labelText: 'Prompt',
-                          labelStyle: const TextStyle(color: Colors.grey), // Style for the label
-                          fillColor: Theme.of(context).colorScheme.secondary,
-                          filled: true,
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                        ),
+                        decoration: roundedInput('Prompt', context)
                       ),
                     ),
                     IconButton(
