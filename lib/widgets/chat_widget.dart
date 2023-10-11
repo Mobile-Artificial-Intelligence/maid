@@ -45,9 +45,10 @@ class _ChatWidgetState extends State<ChatWidget> {
       print("=====================================");
       model.saveAll();
       model.compilePrePrompt();
-      historyLength = model.prePrompt.trim().length + 
-                      model.promptController.text.trim().length +
+      historyLength = model.promptController.text.trim().length +
                       model.responseAliasController.text.trim().length + 3;
+      historyLength += (responseLength == 0) ? model.prePrompt.length : 0;
+      responseLength = 0;
       print("historyLength: $historyLength"); 
       model.inProgress = true;
     });
@@ -134,6 +135,7 @@ class _ChatWidgetState extends State<ChatWidget> {
             characterMatch = 0;
             model.inProgress = false;
             lib?.cancel();
+            newResponse.trim();
             return;
           }
         } else {
@@ -239,14 +241,14 @@ class UserMessage extends StatelessWidget {
 
 class ResponseMessage extends StatefulWidget {
   final StreamController<String> messageController = StreamController<String>.broadcast();
-  final StreamController<int> removeController = StreamController<int>.broadcast(); // 1. Add remove controller
+  final StreamController<int> trimController = StreamController<int>.broadcast(); // 1. Add remove controller
 
   void addMessage(String message) {
     messageController.add(message);
   }
 
-  void removeLast(int length) {
-    removeController.add(length); // 3. Add length to remove controller
+  void trim() {
+    trimController.add(0);
   }
 
   @override
@@ -267,17 +269,11 @@ class _ResponseMessageState extends State<ResponseMessage> {
       });
     });
 
-    // 2. Listen for the remove request
-    widget.removeController.stream.listen((lengthToRemove) {
-      if (_message.length >= lengthToRemove) {
-        setState(() {
-          _message = _message.substring(0, _message.length - lengthToRemove);
-        });
-      } else {
-        setState(() {
-          _message = "";
-        });
-      }
+    // Listen for the trim request
+    widget.trimController.stream.listen((_) {
+      setState(() {
+        _message = _message.trimRight();
+      });
     });
   }
 
@@ -300,7 +296,7 @@ class _ResponseMessageState extends State<ResponseMessage> {
   @override
   void dispose() {
     widget.messageController.close();
-    widget.removeController.close(); // Close remove controller
+    widget.trimController.close(); // Close trim controller
     super.dispose();
   }
 }
