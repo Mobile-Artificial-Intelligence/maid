@@ -21,42 +21,6 @@ class SettingsWidget extends StatefulWidget {
 class _SettingsWidgetState extends State<SettingsWidget> {
   Model get model => widget.model;
 
-  String _ram = "\nCalculating...";
-  Color color = Colors.black;
-
-  void getRam() async {
-    try {
-      if (Platform.isWindows == false) {
-        int? deviceMemory = await SystemInfoPlus.physicalMemory;
-        int deviceMemoryGB = (deviceMemory ?? 0) ~/ 1024 + 1;
-
-        setState(() {
-          _ram = "${deviceMemoryGB}GB";
-          if (deviceMemoryGB <= 6) {
-            _ram += " (WARNING ! May not be enough)";
-          } else {
-            _ram += " (Should be enough)";
-          }
-          color = deviceMemoryGB > 6
-              ? Colors.green
-              : deviceMemoryGB > 4
-                  ? Colors.orange
-                  : Colors.red;
-        });
-      } else {
-        setState(() {
-          _ram = " Can't get RAM on Windows";
-          color = Colors.red;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _ram = " Can't get RAM";
-        color = Colors.red;
-      });
-    }
-  }
-
   void testFileExisting() async {
     if (Platform.isIOS) {
       (await SharedPreferences.getInstance()).remove('path');
@@ -76,8 +40,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   @override
   initState() {
     super.initState();
-    getRam();
-
     testFileExisting();
   }
 
@@ -93,18 +55,18 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             ),
             child: Text('Settings'),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("RAM: "),
-              Text(
-                _ram,
-                style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          FutureBuilder<Row>(
+              future: ramDisplay(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    return snapshot.data!;
+                  } else if (snapshot.hasError) {
+                    return const Text('Error displaying RAM');
+                  }
+                }
+                return const SizedBox.shrink();
+              },
           ),
           const SizedBox(height: 10.0),
           Text(model.modelName),
@@ -282,6 +244,56 @@ class _SettingsWidgetState extends State<SettingsWidget> {
           model.saveBoolToSharedPrefs(key, value);
         });
       },
+    );
+  }
+
+  Future<Row> ramDisplay() async {
+    String ram = "\nCalculating...";
+    Color color = Colors.black;
+    
+    try {
+      if (Platform.isWindows == false) {
+        int? deviceMemory = await SystemInfoPlus.physicalMemory;
+        int deviceMemoryGB = (deviceMemory ?? 0) ~/ 1024 + 1;
+
+        setState(() {
+          ram = "${deviceMemoryGB}GB";
+          if (deviceMemoryGB <= 6) {
+            ram += " (WARNING ! May not be enough)";
+          } else {
+            ram += " (Should be enough)";
+          }
+          color = deviceMemoryGB > 6
+              ? Colors.green
+              : deviceMemoryGB > 4
+                  ? Colors.orange
+                  : Colors.red;
+        });
+      } else {
+        setState(() {
+          ram = " Can't get RAM on Windows";
+          color = Colors.red;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        ram = " Can't get RAM";
+        color = Colors.red;
+      });
+    }
+    
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("RAM: "),
+        Text(
+          ram,
+          style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

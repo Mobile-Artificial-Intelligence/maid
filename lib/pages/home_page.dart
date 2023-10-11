@@ -1,27 +1,23 @@
 import 'dart:io';
-import 'dart:async';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/lib.dart';
 import 'package:maid/model.dart';
 import 'package:maid/widgets/settings_widget.dart';
-import 'package:system_info_plus/system_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:maid/widgets/chat_widgets.dart';
 
-class ChatWidget extends StatefulWidget {
-  const ChatWidget({super.key, required this.model});
+class MaidHomePage extends StatefulWidget {
+  const MaidHomePage({super.key, required this.title});
 
-  final Model model;
+  final String title;
 
   @override
-  State<ChatWidget> createState() => _ChatWidgetState();
+  State<MaidHomePage> createState() => _MaidHomePageState();
 }
 
-class _ChatWidgetState extends State<ChatWidget> {
-  Model get model => widget.model;
+class _MaidHomePageState extends State<MaidHomePage> {
+ 
+  Model model = Model();
 
   final ScrollController _consoleScrollController = ScrollController();
   List<Widget> chatWidgets = [];
@@ -42,14 +38,12 @@ class _ChatWidgetState extends State<ChatWidget> {
       FocusScope.of(context).unfocus();
     }
     setState(() {
-      print("=====================================");
       model.saveAll();
       model.compilePrePrompt();
       historyLength = model.promptController.text.trim().length +
                       model.responseAliasController.text.trim().length + 3;
       historyLength += (responseLength == 0) ? model.prePrompt.length : 0;
       responseLength = 0;
-      print("historyLength: $historyLength"); 
       model.inProgress = true;
     });
     if (lib == null) {
@@ -127,7 +121,6 @@ class _ChatWidgetState extends State<ChatWidget> {
       if (responseLength > historyLength) {
         // If the current character matches the expected character in the model text
         if (message[i] == alias[characterMatch]) {
-          print('------------->${alias[characterMatch]}');
           characterMatch++;
         
           // If the entire model text is matched, reset the match position
@@ -165,7 +158,17 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey.shade900,  // Set a solid color here
+          ),
+        ),
+        title: Text(widget.title),
+      ),
+      drawer: SettingsWidget(model: model),
+      body: Stack(
         children: [
           Container(
             decoration: BoxDecoration(
@@ -228,90 +231,7 @@ class _ChatWidgetState extends State<ChatWidget> {
             ],
           ),
         ],
-      );
-    }
-}
-
-class UserMessage extends StatelessWidget {
-  final String message;
-
-  UserMessage({required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 0, 128, 255),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Text(message),
       ),
     );
-  }
-}
-
-class ResponseMessage extends StatefulWidget {
-  final StreamController<String> messageController = StreamController<String>.broadcast();
-  final StreamController<int> trimController = StreamController<int>.broadcast(); // 1. Add remove controller
-
-  void addMessage(String message) {
-    messageController.add(message);
-  }
-
-  void trim() {
-    trimController.add(0);
-  }
-
-  @override
-  _ResponseMessageState createState() => _ResponseMessageState();
-}
-
-class _ResponseMessageState extends State<ResponseMessage> {
-  String _message = "";
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Listening for new messages
-    widget.messageController.stream.listen((textChunk) {
-      setState(() {
-        _message += textChunk;
-      });
-    });
-
-    // Listen for the trim request
-    widget.trimController.stream.listen((_) {
-      setState(() {
-        _message = _message.trimRight();
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 0, 128, 255),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Text(_message),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    widget.messageController.close();
-    widget.trimController.close(); // Close trim controller
-    super.dispose();
   }
 }
