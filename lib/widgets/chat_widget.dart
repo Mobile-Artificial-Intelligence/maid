@@ -112,31 +112,38 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   void printResult(String message) {
-    // for characters in message
-    for (int i = 0; i < message.length; i++) {
-      responseLength++;
-      if (responseLength > historyLength) {
-        if (message[i] == model.userAliasController.text[characterMatch]) {
-          print('------------->${model.userAliasController.text[characterMatch]}');
-          characterMatch++;
+    int i = 0;
 
-          if (characterMatch >= model.userAliasController.text.length) {
-            characterMatch = 0;
-            newResponse.removeLast(model.userAliasController.text.length);
-            lib?.cancel();
-            return;
+    while (i < message.length) {
+      responseLength++;
+
+      if (responseLength > historyLength) {
+          // If the current character matches the expected character in the model text
+          if (message[i] == model.userAliasController.text[characterMatch]) {
+              print('------------->${model.userAliasController.text[characterMatch]}');
+              characterMatch++;
+
+              // If the entire model text is matched, reset the match position
+              if (characterMatch >= model.userAliasController.text.length) {
+                  characterMatch = 0;
+                  lib?.cancel();
+                  return;
+              }
+          } else {
+              // If there's a mismatch, add the remaining message to newResponse
+              newResponse.addMessage(message.substring(i - characterMatch));
+              scrollDown();
+              characterMatch = 0;
+              return;
           }
-        } else {
-          newResponse.addMessage(message.substring(i - characterMatch));
-          scrollDown();
-          characterMatch = 0;
-          return;
-        }
       }
+    
+      i++;
     }
   }
 
   void done() {
+    print("Done");
     setState(() {
       model.inProgress = false;
     });
