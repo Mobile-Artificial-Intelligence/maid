@@ -115,12 +115,21 @@ class _SettingsPageState extends State<SettingsPage> {
             llamaParamTextField(
               'Response alias:', model.responseAliasController),
             ListTile(
-              title: const Text('PrePrompt:'),
-              subtitle: TextField(
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                controller: model.prePromptController,
-                decoration: roundedInput('PrePrompt', context)
+              title: Row(
+                children: [
+                  const Expanded(
+                    child: Text('PrePrompt'),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      controller: model.prePromptController,
+                      decoration: roundedInput('PrePrompt', context),
+                    ),
+                  ),
+                ],
               ),
             ),
             Row(
@@ -225,10 +234,19 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget llamaParamTextField(String labelText, TextEditingController controller) {
     return ListTile(
-      title: Text(labelText),
-      subtitle: TextField(
-        controller: controller,
-        decoration: roundedInput(labelText, context)
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(labelText),
+          ),
+          Expanded(
+            flex: 2,
+            child: TextField(
+              controller: controller,
+              decoration: roundedInput(labelText, context),
+            ),
+          ),
+        ],
       ),
     );
   }
