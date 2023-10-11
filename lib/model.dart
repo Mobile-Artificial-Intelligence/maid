@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/lib.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path/path.dart' as path;
 
 class Model {
   bool inProgress = false;
@@ -18,7 +21,14 @@ class Model {
 
   TextEditingController promptController = TextEditingController();
   TextEditingController reversePromptController = TextEditingController();
+
   TextEditingController prePromptController = TextEditingController();
+  List<TextEditingController> examplePromptControllers = [];
+  List<TextEditingController> exampleResponseControllers = [];
+
+  TextEditingController userAliasController = TextEditingController()..text = "User:";
+  TextEditingController responseAliasController = TextEditingController()..text = "Maid:";
+
   TextEditingController seedController = TextEditingController()..text = "-1";
   TextEditingController n_threadsController = TextEditingController()..text = "4";
   TextEditingController n_predictController = TextEditingController()..text = "512";
@@ -33,6 +43,9 @@ class Model {
 
   var boolKeys = {};
   var stringKeys = {};
+
+  String modelName = "";
+  String modelPath = "";
 
   FileState fileState = FileState.notFound;
 
@@ -161,29 +174,29 @@ class Model {
   }
 
   void openFile() async {
-    if (fileState != FileState.notFound) {
-      await ModelFilePath.detachModelFile();
-      fileState = FileState.notFound;
+    try {
+      await Permission.storage.request();
+    } catch (e) {
+      print(e);
     }
     
-    fileState = FileState.opening;
-
-    var filePath = await ModelFilePath.getFilePath(); // getting file path
-
-    if (filePath == null) {
-      print("file not found");
-      fileState = FileState.notFound;
-      return;
+    try {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['bin'],
+        );
+        if (result != null) {
+            String? filePath = result.files.single.path;
+            if (filePath != null) {
+                modelPath = filePath;
+                modelName = path.basename(filePath);
+            }
+        }
+    } catch (e) {
+        print(e);
     }
 
-    var file = File(filePath);
-    if (!file.existsSync()) {
-      print("file not found 2");
-      fileState = FileState.notFound;
-      await ModelFilePath.detachModelFile();
-      return;
-    }
-
-    fileState = FileState.found;
+    print(modelPath);
+    print(modelName);
   }
 }

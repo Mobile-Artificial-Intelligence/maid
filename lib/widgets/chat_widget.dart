@@ -47,6 +47,7 @@ class _ChatWidgetState extends State<ChatWidget> {
     if (lib == null) {
       lib = Lib();
       lib?.executeBinary(
+        model: model,
         paramsLlama: ParamsLlama(
           memory_f16: model.memory_f16,
           random_prompt: model.random_prompt,

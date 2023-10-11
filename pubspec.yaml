@@ -43,6 +43,7 @@ dependencies:
   url_launcher: ^6.1.10
   file_picker: ^5.2.6
   device_info_plus: ^8.1.0
+  path: ^1.8.3
 
 dev_dependencies:
   msix: ^3.9.1

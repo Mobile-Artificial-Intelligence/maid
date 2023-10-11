@@ -26,7 +26,7 @@ class MaidApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: MaidTheme().getTheme(),
-      home: const MyHomePage(title: 'Maid'),
+      home: const MaidHomePage(title: 'Maid'),
     );
   }
 }
@@ -50,16 +50,16 @@ class MaidTheme {
   );
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MaidHomePage extends StatefulWidget {
+  const MaidHomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MaidHomePage> createState() => _MaidHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MaidHomePageState extends State<MaidHomePage> {
  
   Model model = Model();
 

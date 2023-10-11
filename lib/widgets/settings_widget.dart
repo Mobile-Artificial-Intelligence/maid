@@ -67,8 +67,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     if (Platform.isIOS) {
       (await SharedPreferences.getInstance()).remove('path');
     }
-    var found = await ModelFilePath.filePathExists();
-    if (found) {
+
+    if (model.modelPath != "" && await File(model.modelPath).exists()) {
       setState(() {
         model.fileState = FileState.found;
       });
@@ -99,6 +99,21 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             ),
             child: Text('Settings'),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("RAM: "),
+              Text(
+                _ram,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10.0),
+          Text(model.modelPath),
           ElevatedButton(
             onPressed: () {
               model.openFile();
@@ -111,20 +126,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               ),
             ),
           ),
-          Row(
-            children: [
-              const Text("RAM: "),
-              Expanded(
-                child: Text(
-                  _ram,
-                  style: TextStyle(
-                    color: color,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const SizedBox(height: 10.0),
           ElevatedButton(
             onPressed: () {
               model.resetAll(setState);
@@ -137,15 +139,65 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               ),
             ),
           ),
+          const SizedBox(height: 15.0),
+          llamaParamTextField(
+            'User alias:', model.userAliasController, 'User alias'),
+          llamaParamTextField(
+            'Response alias:', model.responseAliasController, 'Response alias'),
           ListTile(
-            title: Text('PrePrompt'),
+            title: const Text('PrePrompt:'),
             subtitle: TextField(
               keyboardType: TextInputType.multiline,
               maxLines: null,
               controller: model.prePromptController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'PrePrompt',
               ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    model.examplePromptControllers.add(TextEditingController());
+                    model.exampleResponseControllers.add(TextEditingController());
+                  });
+                },
+                child: const Text(
+                  "Add Example",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10.0),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    model.examplePromptControllers.removeLast();
+                    model.exampleResponseControllers.removeLast();
+                  });
+                },
+                child: const Text(
+                  "Remove Example",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          ...List.generate(
+            (model.examplePromptControllers.length == model.exampleResponseControllers.length) ? model.examplePromptControllers.length : 0,
+            (index) => Column(
+              children: [
+                llamaParamTextField('Example prompt:', model.examplePromptControllers[index], 'Example prompt'),
+                llamaParamTextField('Example response:', model.exampleResponseControllers[index], 'Example response'),
+              ],
             ),
           ),
           llamaParamSwitch(
@@ -162,6 +214,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             'ignore_eos:', model.ignore_eos, 'ignore_eos'),
           llamaParamSwitch(
             'perplexity:', model.perplexity, 'perplexity'),
+          const SizedBox(height: 15.0),
           llamaParamTextField(
             'seed (-1 for random):', model.seedController, 'seed'),
           llamaParamTextField(

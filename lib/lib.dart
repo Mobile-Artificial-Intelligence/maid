@@ -8,11 +8,9 @@ import 'dart:ffi' as ffi;
 import 'dart:isolate';
 import 'dart:math';
 import 'package:ffi/ffi.dart';
-import 'package:file_picker/file_picker.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:maid/model.dart';
 
 import 'package:maid/llama_bindings.dart';
@@ -189,6 +187,7 @@ class Lib {
   SendPort? isolateSendPort;
 
   Future<void> executeBinary({
+    required Model model,
     required void Function(String log) printLnLog,
     required void Function(String log) printLog,
     required String promptPassed,
@@ -211,6 +210,7 @@ class Lib {
       if (message is SendPort) {
         isolateSendPort = message;
         isolateSendPort?.send(ParsingDemand(
+          modelPath: model.modelPath,
           rootIsolateToken: token,
           promptPassed: promptPassed,
           firstInteraction: firstInteraction,
@@ -287,10 +287,9 @@ class Lib {
       "llamamaid loaded",
     );
 
-    var filePath = await ModelFilePath.getFilePath();
-    print("filePath : $filePath");
-    if (filePath == null) {
-      log("no filePath");
+    var modelPathUtf8 = parsingDemand.modelPath?.toNativeUtf8().cast<Char>();
+    if (modelPathUtf8 == null) {
+      log("modelPath is null");
       return;
     }
 
@@ -301,7 +300,8 @@ class Lib {
     Pointer<show_output_cb> show_output = Pointer.fromFunction(showOutput);
 
     NativeLibrary llamamaidBinded = NativeLibrary(llamamaid);
-    llamamaidBinded.llamamaid_start(filePath.toNativeUtf8().cast<Char>(), prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
+    llamamaidBinded.llamamaid_start(modelPathUtf8, prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
+
 
     print('FirstInteraction: $firstInteraction');
     // if first line of conversation was provided, pass it now
@@ -359,6 +359,7 @@ class MessageNewPrompt {
 }
 
 class ParsingDemand {
+  String? modelPath;
   RootIsolateToken? rootIsolateToken;
   String promptPassed;
   String firstInteraction;
@@ -366,6 +367,7 @@ class ParsingDemand {
   ParamsLlama paramsLlama;
 
   ParsingDemand({
+    required this.modelPath,
     required this.rootIsolateToken,
     required this.promptPassed,
     required this.firstInteraction,
@@ -422,43 +424,6 @@ class ParamsLlama {
     required this.repeat_penalty,
     required this.n_batch,
   });
-}
-
-class ModelFilePath {
-  static Future<String?> getFilePath() async {
-    var prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('path') != null) {
-      var path = prefs.getString('path')!;
-      return path;
-    }
-    try {
-      await Permission.storage.request();
-    } catch (e) {}
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['bin'],
-    );
-    if (result?.files.single.path != null) {
-      prefs.setString('path', result!.files.single.path!);
-      return result.files.single.path;
-    } else {
-      return null;
-    }
-  }
-
-  static Future<bool> filePathExists() async {
-    var prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('path') != null) {
-      return true;
-    }
-    return false;
-  }
-
-  static detachModelFile() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.remove('path');
-    });
-  }
 }
 
 enum FileState {
