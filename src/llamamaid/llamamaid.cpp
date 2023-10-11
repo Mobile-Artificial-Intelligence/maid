@@ -410,7 +410,7 @@ int llamamaid_continue(const char *input, show_output_cb *show_output) {
     return 0;
 }
 
-void llamamaid_stop() {
+void llamamaid_stop(void) {
     stop_generation.store(true);
 }
 

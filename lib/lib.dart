@@ -325,9 +325,10 @@ class Lib {
 
   void cancel() {
     print('Attempting to stop');
-    llamamaidBinded.llamamaid_stop();
+    Isolate.spawn((_) {
+      llamamaidBinded.llamamaid_exit();
+    }, null);
   }
-  
 }
 
 class MessageStopGeneration {
