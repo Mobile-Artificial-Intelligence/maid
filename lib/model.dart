@@ -102,6 +102,22 @@ class Model {
         stringKeys[key]!.text = prefs.getString(key)!;
       }
     }
+
+    if (prefs.containsKey("modelPath")) {
+      modelPath = prefs.getString("modelPath")!;
+      modelName = prefs.getString("modelName")!;
+    }
+
+    // Load example prompts and responses from prefs
+    int exampleCount = prefs.getInt("exampleCount") ?? 0; 
+    for (var i = 0; i < exampleCount; i++) {
+      String? examplePrompt = prefs.getString("examplePrompt_$i");
+      String? exampleResponse = prefs.getString("exampleResponse_$i");
+      if (examplePrompt != null && exampleResponse != null) {
+        examplePromptControllers.add(TextEditingController(text: examplePrompt));
+        exampleResponseControllers.add(TextEditingController(text: exampleResponse));
+      }
+    }
   }
 
   void addListeners() {
@@ -121,6 +137,17 @@ class Model {
   void saveBoolToSharedPrefs(String s, bool value) {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setBool(s, value);
+    });
+  }
+
+  void saveExamplePromptsAndResponses() {
+    SharedPreferences.getInstance().then((prefs) {
+      // Store the count of examples
+      prefs.setInt("exampleCount", examplePromptControllers.length);
+      for (var i = 0; i < examplePromptControllers.length; i++) {
+        prefs.setString("examplePrompt_$i", examplePromptControllers[i].text);
+        prefs.setString("exampleResponse_$i", exampleResponseControllers[i].text);
+      }
     });
   }
 
@@ -160,6 +187,8 @@ class Model {
     saveBoolToSharedPrefs("instruct", instruct);
     saveBoolToSharedPrefs("ignore_eos", ignore_eos);
     saveBoolToSharedPrefs("perplexity", perplexity);
+    saveStringToSharedPrefs("modelPath", modelPath);
+    saveStringToSharedPrefs("modelName", modelName);
     saveStringToSharedPrefs("pre_prompt", prePromptController.text);
     saveStringToSharedPrefs("seed", seedController.text);
     saveStringToSharedPrefs("n_threads", n_threadsController.text);
@@ -172,6 +201,7 @@ class Model {
     saveStringToSharedPrefs("temp", tempController.text);
     saveStringToSharedPrefs("repeat_penalty", repeat_penaltyController.text);
     saveStringToSharedPrefs("n_batch", n_batchController.text);
+    saveExamplePromptsAndResponses();
   }
 
   void openFile() async {

@@ -40,6 +40,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       FocusScope.of(context).unfocus();
     }
     setState(() {
+      model.saveAll();
       model.compilePrePrompt();
       historyLength = "${model.prePrompt}${model.promptController.text.trim()}\n".length;
       responseLength = 0;
