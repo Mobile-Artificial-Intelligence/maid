@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/lib.dart';
 import 'package:maid/model.dart';
-import 'package:maid/widgets/settings_widget.dart';
+import 'package:maid/widgets/drawer_widget.dart';
 import 'package:maid/widgets/chat_widgets.dart';
 
 class MaidHomePage extends StatefulWidget {
@@ -16,9 +16,6 @@ class MaidHomePage extends StatefulWidget {
 }
 
 class _MaidHomePageState extends State<MaidHomePage> {
- 
-  Model model = Model();
-
   final ScrollController _consoleScrollController = ScrollController();
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
@@ -167,7 +164,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
         ),
         title: Text(widget.title),
       ),
-      drawer: SettingsWidget(model: model),
+      drawer: const MaidDrawer(),
       body: Stack(
         children: [
           Container(
