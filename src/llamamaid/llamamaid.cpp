@@ -193,6 +193,7 @@ int llamamaid_start(const char *model_path, const char *_prompt, const char *_an
 
 int llamamaid_continue(const char *input, show_output_cb *show_output) {
     std::string buffer(input);
+    printf("LLM Start\n");
 
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
@@ -214,6 +215,7 @@ int llamamaid_continue(const char *input, show_output_cb *show_output) {
     }
 
     while (true) {
+        printf(stop_generation.load() ? "Stopping generation\n" : "Generating\n");
         if (stop_generation.load()) {
             stop_generation.store(false);  // reset for future use
             return 0;  // or any other cleanup you want to do
@@ -411,6 +413,7 @@ int llamamaid_continue(const char *input, show_output_cb *show_output) {
 }
 
 void llamamaid_stop(void) {
+    printf("Stopping\n");
     stop_generation.store(true);
 }
 

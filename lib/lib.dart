@@ -132,8 +132,6 @@ class Lib {
 
   Lib();
 
-  late NativeLibrary llamamaidBinded;
-
   Pointer<Pointer<Char>> strListToPointer(List<String> strings) {
     List<Pointer<Char>> utf8PointerList =
         strings.map((str) => str.toNativeUtf8().cast<Char>()).toList();
@@ -148,7 +146,7 @@ class Lib {
     return pointerPointer;
   }
 
-  Future<void> loadLlamamaid() async {
+  Future<NativeLibrary> loadLlamamaid() async {
     DynamicLibrary llamamaid =
         Platform.isMacOS || Platform.isIOS
           ? DynamicLibrary.process() // macos and ios
@@ -161,7 +159,7 @@ class Lib {
       "llamamaid loaded",
     );
 
-    llamamaidBinded = NativeLibrary(llamamaid);
+    return NativeLibrary(llamamaid);
   }
 
   static parserIsolateFunction(
@@ -302,7 +300,7 @@ class Lib {
 
     Pointer<show_output_cb> show_output = Pointer.fromFunction(showOutput);
 
-    await loadLlamamaid();
+    NativeLibrary llamamaidBinded = await loadLlamamaid();
     llamamaidBinded.llamamaid_start(modelPathUtf8, prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
 
     print('FirstInteraction: $firstInteraction');
@@ -323,11 +321,10 @@ class Lib {
     }
   }
 
-  void cancel() {
+  void cancel() async {
     print('Attempting to stop');
-    Isolate.spawn((_) {
-      llamamaidBinded.llamamaid_exit();
-    }, null);
+    NativeLibrary llamamaidBinded = await loadLlamamaid();
+    llamamaidBinded.llamamaid_stop();
   }
 }
 
