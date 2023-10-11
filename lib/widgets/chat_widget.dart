@@ -32,6 +32,8 @@ class _ChatWidgetState extends State<ChatWidget> {
   int responseLength = 0;
   Lib? lib;
 
+  int characterMatch = 0;
+
   bool canStop = false;
 
   void _exec() {
@@ -42,7 +44,9 @@ class _ChatWidgetState extends State<ChatWidget> {
     setState(() {
       model.saveAll();
       model.compilePrePrompt();
-      historyLength = "${model.prePrompt}${model.promptController.text.trim()}\n".length;
+      historyLength = model.prePrompt.trim().length + 
+                      model.promptController.text.trim().length +
+                      model.responseAliasController.text.trim().length + 3; 
       responseLength = 0;
       model.inProgress = true;
     });
@@ -81,7 +85,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         stopToken: model.reversePromptController.text,
       );
     } else {
-      lib?.newPromp(
+      lib?.newPrompt(
           " ${model.promptController.text.trim()}${model.promptController.text.isEmpty ? "" : "\n"}");
     }
     setState(() {
@@ -112,9 +116,22 @@ class _ChatWidgetState extends State<ChatWidget> {
     for (int i = 0; i < message.length; i++) {
       responseLength++;
       if (responseLength > historyLength) {
-        newResponse.addMessage(message.substring(i));
-        scrollDown();
-        return;
+        if (message[i] == model.userAliasController.text[characterMatch]) {
+          print('------------->${model.userAliasController.text[characterMatch]}');
+          characterMatch++;
+
+          if (characterMatch >= model.userAliasController.text.length) {
+            characterMatch = 0;
+            newResponse.removeLast(model.userAliasController.text.length);
+            lib?.cancel();
+            return;
+          }
+        } else {
+          newResponse.addMessage(message.substring(i - characterMatch));
+          scrollDown();
+          characterMatch = 0;
+          return;
+        }
       }
     }
   }
@@ -209,9 +226,14 @@ class UserMessage extends StatelessWidget {
 
 class ResponseMessage extends StatefulWidget {
   final StreamController<String> messageController = StreamController<String>.broadcast();
+  final StreamController<int> removeController = StreamController<int>.broadcast(); // 1. Add remove controller
 
   void addMessage(String message) {
     messageController.add(message);
+  }
+
+  void removeLast(int length) {
+    removeController.add(length); // 3. Add length to remove controller
   }
 
   @override
@@ -224,10 +246,25 @@ class _ResponseMessageState extends State<ResponseMessage> {
   @override
   void initState() {
     super.initState();
+
+    // Listening for new messages
     widget.messageController.stream.listen((textChunk) {
       setState(() {
         _message += textChunk;
       });
+    });
+
+    // 2. Listen for the remove request
+    widget.removeController.stream.listen((lengthToRemove) {
+      if (_message.length >= lengthToRemove) {
+        setState(() {
+          _message = _message.substring(0, _message.length - lengthToRemove);
+        });
+      } else {
+        setState(() {
+          _message = "";
+        });
+      }
     });
   }
 
@@ -250,6 +287,7 @@ class _ResponseMessageState extends State<ResponseMessage> {
   @override
   void dispose() {
     widget.messageController.close();
+    widget.removeController.close(); // Close remove controller
     super.dispose();
   }
 }

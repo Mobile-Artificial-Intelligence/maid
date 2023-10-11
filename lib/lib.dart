@@ -130,9 +130,9 @@ extension VectorIntExtension on Vector<Int> {
 class Lib {
   Isolate? _isolate;
 
-  static bool stopGeneration = false;
-
   Lib();
+
+  late NativeLibrary llamamaidBinded;
 
   Pointer<Pointer<Char>> strListToPointer(List<String> strings) {
     List<Pointer<Char>> utf8PointerList =
@@ -146,6 +146,22 @@ class Lib {
     });
 
     return pointerPointer;
+  }
+
+  Future<void> loadLlamamaid() async {
+    DynamicLibrary llamamaid =
+        Platform.isMacOS || Platform.isIOS
+          ? DynamicLibrary.process() // macos and ios
+          : (DynamicLibrary.open(
+              Platform.isWindows // windows
+                ? 'llamamaid.dll'
+                : 'libllamamaid.so')); // android and linux
+
+    log(
+      "llamamaid loaded",
+    );
+
+    llamamaidBinded = NativeLibrary(llamamaid);
   }
 
   static parserIsolateFunction(
@@ -177,7 +193,7 @@ class Lib {
     }
   }
 
-  Future<void> newPromp(String prompt) async {
+  Future<void> newPrompt(String prompt) async {
     isolateSendPort?.send(MessageNewPrompt(prompt));
   }
 
@@ -197,7 +213,6 @@ class Lib {
     required String stopToken,
     required ParamsLlama paramsLlama,
   }) async {
-    stopGeneration = false;
     RootIsolateToken? token = ServicesBinding.rootIsolateToken;
     mainSendPort = mainReceivePort.sendPort;
     _isolate = await runZonedGuarded<Future>(
@@ -275,18 +290,6 @@ class Lib {
     BackgroundIsolateBinaryMessenger.ensureInitialized(
         parsingDemand.rootIsolateToken!);
 
-    DynamicLibrary llamamaid =
-        Platform.isMacOS || Platform.isIOS
-          ? DynamicLibrary.process() // macos and ios
-          : (DynamicLibrary.open(
-              Platform.isWindows // windows
-                ? 'llamamaid.dll'
-                : 'libllamamaid.so')); // android and linux
-
-    log(
-      "llamamaid loaded",
-    );
-
     var modelPathUtf8 = parsingDemand.modelPath?.toNativeUtf8().cast<Char>();
     if (modelPathUtf8 == null) {
       log("modelPath is null");
@@ -299,9 +302,8 @@ class Lib {
 
     Pointer<show_output_cb> show_output = Pointer.fromFunction(showOutput);
 
-    NativeLibrary llamamaidBinded = NativeLibrary(llamamaid);
+    await loadLlamamaid();
     llamamaidBinded.llamamaid_start(modelPathUtf8, prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
-
 
     print('FirstInteraction: $firstInteraction');
     // if first line of conversation was provided, pass it now
@@ -322,8 +324,8 @@ class Lib {
   }
 
   void cancel() {
-    print('cancel. isolateSendPort is null ? ${isolateSendPort == null}');
-    stopGeneration = true;
+    print('Attempting to stop');
+    llamamaidBinded.llamamaid_stop();
   }
   
 }
