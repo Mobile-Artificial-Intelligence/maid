@@ -40,4 +40,6 @@ target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
 add_dependencies(${BINARY_NAME} flutter_assemble)
 
 set(BUILD_SHARED_LIBS ON)
-add_subdirectory(../../src/llama.cpp)
+
+# Create a binary directory for the llama.cpp project
+add_subdirectory(../../src/llama.cpp llama_build)
