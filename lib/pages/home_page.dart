@@ -170,50 +170,61 @@ class _MaidHomePageState extends State<MaidHomePage> {
         ),
       ),
       drawer: const MaidDrawer(),
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          Column(
+      body: Builder(
+        builder: (BuildContext context) => GestureDetector(
+          onHorizontalDragEnd: (details) {
+            // Check if the drag is towards right with a certain velocity
+            if (details.primaryVelocity! > 100) { 
+              // Open the drawer
+              Scaffold.of(context).openDrawer();
+            }
+          },
+          child: Stack(
             children: [
-              Expanded(
-                child: ListView.builder(
-                  controller: _consoleScrollController,
-                  itemCount: chatWidgets.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return chatWidgets[index];
-                  },
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        keyboardType: TextInputType.multiline,
-                        onSubmitted: (value) => _exec(),
-                        controller: model.promptController,
-                        cursorColor: Theme.of(context).colorScheme.tertiary, // Change this color as per your design
-                        decoration: roundedInput('Prompt', context)
-                      ),
+              Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _consoleScrollController,
+                      itemCount: chatWidgets.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return chatWidgets[index];
+                      },
                     ),
-                    IconButton(
-                      onPressed: _exec, 
-                      iconSize: 50,
-                      icon: Icon(Icons.arrow_circle_right, 
-                        color: Theme.of(context).colorScheme.tertiary,
-                      )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            onSubmitted: (value) => _exec(),
+                            controller: model.promptController,
+                            cursorColor: Theme.of(context).colorScheme.tertiary, // Change this color as per your design
+                            decoration: roundedInput('Prompt', context)
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: _exec, 
+                          iconSize: 50,
+                          icon: Icon(Icons.arrow_circle_right, 
+                            color: Theme.of(context).colorScheme.tertiary,
+                          )
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
