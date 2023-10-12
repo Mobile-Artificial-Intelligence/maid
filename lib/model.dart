@@ -26,7 +26,7 @@ class Model {
   List<TextEditingController> exampleResponseControllers = [];
 
   TextEditingController userAliasController = TextEditingController()..text = "User:";
-  TextEditingController responseAliasController = TextEditingController()..text = "Maid:";
+  TextEditingController responseAliasController = TextEditingController()..text = "Bot:";
 
   TextEditingController seedController = TextEditingController()..text = "-1";
   TextEditingController n_threadsController = TextEditingController()..text = "4";
