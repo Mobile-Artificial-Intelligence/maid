@@ -16,20 +16,18 @@ class MaidDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          Container(
-            height: 80,
-            color: Theme.of(context).colorScheme.primary,
-            alignment: Alignment.center,
-            child: const Text(
-              'Maid',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
+          const SizedBox(
+            height: 50,
           ),
           ListTile(
-            title: const Text('Settings'),
+            leading: const Icon(Icons.settings),
+            title: const Text(
+              'Settings',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+              ),
+            ),
             onTap: () {
               Navigator.pop(context); // Close the drawer
               Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
