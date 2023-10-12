@@ -6,10 +6,10 @@ class MaidTheme {
   }
 
   static final ThemeData _darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.grey.shade800,
+    scaffoldBackgroundColor: Colors.grey.shade900,
     colorScheme: ColorScheme.dark(
-      primary: Colors.grey.shade800,
-      secondary: Colors.grey.shade900,
+      primary: Colors.grey.shade900,
+      secondary: Colors.grey.shade800,
       tertiary: Colors.blue
     ),
   );
