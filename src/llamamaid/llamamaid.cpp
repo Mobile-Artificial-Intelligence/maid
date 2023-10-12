@@ -111,7 +111,7 @@ static std::vector<llama_token> embd_inp;
 
 int llamamaid_start(const char *model_path, const char *_prompt, const char *_antiprompt, show_output_cb *show_output) {
 
-    llama_init_backend(false);
+    llama_backend_init(false);
     antiprompt = _antiprompt;
 
     // load the model and apply lora adapter, if any
