@@ -170,13 +170,13 @@ class Lib {
     mainSendPort.send(isolateSendPort);
     var completer = Completer<ParsingDemand>();
     try {
-      isolateReceivePort.listen((message) async {
-        if (message is MessageNewPrompt) {
-          interaction.complete(message.prompt);
+      isolateReceivePort.listen((signal) async {
+        if (signal.type == SignalType.NewPrompt) {
+          interaction.complete(signal.data);
         }
-        if (message is ParsingDemand) {
+        if (signal.type == SignalType.ParsingDemand) {
           // mainSendPort.send(ParsingResult(fileSaved.path));
-          completer.complete(message);
+          completer.complete(signal);
         }
       });
 
@@ -192,7 +192,7 @@ class Lib {
   }
 
   Future<void> newPrompt(String prompt) async {
-    isolateSendPort?.send(MessageNewPrompt(prompt));
+    isolateSendPort?.send(Signal.newPrompt(prompt));
   }
 
   ReceivePort mainReceivePort = ReceivePort();
@@ -219,9 +219,9 @@ class Lib {
 
     Completer completer = Completer();
 
-    mainReceivePort.listen((message) {
-      if (message is SendPort) {
-        isolateSendPort = message;
+    mainReceivePort.listen((signal) {
+      if (signal is SendPort) {
+        isolateSendPort = signal;
         isolateSendPort?.send(ParsingDemand(
           modelPath: model.modelPath,
           rootIsolateToken: token,
@@ -230,17 +230,17 @@ class Lib {
           stopToken: stopToken,
           paramsLlama: paramsLlama,
         ));
-      } else if (message is MessageEndFromIsolate) {
-        printLnLog("MessageEndFromIsolate : ${message.message}");
+      } else if (signal.type == SignalType.EndFromIsolate) {
+        printLnLog("MessageEndFromIsolate : ${signal.data}");
         completer.complete();
-      } else if (message is MessageFromIsolate) {
-        printLog(message.message);
-      } else if (message is MessageNewLineFromIsolate) {
-        printLnLog(message.message);
-      } else if (message is MessageCanStop) {
+      } else if (signal.type == SignalType.FromIsolate) {
+        printLog(signal.data);
+      } else if (signal.type == SignalType.NewLineFromIsolate) {
+        printLnLog(signal.data);
+      } else if (signal.type == SignalType.CanStop) {
         canStop();
       } else {
-        print(message);
+        print(signal);
       }
     });
     await completer.future;
@@ -250,22 +250,18 @@ class Lib {
 
   static SendPort? mainPort;
 
-  static log(String message) {
-    print(message);
+  static log(String data) {
+    print(data);
     var time = DateTime.now().toString().substring(11, 19);
     mainPort?.send(
-      MessageNewLineFromIsolate(
-        "[isolate $time] $message",
-      ),
+      Signal.newLineFromIsolate("[isolate $time] $data")
     );
   }
 
-  static logInline(String message) {
-    print(message);
+  static logInline(String data) {
+    print(data);
     mainPort?.send(
-      MessageFromIsolate(
-        message,
-      ),
+      Signal.fromIsolate(data)
     );
   }
 
@@ -326,37 +322,26 @@ class Lib {
   }
 }
 
-class MessageStopGeneration {
-  MessageStopGeneration();
-}
+// Single Signal class that encompasses all the different data types
+class Signal {
+  final SignalType type;
+  final String? data; // We'll use this field for data or prompt data
 
-class MessageFromIsolate {
-  final String message;
+  // Factory constructors allow us to easily create different signals
+  factory Signal.stopGeneration() => Signal._(SignalType.StopGeneration);
+  factory Signal.fromIsolate(String data) => Signal._(SignalType.FromIsolate, data);
+  factory Signal.newLineFromIsolate(String data) => Signal._(SignalType.NewLineFromIsolate, data);
+  factory Signal.endFromIsolate() => Signal._(SignalType.EndFromIsolate);
+  factory Signal.canPrompt() => Signal._(SignalType.CanPrompt);
+  factory Signal.canStop() => Signal._(SignalType.CanStop);
+  factory Signal.newPrompt(String data) => Signal._(SignalType.NewPrompt, data);
 
-  MessageFromIsolate(this.message);
-}
-
-class MessageNewLineFromIsolate {
-  final String message;
-
-  MessageNewLineFromIsolate(this.message);
-}
-
-class MessageCanPrompt {
-  MessageCanPrompt();
-}
-
-class MessageCanStop {
-  MessageCanStop();
-}
-
-class MessageNewPrompt {
-  final String prompt;
-
-  MessageNewPrompt(this.prompt);
+  // Private constructor
+  Signal._(this.type, [this.data]);
 }
 
 class ParsingDemand {
+  final SignalType type = SignalType.ParsingDemand;
   String? modelPath;
   RootIsolateToken? rootIsolateToken;
   String promptPassed;
@@ -372,12 +357,6 @@ class ParsingDemand {
     required this.stopToken,
     required this.paramsLlama,
   });
-}
-
-class MessageEndFromIsolate {
-  final String message;
-
-  MessageEndFromIsolate(this.message);
 }
 
 class ParamsLlama {
@@ -422,6 +401,18 @@ class ParamsLlama {
     required this.repeat_penalty,
     required this.n_batch,
   });
+}
+
+// Enum to represent the different signal types
+enum SignalType {
+  StopGeneration,
+  FromIsolate,
+  NewLineFromIsolate,
+  EndFromIsolate,
+  CanPrompt,
+  CanStop,
+  NewPrompt,
+  ParsingDemand,
 }
 
 enum FileState {
