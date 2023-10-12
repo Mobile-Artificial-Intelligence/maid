@@ -7,25 +7,35 @@ class MaidDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(16.0),
-            bottomRight: Radius.circular(16.0),
-          ),
-        ),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            ListTile(
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
-              },
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20),
+            bottomRight: Radius.circular(20)),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          Container(
+            height: 80,
+            color: Theme.of(context).colorScheme.primary,
+            alignment: Alignment.center,
+            child: const Text(
+              'Maid',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
             ),
-          ],
-        ),
+          ),
+          ListTile(
+            title: const Text('Settings'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+            },
+          ),
+        ],
       ),
     );
   }

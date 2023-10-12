@@ -158,12 +158,16 @@ class _MaidHomePageState extends State<MaidHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
+        centerTitle: true,
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        title: Text(widget.title),
+        title: Text(
+          widget.title
+        ),
       ),
       drawer: const MaidDrawer(),
       body: Stack(
