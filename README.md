@@ -3,7 +3,7 @@ Maid is a cross-platform Flutter app for interfacing with GGML / Llama models.
 
 ## Works on multiple devices :
 Windows, Linux, Android.
-[Releases page](https://github.com/danemadsen/maid/releases)
+[Releases page.](https://github.com/danemadsen/maid/releases)
 MacOS and IOS Releases not available at this time.
 
 ## Usage

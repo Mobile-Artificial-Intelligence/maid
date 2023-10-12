@@ -27,6 +27,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   Lib? lib;
 
   int characterMatch = 0;
+  int lineBreakMatch = 0;
 
   bool canStop = false;
 
@@ -123,11 +124,15 @@ class _MaidHomePageState extends State<MaidHomePage> {
         
           // If the entire model text is matched, reset the match position
           if (characterMatch >= alias.length) {
-            characterMatch = 0;
             model.inProgress = false;
-            lib?.cancel();
-            newResponse.trim();
-            return;
+            break;
+          }
+        } else if (message[i] == '\n') {
+          lineBreakMatch++;
+
+          if (lineBreakMatch >= 3) {
+            model.inProgress = false;
+            break;
           }
         } else {
           // If there's a mismatch, add the remaining message to newResponse
@@ -139,6 +144,14 @@ class _MaidHomePageState extends State<MaidHomePage> {
       }
     
       i++;
+    }
+
+    if (!model.inProgress) {
+      characterMatch = 0;
+      lineBreakMatch = 0;
+      lib?.cancel();
+      newResponse.trim();
+      return;
     }
   }
 
