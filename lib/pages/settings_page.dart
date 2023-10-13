@@ -50,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.background,
           ),
         ),
         title: const Text('Settings'),
@@ -91,7 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   child: const Text(
                     "Load Model",
@@ -110,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   child: const Text(
                     "Reset All",
@@ -160,7 +160,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   child: const Text(
                     "Add Example",
@@ -182,7 +182,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   child: const Text(
                     "Remove Example",

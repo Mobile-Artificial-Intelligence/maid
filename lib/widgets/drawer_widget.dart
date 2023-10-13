@@ -12,7 +12,7 @@ class MaidDrawer extends StatelessWidget {
             topRight: Radius.circular(20),
             bottomRight: Radius.circular(20)),
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.background,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [

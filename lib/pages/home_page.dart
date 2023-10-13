@@ -175,7 +175,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
         centerTitle: true,
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.background,
           ),
         ),
         title: Text(
@@ -196,7 +196,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.background,
                 ),
               ),
               Column(
@@ -219,7 +219,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                             keyboardType: TextInputType.multiline,
                             onSubmitted: (value) => _exec(),
                             controller: model.promptController,
-                            cursorColor: Theme.of(context).colorScheme.tertiary, // Change this color as per your design
+                            cursorColor: Theme.of(context).colorScheme.secondary,
                             decoration: roundedInput('Prompt', context)
                           ),
                         ),
@@ -227,7 +227,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                           onPressed: _exec, 
                           iconSize: 50,
                           icon: Icon(Icons.arrow_circle_right, 
-                            color: Theme.of(context).colorScheme.tertiary,
+                            color: Theme.of(context).colorScheme.secondary,
                           )
                         ),
                       ],

@@ -1,22 +1,16 @@
 /// run.dart
 import 'dart:async';
-import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'dart:isolate';
-import 'dart:math';
 import 'package:ffi/ffi.dart';
 
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:maid/model.dart';
 
 import 'package:maid/llama_bindings.dart';
-import 'package:maid/main.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 //declaration of functions

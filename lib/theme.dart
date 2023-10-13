@@ -8,9 +8,10 @@ class MaidTheme {
   static final ThemeData _darkTheme = ThemeData(
     scaffoldBackgroundColor: Colors.grey.shade900,
     colorScheme: ColorScheme.dark(
-      primary: Colors.grey.shade900,
-      secondary: Colors.grey.shade800,
-      tertiary: Colors.blue
+      background: Colors.grey.shade900,
+      primary: Colors.grey.shade800,
+      secondary: Colors.blue,
+      inversePrimary: const Color.fromARGB(255, 100, 20, 20),
     ),
   );
 }
@@ -24,7 +25,7 @@ InputDecoration roundedInput(labelText, context) {
     ),
     labelText: labelText,
     labelStyle: const TextStyle(color: Colors.grey), // Style for the label
-    fillColor: Theme.of(context).colorScheme.secondary,
+    fillColor: Theme.of(context).colorScheme.primary,
     filled: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
   );
