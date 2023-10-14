@@ -78,7 +78,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
             (model.promptController.text.isEmpty ? "" : "\n"),
         done: done,
         canStop: canUseStop,
-        stopToken: model.reversePromptController.text,
+        antiprompt: model.reversePromptController.text,
       );
     } else {
       lib?.newPrompt(

@@ -177,7 +177,7 @@ class Lib {
       var parsingDemand = await completer.future;
       Future.sync(() => Lib().binaryIsolate(
             parsingDemand: parsingDemand,
-            stopToken: parsingDemand.stopToken,
+            antiprompt: parsingDemand.antiprompt,
             mainSendPort: mainSendPort,
           ) as FutureOr<void>);
     } catch (e) {
@@ -202,7 +202,7 @@ class Lib {
     required String firstInteraction,
     required void Function() done,
     required void Function() canStop,
-    required String stopToken,
+    required String antiprompt,
     required ParamsLlama paramsLlama,
   }) async {
     RootIsolateToken? token = ServicesBinding.rootIsolateToken;
@@ -221,7 +221,7 @@ class Lib {
           rootIsolateToken: token,
           promptPassed: promptPassed,
           firstInteraction: firstInteraction,
-          stopToken: stopToken,
+          antiprompt: antiprompt,
           paramsLlama: paramsLlama,
         ));
       } else if (signal.type == SignalType.EndFromIsolate) {
@@ -272,7 +272,7 @@ class Lib {
   binaryIsolate({
     required ParsingDemand parsingDemand,
     required SendPort mainSendPort,
-    required String stopToken,
+    required String antiprompt,
   }) async {
     interaction.complete();
     mainPort = mainSendPort;
@@ -290,22 +290,27 @@ class Lib {
     var firstInteraction = parsingDemand.firstInteraction;
     interaction = Completer();
 
-    Pointer<show_output_cb> show_output = Pointer.fromFunction(showOutput);
+    Pointer<maid_output_cb> maid_output = Pointer.fromFunction(showOutput);
 
     NativeLibrary llamamaidBinded = await loadLlamamaid();
-    llamamaidBinded.llamamaid_start(modelPathUtf8, prompt.toNativeUtf8().cast<Char>(), stopToken.trim().toNativeUtf8().cast<Char>(), show_output);
+    final params = calloc<llamamaid_params>();
+    params.ref.model_path = modelPathUtf8;
+    params.ref.prompt = prompt.toNativeUtf8().cast<Char>();
+    params.ref.antiprompt = antiprompt.trim().toNativeUtf8().cast<Char>();
+
+    llamamaidBinded.llamamaid_start(params, maid_output);
 
     print('FirstInteraction: $firstInteraction');
     // if first line of conversation was provided, pass it now
     if (firstInteraction.isNotEmpty) {
-      llamamaidBinded.llamamaid_continue(firstInteraction.toNativeUtf8().cast<Char>(), show_output);
+      llamamaidBinded.llamamaid_continue(firstInteraction.toNativeUtf8().cast<Char>(), maid_output);
     }
 
     while (true) {
       String buffer = await interaction.future;
       interaction = Completer();
       // process user input
-      llamamaidBinded.llamamaid_continue(buffer.toNativeUtf8().cast<Char>(), show_output);
+      llamamaidBinded.llamamaid_continue(buffer.toNativeUtf8().cast<Char>(), maid_output);
     }
   }
 
@@ -340,7 +345,7 @@ class ParsingDemand {
   RootIsolateToken? rootIsolateToken;
   String promptPassed;
   String firstInteraction;
-  String stopToken;
+  String antiprompt;
   ParamsLlama paramsLlama;
 
   ParsingDemand({
@@ -348,7 +353,7 @@ class ParsingDemand {
     required this.rootIsolateToken,
     required this.promptPassed,
     required this.firstInteraction,
-    required this.stopToken,
+    required this.antiprompt,
     required this.paramsLlama,
   });
 }

@@ -19,46 +19,39 @@ class NativeLibrary {
       : _lookup = lookup;
 
   int llamamaid_start(
-    ffi.Pointer<ffi.Char> model_path,
-    ffi.Pointer<ffi.Char> _prompt,
-    ffi.Pointer<ffi.Char> _antiprompt,
-    ffi.Pointer<show_output_cb> show_output,
+    ffi.Pointer<llamamaid_params> m_params,
+    ffi.Pointer<maid_output_cb> maid_output,
   ) {
     return _llamamaid_start(
-      model_path,
-      _prompt,
-      _antiprompt,
-      show_output,
+      m_params,
+      maid_output,
     );
   }
 
   late final _llamamaid_startPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<show_output_cb>)>>('llamamaid_start');
+          ffi.Int Function(ffi.Pointer<llamamaid_params>,
+              ffi.Pointer<maid_output_cb>)>>('llamamaid_start');
   late final _llamamaid_start = _llamamaid_startPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<show_output_cb>)>();
+      int Function(
+          ffi.Pointer<llamamaid_params>, ffi.Pointer<maid_output_cb>)>();
 
   int llamamaid_continue(
     ffi.Pointer<ffi.Char> input,
-    ffi.Pointer<show_output_cb> show_output,
+    ffi.Pointer<maid_output_cb> maid_output,
   ) {
     return _llamamaid_continue(
       input,
-      show_output,
+      maid_output,
     );
   }
 
   late final _llamamaid_continuePtr = _lookup<
       ffi.NativeFunction<
           ffi.Int Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<show_output_cb>)>>('llamamaid_continue');
+              ffi.Pointer<maid_output_cb>)>>('llamamaid_continue');
   late final _llamamaid_continue = _llamamaid_continuePtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<show_output_cb>)>();
+      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<maid_output_cb>)>();
 
   void llamamaid_stop() {
     return _llamamaid_stop();
@@ -77,5 +70,13 @@ class NativeLibrary {
   late final _llamamaid_exit = _llamamaid_exitPtr.asFunction<void Function()>();
 }
 
-typedef show_output_cb
+class llamamaid_params extends ffi.Struct {
+  external ffi.Pointer<ffi.Char> model_path;
+
+  external ffi.Pointer<ffi.Char> prompt;
+
+  external ffi.Pointer<ffi.Char> antiprompt;
+}
+
+typedef maid_output_cb
     = ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Char>)>;

@@ -109,10 +109,10 @@ static int n_consumed         = 0;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
-int llamamaid_start(const char *model_path, const char *_prompt, const char *_antiprompt, show_output_cb *show_output) {
+int llamamaid_start(struct llamamaid_params *m_params, maid_output_cb *maid_output) {
 
     llama_backend_init(false);
-    antiprompt = _antiprompt;
+    antiprompt = (*m_params).antiprompt;
 
     // load the model and apply lora adapter, if any
     auto lparams = llama_context_default_params();
@@ -121,15 +121,15 @@ int llamamaid_start(const char *model_path, const char *_prompt, const char *_an
     lparams.n_batch      = n_batch;
     lparams.seed         = time(0);
 
-    model  = llama_load_model_from_file(model_path, lparams);
+    model  = llama_load_model_from_file((*m_params).model_path, lparams);
     if (model == NULL) {
-        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, model_path);
+        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*m_params).model_path);
         return 1;
     }
 
     ctx = llama_new_context_with_model(model, lparams);
     if (ctx == NULL) {
-        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__,model_path);
+        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__,(*m_params).model_path);
         llama_free_model(model);
         return 1;
     }
@@ -141,7 +141,7 @@ int llamamaid_start(const char *model_path, const char *_prompt, const char *_an
                 n_threads, std::thread::hardware_concurrency(), llama_print_system_info());
     }
 
-    std::string prompt(_prompt);
+    std::string prompt((*m_params).prompt);
     if (prompt.back() == '\n') {
         prompt.pop_back();
     }
@@ -191,7 +191,7 @@ int llamamaid_start(const char *model_path, const char *_prompt, const char *_an
     return 0;
 }
 
-int llamamaid_continue(const char *input, show_output_cb *show_output) {
+int llamamaid_continue(const char *input, maid_output_cb *maid_output) {
     std::string buffer(input);
 
     // Add tokens to embd only if the input buffer is non-empty
@@ -362,7 +362,7 @@ int llamamaid_continue(const char *input, show_output_cb *show_output) {
 
         // display text
         for (auto id : embd) {
-            show_output(llama_token_to_str(ctx, id));
+            maid_output(llama_token_to_str(ctx, id));
         }
 
         // if not currently processing queued inputs;
