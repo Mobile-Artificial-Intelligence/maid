@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.9)
+project(butler VERSION 1.0.0 DESCRIPTION "butler")
+add_library(butler SHARED butler.cpp)
+target_include_directories(butler PRIVATE ../llama.cpp)
+target_link_libraries(butler llama)

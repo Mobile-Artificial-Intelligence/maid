@@ -18,59 +18,59 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  int llamamaid_start(
-    ffi.Pointer<llamamaid_params> m_params,
+  int butler_start(
+    ffi.Pointer<butler_params> m_params,
     ffi.Pointer<maid_output_cb> maid_output,
   ) {
-    return _llamamaid_start(
+    return _butler_start(
       m_params,
       maid_output,
     );
   }
 
-  late final _llamamaid_startPtr = _lookup<
+  late final _butler_startPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<llamamaid_params>,
-              ffi.Pointer<maid_output_cb>)>>('llamamaid_start');
-  late final _llamamaid_start = _llamamaid_startPtr.asFunction<
+          ffi.Int Function(ffi.Pointer<butler_params>,
+              ffi.Pointer<maid_output_cb>)>>('butler_start');
+  late final _butler_start = _butler_startPtr.asFunction<
       int Function(
-          ffi.Pointer<llamamaid_params>, ffi.Pointer<maid_output_cb>)>();
+          ffi.Pointer<butler_params>, ffi.Pointer<maid_output_cb>)>();
 
-  int llamamaid_continue(
+  int butler_continue(
     ffi.Pointer<ffi.Char> input,
     ffi.Pointer<maid_output_cb> maid_output,
   ) {
-    return _llamamaid_continue(
+    return _butler_continue(
       input,
       maid_output,
     );
   }
 
-  late final _llamamaid_continuePtr = _lookup<
+  late final _butler_continuePtr = _lookup<
       ffi.NativeFunction<
           ffi.Int Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<maid_output_cb>)>>('llamamaid_continue');
-  late final _llamamaid_continue = _llamamaid_continuePtr.asFunction<
+              ffi.Pointer<maid_output_cb>)>>('butler_continue');
+  late final _butler_continue = _butler_continuePtr.asFunction<
       int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<maid_output_cb>)>();
 
-  void llamamaid_stop() {
-    return _llamamaid_stop();
+  void butler_stop() {
+    return _butler_stop();
   }
 
-  late final _llamamaid_stopPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('llamamaid_stop');
-  late final _llamamaid_stop = _llamamaid_stopPtr.asFunction<void Function()>();
+  late final _butler_stopPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('butler_stop');
+  late final _butler_stop = _butler_stopPtr.asFunction<void Function()>();
 
-  void llamamaid_exit() {
-    return _llamamaid_exit();
+  void butler_exit() {
+    return _butler_exit();
   }
 
-  late final _llamamaid_exitPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('llamamaid_exit');
-  late final _llamamaid_exit = _llamamaid_exitPtr.asFunction<void Function()>();
+  late final _butler_exitPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('butler_exit');
+  late final _butler_exit = _butler_exitPtr.asFunction<void Function()>();
 }
 
-class llamamaid_params extends ffi.Struct {
+class butler_params extends ffi.Struct {
   external ffi.Pointer<ffi.Char> model_path;
 
   external ffi.Pointer<ffi.Char> prompt;

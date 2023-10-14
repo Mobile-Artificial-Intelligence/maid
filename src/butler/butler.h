@@ -1,5 +1,5 @@
-#ifndef __LLAMAMAID_H
-#define __LLAMAMAID_H
+#ifndef __BUTLER_H
+#define __BUTLER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,7 +11,7 @@ extern "C" {
    #define EXPORT __attribute__((visibility("default"))) __attribute__((used))
 #endif
 
-struct llamamaid_params {
+struct butler_params {
    char *model_path;
    char *prompt;
    char *antiprompt;
@@ -19,13 +19,13 @@ struct llamamaid_params {
 
 typedef void maid_output_cb(const char *);
 
-EXPORT int llamamaid_start(struct llamamaid_params *m_params, maid_output_cb *maid_output);
+EXPORT int butler_start(struct butler_params *m_params, maid_output_cb *maid_output);
 
-EXPORT int llamamaid_continue(const char *input, maid_output_cb *maid_output);
+EXPORT int butler_continue(const char *input, maid_output_cb *maid_output);
 
-EXPORT void llamamaid_stop(void);
+EXPORT void butler_stop(void);
 
-EXPORT void llamamaid_exit(void);
+EXPORT void butler_exit(void);
 
 #ifdef __cplusplus
 }

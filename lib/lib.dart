@@ -140,20 +140,20 @@ class Lib {
     return pointerPointer;
   }
 
-  Future<NativeLibrary> loadLlamamaid() async {
-    DynamicLibrary llamamaid =
+  Future<NativeLibrary> loadButler() async {
+    DynamicLibrary butler =
         Platform.isMacOS || Platform.isIOS
           ? DynamicLibrary.process() // macos and ios
           : (DynamicLibrary.open(
               Platform.isWindows // windows
-                ? 'llamamaid.dll'
-                : 'libllamamaid.so')); // android and linux
+                ? 'butler.dll'
+                : 'libbutler.so')); // android and linux
 
     log(
-      "llamamaid loaded",
+      "butler loaded",
     );
 
-    return NativeLibrary(llamamaid);
+    return NativeLibrary(butler);
   }
 
   static parserIsolateFunction(
@@ -292,32 +292,32 @@ class Lib {
 
     Pointer<maid_output_cb> maid_output = Pointer.fromFunction(showOutput);
 
-    NativeLibrary llamamaidBinded = await loadLlamamaid();
-    final params = calloc<llamamaid_params>();
+    NativeLibrary butlerBinded = await loadButler();
+    final params = calloc<butler_params>();
     params.ref.model_path = modelPathUtf8;
     params.ref.prompt = prompt.toNativeUtf8().cast<Char>();
     params.ref.antiprompt = antiprompt.trim().toNativeUtf8().cast<Char>();
 
-    llamamaidBinded.llamamaid_start(params, maid_output);
+    butlerBinded.butler_start(params, maid_output);
 
     print('FirstInteraction: $firstInteraction');
     // if first line of conversation was provided, pass it now
     if (firstInteraction.isNotEmpty) {
-      llamamaidBinded.llamamaid_continue(firstInteraction.toNativeUtf8().cast<Char>(), maid_output);
+      butlerBinded.butler_continue(firstInteraction.toNativeUtf8().cast<Char>(), maid_output);
     }
 
     while (true) {
       String buffer = await interaction.future;
       interaction = Completer();
       // process user input
-      llamamaidBinded.llamamaid_continue(buffer.toNativeUtf8().cast<Char>(), maid_output);
+      butlerBinded.butler_continue(buffer.toNativeUtf8().cast<Char>(), maid_output);
     }
   }
 
   void cancel() async {
     print('Attempting to stop');
-    NativeLibrary llamamaidBinded = await loadLlamamaid();
-    llamamaidBinded.llamamaid_stop();
+    NativeLibrary butlerBinded = await loadButler();
+    butlerBinded.butler_stop();
   }
 }
 

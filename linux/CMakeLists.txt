@@ -139,5 +139,5 @@ endif()
 
 set(BUILD_SHARED_LIBS ON)
 add_subdirectory(./llama.cpp)
-add_subdirectory(./llamamaid)
-install(FILES ${PROJECT_BINARY_DIR}/llamamaid/libllamamaid.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
+add_subdirectory(./butler)
+install(FILES ${PROJECT_BINARY_DIR}/butler/libbutler.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)

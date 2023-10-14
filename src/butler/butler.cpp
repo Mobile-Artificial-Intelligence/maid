@@ -4,7 +4,7 @@
 #endif
 
 #include "llama.h"
-#include "llamamaid.h"
+#include "butler.h"
 
 #include <cassert>
 #include <cinttypes>
@@ -109,7 +109,7 @@ static int n_consumed         = 0;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
-int llamamaid_start(struct llamamaid_params *m_params, maid_output_cb *maid_output) {
+int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
 
     llama_backend_init(false);
     antiprompt = (*m_params).antiprompt;
@@ -191,7 +191,7 @@ int llamamaid_start(struct llamamaid_params *m_params, maid_output_cb *maid_outp
     return 0;
 }
 
-int llamamaid_continue(const char *input, maid_output_cb *maid_output) {
+int butler_continue(const char *input, maid_output_cb *maid_output) {
     std::string buffer(input);
 
     // Add tokens to embd only if the input buffer is non-empty
@@ -410,12 +410,12 @@ int llamamaid_continue(const char *input, maid_output_cb *maid_output) {
     return 0;
 }
 
-void llamamaid_stop(void) {
+void butler_stop(void) {
     printf("Stopping\n");
     stop_generation.store(true);
 }
 
-void llamamaid_exit(void) {
+void butler_exit(void) {
     llama_print_timings(ctx);
     llama_free(ctx);
     llama_free_model(model);
