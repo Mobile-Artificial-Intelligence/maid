@@ -151,6 +151,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       lineBreakMatch = 0;
       lib?.cancel();
       newResponse.trim();
+      newResponse.finalise();
       return;
     }
   }
@@ -158,6 +159,8 @@ class _MaidHomePageState extends State<MaidHomePage> {
   void done() {
     setState(() {
       model.inProgress = false;
+      newResponse.trim();
+      newResponse.finalise();
     });
   }
 
