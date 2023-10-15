@@ -2,7 +2,7 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
-
+ 
 #include "llama.h"
 #include "butler.h"
 
@@ -45,6 +45,20 @@ static const float   mirostat_eta      = 0.10f;
 static const bool penalize_nl = true;
 static std::atomic_bool stop_generation(false);
 
+static std::string butler_token_to_str(const struct llama_context * ctx, llama_token token) {
+    std::vector<char> result(8, 0);
+    const int n_tokens = llama_token_to_piece(llama_get_model(ctx), token, result.data(), result.size());
+    if (n_tokens < 0) {
+        result.resize(-n_tokens);
+        int check = llama_token_to_piece(llama_get_model(ctx), token, result.data(), result.size());
+        GGML_ASSERT(check == -n_tokens);
+    } else {
+        result.resize(n_tokens);
+    }
+
+    return std::string(result.data(), result.size());
+}
+
 int32_t get_num_physical_cores() {
 #ifdef __linux__
     // enumerate the set of thread siblings, num entries is num cores
@@ -83,10 +97,11 @@ int32_t get_num_physical_cores() {
 static int32_t n_threads = get_num_physical_cores();
 
 // TODO: not great allocating this every time
-std::vector<llama_token> llama_tokenize(struct llama_context * ctx, const std::string & text, bool add_bos) {
+std::vector<llama_token> llama_tokenize(struct llama_model * model, const std::string & text, bool add_bos) {
     // initialize to prompt numer of chars, since n_tokens <= n_prompt_chars
     std::vector<llama_token> res(text.size() + (int) add_bos);
-    const int n = llama_tokenize(ctx, text.c_str(), res.data(), res.size(), add_bos);
+    const int n = llama_tokenize(model, text.c_str(), text.size(), res.data(), res.size(), add_bos);
+    printf("n = %d\n", n);
     assert(n >= 0);
     res.resize(n);
 
@@ -115,17 +130,19 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
     antiprompt = (*m_params).antiprompt;
 
     // load the model and apply lora adapter, if any
+    auto mparams = llama_model_default_params();
+
+    model  = llama_load_model_from_file((*m_params).model_path, mparams);
+    if (model == NULL) {
+        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*m_params).model_path);
+        return 1;
+    }
+
     auto lparams = llama_context_default_params();
 
     lparams.n_ctx        = initial_n_ctx;
     lparams.n_batch      = n_batch;
     lparams.seed         = time(0);
-
-    model  = llama_load_model_from_file((*m_params).model_path, lparams);
-    if (model == NULL) {
-        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*m_params).model_path);
-        return 1;
-    }
 
     ctx = llama_new_context_with_model(model, lparams);
     if (ctx == NULL) {
@@ -150,7 +167,7 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
     prompt.insert(0, 1, ' ');
 
     // tokenize the prompt
-    embd_inp = ::llama_tokenize(ctx, prompt, true);
+    embd_inp = ::llama_tokenize(model, prompt, true);
 
     n_ctx = llama_n_ctx(ctx);
 
@@ -163,9 +180,6 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
     if (n_keep > (int) embd_inp.size()) {
         n_keep = (int)embd_inp.size();
     }
-
-    // determine newline token
-    llama_token_newline = ::llama_tokenize(ctx, "\n", false);
 
     fprintf(stderr, "%s: interactive mode on.\n", __func__);
 
@@ -183,8 +197,8 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
 
     // do one empty run to warm up the model
     {
-        const std::vector<llama_token> tmp = { llama_token_bos(), };
-        llama_eval(ctx, tmp.data(), tmp.size(), 0, n_threads);
+        std::vector<llama_token> tmp = { llama_token_bos(ctx), };
+        llama_eval(ctx, tmp.data(), tmp.size(), 0);
         llama_reset_timings(ctx);
     }
 
@@ -197,7 +211,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        auto line_inp = ::llama_tokenize(ctx, buffer, false);
+        auto line_inp = ::llama_tokenize(model, buffer, false);
         embd_inp.insert(embd_inp.end(), line_inp.begin(), line_inp.end());
 
         n_remain -= line_inp.size();
@@ -261,7 +275,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 if (n_eval > n_batch) {
                     n_eval = n_batch;
                 }
-                if (llama_eval(ctx, &embd[i], n_eval, n_past, n_threads)) {
+                if (llama_eval(ctx, &embd[i], n_eval, n_past)) {
                     fprintf(stderr, "%s : failed to eval\n", __func__);
                     return 1;
                 }
@@ -280,7 +294,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
             {
                 auto logits  = llama_get_logits(ctx);
-                auto n_vocab = llama_n_vocab(ctx);
+                auto n_vocab = llama_n_vocab(model);
 
                 std::vector<llama_token_data> candidates;
                 candidates.reserve(n_vocab);
@@ -291,7 +305,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 llama_token_data_array candidates_p = { candidates.data(), candidates.size(), false };
 
                 // Apply penalties
-                float nl_logit = logits[llama_token_nl()];
+                float nl_logit = logits[llama_token_nl(ctx)];
                 auto last_n_repeat = std::min(std::min((int)last_n_tokens.size(), repeat_last_n), n_ctx);
                 llama_sample_repetition_penalty(ctx, &candidates_p,
                     last_n_tokens.data() + last_n_tokens.size() - last_n_repeat,
@@ -300,7 +314,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                     last_n_tokens.data() + last_n_tokens.size() - last_n_repeat,
                     last_n_repeat, alpha_frequency, alpha_presence);
                 if (!penalize_nl) {
-                    logits[llama_token_nl()] = nl_logit;
+                    logits[llama_token_nl(ctx)] = nl_logit;
                 }
 
                 if (temp <= 0) {
@@ -333,11 +347,11 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             }
 
             // replace end of text token with newline token when in interactive mode
-            if (id == llama_token_eos()) {
-                id = llama_token_newline.front();
+            if (id == llama_token_eos(ctx)) {
+                id = llama_token_nl(ctx);
                 if (antiprompt.length() > 0) {
                     // tokenize and inject first reverse prompt
-                    const auto first_antiprompt = ::llama_tokenize(ctx, antiprompt, false);
+                    const auto first_antiprompt = ::llama_tokenize(model, antiprompt, false);
                     embd_inp.insert(embd_inp.end(), first_antiprompt.begin(), first_antiprompt.end());
                 }
             }
@@ -362,7 +376,8 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
         // display text
         for (auto id : embd) {
-            maid_output(llama_token_to_str(ctx, id));
+            maid_output(butler_token_to_str(ctx, id).c_str());
+
         }
 
         // if not currently processing queued inputs;
@@ -372,7 +387,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             if (antiprompt.length() > 0) {
                 std::string last_output;
                 for (auto id : last_n_tokens) {
-                    last_output += llama_token_to_str(ctx, id);
+                    last_output += butler_token_to_str(ctx, id);
                 }
 
                 is_antiprompt = false;
