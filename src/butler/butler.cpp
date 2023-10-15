@@ -178,7 +178,7 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
 
     // number of tokens to keep when resetting context
     if (n_keep > (int) embd_inp.size()) {
-        n_keep = (int)embd_inp.size();
+        n_keep = (int) embd_inp.size();
     }
 
     fprintf(stderr, "%s: interactive mode on.\n", __func__);
@@ -194,13 +194,6 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
 
     last_n_tokens = std::vector<llama_token>(n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
-
-    // do one empty run to warm up the model
-    {
-        std::vector<llama_token> tmp = { llama_token_bos(ctx), };
-        llama_eval(ctx, tmp.data(), tmp.size(), 0);
-        llama_reset_timings(ctx);
-    }
 
     return 0;
 }
@@ -258,14 +251,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
                 // insert n_left/2 tokens at the start of embd from last_n_tokens
                 embd.insert(embd.begin(), last_n_tokens.begin() + n_ctx - n_left/2 - embd.size(), last_n_tokens.end() - embd.size());
-
-                //printf("\n---\n");
-                //printf("resetting: '");
-                //for (int i = 0; i < (int) embd.size(); i++) {
-                //    printf("%s", llama_token_to_str(ctx, embd[i]));
-                //}
-                //printf("'\n");
-                //printf("\n---\n");
             }
 
             // evaluate tokens in batches
@@ -275,7 +260,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 if (n_eval > n_batch) {
                     n_eval = n_batch;
                 }
-                if (llama_eval(ctx, &embd[i], n_eval, n_past)) {
+                if (llama_decode(ctx, llama_batch_get_one(&embd[i], n_eval, n_past, 0))) {
                     fprintf(stderr, "%s : failed to eval\n", __func__);
                     return 1;
                 }
@@ -324,11 +309,11 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                     if (mirostat == 1) {
                         static float mirostat_mu = 2.0f * mirostat_tau;
                         const int mirostat_m = 100;
-                        llama_sample_temperature(ctx, &candidates_p, temp);
+                        llama_sample_temp(ctx, &candidates_p, temp);
                         id = llama_sample_token_mirostat(ctx, &candidates_p, mirostat_tau, mirostat_eta, mirostat_m, &mirostat_mu);
                     } else if (mirostat == 2) {
                         static float mirostat_mu = 2.0f * mirostat_tau;
-                        llama_sample_temperature(ctx, &candidates_p, temp);
+                        llama_sample_temp(ctx, &candidates_p, temp);
                         id = llama_sample_token_mirostat_v2(ctx, &candidates_p, mirostat_tau, mirostat_eta, &mirostat_mu);
                     } else {
                         // Temperature sampling
@@ -336,7 +321,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                         llama_sample_tail_free(ctx, &candidates_p, tfs_z, 1);
                         llama_sample_typical(ctx, &candidates_p, typical_p, 1);
                         llama_sample_top_p(ctx, &candidates_p, top_p, 1);
-                        llama_sample_temperature(ctx, &candidates_p, temp);
+                        llama_sample_temp(ctx, &candidates_p, temp);
                         id = llama_sample_token(ctx, &candidates_p);
                     }
                 }
