@@ -84,8 +84,10 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    model.openFile();
+                  onPressed: () async {
+                    await model.openFile();
+                    model.saveAll();
+                    setState(() {});
                   },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(

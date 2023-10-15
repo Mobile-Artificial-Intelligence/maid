@@ -313,7 +313,6 @@ class Lib {
   }
 
   void cancel() async {
-    print('Attempting to stop');
     NativeLibrary butlerBinded = await loadButler();
     butlerBinded.butler_stop();
   }

@@ -208,7 +208,7 @@ class Model {
     saveExamplePromptsAndResponses();
   }
 
-  void openFile() async {
+  Future<void> openFile() async {
     try {
       await Permission.storage.request();
     } catch (e) {
