@@ -122,8 +122,6 @@ extension VectorIntExtension on Vector<Int> {
 }
 
 class Lib {
-  Isolate? _isolate;
-
   Lib();
 
   Pointer<Pointer<Char>> strListToPointer(List<String> strings) {
@@ -207,7 +205,7 @@ class Lib {
   }) async {
     RootIsolateToken? token = ServicesBinding.rootIsolateToken;
     mainSendPort = mainReceivePort.sendPort;
-    _isolate = await runZonedGuarded<Future>(
+    await runZonedGuarded<Future>(
         () => Isolate.spawn(parserIsolateFunction, mainSendPort!),
         (error, stack) {});
 
