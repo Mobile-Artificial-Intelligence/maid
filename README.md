@@ -1,5 +1,5 @@
 # Maid
-Maid is a cross-platform Flutter app for interfacing with GGML / Llama models.
+Maid is a cross-platform Flutter app for interfacing with GGUF / Llama models.
 
 <img src="https://github.com/danemadsen/maid/blob/main/assets/demo.jpg?raw=true" width="300">
 
@@ -11,7 +11,7 @@ MacOS and IOS Releases not available at this time.
 ## Usage
 To use this app, follow these steps:
 
-1. Download the GGML model from your chosen source.
+1. Download the GGUF model from your chosen source.
 2. Launch maid.
 3. Navigate to the settings page by opening the sidebar and pressing the settings button.
 4. Click load model and select and your model file.
