@@ -217,8 +217,7 @@ class Model {
     
     try {
         FilePickerResult? result = await FilePicker.platform.pickFiles(
-            type: FileType.custom,
-            allowedExtensions: ['gguf'],
+            type: FileType.any,
         );
         if (result != null) {
             String? filePath = result.files.single.path;
