@@ -180,10 +180,6 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
     if (n_keep > (int) embd_inp.size()) {
         n_keep = (int)embd_inp.size();
     }
-    
-    // TODO: This is a hack until we cna find aproper way to find the newline token
-    // determine newline token
-    llama_token_newline = llama_tokenize(model, " ", false);
 
     fprintf(stderr, "%s: interactive mode on.\n", __func__);
 
@@ -352,7 +348,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
             // replace end of text token with newline token when in interactive mode
             if (id == llama_token_eos(ctx)) {
-                id = llama_token_newline.front();
+                id = llama_token_nl(ctx);
                 if (antiprompt.length() > 0) {
                     // tokenize and inject first reverse prompt
                     const auto first_antiprompt = ::llama_tokenize(model, antiprompt, false);
