@@ -8,6 +8,10 @@ import 'package:path/path.dart' as path;
 Model model = Model();
 
 class Model {
+  static const String defaultPreprompt = 
+    'A chat between a curious user and an artificial intelligence assistant. '
+    'The assistant gives helpful, detailed, and polite answers to the user\'s questions.';
+  
   bool inProgress = false;
   bool memory_f16 = false; // use f16 instead of f32 for memory kv
   bool random_prompt = false; // do not randomize prompt if none provided
@@ -21,7 +25,8 @@ class Model {
   TextEditingController promptController = TextEditingController();
   TextEditingController reversePromptController = TextEditingController();
 
-  TextEditingController prePromptController = TextEditingController();
+  TextEditingController prePromptController = TextEditingController()..text = defaultPreprompt;
+  
   List<TextEditingController> examplePromptControllers = [];
   List<TextEditingController> exampleResponseControllers = [];
 
@@ -162,7 +167,7 @@ class Model {
       perplexity = false;
     });
 
-    prePromptController.text = "";
+    prePromptController.text = defaultPreprompt;
     seedController.text = "-1";
     n_threadsController.text = "4";
     n_predictController.text = "512";
@@ -213,7 +218,7 @@ class Model {
     try {
         FilePickerResult? result = await FilePicker.platform.pickFiles(
             type: FileType.custom,
-            allowedExtensions: ['bin'],
+            allowedExtensions: ['gguf'],
         );
         if (result != null) {
             String? filePath = result.files.single.path;
