@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/lib.dart';
@@ -208,30 +210,27 @@ class Model {
     saveExamplePromptsAndResponses();
   }
 
-  Future<void> openFile() async {
-    try {
-      await Permission.storage.request();
-    } catch (e) {
-      print(e);
+  Future<String> openFile() async {
+    if ((Platform.isAndroid || Platform.isIOS) && 
+        !(await Permission.storage.request().isGranted)) {
+      return "Permission Request Failed";
     }
-    
+  
     try {
-        FilePickerResult? result = await FilePicker.platform.pickFiles(
-            type: FileType.any,
-        );
-        if (result != null) {
-            String? filePath = result.files.single.path;
-            if (filePath != null) {
-                modelPath = filePath;
-                modelName = path.basename(filePath);
-            }
-        }
+      final result = await FilePicker.platform.pickFiles(type: FileType.any);
+      final filePath = result?.files.single.path;
+  
+      if (filePath == null) {
+        return "Failed to load model";
+      }
+      
+      modelPath = filePath;
+      modelName = path.basename(filePath);
     } catch (e) {
-        print(e);
+      return "Failed to load model";
     }
-
-    print(modelPath);
-    print(modelName);
+  
+    return "Model Successfully loaded";
   }
 
   void compilePrePrompt() {

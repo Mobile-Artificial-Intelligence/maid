@@ -30,6 +30,45 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  void _openFileDialog() async {
+    String ret = await model.openFile();
+    // Use a local reference to context to avoid using it across an async gap.
+    final localContext = context;
+    // Ensure that the context is still valid before attempting to show the dialog.
+    if (localContext.mounted) {
+      showDialog(
+        context: localContext,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(ret),
+            alignment: Alignment.center,
+            actionsAlignment: MainAxisAlignment.center,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            actions: [
+              FilledButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    "Close",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
+      );
+      model.saveAll();
+      setState(() {});
+    }
+  }
+
   @override
   initState() {
     super.initState();
@@ -70,11 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FilledButton(
-                  onPressed: () async {
-                    await model.openFile();
-                    model.saveAll();
-                    setState(() {});
-                  },
+                  onPressed: _openFileDialog,
                   child: const Text(
                     "Load Model",
                     style: TextStyle(
