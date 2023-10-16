@@ -204,19 +204,19 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             llamaParamSwitch(
-              'memory_f16', model.memory_f16, 'memory_f16'),
+              'memory_f16', model.memory_f16),
             llamaParamSwitch(
-              'random_prompt', model.random_prompt, 'random_prompt'),
+              'random_prompt', model.random_prompt),
             llamaParamSwitch(
-              'interactive', model.interactive, 'interactive'),
+              'interactive', model.interactive),
             llamaParamSwitch(
-              'interactive_start', model.interactive_start, 'interactive_start'),
+              'interactive_start', model.interactive_start),
             llamaParamSwitch(
-              'instruct (Chat4all and Alpaca)', model.instruct, 'instruct'),
+              'instruct (Chat4all and Alpaca)', model.instruct),
             llamaParamSwitch(
-              'ignore_eos', model.ignore_eos, 'ignore_eos'),
+              'ignore_eos', model.ignore_eos),
             llamaParamSwitch(
-              'perplexity', model.perplexity, 'perplexity'),
+              'perplexity', model.perplexity),
             const SizedBox(height: 15.0),
             llamaParamTextField(
               'seed (-1 for random)', model.seedController),
@@ -265,13 +265,13 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget llamaParamSwitch(String title, bool initialValue, String key) {
+  Widget llamaParamSwitch(String title, bool initialValue) {
     return SwitchListTile(
       title: Text(title),
       value: initialValue,
       onChanged: (value) {
         setState(() {
-          switch (key) {
+          switch (title) {
             case 'memory_f16':
               model.memory_f16 = value;
               break;
@@ -296,7 +296,7 @@ class _SettingsPageState extends State<SettingsPage> {
             default:
               break;
           }
-          model.saveBoolToSharedPrefs(key, value);
+          model.saveBoolToSharedPrefs(title, value);
         });
       },
     );
