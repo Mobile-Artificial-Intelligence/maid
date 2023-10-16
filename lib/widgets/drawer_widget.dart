@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:system_info_plus/system_info_plus.dart';
+import 'package:system_info2/system_info2.dart';
 import 'package:maid/pages/settings_page.dart';
 
 class MaidDrawer extends StatelessWidget {
   const MaidDrawer({super.key});
+
+  static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,14 @@ class MaidDrawer extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          const SystemInfo(),
+          Text(
+            ram == -1 ? 'RAM: Unknown' : 'RAM: $ram GB',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color.lerp(Colors.red, Colors.green, ram.clamp(0, 8) / 8) ?? Colors.red,
+              fontSize: 15,
+            ),
+          ),
           Divider(
             indent: 10,
             endIndent: 10,
@@ -46,52 +55,6 @@ class MaidDrawer extends StatelessWidget {
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class SystemInfo extends StatefulWidget {
-  const SystemInfo({super.key});
-
-  @override
-  _SystemInfoState createState() => _SystemInfoState();
-}
-
-class _SystemInfoState extends State<SystemInfo> {
-  int _ram = -1;
-  Color _color = Colors.red;
-
-  @override
-  void initState() {
-    super.initState();
-    initSysInfo();
-  }
-
-  Future<void> initSysInfo() async {
-    int ram;
-
-    if (!mounted || (!Platform.isAndroid && !Platform.isIOS)) return;
-    try {
-      ram = await SystemInfoPlus.physicalMemory ?? -1;
-    } catch (e) {
-      ram = -1;
-    }
-
-    setState(() {
-      _ram = ram ~/ 1024;
-      _color = Color.lerp(Colors.red, Colors.green, ram.clamp(0, 8192) / 8192) ?? Colors.red;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      _ram == -1 ? 'RAM: Unknown' : 'RAM: $_ram GB',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: _color,
-        fontSize: 15,
       ),
     );
   }
