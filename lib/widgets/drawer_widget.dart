@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:maid/pages/settings_page.dart';
+import 'package:maid/pages/about_page.dart';
 
 class MaidDrawer extends StatelessWidget {
   const MaidDrawer({super.key});
@@ -52,6 +48,20 @@ class MaidDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context); // Close the drawer
               Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.info),
+            title: const Text(
+              'About',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutPage()));
             },
           ),
         ],

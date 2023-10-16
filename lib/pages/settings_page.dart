@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/model.dart';
 import 'package:maid/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/lib.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -69,18 +69,12 @@ class _SettingsPageState extends State<SettingsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                FilledButton(
                   onPressed: () async {
                     await model.openFile();
                     model.saveAll();
                     setState(() {});
                   },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                  ),
                   child: const Text(
                     "Load Model",
                     style: TextStyle(
@@ -90,16 +84,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 const SizedBox(width: 10.0),
-                ElevatedButton(
+                FilledButton(
                   onPressed: () {
                     model.resetAll(setState);
                   },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                  ),
                   child: const Text(
                     "Reset All",
                     style: TextStyle(
@@ -137,19 +125,13 @@ class _SettingsPageState extends State<SettingsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                FilledButton(
                   onPressed: () {
                     setState(() {
                       model.examplePromptControllers.add(TextEditingController());
                       model.exampleResponseControllers.add(TextEditingController());
                     });
                   },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                  ),
                   child: const Text(
                     "Add Example",
                     style: TextStyle(
@@ -159,19 +141,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 const SizedBox(width: 10.0),
-                ElevatedButton(
+                FilledButton(
                   onPressed: () {
                     setState(() {
                       model.examplePromptControllers.removeLast();
                       model.exampleResponseControllers.removeLast();
                     });
                   },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                  ),
                   child: const Text(
                     "Remove Example",
                     style: TextStyle(
