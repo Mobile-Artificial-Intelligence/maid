@@ -80,7 +80,7 @@ class _SystemInfoState extends State<SystemInfo> {
 
     setState(() {
       _ram = ram ~/ 1024;
-      _color = Color.lerp(Colors.red, Colors.green, _ram.clamp(0, 8192) / 8192) ?? Colors.red;
+      _color = Color.lerp(Colors.red, Colors.green, ram.clamp(0, 8192) / 8192) ?? Colors.red;
     });
   }
 
