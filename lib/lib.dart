@@ -24,10 +24,6 @@ class Lib {
                 ? 'butler.dll'
                 : 'libbutler.so')); // android and linux
 
-    print(
-      "butler loaded",
-    );
-
     return NativeLibrary(butler);
   }
 
@@ -54,7 +50,7 @@ class Lib {
             parsingDemand: parsingDemand,
             antiprompt: parsingDemand.antiprompt,
             mainSendPort: mainSendPort,
-          ) as FutureOr<void>);
+          ));
     } catch (e) {
       mainSendPort.send("[isolate] ERROR : $e");
     }
@@ -115,24 +111,19 @@ class Lib {
 
   static SendPort? mainPort;
 
-  static logInline(String data) {
-    print(data);
-    mainPort?.send(
-      Signal.fromIsolate(data)
-    );
-  }
-
   static Completer interaction = Completer();
 
   static void showOutput(Pointer<Char> output) {
     try {
-      logInline(output.cast<Utf8>().toDartString());
+      mainPort?.send(
+        Signal.fromIsolate(output.cast<Utf8>().toDartString())
+      );
     } catch (e) {
       print(e.toString());
     }
   }
 
-  binaryIsolate({
+  void binaryIsolate({
     required ParsingDemand parsingDemand,
     required SendPort mainSendPort,
     required String antiprompt,
