@@ -5,7 +5,6 @@ import 'package:maid/model.dart';
 import 'package:maid/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/lib.dart';
-import 'package:system_info_plus/system_info_plus.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -58,19 +57,6 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            FutureBuilder<Row>(
-                future: ramDisplay(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      return snapshot.data!;
-                    } else if (snapshot.hasError) {
-                      return const Text('Error displaying RAM');
-                    }
-                  }
-                  return const SizedBox.shrink();
-                },
-            ),
             const SizedBox(height: 10.0),
             Text(
               model.modelName,
@@ -302,56 +288,6 @@ class _SettingsPageState extends State<SettingsPage> {
           model.saveBoolToSharedPrefs(key, value);
         });
       },
-    );
-  }
-
-  Future<Row> ramDisplay() async {
-    String ram = "\nCalculating...";
-    Color color = Colors.black;
-    
-    try {
-      if (Platform.isWindows == false) {
-        int? deviceMemory = await SystemInfoPlus.physicalMemory;
-        int deviceMemoryGB = (deviceMemory ?? 0) ~/ 1024 + 1;
-
-        setState(() {
-          ram = "${deviceMemoryGB}GB";
-          if (deviceMemoryGB <= 6) {
-            ram += " (WARNING ! May not be enough)";
-          } else {
-            ram += " (Should be enough)";
-          }
-          color = deviceMemoryGB > 6
-              ? Colors.green
-              : deviceMemoryGB > 4
-                  ? Colors.orange
-                  : Colors.red;
-        });
-      } else {
-        setState(() {
-          ram = " Can't get RAM on Windows";
-          color = Colors.red;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        ram = " Can't get RAM";
-        color = Colors.red;
-      });
-    }
-    
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text("RAM: "),
-        Text(
-          ram,
-          style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
     );
   }
 }
