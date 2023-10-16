@@ -143,7 +143,7 @@ class Lib {
     var firstInteraction = parsingDemand.firstInteraction;
     interaction = Completer();
 
-    Pointer<maid_output_cb> maid_output = Pointer.fromFunction(showOutput);
+    Pointer<maid_output_cb> maidOutput = Pointer.fromFunction(showOutput);
 
     NativeLibrary butlerBinded = await loadButler();
     final params = calloc<butler_params>();
@@ -151,19 +151,19 @@ class Lib {
     params.ref.prompt = parsingDemand.promptPassed.toNativeUtf8().cast<Char>();
     params.ref.antiprompt = parsingDemand.antiprompt.trim().toNativeUtf8().cast<Char>();
 
-    butlerBinded.butler_start(params, maid_output);
+    butlerBinded.butler_start(params, maidOutput);
 
     print('FirstInteraction: $firstInteraction');
     // if first line of conversation was provided, pass it now
     if (firstInteraction.isNotEmpty) {
-      butlerBinded.butler_continue(firstInteraction.toNativeUtf8().cast<Char>(), maid_output);
+      butlerBinded.butler_continue(firstInteraction.toNativeUtf8().cast<Char>(), maidOutput);
     }
 
     while (true) {
       String buffer = await interaction.future;
       interaction = Completer();
       // process user input
-      butlerBinded.butler_continue(buffer.toNativeUtf8().cast<Char>(), maid_output);
+      butlerBinded.butler_continue(buffer.toNativeUtf8().cast<Char>(), maidOutput);
     }
   }
 

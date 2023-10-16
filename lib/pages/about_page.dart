@@ -1,9 +1,7 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:maid/theme.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});

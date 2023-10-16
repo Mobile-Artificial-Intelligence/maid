@@ -19,12 +19,12 @@ class NativeLibrary {
       : _lookup = lookup;
 
   int butler_start(
-    ffi.Pointer<butler_params> m_params,
-    ffi.Pointer<maid_output_cb> maid_output,
+    ffi.Pointer<butler_params> mParams,
+    ffi.Pointer<maid_output_cb> maidOutput,
   ) {
     return _butler_start(
-      m_params,
-      maid_output,
+      mParams,
+      maidOutput,
     );
   }
 
@@ -38,11 +38,11 @@ class NativeLibrary {
 
   int butler_continue(
     ffi.Pointer<ffi.Char> input,
-    ffi.Pointer<maid_output_cb> maid_output,
+    ffi.Pointer<maid_output_cb> maidOutput,
   ) {
     return _butler_continue(
       input,
-      maid_output,
+      maidOutput,
     );
   }
 
