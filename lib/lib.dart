@@ -15,20 +15,6 @@ import 'package:maid/llama_bindings.dart';
 class Lib {
   Lib();
 
-  Pointer<Pointer<Char>> strListToPointer(List<String> strings) {
-    List<Pointer<Char>> utf8PointerList =
-        strings.map((str) => str.toNativeUtf8().cast<Char>()).toList();
-
-    final Pointer<Pointer<Char>> pointerPointer =
-        malloc.allocate(sizeOf<Pointer<Char>>() * strings.length);
-
-    strings.asMap().forEach((index, utf) {
-      pointerPointer[index] = utf8PointerList[index];
-    });
-
-    return pointerPointer;
-  }
-
   Future<NativeLibrary> loadButler() async {
     DynamicLibrary butler =
         Platform.isMacOS || Platform.isIOS
@@ -38,7 +24,7 @@ class Lib {
                 ? 'butler.dll'
                 : 'libbutler.so')); // android and linux
 
-    log(
+    print(
       "butler loaded",
     );
 
@@ -85,7 +71,6 @@ class Lib {
 
   Future<void> executeBinary({
     required Model model,
-    required void Function(String log) printLnLog,
     required void Function(String log) printLog,
     required String promptPassed,
     required String firstInteraction,
@@ -114,12 +99,9 @@ class Lib {
           paramsLlama: paramsLlama,
         ));
       } else if (signal.type == SignalType.EndFromIsolate) {
-        printLnLog("MessageEndFromIsolate : ${signal.data}");
         completer.complete();
       } else if (signal.type == SignalType.FromIsolate) {
         printLog(signal.data);
-      } else if (signal.type == SignalType.NewLineFromIsolate) {
-        printLnLog(signal.data);
       } else if (signal.type == SignalType.CanStop) {
         canStop();
       } else {
@@ -132,14 +114,6 @@ class Lib {
   }
 
   static SendPort? mainPort;
-
-  static log(String data) {
-    print(data);
-    var time = DateTime.now().toString().substring(11, 19);
-    mainPort?.send(
-      Signal.newLineFromIsolate("[isolate $time] $data")
-    );
-  }
 
   static logInline(String data) {
     print(data);
@@ -154,7 +128,7 @@ class Lib {
     try {
       logInline(output.cast<Utf8>().toDartString());
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
     }
   }
 
@@ -171,11 +145,10 @@ class Lib {
 
     var modelPathUtf8 = parsingDemand.modelPath?.toNativeUtf8().cast<Char>();
     if (modelPathUtf8 == null) {
-      log("modelPath is null");
+      print("modelPath is null");
       return;
     }
 
-    var prompt = parsingDemand.promptPassed;
     var firstInteraction = parsingDemand.firstInteraction;
     interaction = Completer();
 
@@ -184,8 +157,8 @@ class Lib {
     NativeLibrary butlerBinded = await loadButler();
     final params = calloc<butler_params>();
     params.ref.model_path = modelPathUtf8;
-    params.ref.prompt = prompt.toNativeUtf8().cast<Char>();
-    params.ref.antiprompt = antiprompt.trim().toNativeUtf8().cast<Char>();
+    params.ref.prompt = parsingDemand.promptPassed.toNativeUtf8().cast<Char>();
+    params.ref.antiprompt = parsingDemand.antiprompt.trim().toNativeUtf8().cast<Char>();
 
     butlerBinded.butler_start(params, maid_output);
 

@@ -21,7 +21,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
   
-  String log = "";
   int historyLength = 0;
   int responseLength = 0;
   Lib? lib;
@@ -71,7 +70,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
           repeat_penalty: model.repeat_penaltyController.text,
           n_batch: model.n_batchController.text,
         ),
-        printLnLog: printLnLog,
         printLog: printResult,
         promptPassed: model.prePrompt,
         firstInteraction: model.promptController.text.trim() +
@@ -97,13 +95,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
       duration: const Duration(milliseconds: 50),
       curve: Curves.easeOut,
     );
-  }
-
-  void printLnLog(String message) {
-    setState(() {
-      log += "$message\n";
-    });
-    scrollDown();
   }
 
   void printResult(String message) {
