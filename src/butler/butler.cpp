@@ -117,13 +117,6 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
         return 1;
     }
 
-    // print system information
-    {
-        fprintf(stderr, "\n");
-        fprintf(stderr, "system_info: n_threads = %d / %d | %s\n",
-                n_threads, std::thread::hardware_concurrency(), llama_print_system_info());
-    }
-
     std::string prompt((*m_params).prompt);
     if (prompt.back() == '\n') {
         prompt.pop_back();
@@ -146,17 +139,6 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
     if (n_keep > (int) embd_inp.size()) {
         n_keep = (int) embd_inp.size();
     }
-
-    fprintf(stderr, "%s: interactive mode on.\n", __func__);
-
-    if (antiprompt.length() > 0) {
-        fprintf(stderr, "Reverse prompt: '%s'\n", antiprompt.c_str());
-    }
-
-    fprintf(stderr, "sampling: repeat_last_n = %d, repeat_penalty = %f, presence_penalty = %f, frequency_penalty = %f, top_k = %d, tfs_z = %f, top_p = %f, typical_p = %f, temp = %f, mirostat = %d, mirostat_lr = %f, mirostat_ent = %f\n",
-            repeat_last_n, repeat_penalty, presence_penalty, frequency_penalty, top_k, tfs_z, top_p, typical_p, temp, mirostat, mirostat_eta, mirostat_tau);
-    fprintf(stderr, "generate: n_ctx = %d, n_batch = %d, n_predict = %d, n_keep = %d\n", n_ctx, n_batch, n_predict, n_keep);
-    fprintf(stderr, "\n\n");
 
     last_n_tokens = std::vector<llama_token>(n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
@@ -377,7 +359,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 }
 
 void butler_stop(void) {
-    printf("Stopping\n");
     stop_generation.store(true);
 }
 
