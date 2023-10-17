@@ -1,6 +1,8 @@
 #ifndef __BUTLER_H
 #define __BUTLER_H
 
+#define _POSIX_C_SOURCE 200112L
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -1,10 +1,5 @@
-// Defines sigaction on msys:
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
- 
-#include "llama.h"
 #include "butler.h"
+#include "llama.h"
 
 #include <cassert>
 #include <cinttypes>
