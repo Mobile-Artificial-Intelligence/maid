@@ -4,7 +4,6 @@
 #endif
  
 #include "llama.h"
-#include "common/common.h"
 #include "butler.h"
 
 #include <cassert>
@@ -59,8 +58,6 @@ static std::string butler_token_to_str(const struct llama_context * ctx, llama_t
 
     return std::string(result.data(), result.size());
 }
-
-static int32_t n_threads = get_num_physical_cores();
 
 // TODO: not great allocating this every time
 std::vector<llama_token> llama_tokenize(struct llama_model * model, const std::string & text, bool add_bos) {
