@@ -57,7 +57,7 @@ static int n_consumed         = 0;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
-int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
+int butler_start(struct butler_params *m_params) {
 
     llama_backend_init(false);
     antiprompt = (*m_params).antiprompt;

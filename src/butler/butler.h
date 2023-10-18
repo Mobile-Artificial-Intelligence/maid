@@ -21,7 +21,7 @@ struct butler_params {
 
 typedef void maid_output_cb(const char *);
 
-EXPORT int butler_start(struct butler_params *m_params, maid_output_cb *maid_output);
+EXPORT int butler_start(struct butler_params *m_params);
 
 EXPORT int butler_continue(const char *input, maid_output_cb *maid_output);
 

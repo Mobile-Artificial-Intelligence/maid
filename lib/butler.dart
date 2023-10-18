@@ -19,30 +19,26 @@ class NativeLibrary {
       : _lookup = lookup;
 
   int butler_start(
-    ffi.Pointer<butler_params> mParams,
-    ffi.Pointer<maid_output_cb> maidOutput,
+    ffi.Pointer<butler_params> m_params,
   ) {
     return _butler_start(
-      mParams,
-      maidOutput,
+      m_params,
     );
   }
 
-  late final _butler_startPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<butler_params>,
-              ffi.Pointer<maid_output_cb>)>>('butler_start');
-  late final _butler_start = _butler_startPtr.asFunction<
-      int Function(
-          ffi.Pointer<butler_params>, ffi.Pointer<maid_output_cb>)>();
+  late final _butler_startPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<butler_params>)>>(
+          'butler_start');
+  late final _butler_start =
+      _butler_startPtr.asFunction<int Function(ffi.Pointer<butler_params>)>();
 
   int butler_continue(
     ffi.Pointer<ffi.Char> input,
-    ffi.Pointer<maid_output_cb> maidOutput,
+    ffi.Pointer<maid_output_cb> maid_output,
   ) {
     return _butler_continue(
       input,
-      maidOutput,
+      maid_output,
     );
   }
 
@@ -80,3 +76,5 @@ class butler_params extends ffi.Struct {
 
 typedef maid_output_cb
     = ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Char>)>;
+
+const int _POSIX_C_SOURCE = 200112;

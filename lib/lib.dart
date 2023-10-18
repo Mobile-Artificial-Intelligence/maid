@@ -10,7 +10,73 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/services.dart';
 import 'package:maid/model.dart';
 
-import 'package:maid/llama_bindings.dart';
+import 'package:maid/butler.dart';
+
+// Unimplemented
+class Lib2 {
+  late NativeLibrary _nativeLibrary;
+
+  // Make the default constructor private
+  Lib2._();
+
+  // Private reference to the global instance
+  static final Lib2 _instance = Lib2._();
+
+  // Public accessor to the global instance
+  static Lib2 get instance {
+    _instance._initialize();
+    return _instance;
+  }
+
+  // Flag to check if the instance has been initialized
+  bool _isInitialized = false;
+
+  // Initialization logic
+  void _initialize() {
+    if (!_isInitialized) {
+      _loadNativeLibrary();
+      _isInitialized = true;
+    }
+  }
+
+  void _loadNativeLibrary() {
+    DynamicLibrary butlerDynamic =
+        Platform.isMacOS || Platform.isIOS
+            ? DynamicLibrary.process() // macos and ios
+            : (DynamicLibrary.open(
+                Platform.isWindows // windows
+                    ? 'butler.dll'
+                    : 'libbutler.so')); // android and linux
+
+    _nativeLibrary = NativeLibrary(butlerDynamic);
+  }
+
+  Future<int> butlerStartAsync() {
+    return Future<int>(() {
+      final params = calloc<butler_params>();
+      params.ref.model_path = model.modelPath.toNativeUtf8().cast<Char>();
+      params.ref.prompt = model.prePrompt.toNativeUtf8().cast<Char>();
+      params.ref.antiprompt = model.reversePromptController.text.trim().toNativeUtf8().cast<Char>();
+      
+      return _nativeLibrary.butler_start(params);
+    });
+  }
+
+  Future<int> butlerContinueAsync(ffi.Pointer<maid_output_cb> maidOutput) {
+    return Future<int>(() {
+      ffi.Pointer<ffi.Char> input = model.promptController.text.trim().toNativeUtf8().cast<Char>();
+      return _nativeLibrary.butler_continue(input, maidOutput);
+    });
+  }
+
+  void butlerStop() {
+    _nativeLibrary.butler_stop();
+  }
+
+  void butlerExit() {
+    _nativeLibrary.butler_exit();
+  }
+}
 
 class Lib {
   Lib();
@@ -151,7 +217,7 @@ class Lib {
     params.ref.prompt = parsingDemand.promptPassed.toNativeUtf8().cast<Char>();
     params.ref.antiprompt = parsingDemand.antiprompt.trim().toNativeUtf8().cast<Char>();
 
-    butlerBinded.butler_start(params, maidOutput);
+    butlerBinded.butler_start(params);
 
     print('FirstInteraction: $firstInteraction');
     // if first line of conversation was provided, pass it now
