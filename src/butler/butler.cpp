@@ -121,24 +121,24 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     if (buffer.length() > 1) {
         auto line_inp = ::llama_tokenize(model, buffer, false, true);
         embd_inp.insert(embd_inp.end(), line_inp.begin(), line_inp.end());
-
         n_remain -= line_inp.size();
     }
 
-    if (n_past > 0) {
-        is_interacting = false;
-    }
-
-    // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
-    if (n_remain <= 0 && n_predict != -1) {
-        n_remain = n_predict;
-        is_interacting = true;
-    }
 
     while (true) {
         if (stop_generation.load()) {
             stop_generation.store(false);  // reset for future use
             return 0;  // or any other cleanup you want to do
+        }
+
+        if (n_past > 0) {
+            is_interacting = false;
+        }
+
+        // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
+        if (n_remain <= 0 && n_predict != -1) {
+            n_remain = n_predict;
+            is_interacting = true;
         }
 
         // predict
@@ -309,16 +309,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             if (n_past > 0 && is_interacting) {
                 return 0;
             }
-
-            if (n_past > 0) {
-                is_interacting = false;
-            }
-        }
-
-        // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
-        if (n_remain <= 0 && n_predict != -1) {
-            n_remain = n_predict;
-            is_interacting = true;
         }
     }
 
