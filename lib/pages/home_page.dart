@@ -46,41 +46,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
       model.inProgress = true;
     });
     if (lib == null) {
-      lib = Lib();
-      lib?.executeBinary(
-        model: model,
-        paramsLlama: ParamsLlama(
-          memory_f16: model.memory_f16,
-          random_prompt: model.random_prompt,
-          use_color: model.use_color,
-          interactive: model.interactive,
-          interactive_start: model.interactive_start,
-          instruct: model.instruct,
-          ignore_eos: model.ignore_eos,
-          perplexity: model.perplexity,
-          seed: model.seedController.text,
-          n_threads: model.n_threadsController.text,
-          n_predict: model.n_predictController.text,
-          repeat_last_n: model.repeat_last_nController.text,
-          n_parts: model.n_partsController.text,
-          n_ctx: model.n_ctxController.text,
-          top_k: model.top_kController.text,
-          top_p: model.top_pController.text,
-          temp: model.tempController.text,
-          repeat_penalty: model.repeat_penaltyController.text,
-          n_batch: model.n_batchController.text,
-        ),
-        printLog: printResult,
-        promptPassed: model.prePrompt,
-        firstInteraction: model.promptController.text.trim() +
-            (model.promptController.text.isEmpty ? "" : "\n"),
-        done: done,
-        canStop: canUseStop,
-        antiprompt: model.reversePromptController.text,
-      );
+      lib = Lib.instance;
+      lib?.butlerStart(printResult);
     } else {
-      lib?.newPrompt(
-          " ${model.promptController.text.trim()}${model.promptController.text.isEmpty ? "" : "\n"}");
+      lib?.butlerContinue();
     }
     setState(() {
       newResponse = ResponseMessage();
@@ -140,7 +109,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     if (!model.inProgress) {
       characterMatch = 0;
       lineBreakMatch = 0;
-      lib?.cancel();
+      lib?.butlerStop();
       newResponse.trim();
       newResponse.finalise();
       return;
