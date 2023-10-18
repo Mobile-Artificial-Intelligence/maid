@@ -40,7 +40,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       chatWidgets.add(UserMessage(message: model.promptController.text.trim()));
       model.promptController.text += '\n${model.responseAliasController.text}';
       model.compilePrePrompt();
-      historyLength = model.promptController.text.trim().length + 3;
+      historyLength = model.promptController.text.trim().length + 2;
       historyLength += (responseLength == 0) ? model.prePrompt.length : 0;
       responseLength = 0;
       model.inProgress = true;
