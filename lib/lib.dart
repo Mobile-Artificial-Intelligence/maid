@@ -61,9 +61,10 @@ class Lib2 {
   }
 
   static butlerContinueIsolate(
-    ffi.Pointer<ffi.Char> input
+    String input
   ) async {
-    Lib2.instance._nativeLibrary.butler_continue(input, Pointer.fromFunction(_maidOutputBridge));
+    ffi.Pointer<ffi.Char> text = input.trim().toNativeUtf8().cast<Char>();
+    Lib2.instance._nativeLibrary.butler_continue(text, Pointer.fromFunction(_maidOutputBridge));
   }
 
   Future<void> butlerStart(void Function(String) maidOutput) async {
@@ -74,20 +75,24 @@ class Lib2 {
 
     _nativeLibrary.butler_start(params);
 
-    ffi.Pointer<ffi.Char> input = model.promptController.text.trim().toNativeUtf8().cast<Char>();
+    String input = model.promptController.text;
     Isolate.spawn(butlerContinueIsolate, input);
-
+  
     ReceivePort receivePort = ReceivePort();
+    Completer completer = Completer();
     sendPort = receivePort.sendPort;
     receivePort.listen((data) {
-        if (data is String) {
-          maidOutput(data);
-        }
+      if (data is String) {
+        maidOutput(data);
+      } else if (data is SendPort) {
+        completer.complete();
+      }
     });
+    await completer.future;
   }
 
   void butlerContinue() {
-    ffi.Pointer<ffi.Char> input = model.promptController.text.trim().toNativeUtf8().cast<Char>();
+    String input = model.promptController.text;
     Isolate.spawn(butlerContinueIsolate, input);
   }
 
@@ -97,6 +102,7 @@ class Lib2 {
 
   void butlerExit() {
     _nativeLibrary.butler_exit();
+    sendPort?.send(sendPort);
   }
 }
 
