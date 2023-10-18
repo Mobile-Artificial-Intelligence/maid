@@ -108,7 +108,7 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   COMPONENT Runtime)
 
 set(BUILD_SHARED_LIBS ON)
-add_subdirectory(./llama.cpp)
-add_subdirectory(./butler)
+add_subdirectory(../src/llama.cpp llama_dir)
+add_subdirectory(../src/butler butler_dir)
 install(FILES ${PROJECT_BINARY_DIR}/butler/butler.dll DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 install(FILES ${PROJECT_BINARY_DIR}/butler/butler.lib DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Development)
