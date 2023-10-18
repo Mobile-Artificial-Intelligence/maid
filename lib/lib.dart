@@ -14,6 +14,7 @@ import 'package:maid/butler.dart';
 
 // Unimplemented
 class Lib2 {
+  static SendPort? sendPort;
   late NativeLibrary _nativeLibrary;
 
   // Make the default constructor private
@@ -51,22 +52,43 @@ class Lib2 {
     _nativeLibrary = NativeLibrary(butlerDynamic);
   }
 
-  Future<int> butlerStartAsync() {
-    return Future<int>(() {
-      final params = calloc<butler_params>();
-      params.ref.model_path = model.modelPath.toNativeUtf8().cast<Char>();
-      params.ref.prompt = model.prePrompt.toNativeUtf8().cast<Char>();
-      params.ref.antiprompt = model.reversePromptController.text.trim().toNativeUtf8().cast<Char>();
-      
-      return _nativeLibrary.butler_start(params);
+  static void _maidOutputBridge(Pointer<Char> output) {
+    try {
+      sendPort?.send(output.cast<Utf8>().toDartString());
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  static butlerContinueIsolate(
+    ffi.Pointer<ffi.Char> input
+  ) async {
+    Lib2.instance._nativeLibrary.butler_continue(input, Pointer.fromFunction(_maidOutputBridge));
+  }
+
+  Future<void> butlerStart(void Function(String) maidOutput) async {
+    final params = calloc<butler_params>();
+    params.ref.model_path = model.modelPath.toNativeUtf8().cast<Char>();
+    params.ref.prompt = model.prePrompt.toNativeUtf8().cast<Char>();
+    params.ref.antiprompt = model.reversePromptController.text.trim().toNativeUtf8().cast<Char>();
+
+    _nativeLibrary.butler_start(params);
+
+    ffi.Pointer<ffi.Char> input = model.promptController.text.trim().toNativeUtf8().cast<Char>();
+    Isolate.spawn(butlerContinueIsolate, input);
+
+    ReceivePort receivePort = ReceivePort();
+    sendPort = receivePort.sendPort;
+    receivePort.listen((data) {
+        if (data is String) {
+          maidOutput(data);
+        }
     });
   }
 
-  Future<int> butlerContinueAsync(ffi.Pointer<maid_output_cb> maidOutput) {
-    return Future<int>(() {
-      ffi.Pointer<ffi.Char> input = model.promptController.text.trim().toNativeUtf8().cast<Char>();
-      return _nativeLibrary.butler_continue(input, maidOutput);
-    });
+  void butlerContinue() {
+    ffi.Pointer<ffi.Char> input = model.promptController.text.trim().toNativeUtf8().cast<Char>();
+    Isolate.spawn(butlerContinueIsolate, input);
   }
 
   void butlerStop() {
