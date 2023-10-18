@@ -93,7 +93,7 @@ int butler_start(struct butler_params *m_params, maid_output_cb *maid_output) {
     prompt.insert(0, 1, ' ');
 
     // tokenize the prompt
-    embd_inp = ::llama_tokenize(model, prompt, true);
+    embd_inp = ::llama_tokenize(model, prompt, true, true);
 
     n_ctx = llama_n_ctx(ctx);
 
@@ -119,7 +119,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        auto line_inp = ::llama_tokenize(model, buffer, false);
+        auto line_inp = ::llama_tokenize(model, buffer, false, true);
         embd_inp.insert(embd_inp.end(), line_inp.begin(), line_inp.end());
 
         n_remain -= line_inp.size();
@@ -251,7 +251,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 id = llama_token_nl(ctx);
                 if (antiprompt.length() > 0) {
                     // tokenize and inject first reverse prompt
-                    const auto first_antiprompt = ::llama_tokenize(model, antiprompt, false);
+                    const auto first_antiprompt = ::llama_tokenize(model, antiprompt, false, true);
                     embd_inp.insert(embd_inp.end(), first_antiprompt.begin(), first_antiprompt.end());
                 }
             }
