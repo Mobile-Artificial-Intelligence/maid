@@ -1,5 +1,6 @@
 #include "butler.h"
 #include "llama.h"
+#include "common.h"
 
 #include <cassert>
 #include <cinttypes>
@@ -39,32 +40,6 @@ static const float   mirostat_tau      = 5.00f;
 static const float   mirostat_eta      = 0.10f;
 static const bool penalize_nl = true;
 static std::atomic_bool stop_generation(false);
-
-static std::string butler_token_to_str(const struct llama_context * ctx, llama_token token) {
-    std::vector<char> result(8, 0);
-    const int n_tokens = llama_token_to_piece(llama_get_model(ctx), token, result.data(), result.size());
-    if (n_tokens < 0) {
-        result.resize(-n_tokens);
-        int check = llama_token_to_piece(llama_get_model(ctx), token, result.data(), result.size());
-        GGML_ASSERT(check == -n_tokens);
-    } else {
-        result.resize(n_tokens);
-    }
-
-    return std::string(result.data(), result.size());
-}
-
-// TODO: not great allocating this every time
-std::vector<llama_token> llama_tokenize(struct llama_model * model, const std::string & text, bool add_bos) {
-    // initialize to prompt numer of chars, since n_tokens <= n_prompt_chars
-    std::vector<llama_token> res(text.size() + (int) add_bos);
-    const int n = llama_tokenize(model, text.c_str(), text.size(), res.data(), res.size(), add_bos);
-    printf("n = %d\n", n);
-    assert(n >= 0);
-    res.resize(n);
-
-    return res;
-}
 
 static llama_model *model;
 static llama_context *ctx;
@@ -301,7 +276,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
         // display text
         for (auto id : embd) {
-            maid_output(butler_token_to_str(ctx, id).c_str());
+            maid_output(llama_token_to_piece(ctx, id).c_str());
 
         }
 
@@ -312,7 +287,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             if (antiprompt.length() > 0) {
                 std::string last_output;
                 for (auto id : last_n_tokens) {
-                    last_output += butler_token_to_str(ctx, id);
+                    last_output += llama_token_to_piece(ctx, id);
                 }
 
                 is_antiprompt = false;
