@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/lib.dart';
 import 'package:maid/model.dart';
 import 'package:maid/theme.dart';
 import 'package:maid/widgets/drawer_widget.dart';

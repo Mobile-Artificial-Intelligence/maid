@@ -1,10 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/model.dart';
 import 'package:maid/theme.dart';
-import 'package:maid/lib.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -14,22 +10,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  void testFileExisting() async {
-    if (Platform.isIOS) {
-      (await SharedPreferences.getInstance()).remove('path');
-    }
-
-    if (model.modelPath != "" && await File(model.modelPath).exists()) {
-      setState(() {
-        model.fileState = FileState.found;
-      });
-    } else {
-      setState(() {
-        model.fileState = FileState.notFound;
-      });
-    }
-  }
-
   void _openFileDialog() async {
     String ret = await model.openFile();
     // Use a local reference to context to avoid using it across an async gap.
@@ -72,7 +52,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   initState() {
     super.initState();
-    testFileExisting();
   }
 
   @override
