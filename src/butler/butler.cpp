@@ -41,7 +41,6 @@ static std::atomic_bool stop_generation(false);
 static llama_model *model;
 static llama_context *ctx;
 struct llama_context_params ctx_params;
-static std::string antiprompt;
 
 // TODO: replace with ring-buffer
 static std::vector<llama_token> last_n_tokens;
@@ -67,8 +66,6 @@ int butler_start(struct butler_params *m_params) {
     gpt_parameters.model            = (*m_params).model_path;
     gpt_parameters.prompt           = (*m_params).preprompt;
     gpt_parameters.antiprompt.push_back((*m_params).antiprompt);
-
-    antiprompt = (*m_params).antiprompt;
 
     std::tie(model, ctx) = llama_init_from_gpt_params(gpt_parameters);
     if (model == NULL) {
@@ -240,9 +237,9 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             // replace end of text token with newline token when in interactive mode
             if (id == llama_token_eos(ctx)) {
                 id = llama_token_nl(ctx);
-                if (antiprompt.length() > 0) {
+                if (!gpt_parameters.antiprompt.empty()) {
                     // tokenize and inject first reverse prompt
-                    const auto first_antiprompt = ::llama_tokenize(model, antiprompt, false, true);
+                    const auto first_antiprompt = ::llama_tokenize(ctx, gpt_parameters.antiprompt.front(), false, true);
                     embd_inp.insert(embd_inp.end(), first_antiprompt.begin(), first_antiprompt.end());
                 }
             }
@@ -273,9 +270,8 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
         // if not currently processing queued inputs;
         if ((int) embd_inp.size() <= n_consumed) {
-
             // check for reverse prompt
-            if (antiprompt.length() > 0) {
+            if (!gpt_parameters.antiprompt.empty()) {
                 std::string last_output;
                 for (auto id : last_n_tokens) {
                     last_output += llama_token_to_piece(ctx, id);
@@ -285,15 +281,23 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 // Check if each of the reverse prompts appears at the end of the output.
                 // If we're not running interactively, the reverse prompt might be tokenized with some following characters
                 // so we'll compensate for that by widening the search window a bit.
-                size_t extra_padding = 0;
-                size_t search_start_pos = last_output.length() > static_cast<size_t>(antiprompt.length() + extra_padding)
-                    ? last_output.length() - static_cast<size_t>(antiprompt.length() + extra_padding)
-                    : 0;
+                for (std::string & antiprompt : gpt_parameters.antiprompt) {
+                    size_t extra_padding = gpt_parameters.interactive ? 0 : 2;
+                    size_t search_start_pos = last_output.length() > static_cast<size_t>(antiprompt.length() + extra_padding)
+                        ? last_output.length() - static_cast<size_t>(antiprompt.length() + extra_padding)
+                        : 0;
 
-                if (last_output.find(antiprompt.c_str(), search_start_pos) != std::string::npos) {
-                    is_interacting = true;
-                    is_antiprompt = true;
-                    fflush(stdout);
+                    if (last_output.find(antiprompt, search_start_pos) != std::string::npos) {
+                        if (gpt_parameters.interactive) {
+                            is_interacting = true;
+                        }
+                        is_antiprompt = true;
+                        break;
+                    }
+                }
+
+                if (is_antiprompt) {
+                    LOG("found antiprompt: %s\n", last_output.c_str());
                 }
             }
 
