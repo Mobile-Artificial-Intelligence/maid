@@ -284,6 +284,13 @@ class Lib {
     params.ref.n_ctx = int.tryParse(settings.n_ctxController.text.trim()) ?? 512;
     params.ref.n_threads = int.tryParse(settings.n_threadsController.text.trim()) ?? 4;
     params.ref.n_batch = int.tryParse(settings.n_batchController.text.trim()) ?? 8;
+    params.ref.n_predict = int.tryParse(settings.n_predictController.text.trim()) ?? 512;
+    params.ref.memory_f16 = settings.memory_f16 ? 1 : 0;
+    params.ref.random_prompt = settings.random_prompt ? 1 : 0;
+    params.ref.interactive = settings.interactive ? 1 : 0;
+    params.ref.interactive_start = settings.interactive_start ? 1 : 0;
+    params.ref.instruct = settings.instruct ? 1 : 0;
+    params.ref.ignore_eos = settings.ignore_eos ? 1 : 0;
 
     _nativeLibrary.butler_start(params);
 

@@ -24,20 +24,21 @@
 static bool is_interacting  = false;
 static bool is_antiprompt   = false;
 
-static const int n_predict = 256;
-static int n_keep = 48;
-static const float repeat_penalty = 1.0;
-static const int32_t repeat_last_n = 64;
-static const float presence_penalty = 0.00f;
-static const float frequency_penalty = 0.00f;
-static const int32_t top_k = 40;
-static const float top_p = 0.95f;
-static const float typical_p = 1.00f;
-static const float temp = 0.80f;
-static const float tfs_z = 1.00f;
-static int mirostat          = 0;
-static const float   mirostat_tau      = 5.00f;
-static const float   mirostat_eta      = 0.10f;
+static int n_past                       = 0;
+static int n_keep                       = 48;
+static int n_consumed                   = 0;
+static int mirostat                     = 0;
+static const float repeat_penalty       = 1.0;
+static const int32_t repeat_last_n      = 64;
+static const float presence_penalty     = 0.00f;
+static const float frequency_penalty    = 0.00f;
+static const int32_t top_k              = 40;
+static const float top_p                = 0.95f;
+static const float typical_p            = 1.00f;
+static const float temp                 = 0.80f;
+static const float tfs_z                = 1.00f;
+static const float   mirostat_tau       = 5.00f;
+static const float   mirostat_eta       = 0.10f;
 static const bool penalize_nl = true;
 
 static std::atomic_bool stop_generation(false);
@@ -50,9 +51,7 @@ struct llama_context_params ctx_params;
 // TODO: replace with ring-buffer
 static std::vector<llama_token> last_n_tokens;
 
-static int n_past             = 0;
-static int n_remain = n_predict;
-static int n_consumed         = 0;
+static int n_remain;
 
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
@@ -63,13 +62,22 @@ int butler_start(struct butler_params *m_params) {
     llama_backend_init(false);
 
     gpt_parameters.seed             = (*m_params).seed              ? (*m_params).seed              : -1;
-    gpt_parameters.n_threads        = (*m_params).n_threads         ? (*m_params).n_threads         : get_num_physical_cores();
-    gpt_parameters.n_threads_batch  = (*m_params).n_threads_batch   ? (*m_params).n_threads_batch   : -1;
     gpt_parameters.n_ctx            = (*m_params).n_ctx             ? (*m_params).n_ctx             : 512;
     gpt_parameters.n_batch          = (*m_params).n_batch           ? (*m_params).n_batch           : 512;
+    gpt_parameters.n_threads        = (*m_params).n_threads         ? (*m_params).n_threads         : get_num_physical_cores();
+    gpt_parameters.n_threads_batch  = (*m_params).n_threads_batch   ? (*m_params).n_threads_batch   : -1;
+    gpt_parameters.n_predict        = (*m_params).n_predict         ? (*m_params).n_predict         : 256;
     gpt_parameters.model            = (*m_params).model_path;
     gpt_parameters.prompt           = (*m_params).preprompt;
     gpt_parameters.antiprompt.push_back((*m_params).antiprompt);
+    //gpt_parameters.memory_f16       = (*m_params).memory_f16        != 0;
+    //gpt_parameters.ignore_eos       = (*m_params).ignore_eos        != 0;
+    //gpt_parameters.instruct         = (*m_params).instruct          != 0;
+    //gpt_parameters.interactive      = (*m_params).interactive       != 0;
+    //gpt_parameters.interactive_first= (*m_params).interactive_start != 0;
+    //gpt_parameters.random_prompt    = (*m_params).random_prompt     != 0;
+
+    n_remain = gpt_parameters.n_predict;
 
     std::tie(model, ctx) = llama_init_from_gpt_params(gpt_parameters);
     if (model == NULL) {
@@ -128,8 +136,8 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
         }
 
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
-        if (n_remain <= 0 && n_predict != -1) {
-            n_remain = n_predict;
+        if (n_remain <= 0 && gpt_parameters.n_predict != -1) {
+            n_remain = gpt_parameters.n_predict;
             is_interacting = true;
         }
 

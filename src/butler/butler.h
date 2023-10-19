@@ -23,15 +23,15 @@ struct butler_params {
    char *model_path;
    char *preprompt;
    char *antiprompt;
-   char *input_prefix;
-   char *input_suffix;
+   char *input_prefix; // Not used
+   char *input_suffix; // Not used
    unsigned int seed;
    int n_ctx;
    int n_batch;
    int n_threads;
-   int n_threads_batch;
+   int n_threads_batch; //Not used
    int n_predict;
-   int n_keep;
+   int n_keep; // Not used
 };
 
 typedef void maid_output_cb(const char *);

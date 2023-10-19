@@ -41,7 +41,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       settings.promptController.text += '\n${settings.responseAliasController.text}';
       settings.compilePrePrompt();
       historyLength = settings.promptController.text.trim().length + 1;
-      historyLength += (responseLength == 0) ? settings.prePrompt.length + 1 : 0;
+      historyLength += (responseLength == 0) ? settings.prePrompt.length : 0;
       responseLength = 0;
       settings.inProgress = true;
     });
