@@ -29,7 +29,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
   bool canStop = false;
 
-  void _exec() {
+  void execute() {
     //close the keyboard if on mobile
     if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
@@ -46,7 +46,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     });
     if (lib == null) {
       lib = Lib.instance;
-      lib?.butlerStart(printResult);
+      lib?.butlerStart(responseCallback);
     } else {
       lib?.butlerContinue();
     }
@@ -65,11 +65,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
     );
   }
 
-  void printResult(String message) {
+  void responseCallback(String message) {
     String alias = model.userAliasController.text;
     int i = 0;
 
-    if (!model.inProgress) {
+    if (!model.inProgress || message.isEmpty) {
       return;
     }
 
@@ -78,7 +78,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
       if (responseLength > historyLength) {
         // If the current character matches the expected character in the model text
-        if (message[i] == alias[characterMatch]) {
+        if (alias.isNotEmpty && message[i] == alias[characterMatch]) {
           characterMatch++;
         
           // If the entire model text is matched, reset the match position
@@ -113,20 +113,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
       newResponse.finalise();
       return;
     }
-  }
-
-  void done() {
-    setState(() {
-      model.inProgress = false;
-      newResponse.trim();
-      newResponse.finalise();
-    });
-  }
-
-  void canUseStop() {
-    setState(() {
-      canStop = true;
-    });
   }
 
   @override
@@ -179,14 +165,14 @@ class _MaidHomePageState extends State<MaidHomePage> {
                         Expanded(
                           child: TextField(
                             keyboardType: TextInputType.multiline,
-                            onSubmitted: (value) => _exec(),
+                            onSubmitted: (value) => execute(),
                             controller: model.promptController,
                             cursorColor: Theme.of(context).colorScheme.secondary,
                             decoration: roundedInput('Prompt', context)
                           ),
                         ),
                         IconButton(
-                          onPressed: _exec, 
+                          onPressed: execute, 
                           iconSize: 50,
                           icon: Icon(Icons.arrow_circle_right, 
                             color: Theme.of(context).colorScheme.secondary,

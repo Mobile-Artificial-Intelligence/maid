@@ -21,9 +21,6 @@
 #endif
 
 static bool is_interacting = false;
-static const int initial_n_ctx = 512;
-static int n_ctx;
-static const int n_batch = 1024;
 static const int n_predict = 256;
 static int n_keep = 48;
 static const float repeat_penalty = 1.0;
@@ -57,6 +54,9 @@ static int n_consumed         = 0;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
+struct llama_context_params ctx_params;
+//struct llama_model_params model_params;
+
 int butler_start(struct butler_params *m_params) {
 
     llama_backend_init(false);
@@ -71,20 +71,22 @@ int butler_start(struct butler_params *m_params) {
         return 1;
     }
 
-    auto lparams = llama_context_default_params();
+    ctx_params = llama_context_default_params();
 
-    lparams.n_ctx        = initial_n_ctx;
-    lparams.n_batch      = n_batch;
-    lparams.seed         = time(0);
+    ctx_params.seed             = (*m_params).seed              ? (*m_params).seed              : LLAMA_DEFAULT_SEED;
+    ctx_params.n_ctx            = (*m_params).n_ctx             ? (*m_params).n_ctx             : 512;
+    ctx_params.n_batch          = (*m_params).n_batch           ? (*m_params).n_batch           : 1024;
+    ctx_params.n_threads        = (*m_params).n_threads         ? (*m_params).n_threads         : 4;
+    ctx_params.n_threads_batch  = (*m_params).n_threads_batch   ? (*m_params).n_threads_batch   : 4;
 
-    ctx = llama_new_context_with_model(model, lparams);
+    ctx = llama_new_context_with_model(model, ctx_params);
     if (ctx == NULL) {
         fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__,(*m_params).model_path);
         llama_free_model(model);
         return 1;
     }
 
-    std::string prompt((*m_params).prompt);
+    std::string prompt((*m_params).preprompt);
     if (prompt.back() == '\n') {
         prompt.pop_back();
     }
@@ -95,10 +97,10 @@ int butler_start(struct butler_params *m_params) {
     // tokenize the prompt
     embd_inp = ::llama_tokenize(model, prompt, true, true);
 
-    n_ctx = llama_n_ctx(ctx);
+    ctx_params.n_ctx = llama_n_ctx(ctx);
 
-    if ((int) embd_inp.size() > n_ctx - 4) {
-        fprintf(stderr, "%s: error: prompt is too long (%d tokens, max %d)\n", __func__, (int) embd_inp.size(), n_ctx - 4);
+    if ((int) embd_inp.size() > ctx_params.n_ctx - 4) {
+        fprintf(stderr, "%s: error: prompt is too long (%d tokens, max %d)\n", __func__, (int) embd_inp.size(), ctx_params.n_ctx - 4);
         return 1;
     }
 
@@ -107,7 +109,7 @@ int butler_start(struct butler_params *m_params) {
         n_keep = (int) embd_inp.size();
     }
 
-    last_n_tokens = std::vector<llama_token>(n_ctx);
+    last_n_tokens = std::vector<llama_token>(ctx_params.n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
 
     return 0;
@@ -145,7 +147,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
         if (embd.size() > 0) {
             // Note: n_ctx - 4 here is to match the logic for commandline prompt handling via
             // --prompt or --file which uses the same value.
-            auto max_embd_size = n_ctx - 4;
+            auto max_embd_size = ctx_params.n_ctx - 4;
             // Ensure the input doesn't exceed the context size by truncating embd if necessary.
             if ((int)embd.size() > max_embd_size) {
                 auto skipped_tokens = embd.size() - max_embd_size;
@@ -158,22 +160,22 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             // if we run out of context:
             // - take the n_keep first tokens from the original prompt (via n_past)
             // - take half of the last (n_ctx - n_keep) tokens and recompute the logits in batches
-            if (n_past + (int) embd.size() > n_ctx) {
+            if (n_past + (int) embd.size() > ctx_params.n_ctx) {
                 const int n_left = n_past - n_keep;
 
                 // always keep the first token - BOS
                 n_past = std::max(1, n_keep);
 
                 // insert n_left/2 tokens at the start of embd from last_n_tokens
-                embd.insert(embd.begin(), last_n_tokens.begin() + n_ctx - n_left/2 - embd.size(), last_n_tokens.end() - embd.size());
+                embd.insert(embd.begin(), last_n_tokens.begin() + ctx_params.n_ctx - n_left/2 - embd.size(), last_n_tokens.end() - embd.size());
             }
 
             // evaluate tokens in batches
             // embd is typically prepared beforehand to fit within a batch, but not always
-            for (int i = 0; i < (int) embd.size(); i += n_batch) {
+            for (int i = 0; i < (int) embd.size(); i += ctx_params.n_batch) {
                 int n_eval = (int) embd.size() - i;
-                if (n_eval > n_batch) {
-                    n_eval = n_batch;
+                if (n_eval > ctx_params.n_batch) {
+                    n_eval = ctx_params.n_batch;
                 }
                 if (llama_decode(ctx, llama_batch_get_one(&embd[i], n_eval, n_past, 0))) {
                     fprintf(stderr, "%s : failed to eval\n", __func__);
@@ -205,6 +207,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 llama_token_data_array candidates_p = { candidates.data(), candidates.size(), false };
 
                 // Apply penalties
+                const int n_ctx = ctx_params.n_ctx;
                 float nl_logit = logits[llama_token_nl(ctx)];
                 auto last_n_repeat = std::min(std::min((int)last_n_tokens.size(), repeat_last_n), n_ctx);
                 llama_sample_repetition_penalty(ctx, &candidates_p,
@@ -268,7 +271,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 last_n_tokens.erase(last_n_tokens.begin());
                 last_n_tokens.push_back(embd_inp[n_consumed]);
                 ++n_consumed;
-                if ((int) embd.size() >= n_batch) {
+                if ((int) embd.size() >= ctx_params.n_batch) {
                     break;
                 }
             }

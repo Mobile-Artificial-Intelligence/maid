@@ -40,16 +40,17 @@ class Model {
   TextEditingController responseAliasController = TextEditingController()..text = "ASSISTANT:";
 
   TextEditingController seedController = TextEditingController()..text = "-1";
+  TextEditingController n_ctxController = TextEditingController()..text = "512";
+  TextEditingController n_batchController = TextEditingController()..text = "8";
   TextEditingController n_threadsController = TextEditingController()..text = "4";
+
   TextEditingController n_predictController = TextEditingController()..text = "512";
   TextEditingController repeat_last_nController = TextEditingController()..text = "64";
   TextEditingController n_partsController = TextEditingController()..text = "-1";
-  TextEditingController n_ctxController = TextEditingController()..text = "512";
   TextEditingController top_kController = TextEditingController()..text = "40";
   TextEditingController top_pController = TextEditingController()..text = "0.9";
   TextEditingController tempController = TextEditingController()..text = "0.80";
   TextEditingController repeat_penaltyController = TextEditingController()..text = "1.10";
-  TextEditingController n_batchController = TextEditingController()..text = "8";
 
   var boolKeys = {};
   var stringKeys = {};
@@ -80,17 +81,19 @@ class Model {
     // Map for string values
     stringKeys = {
       "pre_prompt": prePromptController,
+      "user_alias": userAliasController,
+      "response_alias": responseAliasController,
       "seed": seedController,
+      "n_ctx": n_ctxController,
+      "n_batch": n_batchController,
       "n_threads": n_threadsController,
       "n_predict": n_predictController,
       "repeat_last_n": repeat_last_nController,
       "n_parts": n_partsController,
-      "n_ctx": n_ctxController,
       "top_k": top_kController,
       "top_p": top_pController,
       "temp": tempController,
       "repeat_penalty": repeat_penaltyController,
-      "n_batch": n_batchController
     };
   }
 
@@ -173,11 +176,11 @@ class Model {
 
     prePromptController.text = defaultPreprompt;
     seedController.text = "-1";
+    n_ctxController.text = "512";
     n_threadsController.text = "4";
     n_predictController.text = "512";
     repeat_last_nController.text = "64";
     n_partsController.text = "-1";
-    n_ctxController.text = "512";
     top_kController.text = "40";
     top_pController.text = "0.9";
     tempController.text = "0.80";
@@ -198,17 +201,19 @@ class Model {
     saveStringToSharedPrefs("modelPath", modelPath);
     saveStringToSharedPrefs("modelName", modelName);
     saveStringToSharedPrefs("pre_prompt", prePromptController.text);
+    saveStringToSharedPrefs("user_alias", userAliasController.text);
+    saveStringToSharedPrefs("response_alias", responseAliasController.text);
     saveStringToSharedPrefs("seed", seedController.text);
+    saveStringToSharedPrefs("n_ctx", n_ctxController.text);
+    saveStringToSharedPrefs("n_batch", n_batchController.text);
     saveStringToSharedPrefs("n_threads", n_threadsController.text);
     saveStringToSharedPrefs("n_predict", n_predictController.text);
     saveStringToSharedPrefs("repeat_last_n", repeat_last_nController.text);
     saveStringToSharedPrefs("n_parts", n_partsController.text);
-    saveStringToSharedPrefs("n_ctx", n_ctxController.text);
     saveStringToSharedPrefs("top_k", top_kController.text);
     saveStringToSharedPrefs("top_p", top_pController.text);
     saveStringToSharedPrefs("temp", tempController.text);
     saveStringToSharedPrefs("repeat_penalty", repeat_penaltyController.text);
-    saveStringToSharedPrefs("n_batch", n_batchController.text);
     saveExamplePromptsAndResponses();
   }
 
@@ -306,8 +311,12 @@ class Lib {
   void butlerStart(void Function(String) maidOutput) async {
     final params = calloc<butler_params>();
     params.ref.model_path = model.modelPath.toNativeUtf8().cast<Char>();
-    params.ref.prompt = model.prePrompt.toNativeUtf8().cast<Char>();
+    params.ref.preprompt = model.prePrompt.toNativeUtf8().cast<Char>();
     params.ref.antiprompt = model.reversePromptController.text.trim().toNativeUtf8().cast<Char>();
+    params.ref.seed = int.tryParse(model.seedController.text.trim()) ?? -1;
+    params.ref.n_ctx = int.tryParse(model.n_ctxController.text.trim()) ?? 512;
+    params.ref.n_threads = int.tryParse(model.n_threadsController.text.trim()) ?? 4;
+    params.ref.n_batch = int.tryParse(model.n_batchController.text.trim()) ?? 8;
 
     _nativeLibrary.butler_start(params);
 

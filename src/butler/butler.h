@@ -15,8 +15,13 @@ extern "C" {
 
 struct butler_params {
    char *model_path;
-   char *prompt;
+   char *preprompt;
    char *antiprompt;
+   unsigned int seed;
+   unsigned int n_ctx;
+   unsigned int n_batch;
+   unsigned int n_threads;
+   unsigned int n_threads_batch;
 };
 
 typedef void maid_output_cb(const char *);
