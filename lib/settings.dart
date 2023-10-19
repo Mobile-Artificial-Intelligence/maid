@@ -11,9 +11,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Model model = Model();
+Settings settings = Settings();
 
-class Model {
+class Settings {
   static const String defaultPreprompt = 
     'A chat between a curious user and an artificial intelligence assistant. '
     'The assistant gives helpful, detailed, and polite answers to the user\'s questions.';
@@ -59,7 +59,7 @@ class Model {
   String modelPath = "";
   String prePrompt = "";
 
-  Model() {
+  Settings() {
     initKeys();
     initFromSharedPrefs();
     addListeners();
@@ -310,13 +310,13 @@ class Lib {
 
   void butlerStart(void Function(String) maidOutput) async {
     final params = calloc<butler_params>();
-    params.ref.model_path = model.modelPath.toNativeUtf8().cast<Char>();
-    params.ref.preprompt = model.prePrompt.toNativeUtf8().cast<Char>();
-    params.ref.antiprompt = model.reversePromptController.text.trim().toNativeUtf8().cast<Char>();
-    params.ref.seed = int.tryParse(model.seedController.text.trim()) ?? -1;
-    params.ref.n_ctx = int.tryParse(model.n_ctxController.text.trim()) ?? 512;
-    params.ref.n_threads = int.tryParse(model.n_threadsController.text.trim()) ?? 4;
-    params.ref.n_batch = int.tryParse(model.n_batchController.text.trim()) ?? 8;
+    params.ref.model_path = settings.modelPath.toNativeUtf8().cast<Char>();
+    params.ref.preprompt = settings.prePrompt.toNativeUtf8().cast<Char>();
+    params.ref.antiprompt = settings.reversePromptController.text.trim().toNativeUtf8().cast<Char>();
+    params.ref.seed = int.tryParse(settings.seedController.text.trim()) ?? -1;
+    params.ref.n_ctx = int.tryParse(settings.n_ctxController.text.trim()) ?? 512;
+    params.ref.n_threads = int.tryParse(settings.n_threadsController.text.trim()) ?? 4;
+    params.ref.n_batch = int.tryParse(settings.n_batchController.text.trim()) ?? 8;
 
     _nativeLibrary.butler_start(params);
 
@@ -336,7 +336,7 @@ class Lib {
   }
 
   void butlerContinue() {
-    String input = model.promptController.text;
+    String input = settings.promptController.text;
     Isolate.spawn(butlerContinueIsolate, {
       'input': input,
       'port': sendPort

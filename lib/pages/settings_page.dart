@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/model.dart';
+import 'package:maid/settings.dart';
 import 'package:maid/theme.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -11,7 +11,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   void _openFileDialog() async {
-    String ret = await model.openFile();
+    String ret = await settings.openFile();
     // Use a local reference to context to avoid using it across an async gap.
     final localContext = context;
     // Ensure that the context is still valid before attempting to show the dialog.
@@ -44,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         },
       );
-      model.saveAll();
+      settings.saveAll();
       setState(() {});
     }
   }
@@ -77,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             const SizedBox(height: 10.0),
             Text(
-              model.modelName,
+              settings.modelName,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
@@ -100,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(width: 10.0),
                 FilledButton(
                   onPressed: () {
-                    model.resetAll(setState);
+                    settings.resetAll(setState);
                   },
                   child: const Text(
                     "Reset All",
@@ -114,9 +114,9 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 15.0),
             llamaParamTextField(
-              'User alias', model.userAliasController),
+              'User alias', settings.userAliasController),
             llamaParamTextField(
-              'Response alias', model.responseAliasController),
+              'Response alias', settings.responseAliasController),
             ListTile(
               title: Row(
                 children: [
@@ -128,7 +128,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: TextField(
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
-                      controller: model.prePromptController,
+                      controller: settings.prePromptController,
                       decoration: roundedInput('PrePrompt', context),
                     ),
                   ),
@@ -142,8 +142,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 FilledButton(
                   onPressed: () {
                     setState(() {
-                      model.examplePromptControllers.add(TextEditingController());
-                      model.exampleResponseControllers.add(TextEditingController());
+                      settings.examplePromptControllers.add(TextEditingController());
+                      settings.exampleResponseControllers.add(TextEditingController());
                     });
                   },
                   child: const Text(
@@ -158,8 +158,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 FilledButton(
                   onPressed: () {
                     setState(() {
-                      model.examplePromptControllers.removeLast();
-                      model.exampleResponseControllers.removeLast();
+                      settings.examplePromptControllers.removeLast();
+                      settings.exampleResponseControllers.removeLast();
                     });
                   },
                   child: const Text(
@@ -174,51 +174,51 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 10.0),
             ...List.generate(
-              (model.examplePromptControllers.length == model.exampleResponseControllers.length) ? model.examplePromptControllers.length : 0,
+              (settings.examplePromptControllers.length == settings.exampleResponseControllers.length) ? settings.examplePromptControllers.length : 0,
               (index) => Column(
                 children: [
-                  llamaParamTextField('Example prompt', model.examplePromptControllers[index]),
-                  llamaParamTextField('Example response', model.exampleResponseControllers[index]),
+                  llamaParamTextField('Example prompt', settings.examplePromptControllers[index]),
+                  llamaParamTextField('Example response', settings.exampleResponseControllers[index]),
                 ],
               ),
             ),
             llamaParamSwitch(
-              'memory_f16', model.memory_f16),
+              'memory_f16', settings.memory_f16),
             llamaParamSwitch(
-              'random_prompt', model.random_prompt),
+              'random_prompt', settings.random_prompt),
             llamaParamSwitch(
-              'interactive', model.interactive),
+              'interactive', settings.interactive),
             llamaParamSwitch(
-              'interactive_start', model.interactive_start),
+              'interactive_start', settings.interactive_start),
             llamaParamSwitch(
-              'instruct (Chat4all and Alpaca)', model.instruct),
+              'instruct (Chat4all and Alpaca)', settings.instruct),
             llamaParamSwitch(
-              'ignore_eos', model.ignore_eos),
+              'ignore_eos', settings.ignore_eos),
             llamaParamSwitch(
-              'perplexity', model.perplexity),
+              'perplexity', settings.perplexity),
             const SizedBox(height: 15.0),
             llamaParamTextField(
-              'seed (-1 for random)', model.seedController),
+              'seed (-1 for random)', settings.seedController),
             llamaParamTextField(
-              'n_threads', model.n_threadsController),
+              'n_threads', settings.n_threadsController),
             llamaParamTextField(
-              'n_predict', model.n_predictController),
+              'n_ctx', settings.n_ctxController),
             llamaParamTextField(
-              'repeat_last_n', model.repeat_last_nController),
+              'n_batch', settings.n_batchController),
             llamaParamTextField(
-              'n_parts (-1 for auto)', model.n_partsController),
+              'n_predict', settings.n_predictController),
             llamaParamTextField(
-              'n_ctx', model.n_ctxController),
+              'repeat_last_n', settings.repeat_last_nController),
             llamaParamTextField(
-              'top_k', model.top_kController),
+              'n_parts (-1 for auto)', settings.n_partsController),
             llamaParamTextField(
-              'top_p', model.top_pController),
+              'top_k', settings.top_kController),
             llamaParamTextField(
-              'temp', model.tempController),
+              'top_p', settings.top_pController),
             llamaParamTextField(
-              'repeat_penalty', model.repeat_penaltyController),
+              'temp', settings.tempController),
             llamaParamTextField(
-              'batch_size', model.n_batchController),
+              'repeat_penalty', settings.repeat_penaltyController),
           ],
         ),
       )
@@ -252,30 +252,30 @@ class _SettingsPageState extends State<SettingsPage> {
         setState(() {
           switch (title) {
             case 'memory_f16':
-              model.memory_f16 = value;
+              settings.memory_f16 = value;
               break;
             case 'random_prompt':
-              model.random_prompt = value;
+              settings.random_prompt = value;
               break;
             case 'interactive':
-              model.interactive = value;
+              settings.interactive = value;
               break;
             case 'interactive_start':
-              model.interactive_start = value;
+              settings.interactive_start = value;
               break;
             case 'instruct':
-              model.instruct = value;
+              settings.instruct = value;
               break;
             case 'ignore_eos':
-              model.ignore_eos = value;
+              settings.ignore_eos = value;
               break;
             case 'perplexity':
-              model.perplexity = value;
+              settings.perplexity = value;
               break;
             default:
               break;
           }
-          model.saveBoolToSharedPrefs(title, value);
+          settings.saveBoolToSharedPrefs(title, value);
         });
       },
     );

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/model.dart';
+import 'package:maid/settings.dart';
 import 'package:maid/theme.dart';
 import 'package:maid/widgets/drawer_widget.dart';
 import 'package:maid/widgets/chat_widgets.dart';
@@ -35,14 +35,14 @@ class _MaidHomePageState extends State<MaidHomePage> {
       FocusScope.of(context).unfocus();
     }
     setState(() {
-      model.saveAll();
-      chatWidgets.add(UserMessage(message: model.promptController.text.trim()));
-      model.promptController.text += '\n${model.responseAliasController.text}';
-      model.compilePrePrompt();
-      historyLength = model.promptController.text.trim().length + 1;
-      historyLength += (responseLength == 0) ? model.prePrompt.length + 1 : 0;
+      settings.saveAll();
+      chatWidgets.add(UserMessage(message: settings.promptController.text.trim()));
+      settings.promptController.text += '\n${settings.responseAliasController.text}';
+      settings.compilePrePrompt();
+      historyLength = settings.promptController.text.trim().length + 1;
+      historyLength += (responseLength == 0) ? settings.prePrompt.length + 1 : 0;
       responseLength = 0;
-      model.inProgress = true;
+      settings.inProgress = true;
     });
     if (lib == null) {
       lib = Lib.instance;
@@ -53,7 +53,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     setState(() {
       newResponse = ResponseMessage();
       chatWidgets.add(newResponse);
-      model.promptController.text = ""; // Clear the input field
+      settings.promptController.text = ""; // Clear the input field
     });
   }
 
@@ -66,10 +66,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   void responseCallback(String message) {
-    String alias = model.userAliasController.text;
+    String alias = settings.userAliasController.text;
     int i = 0;
 
-    if (!model.inProgress || message.isEmpty) {
+    if (!settings.inProgress || message.isEmpty) {
       return;
     }
 
@@ -83,14 +83,14 @@ class _MaidHomePageState extends State<MaidHomePage> {
         
           // If the entire model text is matched, reset the match position
           if (characterMatch >= alias.length) {
-            model.inProgress = false;
+            settings.inProgress = false;
             break;
           }
         } else if (message[i] == '\n') {
           lineBreakMatch++;
 
           if (lineBreakMatch >= 3) {
-            model.inProgress = false;
+            settings.inProgress = false;
             break;
           }
         } else {
@@ -105,7 +105,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       i++;
     }
 
-    if (!model.inProgress) {
+    if (!settings.inProgress) {
       characterMatch = 0;
       lineBreakMatch = 0;
       lib?.butlerStop();
@@ -166,7 +166,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                           child: TextField(
                             keyboardType: TextInputType.multiline,
                             onSubmitted: (value) => execute(),
-                            controller: model.promptController,
+                            controller: settings.promptController,
                             cursorColor: Theme.of(context).colorScheme.secondary,
                             decoration: roundedInput('Prompt', context)
                           ),
