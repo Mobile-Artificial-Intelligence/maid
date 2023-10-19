@@ -21,26 +21,6 @@
 #pragma warning(disable: 4244 4267) // possible loss of data
 #endif
 
-static bool is_interacting  = false;
-static bool is_antiprompt   = false;
-
-static int n_past                       = 0;
-static int n_keep                       = 48;
-static int n_consumed                   = 0;
-static int mirostat                     = 0;
-static const float repeat_penalty       = 1.0;
-static const int32_t repeat_last_n      = 64;
-static const float presence_penalty     = 0.00f;
-static const float frequency_penalty    = 0.00f;
-static const int32_t top_k              = 40;
-static const float top_p                = 0.95f;
-static const float typical_p            = 1.00f;
-static const float temp                 = 0.80f;
-static const float tfs_z                = 1.00f;
-static const float   mirostat_tau       = 5.00f;
-static const float   mirostat_eta       = 0.10f;
-static const bool penalize_nl = true;
-
 static std::atomic_bool stop_generation(false);
 static std::mutex continue_mutex;
 
@@ -50,11 +30,12 @@ struct llama_context_params ctx_params;
 
 // TODO: replace with ring-buffer
 static std::vector<llama_token> last_n_tokens;
-
-static int n_remain;
-
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
+
+static int n_remain;
+static int n_past      = 0;
+static int n_consumed  = 0;
 
 gpt_params gpt_parameters;
 
@@ -67,6 +48,7 @@ int butler_start(struct butler_params *m_params) {
     gpt_parameters.n_threads        = (*m_params).n_threads         ? (*m_params).n_threads         : get_num_physical_cores();
     gpt_parameters.n_threads_batch  = (*m_params).n_threads_batch   ? (*m_params).n_threads_batch   : -1;
     gpt_parameters.n_predict        = (*m_params).n_predict         ? (*m_params).n_predict         : 256;
+    gpt_parameters.n_keep           = (*m_params).n_keep            ? (*m_params).n_keep            : 48;
     gpt_parameters.model            = (*m_params).model_path;
     gpt_parameters.prompt           = (*m_params).preprompt;
     gpt_parameters.antiprompt.push_back((*m_params).antiprompt);
@@ -102,8 +84,8 @@ int butler_start(struct butler_params *m_params) {
     }
 
     // number of tokens to keep when resetting context
-    if (n_keep > (int) embd_inp.size()) {
-        n_keep = (int) embd_inp.size();
+    if (gpt_parameters.n_keep < 0 || gpt_parameters.n_keep > (int) embd_inp.size() || gpt_parameters.instruct) {
+        gpt_parameters.n_keep = (int)embd_inp.size();
     }
 
     last_n_tokens = std::vector<llama_token>(ctx_params.n_ctx);
@@ -114,6 +96,10 @@ int butler_start(struct butler_params *m_params) {
 
 int butler_continue(const char *input, maid_output_cb *maid_output) {   
     std::string buffer(input);
+
+    bool is_interacting = false;
+    bool is_antiprompt = false;
+
     std::lock_guard<std::mutex> lock(continue_mutex);
 
     // Add tokens to embd only if the input buffer is non-empty
@@ -146,6 +132,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             // Note: n_ctx - 4 here is to match the logic for commandline prompt handling via
             // --prompt or --file which uses the same value.
             auto max_embd_size = ctx_params.n_ctx - 4;
+
             // Ensure the input doesn't exceed the context size by truncating embd if necessary.
             if ((int)embd.size() > max_embd_size) {
                 auto skipped_tokens = embd.size() - max_embd_size;
@@ -159,10 +146,10 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             // - take the n_keep first tokens from the original prompt (via n_past)
             // - take half of the last (n_ctx - n_keep) tokens and recompute the logits in batches
             if (n_past + (int) embd.size() > ctx_params.n_ctx) {
-                const int n_left = n_past - n_keep;
+                const int n_left = n_past - gpt_parameters.n_keep;
 
                 // always keep the first token - BOS
-                n_past = std::max(1, n_keep);
+                n_past = std::max(1, gpt_parameters.n_keep);
 
                 // insert n_left/2 tokens at the start of embd from last_n_tokens
                 embd.insert(embd.begin(), last_n_tokens.begin() + ctx_params.n_ctx - n_left/2 - embd.size(), last_n_tokens.end() - embd.size());
@@ -187,8 +174,8 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
         if ((int) embd_inp.size() <= n_consumed && !is_interacting) {
             // out of user input, sample next token
-            const float   alpha_presence  = presence_penalty;
-            const float   alpha_frequency = frequency_penalty;
+            const float   alpha_presence  = 0.00f;
+            const float   alpha_frequency = 0.00f;
 
             llama_token id = 0;
 
@@ -207,39 +194,25 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 // Apply penalties
                 const int n_ctx = ctx_params.n_ctx;
                 float nl_logit = logits[llama_token_nl(ctx)];
-                auto last_n_repeat = std::min(std::min((int)last_n_tokens.size(), repeat_last_n), n_ctx);
+                auto last_n_repeat = std::min(std::min((int)last_n_tokens.size(), 64), n_ctx);
                 llama_sample_repetition_penalty(ctx, &candidates_p,
                     last_n_tokens.data() + last_n_tokens.size() - last_n_repeat,
-                    last_n_repeat, repeat_penalty);
+                    last_n_repeat, 1.0);
                 llama_sample_frequency_and_presence_penalties(ctx, &candidates_p,
                     last_n_tokens.data() + last_n_tokens.size() - last_n_repeat,
                     last_n_repeat, alpha_frequency, alpha_presence);
-                if (!penalize_nl) {
-                    logits[llama_token_nl(ctx)] = nl_logit;
-                }
 
-                if (temp <= 0) {
+                if (0.80f <= 0) {
                     // Greedy sampling
                     id = llama_sample_token_greedy(ctx, &candidates_p);
                 } else {
-                    if (mirostat == 1) {
-                        static float mirostat_mu = 2.0f * mirostat_tau;
-                        const int mirostat_m = 100;
-                        llama_sample_temp(ctx, &candidates_p, temp);
-                        id = llama_sample_token_mirostat(ctx, &candidates_p, mirostat_tau, mirostat_eta, mirostat_m, &mirostat_mu);
-                    } else if (mirostat == 2) {
-                        static float mirostat_mu = 2.0f * mirostat_tau;
-                        llama_sample_temp(ctx, &candidates_p, temp);
-                        id = llama_sample_token_mirostat_v2(ctx, &candidates_p, mirostat_tau, mirostat_eta, &mirostat_mu);
-                    } else {
-                        // Temperature sampling
-                        llama_sample_top_k(ctx, &candidates_p, top_k, 1);
-                        llama_sample_tail_free(ctx, &candidates_p, tfs_z, 1);
-                        llama_sample_typical(ctx, &candidates_p, typical_p, 1);
-                        llama_sample_top_p(ctx, &candidates_p, top_p, 1);
-                        llama_sample_temp(ctx, &candidates_p, temp);
-                        id = llama_sample_token(ctx, &candidates_p);
-                    }
+                    // Temperature sampling
+                    llama_sample_top_k(ctx, &candidates_p, 40, 1);
+                    llama_sample_tail_free(ctx, &candidates_p, 1.00f, 1);
+                    llama_sample_typical(ctx, &candidates_p, 1.00f, 1);
+                    llama_sample_top_p(ctx, &candidates_p, 0.95f, 1);
+                    llama_sample_temp(ctx, &candidates_p, 0.80f);
+                    id = llama_sample_token(ctx, &candidates_p);
                 }
                 // printf("`%d`", candidates_p.size);
 
