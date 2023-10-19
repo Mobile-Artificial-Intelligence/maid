@@ -40,7 +40,7 @@ static std::atomic_bool stop_generation(false);
 
 static llama_model *model;
 static llama_context *ctx;
-static std::vector<llama_token> llama_token_newline;
+struct llama_context_params ctx_params;
 static std::string antiprompt;
 
 // TODO: replace with ring-buffer
@@ -54,50 +54,38 @@ static int n_consumed         = 0;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
-struct llama_context_params ctx_params;
-//struct llama_model_params model_params;
+gpt_params gpt_parameters;
 
 int butler_start(struct butler_params *m_params) {
-
     llama_backend_init(false);
+
+    gpt_parameters.seed             = (*m_params).seed              ? (*m_params).seed              : -1;
+    gpt_parameters.n_threads        = (*m_params).n_threads         ? (*m_params).n_threads         : get_num_physical_cores();
+    gpt_parameters.n_threads_batch  = (*m_params).n_threads_batch   ? (*m_params).n_threads_batch   : -1;
+    gpt_parameters.n_ctx            = (*m_params).n_ctx             ? (*m_params).n_ctx             : 512;
+    gpt_parameters.n_batch          = (*m_params).n_batch           ? (*m_params).n_batch           : 512;
+    gpt_parameters.model            = (*m_params).model_path;
+    gpt_parameters.prompt           = (*m_params).preprompt;
+    gpt_parameters.antiprompt.push_back((*m_params).antiprompt);
+
     antiprompt = (*m_params).antiprompt;
 
-    // load the model and apply lora adapter, if any
-    auto mparams = llama_model_default_params();
-
-    model  = llama_load_model_from_file((*m_params).model_path, mparams);
+    std::tie(model, ctx) = llama_init_from_gpt_params(gpt_parameters);
     if (model == NULL) {
         fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*m_params).model_path);
         return 1;
-    }
-
-    ctx_params = llama_context_default_params();
-
-    ctx_params.seed             = (*m_params).seed              ? (*m_params).seed              : LLAMA_DEFAULT_SEED;
-    ctx_params.n_ctx            = (*m_params).n_ctx             ? (*m_params).n_ctx             : 512;
-    ctx_params.n_batch          = (*m_params).n_batch           ? (*m_params).n_batch           : 1024;
-    ctx_params.n_threads        = (*m_params).n_threads         ? (*m_params).n_threads         : 4;
-    ctx_params.n_threads_batch  = (*m_params).n_threads_batch   ? (*m_params).n_threads_batch   : 4;
-
-    ctx = llama_new_context_with_model(model, ctx_params);
-    if (ctx == NULL) {
+    } else if (ctx == NULL) {
         fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__,(*m_params).model_path);
         llama_free_model(model);
         return 1;
     }
 
-    std::string prompt((*m_params).preprompt);
-    if (prompt.back() == '\n') {
-        prompt.pop_back();
-    }
+    ctx_params = llama_context_params_from_gpt_params(gpt_parameters);
 
-    // Add a space in front of the first character to match OG llama tokenizer behavior
-    prompt.insert(0, 1, ' ');
+    const bool add_bos = llama_vocab_type(model) == LLAMA_VOCAB_TYPE_SPM;
 
     // tokenize the prompt
-    embd_inp = ::llama_tokenize(model, prompt, true, true);
-
-    ctx_params.n_ctx = llama_n_ctx(ctx);
+    embd_inp = ::llama_tokenize(model, gpt_parameters.prompt, add_bos, true);
 
     if ((int) embd_inp.size() > ctx_params.n_ctx - 4) {
         fprintf(stderr, "%s: error: prompt is too long (%d tokens, max %d)\n", __func__, (int) embd_inp.size(), ctx_params.n_ctx - 4);
