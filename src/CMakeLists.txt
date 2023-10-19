@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-
+project(maid LANGUAGES CXX)
 set(BUILD_SHARED_LIBS ON)
 
 if(ANDROID)

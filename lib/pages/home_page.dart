@@ -19,7 +19,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   final ScrollController _consoleScrollController = ScrollController();
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
-  
+
   int historyLength = 0;
   int responseLength = 0;
   Lib? lib;
@@ -37,11 +37,13 @@ class _MaidHomePageState extends State<MaidHomePage> {
     setState(() {
       busy = true;
       settings.saveAll();
-      chatWidgets.add(UserMessage(message: settings.promptController.text.trim()));
-      settings.promptController.text += '\n${settings.responseAliasController.text}';
+      chatWidgets
+          .add(UserMessage(message: settings.promptController.text.trim()));
+      settings.promptController.text +=
+          '\n${settings.responseAliasController.text}';
       settings.compilePrePrompt();
-      historyLength = settings.promptController.text.trim().length;
-      historyLength += (responseLength == 0) ? settings.prePrompt.length + 2 : 1;
+      historyLength = settings.promptController.text.trim().length + 1;
+      historyLength += (responseLength == 0) ? settings.prePrompt.length : 0;
       responseLength = 0;
       settings.inProgress = true;
     });
@@ -81,7 +83,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
         // If the current character matches the expected character in the model text
         if (alias.isNotEmpty && message[i] == alias[characterMatch]) {
           characterMatch++;
-        
+
           // If the entire model text is matched, reset the match position
           if (characterMatch >= alias.length) {
             settings.inProgress = false;
@@ -102,7 +104,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
           return;
         }
       }
-    
+
       i++;
     }
 
@@ -130,16 +132,14 @@ class _MaidHomePageState extends State<MaidHomePage> {
             color: Theme.of(context).colorScheme.background,
           ),
         ),
-        title: Text(
-          widget.title
-        ),
+        title: Text(widget.title),
       ),
       drawer: const MaidDrawer(),
       body: Builder(
         builder: (BuildContext context) => GestureDetector(
           onHorizontalDragEnd: (details) {
             // Check if the drag is towards right with a certain velocity
-            if (details.primaryVelocity! > 100) { 
+            if (details.primaryVelocity! > 100) {
               // Open the drawer
               Scaffold.of(context).openDrawer();
             }
@@ -168,24 +168,26 @@ class _MaidHomePageState extends State<MaidHomePage> {
                       children: [
                         Expanded(
                           child: TextField(
-                            keyboardType: TextInputType.multiline,
-                            onSubmitted: (value) {
-                              if (!busy) {
-                                execute();
-                              }
-                            },
-                            controller: settings.promptController,
-                            cursorColor: Theme.of(context).colorScheme.secondary,
-                            decoration: roundedInput('Prompt', context)
-                          ),
+                              keyboardType: TextInputType.multiline,
+                              onSubmitted: (value) {
+                                if (!busy) {
+                                  execute();
+                                }
+                              },
+                              controller: settings.promptController,
+                              cursorColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              decoration: roundedInput('Prompt', context)),
                         ),
                         IconButton(
-                          onPressed: busy ? null : execute, 
-                          iconSize: 50,
-                          icon: Icon(Icons.arrow_circle_right, 
-                            color: busy ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.secondary,
-                          )
-                        ),
+                            onPressed: busy ? null : execute,
+                            iconSize: 50,
+                            icon: Icon(
+                              Icons.arrow_circle_right,
+                              color: busy
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.secondary,
+                            )),
                       ],
                     ),
                   ),
