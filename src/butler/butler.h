@@ -14,14 +14,24 @@ extern "C" {
 #endif
 
 struct butler_params {
+   unsigned char memory_f16;
+   unsigned char ignore_eos;
+   unsigned char instruct;
+   unsigned char interactive;
+   unsigned char interactive_start;
+   unsigned char random_prompt;
    char *model_path;
    char *preprompt;
    char *antiprompt;
+   char *input_prefix;
+   char *input_suffix;
    unsigned int seed;
-   unsigned int n_ctx;
-   unsigned int n_batch;
-   unsigned int n_threads;
-   unsigned int n_threads_batch;
+   int n_ctx;
+   int n_batch;
+   int n_threads;
+   int n_threads_batch;
+   int n_predict;
+   int n_keep;
 };
 
 typedef void maid_output_cb(const char *);

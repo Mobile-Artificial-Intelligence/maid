@@ -21,7 +21,9 @@
 #pragma warning(disable: 4244 4267) // possible loss of data
 #endif
 
-static bool is_interacting = false;
+static bool is_interacting  = false;
+static bool is_antiprompt   = false;
+
 static const int n_predict = 256;
 static int n_keep = 48;
 static const float repeat_penalty = 1.0;
@@ -47,7 +49,6 @@ struct llama_context_params ctx_params;
 
 // TODO: replace with ring-buffer
 static std::vector<llama_token> last_n_tokens;
-static bool is_antiprompt        = false;
 
 static int n_past             = 0;
 static int n_remain = n_predict;

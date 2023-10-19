@@ -67,26 +67,54 @@ class NativeLibrary {
 }
 
 class butler_params extends ffi.Struct {
+  @ffi.UnsignedChar()
+  external int memory_f16;
+
+  @ffi.UnsignedChar()
+  external int ignore_eos;
+
+  @ffi.UnsignedChar()
+  external int instruct;
+
+  @ffi.UnsignedChar()
+  external int interactive;
+
+  @ffi.UnsignedChar()
+  external int interactive_start;
+
+  @ffi.UnsignedChar()
+  external int random_prompt;
+
   external ffi.Pointer<ffi.Char> model_path;
 
   external ffi.Pointer<ffi.Char> preprompt;
 
   external ffi.Pointer<ffi.Char> antiprompt;
 
+  external ffi.Pointer<ffi.Char> input_prefix;
+
+  external ffi.Pointer<ffi.Char> input_suffix;
+
   @ffi.UnsignedInt()
   external int seed;
 
-  @ffi.UnsignedInt()
+  @ffi.Int()
   external int n_ctx;
 
-  @ffi.UnsignedInt()
+  @ffi.Int()
   external int n_batch;
 
-  @ffi.UnsignedInt()
+  @ffi.Int()
   external int n_threads;
 
-  @ffi.UnsignedInt()
+  @ffi.Int()
   external int n_threads_batch;
+
+  @ffi.Int()
+  external int n_predict;
+
+  @ffi.Int()
+  external int n_keep;
 }
 
 typedef maid_output_cb

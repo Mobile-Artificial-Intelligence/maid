@@ -185,17 +185,15 @@ class _SettingsPageState extends State<SettingsPage> {
             llamaParamSwitch(
               'memory_f16', settings.memory_f16),
             llamaParamSwitch(
-              'random_prompt', settings.random_prompt),
+              'ignore_eos', settings.ignore_eos),
+            llamaParamSwitch(
+              'instruct', settings.instruct),
             llamaParamSwitch(
               'interactive', settings.interactive),
             llamaParamSwitch(
               'interactive_start', settings.interactive_start),
             llamaParamSwitch(
-              'instruct (Chat4all and Alpaca)', settings.instruct),
-            llamaParamSwitch(
-              'ignore_eos', settings.ignore_eos),
-            llamaParamSwitch(
-              'perplexity', settings.perplexity),
+              'random_prompt', settings.random_prompt),
             const SizedBox(height: 15.0),
             llamaParamTextField(
               'seed (-1 for random)', settings.seedController),
@@ -207,18 +205,6 @@ class _SettingsPageState extends State<SettingsPage> {
               'n_batch', settings.n_batchController),
             llamaParamTextField(
               'n_predict', settings.n_predictController),
-            llamaParamTextField(
-              'repeat_last_n', settings.repeat_last_nController),
-            llamaParamTextField(
-              'n_parts (-1 for auto)', settings.n_partsController),
-            llamaParamTextField(
-              'top_k', settings.top_kController),
-            llamaParamTextField(
-              'top_p', settings.top_pController),
-            llamaParamTextField(
-              'temp', settings.tempController),
-            llamaParamTextField(
-              'repeat_penalty', settings.repeat_penaltyController),
           ],
         ),
       )
@@ -268,9 +254,6 @@ class _SettingsPageState extends State<SettingsPage> {
               break;
             case 'ignore_eos':
               settings.ignore_eos = value;
-              break;
-            case 'perplexity':
-              settings.perplexity = value;
               break;
             default:
               break;
