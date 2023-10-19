@@ -15,6 +15,7 @@
 #include <unordered_set>
 #include <thread>
 #include <atomic>
+#include <mutex>
 
 #if defined(_MSC_VER)
 #pragma warning(disable: 4244 4267) // possible loss of data
@@ -36,7 +37,9 @@ static int mirostat          = 0;
 static const float   mirostat_tau      = 5.00f;
 static const float   mirostat_eta      = 0.10f;
 static const bool penalize_nl = true;
+
 static std::atomic_bool stop_generation(false);
+static std::mutex continue_mutex;
 
 static llama_model *model;
 static llama_context *ctx;
@@ -100,8 +103,9 @@ int butler_start(struct butler_params *m_params) {
     return 0;
 }
 
-int butler_continue(const char *input, maid_output_cb *maid_output) {
+int butler_continue(const char *input, maid_output_cb *maid_output) {   
     std::string buffer(input);
+    std::lock_guard<std::mutex> lock(continue_mutex);
 
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back

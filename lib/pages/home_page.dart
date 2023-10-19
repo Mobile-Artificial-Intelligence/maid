@@ -27,7 +27,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   int characterMatch = 0;
   int lineBreakMatch = 0;
 
-  bool canStop = false;
+  bool busy = false;
 
   void execute() {
     //close the keyboard if on mobile
@@ -35,6 +35,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       FocusScope.of(context).unfocus();
     }
     setState(() {
+      busy = true;
       settings.saveAll();
       chatWidgets.add(UserMessage(message: settings.promptController.text.trim()));
       settings.promptController.text += '\n${settings.responseAliasController.text}';
@@ -111,6 +112,9 @@ class _MaidHomePageState extends State<MaidHomePage> {
       lib?.butlerStop();
       newResponse.trim();
       newResponse.finalise();
+      setState(() {
+        busy = false;
+      });
       return;
     }
   }
@@ -165,17 +169,21 @@ class _MaidHomePageState extends State<MaidHomePage> {
                         Expanded(
                           child: TextField(
                             keyboardType: TextInputType.multiline,
-                            onSubmitted: (value) => execute(),
+                            onSubmitted: (value) {
+                              if (!busy) {
+                                execute();
+                              }
+                            },
                             controller: settings.promptController,
                             cursorColor: Theme.of(context).colorScheme.secondary,
                             decoration: roundedInput('Prompt', context)
                           ),
                         ),
                         IconButton(
-                          onPressed: execute, 
+                          onPressed: busy ? null : execute, 
                           iconSize: 50,
                           icon: Icon(Icons.arrow_circle_right, 
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: busy ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.secondary,
                           )
                         ),
                       ],

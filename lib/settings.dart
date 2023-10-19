@@ -254,7 +254,7 @@ class Settings {
 }
 
 class Lib {
-  static SendPort? sendPort;
+  static SendPort? _sendPort;
   late NativeLibrary _nativeLibrary;
 
   // Make the default constructor private
@@ -292,16 +292,16 @@ class Lib {
     _nativeLibrary = NativeLibrary(butlerDynamic);
   }
 
-  static void _maidOutputBridge(Pointer<Char> output) {
+  static void _maidOutputBridge(Pointer<Char> buffer) {
     try {
-      sendPort?.send(output.cast<Utf8>().toDartString());
+      _sendPort?.send(buffer.cast<Utf8>().toDartString());
     } catch (e) {
       print(e.toString());
     }
   }
 
   static butlerContinueIsolate(Map<String, dynamic> args) async {
-    sendPort = args['port'] as SendPort?;
+    _sendPort = args['port'] as SendPort?;
     String input = args['input'];
     Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
     Lib.instance._nativeLibrary.butler_continue(text, Pointer.fromFunction(_maidOutputBridge));
@@ -321,7 +321,7 @@ class Lib {
     _nativeLibrary.butler_start(params);
 
     ReceivePort receivePort = ReceivePort();
-    sendPort = receivePort.sendPort;
+    _sendPort = receivePort.sendPort;
     butlerContinue();
   
     Completer completer = Completer();
@@ -336,19 +336,19 @@ class Lib {
   }
 
   void butlerContinue() {
-    String input = settings.promptController.text;
+        String input = settings.promptController.text;
     Isolate.spawn(butlerContinueIsolate, {
       'input': input,
-      'port': sendPort
+      'port': _sendPort
     });
   }
 
   void butlerStop() {
     _nativeLibrary.butler_stop();
-  }
+      }
 
   void butlerExit() {
     _nativeLibrary.butler_exit();
-    sendPort?.send(sendPort);
+    _sendPort?.send(_sendPort);
   }
 }
