@@ -71,13 +71,9 @@ jobs:
           dart run ffigen
           flutter build linux
 
-      - name: Compress Linux App
-        run: |
-          tar -cJf release-linux.tar.xz build/linux/x64/release/bundle
-
-      - name: Upload Linux Tar
+      - name: Upload Linux Build
         uses: actions/upload-artifact@v3
         with:
           name: maid-linux
-          path: release-linux.tar.xz
+          path: build/linux/x64/release/bundle
         
