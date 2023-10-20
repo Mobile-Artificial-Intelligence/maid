@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Build Android and Linux
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-apk:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,10 +36,6 @@ jobs:
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
 
-      # - name: Set Version in pubspec.yaml
-      #   run: |
-      #     sed -i "s/^version:.*$/version: $(git tag --list|tail -1)+${GITHUB_RUN_NUMBER:-1}/" pubspec.yaml
-
       - name: Build APK
         run: |
           flutter pub get
@@ -48,5 +44,36 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: release-apk
+          name: maid-android
           path: build/app/outputs/apk/release/app-release.apk
+  
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.7'
+      - name: Build Linux App
+        run: |
+          flutter pub get
+          dart run ffigen
+          flutter build linux
+      - name: Compress Linux App
+        run: |
+          tar -cJf release-linux.tar.xz build/linux/release/bundle
+      - name: Upload Linux Tar
+        uses: actions/upload-artifact@v3
+        with:
+          name: maid-linux
+          path: release-linux.tar.xz
+        
