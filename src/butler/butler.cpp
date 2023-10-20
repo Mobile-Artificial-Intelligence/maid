@@ -52,12 +52,10 @@ int butler_start(struct butler_params *m_params) {
     gpt_parameters.model            = (*m_params).model_path;
     gpt_parameters.prompt           = (*m_params).preprompt;
     gpt_parameters.antiprompt.push_back((*m_params).antiprompt);
-    //gpt_parameters.memory_f16       = (*m_params).memory_f16        != 0;
-    //gpt_parameters.ignore_eos       = (*m_params).ignore_eos        != 0;
-    //gpt_parameters.instruct         = (*m_params).instruct          != 0;
-    //gpt_parameters.interactive      = (*m_params).interactive       != 0;
-    //gpt_parameters.interactive_first= (*m_params).interactive_start != 0;
-    //gpt_parameters.random_prompt    = (*m_params).random_prompt     != 0;
+    gpt_parameters.memory_f16       = (*m_params).memory_f16        != 0;
+    gpt_parameters.ignore_eos       = (*m_params).ignore_eos        != 0;
+    gpt_parameters.instruct         = (*m_params).instruct          != 0;
+    gpt_parameters.random_prompt    = (*m_params).random_prompt     != 0;
 
     n_remain = gpt_parameters.n_predict;
 

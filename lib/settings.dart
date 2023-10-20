@@ -21,8 +21,6 @@ class Settings {
   bool inProgress = false;
   bool memory_f16 = false; // use f16 instead of f32 for memory kv
   bool random_prompt = false; // do not randomize prompt if none provided
-  bool interactive = true; // interactive mode
-  bool interactive_start = false; // wait for user input immediately
   bool instruct = true; // instruction mode (used for Alpaca models)
   bool ignore_eos = false; // do not stop generating after eos
 
@@ -61,8 +59,6 @@ class Settings {
     boolKeys = {
       "memory_f16": memory_f16,
       "random_prompt": random_prompt,
-      "interactive": interactive,
-      "interactive_start": interactive_start,
       "instruct": instruct,
       "ignore_eos": ignore_eos,
     };
@@ -149,8 +145,6 @@ class Settings {
     setState(() {
       memory_f16 = false;
       random_prompt = false;
-      interactive = true;
-      interactive_start = false;
       instruct = true;
       ignore_eos = false;
     });
@@ -167,8 +161,6 @@ class Settings {
   void saveAll() {
     saveBoolToSharedPrefs("memory_f16", memory_f16);
     saveBoolToSharedPrefs("random_prompt", random_prompt);
-    saveBoolToSharedPrefs("interactive", interactive);
-    saveBoolToSharedPrefs("interactive_start", interactive_start);
     saveBoolToSharedPrefs("instruct", instruct);
     saveBoolToSharedPrefs("ignore_eos", ignore_eos);
     saveStringToSharedPrefs("modelPath", modelPath);
@@ -280,17 +272,15 @@ class Lib {
     params.ref.model_path = settings.modelPath.toNativeUtf8().cast<Char>();
     params.ref.preprompt = settings.prePrompt.toNativeUtf8().cast<Char>();
     params.ref.antiprompt = settings.reversePromptController.text.trim().toNativeUtf8().cast<Char>();
-    params.ref.seed = int.tryParse(settings.seedController.text.trim()) ?? -1;
-    params.ref.n_ctx = int.tryParse(settings.n_ctxController.text.trim()) ?? 512;
-    params.ref.n_threads = int.tryParse(settings.n_threadsController.text.trim()) ?? 4;
-    params.ref.n_batch = int.tryParse(settings.n_batchController.text.trim()) ?? 8;
-    params.ref.n_predict = int.tryParse(settings.n_predictController.text.trim()) ?? 512;
-    params.ref.memory_f16 = settings.memory_f16 ? 1 : 0;
-    params.ref.random_prompt = settings.random_prompt ? 1 : 0;
-    params.ref.interactive = settings.interactive ? 1 : 0;
-    params.ref.interactive_start = settings.interactive_start ? 1 : 0;
-    params.ref.instruct = settings.instruct ? 1 : 0;
-    params.ref.ignore_eos = settings.ignore_eos ? 1 : 0;
+    params.ref.seed = int.tryParse(settings.seedController.text.trim())                               ?? -1;
+    params.ref.n_ctx = int.tryParse(settings.n_ctxController.text.trim())                             ?? 512;
+    params.ref.n_threads = int.tryParse(settings.n_threadsController.text.trim())                     ?? 4;
+    params.ref.n_batch = int.tryParse(settings.n_batchController.text.trim())                         ?? 8;
+    params.ref.n_predict = int.tryParse(settings.n_predictController.text.trim())                     ?? 512;
+    params.ref.memory_f16 = settings.memory_f16                                                       ? 1 : 0;
+    params.ref.random_prompt = settings.random_prompt                                                 ? 1 : 0;
+    params.ref.instruct = settings.instruct                                                           ? 1 : 0;
+    params.ref.ignore_eos = settings.ignore_eos                                                       ? 1 : 0;
 
     _nativeLibrary.butler_start(params);
 

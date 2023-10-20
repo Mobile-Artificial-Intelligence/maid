@@ -189,10 +189,6 @@ class _SettingsPageState extends State<SettingsPage> {
             llamaParamSwitch(
               'instruct', settings.instruct),
             llamaParamSwitch(
-              'interactive', settings.interactive),
-            llamaParamSwitch(
-              'interactive_start', settings.interactive_start),
-            llamaParamSwitch(
               'random_prompt', settings.random_prompt),
             const SizedBox(height: 15.0),
             llamaParamTextField(
@@ -242,12 +238,6 @@ class _SettingsPageState extends State<SettingsPage> {
               break;
             case 'random_prompt':
               settings.random_prompt = value;
-              break;
-            case 'interactive':
-              settings.interactive = value;
-              break;
-            case 'interactive_start':
-              settings.interactive_start = value;
               break;
             case 'instruct':
               settings.instruct = value;
