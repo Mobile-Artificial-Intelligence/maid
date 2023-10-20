@@ -1,0 +1,52 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Get tags
+        run: git fetch --tags origin
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.7'
+
+      - name: Decode Keystore File
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+        run: echo "$KEYSTORE" | base64 --decode > android/app/key.jks
+
+      - name: Create key.properties
+        run: |
+          echo "storeFile=key.jks" > android/key.properties
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "releasePassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "releaseAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+
+      # - name: Set Version in pubspec.yaml
+      #   run: |
+      #     sed -i "s/^version:.*$/version: $(git tag --list|tail -1)+${GITHUB_RUN_NUMBER:-1}/" pubspec.yaml
+
+      - name: Build APK
+        run: |
+          flutter pub get
+          dart run ffigen
+          flutter build apk
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release-apk
+          path: build/app/outputs/apk/release/app-release.apk
