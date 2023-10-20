@@ -25,7 +25,8 @@ Also tested on Debian Linux, Windows 11.
 Tested with llama 2 7B-Chat and llama 7B.
 
 ## Disclaimer
-Please note that the llama.cpp models are owned and officially distributed by Meta. This app only serves as a demo for the model's capabilities and functionality. The developers of this app do not provide the LLaMA models and are not responsible for any issues related to their usage.
+Please note that the llama.cpp models are owned and officially distributed by Meta. This app only serves as an environment for the model's 
+capabilities and functionality. The developers of this app do not provide the LLaMA models and are not responsible for any issues related to their usage.
 
 
 
