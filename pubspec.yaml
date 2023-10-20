@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 2.2.1+8
 
 environment:
-  sdk: '>=2.19.4 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -32,14 +32,13 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider: ^2.0.2
-  permission_handler: ^10.2.0
+  permission_handler: ^11.0.1
   shared_preferences: ^2.0.20
   cupertino_icons: ^1.0.2
   llama:
     path: ./packages/llama
-  resource_monitor: ^0.0.2
   url_launcher: ^6.1.10
-  file_picker: ^5.2.6
+  file_picker: ^6.0.0
   path: ^1.8.3
   system_info2: ^4.0.0
   flutter_linkify: ^6.0.0
@@ -49,15 +48,15 @@ dev_dependencies:
   msix: ^3.9.1
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.12.0"
+  flutter_launcher_icons: ^0.13.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
-  ffigen: any
+  flutter_lints: ^3.0.0
+  ffigen: ^9.0.1
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 ffigen:
