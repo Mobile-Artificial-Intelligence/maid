@@ -73,7 +73,7 @@ jobs:
 
       - name: Compress Linux App
         run: |
-          tar -cJf release-linux.tar.xz build/linux/release/bundle
+          tar -cJf release-linux.tar.xz build/linux/x64/release/bundle
 
       - name: Upload Linux Tar
         uses: actions/upload-artifact@v3
