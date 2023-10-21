@@ -69,48 +69,9 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   void responseCallback(String message) {
-    String alias = settings.userAliasController.text;
     int i = 0;
 
-    if (!settings.inProgress || message.isEmpty) {
-      return;
-    }
-
-    while (i < message.length) {
-      responseLength++;
-
-      if (responseLength > historyLength) {
-        // If the current character matches the expected character in the model text
-        if (alias.isNotEmpty && message[i] == alias[characterMatch]) {
-          characterMatch++;
-
-          // If the entire model text is matched, reset the match position
-          if (characterMatch >= alias.length) {
-            settings.inProgress = false;
-            break;
-          }
-        } else if (message[i] == '\n') {
-          lineBreakMatch++;
-
-          if (lineBreakMatch >= 3) {
-            settings.inProgress = false;
-            break;
-          }
-        } else {
-          // If there's a mismatch, add the remaining message to newResponse
-          newResponse.addMessage(message.substring(i - characterMatch));
-          scrollDown();
-          characterMatch = 0;
-          return;
-        }
-      }
-
-      i++;
-    }
-
     if (!settings.inProgress) {
-      characterMatch = 0;
-      lineBreakMatch = 0;
       lib?.butlerStop();
       newResponse.trim();
       newResponse.finalise();
@@ -118,6 +79,18 @@ class _MaidHomePageState extends State<MaidHomePage> {
         busy = false;
       });
       return;
+    } else if (message.isNotEmpty) {
+      while (i < message.length) {
+        responseLength++;
+  
+        if (responseLength > historyLength) {
+          newResponse.addMessage(message.substring(i));
+          scrollDown();
+          return;
+        }
+  
+        i++;
+      }
     }
   }
 

@@ -51,7 +51,12 @@ int butler_start(struct butler_params *m_params) {
     gpt_parameters.n_keep           = (*m_params).n_keep            ? (*m_params).n_keep            : 48;
     gpt_parameters.model            = (*m_params).model_path;
     gpt_parameters.prompt           = (*m_params).preprompt;
-    gpt_parameters.antiprompt.push_back((*m_params).antiprompt);
+    gpt_parameters.input_prefix     = (*m_params).input_prefix;
+    gpt_parameters.input_suffix     = (*m_params).input_suffix;
+
+    gpt_parameters.antiprompt.push_back((*m_params).input_prefix);
+    //gpt_parameters.antiprompt.push_back((*m_params).input_suffix);
+
     gpt_parameters.memory_f16       = (*m_params).memory_f16        != 0;
     gpt_parameters.ignore_eos       = (*m_params).ignore_eos        != 0;
     gpt_parameters.instruct         = (*m_params).instruct          != 0;
@@ -96,15 +101,20 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     std::string buffer(input);
 
     bool is_interacting = false;
-    bool is_antiprompt = false;
 
     std::lock_guard<std::mutex> lock(continue_mutex);
 
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        auto line_inp = ::llama_tokenize(model, buffer, false, true);
+        const auto line_pfx = ::llama_tokenize(ctx, gpt_parameters.input_prefix, false, true);
+        const auto line_inp = ::llama_tokenize(model, buffer,                    false, false);
+        const auto line_sfx = ::llama_tokenize(ctx, gpt_parameters.input_suffix, false, true);
+
+        embd_inp.insert(embd_inp.end(), line_pfx.begin(), line_pfx.end());
         embd_inp.insert(embd_inp.end(), line_inp.begin(), line_inp.end());
+        embd_inp.insert(embd_inp.end(), line_sfx.begin(), line_sfx.end());
+
         n_remain -= line_inp.size();
     }
 
@@ -112,6 +122,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     while (true) {
         if (stop_generation.load()) {
             stop_generation.store(false);  // reset for future use
+            maid_output(return_code::STOP, "");
             return 0;  // or any other cleanup you want to do
         }
 
@@ -248,8 +259,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
         // display text
         for (auto id : embd) {
-            maid_output(llama_token_to_piece(ctx, id).c_str());
-
+            maid_output(return_code::CONTINUE, llama_token_to_piece(ctx, id).c_str());
         }
 
         // if not currently processing queued inputs;
@@ -261,7 +271,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                     last_output += llama_token_to_piece(ctx, id);
                 }
 
-                is_antiprompt = false;
                 // Check if each of the reverse prompts appears at the end of the output.
                 // If we're not running interactively, the reverse prompt might be tokenized with some following characters
                 // so we'll compensate for that by widening the search window a bit.
@@ -275,13 +284,9 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                         if (gpt_parameters.interactive) {
                             is_interacting = true;
                         }
-                        is_antiprompt = true;
-                        break;
+                        maid_output(return_code::STOP, "");
+                        return 0; 
                     }
-                }
-
-                if (is_antiprompt) {
-                    LOG("found antiprompt: %s\n", last_output.c_str());
                 }
             }
 
