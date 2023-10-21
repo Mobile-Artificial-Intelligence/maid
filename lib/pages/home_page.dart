@@ -20,13 +20,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
 
-  int historyLength = 0;
-  int responseLength = 0;
   Lib? lib;
-
-  int characterMatch = 0;
-  int lineBreakMatch = 0;
-
   bool busy = false;
 
   void execute() {
@@ -39,12 +33,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       settings.saveAll();
       chatWidgets
           .add(UserMessage(message: settings.promptController.text.trim()));
-      settings.promptController.text +=
-          '\n${settings.responseAliasController.text}';
       settings.compilePrePrompt();
-      historyLength = settings.promptController.text.trim().length + 1;
-      historyLength += (responseLength == 0) ? settings.prePrompt.length : 0;
-      responseLength = 0;
       settings.inProgress = true;
     });
     if (lib == null) {
@@ -69,8 +58,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   void responseCallback(String message) {
-    int i = 0;
-
     if (!settings.inProgress) {
       lib?.butlerStop();
       newResponse.trim();
@@ -80,17 +67,8 @@ class _MaidHomePageState extends State<MaidHomePage> {
       });
       return;
     } else if (message.isNotEmpty) {
-      while (i < message.length) {
-        responseLength++;
-  
-        if (responseLength > historyLength) {
-          newResponse.addMessage(message.substring(i));
-          scrollDown();
-          return;
-        }
-  
-        i++;
-      }
+      newResponse.addMessage(message);
+      scrollDown();
     }
   }
 

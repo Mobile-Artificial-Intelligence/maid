@@ -208,7 +208,6 @@ class Settings {
         prePrompt += "\n$prompt\n$response";
       }
     }
-    prePrompt += "\n${userAliasController.text.trim()} ";
   }
 }
 
