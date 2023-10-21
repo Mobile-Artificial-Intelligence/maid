@@ -32,6 +32,8 @@ struct llama_context_params ctx_params;
 static std::vector<llama_token> last_n_tokens;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
+static std::vector<llama_token> line_pfx;
+static std::vector<llama_token> line_sfx;
 
 static int n_remain;
 static int n_past      = 0;
@@ -51,10 +53,10 @@ int butler_start(struct butler_params *m_params) {
     gpt_parameters.n_keep           = (*m_params).n_keep            ? (*m_params).n_keep            : 48;
     gpt_parameters.model            = (*m_params).model_path;
     gpt_parameters.prompt           = (*m_params).preprompt;
-    gpt_parameters.input_prefix     = (*m_params).input_prefix;
-    gpt_parameters.input_suffix     = (*m_params).input_suffix;
+    gpt_parameters.input_prefix     = "\n" + std::string((*m_params).input_prefix);
+    gpt_parameters.input_suffix     = "\n" + std::string((*m_params).input_suffix);
 
-    gpt_parameters.antiprompt.push_back((*m_params).input_prefix);
+    gpt_parameters.antiprompt.push_back(gpt_parameters.input_prefix);
     //gpt_parameters.antiprompt.push_back((*m_params).input_suffix);
 
     gpt_parameters.memory_f16       = (*m_params).memory_f16        != 0;
@@ -94,6 +96,9 @@ int butler_start(struct butler_params *m_params) {
     last_n_tokens = std::vector<llama_token>(ctx_params.n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
 
+    line_pfx = ::llama_tokenize(ctx, gpt_parameters.input_prefix, false, true);
+    line_sfx = ::llama_tokenize(ctx, gpt_parameters.input_suffix, false, true);
+
     return 0;
 }
 
@@ -107,9 +112,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        const auto line_pfx = ::llama_tokenize(ctx, gpt_parameters.input_prefix, false, true);
         const auto line_inp = ::llama_tokenize(model, buffer,                    false, false);
-        const auto line_sfx = ::llama_tokenize(ctx, gpt_parameters.input_suffix, false, true);
 
         embd_inp.insert(embd_inp.end(), line_pfx.begin(), line_pfx.end());
         embd_inp.insert(embd_inp.end(), line_inp.begin(), line_inp.end());
