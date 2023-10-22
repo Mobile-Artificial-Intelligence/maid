@@ -28,13 +28,10 @@ static llama_model *model;
 static llama_context *ctx;
 struct llama_context_params ctx_params;
 
-// TODO: replace with ring-buffer
 static std::vector<llama_token> last_n_tokens;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 static std::vector<llama_token> embd_cache;
-static std::vector<llama_token> inp_pfx;
-static std::vector<llama_token> inp_sfx;
 
 static int n_remain;
 static int n_past      = 0;
@@ -99,9 +96,6 @@ int butler_start(struct butler_params *m_params) {
     last_n_tokens = std::vector<llama_token>(ctx_params.n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
 
-    inp_pfx = ::llama_tokenize(ctx, gpt_parameters.input_prefix, false, true);
-    inp_sfx = ::llama_tokenize(ctx, gpt_parameters.input_suffix, false, true);
-
     return 0;
 }
 
@@ -111,6 +105,9 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     bool is_interacting = false;
 
     std::lock_guard<std::mutex> lock(continue_mutex);
+
+    auto inp_pfx = ::llama_tokenize(ctx, gpt_parameters.input_prefix, false, true);
+    auto inp_sfx = ::llama_tokenize(ctx, gpt_parameters.input_suffix, false, true);
 
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
@@ -263,54 +260,66 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             }
         }
 
-        // Look for sequences from inp_pfx in embd and add to embd_cache
-        for (auto id : embd) {
-            if (id == inp_pfx[n_pfx]) {
-                embd_cache.push_back(id);
-                embd.pop_back();
-                n_pfx++;
+        auto embd_out = embd;
 
+        // Remove input_prefix from output
+        std::vector<int>::iterator it = embd_out.begin();
+        while (it != embd_out.end()) {
+            if (*it == inp_pfx[n_pfx]) {
+                embd_cache.push_back(*it);
+                it = embd_out.erase(it);
+                n_pfx++;
+        
                 if (n_pfx == inp_pfx.size()) {
+                    // Prefix found, reset
                     embd_cache.clear();
                     n_pfx = 0;
                     break;
                 }
             } else if (n_pfx != 0) {
                 // Started a sequence but it's broken now, reset
-                embd.insert(embd.end(), embd_cache.begin(), embd_cache.end());
+                embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
                 embd_cache.clear();
                 n_pfx = 0;
+                ++it;
+            } else {
+                ++it;
             }
         }
-        printf("n_pfx: %d\n", n_pfx);
-
-        // Look for sequences from inp_pfx in embd and add to embd_cache
-        for (auto id : embd) {
-            if (id == inp_sfx[n_sfx]) {
-                embd_cache.push_back(id);
-                embd.pop_back();
+        
+        // Remove input_suffix from output
+        it = embd_out.begin();
+        while (it != embd_out.end()) {
+            if (*it == inp_sfx[n_sfx]) {
+                embd_cache.push_back(*it);
+                it = embd_out.erase(it);
                 n_sfx++;
-
+        
                 if (n_sfx == inp_sfx.size()) {
+                    // Suffix found, reset
                     embd_cache.clear();
                     n_sfx = 0;
                     break;
                 }
             } else if (n_sfx != 0) {
                 // Started a sequence but it's broken now, reset
-                embd.insert(embd.end(), embd_cache.begin(), embd_cache.end());
+                embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
                 embd_cache.clear();
                 n_sfx = 0;
+                ++it;
+            } else {
+                ++it;
             }
         }
-        printf("n_sfx: %d\n", n_sfx);
 
         // display text
-        for (auto id : embd) {
+        for (auto id : embd_out) {
             const char * output = llama_token_to_piece(ctx, id).c_str();
             maid_output(return_code::CONTINUE, output);
             printf("%s\n", output);
         }
+
+        embd_out.clear();
 
         // if not currently processing queued inputs;
         if ((int) embd_inp.size() <= n_consumed) {
