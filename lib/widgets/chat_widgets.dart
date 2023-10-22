@@ -54,6 +54,7 @@ class ResponseMessage extends StatefulWidget {
 class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
   String _message = "";
   bool _finalised = false; // Declare finalised here
+  bool _inCodeBox = false;
 
   @override
   void initState() {
@@ -66,7 +67,11 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
 
     widget.trimController.stream.listen((_) {
       setState(() {
-        _message = _message.trimRight();
+        if (_message == "```") {
+          _inCodeBox = !_inCodeBox;
+        } else {
+          _message = _message.trimRight();
+        }
       });
     });
 
@@ -89,7 +94,8 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
           borderRadius: BorderRadius.circular(10),
         ),
         child: !_finalised && _message.isEmpty
-          ? TypingIndicator() : Text(_message),
+          ? const TypingIndicator() : _inCodeBox ? 
+          CodeBox(code: _message) : Text(_message),
       ),
     );
   }
@@ -163,6 +169,56 @@ class _TypingIndicatorState extends State<TypingIndicator>
   @override
   void dispose() {
     _repeatingController.dispose();
+    super.dispose();
+  }
+}
+
+class CodeBox extends StatefulWidget {
+  final StreamController<String> messageController = StreamController<String>.broadcast();
+
+  final String code;
+
+  CodeBox({required this.code, Key? key}) : super(key: key);
+
+  void addCodeChunk(String codeChunk) {
+    messageController.add(codeChunk);
+  }
+
+  @override
+  _CodeBoxState createState() => _CodeBoxState();
+}
+
+class _CodeBoxState extends State<CodeBox> {
+  String _code = "";
+
+  @override
+  void initState() {
+    super.initState();
+    widget.messageController.stream.listen((codeChunk) {
+      setState(() {
+        _code += codeChunk;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Text(
+        _code,
+        style: TextStyle(fontFamily: 'monospace'),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.messageController.close();
     super.dispose();
   }
 }
