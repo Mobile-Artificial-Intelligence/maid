@@ -118,7 +118,10 @@ final class butler_params extends ffi.Struct {
   external int n_keep;
 }
 
-typedef maid_output_cb
-    = ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Char>)>;
+abstract class return_code {
+  static const int STOP = 0;
+  static const int CONTINUE = 1;
+}
 
-const int _POSIX_C_SOURCE = 200112;
+typedef maid_output_cb = ffi.NativeFunction<
+    ffi.Void Function(ffi.UnsignedChar code, ffi.Pointer<ffi.Char> buffer)>;

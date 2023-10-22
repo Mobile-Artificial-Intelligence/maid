@@ -208,7 +208,6 @@ class Settings {
         prePrompt += "\n$prompt\n$response";
       }
     }
-    prePrompt += "\n${userAliasController.text.trim()} ";
   }
 }
 
@@ -251,9 +250,13 @@ class Lib {
     _nativeLibrary = NativeLibrary(butlerDynamic);
   }
 
-  static void _maidOutputBridge(Pointer<Char> buffer) {
+  static void _maidOutputBridge(int code, Pointer<Char> buffer) {
     try {
-      _sendPort?.send(buffer.cast<Utf8>().toDartString());
+      if (code == return_code.CONTINUE) {
+        _sendPort?.send(buffer.cast<Utf8>().toDartString());
+      } else if (code == return_code.STOP) {
+        _sendPort?.send(code);
+      }
     } catch (e) {
       print(e.toString());
     }
@@ -272,6 +275,8 @@ class Lib {
     params.ref.model_path = settings.modelPath.toNativeUtf8().cast<Char>();
     params.ref.preprompt = settings.prePrompt.toNativeUtf8().cast<Char>();
     params.ref.antiprompt = settings.reversePromptController.text.trim().toNativeUtf8().cast<Char>();
+    params.ref.input_prefix = settings.userAliasController.text.trim().toNativeUtf8().cast<Char>();
+    params.ref.input_suffix = settings.responseAliasController.text.trim().toNativeUtf8().cast<Char>();
     params.ref.seed = int.tryParse(settings.seedController.text.trim())                               ?? -1;
     params.ref.n_ctx = int.tryParse(settings.n_ctxController.text.trim())                             ?? 512;
     params.ref.n_threads = int.tryParse(settings.n_threadsController.text.trim())                     ?? 4;
@@ -294,13 +299,16 @@ class Lib {
         maidOutput(data);
       } else if (data is SendPort) {
         completer.complete();
+      } else if (data is int) {
+        settings.inProgress = false;
+        maidOutput("");
       }
     });
     await completer.future;
   }
 
   void butlerContinue() {
-        String input = settings.promptController.text;
+    String input = settings.promptController.text;
     Isolate.spawn(butlerContinueIsolate, {
       'input': input,
       'port': _sendPort
@@ -309,7 +317,7 @@ class Lib {
 
   void butlerStop() {
     _nativeLibrary.butler_stop();
-      }
+  }
 
   void butlerExit() {
     _nativeLibrary.butler_exit();

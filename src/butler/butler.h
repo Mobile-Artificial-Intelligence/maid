@@ -1,8 +1,6 @@
 #ifndef __BUTLER_H
 #define __BUTLER_H
 
-#define _POSIX_C_SOURCE 200112L
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,7 +32,12 @@ struct butler_params {
    int n_keep; // Not used
 };
 
-typedef void maid_output_cb(const char *);
+enum return_code {
+   STOP,
+   CONTINUE,
+};
+
+typedef void maid_output_cb(unsigned char code, const char *buffer);
 
 EXPORT int butler_start(struct butler_params *m_params);
 

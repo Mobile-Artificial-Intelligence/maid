@@ -71,7 +71,6 @@ jobs:
           dart run ffigen
           flutter build linux
 
-
       - name: Upload Linux Build
         uses: actions/upload-artifact@v3
         with:

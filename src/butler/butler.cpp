@@ -28,14 +28,16 @@ static llama_model *model;
 static llama_context *ctx;
 struct llama_context_params ctx_params;
 
-// TODO: replace with ring-buffer
 static std::vector<llama_token> last_n_tokens;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
+static std::vector<llama_token> embd_cache;
 
 static int n_remain;
 static int n_past      = 0;
 static int n_consumed  = 0;
+static int n_pfx       = 0;
+static int n_sfx       = 0;
 
 gpt_params gpt_parameters;
 
@@ -51,7 +53,12 @@ int butler_start(struct butler_params *m_params) {
     gpt_parameters.n_keep           = (*m_params).n_keep            ? (*m_params).n_keep            : 48;
     gpt_parameters.model            = (*m_params).model_path;
     gpt_parameters.prompt           = (*m_params).preprompt;
-    gpt_parameters.antiprompt.push_back((*m_params).antiprompt);
+    gpt_parameters.input_prefix     = (*m_params).input_prefix;
+    gpt_parameters.input_suffix     = (*m_params).input_suffix;
+
+    gpt_parameters.antiprompt.push_back(gpt_parameters.input_prefix);
+    //gpt_parameters.antiprompt.push_back((*m_params).input_suffix);
+
     gpt_parameters.memory_f16       = (*m_params).memory_f16        != 0;
     gpt_parameters.ignore_eos       = (*m_params).ignore_eos        != 0;
     gpt_parameters.instruct         = (*m_params).instruct          != 0;
@@ -96,22 +103,30 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     std::string buffer(input);
 
     bool is_interacting = false;
-    bool is_antiprompt = false;
+    bool suffix_found = false;
 
     std::lock_guard<std::mutex> lock(continue_mutex);
+    stop_generation.store(false);
+
+    auto inp_pfx = ::llama_tokenize(ctx, gpt_parameters.input_prefix, false, true);
+    auto inp_sfx = ::llama_tokenize(ctx, gpt_parameters.input_suffix, false, true);
 
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        auto line_inp = ::llama_tokenize(model, buffer, false, true);
-        embd_inp.insert(embd_inp.end(), line_inp.begin(), line_inp.end());
-        n_remain -= line_inp.size();
-    }
+        const auto inp_text = ::llama_tokenize(model, buffer,                    false, false);
 
+        embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
+        embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
+        embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
+
+        n_remain -= inp_text.size();
+    }
 
     while (true) {
         if (stop_generation.load()) {
             stop_generation.store(false);  // reset for future use
+            maid_output(return_code::STOP, "");
             return 0;  // or any other cleanup you want to do
         }
 
@@ -246,11 +261,69 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             }
         }
 
-        // display text
-        for (auto id : embd) {
-            maid_output(llama_token_to_piece(ctx, id).c_str());
+        auto embd_out = embd;
 
+        // Remove input_prefix from output
+        std::vector<int>::iterator it = embd_out.begin();
+        while (it != embd_out.end()) {
+            if (*it == inp_pfx[n_pfx]) {
+                embd_cache.push_back(*it);
+                it = embd_out.erase(it);
+                n_pfx++;
+        
+                if (n_pfx == inp_pfx.size()) {
+                    // Prefix found, reset
+                    embd_cache.clear();
+                    n_pfx = 0;
+                    break;
+                }
+            } else if (n_pfx != 0) {
+                // Started a sequence but it's broken now, reset
+                embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
+                embd_cache.clear();
+                n_pfx = 0;
+                ++it;
+            } else {
+                ++it;
+            }
         }
+
+        if (suffix_found) {
+            // display text
+            for (auto id : embd_out) {
+                const char * output = llama_token_to_piece(ctx, id).c_str();
+                maid_output(return_code::CONTINUE, output);
+                printf("%s\n", output);
+            }
+        }
+        
+        // Remove input_suffix from output
+        it = embd_out.begin();
+        while (it != embd_out.end()) {
+            if (*it == inp_sfx[n_sfx]) {
+                embd_cache.push_back(*it);
+                it = embd_out.erase(it);
+                n_sfx++;
+        
+                if (n_sfx == inp_sfx.size()) {
+                    // Suffix found, reset
+                    suffix_found = true;
+                    embd_cache.clear();
+                    n_sfx = 0;
+                    break;
+                }
+            } else if (n_sfx != 0) {
+                // Started a sequence but it's broken now, reset
+                embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
+                embd_cache.clear();
+                n_sfx = 0;
+                ++it;
+            } else {
+                ++it;
+            }
+        }
+
+        embd_out.clear();
 
         // if not currently processing queued inputs;
         if ((int) embd_inp.size() <= n_consumed) {
@@ -261,7 +334,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                     last_output += llama_token_to_piece(ctx, id);
                 }
 
-                is_antiprompt = false;
                 // Check if each of the reverse prompts appears at the end of the output.
                 // If we're not running interactively, the reverse prompt might be tokenized with some following characters
                 // so we'll compensate for that by widening the search window a bit.
@@ -275,13 +347,9 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                         if (gpt_parameters.interactive) {
                             is_interacting = true;
                         }
-                        is_antiprompt = true;
-                        break;
+                        maid_output(return_code::STOP, "");
+                        return 0; 
                     }
-                }
-
-                if (is_antiprompt) {
-                    LOG("found antiprompt: %s\n", last_output.c_str());
                 }
             }
 
