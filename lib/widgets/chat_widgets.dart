@@ -33,7 +33,7 @@ class ResponseMessage extends StatefulWidget {
   final StreamController<int> finaliseController =
       StreamController<int>.broadcast();
 
-  ResponseMessage({Key? key}) : super(key: key);
+  ResponseMessage({super.key});
 
   void addMessage(String message) {
     messageController.add(message);
@@ -51,25 +51,13 @@ class ResponseMessage extends StatefulWidget {
   _ResponseMessageState createState() => _ResponseMessageState();
 }
 
-
 class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
   String _message = "";
-  late AnimationController _repeatingController;
-  final List<Interval> _dotIntervals = const [
-    Interval(0.25, 0.8),
-    Interval(0.35, 0.9),
-    Interval(0.45, 1.0),
-  ];
   bool _finalised = false; // Declare finalised here
 
   @override
   void initState() {
     super.initState();
-    _repeatingController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    );
-
     widget.messageController.stream.listen((textChunk) {
       setState(() {
         _message += textChunk;
@@ -87,10 +75,6 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
         _finalised = true;
       });
     });
-
-    if (!_finalised) { // Use _finalised instead of widget.finalised
-      _repeatingController.repeat();
-    }
   }
 
   @override
@@ -105,37 +89,7 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
           borderRadius: BorderRadius.circular(10),
         ),
         child: !_finalised && _message.isEmpty
-          ? SizedBox(
-              width: 50,  // Adjust width to your needs
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(
-                  _dotIntervals.length,
-                  (index) => AnimatedBuilder(
-                    animation: _repeatingController,
-                    builder: (context, child) {
-                      final circleFlashPercent = _dotIntervals[index].transform(
-                        _repeatingController.value,
-                      );
-                      final circleColorPercent = sin(pi * circleFlashPercent);
-                      return Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.lerp(
-                            Theme.of(context).colorScheme.background, // flashingCircleDarkColor
-                            Theme.of(context).colorScheme.secondary, // flashingCircleBrightColor
-                            circleColorPercent,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            )
-          : Text(_message),
+          ? TypingIndicator() : Text(_message),
       ),
     );
   }
@@ -144,6 +98,70 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
   void dispose() {
     widget.messageController.close();
     widget.trimController.close();
+    super.dispose();
+  }
+}
+
+class TypingIndicator extends StatefulWidget {
+  const TypingIndicator({super.key});
+
+  @override
+  _TypingIndicatorState createState() => _TypingIndicatorState();
+}
+
+class _TypingIndicatorState extends State<TypingIndicator>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _repeatingController;
+  final List<Interval> _dotIntervals = const [
+    Interval(0.25, 0.8),
+    Interval(0.35, 0.9),
+    Interval(0.45, 1.0),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _repeatingController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(
+          _dotIntervals.length,
+          (index) => AnimatedBuilder(
+            animation: _repeatingController,
+            builder: (context, child) {
+              final circleFlashPercent =
+                  _dotIntervals[index].transform(_repeatingController.value);
+              final circleColorPercent = sin(pi * circleFlashPercent);
+              return Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color.lerp(
+                    Theme.of(context).colorScheme.background,
+                    Theme.of(context).colorScheme.secondary,
+                    circleColorPercent,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
     _repeatingController.dispose();
     super.dispose();
   }
