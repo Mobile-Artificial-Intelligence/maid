@@ -56,8 +56,8 @@ int butler_start(struct butler_params *m_params) {
     gpt_parameters.n_keep           = (*m_params).n_keep            ? (*m_params).n_keep            : 48;
     gpt_parameters.model            = (*m_params).model_path;
     gpt_parameters.prompt           = (*m_params).preprompt;
-    gpt_parameters.input_prefix     = "\n" + std::string((*m_params).input_prefix);
-    gpt_parameters.input_suffix     = "\n" + std::string((*m_params).input_suffix);
+    gpt_parameters.input_prefix     = (*m_params).input_prefix;
+    gpt_parameters.input_suffix     = (*m_params).input_suffix;
 
     gpt_parameters.antiprompt.push_back(gpt_parameters.input_prefix);
     //gpt_parameters.antiprompt.push_back((*m_params).input_suffix);
@@ -266,18 +266,44 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
         // Look for sequences from inp_pfx in embd and add to embd_cache
         for (auto id : embd) {
             if (id == inp_pfx[n_pfx]) {
-                n_pfx++;
                 embd_cache.push_back(id);
+                embd.pop_back();
+                n_pfx++;
 
                 if (n_pfx == inp_pfx.size()) {
+                    embd_cache.clear();
+                    n_pfx = 0;
                     break;
                 }
             } else if (n_pfx != 0) {
                 // Started a sequence but it's broken now, reset
+                embd.insert(embd.end(), embd_cache.begin(), embd_cache.end());
+                embd_cache.clear();
                 n_pfx = 0;
             }
         }
         printf("n_pfx: %d\n", n_pfx);
+
+        // Look for sequences from inp_pfx in embd and add to embd_cache
+        for (auto id : embd) {
+            if (id == inp_sfx[n_sfx]) {
+                embd_cache.push_back(id);
+                embd.pop_back();
+                n_sfx++;
+
+                if (n_sfx == inp_sfx.size()) {
+                    embd_cache.clear();
+                    n_sfx = 0;
+                    break;
+                }
+            } else if (n_sfx != 0) {
+                // Started a sequence but it's broken now, reset
+                embd.insert(embd.end(), embd_cache.begin(), embd_cache.end());
+                embd_cache.clear();
+                n_sfx = 0;
+            }
+        }
+        printf("n_sfx: %d\n", n_sfx);
 
         // display text
         for (auto id : embd) {
@@ -285,22 +311,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             maid_output(return_code::CONTINUE, output);
             printf("%s\n", output);
         }
-
-        // Look for sequences from inp_pfx in embd and add to embd_cache
-        for (auto id : embd) {
-            if (id == inp_sfx[n_sfx]) {
-                n_sfx++;
-                embd_cache.push_back(id);
-
-                if (n_sfx == inp_sfx.size()) {
-                    break;
-                }
-            } else if (n_sfx != 0) {
-                // Started a sequence but it's broken now, reset
-                n_sfx = 0;
-            }
-        }
-        printf("n_sfx: %d\n", n_sfx);
 
         // if not currently processing queued inputs;
         if ((int) embd_inp.size() <= n_consumed) {
