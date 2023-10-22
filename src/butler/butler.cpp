@@ -103,6 +103,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     std::string buffer(input);
 
     bool is_interacting = false;
+    bool suffix_found = false;
 
     std::lock_guard<std::mutex> lock(continue_mutex);
 
@@ -120,7 +121,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
         n_remain -= inp_text.size();
     }
-
 
     while (true) {
         if (stop_generation.load()) {
@@ -297,6 +297,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
         
                 if (n_sfx == inp_sfx.size()) {
                     // Suffix found, reset
+                    suffix_found = true;
                     embd_cache.clear();
                     n_sfx = 0;
                     break;
@@ -312,11 +313,13 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             }
         }
 
-        // display text
-        for (auto id : embd_out) {
-            const char * output = llama_token_to_piece(ctx, id).c_str();
-            maid_output(return_code::CONTINUE, output);
-            printf("%s\n", output);
+        if (suffix_found) {
+            // display text
+            for (auto id : embd_out) {
+                const char * output = llama_token_to_piece(ctx, id).c_str();
+                maid_output(return_code::CONTINUE, output);
+                printf("%s\n", output);
+            }
         }
 
         embd_out.clear();
