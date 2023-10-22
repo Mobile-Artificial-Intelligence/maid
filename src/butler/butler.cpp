@@ -106,6 +106,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     bool suffix_found = false;
 
     std::lock_guard<std::mutex> lock(continue_mutex);
+    stop_generation.store(false);
 
     auto inp_pfx = ::llama_tokenize(ctx, gpt_parameters.input_prefix, false, true);
     auto inp_sfx = ::llama_tokenize(ctx, gpt_parameters.input_suffix, false, true);

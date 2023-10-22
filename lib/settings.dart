@@ -302,14 +302,13 @@ class Lib {
       } else if (data is int) {
         settings.inProgress = false;
         maidOutput("");
-        butlerStop();
       }
     });
     await completer.future;
   }
 
   void butlerContinue() {
-        String input = settings.promptController.text;
+    String input = settings.promptController.text;
     Isolate.spawn(butlerContinueIsolate, {
       'input': input,
       'port': _sendPort

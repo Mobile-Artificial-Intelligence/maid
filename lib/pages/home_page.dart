@@ -59,7 +59,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
   void responseCallback(String message) {
     if (!settings.inProgress) {
-      lib?.butlerStop();
       newResponse.trim();
       newResponse.finalise();
       setState(() {
