@@ -32,12 +32,15 @@ struct llama_context_params ctx_params;
 static std::vector<llama_token> last_n_tokens;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
-static std::vector<llama_token> line_pfx;
-static std::vector<llama_token> line_sfx;
+static std::vector<llama_token> embd_cache;
+static std::vector<llama_token> inp_pfx;
+static std::vector<llama_token> inp_sfx;
 
 static int n_remain;
 static int n_past      = 0;
 static int n_consumed  = 0;
+static int n_pfx       = 0;
+static int n_sfx       = 0;
 
 gpt_params gpt_parameters;
 
@@ -96,8 +99,8 @@ int butler_start(struct butler_params *m_params) {
     last_n_tokens = std::vector<llama_token>(ctx_params.n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
 
-    line_pfx = ::llama_tokenize(ctx, gpt_parameters.input_prefix, false, true);
-    line_sfx = ::llama_tokenize(ctx, gpt_parameters.input_suffix, false, true);
+    inp_pfx = ::llama_tokenize(ctx, gpt_parameters.input_prefix, false, true);
+    inp_sfx = ::llama_tokenize(ctx, gpt_parameters.input_suffix, false, true);
 
     return 0;
 }
@@ -112,13 +115,13 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        const auto line_inp = ::llama_tokenize(model, buffer,                    false, false);
+        const auto inp_text = ::llama_tokenize(model, buffer,                    false, false);
 
-        embd_inp.insert(embd_inp.end(), line_pfx.begin(), line_pfx.end());
-        embd_inp.insert(embd_inp.end(), line_inp.begin(), line_inp.end());
-        embd_inp.insert(embd_inp.end(), line_sfx.begin(), line_sfx.end());
+        embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
+        embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
+        embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
 
-        n_remain -= line_inp.size();
+        n_remain -= inp_text.size();
     }
 
 
@@ -260,10 +263,44 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             }
         }
 
+        // Look for sequences from inp_pfx in embd and add to embd_cache
+        for (auto id : embd) {
+            if (id == inp_pfx[n_pfx]) {
+                n_pfx++;
+                embd_cache.push_back(id);
+
+                if (n_pfx == inp_pfx.size()) {
+                    break;
+                }
+            } else if (n_pfx != 0) {
+                // Started a sequence but it's broken now, reset
+                n_pfx = 0;
+            }
+        }
+        printf("n_pfx: %d\n", n_pfx);
+
         // display text
         for (auto id : embd) {
-            maid_output(return_code::CONTINUE, llama_token_to_piece(ctx, id).c_str());
+            const char * output = llama_token_to_piece(ctx, id).c_str();
+            maid_output(return_code::CONTINUE, output);
+            printf("%s\n", output);
         }
+
+        // Look for sequences from inp_pfx in embd and add to embd_cache
+        for (auto id : embd) {
+            if (id == inp_sfx[n_sfx]) {
+                n_sfx++;
+                embd_cache.push_back(id);
+
+                if (n_sfx == inp_sfx.size()) {
+                    break;
+                }
+            } else if (n_sfx != 0) {
+                // Started a sequence but it's broken now, reset
+                n_sfx = 0;
+            }
+        }
+        printf("n_sfx: %d\n", n_sfx);
 
         // if not currently processing queued inputs;
         if ((int) embd_inp.size() <= n_consumed) {
