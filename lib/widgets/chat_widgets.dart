@@ -36,6 +36,7 @@ class ResponseMessage extends StatefulWidget {
   ResponseMessage({super.key});
 
   void addMessage(String message) {
+    print("{$message}");
     messageController.add(message);
   }
 
@@ -53,6 +54,7 @@ class ResponseMessage extends StatefulWidget {
 
 class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
   String _message = "";
+  String _codeMessage = "";
   bool _finalised = false; // Declare finalised here
   bool _inCodeBox = false;
 
@@ -61,17 +63,22 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
     super.initState();
     widget.messageController.stream.listen((textChunk) {
       setState(() {
-        _message += textChunk;
+        if (textChunk.contains('```')) {
+          _inCodeBox = !_inCodeBox;
+        } else {
+          if (_inCodeBox) {
+            _codeMessage += textChunk;
+          } else {
+            _message += textChunk;
+          }
+        }
       });
     });
 
     widget.trimController.stream.listen((_) {
       setState(() {
-        if (_message == "```") {
-          _inCodeBox = !_inCodeBox;
-        } else {
-          _message = _message.trimRight();
-        }
+        _message = _message.trimRight();
+        _codeMessage = _codeMessage.trim();
       });
     });
 
@@ -93,9 +100,15 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
           color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: !_finalised && _message.isEmpty
-          ? const TypingIndicator() : _inCodeBox ? 
-          CodeBox(code: _message) : Text(_message),
+        child: !_finalised && _message.isEmpty && _codeMessage.isEmpty
+            ? const TypingIndicator()
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_message.isNotEmpty) Text(_message),
+                  if (_codeMessage.isNotEmpty) CodeBox(code: _codeMessage),
+                ],
+              ),
       ),
     );
   }
@@ -173,52 +186,23 @@ class _TypingIndicatorState extends State<TypingIndicator>
   }
 }
 
-class CodeBox extends StatefulWidget {
-  final StreamController<String> messageController = StreamController<String>.broadcast();
-
+class CodeBox extends StatelessWidget {
   final String code;
 
-  CodeBox({required this.code, Key? key}) : super(key: key);
-
-  void addCodeChunk(String codeChunk) {
-    messageController.add(codeChunk);
-  }
-
-  @override
-  _CodeBoxState createState() => _CodeBoxState();
-}
-
-class _CodeBoxState extends State<CodeBox> {
-  String _code = "";
-
-  @override
-  void initState() {
-    super.initState();
-    widget.messageController.stream.listen((codeChunk) {
-      setState(() {
-        _code += codeChunk;
-      });
-    });
-  }
+  const CodeBox({super.key, required this.code});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
+        color: Colors.black,
         borderRadius: BorderRadius.circular(5),
       ),
       child: Text(
-        _code,
-        style: TextStyle(fontFamily: 'monospace'),
+        code,
+        style: const TextStyle(fontFamily: 'monospace'),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    widget.messageController.close();
-    super.dispose();
   }
 }
