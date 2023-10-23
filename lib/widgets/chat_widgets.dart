@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 class UserMessage extends StatelessWidget {
@@ -53,8 +54,8 @@ class ResponseMessage extends StatefulWidget {
 }
 
 class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
+  List<Widget> _messageWidgets = [const Text("")];
   String _message = "";
-  String _codeMessage = "";
   bool _finalised = false; // Declare finalised here
   bool _inCodeBox = false;
 
@@ -64,12 +65,22 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
     widget.messageController.stream.listen((textChunk) {
       setState(() {
         if (textChunk.contains('```')) {
+          if (_inCodeBox) {
+            _messageWidgets.last = CodeBox(code: _message.trim());
+          } else {
+            _messageWidgets.last = SelectableText(_message.trim());
+          }
           _inCodeBox = !_inCodeBox;
+          _messageWidgets.add(const SizedBox(height: 10));
+          _messageWidgets.add(const Text("")); // Placeholder
+          _message = "";
         } else {
           if (_inCodeBox) {
-            _codeMessage += textChunk;
+            _message += textChunk;
+            _messageWidgets.last = CodeBox(code: _message);
           } else {
             _message += textChunk;
+            _messageWidgets.last = SelectableText(_message);
           }
         }
       });
@@ -78,7 +89,6 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
     widget.trimController.stream.listen((_) {
       setState(() {
         _message = _message.trimRight();
-        _codeMessage = _codeMessage.trim();
       });
     });
 
@@ -100,15 +110,12 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
           color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: !_finalised && _message.isEmpty && _codeMessage.isEmpty
-            ? const TypingIndicator()
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (_message.isNotEmpty) SelectableText(_message),
-                  if (_codeMessage.isNotEmpty) CodeBox(code: _codeMessage),
-                ],
-              ),
+        child: !_finalised && _messageWidgets.isEmpty
+          ? const TypingIndicator()
+          : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: _messageWidgets,
+        ),
       ),
     );
   }
@@ -193,16 +200,35 @@ class CodeBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: SelectableText(
-        code,
-        style: const TextStyle(fontFamily: 'monospace'),
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: SelectableText(
+              code,
+              style: const TextStyle(fontFamily: 'monospace'),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.secondary),
+          onPressed: () async {
+            final ctx = context;
+            Clipboard.setData(ClipboardData(text: code)).then((_) {
+              ScaffoldMessenger.of(ctx).showSnackBar(
+                const SnackBar(content: Text("Code copied to clipboard!")),
+              );
+            });
+          },
+          tooltip: 'Copy Code',
+        ),
+      ],
     );
   }
 }

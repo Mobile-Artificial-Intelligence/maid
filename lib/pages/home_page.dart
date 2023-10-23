@@ -118,16 +118,20 @@ class _MaidHomePageState extends State<MaidHomePage> {
                       children: [
                         Expanded(
                           child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              onSubmitted: (value) {
-                                if (!busy) {
-                                  execute();
-                                }
-                              },
-                              controller: settings.promptController,
-                              cursorColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              decoration: roundedInput('Prompt', context)),
+                            keyboardType: TextInputType.multiline,
+                            enableInteractiveSelection: true,
+                            onSubmitted: (value) {
+                              if (!busy) {
+                                execute();
+                              }
+                            },
+                            controller: settings.promptController,
+                            cursorColor:
+                                Theme.of(context).colorScheme.secondary,
+                            decoration: const InputDecoration(
+                              labelText: 'Prompt',
+                            ),
+                          ),
                         ),
                         IconButton(
                             onPressed: busy ? null : execute,

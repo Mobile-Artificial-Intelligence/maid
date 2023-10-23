@@ -129,7 +129,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       controller: settings.prePromptController,
-                      decoration: roundedInput('PrePrompt', context),
+                      decoration: const InputDecoration(
+                        labelText: 'PrePrompt',
+                      ),
                     ),
                   ),
                 ],
@@ -218,7 +220,9 @@ class _SettingsPageState extends State<SettingsPage> {
             flex: 2,
             child: TextField(
               controller: controller,
-              decoration: roundedInput(labelText, context),
+              decoration: InputDecoration(
+                labelText: labelText,
+              )
             ),
           ),
         ],
