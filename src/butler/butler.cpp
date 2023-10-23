@@ -36,12 +36,10 @@ static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
 static int n_remain;
-static int n_past               = 0;
-static int n_consumed           = 0;
-static int n_session_consumed   = 0;
-static int n_past_guidance      = 0;
-static int n_pfx                = 0;
-static int n_sfx                = 0;
+static int n_past     = 0;
+static int n_consumed = 0;
+static int n_pfx      = 0;
+static int n_sfx      = 0;
 
 gpt_params params;
 
@@ -50,7 +48,7 @@ int butler_start(struct butler_params *bparams) {
 
     params.seed             = (*bparams).seed              ? (*bparams).seed              : -1;
     params.n_ctx            = (*bparams).n_ctx             ? (*bparams).n_ctx             : 512;
-    params.n_batch          = (*bparams).n_batch           ? (*bparams).n_batch           : 512;
+    params.n_batch          = (*bparams).n_batch           ? (*bparams).n_batch           : 8;
     params.n_threads        = (*bparams).n_threads         ? (*bparams).n_threads         : get_num_physical_cores();
     params.n_threads_batch  = (*bparams).n_threads_batch   ? (*bparams).n_threads_batch   : -1;
     params.n_predict        = (*bparams).n_predict         ? (*bparams).n_predict         : 256;
@@ -174,12 +172,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 llama_kv_cache_seq_shift(ctx, 0, params.n_keep + 1 + n_discard, n_past, -n_discard);
 
                 n_past -= n_discard;
-
-                if (ctx_guidance) {
-                    n_past_guidance -= n_discard;
-                }
-
-                LOG("after swap: n_past = %d, n_past_guidance = %d\n", n_past, n_past_guidance);
 
                 LOG("embd: %s\n", LOG_TOKENS_TOSTR_PRETTY(ctx, embd).c_str());
             }

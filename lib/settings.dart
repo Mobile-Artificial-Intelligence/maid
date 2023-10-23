@@ -23,6 +23,7 @@ class Settings {
   bool random_prompt = false; // do not randomize prompt if none provided
   bool instruct = true; // instruction mode (used for Alpaca models)
   bool ignore_eos = false; // do not stop generating after eos
+  bool random_seed = true; // use random seed
 
   TextEditingController promptController = TextEditingController();
 
@@ -34,18 +35,19 @@ class Settings {
   TextEditingController userAliasController = TextEditingController()..text = "USER:";
   TextEditingController responseAliasController = TextEditingController()..text = "ASSISTANT:";
 
-  TextEditingController seedController = TextEditingController()..text = "-1";
-  TextEditingController n_ctxController = TextEditingController()..text = "512";
-  TextEditingController n_batchController = TextEditingController()..text = "8";
-  TextEditingController n_threadsController = TextEditingController()..text = "4";
-  TextEditingController n_predictController = TextEditingController()..text = "512";
-
   var boolKeys = {};
   var stringKeys = {};
+  var numKeys = {};
 
   String modelName = "";
   String modelPath = "";
   String prePrompt = "";
+
+  int seed = -1;
+  int n_ctx = 512;
+  int n_batch = 8;
+  int n_threads = 4;
+  int n_predict = 512;
 
   Settings() {
     initKeys();
@@ -60,6 +62,7 @@ class Settings {
       "random_prompt": random_prompt,
       "instruct": instruct,
       "ignore_eos": ignore_eos,
+      "random_seed": random_seed,
     };
 
     // Map for string values
@@ -67,11 +70,14 @@ class Settings {
       "pre_prompt": prePromptController,
       "user_alias": userAliasController,
       "response_alias": responseAliasController,
-      "seed": seedController,
-      "n_ctx": n_ctxController,
-      "n_batch": n_batchController,
-      "n_threads": n_threadsController,
-      "n_predict": n_predictController,
+    };
+
+    numKeys = {
+      "seed": seed,
+      "n_ctx": n_ctx,
+      "n_batch": n_batch,
+      "n_threads": n_threads,
+      "n_predict": n_predict,
     };
   }
 
@@ -117,15 +123,21 @@ class Settings {
     });
   }
 
+  void saveBoolToSharedPrefs(String s, bool value) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool(s, value);
+    });
+  }
+
   void saveStringToSharedPrefs(String s, String text) {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setString(s, text);
     });
   }
 
-  void saveBoolToSharedPrefs(String s, bool value) {
+  void saveIntegerToSharedPrefs(String s, int value) {
     SharedPreferences.getInstance().then((prefs) {
-      prefs.setBool(s, value);
+      prefs.setInt(s, value);
     });
   }
 
@@ -149,11 +161,11 @@ class Settings {
     });
 
     prePromptController.text = defaultPreprompt;
-    seedController.text = "-1";
-    n_ctxController.text = "512";
-    n_threadsController.text = "4";
-    n_predictController.text = "512";
-    n_batchController.text = "8";
+    seed = -1;
+    n_ctx = 512;
+    n_batch = 8;
+    n_threads = 4;
+    n_predict = 512;
     saveAll();
   }
 
@@ -162,16 +174,20 @@ class Settings {
     saveBoolToSharedPrefs("random_prompt", random_prompt);
     saveBoolToSharedPrefs("instruct", instruct);
     saveBoolToSharedPrefs("ignore_eos", ignore_eos);
+    saveBoolToSharedPrefs("random_seed", random_seed);
+
     saveStringToSharedPrefs("modelPath", modelPath);
     saveStringToSharedPrefs("modelName", modelName);
     saveStringToSharedPrefs("pre_prompt", prePromptController.text);
     saveStringToSharedPrefs("user_alias", userAliasController.text);
     saveStringToSharedPrefs("response_alias", responseAliasController.text);
-    saveStringToSharedPrefs("seed", seedController.text);
-    saveStringToSharedPrefs("n_ctx", n_ctxController.text);
-    saveStringToSharedPrefs("n_batch", n_batchController.text);
-    saveStringToSharedPrefs("n_threads", n_threadsController.text);
-    saveStringToSharedPrefs("n_predict", n_predictController.text);
+
+    saveIntegerToSharedPrefs("seed", seed);
+    saveIntegerToSharedPrefs("n_ctx", n_ctx);
+    saveIntegerToSharedPrefs("n_batch", n_batch);
+    saveIntegerToSharedPrefs("n_threads", n_threads);
+    saveIntegerToSharedPrefs("n_predict", n_predict);
+    
     saveExamplePromptsAndResponses();
   }
 
@@ -275,15 +291,15 @@ class Lib {
     params.ref.preprompt = settings.prePrompt.toNativeUtf8().cast<Char>();
     params.ref.input_prefix = settings.userAliasController.text.trim().toNativeUtf8().cast<Char>();
     params.ref.input_suffix = settings.responseAliasController.text.trim().toNativeUtf8().cast<Char>();
-    params.ref.seed = int.tryParse(settings.seedController.text.trim())                               ?? -1;
-    params.ref.n_ctx = int.tryParse(settings.n_ctxController.text.trim())                             ?? 512;
-    params.ref.n_threads = int.tryParse(settings.n_threadsController.text.trim())                     ?? 4;
-    params.ref.n_batch = int.tryParse(settings.n_batchController.text.trim())                         ?? 8;
-    params.ref.n_predict = int.tryParse(settings.n_predictController.text.trim())                     ?? 512;
-    params.ref.memory_f16 = settings.memory_f16                                                       ? 1 : 0;
-    params.ref.random_prompt = settings.random_prompt                                                 ? 1 : 0;
-    params.ref.instruct = settings.instruct                                                           ? 1 : 0;
-    params.ref.ignore_eos = settings.ignore_eos                                                       ? 1 : 0;
+    params.ref.seed = settings.random_seed ? -1 : settings.seed;
+    params.ref.n_ctx = settings.n_ctx;
+    params.ref.n_threads = settings.n_threads;
+    params.ref.n_batch = settings.n_batch;
+    params.ref.n_predict = settings.n_predict;
+    params.ref.memory_f16 = settings.memory_f16       ? 1 : 0;
+    params.ref.random_prompt = settings.random_prompt ? 1 : 0;
+    params.ref.instruct = settings.instruct           ? 1 : 0;
+    params.ref.ignore_eos = settings.ignore_eos       ? 1 : 0;
 
     _nativeLibrary.butler_start(params);
 
