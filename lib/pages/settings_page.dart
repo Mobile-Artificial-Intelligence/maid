@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/settings.dart';
-import 'package:maid/theme.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

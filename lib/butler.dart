@@ -20,10 +20,10 @@ class NativeLibrary {
       : _lookup = lookup;
 
   int butler_start(
-    ffi.Pointer<butler_params> m_params,
+    ffi.Pointer<butler_params> bparams,
   ) {
     return _butler_start(
-      m_params,
+      bparams,
     );
   }
 
@@ -89,8 +89,6 @@ final class butler_params extends ffi.Struct {
   external ffi.Pointer<ffi.Char> model_path;
 
   external ffi.Pointer<ffi.Char> preprompt;
-
-  external ffi.Pointer<ffi.Char> antiprompt;
 
   external ffi.Pointer<ffi.Char> input_prefix;
 

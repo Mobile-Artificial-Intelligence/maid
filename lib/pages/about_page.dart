@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -45,7 +44,7 @@ class AboutPage extends StatelessWidget {
               onOpen: _onOpen,
               text: 'Maid is a cross-platform open source app for interacting with GGUF Large Language Models. '
               'This app is distributed under the MIT License. The source code of this project can be found '
-              'on github ( https://github.com/danemadsen/maid ). This app was originally forked off sherpa which '
+              'on github ( https://github.com/MaidFoundation/Maid ). This app was originally forked off sherpa which '
               'can also be found on github ( https://github.com/Bip-Rep/sherpa ). Maid is not affiliated with Meta, '
               'OpenAI or any other company that provides a model which can be used with this app. Model files are '
               'not included with this app and must be downloaded separately. Model files can be downloaded online '
