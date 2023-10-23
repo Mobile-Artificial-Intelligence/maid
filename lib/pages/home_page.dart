@@ -268,7 +268,7 @@ class ResponseMessage extends StatefulWidget {
 }
 
 class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
-  List<Widget> _messageWidgets = [const Text("")];
+  List<Widget> _messageWidgets = [];
   String _message = "";
   bool _finalised = false; // Declare finalised here
   bool _inCodeBox = false;
@@ -278,6 +278,10 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
     super.initState();
     widget.messageController.stream.listen((textChunk) {
       setState(() {
+        if (_messageWidgets.isEmpty) {
+          _messageWidgets.add(const Text("")); // Placeholder
+        }
+        
         if (textChunk.contains('```')) {
           if (_inCodeBox) {
             _messageWidgets.last = CodeBox(code: _message.trim());

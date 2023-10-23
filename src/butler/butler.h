@@ -20,7 +20,6 @@ struct butler_params {
    unsigned char random_prompt;
    char *model_path;
    char *preprompt;
-   char *antiprompt;
    char *input_prefix; // Not used
    char *input_suffix; // Not used
    unsigned int seed;
@@ -39,7 +38,7 @@ enum return_code {
 
 typedef void maid_output_cb(unsigned char code, const char *buffer);
 
-EXPORT int butler_start(struct butler_params *m_params);
+EXPORT int butler_start(struct butler_params *bparams);
 
 EXPORT int butler_continue(const char *input, maid_output_cb *maid_output);
 

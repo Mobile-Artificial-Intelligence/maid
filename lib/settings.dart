@@ -25,7 +25,6 @@ class Settings {
   bool ignore_eos = false; // do not stop generating after eos
 
   TextEditingController promptController = TextEditingController();
-  TextEditingController reversePromptController = TextEditingController();
 
   TextEditingController prePromptController = TextEditingController()..text = defaultPreprompt;
   
@@ -274,7 +273,6 @@ class Lib {
     final params = calloc<butler_params>();
     params.ref.model_path = settings.modelPath.toNativeUtf8().cast<Char>();
     params.ref.preprompt = settings.prePrompt.toNativeUtf8().cast<Char>();
-    params.ref.antiprompt = settings.reversePromptController.text.trim().toNativeUtf8().cast<Char>();
     params.ref.input_prefix = settings.userAliasController.text.trim().toNativeUtf8().cast<Char>();
     params.ref.input_suffix = settings.responseAliasController.text.trim().toNativeUtf8().cast<Char>();
     params.ref.seed = int.tryParse(settings.seedController.text.trim())                               ?? -1;
