@@ -7,8 +7,9 @@ class MaidTheme {
 
   static final ThemeData _darkTheme = ThemeData(
     scaffoldBackgroundColor: Colors.grey.shade900,
-    textSelectionTheme: const TextSelectionThemeData(
+    textSelectionTheme: TextSelectionThemeData(
       selectionHandleColor: Colors.blue,
+      selectionColor: Colors.blue.shade800,
     ),
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
