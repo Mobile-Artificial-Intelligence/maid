@@ -19,7 +19,7 @@ class UserMessage extends StatelessWidget {
           color: Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Text(message),
+        child: SelectableText(message),
       ),
     );
   }
@@ -105,7 +105,7 @@ class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProv
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (_message.isNotEmpty) Text(_message),
+                  if (_message.isNotEmpty) SelectableText(_message),
                   if (_codeMessage.isNotEmpty) CodeBox(code: _codeMessage),
                 ],
               ),
@@ -199,7 +199,7 @@ class CodeBox extends StatelessWidget {
         color: Colors.black,
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Text(
+      child: SelectableText(
         code,
         style: const TextStyle(fontFamily: 'monospace'),
       ),
