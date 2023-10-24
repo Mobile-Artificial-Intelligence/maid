@@ -270,11 +270,7 @@ class Settings {
 
         // Get the application documents directory using path_provider
         final directory = await getApplicationDocumentsDirectory();
-        filePath = '${directory.path}/settings.json';
-
-        // Write the JSON data to the file
-        File file = File(filePath);
-        await file.writeAsString(jsonString);      
+        filePath = '${directory.path}/settings.json';     
       } else {
         // Use file picker to let user select save location
         filePath = await FilePicker.platform.saveFile(type: FileType.any);
