@@ -8,6 +8,7 @@ import 'package:ffi/ffi.dart';
 import 'package:maid/butler.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -243,7 +244,7 @@ class Settings {
     }
   }
 
-  void saveSettingsToJson() async {
+  Future<String> saveSettingsToJson() async {
     Map<String, dynamic> jsonMap = {};
 
     // Convert the Settings instance to a map
@@ -255,46 +256,89 @@ class Settings {
     jsonMap['modelPath'] = settings.modelPath;
     jsonMap['examplePrompts'] = settings.examplePromptControllers.map((e) => e.text).toList();
     jsonMap['exampleResponses'] = settings.exampleResponseControllers.map((e) => e.text).toList();
-
+  
     // Convert the map to a JSON string
     String jsonString = json.encode(jsonMap);
 
-    // Use file picker to let user select save location
-    final result = await FilePicker.platform.saveFile(type: FileType.any);
+    String? filePath;
+    
+    if ((Platform.isAndroid || Platform.isIOS)) {
+      if (!(await Permission.storage.request().isGranted)) {
+        return "Permission Request Failed";
+      }
 
-    if (result != null) {
-      File file = File(result);
-      await file.writeAsString(jsonString);
-    }
-  }
+      try {
+        // Get the application documents directory using path_provider
+        final directory = await getApplicationDocumentsDirectory();
+        filePath = '${directory.path}/settings.json';
 
-  void loadSettingsFromJson() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.any);
-
-    if (result != null) {
-      File file = File(result.files.single.path!);
-      String jsonString = await file.readAsString();
-
-      Map<String, dynamic> jsonMap = json.decode(jsonString);
-
-      // Update the Settings instance from the map
-      settings.boolKeys = Map<String, bool>.from(jsonMap['boolKeys']);
-      jsonMap['stringKeys'].forEach((key, value) {
-        settings.stringKeys[key]!.text = value;
-      });
-      settings.intKeys = Map<String, int>.from(jsonMap['intKeys']);
-      settings.doubleKeys = Map<String, double>.from(jsonMap['doubleKeys']);
-      settings.modelName = jsonMap['modelName'];
-      settings.modelPath = jsonMap['modelPath'];
-      for (var i = 0; i < jsonMap['examplePrompts'].length; i++) {
-        settings.examplePromptControllers[i].text = jsonMap['examplePrompts'][i];
-        settings.exampleResponseControllers[i].text = jsonMap['exampleResponses'][i];
+        // Write the JSON data to the file
+        File file = File(filePath);
+        await file.writeAsString(jsonString);      
+      } catch (e) {
+        return "Error: $e";
       }
     }
+
+    try {
+      // Use file picker to let user select save location
+      filePath = await FilePicker.platform.saveFile(type: FileType.any);
+    } catch (e) {
+      return "Error: $e";
+    }
+
+    if (filePath != null) {
+      try{
+        File file = File(filePath);
+        await file.writeAsString(jsonString);
+      } catch (e) {
+        return "Error: $e";
+      }
+    } else {
+      return "No File Selected";
+    }
+
+    return "Settings Successfully Saved to $filePath";
+  }
+
+  Future<String> loadSettingsFromJson() async {
+    if ((Platform.isAndroid || Platform.isIOS) && 
+        !(await Permission.storage.request().isGranted)) {
+      return "Permission Request Failed";
+    }
+    
+    try{
+      final result = await FilePicker.platform.pickFiles(type: FileType.any);
+
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        String jsonString = await file.readAsString();
+
+        Map<String, dynamic> jsonMap = json.decode(jsonString);
+
+        // Update the Settings instance from the map
+        settings.boolKeys = Map<String, bool>.from(jsonMap['boolKeys']);
+        jsonMap['stringKeys'].forEach((key, value) {
+          settings.stringKeys[key]!.text = value;
+        });
+        settings.intKeys = Map<String, int>.from(jsonMap['intKeys']);
+        settings.doubleKeys = Map<String, double>.from(jsonMap['doubleKeys']);
+        settings.modelName = jsonMap['modelName'];
+        settings.modelPath = jsonMap['modelPath'];
+        for (var i = 0; i < jsonMap['examplePrompts'].length; i++) {
+          settings.examplePromptControllers[i].text = jsonMap['examplePrompts'][i];
+          settings.exampleResponseControllers[i].text = jsonMap['exampleResponses'][i];
+        }
+      }
+    } catch (e) {
+      return "Error: $e";
+    }
+
+    return "Settings Successfully Loaded";
   }
 
 
-  Future<String> openModelFile() async {
+  Future<String> loadModelFile() async {
     if ((Platform.isAndroid || Platform.isIOS) && 
         !(await Permission.storage.request().isGranted)) {
       return "Permission Request Failed";
@@ -311,10 +355,10 @@ class Settings {
       modelPath = filePath;
       modelName = path.basename(filePath);
     } catch (e) {
-      return "Failed to load model";
+      return "Error: $e";
     }
   
-    return "Model Successfully loaded";
+    return "Model Successfully Loaded";
   }
 
   void compilePrePrompt() {
@@ -399,7 +443,7 @@ class Lib {
     params.ref.n_threads = settings.n_threads;
     params.ref.n_batch = settings.n_batch;
     params.ref.n_predict = settings.n_predict;
-    params.ref.instruct = settings.instruct ? 1 : 0;
+    params.ref.instruct = settings.instruct           ? 1 : 0;
     params.ref.memory_f16 = settings.memory_f16       ? 1 : 0;
     params.ref.n_prev = settings.n_prev;
     params.ref.n_probs = settings.n_probs;
