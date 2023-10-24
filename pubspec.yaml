@@ -35,8 +35,6 @@ dependencies:
   permission_handler: ^11.0.1
   shared_preferences: ^2.0.20
   cupertino_icons: ^1.0.2
-  llama:
-    path: ./packages/llama
   url_launcher: ^6.1.10
   file_picker: ^6.0.0
   path: ^1.8.3
