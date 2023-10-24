@@ -9,8 +9,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  void _openModelFileDialog() async {
-    String ret = await settings.openModelFile();
+  void _storageOperationDialog(Future<String> Function() storageFunction) async {
+    String ret = await storageFunction();
     // Use a local reference to context to avoid using it across an async gap.
     final localContext = context;
     // Ensure that the context is still valid before attempting to show the dialog.
@@ -92,8 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 FilledButton(
                   onPressed: () {
-                    settings.loadSettingsFromJson();
-                    setState(() {});
+                    _storageOperationDialog(settings.loadSettingsFromJson);
                   },
                   child: const Text(
                     "Load Settings",
@@ -106,8 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(width: 10.0),
                 FilledButton(
                   onPressed: () {
-                    settings.saveSettingsToJson();
-                    setState(() {});
+                    _storageOperationDialog(settings.saveSettingsToJson);
                   },
                   child: const Text(
                     "Save Settings",
@@ -124,7 +122,9 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FilledButton(
-                  onPressed: _openModelFileDialog,
+                  onPressed: () {
+                    _storageOperationDialog(settings.loadModelFile);
+                  },
                   child: const Text(
                     "Load Model",
                     style: TextStyle(
