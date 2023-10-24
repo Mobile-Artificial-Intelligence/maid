@@ -20,10 +20,10 @@ class NativeLibrary {
       : _lookup = lookup;
 
   int butler_start(
-    ffi.Pointer<butler_params> bparams,
+    ffi.Pointer<butler_params> butler,
   ) {
     return _butler_start(
-      bparams,
+      butler,
     );
   }
 
@@ -69,22 +69,10 @@ class NativeLibrary {
 
 final class butler_params extends ffi.Struct {
   @ffi.UnsignedChar()
-  external int memory_f16;
-
-  @ffi.UnsignedChar()
-  external int ignore_eos;
-
-  @ffi.UnsignedChar()
   external int instruct;
 
   @ffi.UnsignedChar()
-  external int interactive;
-
-  @ffi.UnsignedChar()
-  external int interactive_start;
-
-  @ffi.UnsignedChar()
-  external int random_prompt;
+  external int memory_f16;
 
   external ffi.Pointer<ffi.Char> model_path;
 
@@ -114,6 +102,51 @@ final class butler_params extends ffi.Struct {
 
   @ffi.Int()
   external int n_keep;
+
+  @ffi.Int()
+  external int n_prev;
+
+  @ffi.Int()
+  external int n_probs;
+
+  @ffi.Int()
+  external int top_k;
+
+  @ffi.Float()
+  external double top_p;
+
+  @ffi.Float()
+  external double tfs_z;
+
+  @ffi.Float()
+  external double typical_p;
+
+  @ffi.Float()
+  external double temp;
+
+  @ffi.Int()
+  external int penalty_last_n;
+
+  @ffi.Float()
+  external double penalty_repeat;
+
+  @ffi.Float()
+  external double penalty_freq;
+
+  @ffi.Float()
+  external double penalty_present;
+
+  @ffi.Int()
+  external int mirostat;
+
+  @ffi.Float()
+  external double mirostat_tau;
+
+  @ffi.Float()
+  external double mirostat_eta;
+
+  @ffi.UnsignedChar()
+  external int penalize_nl;
 }
 
 abstract class return_code {

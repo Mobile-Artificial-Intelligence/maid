@@ -99,7 +99,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(width: 10.0),
                 FilledButton(
                   onPressed: () {
-                    settings.resetAll(setState);
+                    settings.resetAll();
+                    setState(() {});
                   },
                   child: const Text(
                     "Reset All",
@@ -184,24 +185,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             SwitchListTile(
-              title: const Text('memory_f16'),
-              value: settings.memory_f16,
-              onChanged: (value) {
-                setState(() {
-                  settings.memory_f16 = value;
-                });
-              },
-            ),
-            SwitchListTile(
-              title: const Text('ignore_eos'),
-              value: settings.ignore_eos,
-              onChanged: (value) {
-                setState(() {
-                  settings.ignore_eos = value;
-                });
-              },
-            ),
-            SwitchListTile(
               title: const Text('instruct'),
               value: settings.instruct,
               onChanged: (value) {
@@ -211,11 +194,20 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             SwitchListTile(
-              title: const Text('random_prompt'),
-              value: settings.random_prompt,
+              title: const Text('memory_f16'),
+              value: settings.memory_f16,
               onChanged: (value) {
                 setState(() {
-                  settings.random_prompt = value;
+                  settings.memory_f16 = value;
+                });
+              },
+            ),
+            SwitchListTile(
+              title: const Text('penalize_nl'),
+              value: settings.penalize_nl,
+              onChanged: (value) {
+                setState(() {
+                  settings.penalize_nl = value;
                 });
               },
             ),
@@ -282,6 +274,126 @@ class _SettingsPageState extends State<SettingsPage> {
               1023,
               (value) => settings.n_predict = value.round()
             ),
+            llamaParamSlider(
+              'n_keep',
+              settings.n_keep,
+              1.0,
+              1024.0,
+              1023,
+              (value) => settings.n_keep = value.round()
+            ),
+            llamaParamSlider(
+              'n_prev',
+              settings.n_prev,
+              1.0,
+              1024.0,
+              1023,
+              (value) => settings.n_prev = value.round()
+            ),
+            llamaParamSlider(
+              'n_probs',
+              settings.n_probs,
+              0.0,
+              128.0,
+              127,
+              (value) => settings.n_probs = value.round()
+            ),
+            llamaParamSlider(
+              'top_k',
+              settings.top_k,
+              1.0,
+              128.0,
+              127,
+              (value) => settings.top_k = value.round()
+            ),
+            llamaParamSlider(
+              'top_p',
+              settings.top_p,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.top_p = value
+            ),
+            llamaParamSlider(
+              'tfs_z',
+              settings.tfs_z,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.tfs_z = value
+            ),
+            llamaParamSlider(
+              'typical_p',
+              settings.typical_p,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.typical_p = value
+            ),
+            llamaParamSlider(
+              'temperature',
+              settings.temperature,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.temperature = value
+            ),
+            llamaParamSlider(
+              'penalty_last_n',
+              settings.penalty_last_n,
+              0.0,
+              128.0,
+              127,
+              (value) => settings.penalty_last_n = value.round()
+            ),
+            llamaParamSlider(
+              'penalty_repeat',
+              settings.penalty_repeat,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.penalty_repeat = value
+            ),
+            llamaParamSlider(
+              'penalty_freq',
+              settings.penalty_freq,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.penalty_freq = value
+            ),
+            llamaParamSlider(
+              'penalty_present',
+              settings.penalty_present,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.penalty_present = value
+            ),
+            llamaParamSlider(
+              'mirostat',
+              settings.mirostat,
+              0.0,
+              128.0,
+              127,
+              (value) => settings.mirostat = value.round()
+            ),
+            llamaParamSlider(
+              'mirostat_tau',
+              settings.mirostat_tau,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.mirostat_tau = value
+            ),
+            llamaParamSlider(
+              'mirostat_eta',
+              settings.mirostat_eta,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.mirostat_eta = value
+            ),
           ],
         ),
       )
@@ -313,6 +425,16 @@ class _SettingsPageState extends State<SettingsPage> {
     double sliderMin, double sliderMax, int sliderDivisions, 
     Function(double) onValueChanged
   ) {
+    String labelValue;
+
+    // I finput value is a double
+    if (inputValue is int) {
+      // If input value is an integer
+      labelValue = inputValue.round().toString();
+    } else {
+      labelValue = inputValue.toStringAsFixed(3);
+    }
+    
     return ListTile(
       title: Row(
         children: [
@@ -327,7 +449,7 @@ class _SettingsPageState extends State<SettingsPage> {
               min: sliderMin,
               max: sliderMax,
               divisions: sliderDivisions,
-              label: inputValue.round().toString(),
+              label: labelValue,
               onChanged: (double value) {
                 setState(() {
                   onValueChanged(value);
@@ -337,7 +459,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           Expanded(
             flex: 1,
-            child: Text(inputValue.round().toString()),
+            child: Text(labelValue),
           ),
         ],
       ),
