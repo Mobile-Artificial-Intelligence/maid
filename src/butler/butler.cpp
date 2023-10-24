@@ -27,55 +27,67 @@ static std::mutex continue_mutex;
 static llama_model * model;
 static llama_context * ctx;
 static llama_context * ctx_guidance;
-
-struct llama_context_params lparams;
-struct llama_sampling_context * ctx_sampling;
+static llama_sampling_context * ctx_sampling;
 
 static std::vector<llama_token> last_n_tokens;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
 static int n_remain;
-static int n_past               = 0;
-static int n_consumed           = 0;
-static int n_session_consumed   = 0;
-static int n_past_guidance      = 0;
-static int n_pfx                = 0;
-static int n_sfx                = 0;
+static int n_past     = 0;
+static int n_consumed = 0;
+static int n_pfx      = 0;
+static int n_sfx      = 0;
 
-gpt_params params;
+static gpt_params params;
+static llama_context_params lparams;
 
-int butler_start(struct butler_params *bparams) {
+int butler_start(struct butler_params *butler) {
     llama_backend_init(false);
 
-    params.seed             = (*bparams).seed              ? (*bparams).seed              : -1;
-    params.n_ctx            = (*bparams).n_ctx             ? (*bparams).n_ctx             : 512;
-    params.n_batch          = (*bparams).n_batch           ? (*bparams).n_batch           : 512;
-    params.n_threads        = (*bparams).n_threads         ? (*bparams).n_threads         : get_num_physical_cores();
-    params.n_threads_batch  = (*bparams).n_threads_batch   ? (*bparams).n_threads_batch   : -1;
-    params.n_predict        = (*bparams).n_predict         ? (*bparams).n_predict         : 256;
-    params.n_keep           = (*bparams).n_keep            ? (*bparams).n_keep            : 48;
-    params.model            = (*bparams).model_path;
-    params.prompt           = (*bparams).preprompt;
-    params.input_prefix     = (*bparams).input_prefix;
-    params.input_suffix     = (*bparams).input_suffix;
+    params.instruct                 = (*butler).instruct          != 0;
+    params.memory_f16               = (*butler).memory_f16        != 0;
 
-    params.antiprompt.push_back((*bparams).input_prefix);
+    params.seed                     = (*butler).seed              ? (*butler).seed              : -1;
+    params.n_ctx                    = (*butler).n_ctx             ? (*butler).n_ctx             : 512;
+    params.n_batch                  = (*butler).n_batch           ? (*butler).n_batch           : 8;
+    params.n_threads                = (*butler).n_threads         ? (*butler).n_threads         : get_num_physical_cores();
+    params.n_threads_batch          = (*butler).n_threads_batch   ? (*butler).n_threads_batch   : -1;
+    params.n_predict                = (*butler).n_predict         ? (*butler).n_predict         : 256;
+    params.n_keep                   = (*butler).n_keep            ? (*butler).n_keep            : 48;
+
+    params.sparams.n_prev           = (*butler).n_prev            ? (*butler).n_prev            : 64;
+    params.sparams.n_probs          = (*butler).n_probs           ? (*butler).n_probs           : 0;
+    params.sparams.top_k            = (*butler).top_k             ? (*butler).top_k             : 40;
+    params.sparams.top_p            = (*butler).top_p             ? (*butler).top_p             : 0.95f;
+    params.sparams.tfs_z            = (*butler).tfs_z             ? (*butler).tfs_z             : 1.00f;
+    params.sparams.typical_p        = (*butler).typical_p         ? (*butler).typical_p         : 1.00f;
+    params.sparams.temp             = (*butler).temp              ? (*butler).temp              : 0.80f;
+    params.sparams.penalty_last_n   = (*butler).penalty_last_n    ? (*butler).penalty_last_n    : 64;
+    params.sparams.penalty_repeat   = (*butler).penalty_repeat    ? (*butler).penalty_repeat    : 1.10f;
+    params.sparams.penalty_freq     = (*butler).penalty_freq      ? (*butler).penalty_freq      : 0.00f;
+    params.sparams.penalty_present  = (*butler).penalty_present   ? (*butler).penalty_present   : 0.00f;
+    params.sparams.mirostat         = (*butler).mirostat          ? (*butler).mirostat          : 0;
+    params.sparams.mirostat_tau     = (*butler).mirostat_tau      ? (*butler).mirostat_tau      : 5.00f;
+    params.sparams.mirostat_eta     = (*butler).mirostat_eta      ? (*butler).mirostat_eta      : 0.10f;
+    params.sparams.penalize_nl      = (*butler).penalize_nl       != 0;
+
+    params.model                    = (*butler).model_path;
+    params.prompt                   = (*butler).preprompt;
+    params.input_prefix             = (*butler).input_prefix;
+    params.input_suffix             = (*butler).input_suffix;
+
+    params.antiprompt.push_back((*butler).input_prefix);
     params.antiprompt.push_back("\n\n\n\n");
-
-    params.memory_f16       = (*bparams).memory_f16        != 0;
-    params.ignore_eos       = (*bparams).ignore_eos        != 0;
-    params.instruct         = (*bparams).instruct          != 0;
-    params.random_prompt    = (*bparams).random_prompt     != 0;
 
     n_remain = params.n_predict;
 
     std::tie(model, ctx) = llama_init_from_gpt_params(params);
     if (model == NULL) {
-        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*bparams).model_path);
+        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*butler).model_path);
         return 1;
     } else if (ctx == NULL) {
-        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__,(*bparams).model_path);
+        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__, (*butler).model_path);
         llama_free_model(model);
         return 1;
     }
@@ -99,7 +111,7 @@ int butler_start(struct butler_params *bparams) {
     }
 
     // number of tokens to keep when resetting context
-    if (params.n_keep < 0 || params.n_keep > (int) embd_inp.size() || params.instruct) {
+    if (params.n_keep < 0 || params.n_keep > (int) embd_inp.size()) {
         params.n_keep = (int)embd_inp.size();
     }
 
@@ -174,12 +186,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                 llama_kv_cache_seq_shift(ctx, 0, params.n_keep + 1 + n_discard, n_past, -n_discard);
 
                 n_past -= n_discard;
-
-                if (ctx_guidance) {
-                    n_past_guidance -= n_discard;
-                }
-
-                LOG("after swap: n_past = %d, n_past_guidance = %d\n", n_past, n_past_guidance);
 
                 LOG("embd: %s\n", LOG_TOKENS_TOSTR_PRETTY(ctx, embd).c_str());
             }

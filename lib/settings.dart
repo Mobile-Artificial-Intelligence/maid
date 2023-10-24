@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ffi';
 import 'dart:async';
 import 'dart:isolate';
+import 'dart:convert';
 
 import 'package:ffi/ffi.dart';
 import 'package:maid/butler.dart';
@@ -20,9 +21,8 @@ class Settings {
   
   bool inProgress = false;
   bool memory_f16 = false; // use f16 instead of f32 for memory kv
-  bool random_prompt = false; // do not randomize prompt if none provided
-  bool instruct = true; // instruction mode (used for Alpaca models)
-  bool ignore_eos = false; // do not stop generating after eos
+  bool instruct = true;
+  bool random_seed = true; // use random seed
 
   TextEditingController promptController = TextEditingController();
 
@@ -34,32 +34,56 @@ class Settings {
   TextEditingController userAliasController = TextEditingController()..text = "USER:";
   TextEditingController responseAliasController = TextEditingController()..text = "ASSISTANT:";
 
-  TextEditingController seedController = TextEditingController()..text = "-1";
-  TextEditingController n_ctxController = TextEditingController()..text = "512";
-  TextEditingController n_batchController = TextEditingController()..text = "8";
-  TextEditingController n_threadsController = TextEditingController()..text = "4";
-  TextEditingController n_predictController = TextEditingController()..text = "512";
-
   var boolKeys = {};
   var stringKeys = {};
+  var intKeys = {};
+  var doubleKeys = {};
 
   String modelName = "";
   String modelPath = "";
   String prePrompt = "";
 
+  int seed = -1;
+  int n_ctx = 512;
+  int n_batch = 8;
+  int n_threads = 4;
+  int n_predict = 512;
+  int n_keep = 48;
+
+  int n_prev = 64;
+  int n_probs = 0;
+  int top_k = 40;
+
+  double top_p = 0.95;
+  double tfs_z = 1.0;
+  double typical_p = 1.0;
+  double temperature = 0.8;
+
+  int penalty_last_n = 64;
+
+  double penalty_repeat = 1.1;
+  double penalty_freq = 0.0;
+  double penalty_present = 0.0;
+
+  int mirostat = 0;
+
+  double mirostat_tau = 5.0;
+  double mirostat_eta = 0.1;
+
+  bool penalize_nl = true;
+
   Settings() {
     initKeys();
     initFromSharedPrefs();
-    addListeners();
   }
 
   void initKeys() {
     // Map for boolean values
     boolKeys = {
-      "memory_f16": memory_f16,
-      "random_prompt": random_prompt,
       "instruct": instruct,
-      "ignore_eos": ignore_eos,
+      "memory_f16": memory_f16,
+      "random_seed": random_seed,
+      "penalize_nl": penalize_nl,
     };
 
     // Map for string values
@@ -67,11 +91,32 @@ class Settings {
       "pre_prompt": prePromptController,
       "user_alias": userAliasController,
       "response_alias": responseAliasController,
-      "seed": seedController,
-      "n_ctx": n_ctxController,
-      "n_batch": n_batchController,
-      "n_threads": n_threadsController,
-      "n_predict": n_predictController,
+    };
+
+    intKeys = {
+      "seed": seed,
+      "n_ctx": n_ctx,
+      "n_batch": n_batch,
+      "n_threads": n_threads,
+      "n_predict": n_predict,
+      "n_keep": n_keep,
+      "n_prev": n_prev,
+      "n_probs": n_probs,
+      "top_k": top_k,
+      "penalty_last_n": penalty_last_n,
+      "mirostat": mirostat,
+    };
+
+    doubleKeys = {
+      "top_p": top_p,
+      "tfs_z": tfs_z,
+      "typical_p": typical_p,
+      "temperature": temperature,
+      "penalty_repeat": penalty_repeat,
+      "penalty_freq": penalty_freq,
+      "penalty_present": penalty_present,
+      "mirostat_tau": mirostat_tau,
+      "mirostat_eta": mirostat_eta,
     };
   }
 
@@ -92,6 +137,20 @@ class Settings {
       }
     }
 
+    // Load integer values from prefs
+    for (var key in intKeys.keys) {
+      if (prefs.containsKey(key)) {
+        intKeys[key] = prefs.getInt(key)!;
+      }
+    }
+
+    // Load double values from prefs
+    for (var key in doubleKeys.keys) {
+      if (prefs.containsKey(key)) {
+        doubleKeys[key] = prefs.getDouble(key)!;
+      }
+    }
+
     if (prefs.containsKey("modelPath")) {
       modelPath = prefs.getString("modelPath")!;
       modelName = prefs.getString("modelName")!;
@@ -109,70 +168,79 @@ class Settings {
     }
   }
 
-  void addListeners() {
-    stringKeys.forEach((key, controller) {
-      controller.addListener(() {
-        saveStringToSharedPrefs(key, controller.text);
-      });
-    });
-  }
-
-  void saveStringToSharedPrefs(String s, String text) {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString(s, text);
-    });
-  }
-
-  void saveBoolToSharedPrefs(String s, bool value) {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setBool(s, value);
-    });
-  }
-
-  void saveExamplePromptsAndResponses() {
-    SharedPreferences.getInstance().then((prefs) {
-      // Store the count of examples
-      prefs.setInt("exampleCount", examplePromptControllers.length);
-      for (var i = 0; i < examplePromptControllers.length; i++) {
-        prefs.setString("examplePrompt_$i", examplePromptControllers[i].text);
-        prefs.setString("exampleResponse_$i", exampleResponseControllers[i].text);
-      }
-    });
-  }
-
-  void resetAll(void Function(VoidCallback fn) setState) async {
-    setState(() {
-      memory_f16 = false;
-      random_prompt = false;
-      instruct = true;
-      ignore_eos = false;
-    });
-
+  void resetAll() async {
+    // Reset all the internal state to the defaults
+    initKeys();
+  
+    inProgress = false;
+    memory_f16 = false;
+    instruct = true;
+    random_seed = true;
+    modelName = "";
+    modelPath = "";
+    prePrompt = "";
+    seed = -1;
+    n_ctx = 512;
+    n_batch = 8;
+    n_threads = 4;
+    n_predict = 512;
+    n_keep = 48;
+    n_prev = 64;
+    n_probs = 0;
+    top_k = 40;
+    top_p = 0.95;
+    tfs_z = 1.0;
+    typical_p = 1.0;
+    temperature = 0.8;
+    penalty_last_n = 64;
+    penalty_repeat = 1.1;
+    penalty_freq = 0.0;
+    penalty_present = 0.0;
+    mirostat = 0;
+    mirostat_tau = 5.0;
+    mirostat_eta = 0.1;
+    penalize_nl = true;
+  
+    promptController.clear();
     prePromptController.text = defaultPreprompt;
-    seedController.text = "-1";
-    n_ctxController.text = "512";
-    n_threadsController.text = "4";
-    n_predictController.text = "512";
-    n_batchController.text = "8";
+    examplePromptControllers.clear();
+    exampleResponseControllers.clear();
+    userAliasController.text = "USER:";
+    responseAliasController.text = "ASSISTANT:";
+  
+    // Clear values from SharedPreferences
+    var prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+  
+    // It might be a good idea to save the default settings after a reset
     saveAll();
   }
 
-  void saveAll() {
-    saveBoolToSharedPrefs("memory_f16", memory_f16);
-    saveBoolToSharedPrefs("random_prompt", random_prompt);
-    saveBoolToSharedPrefs("instruct", instruct);
-    saveBoolToSharedPrefs("ignore_eos", ignore_eos);
-    saveStringToSharedPrefs("modelPath", modelPath);
-    saveStringToSharedPrefs("modelName", modelName);
-    saveStringToSharedPrefs("pre_prompt", prePromptController.text);
-    saveStringToSharedPrefs("user_alias", userAliasController.text);
-    saveStringToSharedPrefs("response_alias", responseAliasController.text);
-    saveStringToSharedPrefs("seed", seedController.text);
-    saveStringToSharedPrefs("n_ctx", n_ctxController.text);
-    saveStringToSharedPrefs("n_batch", n_batchController.text);
-    saveStringToSharedPrefs("n_threads", n_threadsController.text);
-    saveStringToSharedPrefs("n_predict", n_predictController.text);
-    saveExamplePromptsAndResponses();
+  void saveAll() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    for (var key in boolKeys.keys) {
+      prefs.setBool(key, boolKeys[key]!);
+    }
+
+    for (var key in stringKeys.keys) {
+      prefs.setString(key, stringKeys[key]!.text);
+    }
+
+    for (var key in intKeys.keys) {
+      prefs.setInt(key, intKeys[key]!);
+    }
+
+    for (var key in doubleKeys.keys) {
+      prefs.setDouble(key, doubleKeys[key]!);
+    }
+
+    prefs.setInt("exampleCount", examplePromptControllers.length);
+
+    for (var i = 0; i < examplePromptControllers.length; i++) {
+      prefs.setString("examplePrompt_$i", examplePromptControllers[i].text);
+      prefs.setString("exampleResponse_$i", exampleResponseControllers[i].text);
+    }
   }
 
   Future<String> openFile() async {
@@ -275,15 +343,28 @@ class Lib {
     params.ref.preprompt = settings.prePrompt.toNativeUtf8().cast<Char>();
     params.ref.input_prefix = settings.userAliasController.text.trim().toNativeUtf8().cast<Char>();
     params.ref.input_suffix = settings.responseAliasController.text.trim().toNativeUtf8().cast<Char>();
-    params.ref.seed = int.tryParse(settings.seedController.text.trim())                               ?? -1;
-    params.ref.n_ctx = int.tryParse(settings.n_ctxController.text.trim())                             ?? 512;
-    params.ref.n_threads = int.tryParse(settings.n_threadsController.text.trim())                     ?? 4;
-    params.ref.n_batch = int.tryParse(settings.n_batchController.text.trim())                         ?? 8;
-    params.ref.n_predict = int.tryParse(settings.n_predictController.text.trim())                     ?? 512;
-    params.ref.memory_f16 = settings.memory_f16                                                       ? 1 : 0;
-    params.ref.random_prompt = settings.random_prompt                                                 ? 1 : 0;
-    params.ref.instruct = settings.instruct                                                           ? 1 : 0;
-    params.ref.ignore_eos = settings.ignore_eos                                                       ? 1 : 0;
+    params.ref.seed = settings.random_seed ? -1 : settings.seed;
+    params.ref.n_ctx = settings.n_ctx;
+    params.ref.n_threads = settings.n_threads;
+    params.ref.n_batch = settings.n_batch;
+    params.ref.n_predict = settings.n_predict;
+    params.ref.instruct = settings.instruct ? 1 : 0;
+    params.ref.memory_f16 = settings.memory_f16       ? 1 : 0;
+    params.ref.n_prev = settings.n_prev;
+    params.ref.n_probs = settings.n_probs;
+    params.ref.top_k = settings.top_k;
+    params.ref.top_p = settings.top_p;
+    params.ref.tfs_z = settings.tfs_z;
+    params.ref.typical_p = settings.typical_p;
+    params.ref.temp = settings.temperature;
+    params.ref.penalty_last_n = settings.penalty_last_n;
+    params.ref.penalty_repeat = settings.penalty_repeat;
+    params.ref.penalty_freq = settings.penalty_freq;
+    params.ref.penalty_present = settings.penalty_present;
+    params.ref.mirostat = settings.mirostat;
+    params.ref.mirostat_tau = settings.mirostat_tau;
+    params.ref.mirostat_eta = settings.mirostat_eta;
+    params.ref.penalize_nl = settings.penalize_nl     ? 1 : 0;
 
     _nativeLibrary.butler_start(params);
 

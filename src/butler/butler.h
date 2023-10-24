@@ -12,23 +12,37 @@ extern "C" {
 #endif
 
 struct butler_params {
-   unsigned char memory_f16;
-   unsigned char ignore_eos;
    unsigned char instruct;
-   unsigned char interactive;
-   unsigned char interactive_start;
-   unsigned char random_prompt;
+   unsigned char memory_f16;
+
    char *model_path;
    char *preprompt;
-   char *input_prefix; // Not used
-   char *input_suffix; // Not used
-   unsigned int seed;
-   int n_ctx;
-   int n_batch;
-   int n_threads;
-   int n_threads_batch; //Not used
-   int n_predict;
-   int n_keep; // Not used
+   char *input_prefix;                    // string to prefix user inputs with
+   char *input_suffix;                    // string to suffix user inputs with
+
+   unsigned int seed;                     // RNG seed
+   int n_ctx;                             // context size
+   int n_batch;                           // batch size for prompt processing (must be >=32 to use BLAS)
+   int n_threads;                         // number of threads to use for processing
+   int n_threads_batch; //Not used        // number of threads to use for batch processing
+   int n_predict;                         // new tokens to predict
+   int n_keep;                            // number of tokens to keep from initial prompt
+
+   int n_prev;                            // number of previous tokens to remember
+   int n_probs;                           // if greater than 0, output the probabilities of top n_probs tokens.
+   int top_k;                             // <= 0 to use vocab size
+   float top_p;                           // 1.0 = disabled
+   float tfs_z;                           // 1.0 = disabled
+   float typical_p;                       // 1.0 = disabled
+   float temp;                            // 1.0 = disabled
+   int penalty_last_n;                    // last n tokens to penalize (0 = disable penalty, -1 = context size)
+   float penalty_repeat;                  // 1.0 = disabled
+   float penalty_freq;                    // 0.0 = disabled
+   float penalty_present;                 // 0.0 = disabled
+   int mirostat;                          // 0 = disabled, 1 = mirostat, 2 = mirostat 2.0
+   float mirostat_tau;                    // target entropy
+   float mirostat_eta;                    // learning rate
+   unsigned char penalize_nl;             // consider newlines as a repeatable token
 };
 
 enum return_code {
@@ -38,7 +52,7 @@ enum return_code {
 
 typedef void maid_output_cb(unsigned char code, const char *buffer);
 
-EXPORT int butler_start(struct butler_params *bparams);
+EXPORT int butler_start(struct butler_params *butler);
 
 EXPORT int butler_continue(const char *input, maid_output_cb *maid_output);
 

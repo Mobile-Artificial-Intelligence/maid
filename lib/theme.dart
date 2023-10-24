@@ -22,6 +22,12 @@ class MaidTheme {
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
     ),
+    sliderTheme: SliderThemeData(
+      activeTrackColor: Colors.blue.shade800,
+      inactiveTrackColor: Colors.grey.shade800,
+      thumbColor: Colors.blue,
+      overlayColor: Colors.blue.shade800,
+    ),
     colorScheme: ColorScheme.dark(
       background: Colors.grey.shade900,
       primary: Colors.grey.shade800,

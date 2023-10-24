@@ -99,7 +99,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(width: 10.0),
                 FilledButton(
                   onPressed: () {
-                    settings.resetAll(setState);
+                    settings.resetAll();
+                    setState(() {});
                   },
                   child: const Text(
                     "Reset All",
@@ -183,25 +184,216 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
-            llamaParamSwitch(
-              'memory_f16', settings.memory_f16),
-            llamaParamSwitch(
-              'ignore_eos', settings.ignore_eos),
-            llamaParamSwitch(
-              'instruct', settings.instruct),
-            llamaParamSwitch(
-              'random_prompt', settings.random_prompt),
+            SwitchListTile(
+              title: const Text('instruct'),
+              value: settings.instruct,
+              onChanged: (value) {
+                setState(() {
+                  settings.instruct = value;
+                });
+              },
+            ),
+            SwitchListTile(
+              title: const Text('memory_f16'),
+              value: settings.memory_f16,
+              onChanged: (value) {
+                setState(() {
+                  settings.memory_f16 = value;
+                });
+              },
+            ),
+            SwitchListTile(
+              title: const Text('penalize_nl'),
+              value: settings.penalize_nl,
+              onChanged: (value) {
+                setState(() {
+                  settings.penalize_nl = value;
+                });
+              },
+            ),
+            SwitchListTile(
+              title: const Text('random_seed'),
+              value: settings.random_seed,
+              onChanged: (value) {
+                setState(() {
+                  settings.random_seed = value;
+                });
+              },
+            ),
             const SizedBox(height: 15.0),
-            llamaParamTextField(
-              'seed (-1 for random)', settings.seedController),
-            llamaParamTextField(
-              'n_threads', settings.n_threadsController),
-            llamaParamTextField(
-              'n_ctx', settings.n_ctxController),
-            llamaParamTextField(
-              'n_batch', settings.n_batchController),
-            llamaParamTextField(
-              'n_predict', settings.n_predictController),
+            if (!settings.random_seed)
+              ListTile(
+                title: Row(
+                  children: [
+                    const Expanded(
+                      child: Text('seed'),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'seed',
+                        ),
+                        onChanged: (value) {
+                          settings.seed = int.parse(value) ?? 0;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            llamaParamSlider(
+              'n_threads', 
+              settings.n_threads,
+              1.0,
+              128.0,
+              127,
+              (value) => settings.n_threads = value.round()
+            ),
+            llamaParamSlider(
+              'n_ctx',
+              settings.n_ctx,
+              1.0,
+              4096.0,
+              4095,
+              (value) => settings.n_ctx = value.round()
+            ),
+            llamaParamSlider(
+              'n_batch',
+              settings.n_batch,
+              1.0,
+              4096.0,
+              4095,
+              (value) => settings.n_batch = value.round()
+            ),
+            llamaParamSlider(
+              'n_predict',
+              settings.n_predict,
+              1.0,
+              1024.0,
+              1023,
+              (value) => settings.n_predict = value.round()
+            ),
+            llamaParamSlider(
+              'n_keep',
+              settings.n_keep,
+              1.0,
+              1024.0,
+              1023,
+              (value) => settings.n_keep = value.round()
+            ),
+            llamaParamSlider(
+              'n_prev',
+              settings.n_prev,
+              1.0,
+              1024.0,
+              1023,
+              (value) => settings.n_prev = value.round()
+            ),
+            llamaParamSlider(
+              'n_probs',
+              settings.n_probs,
+              0.0,
+              128.0,
+              127,
+              (value) => settings.n_probs = value.round()
+            ),
+            llamaParamSlider(
+              'top_k',
+              settings.top_k,
+              1.0,
+              128.0,
+              127,
+              (value) => settings.top_k = value.round()
+            ),
+            llamaParamSlider(
+              'top_p',
+              settings.top_p,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.top_p = value
+            ),
+            llamaParamSlider(
+              'tfs_z',
+              settings.tfs_z,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.tfs_z = value
+            ),
+            llamaParamSlider(
+              'typical_p',
+              settings.typical_p,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.typical_p = value
+            ),
+            llamaParamSlider(
+              'temperature',
+              settings.temperature,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.temperature = value
+            ),
+            llamaParamSlider(
+              'penalty_last_n',
+              settings.penalty_last_n,
+              0.0,
+              128.0,
+              127,
+              (value) => settings.penalty_last_n = value.round()
+            ),
+            llamaParamSlider(
+              'penalty_repeat',
+              settings.penalty_repeat,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.penalty_repeat = value
+            ),
+            llamaParamSlider(
+              'penalty_freq',
+              settings.penalty_freq,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.penalty_freq = value
+            ),
+            llamaParamSlider(
+              'penalty_present',
+              settings.penalty_present,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.penalty_present = value
+            ),
+            llamaParamSlider(
+              'mirostat',
+              settings.mirostat,
+              0.0,
+              128.0,
+              127,
+              (value) => settings.mirostat = value.round()
+            ),
+            llamaParamSlider(
+              'mirostat_tau',
+              settings.mirostat_tau,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.mirostat_tau = value
+            ),
+            llamaParamSlider(
+              'mirostat_eta',
+              settings.mirostat_eta,
+              0.0,
+              1.0,
+              100,
+              (value) => settings.mirostat_eta = value
+            ),
           ],
         ),
       )
@@ -229,31 +421,48 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget llamaParamSwitch(String title, bool initialValue) {
-    return SwitchListTile(
-      title: Text(title),
-      value: initialValue,
-      onChanged: (value) {
-        setState(() {
-          switch (title) {
-            case 'memory_f16':
-              settings.memory_f16 = value;
-              break;
-            case 'random_prompt':
-              settings.random_prompt = value;
-              break;
-            case 'instruct':
-              settings.instruct = value;
-              break;
-            case 'ignore_eos':
-              settings.ignore_eos = value;
-              break;
-            default:
-              break;
-          }
-          settings.saveBoolToSharedPrefs(title, value);
-        });
-      },
+  Widget llamaParamSlider(String labelText, num inputValue, 
+    double sliderMin, double sliderMax, int sliderDivisions, 
+    Function(double) onValueChanged
+  ) {
+    String labelValue;
+
+    // I finput value is a double
+    if (inputValue is int) {
+      // If input value is an integer
+      labelValue = inputValue.round().toString();
+    } else {
+      labelValue = inputValue.toStringAsFixed(3);
+    }
+    
+    return ListTile(
+      title: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(labelText),
+          ),
+          Expanded(
+            flex: 7,
+            child: Slider(
+              value: inputValue.toDouble(),
+              min: sliderMin,
+              max: sliderMax,
+              divisions: sliderDivisions,
+              label: labelValue,
+              onChanged: (double value) {
+                setState(() {
+                  onValueChanged(value);
+                });
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(labelValue),
+          ),
+        ],
+      ),
     );
   }
 }
