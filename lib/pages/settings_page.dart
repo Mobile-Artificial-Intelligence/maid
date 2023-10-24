@@ -9,8 +9,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  void _openFileDialog() async {
-    String ret = await settings.openFile();
+  void _openModelFileDialog() async {
+    String ret = await settings.openModelFile();
     // Use a local reference to context to avoid using it across an async gap.
     final localContext = context;
     // Ensure that the context is still valid before attempting to show the dialog.
@@ -43,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         },
       );
-      settings.saveAll();
+      settings.saveSharedPreferences();
       setState(() {});
     }
   }
@@ -87,9 +87,37 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FilledButton(
-                  onPressed: _openFileDialog,
+                  onPressed: _openModelFileDialog,
                   child: const Text(
                     "Load Model",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10.0),
+                FilledButton(
+                  onPressed: () {
+                    settings.loadSettingsFromJson();
+                    setState(() {});
+                  },
+                  child: const Text(
+                    "Load Settings",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10.0),
+                FilledButton(
+                  onPressed: () {
+                    settings.saveSettingsToJson();
+                    setState(() {});
+                  },
+                  child: const Text(
+                    "Save Settings",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

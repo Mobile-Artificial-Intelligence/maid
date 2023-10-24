@@ -37,7 +37,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
     setState(() {
       busy = true;
-      settings.saveAll();
+      settings.saveSharedPreferences();
       chatWidgets
           .add(UserMessage(message: settings.promptController.text.trim()));
       settings.compilePrePrompt();
