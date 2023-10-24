@@ -33,10 +33,7 @@ class Settings {
   TextEditingController userAliasController = TextEditingController()..text = "USER:";
   TextEditingController responseAliasController = TextEditingController()..text = "ASSISTANT:";
 
-  var boolKeys = {};
-  var stringKeys = {};
-  var intKeys = {};
-  var doubleKeys = {};
+  var params = {};
 
   String modelName = "";
   String modelPath = "";
@@ -77,22 +74,17 @@ class Settings {
   }
 
   void initKeys() {
-    // Map for boolean values
-    boolKeys = {
+    // Map for parameter values
+    params = {
       "instruct": instruct,
       "memory_f16": memory_f16,
       "random_seed": random_seed,
       "penalize_nl": penalize_nl,
-    };
-
-    // Map for string values
-    stringKeys = {
+      "modelPath": modelPath,
+      "modelName": modelName,
       "pre_prompt": prePromptController,
       "user_alias": userAliasController,
       "response_alias": responseAliasController,
-    };
-
-    intKeys = {
       "seed": seed,
       "n_ctx": n_ctx,
       "n_batch": n_batch,
@@ -104,9 +96,6 @@ class Settings {
       "top_k": top_k,
       "penalty_last_n": penalty_last_n,
       "mirostat": mirostat,
-    };
-
-    doubleKeys = {
       "top_p": top_p,
       "tfs_z": tfs_z,
       "typical_p": typical_p,
@@ -122,37 +111,24 @@ class Settings {
   void initFromSharedPrefs() async {
     var prefs = await SharedPreferences.getInstance();
 
-    // Load boolean values from prefs
-    for (var key in boolKeys.keys) {
+    for (var key in params.keys) {
       if (prefs.containsKey(key)) {
-        boolKeys[key] = prefs.getBool(key)!;
+        if (params[key] is bool) {
+          params[key] = prefs.getBool(key)!;
+        } 
+        else if (params[key] is TextEditingController) {
+          params[key]!.text = prefs.getString(key)!;
+        } 
+        else if (params[key] is int) {
+          params[key] = prefs.getInt(key)!;
+        } 
+        else if (params[key] is double) {
+          params[key] = prefs.getDouble(key)!;
+        } 
+        else if (params[key] is String) {
+          params[key] = prefs.getString(key)!;
+        }
       }
-    }
-
-    // Load string values from prefs
-    for (var key in stringKeys.keys) {
-      if (prefs.containsKey(key)) {
-        stringKeys[key]!.text = prefs.getString(key)!;
-      }
-    }
-
-    // Load integer values from prefs
-    for (var key in intKeys.keys) {
-      if (prefs.containsKey(key)) {
-        intKeys[key] = prefs.getInt(key)!;
-      }
-    }
-
-    // Load double values from prefs
-    for (var key in doubleKeys.keys) {
-      if (prefs.containsKey(key)) {
-        doubleKeys[key] = prefs.getDouble(key)!;
-      }
-    }
-
-    if (prefs.containsKey("modelPath")) {
-      modelPath = prefs.getString("modelPath")!;
-      modelName = prefs.getString("modelName")!;
     }
 
     // Load example prompts and responses from prefs
@@ -220,20 +196,22 @@ class Settings {
   void saveSharedPreferences() async {
     var prefs = await SharedPreferences.getInstance();
 
-    for (var key in boolKeys.keys) {
-      prefs.setBool(key, boolKeys[key]!);
-    }
-
-    for (var key in stringKeys.keys) {
-      prefs.setString(key, stringKeys[key]!.text);
-    }
-
-    for (var key in intKeys.keys) {
-      prefs.setInt(key, intKeys[key]!);
-    }
-
-    for (var key in doubleKeys.keys) {
-      prefs.setDouble(key, doubleKeys[key]!);
+    for (var key in params.keys) {
+      if (params[key] is bool) {
+        prefs.setBool(key, params[key]);
+      } 
+      else if (params[key] is TextEditingController) {
+        prefs.setString(key, params[key]!.text);
+      } 
+      else if (params[key] is int) {
+        prefs.setInt(key, params[key]);
+      } 
+      else if (params[key] is double) {
+        prefs.setDouble(key, params[key]);
+      } 
+      else if (params[key] is String) {
+        prefs.setString(key, params[key]);
+      }
     }
 
     prefs.setInt("exampleCount", examplePromptControllers.length);
@@ -248,31 +226,46 @@ class Settings {
     Map<String, dynamic> jsonMap = {};
 
     // Convert the Settings instance to a map
-    jsonMap['boolKeys'] = settings.boolKeys;
-    jsonMap['stringKeys'] = settings.stringKeys.map((key, value) => MapEntry(key, value.text));
-    jsonMap['intKeys'] = settings.intKeys;
-    jsonMap['doubleKeys'] = settings.doubleKeys;
-    jsonMap['modelName'] = settings.modelName;
-    jsonMap['modelPath'] = settings.modelPath;
+    for (var key in params.keys) {
+      if (params[key] is bool) {
+        jsonMap[key] = params[key];
+      } 
+      else if (params[key] is TextEditingController) {
+        jsonMap[key] = params[key]!.text;
+      } 
+      else if (params[key] is int) {
+        jsonMap[key] = params[key];
+      } 
+      else if (params[key] is double) {
+        jsonMap[key] = params[key];
+      } 
+      else if (params[key] is String) {
+        jsonMap[key] = params[key];
+      }
+    }
+
     jsonMap['examplePrompts'] = settings.examplePromptControllers.map((e) => e.text).toList();
     jsonMap['exampleResponses'] = settings.exampleResponseControllers.map((e) => e.text).toList();
-  
+
     // Convert the map to a JSON string
     String jsonString = json.encode(jsonMap);
-
     String? filePath;
-    
+
     try {
-      if ((Platform.isAndroid || Platform.isIOS)) {
-        if (!(await Permission.storage.request().isGranted)) {
+      if (Platform.isAndroid || Platform.isIOS) {
+        Directory? directory;
+        if (Platform.isAndroid && (await Permission.manageExternalStorage.request().isGranted)) {
+          directory = await Directory('/storage/emulated/0/Download/Maid').create();
+        } 
+        else if (Platform.isIOS && (await Permission.storage.request().isGranted)) {
+          directory = await getDownloadsDirectory();
+        } else {
           return "Permission Request Failed";
         }
 
-        // Get the application documents directory using path_provider
-        final directory = await getApplicationDocumentsDirectory();
-        filePath = '${directory.path}/settings.json';     
-      } else {
-        // Use file picker to let user select save location
+        filePath = '${directory!.path}/maid_settings.json';
+      }
+      else {
         filePath = await FilePicker.platform.saveFile(type: FileType.any);
       }
 
@@ -285,7 +278,6 @@ class Settings {
     } catch (e) {
       return "Error: $e";
     }
-
     return "Settings Successfully Saved to $filePath";
   }
 
@@ -305,14 +297,22 @@ class Settings {
         Map<String, dynamic> jsonMap = json.decode(jsonString);
 
         // Update the Settings instance from the map
-        settings.boolKeys = Map<String, bool>.from(jsonMap['boolKeys']);
-        jsonMap['stringKeys'].forEach((key, value) {
-          settings.stringKeys[key]!.text = value;
-        });
-        settings.intKeys = Map<String, int>.from(jsonMap['intKeys']);
-        settings.doubleKeys = Map<String, double>.from(jsonMap['doubleKeys']);
-        settings.modelName = jsonMap['modelName'];
-        settings.modelPath = jsonMap['modelPath'];
+        for (var key in jsonMap.keys) {
+          if (params.containsKey(key)) {
+            if (params[key] is bool) {
+              params[key] = jsonMap[key];
+            } else if (params[key] is TextEditingController) {
+              params[key]!.text = jsonMap[key];
+            } else if (params[key] is int) {
+              params[key] = jsonMap[key];
+            } else if (params[key] is double) {
+              params[key] = jsonMap[key];
+            } else if (params[key] is String) {
+              params[key] = jsonMap[key];
+            }
+          }
+        }
+
         for (var i = 0; i < jsonMap['examplePrompts'].length; i++) {
           settings.examplePromptControllers[i].text = jsonMap['examplePrompts'][i];
           settings.exampleResponseControllers[i].text = jsonMap['exampleResponses'][i];
@@ -324,7 +324,6 @@ class Settings {
 
     return "Settings Successfully Loaded";
   }
-
 
   Future<String> loadModelFile() async {
     if ((Platform.isAndroid || Platform.isIOS) && 
