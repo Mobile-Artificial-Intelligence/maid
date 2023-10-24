@@ -171,7 +171,7 @@ class Settings {
   void resetAll() async {
     // Reset all the internal state to the defaults
     initKeys();
-  
+
     inProgress = false;
     memory_f16 = false;
     instruct = true;
@@ -200,23 +200,23 @@ class Settings {
     mirostat_tau = 5.0;
     mirostat_eta = 0.1;
     penalize_nl = true;
-  
+
     promptController.clear();
     prePromptController.text = defaultPreprompt;
     examplePromptControllers.clear();
     exampleResponseControllers.clear();
     userAliasController.text = "USER:";
     responseAliasController.text = "ASSISTANT:";
-  
+
     // Clear values from SharedPreferences
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
-  
+
     // It might be a good idea to save the default settings after a reset
-    saveAll();
+    saveSharedPreferences();
   }
 
-  void saveAll() async {
+  void saveSharedPreferences() async {
     var prefs = await SharedPreferences.getInstance();
 
     for (var key in boolKeys.keys) {
@@ -243,7 +243,58 @@ class Settings {
     }
   }
 
-  Future<String> openFile() async {
+  void saveSettingsToJson() async {
+    Map<String, dynamic> jsonMap = {};
+
+    // Convert the Settings instance to a map
+    jsonMap['boolKeys'] = settings.boolKeys;
+    jsonMap['stringKeys'] = settings.stringKeys.map((key, value) => MapEntry(key, value.text));
+    jsonMap['intKeys'] = settings.intKeys;
+    jsonMap['doubleKeys'] = settings.doubleKeys;
+    jsonMap['modelName'] = settings.modelName;
+    jsonMap['modelPath'] = settings.modelPath;
+    jsonMap['examplePrompts'] = settings.examplePromptControllers.map((e) => e.text).toList();
+    jsonMap['exampleResponses'] = settings.exampleResponseControllers.map((e) => e.text).toList();
+
+    // Convert the map to a JSON string
+    String jsonString = json.encode(jsonMap);
+
+    // Use file picker to let user select save location
+    final result = await FilePicker.platform.saveFile(type: FileType.any);
+
+    if (result != null) {
+      File file = File(result);
+      await file.writeAsString(jsonString);
+    }
+  }
+
+  void loadSettingsFromJson() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.any);
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      String jsonString = await file.readAsString();
+
+      Map<String, dynamic> jsonMap = json.decode(jsonString);
+
+      // Update the Settings instance from the map
+      settings.boolKeys = Map<String, bool>.from(jsonMap['boolKeys']);
+      jsonMap['stringKeys'].forEach((key, value) {
+        settings.stringKeys[key]!.text = value;
+      });
+      settings.intKeys = Map<String, int>.from(jsonMap['intKeys']);
+      settings.doubleKeys = Map<String, double>.from(jsonMap['doubleKeys']);
+      settings.modelName = jsonMap['modelName'];
+      settings.modelPath = jsonMap['modelPath'];
+      for (var i = 0; i < jsonMap['examplePrompts'].length; i++) {
+        settings.examplePromptControllers[i].text = jsonMap['examplePrompts'][i];
+        settings.exampleResponseControllers[i].text = jsonMap['exampleResponses'][i];
+      }
+    }
+  }
+
+
+  Future<String> openModelFile() async {
     if ((Platform.isAndroid || Platform.isIOS) && 
         !(await Permission.storage.request().isGranted)) {
       return "Permission Request Failed";
