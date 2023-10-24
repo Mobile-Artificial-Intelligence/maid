@@ -256,13 +256,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
-  llama:
-    dependency: "direct main"
-    description:
-      path: "packages/llama"
-      relative: true
-    source: path
-    version: "0.0.1"
   logging:
     dependency: transitive
     description:
@@ -702,4 +695,4 @@ packages:
     version: "2.1.1"
 sdks:
   dart: ">=3.1.0 <4.0.0"
-  flutter: ">=3.13.7"
+  flutter: ">=3.13.0"
