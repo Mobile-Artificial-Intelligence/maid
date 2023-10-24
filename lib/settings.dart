@@ -262,12 +262,12 @@ class Settings {
 
     String? filePath;
     
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (!(await Permission.storage.request().isGranted)) {
-        return "Permission Request Failed";
-      }
+    try {
+      if ((Platform.isAndroid || Platform.isIOS)) {
+        if (!(await Permission.storage.request().isGranted)) {
+          return "Permission Request Failed";
+        }
 
-      try {
         // Get the application documents directory using path_provider
         final directory = await getApplicationDocumentsDirectory();
         filePath = '${directory.path}/settings.json';
@@ -275,27 +275,19 @@ class Settings {
         // Write the JSON data to the file
         File file = File(filePath);
         await file.writeAsString(jsonString);      
-      } catch (e) {
-        return "Error: $e";
+      } else {
+        // Use file picker to let user select save location
+        filePath = await FilePicker.platform.saveFile(type: FileType.any);
       }
-    }
 
-    try {
-      // Use file picker to let user select save location
-      filePath = await FilePicker.platform.saveFile(type: FileType.any);
-    } catch (e) {
-      return "Error: $e";
-    }
-
-    if (filePath != null) {
-      try{
+      if (filePath != null) {
         File file = File(filePath);
         await file.writeAsString(jsonString);
-      } catch (e) {
-        return "Error: $e";
+      } else {
+        return "No File Selected";
       }
-    } else {
-      return "No File Selected";
+    } catch (e) {
+      return "Error: $e";
     }
 
     return "Settings Successfully Saved to $filePath";
