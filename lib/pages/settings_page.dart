@@ -82,21 +82,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 fontSize: 20.0,
               ),
             ),
-            const SizedBox(height: 15.0),
+            Divider(
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FilledButton(
-                  onPressed: _openModelFileDialog,
-                  child: const Text(
-                    "Load Model",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10.0),
                 FilledButton(
                   onPressed: () {
                     settings.loadSettingsFromJson();
@@ -124,6 +117,22 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 15.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FilledButton(
+                  onPressed: _openModelFileDialog,
+                  child: const Text(
+                    "Load Model",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 10.0),
                 FilledButton(
                   onPressed: () {
@@ -140,7 +149,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 15.0),
+            Divider(
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             llamaParamTextField(
               'User alias', settings.userAliasController),
             llamaParamTextField(
@@ -165,7 +178,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 20.0),
+            Divider(
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -212,6 +229,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
+            Divider(
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             SwitchListTile(
               title: const Text('instruct'),
               value: settings.instruct,
@@ -248,7 +270,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 });
               },
             ),
-            const SizedBox(height: 15.0),
+            Divider(
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             if (!settings.random_seed)
               ListTile(
                 title: Row(
@@ -378,8 +404,8 @@ class _SettingsPageState extends State<SettingsPage> {
               'penalty_repeat',
               settings.penalty_repeat,
               0.0,
-              1.0,
-              100,
+              2.0,
+              200,
               (value) => settings.penalty_repeat = value
             ),
             llamaParamSlider(
@@ -410,7 +436,7 @@ class _SettingsPageState extends State<SettingsPage> {
               'mirostat_tau',
               settings.mirostat_tau,
               0.0,
-              1.0,
+              10.0,
               100,
               (value) => settings.mirostat_tau = value
             ),

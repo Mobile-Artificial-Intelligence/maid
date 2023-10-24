@@ -14,11 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Settings settings = Settings();
 
-class Settings {
-  static const String defaultPreprompt = 
-    'A chat between a curious user and an artificial intelligence assistant. '
-    'The assistant gives helpful, detailed, and polite answers to the user\'s questions.';
-  
+class Settings { 
   bool inProgress = false;
   bool memory_f16 = false; // use f16 instead of f32 for memory kv
   bool instruct = true;
@@ -26,7 +22,9 @@ class Settings {
 
   TextEditingController promptController = TextEditingController();
 
-  TextEditingController prePromptController = TextEditingController()..text = defaultPreprompt;
+  TextEditingController prePromptController = TextEditingController()..text =
+    'A chat between a curious user and an artificial intelligence assistant. '
+    'The assistant gives helpful, detailed, and polite answers to the user\'s questions.';
   
   List<TextEditingController> examplePromptControllers = [];
   List<TextEditingController> exampleResponseControllers = [];
@@ -202,7 +200,9 @@ class Settings {
     penalize_nl = true;
 
     promptController.clear();
-    prePromptController.text = defaultPreprompt;
+    prePromptController.text =
+      'A chat between a curious user and an artificial intelligence assistant. '
+      'The assistant gives helpful, detailed, and polite answers to the user\'s questions.';
     examplePromptControllers.clear();
     exampleResponseControllers.clear();
     userAliasController.text = "USER:";
