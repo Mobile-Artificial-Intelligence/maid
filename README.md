@@ -19,6 +19,11 @@ To use this app, follow these steps:
 6. Navigate back to the Home Page
 7. Enter a prompt
 
+## Help Wanted
+- Fix windows build to allow dll's (butler.dll, llama.dll, etc) to be built with maid
+- Seperate Desktop UI from Mobile UI
+- Testing and Building on MacOS and IOS
+
 ## Testing
 Android version tested on a Oneplus 10 Pro 11gb phone.
 Also tested on Debian Linux, Windows 11.
