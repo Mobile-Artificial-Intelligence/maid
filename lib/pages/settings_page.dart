@@ -76,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             const SizedBox(height: 10.0),
             Text(
-              settings.modelName,
+              settings.parameters["modelName"],
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
@@ -236,37 +236,37 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             SwitchListTile(
               title: const Text('instruct'),
-              value: settings.instruct,
+              value: settings.parameters["instruct"],
               onChanged: (value) {
                 setState(() {
-                  settings.instruct = value;
+                  settings.parameters["instruct"] = value;
                 });
               },
             ),
             SwitchListTile(
               title: const Text('memory_f16'),
-              value: settings.memory_f16,
+              value: settings.parameters["memory_f16"],
               onChanged: (value) {
                 setState(() {
-                  settings.memory_f16 = value;
+                  settings.parameters["memory_f16"] = value;
                 });
               },
             ),
             SwitchListTile(
               title: const Text('penalize_nl'),
-              value: settings.penalize_nl,
+              value: settings.parameters["penalize_nl"],
               onChanged: (value) {
                 setState(() {
-                  settings.penalize_nl = value;
+                  settings.parameters["penalize_nl"] = value;
                 });
               },
             ),
             SwitchListTile(
               title: const Text('random_seed'),
-              value: settings.random_seed,
+              value: settings.parameters["random_seed"],
               onChanged: (value) {
                 setState(() {
-                  settings.random_seed = value;
+                  settings.parameters["random_seed"] = value;
                 });
               },
             ),
@@ -275,7 +275,7 @@ class _SettingsPageState extends State<SettingsPage> {
               endIndent: 10,
               color: Theme.of(context).colorScheme.primary,
             ),
-            if (!settings.random_seed)
+            if (!settings.parameters["random_seed"])
               ListTile(
                 title: Row(
                   children: [
@@ -289,7 +289,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           labelText: 'seed',
                         ),
                         onChanged: (value) {
-                          settings.seed = int.parse(value) ?? 0;
+                          settings.parameters["seed"] = int.parse(value) ?? 0;
                         },
                       ),
                     ),
@@ -298,155 +298,155 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             llamaParamSlider(
               'n_threads', 
-              settings.n_threads,
+              settings.parameters["n_threads"],
               1.0,
               128.0,
               127,
-              (value) => settings.n_threads = value.round()
+              (value) => settings.parameters["n_threads"] = value.round()
             ),
             llamaParamSlider(
               'n_ctx',
-              settings.n_ctx,
+              settings.parameters["n_ctx"],
               1.0,
               4096.0,
               4095,
-              (value) => settings.n_ctx = value.round()
+              (value) => settings.parameters["n_ctx"] = value.round()
             ),
             llamaParamSlider(
               'n_batch',
-              settings.n_batch,
+              settings.parameters["n_batch"],
               1.0,
               4096.0,
               4095,
-              (value) => settings.n_batch = value.round()
+              (value) => settings.parameters["n_batch"] = value.round()
             ),
             llamaParamSlider(
               'n_predict',
-              settings.n_predict,
+              settings.parameters["n_predict"],
               1.0,
               1024.0,
               1023,
-              (value) => settings.n_predict = value.round()
+              (value) => settings.parameters["n_predict"] = value.round()
             ),
             llamaParamSlider(
               'n_keep',
-              settings.n_keep,
+              settings.parameters["n_keep"],
               1.0,
               1024.0,
               1023,
-              (value) => settings.n_keep = value.round()
+              (value) => settings.parameters["n_keep"] = value.round()
             ),
             llamaParamSlider(
               'n_prev',
-              settings.n_prev,
+              settings.parameters["n_prev"],
               1.0,
               1024.0,
               1023,
-              (value) => settings.n_prev = value.round()
+              (value) => settings.parameters["n_prev"] = value.round()
             ),
             llamaParamSlider(
               'n_probs',
-              settings.n_probs,
+              settings.parameters["n_probs"],
               0.0,
               128.0,
               127,
-              (value) => settings.n_probs = value.round()
+              (value) => settings.parameters["n_probs"] = value.round()
             ),
             llamaParamSlider(
               'top_k',
-              settings.top_k,
+              settings.parameters["top_k"],
               1.0,
               128.0,
               127,
-              (value) => settings.top_k = value.round()
+              (value) => settings.parameters["top_k"] = value.round()
             ),
             llamaParamSlider(
               'top_p',
-              settings.top_p,
+              settings.parameters["top_p"],
               0.0,
               1.0,
               100,
-              (value) => settings.top_p = value
+              (value) => settings.parameters["top_p"] = value
             ),
             llamaParamSlider(
               'tfs_z',
-              settings.tfs_z,
+              settings.parameters["tfs_z"],
               0.0,
               1.0,
               100,
-              (value) => settings.tfs_z = value
+              (value) => settings.parameters["tfs_z"] = value
             ),
             llamaParamSlider(
               'typical_p',
-              settings.typical_p,
+              settings.parameters["typical_p"],
               0.0,
               1.0,
               100,
-              (value) => settings.typical_p = value
+              (value) => settings.parameters["typical_p"] = value
             ),
             llamaParamSlider(
               'temperature',
-              settings.temperature,
+              settings.parameters["temperature"],
               0.0,
               1.0,
               100,
-              (value) => settings.temperature = value
+              (value) => settings.parameters["temperature"] = value
             ),
             llamaParamSlider(
               'penalty_last_n',
-              settings.penalty_last_n,
+              settings.parameters["penalty_last_n"],
               0.0,
               128.0,
               127,
-              (value) => settings.penalty_last_n = value.round()
+              (value) => settings.parameters["penalty_last_n"] = value.round()
             ),
             llamaParamSlider(
               'penalty_repeat',
-              settings.penalty_repeat,
+              settings.parameters["penalty_repeat"],
               0.0,
               2.0,
               200,
-              (value) => settings.penalty_repeat = value
+              (value) => settings.parameters["penalty_repeat"] = value
             ),
             llamaParamSlider(
               'penalty_freq',
-              settings.penalty_freq,
+              settings.parameters["penalty_freq"],
               0.0,
               1.0,
               100,
-              (value) => settings.penalty_freq = value
+              (value) => settings.parameters["penalty_freq"] = value
             ),
             llamaParamSlider(
               'penalty_present',
-              settings.penalty_present,
+              settings.parameters["penalty_present"],
               0.0,
               1.0,
               100,
-              (value) => settings.penalty_present = value
+              (value) => settings.parameters["penalty_present"] = value
             ),
             llamaParamSlider(
               'mirostat',
-              settings.mirostat,
+              settings.parameters["mirostat"],
               0.0,
               128.0,
               127,
-              (value) => settings.mirostat = value.round()
+              (value) => settings.parameters["mirostat"] = value.round()
             ),
             llamaParamSlider(
               'mirostat_tau',
-              settings.mirostat_tau,
+              settings.parameters["mirostat_tau"],
               0.0,
               10.0,
               100,
-              (value) => settings.mirostat_tau = value
+              (value) => settings.parameters["mirostat_tau"] = value
             ),
             llamaParamSlider(
               'mirostat_eta',
-              settings.mirostat_eta,
+              settings.parameters["mirostat_eta"],
               0.0,
               1.0,
               100,
-              (value) => settings.mirostat_eta = value
+              (value) => settings.parameters["mirostat_eta"] = value
             ),
           ],
         ),

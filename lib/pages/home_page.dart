@@ -28,7 +28,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
   ResponseMessage newResponse = ResponseMessage();
 
   Lib? lib;
-  bool busy = false;
 
   void execute() {
     //close the keyboard if on mobile
@@ -36,12 +35,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
       FocusScope.of(context).unfocus();
     }
     setState(() {
-      busy = true;
+      settings.busy = true;
       settings.saveSharedPreferences();
       chatWidgets
           .add(UserMessage(message: settings.promptController.text.trim()));
       settings.compilePrePrompt();
-      settings.inProgress = true;
     });
     if (lib == null) {
       lib = Lib.instance;
@@ -65,12 +63,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   void responseCallback(String message) {
-    if (!settings.inProgress) {
+    if (!settings.busy) {
       newResponse.trim();
       newResponse.finalise();
-      setState(() {
-        busy = false;
-      });
+      setState(() {});
       return;
     } else if (message.isNotEmpty) {
       newResponse.addMessage(message);
@@ -179,7 +175,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (busy)
+                        if (settings.busy)
                           IconButton(
                             onPressed: Lib.instance.butlerStop,
                             iconSize: 50,
@@ -193,7 +189,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                             keyboardType: TextInputType.multiline,
                             enableInteractiveSelection: true,
                             onSubmitted: (value) {
-                              if (!busy) {
+                              if (!settings.busy) {
                                 execute();
                               }
                             },
@@ -206,11 +202,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
                           ),
                         ),
                         IconButton(
-                          onPressed: busy ? null : execute,
+                          onPressed: settings.busy ? null : execute,
                           iconSize: 50,
                           icon: Icon(
                             Icons.arrow_circle_right,
-                            color: busy
+                            color: settings.busy
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).colorScheme.secondary,
                           )
