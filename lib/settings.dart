@@ -33,8 +33,6 @@ class Settings {
   TextEditingController userAliasController = TextEditingController()..text = "USER:";
   TextEditingController responseAliasController = TextEditingController()..text = "ASSISTANT:";
 
-  var params = {};
-
   String modelName = "";
   String modelPath = "";
   String prePrompt = "";
@@ -69,67 +67,53 @@ class Settings {
   bool penalize_nl = true;
 
   Settings() {
-    initKeys();
     initFromSharedPrefs();
-  }
-
-  void initKeys() {
-    // Map for parameter values
-    params = {
-      "instruct": instruct,
-      "memory_f16": memory_f16,
-      "random_seed": random_seed,
-      "penalize_nl": penalize_nl,
-      "modelPath": modelPath,
-      "modelName": modelName,
-      "pre_prompt": prePromptController,
-      "user_alias": userAliasController,
-      "response_alias": responseAliasController,
-      "seed": seed,
-      "n_ctx": n_ctx,
-      "n_batch": n_batch,
-      "n_threads": n_threads,
-      "n_predict": n_predict,
-      "n_keep": n_keep,
-      "n_prev": n_prev,
-      "n_probs": n_probs,
-      "top_k": top_k,
-      "penalty_last_n": penalty_last_n,
-      "mirostat": mirostat,
-      "top_p": top_p,
-      "tfs_z": tfs_z,
-      "typical_p": typical_p,
-      "temperature": temperature,
-      "penalty_repeat": penalty_repeat,
-      "penalty_freq": penalty_freq,
-      "penalty_present": penalty_present,
-      "mirostat_tau": mirostat_tau,
-      "mirostat_eta": mirostat_eta,
-    };
   }
 
   void initFromSharedPrefs() async {
     var prefs = await SharedPreferences.getInstance();
 
-    for (var key in params.keys) {
-      if (prefs.containsKey(key)) {
-        if (params[key] is bool) {
-          params[key] = prefs.getBool(key)!;
-        } 
-        else if (params[key] is TextEditingController) {
-          params[key]!.text = prefs.getString(key)!;
-        } 
-        else if (params[key] is int) {
-          params[key] = prefs.getInt(key)!;
-        } 
-        else if (params[key] is double) {
-          params[key] = prefs.getDouble(key)!;
-        } 
-        else if (params[key] is String) {
-          params[key] = prefs.getString(key)!;
-        }
-      }
-    }
+    inProgress = prefs.getBool("inProgress") ?? false;
+    memory_f16 = prefs.getBool("memory_f16") ?? false;
+    instruct = prefs.getBool("instruct") ?? true;
+    random_seed = prefs.getBool("random_seed") ?? true;
+
+    prePromptController.text = prefs.getString("prePrompt") ?? 
+      'A chat between a curious user and an artificial intelligence assistant. '
+      'The assistant gives helpful, detailed, and polite answers to the user\'s questions.';
+    userAliasController.text = prefs.getString("userAlias") ?? "USER:";
+    responseAliasController.text = prefs.getString("responseAlias") ?? "ASSISTANT:";
+    modelName = prefs.getString("modelName") ?? "";
+    modelPath = prefs.getString("modelPath") ?? "";
+
+    seed = prefs.getInt("seed") ?? -1;
+    n_ctx = prefs.getInt("n_ctx") ?? 512;
+    n_batch = prefs.getInt("n_batch") ?? 8;
+    n_threads = prefs.getInt("n_threads") ?? 4;
+    n_predict = prefs.getInt("n_predict") ?? 512;
+    n_keep = prefs.getInt("n_keep") ?? 48;
+
+    n_prev = prefs.getInt("n_prev") ?? 64;
+    n_probs = prefs.getInt("n_probs") ?? 0;
+    top_k = prefs.getInt("top_k") ?? 40;
+
+    top_p = prefs.getDouble("top_p") ?? 0.95;
+    tfs_z = prefs.getDouble("tfs_z") ?? 1.0;
+    typical_p = prefs.getDouble("typical_p") ?? 1.0;
+    temperature = prefs.getDouble("temperature") ?? 0.8;
+
+    penalty_last_n = prefs.getInt("penalty_last_n") ?? 64;
+
+    penalty_repeat = prefs.getDouble("penalty_repeat") ?? 1.1;
+    penalty_freq = prefs.getDouble("penalty_freq") ?? 0.0;
+    penalty_present = prefs.getDouble("penalty_present") ?? 0.0;
+
+    mirostat = prefs.getInt("mirostat") ?? 0;
+
+    mirostat_tau = prefs.getDouble("mirostat_tau") ?? 5.0;
+    mirostat_eta = prefs.getDouble("mirostat_eta") ?? 0.1;
+
+    penalize_nl = prefs.getBool("penalize_nl") ?? true;
 
     // Load example prompts and responses from prefs
     int exampleCount = prefs.getInt("exampleCount") ?? 0; 
@@ -145,8 +129,6 @@ class Settings {
 
   void resetAll() async {
     // Reset all the internal state to the defaults
-    initKeys();
-
     inProgress = false;
     memory_f16 = false;
     instruct = true;
@@ -196,23 +178,45 @@ class Settings {
   void saveSharedPreferences() async {
     var prefs = await SharedPreferences.getInstance();
 
-    for (var key in params.keys) {
-      if (params[key] is bool) {
-        prefs.setBool(key, params[key]);
-      } 
-      else if (params[key] is TextEditingController) {
-        prefs.setString(key, params[key]!.text);
-      } 
-      else if (params[key] is int) {
-        prefs.setInt(key, params[key]);
-      } 
-      else if (params[key] is double) {
-        prefs.setDouble(key, params[key]);
-      } 
-      else if (params[key] is String) {
-        prefs.setString(key, params[key]);
-      }
-    }
+    prefs.setBool("inProgress", inProgress);
+    prefs.setBool("memory_f16", memory_f16);
+    prefs.setBool("instruct", instruct);
+    prefs.setBool("random_seed", random_seed);
+
+    prefs.setString("prePrompt", prePromptController.text);
+    prefs.setString("userAlias", userAliasController.text);
+    prefs.setString("responseAlias", responseAliasController.text);
+    prefs.setString("modelName", modelName);
+    prefs.setString("modelPath", modelPath);
+
+    prefs.setInt("seed", seed);
+    prefs.setInt("n_ctx", n_ctx);
+    prefs.setInt("n_batch", n_batch);
+    prefs.setInt("n_threads", n_threads);
+    prefs.setInt("n_predict", n_predict);
+    prefs.setInt("n_keep", n_keep);
+
+    prefs.setInt("n_prev", n_prev);
+    prefs.setInt("n_probs", n_probs);
+    prefs.setInt("top_k", top_k);
+
+    prefs.setDouble("top_p", top_p);
+    prefs.setDouble("tfs_z", tfs_z);
+    prefs.setDouble("typical_p", typical_p);
+    prefs.setDouble("temperature", temperature);
+
+    prefs.setInt("penalty_last_n", penalty_last_n);
+
+    prefs.setDouble("penalty_repeat", penalty_repeat);
+    prefs.setDouble("penalty_freq", penalty_freq);
+    prefs.setDouble("penalty_present", penalty_present);
+
+    prefs.setInt("mirostat", mirostat);
+
+    prefs.setDouble("mirostat_tau", mirostat_tau);
+    prefs.setDouble("mirostat_eta", mirostat_eta);
+
+    prefs.setBool("penalize_nl", penalize_nl);
 
     prefs.setInt("exampleCount", examplePromptControllers.length);
 
@@ -225,24 +229,46 @@ class Settings {
   Future<String> saveSettingsToJson() async {
     Map<String, dynamic> jsonMap = {};
 
-    // Convert the Settings instance to a map
-    for (var key in params.keys) {
-      if (params[key] is bool) {
-        jsonMap[key] = params[key];
-      } 
-      else if (params[key] is TextEditingController) {
-        jsonMap[key] = params[key]!.text;
-      } 
-      else if (params[key] is int) {
-        jsonMap[key] = params[key];
-      } 
-      else if (params[key] is double) {
-        jsonMap[key] = params[key];
-      } 
-      else if (params[key] is String) {
-        jsonMap[key] = params[key];
-      }
-    }
+    // Add all the settings to the map
+    jsonMap['inProgress'] = settings.inProgress;
+    jsonMap['memory_f16'] = settings.memory_f16;
+    jsonMap['instruct'] = settings.instruct;
+    jsonMap['random_seed'] = settings.random_seed;
+
+    jsonMap['prePrompt'] = settings.prePromptController.text;
+    jsonMap['userAlias'] = settings.userAliasController.text;
+    jsonMap['responseAlias'] = settings.responseAliasController.text;
+    jsonMap['modelName'] = settings.modelName;
+    jsonMap['modelPath'] = settings.modelPath;
+
+    jsonMap['seed'] = settings.seed;
+    jsonMap['n_ctx'] = settings.n_ctx;
+    jsonMap['n_batch'] = settings.n_batch;
+    jsonMap['n_threads'] = settings.n_threads;
+    jsonMap['n_predict'] = settings.n_predict;
+    jsonMap['n_keep'] = settings.n_keep;
+
+    jsonMap['n_prev'] = settings.n_prev;
+    jsonMap['n_probs'] = settings.n_probs;
+    jsonMap['top_k'] = settings.top_k;
+
+    jsonMap['top_p'] = settings.top_p;
+    jsonMap['tfs_z'] = settings.tfs_z;
+    jsonMap['typical_p'] = settings.typical_p;
+    jsonMap['temperature'] = settings.temperature;
+
+    jsonMap['penalty_last_n'] = settings.penalty_last_n;
+
+    jsonMap['penalty_repeat'] = settings.penalty_repeat;
+    jsonMap['penalty_freq'] = settings.penalty_freq;
+    jsonMap['penalty_present'] = settings.penalty_present;
+
+    jsonMap['mirostat'] = settings.mirostat;
+
+    jsonMap['mirostat_tau'] = settings.mirostat_tau;
+    jsonMap['mirostat_eta'] = settings.mirostat_eta;
+
+    jsonMap['penalize_nl'] = settings.penalize_nl;
 
     jsonMap['examplePrompts'] = settings.examplePromptControllers.map((e) => e.text).toList();
     jsonMap['exampleResponses'] = settings.exampleResponseControllers.map((e) => e.text).toList();
@@ -297,21 +323,45 @@ class Settings {
         Map<String, dynamic> jsonMap = json.decode(jsonString);
 
         // Update the Settings instance from the map
-        for (var key in jsonMap.keys) {
-          if (params.containsKey(key)) {
-            if (params[key] is bool) {
-              params[key] = jsonMap[key];
-            } else if (params[key] is TextEditingController) {
-              params[key]!.text = jsonMap[key];
-            } else if (params[key] is int) {
-              params[key] = jsonMap[key];
-            } else if (params[key] is double) {
-              params[key] = jsonMap[key];
-            } else if (params[key] is String) {
-              params[key] = jsonMap[key];
-            }
-          }
-        }
+        inProgress = jsonMap['inProgress'];
+        memory_f16 = jsonMap['memory_f16'];
+        instruct = jsonMap['instruct'];
+        random_seed = jsonMap['random_seed'];
+
+        prePromptController.text = jsonMap['prePrompt'];
+        userAliasController.text = jsonMap['userAlias'];
+        responseAliasController.text = jsonMap['responseAlias'];
+        modelName = jsonMap['modelName'];
+        modelPath = jsonMap['modelPath'];
+
+        seed = jsonMap['seed'];
+        n_ctx = jsonMap['n_ctx'];
+        n_batch = jsonMap['n_batch'];
+        n_threads = jsonMap['n_threads'];
+        n_predict = jsonMap['n_predict'];
+        n_keep = jsonMap['n_keep'];
+
+        n_prev = jsonMap['n_prev'];
+        n_probs = jsonMap['n_probs'];
+        top_k = jsonMap['top_k'];
+
+        top_p = jsonMap['top_p'];
+        tfs_z = jsonMap['tfs_z'];
+        typical_p = jsonMap['typical_p'];
+        temperature = jsonMap['temperature'];
+
+        penalty_last_n = jsonMap['penalty_last_n'];
+
+        penalty_repeat = jsonMap['penalty_repeat'];
+        penalty_freq = jsonMap['penalty_freq'];
+        penalty_present = jsonMap['penalty_present'];
+
+        mirostat = jsonMap['mirostat'];
+
+        mirostat_tau = jsonMap['mirostat_tau'];
+        mirostat_eta = jsonMap['mirostat_eta'];
+
+        penalize_nl = jsonMap['penalize_nl'];
 
         for (var i = 0; i < jsonMap['examplePrompts'].length; i++) {
           settings.examplePromptControllers[i].text = jsonMap['examplePrompts'][i];
@@ -319,6 +369,7 @@ class Settings {
         }
       }
     } catch (e) {
+      resetAll();
       return "Error: $e";
     }
 
