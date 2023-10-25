@@ -179,6 +179,15 @@ class _MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
+                        if (busy)
+                          IconButton(
+                            onPressed: Lib.instance.butlerStop,
+                            iconSize: 50,
+                            icon: const Icon(
+                              Icons.stop_circle_sharp,
+                              color: Colors.red,
+                            )
+                          ),
                         Expanded(
                           child: TextField(
                             keyboardType: TextInputType.multiline,
@@ -197,14 +206,15 @@ class _MaidHomePageState extends State<MaidHomePage> {
                           ),
                         ),
                         IconButton(
-                            onPressed: busy ? null : execute,
-                            iconSize: 50,
-                            icon: Icon(
-                              Icons.arrow_circle_right,
-                              color: busy
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.secondary,
-                            )),
+                          onPressed: busy ? null : execute,
+                          iconSize: 50,
+                          icon: Icon(
+                            Icons.arrow_circle_right,
+                            color: busy
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.secondary,
+                          )
+                        ),
                       ],
                     ),
                   ),
