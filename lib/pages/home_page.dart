@@ -34,24 +34,81 @@ class _MaidHomePageState extends State<MaidHomePage> {
     if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
     }
-    setState(() {
-      settings.busy = true;
-      settings.saveSharedPreferences();
-      chatWidgets
-          .add(UserMessage(message: settings.promptController.text.trim()));
-      settings.compilePrePrompt();
-    });
-    if (lib == null) {
-      lib = Lib.instance;
-      lib?.butlerStart(responseCallback);
+    
+    if (settings.modelPath.isEmpty) {
+      // Use a local reference to context to avoid using it across an async gap.
+      final localContext = context;
+      // Ensure that the context is still valid before attempting to show the dialog.
+      if (localContext.mounted) {
+        showDialog(
+          context: localContext,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                "Model Missing\nPlease assign a model in settings.",
+                textAlign: TextAlign.center,
+              ),
+              alignment: Alignment.center,
+              actionsAlignment: MainAxisAlignment.center,
+              backgroundColor: Theme.of(context).colorScheme.background,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              ),
+              actions: [
+                FilledButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+                  },
+                  child: const Text(
+                    "Open Settings",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    "Close",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+        setState(() {});
+      }
+      return;
     } else {
-      lib?.butlerContinue();
+      setState(() {
+        settings.busy = true;
+        settings.saveSharedPreferences();
+        chatWidgets
+            .add(UserMessage(message: settings.promptController.text.trim()));
+        settings.compilePrePrompt();
+      });
+
+      if (lib == null) {
+        lib = Lib.instance;
+        lib?.butlerStart(responseCallback);
+      } else {
+        lib?.butlerContinue();
+      }
+
+      setState(() {
+        newResponse = ResponseMessage();
+        chatWidgets.add(newResponse);
+        settings.promptController.text = ""; // Clear the input field
+      });
     }
-    setState(() {
-      newResponse = ResponseMessage();
-      chatWidgets.add(newResponse);
-      settings.promptController.text = ""; // Clear the input field
-    });
   }
 
   void scrollDown() {
@@ -71,6 +128,43 @@ class _MaidHomePageState extends State<MaidHomePage> {
     } else if (message.isNotEmpty) {
       newResponse.addMessage(message);
       scrollDown();
+    }
+  }
+
+  void _missingModelDialog() async {
+    // Use a local reference to context to avoid using it across an async gap.
+    final localContext = context;
+    // Ensure that the context is still valid before attempting to show the dialog.
+    if (localContext.mounted) {
+      showDialog(
+        context: localContext,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Model Missing\nPlease assign a model in settings."),
+            alignment: Alignment.center,
+            actionsAlignment: MainAxisAlignment.center,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            actions: [
+              FilledButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    "Close",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
+      );
+      setState(() {});
     }
   }
 
