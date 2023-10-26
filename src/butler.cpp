@@ -154,63 +154,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             return 0;  // or any other cleanup you want to do
         }
 
-        // predict
-        if (!embd.empty()) {
-            // Note: lparams.n_ctx - 4 here is to match the logic for commandline prompt handling via
-            // --prompt or --file which uses the same value.
-            int max_embd_size = lparams.n_ctx - 4;
-
-            // Ensure the input doesn't exceed the context size by truncating embd if necessary.
-            if ((int) embd.size() > max_embd_size) {
-                const int skipped_tokens = (int) embd.size() - max_embd_size;
-                embd.resize(max_embd_size);
-            }
-
-            // infinite text generation via context swapping
-            // if we run out of context:
-            // - take the n_keep first tokens from the original prompt (via n_past)
-            // - take half of the last (n_ctx - n_keep) tokens and recompute the logits in batches
-            if (n_past + (int) embd.size() > lparams.n_ctx) {
-                if (params.n_predict == -2) {
-                    LOG_TEE("\n\n%s: context full and n_predict == -%d => stopping\n", __func__, params.n_predict);
-                    break;
-                }
-
-                const int n_left    = n_past - params.n_keep - 1;
-                const int n_discard = n_left/2;
-
-                LOG("context full, swapping: n_past = %d, n_left = %d, lparams.n_ctx = %d, n_keep = %d, n_discard = %d\n",
-                    n_past, n_left, lparams.n_ctx, params.n_keep, n_discard);
-
-                llama_kv_cache_seq_rm   (ctx, 0, params.n_keep + 1            , params.n_keep + n_discard + 1);
-                llama_kv_cache_seq_shift(ctx, 0, params.n_keep + 1 + n_discard, n_past, -n_discard);
-
-                n_past -= n_discard;
-
-                LOG("embd: %s\n", LOG_TOKENS_TOSTR_PRETTY(ctx, embd).c_str());
-            }
-
-            for (int i = 0; i < (int) embd.size(); i += params.n_batch) {
-                int n_eval = (int) embd.size() - i;
-                if (n_eval > params.n_batch) {
-                    n_eval = params.n_batch;
-                }
-
-                LOG("eval: %s\n", LOG_TOKENS_TOSTR_PRETTY(ctx, embd).c_str());
-
-                if (llama_decode(ctx, llama_batch_get_one(&embd[i], n_eval, n_past, 0))) {
-                    LOG_TEE("%s : failed to eval\n", __func__);
-                    return 1;
-                }
-
-                n_past += n_eval;
-
-                LOG("n_past = %d\n", n_past);
-            }
-        }
-
-        embd.clear();
-
         if ((int) embd_inp.size() <= n_consumed && !is_interacting) {
             const llama_token id = llama_sampling_sample(ctx_sampling, ctx, NULL);
 
@@ -297,6 +240,63 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
         }
 
         embd_out.clear();
+
+        // predict
+        if (!embd.empty()) {
+            // Note: lparams.n_ctx - 4 here is to match the logic for commandline prompt handling via
+            // --prompt or --file which uses the same value.
+            int max_embd_size = lparams.n_ctx - 4;
+
+            // Ensure the input doesn't exceed the context size by truncating embd if necessary.
+            if ((int) embd.size() > max_embd_size) {
+                const int skipped_tokens = (int) embd.size() - max_embd_size;
+                embd.resize(max_embd_size);
+            }
+
+            // infinite text generation via context swapping
+            // if we run out of context:
+            // - take the n_keep first tokens from the original prompt (via n_past)
+            // - take half of the last (n_ctx - n_keep) tokens and recompute the logits in batches
+            if (n_past + (int) embd.size() > lparams.n_ctx) {
+                if (params.n_predict == -2) {
+                    LOG_TEE("\n\n%s: context full and n_predict == -%d => stopping\n", __func__, params.n_predict);
+                    break;
+                }
+
+                const int n_left    = n_past - params.n_keep - 1;
+                const int n_discard = n_left/2;
+
+                LOG("context full, swapping: n_past = %d, n_left = %d, lparams.n_ctx = %d, n_keep = %d, n_discard = %d\n",
+                    n_past, n_left, lparams.n_ctx, params.n_keep, n_discard);
+
+                llama_kv_cache_seq_rm   (ctx, 0, params.n_keep + 1            , params.n_keep + n_discard + 1);
+                llama_kv_cache_seq_shift(ctx, 0, params.n_keep + 1 + n_discard, n_past, -n_discard);
+
+                n_past -= n_discard;
+
+                LOG("embd: %s\n", LOG_TOKENS_TOSTR_PRETTY(ctx, embd).c_str());
+            }
+
+            for (int i = 0; i < (int) embd.size(); i += params.n_batch) {
+                int n_eval = (int) embd.size() - i;
+                if (n_eval > params.n_batch) {
+                    n_eval = params.n_batch;
+                }
+
+                LOG("eval: %s\n", LOG_TOKENS_TOSTR_PRETTY(ctx, embd).c_str());
+
+                if (llama_decode(ctx, llama_batch_get_one(&embd[i], n_eval, n_past, 0))) {
+                    LOG_TEE("%s : failed to eval\n", __func__);
+                    return 1;
+                }
+
+                n_past += n_eval;
+
+                LOG("n_past = %d\n", n_past);
+            }
+        }
+
+        embd.clear();
 
         // if not currently processing queued inputs;
         if ((int) embd_inp.size() <= n_consumed) {
