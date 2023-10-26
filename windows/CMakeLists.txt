@@ -52,6 +52,8 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
+add_subdirectory(../src butler)
+install(FILES ${PROJECT_BINARY_DIR}/butler/butler.dll DESTINATION ${PROJECT_BINARY_DIR})
 
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
