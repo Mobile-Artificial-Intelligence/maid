@@ -47,6 +47,7 @@ int butler_start(struct butler_params *butler) {
 
     params.instruct                 = (*butler).instruct          != 0;
     params.memory_f16               = (*butler).memory_f16        != 0;
+    params.interactive = true; //   = (*butler).interactive       != 0;
 
     params.seed                     = (*butler).seed              ? (*butler).seed              : -1;
     params.n_ctx                    = (*butler).n_ctx             ? (*butler).n_ctx             : 512;
@@ -154,6 +155,97 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             return 0;  // or any other cleanup you want to do
         }
 
+        if ((int) embd_inp.size() <= n_consumed && !is_interacting) {
+            const llama_token id = llama_sampling_sample(ctx_sampling, ctx, NULL);
+
+            llama_sampling_accept(ctx_sampling, ctx, id, true);
+
+            embd.push_back(id);
+
+            // decrement remaining sampling budget
+            --n_remain;
+        } else {
+            // some user input remains from prompt or interaction, forward it to processing
+            while ((int) embd_inp.size() > n_consumed) {
+                embd.push_back(embd_inp[n_consumed]);
+
+                // push the prompt in the sampling context in order to apply repetition penalties later
+                // for the prompt, we don't apply grammar rules
+                llama_sampling_accept(ctx_sampling, ctx, embd_inp[n_consumed], false);
+
+                ++n_consumed;
+                if ((int) embd.size() >= params.n_batch) {
+                    break;
+                }
+            }
+        }
+
+        auto embd_out = embd;
+
+        if (params.interactive) {
+            // Remove input_prefix from output
+            std::vector<int>::iterator it = embd_out.begin();
+            while (it != embd_out.end()) {
+                if (*it == inp_pfx[n_pfx]) {
+                    embd_cache.push_back(*it);
+                    it = embd_out.erase(it);
+                    n_pfx++;
+
+                    if (n_pfx == inp_pfx.size()) {
+                        // Prefix found, reset
+                        embd_cache.clear();
+                        n_pfx = 0;
+                        break;
+                    }
+                } else if (n_pfx != 0) {
+                    // Started a sequence but it's broken now, reset
+                    embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
+                    embd_cache.clear();
+                    n_pfx = 0;
+                    ++it;
+                } else {
+                    ++it;
+                }
+            }
+        }
+
+        if (suffix_found || !params.interactive) {
+            // display text
+            for (auto id : embd_out) {
+                maid_output(return_code::CONTINUE, llama_token_to_piece(ctx, id).c_str());
+            }
+        }
+        
+        if (params.interactive) {
+            // Remove input_suffix from output
+            std::vector<int>::iterator it = embd_out.begin();
+            while (it != embd_out.end()) {
+                if (*it == inp_sfx[n_sfx]) {
+                    embd_cache.push_back(*it);
+                    it = embd_out.erase(it);
+                    n_sfx++;
+
+                    if (n_sfx == inp_sfx.size()) {
+                        // Suffix found, reset
+                        suffix_found = true;
+                        embd_cache.clear();
+                        n_sfx = 0;
+                        break;
+                    }
+                } else if (n_sfx != 0) {
+                    // Started a sequence but it's broken now, reset
+                    embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
+                    embd_cache.clear();
+                    n_sfx = 0;
+                    ++it;
+                } else {
+                    ++it;
+                }
+            }
+        }
+
+        embd_out.clear();
+
         // predict
         if (!embd.empty()) {
             // Note: lparams.n_ctx - 4 here is to match the logic for commandline prompt handling via
@@ -211,93 +303,6 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
         embd.clear();
 
-        if ((int) embd_inp.size() <= n_consumed && !is_interacting) {
-            const llama_token id = llama_sampling_sample(ctx_sampling, ctx, NULL);
-
-            llama_sampling_accept(ctx_sampling, ctx, id, true);
-
-            embd.push_back(id);
-
-            // decrement remaining sampling budget
-            --n_remain;
-        } else {
-            // some user input remains from prompt or interaction, forward it to processing
-            while ((int) embd_inp.size() > n_consumed) {
-                embd.push_back(embd_inp[n_consumed]);
-
-                // push the prompt in the sampling context in order to apply repetition penalties later
-                // for the prompt, we don't apply grammar rules
-                llama_sampling_accept(ctx_sampling, ctx, embd_inp[n_consumed], false);
-
-                ++n_consumed;
-                if ((int) embd.size() >= params.n_batch) {
-                    break;
-                }
-            }
-        }
-
-        auto embd_out = embd;
-
-        // Remove input_prefix from output
-        std::vector<int>::iterator it = embd_out.begin();
-        while (it != embd_out.end()) {
-            if (*it == inp_pfx[n_pfx]) {
-                embd_cache.push_back(*it);
-                it = embd_out.erase(it);
-                n_pfx++;
-        
-                if (n_pfx == inp_pfx.size()) {
-                    // Prefix found, reset
-                    embd_cache.clear();
-                    n_pfx = 0;
-                    break;
-                }
-            } else if (n_pfx != 0) {
-                // Started a sequence but it's broken now, reset
-                embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
-                embd_cache.clear();
-                n_pfx = 0;
-                ++it;
-            } else {
-                ++it;
-            }
-        }
-
-        if (suffix_found) {
-            // display text
-            for (auto id : embd_out) {
-                maid_output(return_code::CONTINUE, llama_token_to_piece(ctx, id).c_str());
-            }
-        }
-        
-        // Remove input_suffix from output
-        it = embd_out.begin();
-        while (it != embd_out.end()) {
-            if (*it == inp_sfx[n_sfx]) {
-                embd_cache.push_back(*it);
-                it = embd_out.erase(it);
-                n_sfx++;
-        
-                if (n_sfx == inp_sfx.size()) {
-                    // Suffix found, reset
-                    suffix_found = true;
-                    embd_cache.clear();
-                    n_sfx = 0;
-                    break;
-                }
-            } else if (n_sfx != 0) {
-                // Started a sequence but it's broken now, reset
-                embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
-                embd_cache.clear();
-                n_sfx = 0;
-                ++it;
-            } else {
-                ++it;
-            }
-        }
-
-        embd_out.clear();
-
         // if not currently processing queued inputs;
         if ((int) embd_inp.size() <= n_consumed) {
             // check for reverse prompt
@@ -321,6 +326,26 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                         maid_output(return_code::STOP, "");
                         return 0;
                     }
+                }
+            }
+
+             // deal with end of text token in interactive mode
+            if (llama_sampling_last(ctx_sampling) == llama_token_eos(model)) {
+                LOG("found EOS token\n");
+
+                if (params.interactive) {
+                    if (!params.antiprompt.empty()) {
+                        // tokenize and inject first reverse prompt
+                        const auto first_antiprompt = ::llama_tokenize(ctx, params.antiprompt.front(), false, true);
+                        embd_inp.insert(embd_inp.end(), first_antiprompt.begin(), first_antiprompt.end());
+                        maid_output(return_code::STOP, "");
+                        return 0;
+                    }
+
+                    is_interacting = true;
+                    printf("\n");
+                } else if (params.instruct) {
+                    is_interacting = true;
                 }
             }
 
