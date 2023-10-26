@@ -47,6 +47,7 @@ int butler_start(struct butler_params *butler) {
 
     params.instruct                 = (*butler).instruct          != 0;
     params.memory_f16               = (*butler).memory_f16        != 0;
+    params.interactive = true; //   = (*butler).interactive       != 0;
 
     params.seed                     = (*butler).seed              ? (*butler).seed              : -1;
     params.n_ctx                    = (*butler).n_ctx             ? (*butler).n_ctx             : 512;
@@ -181,61 +182,65 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
         auto embd_out = embd;
 
-        // Remove input_prefix from output
-        std::vector<int>::iterator it = embd_out.begin();
-        while (it != embd_out.end()) {
-            if (*it == inp_pfx[n_pfx]) {
-                embd_cache.push_back(*it);
-                it = embd_out.erase(it);
-                n_pfx++;
-        
-                if (n_pfx == inp_pfx.size()) {
-                    // Prefix found, reset
+        if (params.interactive) {
+            // Remove input_prefix from output
+            std::vector<int>::iterator it = embd_out.begin();
+            while (it != embd_out.end()) {
+                if (*it == inp_pfx[n_pfx]) {
+                    embd_cache.push_back(*it);
+                    it = embd_out.erase(it);
+                    n_pfx++;
+
+                    if (n_pfx == inp_pfx.size()) {
+                        // Prefix found, reset
+                        embd_cache.clear();
+                        n_pfx = 0;
+                        break;
+                    }
+                } else if (n_pfx != 0) {
+                    // Started a sequence but it's broken now, reset
+                    embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
                     embd_cache.clear();
                     n_pfx = 0;
-                    break;
+                    ++it;
+                } else {
+                    ++it;
                 }
-            } else if (n_pfx != 0) {
-                // Started a sequence but it's broken now, reset
-                embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
-                embd_cache.clear();
-                n_pfx = 0;
-                ++it;
-            } else {
-                ++it;
             }
         }
 
-        if (suffix_found) {
+        if (suffix_found || !params.interactive) {
             // display text
             for (auto id : embd_out) {
                 maid_output(return_code::CONTINUE, llama_token_to_piece(ctx, id).c_str());
             }
         }
         
-        // Remove input_suffix from output
-        it = embd_out.begin();
-        while (it != embd_out.end()) {
-            if (*it == inp_sfx[n_sfx]) {
-                embd_cache.push_back(*it);
-                it = embd_out.erase(it);
-                n_sfx++;
-        
-                if (n_sfx == inp_sfx.size()) {
-                    // Suffix found, reset
-                    suffix_found = true;
+        if (params.interactive) {
+            // Remove input_suffix from output
+            std::vector<int>::iterator it = embd_out.begin();
+            while (it != embd_out.end()) {
+                if (*it == inp_sfx[n_sfx]) {
+                    embd_cache.push_back(*it);
+                    it = embd_out.erase(it);
+                    n_sfx++;
+
+                    if (n_sfx == inp_sfx.size()) {
+                        // Suffix found, reset
+                        suffix_found = true;
+                        embd_cache.clear();
+                        n_sfx = 0;
+                        break;
+                    }
+                } else if (n_sfx != 0) {
+                    // Started a sequence but it's broken now, reset
+                    embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
                     embd_cache.clear();
                     n_sfx = 0;
-                    break;
+                    ++it;
+                } else {
+                    ++it;
                 }
-            } else if (n_sfx != 0) {
-                // Started a sequence but it's broken now, reset
-                embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
-                embd_cache.clear();
-                n_sfx = 0;
-                ++it;
-            } else {
-                ++it;
             }
         }
 
@@ -321,6 +326,26 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
                         maid_output(return_code::STOP, "");
                         return 0;
                     }
+                }
+            }
+
+             // deal with end of text token in interactive mode
+            if (llama_sampling_last(ctx_sampling) == llama_token_eos(model)) {
+                LOG("found EOS token\n");
+
+                if (params.interactive) {
+                    if (!params.antiprompt.empty()) {
+                        // tokenize and inject first reverse prompt
+                        const auto first_antiprompt = ::llama_tokenize(ctx, params.antiprompt.front(), false, true);
+                        embd_inp.insert(embd_inp.end(), first_antiprompt.begin(), first_antiprompt.end());
+                        maid_output(return_code::STOP, "");
+                        return 0;
+                    }
+
+                    is_interacting = true;
+                    printf("\n");
+                } else if (params.instruct) {
+                    is_interacting = true;
                 }
             }
 
