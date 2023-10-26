@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(maid LANGUAGES CXX)
+project(butler LANGUAGES CXX)
 set(BUILD_SHARED_LIBS ON)
 
 if(ANDROID)
@@ -8,4 +8,6 @@ if(ANDROID)
 endif()
 
 add_subdirectory(./llama.cpp)
-add_subdirectory(./butler)
+add_library(butler SHARED butler.cpp)
+target_include_directories(butler PRIVATE ./llama.cpp ./llama.cpp/common)
+target_link_libraries(butler llama common)
