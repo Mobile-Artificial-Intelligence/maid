@@ -235,6 +235,8 @@ class _MaidHomePageState extends State<MaidHomePage> {
                         Expanded(
                           child: TextField(
                             keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            maxLines: 9,
                             enableInteractiveSelection: true,
                             onSubmitted: (value) {
                               if (!settings.busy) {
