@@ -14,7 +14,20 @@ class MaidTheme {
     iconTheme: const IconThemeData(color: Colors.white),
 
     textTheme: const TextTheme(
-      titleMedium: TextStyle(color: Colors.white),
+      titleLarge: TextStyle(
+        color: Colors.white,
+        fontSize: 30.0,
+        fontWeight: FontWeight.bold,
+      ),
+      titleSmall: TextStyle(
+        color: Colors.white,
+        fontSize: 20.0,
+      ),
+      bodyMedium: TextStyle(
+        color: Colors.white,
+        fontSize: 15.0,
+        fontWeight: FontWeight.bold,
+      ),
       labelLarge: TextStyle(
         color: Colors.white,
         fontWeight: FontWeight.bold,
@@ -49,8 +62,16 @@ class MaidTheme {
         borderRadius: BorderRadius.circular(30.0),
         borderSide: BorderSide.none,
       ),
-      labelStyle: const TextStyle(color: Colors.grey), // Style for the label
-      hintStyle: const TextStyle(color: Colors.white),
+      labelStyle: const TextStyle(
+        fontWeight: FontWeight.normal,
+        color: Colors.grey,
+        fontSize: 10.0
+      ),
+      hintStyle: const TextStyle(
+        fontWeight: FontWeight.normal,
+        color: Colors.white,
+        fontSize: 10.0
+      ),
       fillColor: Colors.grey.shade800,
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -76,7 +97,20 @@ class MaidTheme {
     iconTheme: const IconThemeData(color: Colors.black),
 
     textTheme: const TextTheme(
-      titleMedium: TextStyle(color: Colors.black),
+      titleLarge: TextStyle(
+        color: Colors.black,
+        fontSize: 30.0,
+        fontWeight: FontWeight.bold,
+      ),
+      titleSmall: TextStyle(
+        color: Colors.black,
+        fontSize: 15.0,
+      ),
+      bodyMedium: TextStyle(
+        color: Colors.black,
+        fontSize: 15.0,
+        fontWeight: FontWeight.bold,
+      ),
       labelLarge: TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.bold,
@@ -112,8 +146,16 @@ class MaidTheme {
         borderRadius: BorderRadius.circular(30.0),
         borderSide: BorderSide.none,
       ),
-      labelStyle: const TextStyle(color: Colors.black), // Style for the label
-      hintStyle: const TextStyle(color: Colors.black),
+      labelStyle: const TextStyle(
+        fontWeight: FontWeight.normal,
+        color: Colors.black,
+        fontSize: 10.0
+      ),
+      hintStyle: const TextStyle(
+        fontWeight: FontWeight.normal,
+        color: Colors.black,
+        fontSize: 10.0
+      ),
       fillColor: Colors.white,
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
