@@ -31,10 +31,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
+                  child: Text(
                     "Close",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -77,7 +77,8 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 10.0),
             Text(
               settings.parameters["modelName"],
-              style: const TextStyle(
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
               ),
@@ -94,10 +95,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   onPressed: () {
                     _storageOperationDialog(settings.loadSettingsFromJson);
                   },
-                  child: const Text(
+                  child: Text(
                     "Load Settings",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -107,10 +108,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   onPressed: () {
                     _storageOperationDialog(settings.saveSettingsToJson);
                   },
-                  child: const Text(
+                  child: Text(
                     "Save Settings",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -125,10 +126,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   onPressed: () {
                     _storageOperationDialog(settings.loadModelFile);
                   },
-                  child: const Text(
+                  child: Text(
                     "Load Model",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -139,10 +140,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     settings.resetAll();
                     setState(() {});
                   },
-                  child: const Text(
+                  child: Text(
                     "Reset All",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -193,10 +194,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       settings.exampleResponseControllers.add(TextEditingController());
                     });
                   },
-                  child: const Text(
+                  child: Text(
                     "Add Example",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -209,10 +210,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       settings.exampleResponseControllers.removeLast();
                     });
                   },
-                  child: const Text(
+                  child: Text(
                     "Remove Example",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

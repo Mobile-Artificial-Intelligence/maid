@@ -30,13 +30,14 @@ class AboutPage extends StatelessWidget {
               height: 150,
             ),
             const SizedBox(height: 30.0),
-            const Center(
+            Center(
               child: Text(
                 'Maid',
                 style: TextStyle(
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-              ),
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                ),
               )
             ),
             const SizedBox(height: 20.0),
@@ -49,7 +50,8 @@ class AboutPage extends StatelessWidget {
               'OpenAI or any other company that provides a model which can be used with this app. Model files are '
               'not included with this app and must be downloaded separately. Model files can be downloaded online '
               'at https://huggingface.co',
-              style: const TextStyle(
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
                 fontSize: 15.0,
                 fontWeight: FontWeight.bold,
               ),
