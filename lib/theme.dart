@@ -12,6 +12,9 @@ class MaidTheme {
 
   static final ThemeData _darkTheme = ThemeData(
     iconTheme: const IconThemeData(color: Colors.white),
+    textTheme: const TextTheme(
+      titleMedium: TextStyle(color: Colors.white),
+    ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.grey.shade900,
       foregroundColor: Colors.white,
@@ -60,6 +63,9 @@ class MaidTheme {
 
   static final ThemeData _lightTheme = ThemeData(
     iconTheme: const IconThemeData(color: Colors.black),
+    textTheme: const TextTheme(
+      titleMedium: TextStyle(color: Colors.black),
+    ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.grey.shade300,
       foregroundColor: Colors.black,
