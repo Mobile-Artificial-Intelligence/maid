@@ -3,20 +3,43 @@ import 'package:maid/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
 void main() {
-  runApp(const MaidApp());
+  runApp(MaidApp());
 }
 
-class MaidApp extends StatelessWidget {
-  const MaidApp({super.key});
+class MaidApp extends StatefulWidget {
+  @override
+  _MaidAppState createState() => _MaidAppState();
+}
 
-  // This widget is the root of your application.
+class _MaidAppState extends State<MaidApp> {
+  late ThemeData _currentTheme;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentTheme = MaidTheme.darkTheme; // Starting with dark theme
+  }
+
+  void _toggleTheme() {
+    setState(() {
+      if (_currentTheme == MaidTheme.darkTheme) {
+        _currentTheme = MaidTheme.lightTheme;
+      } else {
+        _currentTheme = MaidTheme.darkTheme;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Maid',
-      theme: MaidTheme().getTheme(),
-      home: const MaidHomePage(title: 'Maid'),
+      theme: _currentTheme,
+      home: MaidHomePage(
+        title: 'Maid',
+        onToggleTheme: _toggleTheme,
+      ),
     );
   }
 }

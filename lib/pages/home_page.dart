@@ -13,9 +13,11 @@ import 'package:maid/pages/about_page.dart';
 
 
 class MaidHomePage extends StatefulWidget {
-  const MaidHomePage({super.key, required this.title});
-
   final String title;
+  final VoidCallback onToggleTheme;
+
+  const MaidHomePage({Key? key, required this.title, required this.onToggleTheme}) : super(key: key);
+
 
   @override
   State<MaidHomePage> createState() => _MaidHomePageState();
@@ -60,24 +62,18 @@ class _MaidHomePageState extends State<MaidHomePage> {
                     Navigator.of(context).pop();
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
                   },
-                  child: const Text(
+                  child: Text(
                     "Open Settings",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
                 FilledButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
+                  child: Text(
                     "Close",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
               ],
@@ -131,43 +127,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
   }
 
-  void _missingModelDialog() async {
-    // Use a local reference to context to avoid using it across an async gap.
-    final localContext = context;
-    // Ensure that the context is still valid before attempting to show the dialog.
-    if (localContext.mounted) {
-      showDialog(
-        context: localContext,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Model Missing\nPlease assign a model in settings."),
-            alignment: Alignment.center,
-            actionsAlignment: MainAxisAlignment.center,
-            backgroundColor: Theme.of(context).colorScheme.background,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    "Close",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
-      );
-      setState(() {});
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -182,12 +141,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
         title: Text(widget.title),
       ),
       drawer: Drawer(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20),
-              bottomRight: Radius.circular(20)),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.background,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -209,10 +162,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text(
+              title: Text(
                 'Settings',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 15,
                 ),
               ),
@@ -223,10 +176,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.info),
-              title: const Text(
+              title: Text(
                 'About',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 15,
                 ),
               ),
@@ -235,6 +188,13 @@ class _MaidHomePageState extends State<MaidHomePage> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutPage()));
               },
             ),
+            IconButton(
+              onPressed: () {
+                widget.onToggleTheme();
+              },
+              icon: const Icon(Icons.brightness_4),
+              tooltip: 'Toggle Theme',
+            )
           ],
         ),
       ),
