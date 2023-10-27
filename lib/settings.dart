@@ -181,8 +181,8 @@ class Settings {
         responseAliasController.text = parameters['responseAlias'];
 
         for (var i = 0; i < parameters['examplePrompts'].length; i++) {
-          settings.examplePromptControllers[i].text = parameters['examplePrompts'][i];
-          settings.exampleResponseControllers[i].text = parameters['exampleResponses'][i];
+          examplePromptControllers[i].text = parameters['examplePrompts'][i];
+          exampleResponseControllers[i].text = parameters['exampleResponses'][i];
         }
       }
     } catch (e) {

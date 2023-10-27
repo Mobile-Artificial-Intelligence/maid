@@ -13,9 +13,11 @@ import 'package:maid/pages/about_page.dart';
 
 
 class MaidHomePage extends StatefulWidget {
-  const MaidHomePage({super.key, required this.title});
-
   final String title;
+  final VoidCallback onToggleTheme;
+
+  const MaidHomePage({Key? key, required this.title, required this.onToggleTheme}) : super(key: key);
+
 
   @override
   State<MaidHomePage> createState() => _MaidHomePageState();
@@ -60,10 +62,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
                     Navigator.of(context).pop();
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
                   },
-                  child: const Text(
+                  child: Text(
                     "Open Settings",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -72,10 +74,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
+                  child: Text(
                     "Close",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -152,10 +154,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
+                  child: Text(
                     "Close",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -182,12 +184,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
         title: Text(widget.title),
       ),
       drawer: Drawer(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20),
-              bottomRight: Radius.circular(20)),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.background,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -209,10 +205,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text(
+              title: Text(
                 'Settings',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 15,
                 ),
               ),
@@ -223,10 +219,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.info),
-              title: const Text(
+              title: Text(
                 'About',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 15,
                 ),
               ),
@@ -235,6 +231,13 @@ class _MaidHomePageState extends State<MaidHomePage> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutPage()));
               },
             ),
+            IconButton(
+              onPressed: () {
+                widget.onToggleTheme();
+              },
+              icon: const Icon(Icons.brightness_4),
+              tooltip: 'Toggle Theme',
+            )
           ],
         ),
       ),
