@@ -164,10 +164,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               leading: const Icon(Icons.settings),
               title: Text(
                 'Settings',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontSize: 15,
-                ),
+                style: Theme.of(context).textTheme.labelLarge
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
@@ -178,10 +175,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               leading: const Icon(Icons.info),
               title: Text(
                 'About',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontSize: 15,
-                ),
+                style: Theme.of(context).textTheme.labelLarge
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer

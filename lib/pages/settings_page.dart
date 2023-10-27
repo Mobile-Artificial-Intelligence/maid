@@ -74,11 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 10.0),
             Text(
               settings.parameters["modelName"],
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-              ),
+              style: Theme.of(context).textTheme.titleSmall
             ),
             Divider(
               indent: 10,
