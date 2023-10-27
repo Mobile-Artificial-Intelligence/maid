@@ -33,10 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   child: Text(
                     "Close",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),
             ],
@@ -97,10 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   child: Text(
                     "Load Settings",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
                 const SizedBox(width: 10.0),
@@ -110,10 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   child: Text(
                     "Save Settings",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
               ],
@@ -128,10 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   child: Text(
                     "Load Model",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
                 const SizedBox(width: 10.0),
@@ -142,10 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   child: Text(
                     "Reset All",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
               ],
@@ -196,10 +181,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   child: Text(
                     "Add Example",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
                 const SizedBox(width: 10.0),
@@ -212,10 +194,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   child: Text(
                     "Remove Example",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
               ],

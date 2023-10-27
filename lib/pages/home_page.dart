@@ -64,10 +64,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                   },
                   child: Text(
                     "Open Settings",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
                 FilledButton(
@@ -76,10 +73,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                   },
                   child: Text(
                     "Close",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
               ],
@@ -130,43 +124,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
     } else if (message.isNotEmpty) {
       newResponse.addMessage(message);
       scrollDown();
-    }
-  }
-
-  void _missingModelDialog() async {
-    // Use a local reference to context to avoid using it across an async gap.
-    final localContext = context;
-    // Ensure that the context is still valid before attempting to show the dialog.
-    if (localContext.mounted) {
-      showDialog(
-        context: localContext,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Model Missing\nPlease assign a model in settings."),
-            alignment: Alignment.center,
-            actionsAlignment: MainAxisAlignment.center,
-            backgroundColor: Theme.of(context).colorScheme.background,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Close",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
-      );
-      setState(() {});
     }
   }
 
