@@ -19,6 +19,10 @@ class MaidTheme {
         fontSize: 30.0,
         fontWeight: FontWeight.bold,
       ),
+      titleMedium: TextStyle(
+        color: Colors.white,
+        fontSize: 15.0,
+      ),
       titleSmall: TextStyle(
         color: Colors.white,
         fontSize: 20.0,
@@ -102,9 +106,13 @@ class MaidTheme {
         fontSize: 30.0,
         fontWeight: FontWeight.bold,
       ),
-      titleSmall: TextStyle(
+      titleMedium: TextStyle(
         color: Colors.black,
         fontSize: 15.0,
+      ),
+      titleSmall: TextStyle(
+        color: Colors.black,
+        fontSize: 20.0,
       ),
       bodyMedium: TextStyle(
         color: Colors.black,
