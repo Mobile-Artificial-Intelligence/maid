@@ -244,8 +244,9 @@ class _MaidHomePageState extends State<MaidHomePage> {
                             controller: settings.promptController,
                             cursorColor:
                                 Theme.of(context).colorScheme.secondary,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Prompt',
+                              hintStyle: Theme.of(context).textTheme.labelSmall
                             ),
                           ),
                         ),

@@ -69,12 +69,12 @@ class MaidTheme {
       labelStyle: const TextStyle(
         fontWeight: FontWeight.normal,
         color: Colors.grey,
-        fontSize: 10.0
+        fontSize: 15.0
       ),
       hintStyle: const TextStyle(
         fontWeight: FontWeight.normal,
         color: Colors.white,
-        fontSize: 10.0
+        fontSize: 15.0
       ),
       fillColor: Colors.grey.shade800,
       filled: true,
@@ -157,12 +157,12 @@ class MaidTheme {
       labelStyle: const TextStyle(
         fontWeight: FontWeight.normal,
         color: Colors.black,
-        fontSize: 10.0
+        fontSize: 15.0
       ),
       hintStyle: const TextStyle(
         fontWeight: FontWeight.normal,
         color: Colors.black,
-        fontSize: 10.0
+        fontSize: 15.0
       ),
       fillColor: Colors.white,
       filled: true,
