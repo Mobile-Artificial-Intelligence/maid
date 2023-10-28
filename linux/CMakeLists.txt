@@ -138,4 +138,4 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
 endif()
 
 add_subdirectory(../src butler)
-install(FILES ${PROJECT_BINARY_DIR}/butler/libbutler.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
+install(FILES ${PROJECT_BINARY_DIR}/bin/libbutler.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
