@@ -81,6 +81,17 @@ class MaidTheme {
       floatingLabelBehavior: FloatingLabelBehavior.never,
     ),
 
+    dialogTheme: DialogTheme(
+      backgroundColor: Colors.grey.shade900,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20.0))
+      ),
+      titleTextStyle: const TextStyle(
+        color: Colors.white,
+        fontSize: 20.0,
+      ),
+    ),
+
     sliderTheme: SliderThemeData(
       activeTrackColor: Colors.blue.shade800,
       inactiveTrackColor: Colors.grey.shade800,
@@ -167,6 +178,17 @@ class MaidTheme {
       fillColor: Colors.white,
       filled: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
+    ),
+
+    dialogTheme: DialogTheme(
+      backgroundColor: Colors.grey.shade300,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20.0))
+      ),
+      titleTextStyle: const TextStyle(
+        color: Colors.black,
+        fontSize: 20.0,
+      ),
     ),
 
     sliderTheme: SliderThemeData(
