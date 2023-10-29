@@ -198,14 +198,14 @@ class Settings {
 
       await FilePicker.platform.clearTemporaryFiles();
     }
-
-    if (Lib.instance.hasStarted()) {
-      Lib.instance.butlerStop();
-      Lib.instance.butlerExit();
-    }
   
     try {
-      final result = await FilePicker.platform.pickFiles(type: FileType.any);
+      final result = await FilePicker.platform.pickFiles(
+        dialogTitle: "Select Model File",
+        type: FileType.any,
+        allowMultiple: false,
+        lockParentWindow: true
+      );
       final filePath = result?.files.single.path;
   
       if (filePath == null) {
@@ -295,6 +295,11 @@ class Lib {
 
 
   void butlerStart(void Function(String) maidOutput) async {
+    if (_hasStarted) {
+      butlerExit();
+      await Future.delayed(const Duration(seconds: 1));
+    }
+    
     _hasStarted = true;
     
     final params = calloc<butler_params>();

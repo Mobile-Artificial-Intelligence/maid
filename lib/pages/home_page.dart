@@ -29,8 +29,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
 
-  Lib? lib;
-
   void execute() {
     //close the keyboard if on mobile
     if (Platform.isAndroid || Platform.isIOS) {
@@ -92,11 +90,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
         settings.compilePrePrompt();
       });
 
-      if (lib == null || !Lib.instance.hasStarted()) {
-        lib = Lib.instance;
-        lib?.butlerStart(responseCallback);
+      if (!Lib.instance.hasStarted()) {
+        Lib.instance.butlerStart(responseCallback);
       } else {
-        lib?.butlerContinue();
+        Lib.instance.butlerContinue();
       }
 
       setState(() {
