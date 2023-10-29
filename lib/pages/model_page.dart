@@ -75,7 +75,7 @@ class _ModelPageState extends State<ModelPage> {
               children: [
                 const SizedBox(height: 10.0),
                 Text(
-                  model.parameters["modelName"],
+                  model.parameters["model_name"],
                   style: Theme.of(context).textTheme.titleSmall
                 ),
                 Divider(
