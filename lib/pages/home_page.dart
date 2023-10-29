@@ -10,13 +10,13 @@ import 'package:system_info2/system_info2.dart';
 import 'package:maid/settings.dart';
 import 'package:maid/pages/settings_page.dart';
 import 'package:maid/pages/about_page.dart';
+import 'package:maid/theme.dart';
 
 
 class MaidHomePage extends StatefulWidget {
   final String title;
-  final VoidCallback onToggleTheme;
 
-  const MaidHomePage({Key? key, required this.title, required this.onToggleTheme}) : super(key: key);
+  const MaidHomePage({Key? key, required this.title}) : super(key: key);
 
 
   @override
@@ -28,8 +28,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
-
-  Lib? lib;
 
   void execute() {
     //close the keyboard if on mobile
@@ -92,11 +90,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
         settings.compilePrePrompt();
       });
 
-      if (lib == null) {
-        lib = Lib.instance;
-        lib?.butlerStart(responseCallback);
+      if (!Lib.instance.hasStarted()) {
+        Lib.instance.butlerStart(responseCallback);
       } else {
-        lib?.butlerContinue();
+        Lib.instance.butlerContinue();
       }
 
       setState(() {
@@ -183,8 +180,8 @@ class _MaidHomePageState extends State<MaidHomePage> {
               },
             ),
             IconButton(
-              onPressed: () {
-                widget.onToggleTheme();
+              onPressed: () async {
+                await MaidTheme.toggleTheme();
               },
               icon: const Icon(Icons.brightness_4),
               tooltip: 'Toggle Theme',

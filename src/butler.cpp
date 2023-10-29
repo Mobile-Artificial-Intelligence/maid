@@ -377,6 +377,12 @@ void butler_stop(void) {
 }
 
 void butler_exit(void) {
+    stop_generation.store(true);
+
+    while (stop_generation.load()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
     llama_print_timings(ctx);
     llama_free(ctx);
     llama_free_model(model);

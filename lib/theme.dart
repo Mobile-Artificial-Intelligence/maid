@@ -1,14 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:maid/main.dart';
 
 class MaidTheme {
-  ThemeData getTheme() {
-    return _darkTheme;
+  static ThemeData _theme = _darkTheme;
+  static ThemeData get theme => _theme;
+
+  static Future<void> loadThemePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? themePref = prefs.getString('theme');
+
+    // Switch case for theme preference
+    switch (themePref) {
+      case 'dark':
+        _theme = _darkTheme;
+        break;
+      case 'light':
+        _theme = _lightTheme;
+        break;
+      default:
+        _theme = _darkTheme;
+        break;
+    }
   }
 
-  // Inside MaidTheme class
-  static ThemeData get darkTheme => _darkTheme;
-  static ThemeData get lightTheme => _lightTheme;
-
+  static Future<void> toggleTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (_theme == _darkTheme) {
+      _theme = _lightTheme;
+      await prefs.setString('theme', 'light');
+    } else {
+      _theme = _darkTheme;
+      await prefs.setString('theme', 'dark');
+    }
+  
+    maidAppKey.currentState!.refreshApp();
+  }
 
   static final ThemeData _darkTheme = ThemeData(
     iconTheme: const IconThemeData(color: Colors.white),
@@ -41,7 +68,11 @@ class MaidTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.grey.shade900,
       foregroundColor: Colors.white,
-      titleTextStyle: const TextStyle(color: Colors.white),
+      titleTextStyle: const TextStyle(
+        color: Colors.white,
+        fontSize: 20.0,
+        fontWeight: FontWeight.bold,
+      ),
       iconTheme: const IconThemeData(color: Colors.white),
     ),
 
@@ -139,7 +170,11 @@ class MaidTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.grey.shade300,
       foregroundColor: Colors.black,
-      titleTextStyle: const TextStyle(color: Colors.black),
+      titleTextStyle: const TextStyle(
+        color: Colors.black,
+        fontSize: 20.0,
+        fontWeight: FontWeight.bold,
+      ),
       iconTheme: const IconThemeData(color: Colors.black),
     ),
 

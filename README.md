@@ -20,7 +20,8 @@ To use this app, follow these steps:
 7. Enter a prompt
 
 ## Help Wanted
-- Fix windows build to allow dll's (butler.dll, llama.dll, etc) to be built with maid
+- Add ability to import sillytavern character cards
+- Fix issue with models being cached
 - Seperate Desktop UI from Mobile UI
 - Testing and Building on MacOS and IOS
 
