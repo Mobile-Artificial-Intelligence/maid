@@ -8,8 +8,8 @@ class MaidTheme {
 
   static Future<void> loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? theme = prefs.getString('theme');
-    _theme = (theme == 'dark') ? _darkTheme : _lightTheme;
+    String? themePref = prefs.getString('theme');
+    _theme = (themePref == 'dark') ? _darkTheme : _lightTheme;
   }
 
   static Future<void> toggleTheme() async {
