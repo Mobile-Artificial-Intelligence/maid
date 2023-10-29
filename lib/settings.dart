@@ -23,18 +23,16 @@ class Settings {
 
   TextEditingController promptController = TextEditingController();
 
-  TextEditingController prePromptController = TextEditingController()..text =
-    'A chat between a curious user and an artificial intelligence assistant. '
-    'The assistant gives helpful, detailed, and polite answers to the user\'s questions.';
+  TextEditingController prePromptController = TextEditingController();
   
   List<TextEditingController> examplePromptControllers = [];
   List<TextEditingController> exampleResponseControllers = [];
 
-  TextEditingController userAliasController = TextEditingController()..text = "USER:";
-  TextEditingController responseAliasController = TextEditingController()..text = "ASSISTANT:";
+  TextEditingController userAliasController = TextEditingController();
+  TextEditingController responseAliasController = TextEditingController();
 
-  String prePrompt = "";
-  String modelPath = "";
+  late String prePrompt;
+  late String modelPath;
 
   Settings() {
     initFromSharedPrefs();
@@ -256,12 +254,12 @@ class Lib {
 
   void _loadNativeLibrary() {
     DynamicLibrary butlerDynamic =
-        Platform.isMacOS || Platform.isIOS
-            ? DynamicLibrary.process() // macos and ios
-            : (DynamicLibrary.open(
-                Platform.isWindows // windows
-                    ? 'butler.dll'
-                    : 'libbutler.so')); // android and linux
+      Platform.isMacOS || Platform.isIOS
+        ? DynamicLibrary.process() // macos and ios
+        : (DynamicLibrary.open(
+          Platform.isWindows // windows
+            ? 'butler.dll'
+            : 'libbutler.so')); // android and linux
 
     _nativeLibrary = NativeLibrary(butlerDynamic);
   }
