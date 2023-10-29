@@ -44,10 +44,10 @@ class Character {
     userAliasController.text = jsonCharacter["user_alias"] ?? "";
     responseAliasController.text = jsonCharacter["response_alias"] ?? "";
 
-    int length = jsonCharacter["example_prompt"]?.length ?? 0;
+    int length = jsonCharacter["example"]?.length ?? 0;
     for (var i = 0; i < length; i++) {
-      String? examplePrompt = jsonCharacter["example_prompt_$i"];
-      String? exampleResponse = jsonCharacter["example_response_$i"];
+      String? examplePrompt = jsonCharacter["example"][i]["prompt"];
+      String? exampleResponse = jsonCharacter["example"][i]["response"];
       if (examplePrompt != null && exampleResponse != null) {
         examplePromptControllers.add(TextEditingController(text: examplePrompt));
         exampleResponseControllers.add(TextEditingController(text: exampleResponse));
@@ -61,8 +61,8 @@ class Character {
     jsonCharacter["response_alias"] = responseAliasController.text;
 
     for (var i = 0; i < examplePromptControllers.length; i++) {
-      jsonCharacter["example_prompt"][i] = examplePromptControllers[i].text;
-      jsonCharacter["example_response"][i] = exampleResponseControllers[i].text;
+      jsonCharacter["example"][i]["prompt"] = examplePromptControllers[i].text;
+      jsonCharacter["example"][i]["response"] = exampleResponseControllers[i].text;
     }
     
     var prefs = await SharedPreferences.getInstance();
