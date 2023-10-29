@@ -31,11 +31,11 @@ class Model {
       resetAll();
     }
 
-    modelPath = parameters["modelPath"] ?? "";
+    modelPath = parameters["model_path"] ?? "";
   }
 
   void saveSharedPreferences() async {
-    parameters["modelPath"] = modelPath;
+    parameters["model_path"] = modelPath;
     
     var prefs = await SharedPreferences.getInstance();
 
@@ -57,7 +57,7 @@ class Model {
   }
 
   Future<String> saveModelToJson() async {
-    parameters["modelPath"] = modelPath;
+    parameters["model_path"] = modelPath;
 
     // Convert the map to a JSON string
     String jsonString = json.encode(parameters);
@@ -113,7 +113,7 @@ class Model {
         return "Failed to decode model";
       }
 
-      modelPath = parameters['modelPath'];
+      modelPath = parameters['model_path'];
     } catch (e) {
       resetAll();
       return "Error: $e";
@@ -145,7 +145,7 @@ class Model {
       }
       
       modelPath = filePath;
-      parameters["modelName"] = path.basename(filePath);
+      parameters["model_name"] = path.basename(filePath);
     } catch (e) {
       return "Error: $e";
     }

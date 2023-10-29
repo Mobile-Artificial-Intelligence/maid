@@ -40,14 +40,17 @@ class Character {
       resetAll();
     }
 
-    prePromptController.text = jsonCharacter["prePrompt"] ?? "";
-    userAliasController.text = jsonCharacter["userAlias"] ?? "";
-    responseAliasController.text = jsonCharacter["responseAlias"] ?? "";
+    prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
+    userAliasController.text = jsonCharacter["user_alias"] ?? "";
+    responseAliasController.text = jsonCharacter["response_alias"] ?? "";
 
-    int length = jsonCharacter["examplePrompt"]?.length ?? 0;
+    examplePromptControllers.clear();
+    exampleResponseControllers.clear();
+
+    int length = jsonCharacter["example"]?.length ?? 0;
     for (var i = 0; i < length; i++) {
-      String? examplePrompt = jsonCharacter["examplePrompt_$i"];
-      String? exampleResponse = jsonCharacter["exampleResponse_$i"];
+      String? examplePrompt = jsonCharacter["example"][i]["prompt"];
+      String? exampleResponse = jsonCharacter["example"][i]["response"];
       if (examplePrompt != null && exampleResponse != null) {
         examplePromptControllers.add(TextEditingController(text: examplePrompt));
         exampleResponseControllers.add(TextEditingController(text: exampleResponse));
@@ -56,13 +59,13 @@ class Character {
   }
 
   void saveSharedPreferences() async {
-    jsonCharacter["prePrompt"] = prePromptController.text;
-    jsonCharacter["userAlias"] = userAliasController.text;
-    jsonCharacter["responseAlias"] = responseAliasController.text;
+    jsonCharacter["pre_prompt"] = prePromptController.text;
+    jsonCharacter["user_alias"] = userAliasController.text;
+    jsonCharacter["response_alias"] = responseAliasController.text;
 
     for (var i = 0; i < examplePromptControllers.length; i++) {
-      jsonCharacter["examplePrompt"][i] = examplePromptControllers[i].text;
-      jsonCharacter["exampleResponse"][i] = exampleResponseControllers[i].text;
+      jsonCharacter["example"][i]["prompt"] = examplePromptControllers[i].text;
+      jsonCharacter["example"][i]["response"] = exampleResponseControllers[i].text;
     }
     
     var prefs = await SharedPreferences.getInstance();
@@ -76,14 +79,17 @@ class Character {
 
     jsonCharacter = json.decode(jsonString);
 
-    prePromptController.text = jsonCharacter["prePrompt"] ?? "";
-    userAliasController.text = jsonCharacter["userAlias"] ?? "";
-    responseAliasController.text = jsonCharacter["responseAlias"] ?? "";
+    prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
+    userAliasController.text = jsonCharacter["user_alias"] ?? "";
+    responseAliasController.text = jsonCharacter["response_alias"] ?? "";
 
-    int length = jsonCharacter["examplePrompt"]?.length ?? 0;
+    examplePromptControllers.clear();
+    exampleResponseControllers.clear();
+
+    int length = jsonCharacter["example"]?.length ?? 0;
     for (var i = 0; i < length; i++) {
-      String? examplePrompt = jsonCharacter["examplePrompt"][i];
-      String? exampleResponse = jsonCharacter["exampleResponse"][i];
+      String? examplePrompt = jsonCharacter["example"][i]["prompt"];
+      String? exampleResponse = jsonCharacter["example"][i]["response"];
       if (examplePrompt != null && exampleResponse != null) {
         examplePromptControllers.add(TextEditingController(text: examplePrompt));
         exampleResponseControllers.add(TextEditingController(text: exampleResponse));
@@ -99,13 +105,13 @@ class Character {
   }
 
   Future<String> saveCharacterToJson() async {
-    jsonCharacter["prePrompt"] = prePromptController.text;
-    jsonCharacter["userAlias"] = userAliasController.text;
-    jsonCharacter["responseAlias"] = responseAliasController.text;
+    jsonCharacter["pre_prompt"] = prePromptController.text;
+    jsonCharacter["user_alias"] = userAliasController.text;
+    jsonCharacter["response_alias"] = responseAliasController.text;
 
     for (var i = 0; i < examplePromptControllers.length; i++) {
-      jsonCharacter["examplePrompt"][i] = examplePromptControllers[i].text;
-      jsonCharacter["exampleResponse"][i] = exampleResponseControllers[i].text;
+      jsonCharacter["example"][i]["prompt"] = examplePromptControllers[i].text;
+      jsonCharacter["example"][i]["response"] = exampleResponseControllers[i].text;
     }
 
     // Convert the map to a JSON string
@@ -160,6 +166,20 @@ class Character {
       if (jsonCharacter.isEmpty) {
         resetAll();
         return "Failed to decode character";
+      }
+
+      prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
+      userAliasController.text = jsonCharacter["user_alias"] ?? "";
+      responseAliasController.text = jsonCharacter["response_alias"] ?? "";
+
+      int length = jsonCharacter["example"]?.length ?? 0;
+      for (var i = 0; i < length; i++) {
+        String? examplePrompt = jsonCharacter["example"][i]["prompt"];
+        String? exampleResponse = jsonCharacter["example"][i]["response"];
+        if (examplePrompt != null && exampleResponse != null) {
+          examplePromptControllers.add(TextEditingController(text: examplePrompt));
+          exampleResponseControllers.add(TextEditingController(text: exampleResponse));
+        }
       }
     } catch (e) {
       resetAll();

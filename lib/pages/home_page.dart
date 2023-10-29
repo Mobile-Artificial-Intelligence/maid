@@ -88,8 +88,8 @@ class _MaidHomePageState extends State<MaidHomePage> {
       setState(() {
         model.busy = true;
         model.saveSharedPreferences();
-        chatWidgets
-            .add(UserMessage(message: character.promptController.text.trim()));
+        character.saveSharedPreferences();
+        chatWidgets.add(UserMessage(message: character.promptController.text.trim()));
         character.compilePrePrompt();
       });
 
