@@ -32,79 +32,78 @@ class _MaidHomePageState extends State<MaidHomePage> {
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
 
+  void _missingModelDialog() {
+    // Use a local reference to context to avoid using it across an async gap.
+    final localContext = context;
+    // Ensure that the context is still valid before attempting to show the dialog.
+    if (localContext.mounted) {
+      showDialog(
+        context: localContext,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              "Model Missing\nPlease assign a model in model settings.",
+              textAlign: TextAlign.center,
+            ),
+            alignment: Alignment.center,
+            actionsAlignment: MainAxisAlignment.center,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
+                },
+                child: Text(
+                  "Open Model Settings",
+                  style: Theme.of(context).textTheme.labelLarge
+                ),
+              ),
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "Close",
+                  style: Theme.of(context).textTheme.labelLarge
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      setState(() {});
+    }
+  }
+
   void execute() {
     //close the keyboard if on mobile
     if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
     }
     
-    if (model.modelPath.isEmpty) {
-      // Use a local reference to context to avoid using it across an async gap.
-      final localContext = context;
-      // Ensure that the context is still valid before attempting to show the dialog.
-      if (localContext.mounted) {
-        showDialog(
-          context: localContext,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text(
-                "Model Missing\nPlease assign a model in model settings.",
-                textAlign: TextAlign.center,
-              ),
-              alignment: Alignment.center,
-              actionsAlignment: MainAxisAlignment.center,
-              backgroundColor: Theme.of(context).colorScheme.background,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              ),
-              actions: [
-                FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
-                  },
-                  child: Text(
-                    "Open Model Settings",
-                    style: Theme.of(context).textTheme.labelLarge
-                  ),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Close",
-                    style: Theme.of(context).textTheme.labelLarge
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-        setState(() {});
-      }
-      return;
+    setState(() {
+      model.busy = true;
+      model.saveSharedPreferences();
+      character.saveSharedPreferences();
+      chatWidgets.add(UserMessage(message: character.promptController.text.trim()));
+      character.compilePrePrompt();
+    });
+
+    if (!Lib.instance.hasStarted()) {
+      Lib.instance.butlerStart(responseCallback);
     } else {
-      setState(() {
-        model.busy = true;
-        model.saveSharedPreferences();
-        character.saveSharedPreferences();
-        chatWidgets.add(UserMessage(message: character.promptController.text.trim()));
-        character.compilePrePrompt();
-      });
-
-      if (!Lib.instance.hasStarted()) {
-        Lib.instance.butlerStart(responseCallback);
-      } else {
-        Lib.instance.butlerContinue();
-      }
-
-      setState(() {
-        newResponse = ResponseMessage();
-        chatWidgets.add(newResponse);
-        character.promptController.text = ""; // Clear the input field
-      });
+      Lib.instance.butlerContinue();
     }
+
+    setState(() {
+      newResponse = ResponseMessage();
+      chatWidgets.add(newResponse);
+      character.promptController.text = ""; // Clear the input field
+    });
   }
 
   void scrollDown() {
@@ -249,10 +248,14 @@ class _MaidHomePageState extends State<MaidHomePage> {
                             minLines: 1,
                             maxLines: 9,
                             enableInteractiveSelection: true,
-                            onSubmitted: (value) {
+                            onSubmitted:  (value) {
                               if (!model.busy) {
-                                execute();
-                              }
+                                if (model.modelPath.isEmpty) {
+                                  _missingModelDialog();
+                                } else {
+                                  execute();
+                                }                             
+                              }                          
                             },
                             controller: character.promptController,
                             cursorColor:
@@ -264,7 +267,15 @@ class _MaidHomePageState extends State<MaidHomePage> {
                           ),
                         ),
                         IconButton(
-                          onPressed: model.busy ? null : execute,
+                          onPressed: () {
+                            if (!model.busy) {
+                              if (model.modelPath.isEmpty) {
+                                _missingModelDialog();
+                              } else {
+                                execute();
+                              }                             
+                            }                          
+                          },
                           iconSize: 50,
                           icon: Icon(
                             Icons.arrow_circle_right,

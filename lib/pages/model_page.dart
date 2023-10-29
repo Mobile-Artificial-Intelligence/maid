@@ -91,7 +91,7 @@ class _ModelPageState extends State<ModelPage> {
                         _storageOperationDialog(model.loadModelFromJson);
                       },
                       child: Text(
-                        "Load Model",
+                        "Load Parameters",
                         style: Theme.of(context).textTheme.labelLarge
                       ),
                     ),
@@ -101,7 +101,7 @@ class _ModelPageState extends State<ModelPage> {
                         _storageOperationDialog(model.saveModelToJson);
                       },
                       child: Text(
-                        "Save Model",
+                        "Save Parameters",
                         style: Theme.of(context).textTheme.labelLarge
                       ),
                     ),
