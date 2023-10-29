@@ -58,7 +58,7 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 ffigen:
-  output: lib/butler.dart
+  output: lib/config/butler_bindings.dart
   headers:
     entry-points:
       # - "src/llama.cpp/utils.h"
