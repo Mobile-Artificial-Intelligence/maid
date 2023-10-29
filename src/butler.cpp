@@ -38,6 +38,7 @@ static int n_past     = 0;
 static int n_consumed = 0;
 static int n_pfx      = 0;
 static int n_sfx      = 0;
+static signed int prior = 0;
 
 static gpt_params params;
 static llama_context_params lparams;
@@ -119,6 +120,8 @@ int butler_start(struct butler_params *butler) {
     last_n_tokens = std::vector<llama_token>(lparams.n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
 
+    prior = embd_inp.size();
+
     return 0;
 }
 
@@ -181,7 +184,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
         }
 
         auto embd_out = embd;
-
+        
         if (params.interactive) {
             // Remove input_prefix from output
             std::vector<int>::iterator it = embd_out.begin();
@@ -209,6 +212,8 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             }
         }
 
+        if (prior > 0) prior -= embd_out.size();
+
         if (suffix_found || !params.interactive) {
             // display text
             for (auto id : embd_out) {
@@ -227,7 +232,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
 
                     if (n_sfx == inp_sfx.size()) {
                         // Suffix found, reset
-                        suffix_found = true;
+                        if (prior <= 0) suffix_found = true;
                         embd_cache.clear();
                         n_sfx = 0;
                         break;
