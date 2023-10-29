@@ -23,18 +23,16 @@ class Settings {
 
   TextEditingController promptController = TextEditingController();
 
-  TextEditingController prePromptController = TextEditingController()..text =
-    'A chat between a curious user and an artificial intelligence assistant. '
-    'The assistant gives helpful, detailed, and polite answers to the user\'s questions.';
+  TextEditingController prePromptController = TextEditingController();
   
   List<TextEditingController> examplePromptControllers = [];
   List<TextEditingController> exampleResponseControllers = [];
 
-  TextEditingController userAliasController = TextEditingController()..text = "USER:";
-  TextEditingController responseAliasController = TextEditingController()..text = "ASSISTANT:";
+  TextEditingController userAliasController = TextEditingController();
+  TextEditingController responseAliasController = TextEditingController();
 
-  String prePrompt = "";
-  String modelPath = "";
+  late String prePrompt;
+  late String modelPath;
 
   Settings() {
     initFromSharedPrefs();
@@ -163,27 +161,26 @@ class Settings {
     
     try{
       final result = await FilePicker.platform.pickFiles(type: FileType.any);
+      if (result == null) return "No File Selected";
 
-      if (result != null) {
-        File file = File(result.files.single.path!);
-        String jsonString = await file.readAsString();
+      File file = File(result.files.single.path!);
+      String jsonString = await file.readAsString();
+      if (jsonString.isEmpty) return "Failed to load settings";
+      
+      parameters = json.decode(jsonString);
+      if (parameters.isEmpty) {
+        resetAll();
+        return "Failed to decode settings";
+      }
 
-        parameters = json.decode(jsonString);
+      modelPath = parameters['modelPath'];
+      prePromptController.text = parameters['prePrompt'];
+      userAliasController.text = parameters['userAlias'];
+      responseAliasController.text = parameters['responseAlias'];
 
-        if (parameters.isEmpty) {
-          resetAll();
-          return "Failed to load settings";
-        }
-
-        modelPath = parameters['modelPath'];
-        prePromptController.text = parameters['prePrompt'];
-        userAliasController.text = parameters['userAlias'];
-        responseAliasController.text = parameters['responseAlias'];
-
-        for (var i = 0; i < parameters['examplePrompts'].length; i++) {
-          examplePromptControllers[i].text = parameters['examplePrompts'][i];
-          exampleResponseControllers[i].text = parameters['exampleResponses'][i];
-        }
+      for (var i = 0; i < parameters['examplePrompts'].length; i++) {
+        examplePromptControllers[i].text = parameters['examplePrompts'][i];
+        exampleResponseControllers[i].text = parameters['exampleResponses'][i];
       }
     } catch (e) {
       resetAll();
@@ -194,9 +191,17 @@ class Settings {
   }
 
   Future<String> loadModelFile() async {
-    if ((Platform.isAndroid || Platform.isIOS) && 
-        !(await Permission.storage.request().isGranted)) {
-      return "Permission Request Failed";
+    if ((Platform.isAndroid || Platform.isIOS)) {
+      if (!(await Permission.storage.request().isGranted)) {
+        return "Permission Request Failed";
+      }
+
+      await FilePicker.platform.clearTemporaryFiles();
+    }
+
+    if (Lib.instance.hasStarted()) {
+      Lib.instance.butlerStop();
+      Lib.instance.butlerExit();
     }
   
     try {
@@ -246,6 +251,8 @@ class Lib {
 
   // Flag to check if the instance has been initialized
   bool _isInitialized = false;
+  bool _hasStarted = false;
+  bool hasStarted() => _hasStarted;
 
   // Initialization logic
   void _initialize() {
@@ -257,12 +264,12 @@ class Lib {
 
   void _loadNativeLibrary() {
     DynamicLibrary butlerDynamic =
-        Platform.isMacOS || Platform.isIOS
-            ? DynamicLibrary.process() // macos and ios
-            : (DynamicLibrary.open(
-                Platform.isWindows // windows
-                    ? 'butler.dll'
-                    : 'libbutler.so')); // android and linux
+      Platform.isMacOS || Platform.isIOS
+        ? DynamicLibrary.process() // macos and ios
+        : (DynamicLibrary.open(
+          Platform.isWindows // windows
+            ? 'butler.dll'
+            : 'libbutler.so')); // android and linux
 
     _nativeLibrary = NativeLibrary(butlerDynamic);
   }
@@ -288,6 +295,8 @@ class Lib {
 
 
   void butlerStart(void Function(String) maidOutput) async {
+    _hasStarted = true;
+    
     final params = calloc<butler_params>();
     params.ref.model_path = settings.modelPath.toNativeUtf8().cast<Char>();
     params.ref.preprompt = settings.prePrompt.toNativeUtf8().cast<Char>();
@@ -351,5 +360,6 @@ class Lib {
   void butlerExit() {
     _nativeLibrary.butler_exit();
     _sendPort?.send(_sendPort);
+    _hasStarted = false;
   }
 }
