@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:system_info2/system_info2.dart';
 
 import 'package:maid/settings.dart';
-import 'package:maid/pages/settings_page.dart';
+import 'package:maid/pages/parameters_page.dart';
 import 'package:maid/pages/about_page.dart';
 import 'package:maid/theme.dart';
 
@@ -35,7 +35,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       FocusScope.of(context).unfocus();
     }
     
-    if (settings.modelPath.isEmpty) {
+    if (parameters.modelPath.isEmpty) {
       // Use a local reference to context to avoid using it across an async gap.
       final localContext = context;
       // Ensure that the context is still valid before attempting to show the dialog.
@@ -45,7 +45,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text(
-                "Model Missing\nPlease assign a model in settings.",
+                "Model Missing\nPlease assign a model in parameters.",
                 textAlign: TextAlign.center,
               ),
               alignment: Alignment.center,
@@ -58,10 +58,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
                 FilledButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ParametersPage()));
                   },
                   child: Text(
-                    "Open Settings",
+                    "Open Parameters",
                     style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
@@ -83,11 +83,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
       return;
     } else {
       setState(() {
-        settings.busy = true;
-        settings.saveSharedPreferences();
+        parameters.busy = true;
+        parameters.saveSharedPreferences();
         chatWidgets
-            .add(UserMessage(message: settings.promptController.text.trim()));
-        settings.compilePrePrompt();
+            .add(UserMessage(message: parameters.promptController.text.trim()));
+        parameters.compilePrePrompt();
       });
 
       if (!Lib.instance.hasStarted()) {
@@ -99,7 +99,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       setState(() {
         newResponse = ResponseMessage();
         chatWidgets.add(newResponse);
-        settings.promptController.text = ""; // Clear the input field
+        parameters.promptController.text = ""; // Clear the input field
       });
     }
   }
@@ -113,7 +113,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   void responseCallback(String message) {
-    if (!settings.busy) {
+    if (!parameters.busy) {
       newResponse.trim();
       newResponse.finalise();
       setState(() {});
@@ -160,12 +160,12 @@ class _MaidHomePageState extends State<MaidHomePage> {
             ListTile(
               leading: const Icon(Icons.settings),
               title: Text(
-                'Settings',
+                'Parameters',
                 style: Theme.of(context).textTheme.labelLarge
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ParametersPage()));
               },
             ),
             ListTile(
@@ -220,7 +220,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (settings.busy)
+                        if (parameters.busy)
                           IconButton(
                             onPressed: Lib.instance.butlerStop,
                             iconSize: 50,
@@ -236,11 +236,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
                             maxLines: 9,
                             enableInteractiveSelection: true,
                             onSubmitted: (value) {
-                              if (!settings.busy) {
+                              if (!parameters.busy) {
                                 execute();
                               }
                             },
-                            controller: settings.promptController,
+                            controller: parameters.promptController,
                             cursorColor:
                                 Theme.of(context).colorScheme.secondary,
                             decoration: InputDecoration(
@@ -250,11 +250,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
                           ),
                         ),
                         IconButton(
-                          onPressed: settings.busy ? null : execute,
+                          onPressed: parameters.busy ? null : execute,
                           iconSize: 50,
                           icon: Icon(
                             Icons.arrow_circle_right,
-                            color: settings.busy
+                            color: parameters.busy
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).colorScheme.secondary,
                           )

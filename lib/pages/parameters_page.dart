@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:maid/settings.dart';
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+class ParametersPage extends StatefulWidget {
+  const ParametersPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<ParametersPage> createState() => _ParametersPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _ParametersPageState extends State<ParametersPage> {
   void _storageOperationDialog(Future<String> Function() storageFunction) async {
     String ret = await storageFunction();
     // Use a local reference to context to avoid using it across an async gap.
@@ -40,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         },
       );
-      settings.saveSharedPreferences();
+      parameters.saveSharedPreferences();
       setState(() {});
     }
   }
@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
             color: Theme.of(context).colorScheme.background,
           ),
         ),
-        title: const Text('Settings'),
+        title: const Text('Parameters'),
       ),
       body: Stack(
         children: [
@@ -75,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 const SizedBox(height: 10.0),
                 Text(
-                  settings.parameters["modelName"],
+                  parameters.parameters["modelName"],
                   style: Theme.of(context).textTheme.titleSmall
                 ),
                 Divider(
@@ -88,20 +88,20 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     FilledButton(
                       onPressed: () {
-                        _storageOperationDialog(settings.loadSettingsFromJson);
+                        _storageOperationDialog(parameters.loadParametersFromJson);
                       },
                       child: Text(
-                        "Load Settings",
+                        "Load Parameters",
                         style: Theme.of(context).textTheme.labelLarge
                       ),
                     ),
                     const SizedBox(width: 10.0),
                     FilledButton(
                       onPressed: () {
-                        _storageOperationDialog(settings.saveSettingsToJson);
+                        _storageOperationDialog(parameters.saveParametersToJson);
                       },
                       child: Text(
-                        "Save Settings",
+                        "Save Parameters",
                         style: Theme.of(context).textTheme.labelLarge
                       ),
                     ),
@@ -113,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     FilledButton(
                       onPressed: () {
-                        _storageOperationDialog(settings.loadModelFile);
+                        _storageOperationDialog(parameters.loadModelFile);
                       },
                       child: Text(
                         "Load Model",
@@ -123,7 +123,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     const SizedBox(width: 10.0),
                     FilledButton(
                       onPressed: () {
-                        settings.resetAll();
+                        parameters.resetAll();
                         setState(() {});
                       },
                       child: Text(
@@ -139,9 +139,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 llamaParamTextField(
-                  'User alias', settings.userAliasController),
+                  'User alias', parameters.userAliasController),
                 llamaParamTextField(
-                  'Response alias', settings.responseAliasController),
+                  'Response alias', parameters.responseAliasController),
                 ListTile(
                   title: Row(
                     children: [
@@ -153,7 +153,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: TextField(
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
-                          controller: settings.prePromptController,
+                          controller: parameters.prePromptController,
                           decoration: const InputDecoration(
                             labelText: 'PrePrompt',
                           ),
@@ -173,8 +173,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     FilledButton(
                       onPressed: () {
                         setState(() {
-                          settings.examplePromptControllers.add(TextEditingController());
-                          settings.exampleResponseControllers.add(TextEditingController());
+                          parameters.examplePromptControllers.add(TextEditingController());
+                          parameters.exampleResponseControllers.add(TextEditingController());
                         });
                       },
                       child: Text(
@@ -186,8 +186,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     FilledButton(
                       onPressed: () {
                         setState(() {
-                          settings.examplePromptControllers.removeLast();
-                          settings.exampleResponseControllers.removeLast();
+                          parameters.examplePromptControllers.removeLast();
+                          parameters.exampleResponseControllers.removeLast();
                         });
                       },
                       child: Text(
@@ -199,11 +199,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 10.0),
                 ...List.generate(
-                  (settings.examplePromptControllers.length == settings.exampleResponseControllers.length) ? settings.examplePromptControllers.length : 0,
+                  (parameters.examplePromptControllers.length == parameters.exampleResponseControllers.length) ? parameters.examplePromptControllers.length : 0,
                   (index) => Column(
                     children: [
-                      llamaParamTextField('Example prompt', settings.examplePromptControllers[index]),
-                      llamaParamTextField('Example response', settings.exampleResponseControllers[index]),
+                      llamaParamTextField('Example prompt', parameters.examplePromptControllers[index]),
+                      llamaParamTextField('Example response', parameters.exampleResponseControllers[index]),
                     ],
                   ),
                 ),
@@ -214,37 +214,37 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 SwitchListTile(
                   title: const Text('instruct'),
-                  value: settings.parameters["instruct"],
+                  value: parameters.parameters["instruct"],
                   onChanged: (value) {
                     setState(() {
-                      settings.parameters["instruct"] = value;
+                      parameters.parameters["instruct"] = value;
                     });
                   },
                 ),
                 SwitchListTile(
                   title: const Text('memory_f16'),
-                  value: settings.parameters["memory_f16"],
+                  value: parameters.parameters["memory_f16"],
                   onChanged: (value) {
                     setState(() {
-                      settings.parameters["memory_f16"] = value;
+                      parameters.parameters["memory_f16"] = value;
                     });
                   },
                 ),
                 SwitchListTile(
                   title: const Text('penalize_nl'),
-                  value: settings.parameters["penalize_nl"],
+                  value: parameters.parameters["penalize_nl"],
                   onChanged: (value) {
                     setState(() {
-                      settings.parameters["penalize_nl"] = value;
+                      parameters.parameters["penalize_nl"] = value;
                     });
                   },
                 ),
                 SwitchListTile(
                   title: const Text('random_seed'),
-                  value: settings.parameters["random_seed"],
+                  value: parameters.parameters["random_seed"],
                   onChanged: (value) {
                     setState(() {
-                      settings.parameters["random_seed"] = value;
+                      parameters.parameters["random_seed"] = value;
                     });
                   },
                 ),
@@ -253,7 +253,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                if (!settings.parameters["random_seed"])
+                if (!parameters.parameters["random_seed"])
                   ListTile(
                     title: Row(
                       children: [
@@ -267,7 +267,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               labelText: 'seed',
                             ),
                             onChanged: (value) {
-                              settings.parameters["seed"] = int.parse(value) ?? 0;
+                              parameters.parameters["seed"] = int.parse(value) ?? 0;
                             },
                           ),
                         ),
@@ -276,160 +276,160 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 llamaParamSlider(
                   'n_threads', 
-                  settings.parameters["n_threads"],
+                  parameters.parameters["n_threads"],
                   1.0,
                   128.0,
                   127,
-                  (value) => settings.parameters["n_threads"] = value.round()
+                  (value) => parameters.parameters["n_threads"] = value.round()
                 ),
                 llamaParamSlider(
                   'n_ctx',
-                  settings.parameters["n_ctx"],
+                  parameters.parameters["n_ctx"],
                   1.0,
                   4096.0,
                   4095,
-                  (value) => settings.parameters["n_ctx"] = value.round()
+                  (value) => parameters.parameters["n_ctx"] = value.round()
                 ),
                 llamaParamSlider(
                   'n_batch',
-                  settings.parameters["n_batch"],
+                  parameters.parameters["n_batch"],
                   1.0,
                   4096.0,
                   4095,
-                  (value) => settings.parameters["n_batch"] = value.round()
+                  (value) => parameters.parameters["n_batch"] = value.round()
                 ),
                 llamaParamSlider(
                   'n_predict',
-                  settings.parameters["n_predict"],
+                  parameters.parameters["n_predict"],
                   1.0,
                   1024.0,
                   1023,
-                  (value) => settings.parameters["n_predict"] = value.round()
+                  (value) => parameters.parameters["n_predict"] = value.round()
                 ),
                 llamaParamSlider(
                   'n_keep',
-                  settings.parameters["n_keep"],
+                  parameters.parameters["n_keep"],
                   1.0,
                   1024.0,
                   1023,
-                  (value) => settings.parameters["n_keep"] = value.round()
+                  (value) => parameters.parameters["n_keep"] = value.round()
                 ),
                 llamaParamSlider(
                   'n_prev',
-                  settings.parameters["n_prev"],
+                  parameters.parameters["n_prev"],
                   1.0,
                   1024.0,
                   1023,
-                  (value) => settings.parameters["n_prev"] = value.round()
+                  (value) => parameters.parameters["n_prev"] = value.round()
                 ),
                 llamaParamSlider(
                   'n_probs',
-                  settings.parameters["n_probs"],
+                  parameters.parameters["n_probs"],
                   0.0,
                   128.0,
                   127,
-                  (value) => settings.parameters["n_probs"] = value.round()
+                  (value) => parameters.parameters["n_probs"] = value.round()
                 ),
                 llamaParamSlider(
                   'top_k',
-                  settings.parameters["top_k"],
+                  parameters.parameters["top_k"],
                   1.0,
                   128.0,
                   127,
-                  (value) => settings.parameters["top_k"] = value.round()
+                  (value) => parameters.parameters["top_k"] = value.round()
                 ),
                 llamaParamSlider(
                   'top_p',
-                  settings.parameters["top_p"],
+                  parameters.parameters["top_p"],
                   0.0,
                   1.0,
                   100,
-                  (value) => settings.parameters["top_p"] = value
+                  (value) => parameters.parameters["top_p"] = value
                 ),
                 llamaParamSlider(
                   'tfs_z',
-                  settings.parameters["tfs_z"],
+                  parameters.parameters["tfs_z"],
                   0.0,
                   1.0,
                   100,
-                  (value) => settings.parameters["tfs_z"] = value
+                  (value) => parameters.parameters["tfs_z"] = value
                 ),
                 llamaParamSlider(
                   'typical_p',
-                  settings.parameters["typical_p"],
+                  parameters.parameters["typical_p"],
                   0.0,
                   1.0,
                   100,
-                  (value) => settings.parameters["typical_p"] = value
+                  (value) => parameters.parameters["typical_p"] = value
                 ),
                 llamaParamSlider(
                   'temperature',
-                  settings.parameters["temperature"],
+                  parameters.parameters["temperature"],
                   0.0,
                   1.0,
                   100,
-                  (value) => settings.parameters["temperature"] = value
+                  (value) => parameters.parameters["temperature"] = value
                 ),
                 llamaParamSlider(
                   'penalty_last_n',
-                  settings.parameters["penalty_last_n"],
+                  parameters.parameters["penalty_last_n"],
                   0.0,
                   128.0,
                   127,
-                  (value) => settings.parameters["penalty_last_n"] = value.round()
+                  (value) => parameters.parameters["penalty_last_n"] = value.round()
                 ),
                 llamaParamSlider(
                   'penalty_repeat',
-                  settings.parameters["penalty_repeat"],
+                  parameters.parameters["penalty_repeat"],
                   0.0,
                   2.0,
                   200,
-                  (value) => settings.parameters["penalty_repeat"] = value
+                  (value) => parameters.parameters["penalty_repeat"] = value
                 ),
                 llamaParamSlider(
                   'penalty_freq',
-                  settings.parameters["penalty_freq"],
+                  parameters.parameters["penalty_freq"],
                   0.0,
                   1.0,
                   100,
-                  (value) => settings.parameters["penalty_freq"] = value
+                  (value) => parameters.parameters["penalty_freq"] = value
                 ),
                 llamaParamSlider(
                   'penalty_present',
-                  settings.parameters["penalty_present"],
+                  parameters.parameters["penalty_present"],
                   0.0,
                   1.0,
                   100,
-                  (value) => settings.parameters["penalty_present"] = value
+                  (value) => parameters.parameters["penalty_present"] = value
                 ),
                 llamaParamSlider(
                   'mirostat',
-                  settings.parameters["mirostat"],
+                  parameters.parameters["mirostat"],
                   0.0,
                   128.0,
                   127,
-                  (value) => settings.parameters["mirostat"] = value.round()
+                  (value) => parameters.parameters["mirostat"] = value.round()
                 ),
                 llamaParamSlider(
                   'mirostat_tau',
-                  settings.parameters["mirostat_tau"],
+                  parameters.parameters["mirostat_tau"],
                   0.0,
                   10.0,
                   100,
-                  (value) => settings.parameters["mirostat_tau"] = value
+                  (value) => parameters.parameters["mirostat_tau"] = value
                 ),
                 llamaParamSlider(
                   'mirostat_eta',
-                  settings.parameters["mirostat_eta"],
+                  parameters.parameters["mirostat_eta"],
                   0.0,
                   1.0,
                   100,
-                  (value) => settings.parameters["mirostat_eta"] = value
+                  (value) => parameters.parameters["mirostat_eta"] = value
                 ),
               ],
             ),
           ),
-          if (settings.busy)
+          if (parameters.busy)
             // This is a semi-transparent overlay that will cover the entire screen.
             Positioned.fill(
               child: Container(

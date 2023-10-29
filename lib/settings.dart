@@ -14,9 +14,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Settings settings = Settings();
+Parameters parameters = Parameters();
 
-class Settings { 
+class Parameters { 
   Map<String, dynamic> parameters = {};
 
   bool busy = false;
@@ -34,7 +34,7 @@ class Settings {
   late String prePrompt;
   late String modelPath;
 
-  Settings() {
+  Parameters() {
     initFromSharedPrefs();
   }
 
@@ -66,7 +66,7 @@ class Settings {
 
   void resetAll() async {
     // Reset all the internal state to the defaults
-    String jsonString = await rootBundle.loadString('assets/default_settings.json');
+    String jsonString = await rootBundle.loadString('assets/default_parameters.json');
 
     parameters = json.decode(jsonString);
 
@@ -88,7 +88,7 @@ class Settings {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
 
-    // It might be a good idea to save the default settings after a reset
+    // It might be a good idea to save the default parameters after a reset
     saveSharedPreferences();
   }
 
@@ -108,7 +108,7 @@ class Settings {
     prefs.setString("parameters", json.encode(parameters));
   }
 
-  Future<String> saveSettingsToJson() async {
+  Future<String> saveParametersToJson() async {
     parameters["modelPath"] = modelPath;
     parameters["prePrompt"] = prePromptController.text;
     parameters["userAlias"] = userAliasController.text;
@@ -135,7 +135,7 @@ class Settings {
           return "Permission Request Failed";
         }
 
-        filePath = '${directory!.path}/maid_settings.json';
+        filePath = '${directory!.path}/maid_parameters.json';
       }
       else {
         filePath = await FilePicker.platform.saveFile(type: FileType.any);
@@ -150,10 +150,10 @@ class Settings {
     } catch (e) {
       return "Error: $e";
     }
-    return "Settings Successfully Saved to $filePath";
+    return "Parameters Successfully Saved to $filePath";
   }
 
-  Future<String> loadSettingsFromJson() async {
+  Future<String> loadParametersFromJson() async {
     if ((Platform.isAndroid || Platform.isIOS) && 
         !(await Permission.storage.request().isGranted)) {
       return "Permission Request Failed";
@@ -165,12 +165,12 @@ class Settings {
 
       File file = File(result.files.single.path!);
       String jsonString = await file.readAsString();
-      if (jsonString.isEmpty) return "Failed to load settings";
+      if (jsonString.isEmpty) return "Failed to load parameters";
       
       parameters = json.decode(jsonString);
       if (parameters.isEmpty) {
         resetAll();
-        return "Failed to decode settings";
+        return "Failed to decode parameters";
       }
 
       modelPath = parameters['modelPath'];
@@ -187,7 +187,7 @@ class Settings {
       return "Error: $e";
     }
 
-    return "Settings Successfully Loaded";
+    return "Parameters Successfully Loaded";
   }
 
   Future<String> loadModelFile() async {
@@ -303,32 +303,32 @@ class Lib {
     _hasStarted = true;
     
     final params = calloc<butler_params>();
-    params.ref.model_path = settings.modelPath.toNativeUtf8().cast<Char>();
-    params.ref.preprompt = settings.prePrompt.toNativeUtf8().cast<Char>();
-    params.ref.input_prefix = settings.userAliasController.text.trim().toNativeUtf8().cast<Char>();
-    params.ref.input_suffix = settings.responseAliasController.text.trim().toNativeUtf8().cast<Char>();
-    params.ref.seed = settings.parameters["random_seed"] ? -1 : settings.parameters["seed"];
-    params.ref.n_ctx = settings.parameters["n_ctx"];
-    params.ref.n_threads = settings.parameters["n_threads"];
-    params.ref.n_batch = settings.parameters["n_batch"];
-    params.ref.n_predict = settings.parameters["n_predict"];
-    params.ref.instruct = settings.parameters["instruct"]       ? 1 : 0;
-    params.ref.memory_f16 = settings.parameters["memory_f16"]   ? 1 : 0;
-    params.ref.n_prev = settings.parameters["n_prev"];
-    params.ref.n_probs = settings.parameters["n_probs"];
-    params.ref.top_k = settings.parameters["top_k"];
-    params.ref.top_p = settings.parameters["top_p"];
-    params.ref.tfs_z = settings.parameters["tfs_z"];
-    params.ref.typical_p = settings.parameters["typical_p"];
-    params.ref.temp = settings.parameters["temperature"];
-    params.ref.penalty_last_n = settings.parameters["penalty_last_n"];
-    params.ref.penalty_repeat = settings.parameters["penalty_repeat"];
-    params.ref.penalty_freq = settings.parameters["penalty_freq"];
-    params.ref.penalty_present = settings.parameters["penalty_present"];
-    params.ref.mirostat = settings.parameters["mirostat"];
-    params.ref.mirostat_tau = settings.parameters["mirostat_tau"];
-    params.ref.mirostat_eta = settings.parameters["mirostat_eta"];
-    params.ref.penalize_nl = settings.parameters["penalize_nl"]     ? 1 : 0;
+    params.ref.model_path = parameters.modelPath.toNativeUtf8().cast<Char>();
+    params.ref.preprompt = parameters.prePrompt.toNativeUtf8().cast<Char>();
+    params.ref.input_prefix = parameters.userAliasController.text.trim().toNativeUtf8().cast<Char>();
+    params.ref.input_suffix = parameters.responseAliasController.text.trim().toNativeUtf8().cast<Char>();
+    params.ref.seed = parameters.parameters["random_seed"] ? -1 : parameters.parameters["seed"];
+    params.ref.n_ctx = parameters.parameters["n_ctx"];
+    params.ref.n_threads = parameters.parameters["n_threads"];
+    params.ref.n_batch = parameters.parameters["n_batch"];
+    params.ref.n_predict = parameters.parameters["n_predict"];
+    params.ref.instruct = parameters.parameters["instruct"]       ? 1 : 0;
+    params.ref.memory_f16 = parameters.parameters["memory_f16"]   ? 1 : 0;
+    params.ref.n_prev = parameters.parameters["n_prev"];
+    params.ref.n_probs = parameters.parameters["n_probs"];
+    params.ref.top_k = parameters.parameters["top_k"];
+    params.ref.top_p = parameters.parameters["top_p"];
+    params.ref.tfs_z = parameters.parameters["tfs_z"];
+    params.ref.typical_p = parameters.parameters["typical_p"];
+    params.ref.temp = parameters.parameters["temperature"];
+    params.ref.penalty_last_n = parameters.parameters["penalty_last_n"];
+    params.ref.penalty_repeat = parameters.parameters["penalty_repeat"];
+    params.ref.penalty_freq = parameters.parameters["penalty_freq"];
+    params.ref.penalty_present = parameters.parameters["penalty_present"];
+    params.ref.mirostat = parameters.parameters["mirostat"];
+    params.ref.mirostat_tau = parameters.parameters["mirostat_tau"];
+    params.ref.mirostat_eta = parameters.parameters["mirostat_eta"];
+    params.ref.penalize_nl = parameters.parameters["penalize_nl"]     ? 1 : 0;
 
     _nativeLibrary.butler_start(params);
 
@@ -343,7 +343,7 @@ class Lib {
       } else if (data is SendPort) {
         completer.complete();
       } else if (data is int) {
-        settings.busy = false;
+        parameters.busy = false;
         maidOutput("");
       }
     });
@@ -351,7 +351,7 @@ class Lib {
   }
 
   void butlerContinue() {
-    String input = settings.promptController.text;
+    String input = parameters.promptController.text;
     Isolate.spawn(butlerContinueIsolate, {
       'input': input,
       'port': _sendPort
