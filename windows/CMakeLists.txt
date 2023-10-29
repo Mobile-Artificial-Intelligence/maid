@@ -52,9 +52,6 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
-add_subdirectory(../src butler)
-install(FILES ${PROJECT_BINARY_DIR}/butler/butler.dll DESTINATION ${PROJECT_BINARY_DIR})
-
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)
@@ -64,7 +61,7 @@ include(flutter/generated_plugins.cmake)
 # Support files are copied into place next to the executable, so that it can
 # run in place. This is done instead of making a separate bundle (as on Linux)
 # so that building and running from within Visual Studio will work.
-set(BUILD_BUNDLE_DIR "$<TARGET_FILE_DIR:${BINARY_NAME}>")
+set(BUILD_BUNDLE_DIR "${PROJECT_BINARY_DIR}/bundle")
 # Make the "install" step default, as it's required to run.
 set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -102,3 +99,10 @@ install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
 install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   CONFIGURATIONS Profile;Release
   COMPONENT Runtime)
+
+# Override the default install location for the butler library.
+set(CMAKE_INSTALL_BINDIR ${BUILD_BUNDLE_DIR})
+
+# Build the butler library.
+add_subdirectory(../src butler)
+install(FILES ${PROJECT_BINARY_DIR}/butler/Release/butler.dll DESTINATION ${BUILD_BUNDLE_DIR})

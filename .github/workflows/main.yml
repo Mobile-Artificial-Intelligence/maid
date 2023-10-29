@@ -1,4 +1,4 @@
-name: Build Android and Linux
+name: Build Android, Windows and Linux
 
 on:
   push:
@@ -77,3 +77,31 @@ jobs:
           name: maid-linux
           path: build/linux/x64/release/bundle
         
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.7'
+        
+      - name: Install dependencies
+        run: |
+          choco install -y cmake ninja
+
+      - name: Build Windows App
+        run: |
+          flutter pub get
+          dart run ffigen
+          flutter build windows
+
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: maid-windows
+          path: build/windows/bundle
