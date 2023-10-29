@@ -75,7 +75,7 @@ class _CharacterPageState extends State<CharacterPage> {
               children: [
                 const SizedBox(height: 10.0),
                 Text(
-                  character.jsonCharacter["responseAlias"],
+                  character.jsonCharacter["response_alias"],
                   style: Theme.of(context).textTheme.titleSmall
                 ),
                 Divider(
