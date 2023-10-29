@@ -44,9 +44,9 @@ class Character {
     userAliasController.text = jsonCharacter["user_alias"] ?? "";
     responseAliasController.text = jsonCharacter["response_alias"] ?? "";
 
-    examplePromptControllers = [];
-    exampleResponseControllers = [];
-    
+    examplePromptControllers.clear();
+    exampleResponseControllers.clear();
+
     int length = jsonCharacter["example"]?.length ?? 0;
     for (var i = 0; i < length; i++) {
       String? examplePrompt = jsonCharacter["example"][i]["prompt"];
@@ -82,6 +82,9 @@ class Character {
     prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
     userAliasController.text = jsonCharacter["user_alias"] ?? "";
     responseAliasController.text = jsonCharacter["response_alias"] ?? "";
+
+    examplePromptControllers.clear();
+    exampleResponseControllers.clear();
 
     int length = jsonCharacter["example"]?.length ?? 0;
     for (var i = 0; i < length; i++) {
