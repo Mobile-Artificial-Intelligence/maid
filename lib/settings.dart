@@ -191,9 +191,17 @@ class Settings {
   }
 
   Future<String> loadModelFile() async {
-    if ((Platform.isAndroid || Platform.isIOS) && 
-        !(await Permission.storage.request().isGranted)) {
-      return "Permission Request Failed";
+    if ((Platform.isAndroid || Platform.isIOS)) {
+      if (!(await Permission.storage.request().isGranted)) {
+        return "Permission Request Failed";
+      }
+
+      await FilePicker.platform.clearTemporaryFiles();
+    }
+
+    if (Lib.instance.hasStarted()) {
+      Lib.instance.butlerStop();
+      Lib.instance.butlerExit();
     }
   
     try {
@@ -243,6 +251,8 @@ class Lib {
 
   // Flag to check if the instance has been initialized
   bool _isInitialized = false;
+  bool _hasStarted = false;
+  bool hasStarted() => _hasStarted;
 
   // Initialization logic
   void _initialize() {
@@ -285,6 +295,8 @@ class Lib {
 
 
   void butlerStart(void Function(String) maidOutput) async {
+    _hasStarted = true;
+    
     final params = calloc<butler_params>();
     params.ref.model_path = settings.modelPath.toNativeUtf8().cast<Char>();
     params.ref.preprompt = settings.prePrompt.toNativeUtf8().cast<Char>();
@@ -348,5 +360,6 @@ class Lib {
   void butlerExit() {
     _nativeLibrary.butler_exit();
     _sendPort?.send(_sendPort);
+    _hasStarted = false;
   }
 }

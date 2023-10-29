@@ -92,7 +92,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
         settings.compilePrePrompt();
       });
 
-      if (lib == null) {
+      if (lib == null || !Lib.instance.hasStarted()) {
         lib = Lib.instance;
         lib?.butlerStart(responseCallback);
       } else {
