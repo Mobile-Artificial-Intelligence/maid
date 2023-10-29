@@ -196,7 +196,7 @@ class Settings {
         return "Permission Request Failed";
       }
 
-      await FilePicker.platform.clearTemporaryFiles();
+      if (modelPath.isNotEmpty) await FilePicker.platform.clearTemporaryFiles();
     }
   
     try {
@@ -204,7 +204,7 @@ class Settings {
         dialogTitle: "Select Model File",
         type: FileType.any,
         allowMultiple: false,
-        lockParentWindow: true
+        onFileLoading: (FilePickerStatus status) => busy = status == FilePickerStatus.picking
       );
       final filePath = result?.files.single.path;
   
