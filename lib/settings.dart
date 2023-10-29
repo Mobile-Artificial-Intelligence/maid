@@ -163,27 +163,26 @@ class Settings {
     
     try{
       final result = await FilePicker.platform.pickFiles(type: FileType.any);
+      if (result == null) return "No File Selected";
 
-      if (result != null) {
-        File file = File(result.files.single.path!);
-        String jsonString = await file.readAsString();
+      File file = File(result.files.single.path!);
+      String jsonString = await file.readAsString();
+      if (jsonString.isEmpty) return "Failed to load settings";
+      
+      parameters = json.decode(jsonString);
+      if (parameters.isEmpty) {
+        resetAll();
+        return "Failed to decode settings";
+      }
 
-        parameters = json.decode(jsonString);
+      modelPath = parameters['modelPath'];
+      prePromptController.text = parameters['prePrompt'];
+      userAliasController.text = parameters['userAlias'];
+      responseAliasController.text = parameters['responseAlias'];
 
-        if (parameters.isEmpty) {
-          resetAll();
-          return "Failed to load settings";
-        }
-
-        modelPath = parameters['modelPath'];
-        prePromptController.text = parameters['prePrompt'];
-        userAliasController.text = parameters['userAlias'];
-        responseAliasController.text = parameters['responseAlias'];
-
-        for (var i = 0; i < parameters['examplePrompts'].length; i++) {
-          examplePromptControllers[i].text = parameters['examplePrompts'][i];
-          exampleResponseControllers[i].text = parameters['exampleResponses'][i];
-        }
+      for (var i = 0; i < parameters['examplePrompts'].length; i++) {
+        examplePromptControllers[i].text = parameters['examplePrompts'][i];
+        exampleResponseControllers[i].text = parameters['exampleResponses'][i];
       }
     } catch (e) {
       resetAll();
