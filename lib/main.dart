@@ -2,32 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:maid/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
+final maidAppKey = GlobalKey<_MaidAppState>();
+
 void main() {
-  runApp(MaidApp());
+  runApp(MaidApp(key: maidAppKey));
 }
 
 class MaidApp extends StatefulWidget {
+  const MaidApp({super.key});
+
   @override
   _MaidAppState createState() => _MaidAppState();
 }
 
 class _MaidAppState extends State<MaidApp> {
-  late ThemeData _currentTheme;
-
   @override
   void initState() {
     super.initState();
-    _currentTheme = MaidTheme.darkTheme; // Starting with dark theme
+    _loadTheme();
   }
 
-  void _toggleTheme() {
-    setState(() {
-      if (_currentTheme == MaidTheme.darkTheme) {
-        _currentTheme = MaidTheme.lightTheme;
-      } else {
-        _currentTheme = MaidTheme.darkTheme;
-      }
-    });
+  _loadTheme() async {
+    await MaidTheme.loadThemePreference();
+    setState(() {});
+  }
+
+  void refreshApp() {
+    setState(() {});
   }
 
   @override
@@ -35,11 +36,8 @@ class _MaidAppState extends State<MaidApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Maid',
-      theme: _currentTheme,
-      home: MaidHomePage(
-        title: 'Maid',
-        onToggleTheme: _toggleTheme,
-      ),
+      theme: MaidTheme.theme,
+      home: const MaidHomePage(title: 'Maid'),
     );
   }
 }

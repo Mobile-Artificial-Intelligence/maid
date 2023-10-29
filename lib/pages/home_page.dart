@@ -10,13 +10,13 @@ import 'package:system_info2/system_info2.dart';
 import 'package:maid/settings.dart';
 import 'package:maid/pages/settings_page.dart';
 import 'package:maid/pages/about_page.dart';
+import 'package:maid/theme.dart';
 
 
 class MaidHomePage extends StatefulWidget {
   final String title;
-  final VoidCallback onToggleTheme;
 
-  const MaidHomePage({Key? key, required this.title, required this.onToggleTheme}) : super(key: key);
+  const MaidHomePage({Key? key, required this.title}) : super(key: key);
 
 
   @override
@@ -183,8 +183,8 @@ class _MaidHomePageState extends State<MaidHomePage> {
               },
             ),
             IconButton(
-              onPressed: () {
-                widget.onToggleTheme();
+              onPressed: () async {
+                await MaidTheme.toggleTheme();
               },
               icon: const Icon(Icons.brightness_4),
               tooltip: 'Toggle Theme',
