@@ -2,9 +2,6 @@
     "memory_f16":false,
     "instruct":true,
     "random_seed":true,
-    "prePrompt":"A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions.",
-    "userAlias":"USER:",
-    "responseAlias":"ASSISTANT:",
     "modelName":"",
     "modelPath":"",
     "seed":-1,
@@ -27,7 +24,5 @@
     "mirostat":0,
     "mirostat_tau":5.0,
     "mirostat_eta":0.1,
-    "penalize_nl":true,
-    "examplePrompts":[],
-    "exampleResponses":[]
+    "penalize_nl":true
 }

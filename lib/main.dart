@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/theme.dart';
+import 'package:maid/config/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
 final maidAppKey = GlobalKey<_MaidAppState>();
