@@ -7,10 +7,13 @@ import 'package:flutter/services.dart';
 
 import 'package:system_info2/system_info2.dart';
 
-import 'package:maid/settings.dart';
-import 'package:maid/pages/parameters_page.dart';
+import 'package:maid/config/model.dart';
+import 'package:maid/config/character.dart';
+import 'package:maid/config/butler.dart';
+import 'package:maid/pages/character_page.dart';
+import 'package:maid/pages/model_page.dart';
 import 'package:maid/pages/about_page.dart';
-import 'package:maid/theme.dart';
+import 'package:maid/config/theme.dart';
 
 
 class MaidHomePage extends StatefulWidget {
@@ -35,7 +38,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       FocusScope.of(context).unfocus();
     }
     
-    if (parameters.modelPath.isEmpty) {
+    if (model.modelPath.isEmpty) {
       // Use a local reference to context to avoid using it across an async gap.
       final localContext = context;
       // Ensure that the context is still valid before attempting to show the dialog.
@@ -45,7 +48,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text(
-                "Model Missing\nPlease assign a model in parameters.",
+                "Model Missing\nPlease assign a model in model settings.",
                 textAlign: TextAlign.center,
               ),
               alignment: Alignment.center,
@@ -58,10 +61,10 @@ class _MaidHomePageState extends State<MaidHomePage> {
                 FilledButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ParametersPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
                   },
                   child: Text(
-                    "Open Parameters",
+                    "Open Model Settings",
                     style: Theme.of(context).textTheme.labelLarge
                   ),
                 ),
@@ -83,11 +86,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
       return;
     } else {
       setState(() {
-        parameters.busy = true;
-        parameters.saveSharedPreferences();
+        model.busy = true;
+        model.saveSharedPreferences();
         chatWidgets
-            .add(UserMessage(message: parameters.promptController.text.trim()));
-        parameters.compilePrePrompt();
+            .add(UserMessage(message: character.promptController.text.trim()));
+        character.compilePrePrompt();
       });
 
       if (!Lib.instance.hasStarted()) {
@@ -99,7 +102,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
       setState(() {
         newResponse = ResponseMessage();
         chatWidgets.add(newResponse);
-        parameters.promptController.text = ""; // Clear the input field
+        character.promptController.text = ""; // Clear the input field
       });
     }
   }
@@ -113,7 +116,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   void responseCallback(String message) {
-    if (!parameters.busy) {
+    if (!model.busy) {
       newResponse.trim();
       newResponse.finalise();
       setState(() {});
@@ -158,14 +161,25 @@ class _MaidHomePageState extends State<MaidHomePage> {
               color: Theme.of(context).colorScheme.primary,
             ),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: const Icon(Icons.person),
               title: Text(
-                'Parameters',
+                'Character',
                 style: Theme.of(context).textTheme.labelLarge
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ParametersPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CharacterPage()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: Text(
+                'Model',
+                style: Theme.of(context).textTheme.labelLarge
+              ),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
               },
             ),
             ListTile(
@@ -220,7 +234,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (parameters.busy)
+                        if (model.busy)
                           IconButton(
                             onPressed: Lib.instance.butlerStop,
                             iconSize: 50,
@@ -236,11 +250,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
                             maxLines: 9,
                             enableInteractiveSelection: true,
                             onSubmitted: (value) {
-                              if (!parameters.busy) {
+                              if (!model.busy) {
                                 execute();
                               }
                             },
-                            controller: parameters.promptController,
+                            controller: character.promptController,
                             cursorColor:
                                 Theme.of(context).colorScheme.secondary,
                             decoration: InputDecoration(
@@ -250,11 +264,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
                           ),
                         ),
                         IconButton(
-                          onPressed: parameters.busy ? null : execute,
+                          onPressed: model.busy ? null : execute,
                           iconSize: 50,
                           icon: Icon(
                             Icons.arrow_circle_right,
-                            color: parameters.busy
+                            color: model.busy
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).colorScheme.secondary,
                           )
