@@ -7,6 +7,7 @@ import 'package:ffi/ffi.dart';
 import 'package:maid/config/butler_bindings.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/character.dart';
+import 'package:maid/config/settings.dart';
 
 class Lib {
   static SendPort? _sendPort;
@@ -57,7 +58,7 @@ class Lib {
         _sendPort?.send(code);
       }
     } catch (e) {
-      print(e.toString());
+      Settings.log(e.toString());
     }
   }
 

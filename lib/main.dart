@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/config/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
-final maidAppKey = GlobalKey<_MaidAppState>();
+final maidAppKey = GlobalKey<MaidAppState>();
 
 void main() {
   runApp(MaidApp(key: maidAppKey));
@@ -12,10 +12,10 @@ class MaidApp extends StatefulWidget {
   const MaidApp({super.key});
 
   @override
-  _MaidAppState createState() => _MaidAppState();
+  MaidAppState createState() => MaidAppState();
 }
 
-class _MaidAppState extends State<MaidApp> {
+class MaidAppState extends State<MaidApp> {
   @override
   void initState() {
     super.initState();

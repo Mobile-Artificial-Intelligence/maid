@@ -9,6 +9,7 @@ import 'package:system_info2/system_info2.dart';
 
 import 'package:maid/config/model.dart';
 import 'package:maid/config/character.dart';
+import 'package:maid/config/settings.dart';
 import 'package:maid/config/butler.dart';
 import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/model_page.dart';
@@ -19,7 +20,7 @@ import 'package:maid/pages/about_page.dart';
 class MaidHomePage extends StatefulWidget {
   final String title;
 
-  const MaidHomePage({Key? key, required this.title}) : super(key: key);
+  const MaidHomePage({super.key, required this.title});
 
 
   @override
@@ -334,7 +335,7 @@ class ResponseMessage extends StatefulWidget {
   ResponseMessage({super.key});
 
   void addMessage(String message) {
-    print("{$message}");
+    Settings.log("{$message}");
     messageController.add(message);
   }
 
@@ -347,11 +348,11 @@ class ResponseMessage extends StatefulWidget {
   }
 
   @override
-  _ResponseMessageState createState() => _ResponseMessageState();
+  ResponseMessageState createState() => ResponseMessageState();
 }
 
-class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
-  List<Widget> _messageWidgets = [];
+class ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
+  final List<Widget> _messageWidgets = [];
   String _message = "";
   bool _finalised = false; // Declare finalised here
   bool _inCodeBox = false;
@@ -433,10 +434,10 @@ class TypingIndicator extends StatefulWidget {
   const TypingIndicator({super.key});
 
   @override
-  _TypingIndicatorState createState() => _TypingIndicatorState();
+  TypingIndicatorState createState() => TypingIndicatorState();
 }
 
-class _TypingIndicatorState extends State<TypingIndicator>
+class TypingIndicatorState extends State<TypingIndicator>
     with SingleTickerProviderStateMixin {
   late AnimationController _repeatingController;
   final List<Interval> _dotIntervals = const [
