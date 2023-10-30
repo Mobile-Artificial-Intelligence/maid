@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:maid/main.dart';
 
+enum ThemeType { dark, light }
+
 class MaidTheme {
   static ThemeData _theme = _darkTheme;
   static ThemeData get theme => _theme;
+  static ThemeData get darkTheme => _darkTheme;
+  static ThemeData get lightTheme => _lightTheme;
 
   static Future<void> loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -24,14 +28,21 @@ class MaidTheme {
     }
   }
 
-  static Future<void> toggleTheme() async {
+  static Future<void> setTheme(ThemeType type) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (_theme == _darkTheme) {
-      _theme = _lightTheme;
-      await prefs.setString('theme', 'light');
-    } else {
-      _theme = _darkTheme;
-      await prefs.setString('theme', 'dark');
+    switch (type) {
+      case ThemeType.dark:
+        _theme = _darkTheme;
+        await prefs.setString('theme', 'dark');
+        break;
+      case ThemeType.light:
+        _theme = _lightTheme;
+        await prefs.setString('theme', 'light');
+        break;
+      default:
+        _theme = _darkTheme;
+        await prefs.setString('theme', 'dark');
+        break;
     }
   
     maidAppKey.currentState!.refreshApp();

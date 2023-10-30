@@ -34,10 +34,10 @@ static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
 static int n_remain;
-static int n_past     = 0;
-static int n_consumed = 0;
-static int n_pfx      = 0;
-static int n_sfx      = 0;
+static int n_past       = 0;
+static int n_consumed   = 0;
+static int n_pfx        = 0;
+static int n_sfx        = 0;
 static signed int prior = 0;
 
 static gpt_params params;

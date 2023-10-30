@@ -7,9 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-Model model = Model();
+import 'package:maid/config/settings.dart';
 
 class Model { 
   Map<String, dynamic> parameters = {};
@@ -19,27 +17,16 @@ class Model {
   late String modelPath;
 
   Model() {
-    initFromSharedPrefs();
+    resetAll();
   }
 
-  void initFromSharedPrefs() async {
-    var prefs = await SharedPreferences.getInstance();
-
-    parameters = json.decode(prefs.getString("model") ?? "{}");
-
-    if (parameters.isEmpty) {
+  Model.fromMap(Map<String, dynamic> inputJson) {
+    if (inputJson.isEmpty) {
       resetAll();
+    } else {
+      parameters = inputJson;
+      modelPath = parameters["model_path"] ?? "";
     }
-
-    modelPath = parameters["model_path"] ?? "";
-  }
-
-  void saveSharedPreferences() async {
-    parameters["model_path"] = modelPath;
-    
-    var prefs = await SharedPreferences.getInstance();
-
-    prefs.setString("model", json.encode(parameters));
   }
 
   void resetAll() async {
@@ -48,15 +35,10 @@ class Model {
 
     parameters = json.decode(jsonString);
 
-    // Clear values from SharedPreferences
-    var prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-
-    // It might be a good idea to save the default model after a reset
-    saveSharedPreferences();
+    settings.save();
   }
 
-  Future<String> saveModelToJson() async {
+  Future<String> saveParametersToJson() async {
     parameters["model_path"] = modelPath;
 
     // Convert the map to a JSON string
@@ -93,7 +75,7 @@ class Model {
     return "Model Successfully Saved to $filePath";
   }
 
-  Future<String> loadModelFromJson() async {
+  Future<String> loadParametersFromJson() async {
     if ((Platform.isAndroid || Platform.isIOS) && 
         !(await Permission.storage.request().isGranted)) {
       return "Permission Request Failed";

@@ -7,19 +7,18 @@ import 'package:flutter/services.dart';
 
 import 'package:system_info2/system_info2.dart';
 
-import 'package:maid/config/model.dart';
-import 'package:maid/config/character.dart';
+import 'package:maid/config/settings.dart';
 import 'package:maid/config/butler.dart';
 import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/model_page.dart';
+import 'package:maid/pages/settings_page.dart';
 import 'package:maid/pages/about_page.dart';
-import 'package:maid/config/theme.dart';
 
 
 class MaidHomePage extends StatefulWidget {
   final String title;
 
-  const MaidHomePage({Key? key, required this.title}) : super(key: key);
+  const MaidHomePage({super.key, required this.title});
 
 
   @override
@@ -32,79 +31,76 @@ class _MaidHomePageState extends State<MaidHomePage> {
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
 
+  void _missingModelDialog() {
+    // Use a local reference to context to avoid using it across an async gap.
+    final localContext = context;
+    // Ensure that the context is still valid before attempting to show the dialog.
+    if (localContext.mounted) {
+      showDialog(
+        context: localContext,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text(
+              "Model Missing\nPlease assign a model in model settings.",
+              textAlign: TextAlign.center,
+            ),
+            alignment: Alignment.center,
+            actionsAlignment: MainAxisAlignment.center,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ModelPage(model: settings.getCurrentModel())));
+                },
+                child: Text(
+                  "Open Model Settings",
+                  style: Theme.of(context).textTheme.labelLarge
+                ),
+              ),
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "Close",
+                  style: Theme.of(context).textTheme.labelLarge
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      setState(() {});
+    }
+  }
+
   void execute() {
     //close the keyboard if on mobile
     if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
     }
     
-    if (model.modelPath.isEmpty) {
-      // Use a local reference to context to avoid using it across an async gap.
-      final localContext = context;
-      // Ensure that the context is still valid before attempting to show the dialog.
-      if (localContext.mounted) {
-        showDialog(
-          context: localContext,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text(
-                "Model Missing\nPlease assign a model in model settings.",
-                textAlign: TextAlign.center,
-              ),
-              alignment: Alignment.center,
-              actionsAlignment: MainAxisAlignment.center,
-              backgroundColor: Theme.of(context).colorScheme.background,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              ),
-              actions: [
-                FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
-                  },
-                  child: Text(
-                    "Open Model Settings",
-                    style: Theme.of(context).textTheme.labelLarge
-                  ),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Close",
-                    style: Theme.of(context).textTheme.labelLarge
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-        setState(() {});
-      }
-      return;
+    setState(() {
+      settings.getCurrentModel().busy = true;
+      settings.save();
+      chatWidgets.add(UserMessage(message: settings.getCurrentCharacter().promptController.text.trim()));
+    });
+
+    if (!Lib.instance.hasStarted()) {
+      Lib.instance.butlerStart(responseCallback);
     } else {
-      setState(() {
-        model.busy = true;
-        model.saveSharedPreferences();
-        character.saveSharedPreferences();
-        chatWidgets.add(UserMessage(message: character.promptController.text.trim()));
-        character.compilePrePrompt();
-      });
-
-      if (!Lib.instance.hasStarted()) {
-        Lib.instance.butlerStart(responseCallback);
-      } else {
-        Lib.instance.butlerContinue();
-      }
-
-      setState(() {
-        newResponse = ResponseMessage();
-        chatWidgets.add(newResponse);
-        character.promptController.text = ""; // Clear the input field
-      });
+      Lib.instance.butlerContinue();
     }
+
+    setState(() {
+      newResponse = ResponseMessage();
+      chatWidgets.add(newResponse);
+      settings.getCurrentCharacter().promptController.text = ""; // Clear the input field
+    });
   }
 
   void scrollDown() {
@@ -116,7 +112,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   void responseCallback(String message) {
-    if (!model.busy) {
+    if (!settings.getCurrentModel().busy) {
       newResponse.trim();
       newResponse.finalise();
       setState(() {});
@@ -168,18 +164,29 @@ class _MaidHomePageState extends State<MaidHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const CharacterPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CharacterPage(character: settings.getCurrentCharacter())));
               },
             ),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: const Icon(Icons.account_tree_rounded),
               title: Text(
                 'Model',
                 style: Theme.of(context).textTheme.labelLarge
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ModelPage(model: settings.getCurrentModel())));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: Text(
+                'Settings',
+                style: Theme.of(context).textTheme.labelLarge
+              ),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
               },
             ),
             ListTile(
@@ -192,13 +199,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutPage()));
               },
-            ),
-            IconButton(
-              onPressed: () async {
-                await MaidTheme.toggleTheme();
-              },
-              icon: const Icon(Icons.brightness_4),
-              tooltip: 'Toggle Theme',
             )
           ],
         ),
@@ -234,7 +234,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (model.busy)
+                        if (settings.getCurrentModel().busy)
                           IconButton(
                             onPressed: Lib.instance.butlerStop,
                             iconSize: 50,
@@ -249,12 +249,16 @@ class _MaidHomePageState extends State<MaidHomePage> {
                             minLines: 1,
                             maxLines: 9,
                             enableInteractiveSelection: true,
-                            onSubmitted: (value) {
-                              if (!model.busy) {
-                                execute();
-                              }
+                            onSubmitted:  (value) {
+                              if (!(settings.getCurrentModel().busy)) {
+                                if (settings.getCurrentModel().modelPath.isEmpty) {
+                                  _missingModelDialog();
+                                } else {
+                                  execute();
+                                }                             
+                              }                          
                             },
-                            controller: character.promptController,
+                            controller: settings.getCurrentCharacter().promptController,
                             cursorColor:
                                 Theme.of(context).colorScheme.secondary,
                             decoration: InputDecoration(
@@ -264,11 +268,19 @@ class _MaidHomePageState extends State<MaidHomePage> {
                           ),
                         ),
                         IconButton(
-                          onPressed: model.busy ? null : execute,
+                          onPressed: () {
+                            if (!settings.getCurrentModel().busy) {
+                              if (settings.getCurrentModel().modelPath.isEmpty) {
+                                _missingModelDialog();
+                              } else {
+                                execute();
+                              }                             
+                            }                          
+                          },
                           iconSize: 50,
                           icon: Icon(
                             Icons.arrow_circle_right,
-                            color: model.busy
+                            color: settings.getCurrentModel().busy
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).colorScheme.secondary,
                           )
@@ -319,7 +331,7 @@ class ResponseMessage extends StatefulWidget {
   ResponseMessage({super.key});
 
   void addMessage(String message) {
-    print("{$message}");
+    Settings.log("{$message}");
     messageController.add(message);
   }
 
@@ -332,11 +344,11 @@ class ResponseMessage extends StatefulWidget {
   }
 
   @override
-  _ResponseMessageState createState() => _ResponseMessageState();
+  ResponseMessageState createState() => ResponseMessageState();
 }
 
-class _ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
-  List<Widget> _messageWidgets = [];
+class ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
+  final List<Widget> _messageWidgets = [];
   String _message = "";
   bool _finalised = false; // Declare finalised here
   bool _inCodeBox = false;
@@ -418,10 +430,10 @@ class TypingIndicator extends StatefulWidget {
   const TypingIndicator({super.key});
 
   @override
-  _TypingIndicatorState createState() => _TypingIndicatorState();
+  TypingIndicatorState createState() => TypingIndicatorState();
 }
 
-class _TypingIndicatorState extends State<TypingIndicator>
+class TypingIndicatorState extends State<TypingIndicator>
     with SingleTickerProviderStateMixin {
   late AnimationController _repeatingController;
   final List<Interval> _dotIntervals = const [
