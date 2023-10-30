@@ -9,6 +9,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:maid/config/settings.dart';
 
+Character character = Character();
+
 class Character {  
   TextEditingController nameController = TextEditingController();
   
@@ -55,7 +57,7 @@ class Character {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> jsonCharacter = {};
 
-    jsonCharacter["name"] = nameController.text;
+    jsonCharacter["name"] = getName();
     
     jsonCharacter["pre_prompt"] = prePromptController.text;
     jsonCharacter["user_alias"] = userAliasController.text;
@@ -75,7 +77,12 @@ class Character {
     }
 
     return jsonCharacter;
-  } 
+  }
+
+  String getName() {
+    if (nameController.text.isEmpty) return "default";
+    return nameController.text;
+  }
 
   void resetAll() async {
     // Reset all the internal state to the defaults

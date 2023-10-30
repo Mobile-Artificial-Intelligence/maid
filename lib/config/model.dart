@@ -9,12 +9,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:maid/config/settings.dart';
 
+Model model = Model();
+
 class Model { 
   Map<String, dynamic> parameters = {};
 
   bool busy = false;
-
-  late String modelPath;
 
   Model() {
     resetAll();
@@ -25,8 +25,12 @@ class Model {
       resetAll();
     } else {
       parameters = inputJson;
-      modelPath = parameters["model_path"] ?? "";
     }
+  }
+
+  String getName() {
+    if (parameters["model_name"] == null || parameters["model_name"].isEmpty) return "default";
+    return parameters["model_name"];
   }
 
   void resetAll() async {
@@ -39,8 +43,6 @@ class Model {
   }
 
   Future<String> saveParametersToJson() async {
-    parameters["model_path"] = modelPath;
-
     // Convert the map to a JSON string
     String jsonString = json.encode(parameters);
     String? filePath;
@@ -94,8 +96,6 @@ class Model {
         resetAll();
         return "Failed to decode model";
       }
-
-      modelPath = parameters['model_path'];
     } catch (e) {
       resetAll();
       return "Error: $e";
@@ -109,8 +109,6 @@ class Model {
       if (!(await Permission.storage.request().isGranted)) {
         return "Permission Request Failed";
       }
-
-      if (modelPath.isNotEmpty) await FilePicker.platform.clearTemporaryFiles();
     }
   
     try {
@@ -126,7 +124,7 @@ class Model {
         return "Failed to load model";
       }
       
-      modelPath = filePath;
+      parameters["model_path"] = filePath;
       parameters["model_name"] = path.basename(filePath);
     } catch (e) {
       return "Error: $e";
