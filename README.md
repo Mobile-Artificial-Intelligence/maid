@@ -1,7 +1,7 @@
 # Maid - Mobile Artificial Intelligence Distribution
 Maid is a cross-platform Flutter app for interfacing with GGUF / Llama models.
 
-<img src="https://github.com/danemadsen/maid/blob/main/assets/demo.jpg?raw=true" width="300">
+<img src="https://github.com/danemadsen/maid/blob/main/.images/demo.jpg?raw=true" width="300">
 
 ## Works on multiple devices :
 Windows, Linux, Android.
