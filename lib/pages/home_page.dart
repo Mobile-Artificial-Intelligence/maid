@@ -12,8 +12,8 @@ import 'package:maid/config/character.dart';
 import 'package:maid/config/butler.dart';
 import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/model_page.dart';
+import 'package:maid/pages/settings_page.dart';
 import 'package:maid/pages/about_page.dart';
-import 'package:maid/config/theme.dart';
 
 
 class MaidHomePage extends StatefulWidget {
@@ -171,7 +171,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: const Icon(Icons.account_tree_rounded),
               title: Text(
                 'Model',
                 style: Theme.of(context).textTheme.labelLarge
@@ -179,6 +179,17 @@ class _MaidHomePageState extends State<MaidHomePage> {
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: Text(
+                'Settings',
+                style: Theme.of(context).textTheme.labelLarge
+              ),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
               },
             ),
             ListTile(
@@ -191,13 +202,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutPage()));
               },
-            ),
-            IconButton(
-              onPressed: () async {
-                await MaidTheme.toggleTheme();
-              },
-              icon: const Icon(Icons.brightness_4),
-              tooltip: 'Toggle Theme',
             )
           ],
         ),
