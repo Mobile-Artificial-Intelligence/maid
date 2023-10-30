@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:maid/config/character.dart';
+import 'package:maid/config/settings.dart';
 
 class CharacterPage extends StatefulWidget {
-  const CharacterPage({super.key});
+  final Character character;
+
+  const CharacterPage({super.key, required this.character});
 
   @override
   State<CharacterPage> createState() => _CharacterPageState();
@@ -40,7 +43,7 @@ class _CharacterPageState extends State<CharacterPage> {
           );
         },
       );
-      character.saveSharedPreferences();
+      settings.save();
       setState(() {});
     }
   }
@@ -75,7 +78,7 @@ class _CharacterPageState extends State<CharacterPage> {
               children: [
                 const SizedBox(height: 10.0),
                 Text(
-                  character.jsonCharacter["name"],
+                  widget.character.nameController.text,
                   style: Theme.of(context).textTheme.titleSmall
                 ),
                 Divider(
@@ -88,7 +91,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   children: [
                     FilledButton(
                       onPressed: () {
-                        _storageOperationDialog(character.loadCharacterFromJson);
+                        _storageOperationDialog(widget.character.loadCharacterFromJson);
                       },
                       child: Text(
                         "Load Character",
@@ -98,7 +101,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     const SizedBox(width: 10.0),
                     FilledButton(
                       onPressed: () {
-                        _storageOperationDialog(character.saveCharacterToJson);
+                        _storageOperationDialog(widget.character.saveCharacterToJson);
                       },
                       child: Text(
                         "Save Character",
@@ -110,7 +113,7 @@ class _CharacterPageState extends State<CharacterPage> {
                 const SizedBox(height: 10.0),
                 FilledButton(
                   onPressed: () {
-                    character.resetAll();
+                    widget.character.resetAll();
                     setState(() {});
                   },
                   child: Text(
@@ -124,9 +127,9 @@ class _CharacterPageState extends State<CharacterPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 llamaParamTextField(
-                  'User alias', character.userAliasController),
+                  'User alias', widget.character.userAliasController),
                 llamaParamTextField(
-                  'Response alias', character.responseAliasController),
+                  'Response alias', widget.character.responseAliasController),
                 ListTile(
                   title: Row(
                     children: [
@@ -138,7 +141,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         child: TextField(
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
-                          controller: character.prePromptController,
+                          controller: widget.character.prePromptController,
                           decoration: const InputDecoration(
                             labelText: 'PrePrompt',
                           ),
@@ -158,8 +161,8 @@ class _CharacterPageState extends State<CharacterPage> {
                     FilledButton(
                       onPressed: () {
                         setState(() {
-                          character.examplePromptControllers.add(TextEditingController());
-                          character.exampleResponseControllers.add(TextEditingController());
+                          widget.character.examplePromptControllers.add(TextEditingController());
+                          widget.character.exampleResponseControllers.add(TextEditingController());
                         });
                       },
                       child: Text(
@@ -171,8 +174,8 @@ class _CharacterPageState extends State<CharacterPage> {
                     FilledButton(
                       onPressed: () {
                         setState(() {
-                          character.examplePromptControllers.removeLast();
-                          character.exampleResponseControllers.removeLast();
+                          widget.character.examplePromptControllers.removeLast();
+                          widget.character.exampleResponseControllers.removeLast();
                         });
                       },
                       child: Text(
@@ -184,18 +187,18 @@ class _CharacterPageState extends State<CharacterPage> {
                 ),
                 const SizedBox(height: 10.0),
                 ...List.generate(
-                  (character.examplePromptControllers.length == character.exampleResponseControllers.length) ? character.examplePromptControllers.length : 0,
+                  (widget.character.examplePromptControllers.length == widget.character.exampleResponseControllers.length) ? widget.character.examplePromptControllers.length : 0,
                   (index) => Column(
                     children: [
-                      llamaParamTextField('Example prompt', character.examplePromptControllers[index]),
-                      llamaParamTextField('Example response', character.exampleResponseControllers[index]),
+                      llamaParamTextField('Example prompt', widget.character.examplePromptControllers[index]),
+                      llamaParamTextField('Example response', widget.character.exampleResponseControllers[index]),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          if (character.busy)
+          if (widget.character.busy)
             // This is a semi-transparent overlay that will cover the entire screen.
             Positioned.fill(
               child: Container(
