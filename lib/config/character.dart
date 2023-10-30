@@ -7,12 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:maid/config/settings.dart';
 
-Character character = Character();
-
-class Character {
-  Map<String, dynamic> jsonCharacter = {};
+class Character {  
+  TextEditingController nameController = TextEditingController();
   
   TextEditingController promptController = TextEditingController();
   TextEditingController prePromptController = TextEditingController();
@@ -23,34 +21,30 @@ class Character {
   TextEditingController userAliasController = TextEditingController();
   TextEditingController responseAliasController = TextEditingController();
 
-  late String prePrompt;
-
   bool busy = false;
 
   Character() {
-    initFromSharedPrefs();
+    resetAll();
   }
 
-  void initFromSharedPrefs() async {
-    var prefs = await SharedPreferences.getInstance();
-
-    jsonCharacter = json.decode(prefs.getString("character") ?? "{}");
-
-    if (jsonCharacter.isEmpty) {
+  Character.fromMap(Map<String, dynamic> inputJson) {
+    if (inputJson.isEmpty) {
       resetAll();
     }
 
-    prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
-    userAliasController.text = jsonCharacter["user_alias"] ?? "";
-    responseAliasController.text = jsonCharacter["response_alias"] ?? "";
+    nameController.text = inputJson["name"] ?? "";
+
+    prePromptController.text = inputJson["pre_prompt"] ?? "";
+    userAliasController.text = inputJson["user_alias"] ?? "";
+    responseAliasController.text = inputJson["response_alias"] ?? "";
 
     examplePromptControllers.clear();
     exampleResponseControllers.clear();
 
-    int length = jsonCharacter["example"]?.length ?? 0;
+    int length = inputJson["example"].length ?? 0;
     for (var i = 0; i < length; i++) {
-      String? examplePrompt = jsonCharacter["example"][i]["prompt"];
-      String? exampleResponse = jsonCharacter["example"][i]["response"];
+      String? examplePrompt = inputJson["example"][i]["prompt"];
+      String? exampleResponse = inputJson["example"][i]["response"];
       if (examplePrompt != null && exampleResponse != null) {
         examplePromptControllers.add(TextEditingController(text: examplePrompt));
         exampleResponseControllers.add(TextEditingController(text: exampleResponse));
@@ -58,26 +52,38 @@ class Character {
     }
   }
 
-  void saveSharedPreferences() async {
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> jsonCharacter = {};
+
+    jsonCharacter["name"] = nameController.text;
+    
     jsonCharacter["pre_prompt"] = prePromptController.text;
     jsonCharacter["user_alias"] = userAliasController.text;
     jsonCharacter["response_alias"] = responseAliasController.text;
 
-    for (var i = 0; i < examplePromptControllers.length; i++) {
-      jsonCharacter["example"][i]["prompt"] = examplePromptControllers[i].text;
-      jsonCharacter["example"][i]["response"] = exampleResponseControllers[i].text;
-    }
-    
-    var prefs = await SharedPreferences.getInstance();
+    // Initialize the "example" key to an empty list
+    jsonCharacter["example"] = [];
 
-    prefs.setString("character", json.encode(jsonCharacter));
-  }
+    for (var i = 0; i < examplePromptControllers.length; i++) {
+      // Create a map for each example and add it to the "example" list
+      Map<String, String> example = {
+        "prompt": examplePromptControllers[i].text,
+        "response": exampleResponseControllers[i].text,
+      };
+
+      jsonCharacter["example"].add(example);
+    }
+
+    return jsonCharacter;
+  } 
 
   void resetAll() async {
     // Reset all the internal state to the defaults
     String jsonString = await rootBundle.loadString('assets/default_character.json');
 
-    jsonCharacter = json.decode(jsonString);
+    Map<String, dynamic> jsonCharacter = json.decode(jsonString);
+
+    nameController.text = jsonCharacter["name"] ?? "";
 
     prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
     userAliasController.text = jsonCharacter["user_alias"] ?? "";
@@ -96,15 +102,14 @@ class Character {
       }
     }
 
-    // Clear values from SharedPreferences
-    var prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-
-    // It might be a good idea to save the default character after a reset
-    saveSharedPreferences();
+    settings.save();
   }
 
   Future<String> saveCharacterToJson() async {
+    Map<String, dynamic> jsonCharacter = {};
+
+    jsonCharacter["name"] = nameController.text;
+    
     jsonCharacter["pre_prompt"] = prePromptController.text;
     jsonCharacter["user_alias"] = userAliasController.text;
     jsonCharacter["response_alias"] = responseAliasController.text;
@@ -162,11 +167,15 @@ class Character {
       String jsonString = await file.readAsString();
       if (jsonString.isEmpty) return "Failed to load character";
       
+      Map<String, dynamic> jsonCharacter = {};
+
       jsonCharacter = json.decode(jsonString);
       if (jsonCharacter.isEmpty) {
         resetAll();
         return "Failed to decode character";
       }
+
+      nameController.text = jsonCharacter["name"] ?? "";
 
       prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
       userAliasController.text = jsonCharacter["user_alias"] ?? "";
@@ -189,8 +198,8 @@ class Character {
     return "Character Successfully Loaded";
   }
   
-  void compilePrePrompt() {
-    prePrompt = prePromptController.text.isNotEmpty ? prePromptController.text.trim() : "";
+  String getPrePrompt() {
+    String prePrompt = prePromptController.text.isNotEmpty ? prePromptController.text.trim() : "";
     for (var i = 0; i < examplePromptControllers.length; i++) {
       var prompt = '${userAliasController.text.trim()} ${examplePromptControllers[i].text.trim()}';
       var response = '${responseAliasController.text.trim()} ${exampleResponseControllers[i].text.trim()}';
@@ -198,5 +207,7 @@ class Character {
         prePrompt += "\n$prompt\n$response";
       }
     }
+
+    return prePrompt;
   }
 }

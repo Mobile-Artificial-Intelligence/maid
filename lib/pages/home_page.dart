@@ -7,8 +7,6 @@ import 'package:flutter/services.dart';
 
 import 'package:system_info2/system_info2.dart';
 
-import 'package:maid/config/model.dart';
-import 'package:maid/config/character.dart';
 import 'package:maid/config/settings.dart';
 import 'package:maid/config/butler.dart';
 import 'package:maid/pages/character_page.dart';
@@ -56,7 +54,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               FilledButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ModelPage(model: settings.getCurrentModel())));
                 },
                 child: Text(
                   "Open Model Settings",
@@ -87,11 +85,9 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
     
     setState(() {
-      model.busy = true;
-      model.saveSharedPreferences();
-      character.saveSharedPreferences();
-      chatWidgets.add(UserMessage(message: character.promptController.text.trim()));
-      character.compilePrePrompt();
+      settings.getCurrentModel().busy = true;
+      settings.save();
+      chatWidgets.add(UserMessage(message: settings.getCurrentCharacter().promptController.text.trim()));
     });
 
     if (!Lib.instance.hasStarted()) {
@@ -103,7 +99,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     setState(() {
       newResponse = ResponseMessage();
       chatWidgets.add(newResponse);
-      character.promptController.text = ""; // Clear the input field
+      settings.getCurrentCharacter().promptController.text = ""; // Clear the input field
     });
   }
 
@@ -116,7 +112,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   void responseCallback(String message) {
-    if (!model.busy) {
+    if (!settings.getCurrentModel().busy) {
       newResponse.trim();
       newResponse.finalise();
       setState(() {});
@@ -168,7 +164,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const CharacterPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CharacterPage(character: settings.getCurrentCharacter())));
               },
             ),
             ListTile(
@@ -179,7 +175,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ModelPage(model: settings.getCurrentModel())));
               },
             ),
             ListTile(
@@ -238,7 +234,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (model.busy)
+                        if (settings.getCurrentModel().busy)
                           IconButton(
                             onPressed: Lib.instance.butlerStop,
                             iconSize: 50,
@@ -254,15 +250,15 @@ class _MaidHomePageState extends State<MaidHomePage> {
                             maxLines: 9,
                             enableInteractiveSelection: true,
                             onSubmitted:  (value) {
-                              if (!model.busy) {
-                                if (model.modelPath.isEmpty) {
+                              if (!(settings.getCurrentModel().busy)) {
+                                if (settings.getCurrentModel().modelPath.isEmpty) {
                                   _missingModelDialog();
                                 } else {
                                   execute();
                                 }                             
                               }                          
                             },
-                            controller: character.promptController,
+                            controller: settings.getCurrentCharacter().promptController,
                             cursorColor:
                                 Theme.of(context).colorScheme.secondary,
                             decoration: InputDecoration(
@@ -273,8 +269,8 @@ class _MaidHomePageState extends State<MaidHomePage> {
                         ),
                         IconButton(
                           onPressed: () {
-                            if (!model.busy) {
-                              if (model.modelPath.isEmpty) {
+                            if (!settings.getCurrentModel().busy) {
+                              if (settings.getCurrentModel().modelPath.isEmpty) {
                                 _missingModelDialog();
                               } else {
                                 execute();
@@ -284,7 +280,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                           iconSize: 50,
                           icon: Icon(
                             Icons.arrow_circle_right,
-                            color: model.busy
+                            color: settings.getCurrentModel().busy
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).colorScheme.secondary,
                           )
