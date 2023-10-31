@@ -57,7 +57,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               FilledButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ModelPage(model: model)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
                 },
                 child: Text(
                   "Open Model Settings",
@@ -174,7 +174,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CharacterPage(character: character)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CharacterPage()));
               },
             ),
             ListTile(
@@ -185,7 +185,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ModelPage(model: model)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
               },
             ),
             ListTile(

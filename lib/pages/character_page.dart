@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:maid/widgets/preset_name_field.dart';
+import 'package:maid/widgets/settings_widgets.dart';
 import 'package:maid/config/character.dart';
 import 'package:maid/config/settings.dart';
 
 class CharacterPage extends StatefulWidget {
-  final Character character;
-
-  const CharacterPage({super.key, required this.character});
+  const CharacterPage({super.key});
 
   @override
   State<CharacterPage> createState() => _CharacterPageState();
@@ -77,10 +77,7 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                Text(
-                  widget.character.nameController.text,
-                  style: Theme.of(context).textTheme.titleSmall
-                ),
+                presetNameField(character.nameController),
                 Divider(
                   indent: 10,
                   endIndent: 10,
@@ -91,7 +88,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   children: [
                     FilledButton(
                       onPressed: () {
-                        _storageOperationDialog(widget.character.loadCharacterFromJson);
+                        _storageOperationDialog(character.loadCharacterFromJson);
                       },
                       child: Text(
                         "Load Character",
@@ -101,7 +98,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     const SizedBox(width: 10.0),
                     FilledButton(
                       onPressed: () {
-                        _storageOperationDialog(widget.character.saveCharacterToJson);
+                        _storageOperationDialog(character.saveCharacterToJson);
                       },
                       child: Text(
                         "Save Character",
@@ -113,7 +110,7 @@ class _CharacterPageState extends State<CharacterPage> {
                 const SizedBox(height: 10.0),
                 FilledButton(
                   onPressed: () {
-                    widget.character.resetAll();
+                    character.resetAll();
                     setState(() {});
                   },
                   child: Text(
@@ -126,10 +123,10 @@ class _CharacterPageState extends State<CharacterPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                llamaParamTextField(
-                  'User alias', widget.character.userAliasController),
-                llamaParamTextField(
-                  'Response alias', widget.character.responseAliasController),
+                settingsTextField(
+                  'User alias', character.userAliasController),
+                settingsTextField(
+                  'Response alias', character.responseAliasController),
                 ListTile(
                   title: Row(
                     children: [
@@ -141,7 +138,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         child: TextField(
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
-                          controller: widget.character.prePromptController,
+                          controller: character.prePromptController,
                           decoration: const InputDecoration(
                             labelText: 'PrePrompt',
                           ),
@@ -161,8 +158,8 @@ class _CharacterPageState extends State<CharacterPage> {
                     FilledButton(
                       onPressed: () {
                         setState(() {
-                          widget.character.examplePromptControllers.add(TextEditingController());
-                          widget.character.exampleResponseControllers.add(TextEditingController());
+                          character.examplePromptControllers.add(TextEditingController());
+                          character.exampleResponseControllers.add(TextEditingController());
                         });
                       },
                       child: Text(
@@ -174,8 +171,8 @@ class _CharacterPageState extends State<CharacterPage> {
                     FilledButton(
                       onPressed: () {
                         setState(() {
-                          widget.character.examplePromptControllers.removeLast();
-                          widget.character.exampleResponseControllers.removeLast();
+                          character.examplePromptControllers.removeLast();
+                          character.exampleResponseControllers.removeLast();
                         });
                       },
                       child: Text(
@@ -187,18 +184,18 @@ class _CharacterPageState extends State<CharacterPage> {
                 ),
                 const SizedBox(height: 10.0),
                 ...List.generate(
-                  (widget.character.examplePromptControllers.length == widget.character.exampleResponseControllers.length) ? widget.character.examplePromptControllers.length : 0,
+                  (character.examplePromptControllers.length == character.exampleResponseControllers.length) ? character.examplePromptControllers.length : 0,
                   (index) => Column(
                     children: [
-                      llamaParamTextField('Example prompt', widget.character.examplePromptControllers[index]),
-                      llamaParamTextField('Example response', widget.character.exampleResponseControllers[index]),
+                      settingsTextField('Example prompt', character.examplePromptControllers[index]),
+                      settingsTextField('Example response', character.exampleResponseControllers[index]),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          if (widget.character.busy)
+          if (character.busy)
             // This is a semi-transparent overlay that will cover the entire screen.
             Positioned.fill(
               child: Container(
@@ -210,27 +207,6 @@ class _CharacterPageState extends State<CharacterPage> {
             ),
         ],
       )
-    );
-  }
-
-  Widget llamaParamTextField(String labelText, TextEditingController controller) {
-    return ListTile(
-      title: Row(
-        children: [
-          Expanded(
-            child: Text(labelText),
-          ),
-          Expanded(
-            flex: 2,
-            child: TextField(
-              controller: controller,
-              decoration: InputDecoration(
-                labelText: labelText,
-              )
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
