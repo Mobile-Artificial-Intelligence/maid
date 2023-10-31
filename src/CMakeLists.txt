@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.10)
 project(butler LANGUAGES CXX)
 
 set(BUILD_SHARED_LIBS ON)
+
+set_target_properties(butler PROPERTIES
+    BUILD_WITH_INSTALL_RPATH TRUE
+    INSTALL_RPATH "$ORIGIN"
+)
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if(ANDROID)
