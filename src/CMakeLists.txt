@@ -13,3 +13,8 @@ add_subdirectory(./llama.cpp)
 add_library(butler SHARED butler.cpp)
 target_include_directories(butler PRIVATE ./llama.cpp ./llama.cpp/common)
 target_link_libraries(butler llama common)
+
+set_target_properties(butler PROPERTIES
+    BUILD_WITH_INSTALL_RPATH TRUE
+    INSTALL_RPATH "$ORIGIN"
+)

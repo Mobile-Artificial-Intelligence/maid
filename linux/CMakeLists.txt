@@ -137,8 +137,5 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
     COMPONENT Runtime)
 endif()
 
-set(BUILD_SHARED_LIBS ON)
 add_subdirectory(../src butler)
 install(FILES ${PROJECT_BINARY_DIR}/bin/libbutler.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
-install(FILES ${PROJECT_BINARY_DIR}/bin/libllama.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
-install(FILES ${PROJECT_BINARY_DIR}/bin/libggml_shared.so DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
