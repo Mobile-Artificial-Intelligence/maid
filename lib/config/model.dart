@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -34,7 +33,6 @@ class Model {
 
     jsonModel = parameters;
     jsonModel["name"] = getName();
-    print("Name: ${getName()}");
 
     return jsonModel;
   }

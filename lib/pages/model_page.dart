@@ -64,6 +64,17 @@ class _ModelPageState extends State<ModelPage> {
                     setState(() {});
                   }),
                 ),
+                FilledButton(
+                  onPressed: () async {
+                    await settings.save();
+                    model = Model();
+                    setState(() {});
+                  },
+                  child: Text(
+                    "New Preset",
+                    style: Theme.of(context).textTheme.labelLarge
+                  ),
+                ),
                 Divider(
                   indent: 10,
                   endIndent: 10,
