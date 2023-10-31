@@ -58,7 +58,7 @@ class Settings {
     _models[model.getName()] = model;
     _characters[character.getName()] = character;
 
-    prefs.setString("models", json.encode(_models.map((key, value) => MapEntry(key, value.parameters))));
+    prefs.setString("models", json.encode(_models.map((key, value) => MapEntry(key, value.toMap()))));
     prefs.setString("characters", json.encode(_characters.map((key, value) => MapEntry(key, value.toMap()))));
     prefs.setString("current_model", model.getName());
     prefs.setString("current_character", character.getName());

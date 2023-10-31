@@ -77,9 +77,14 @@ class _ModelPageState extends State<ModelPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                Text(
-                  widget.model.parameters["model_name"],
-                  style: Theme.of(context).textTheme.titleSmall
+                IntrinsicWidth(
+                  child: TextField(
+                    controller: model.nameController,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      labelText: "Preset Name",
+                    ),
+                  ),
                 ),
                 Divider(
                   indent: 10,

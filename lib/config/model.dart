@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -12,6 +13,8 @@ import 'package:maid/config/settings.dart';
 Model model = Model();
 
 class Model { 
+  TextEditingController nameController = TextEditingController();
+  
   Map<String, dynamic> parameters = {};
 
   bool busy = false;
@@ -28,9 +31,18 @@ class Model {
     }
   }
 
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> jsonModel = {};
+
+    jsonModel = parameters;
+    jsonModel["name"] = getName();
+
+    return jsonModel;
+  }
+
   String getName() {
-    if (parameters["model_name"] == null || parameters["model_name"].isEmpty) return "default";
-    return parameters["model_name"];
+    if (nameController.text.isEmpty) return "default";
+    return nameController.text;
   }
 
   void resetAll() async {
