@@ -12,6 +12,8 @@ class ModelPage extends StatefulWidget {
 }
 
 class _ModelPageState extends State<ModelPage> {
+  TextEditingController presetController = TextEditingController();
+  
   @override
   initState() {
     super.initState();
@@ -43,7 +45,7 @@ class _ModelPageState extends State<ModelPage> {
                 const SizedBox(height: 10.0),
                 DropdownMenu<String>(
                   initialSelection: model.getName(),
-                  controller: model.nameController,
+                  controller: presetController,
                   dropdownMenuEntries: settings.getModels().map<DropdownMenuEntry<String>>(
                     (String value) {
                       return DropdownMenuEntry<String>(
@@ -53,7 +55,10 @@ class _ModelPageState extends State<ModelPage> {
                     },
                   ).toList(),
                   onSelected: (value) => setState(() async {
+                    print("Preset: ${presetController.text}");
+                    model.nameController.text = presetController.text;
                     await settings.save();
+                    print("Model: $value");
                     settings.setModel(value);
                     setState(() {});
                   }),

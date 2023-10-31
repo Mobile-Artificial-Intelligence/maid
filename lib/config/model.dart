@@ -37,6 +37,7 @@ class Model {
 
     jsonModel = parameters;
     jsonModel["name"] = getName();
+    print("Name: ${getName()}");
 
     return jsonModel;
   }

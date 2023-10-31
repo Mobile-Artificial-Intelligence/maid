@@ -41,7 +41,7 @@ class Settings {
   Future<void> save() async {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
-
+    
     _models[model.getName()] = model.toMap();
     _characters[character.getName()] = character.toMap();
 
