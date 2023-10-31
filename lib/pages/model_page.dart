@@ -12,42 +12,6 @@ class ModelPage extends StatefulWidget {
 }
 
 class _ModelPageState extends State<ModelPage> {
-  void _storageOperationDialog(Future<String> Function() storageFunction) async {
-    String ret = await storageFunction();
-    // Use a local reference to context to avoid using it across an async gap.
-    final localContext = context;
-    // Ensure that the context is still valid before attempting to show the dialog.
-    if (localContext.mounted) {
-      showDialog(
-        context: localContext,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(ret),
-            alignment: Alignment.center,
-            actionsAlignment: MainAxisAlignment.center,
-            backgroundColor: Theme.of(context).colorScheme.background,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Close",
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
-                ),
-            ],
-          );
-        },
-      );
-      settings.save();
-      setState(() {});
-    }
-  }
-
   @override
   initState() {
     super.initState();
@@ -77,43 +41,49 @@ class _ModelPageState extends State<ModelPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                presetNameField(model.nameController),
+                DropdownMenu<String>(
+                  initialSelection: model.getName(),
+                  controller: model.nameController,
+                  dropdownMenuEntries: settings.getModels().map<DropdownMenuEntry<String>>(
+                    (String value) {
+                      return DropdownMenuEntry<String>(
+                        value: value,
+                        label: value,
+                      );
+                    },
+                  ).toList(),
+                  onSelected: (value) => setState(() async {
+                    await settings.save();
+                    settings.setModel(value);
+                    setState(() {});
+                  }),
+                ),
                 Divider(
                   indent: 10,
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(model.loadParametersFromJson);
-                      },
-                      child: Text(
-                        "Load Parameters",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(model.saveParametersToJson);
-                      },
-                      child: Text(
-                        "Save Parameters",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Model Name: ${model.parameters["model_name"]}",
+                  ),
+                ),
+                const SizedBox(height: 15.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Model Path: ${model.parameters["model_path"]}",
+                  ),
                 ),
                 const SizedBox(height: 15.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(model.loadModelFile);
+                      onPressed: () async {
+                        await storageOperationDialog(context, model.loadModelFile);
+                        setState(() {});
                       },
                       child: Text(
                         "Load Model",
@@ -138,6 +108,33 @@ class _ModelPageState extends State<ModelPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      onPressed: () async {
+                        await storageOperationDialog(context, model.loadParametersFromJson);
+                        setState(() {});
+                      },
+                      child: Text(
+                        "Load Parameters",
+                        style: Theme.of(context).textTheme.labelLarge
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
+                    FilledButton(
+                      onPressed: () async {
+                        await storageOperationDialog(context, model.saveParametersToJson);
+                        setState(() {});
+                      },
+                      child: Text(
+                        "Save Parameters",
+                        style: Theme.of(context).textTheme.labelLarge
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15.0),
                 SwitchListTile(
                   title: const Text('instruct'),
                   value: model.parameters["instruct"],

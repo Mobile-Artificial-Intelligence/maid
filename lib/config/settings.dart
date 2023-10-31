@@ -8,8 +8,8 @@ import 'package:maid/config/character.dart';
 Settings settings = Settings();
 
 class Settings { 
-  Map<String, Model> _models = {};
-  Map<String, Character> _characters = {};
+  Map<String, dynamic> _models = {};
+  Map<String, dynamic> _characters = {};
   
   static String _logString = "";
 
@@ -22,44 +22,31 @@ class Settings {
   Future<void> init() async {
     var prefs = await SharedPreferences.getInstance();
     
-    var modelsJson = json.decode(prefs.getString("models") ?? "{}");
-    var charactersJson = json.decode(prefs.getString("characters") ?? "{}");
-
-    _models = modelsJson.map<String, Model>(
-      (String key, dynamic value) => MapEntry<String, Model>(
-        key, 
-        Model.fromMap(value)
-      )
-    );
-
-    _characters = charactersJson.map<String, Character>(
-      (String key, dynamic value) => MapEntry<String, Character>(
-        key, 
-        Character.fromMap(value)
-      )
-    );
+    _models = json.decode(prefs.getString("models") ?? "{}");
+    _characters = json.decode(prefs.getString("characters") ?? "{}");
 
     if (_models.isEmpty) {
-      _models["default"] = Model();
+      model = Model();
+    } else {
+      model = Model.fromMap(_models[prefs.getString("current_model") ?? "Default"] ?? {});
     }
 
     if (_characters.isEmpty) {
-      _characters["default"] = Character();
+      character = Character();
+    } else {
+      character = Character.fromMap(_characters[prefs.getString("current_character") ?? "Default"] ?? {});
     }
-
-    model = _models[prefs.getString("current_model") ?? "default"] ?? Model();
-    character = _characters[prefs.getString("current_character") ?? "default"] ?? Character();
   }
 
-  void save() async {
+  Future<void> save() async {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
 
-    _models[model.getName()] = model;
-    _characters[character.getName()] = character;
+    _models[model.getName()] = model.toMap();
+    _characters[character.getName()] = character.toMap();
 
-    prefs.setString("models", json.encode(_models.map((key, value) => MapEntry(key, value.toMap()))));
-    prefs.setString("characters", json.encode(_characters.map((key, value) => MapEntry(key, value.toMap()))));
+    prefs.setString("models", json.encode(_models));
+    prefs.setString("characters", json.encode(_characters));
     prefs.setString("current_model", model.getName());
     prefs.setString("current_character", character.getName());
   }
@@ -72,11 +59,11 @@ class Settings {
     return _characters.keys.toList();
   }
 
-  void setModel(String modelName) {
-    model = _models[modelName] ?? Model();
+  void setModel(String? modelName) {
+    model = Model.fromMap(_models[modelName ?? "Default"] ?? {});
   }
 
-  void setCharacter(String characterName) {
-    character = _characters[characterName] ?? Character();
+  void setCharacter(String? characterName) {
+    character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
   }
 }

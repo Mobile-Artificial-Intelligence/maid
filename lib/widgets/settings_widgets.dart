@@ -1,5 +1,6 @@
   
 import 'package:flutter/material.dart';
+import 'package:maid/config/settings.dart';
 
 Widget settingsTextField(String labelText, TextEditingController controller) {
   return ListTile(
@@ -62,4 +63,37 @@ Widget settingsSlider(String labelText, num inputValue,
       ],
     ),
   );
+}
+
+Future<void> storageOperationDialog(BuildContext context, Future<String> Function() storageFunction) async {
+  String ret = await storageFunction();
+  // Ensure that the context is still valid before attempting to show the dialog.
+  if (context.mounted) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(ret),
+          alignment: Alignment.center,
+          actionsAlignment: MainAxisAlignment.center,
+          backgroundColor: Theme.of(context).colorScheme.background,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          actions: [
+            FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  settings.save();
+                },
+                child: Text(
+                  "Close",
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
 }

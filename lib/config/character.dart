@@ -30,11 +30,11 @@ class Character {
   }
 
   Character.fromMap(Map<String, dynamic> inputJson) {
+    nameController.text = inputJson["name"] ?? "New Character";
+
     if (inputJson.isEmpty) {
       resetAll();
     }
-
-    nameController.text = inputJson["name"] ?? "";
 
     prePromptController.text = inputJson["pre_prompt"] ?? "";
     userAliasController.text = inputJson["user_alias"] ?? "";
@@ -80,7 +80,7 @@ class Character {
   }
 
   String getName() {
-    if (nameController.text.isEmpty) return "default";
+    if (nameController.text.isEmpty) return "New Character";
     return nameController.text;
   }
 
@@ -89,8 +89,6 @@ class Character {
     String jsonString = await rootBundle.loadString('assets/default_character.json');
 
     Map<String, dynamic> jsonCharacter = json.decode(jsonString);
-
-    nameController.text = jsonCharacter["name"] ?? "";
 
     prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
     userAliasController.text = jsonCharacter["user_alias"] ?? "";
@@ -121,9 +119,17 @@ class Character {
     jsonCharacter["user_alias"] = userAliasController.text;
     jsonCharacter["response_alias"] = responseAliasController.text;
 
+    // Initialize the "example" key to an empty list
+    jsonCharacter["example"] = [];
+
     for (var i = 0; i < examplePromptControllers.length; i++) {
-      jsonCharacter["example"][i]["prompt"] = examplePromptControllers[i].text;
-      jsonCharacter["example"][i]["response"] = exampleResponseControllers[i].text;
+      // Create a map for each example and add it to the "example" list
+      Map<String, String> example = {
+        "prompt": examplePromptControllers[i].text,
+        "response": exampleResponseControllers[i].text,
+      };
+
+      jsonCharacter["example"].add(example);
     }
 
     // Convert the map to a JSON string

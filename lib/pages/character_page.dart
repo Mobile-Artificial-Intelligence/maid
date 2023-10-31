@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/widgets/preset_name_field.dart';
 import 'package:maid/widgets/settings_widgets.dart';
 import 'package:maid/config/character.dart';
-import 'package:maid/config/settings.dart';
 
 class CharacterPage extends StatefulWidget {
   const CharacterPage({super.key});
@@ -12,42 +11,6 @@ class CharacterPage extends StatefulWidget {
 }
 
 class _CharacterPageState extends State<CharacterPage> {
-  void _storageOperationDialog(Future<String> Function() storageFunction) async {
-    String ret = await storageFunction();
-    // Use a local reference to context to avoid using it across an async gap.
-    final localContext = context;
-    // Ensure that the context is still valid before attempting to show the dialog.
-    if (localContext.mounted) {
-      showDialog(
-        context: localContext,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(ret),
-            alignment: Alignment.center,
-            actionsAlignment: MainAxisAlignment.center,
-            backgroundColor: Theme.of(context).colorScheme.background,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Close",
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
-                ),
-            ],
-          );
-        },
-      );
-      settings.save();
-      setState(() {});
-    }
-  }
-
   @override
   initState() {
     super.initState();
@@ -87,8 +50,9 @@ class _CharacterPageState extends State<CharacterPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(character.loadCharacterFromJson);
+                      onPressed: () async {
+                        await storageOperationDialog(context, character.loadCharacterFromJson);
+                        setState(() {});
                       },
                       child: Text(
                         "Load Character",
@@ -97,8 +61,9 @@ class _CharacterPageState extends State<CharacterPage> {
                     ),
                     const SizedBox(width: 10.0),
                     FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(character.saveCharacterToJson);
+                      onPressed: () async {
+                        await storageOperationDialog(context, character.saveCharacterToJson);
+                        setState(() {});
                       },
                       child: Text(
                         "Save Character",

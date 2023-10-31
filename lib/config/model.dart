@@ -24,6 +24,7 @@ class Model {
   }
 
   Model.fromMap(Map<String, dynamic> inputJson) {
+    nameController.text = inputJson["name"] ?? "Default";
     if (inputJson.isEmpty) {
       resetAll();
     } else {
@@ -41,7 +42,7 @@ class Model {
   }
 
   String getName() {
-    if (nameController.text.isEmpty) return "default";
+    if (nameController.text.isEmpty) return "Default";
     return nameController.text;
   }
 

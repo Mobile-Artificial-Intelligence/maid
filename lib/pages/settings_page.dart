@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/config/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -42,6 +43,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   MaidTheme.setTheme(ThemeType.light);
                 }
               },
+            ),
+            FilledButton(
+              onPressed: () async {
+                var prefs = await SharedPreferences.getInstance();
+                prefs.clear();
+                setState(() {});
+              },
+              child: Text(
+                "Clear Cache",
+                style: Theme.of(context).textTheme.labelLarge
+              ),
             ),
           ],
         ),
