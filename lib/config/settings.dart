@@ -59,11 +59,20 @@ class Settings {
     return _characters.keys.toList();
   }
 
-  void setModel(String? modelName) {
+  void updateModel(String newName) {
+    String oldName = model.getName();
+    model.parameters["name"] = newName;
+    _models.remove(oldName);
+    save();
+  }
+
+  Future<void> setModel(String? modelName) async {
+    await settings.save();
     model = Model.fromMap(_models[modelName ?? "Default"] ?? {});
   }
 
-  void setCharacter(String? characterName) {
+  Future<void> setCharacter(String? characterName) async {
+    await settings.save();
     character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
   }
 }

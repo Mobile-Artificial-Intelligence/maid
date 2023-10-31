@@ -55,11 +55,12 @@ class _ModelPageState extends State<ModelPage> {
                     },
                   ).toList(),
                   onSelected: (value) => setState(() async {
-                    print("Preset: ${presetController.text}");
-                    model.nameController.text = presetController.text;
-                    await settings.save();
-                    print("Model: $value");
-                    settings.setModel(value);
+                    if (value == null) {
+                      settings.updateModel(presetController.text);
+                    }
+                    else {
+                      await settings.setModel(value);
+                    }
                     setState(() {});
                   }),
                 ),

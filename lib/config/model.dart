@@ -12,9 +12,7 @@ import 'package:maid/config/settings.dart';
 
 Model model = Model();
 
-class Model { 
-  TextEditingController nameController = TextEditingController();
-  
+class Model {  
   Map<String, dynamic> parameters = {};
 
   bool busy = false;
@@ -24,7 +22,6 @@ class Model {
   }
 
   Model.fromMap(Map<String, dynamic> inputJson) {
-    nameController.text = inputJson["name"] ?? "Default";
     if (inputJson.isEmpty) {
       resetAll();
     } else {
@@ -43,8 +40,8 @@ class Model {
   }
 
   String getName() {
-    if (nameController.text.isEmpty) return "Default";
-    return nameController.text;
+    if (parameters["name"] == null) return "Default";
+    return parameters["name"];
   }
 
   void resetAll() async {
