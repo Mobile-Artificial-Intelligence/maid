@@ -44,7 +44,7 @@ class _ModelPageState extends State<ModelPage> {
               children: [
                 const SizedBox(height: 10.0),
                 DropdownMenu<String>(
-                  initialSelection: model.getName(),
+                  initialSelection: model.name,
                   controller: presetController,
                   dropdownMenuEntries: settings.getModels().map<DropdownMenuEntry<String>>(
                     (String value) {
@@ -56,7 +56,7 @@ class _ModelPageState extends State<ModelPage> {
                   ).toList(),
                   onSelected: (value) => setState(() async {
                     if (value == null) {
-                      settings.updateModel(presetController.text);
+                      await settings.updateModel(presetController.text);
                     }
                     else {
                       await settings.setModel(value);
@@ -64,16 +64,34 @@ class _ModelPageState extends State<ModelPage> {
                     setState(() {});
                   }),
                 ),
-                FilledButton(
-                  onPressed: () async {
-                    await settings.save();
-                    model = Model();
-                    setState(() {});
-                  },
-                  child: Text(
-                    "New Preset",
-                    style: Theme.of(context).textTheme.labelLarge
-                  ),
+                const SizedBox(height: 15.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      onPressed: () async {
+                        await settings.save();
+                        model = Model();
+                        model.parameters["name"] = "New Preset";
+                        setState(() {});
+                      },
+                      child: Text(
+                        "New Preset",
+                        style: Theme.of(context).textTheme.labelLarge
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
+                    FilledButton(
+                      onPressed: () async {
+                        await settings.removeModel();
+                        setState(() {});
+                      },
+                      child: Text(
+                        "Delete Preset",
+                        style: Theme.of(context).textTheme.labelLarge
+                      ),
+                    ),
+                  ],
                 ),
                 Divider(
                   indent: 10,
@@ -220,10 +238,10 @@ class _ModelPageState extends State<ModelPage> {
                   1.0,
                   128.0,
                   127,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["n_threads"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -232,10 +250,10 @@ class _ModelPageState extends State<ModelPage> {
                   1.0,
                   4096.0,
                   4095,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["n_ctx"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -244,10 +262,10 @@ class _ModelPageState extends State<ModelPage> {
                   1.0,
                   4096.0,
                   4095,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["n_batch"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -256,10 +274,10 @@ class _ModelPageState extends State<ModelPage> {
                   1.0,
                   1024.0,
                   1023,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["n_predict"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -268,10 +286,10 @@ class _ModelPageState extends State<ModelPage> {
                   1.0,
                   1024.0,
                   1023,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["n_keep"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -280,10 +298,10 @@ class _ModelPageState extends State<ModelPage> {
                   1.0,
                   1024.0,
                   1023,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["n_prev"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -292,10 +310,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   128.0,
                   127,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["n_probs"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -304,10 +322,10 @@ class _ModelPageState extends State<ModelPage> {
                   1.0,
                   128.0,
                   127,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["top_k"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -316,10 +334,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   1.0,
                   100,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["top_p"] = value;
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -328,10 +346,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   1.0,
                   100,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["tfs_z"] = value;
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -340,10 +358,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   1.0,
                   100,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["typical_p"] = value;
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -352,10 +370,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   1.0,
                   100,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["temperature"] = value;
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -364,10 +382,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   128.0,
                   127,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["penalty_last_n"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -376,10 +394,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   2.0,
                   200,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["penalty_repeat"] = value;
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -388,8 +406,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   1.0,
                   100,
-                  (value) => () {
-                    model.parameters["penalty_freq"] = value;
+                  (value) => {
+                    setState(() {
+                      model.parameters["penalty_freq"] = value;
+                    })
                   }
                 ),
                 settingsSlider(
@@ -398,10 +418,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   1.0,
                   100,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["penalty_present"] = value;
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -410,10 +430,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   128.0,
                   127,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["mirostat"] = value.round();
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -422,10 +442,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   10.0,
                   100,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["mirostat_tau"] = value;
-                    });
+                    })
                   }
                 ),
                 settingsSlider(
@@ -434,10 +454,10 @@ class _ModelPageState extends State<ModelPage> {
                   0.0,
                   1.0,
                   100,
-                  (value) => () {
+                  (value) => {
                     setState(() {
                       model.parameters["mirostat_eta"] = value;
-                    });
+                    })
                   }
                 ),
               ],

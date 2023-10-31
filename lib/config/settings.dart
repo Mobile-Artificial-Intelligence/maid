@@ -42,13 +42,26 @@ class Settings {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
     
-    _models[model.getName()] = model.toMap();
+    _models[model.name] = model.toMap();
     _characters[character.getName()] = character.toMap();
 
     prefs.setString("models", json.encode(_models));
     prefs.setString("characters", json.encode(_characters));
-    prefs.setString("current_model", model.getName());
+    prefs.setString("current_model", model.name);
     prefs.setString("current_character", character.getName());
+  }
+
+  Future<void> updateModel(String newName) async {
+    String oldName = model.name;
+    model.parameters["name"] = newName;
+    _models.remove(oldName);
+    await save();
+  }
+
+  Future<void> removeModel() async {
+    _models.remove(model.name);
+    model = Model.fromMap(_models[_models.keys.lastOrNull ?? "Default"] ?? {});
+    await save();
   }
 
   List<String> getModels() {
@@ -59,20 +72,13 @@ class Settings {
     return _characters.keys.toList();
   }
 
-  void updateModel(String newName) {
-    String oldName = model.getName();
-    model.parameters["name"] = newName;
-    _models.remove(oldName);
-    save();
-  }
-
   Future<void> setModel(String? modelName) async {
-    await settings.save();
+    await save();
     model = Model.fromMap(_models[modelName ?? "Default"] ?? {});
   }
 
   Future<void> setCharacter(String? characterName) async {
-    await settings.save();
+    await save();
     character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
   }
 }
