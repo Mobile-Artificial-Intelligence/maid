@@ -48,7 +48,7 @@ int butler_start(struct butler_params *butler) {
 
     params.instruct                 = (*butler).instruct          != 0;
     params.memory_f16               = (*butler).memory_f16        != 0;
-    params.interactive = true; //   = (*butler).interactive       != 0;
+    params.interactive              = (*butler).interactive       != 0;
 
     params.seed                     = (*butler).seed              ? (*butler).seed              : -1;
     params.n_ctx                    = (*butler).n_ctx             ? (*butler).n_ctx             : 512;
@@ -387,4 +387,7 @@ void butler_exit(void) {
     llama_free(ctx);
     llama_free(ctx_guidance);
     llama_free_model(model);
+    llama_sampling_free(ctx_sampling);
+    llama_backend_free();
+    embd_inp.clear();
 }

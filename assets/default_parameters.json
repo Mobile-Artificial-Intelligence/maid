@@ -1,6 +1,7 @@
 {
     "memory_f16":false,
     "instruct":true,
+    "interactive":true,
     "random_seed":true,
     "model_name":"",
     "model_path":"",

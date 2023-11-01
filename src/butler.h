@@ -13,6 +13,7 @@ extern "C" {
 
 struct butler_params {
    unsigned char instruct;
+   unsigned char interactive;
    unsigned char memory_f16;
 
    char *model_path;

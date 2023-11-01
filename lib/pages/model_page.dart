@@ -151,6 +151,15 @@ class _ModelPageState extends State<ModelPage> {
                   },
                 ),
                 SwitchListTile(
+                  title: const Text('interactive'),
+                  value: model.parameters["interactive"],
+                  onChanged: (value) {
+                    setState(() {
+                      model.parameters["interactive"] = value;
+                    });
+                  },
+                ),
+                SwitchListTile(
                   title: const Text('memory_f16'),
                   value: model.parameters["memory_f16"],
                   onChanged: (value) {
