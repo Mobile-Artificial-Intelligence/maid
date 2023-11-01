@@ -44,12 +44,13 @@ class Settings {
     
     _models[model.name] = model.toMap();
     log("Model Saved: ${model.name}");
-    _characters[character.getName()] = character.toMap();
+    _characters[character.name] = character.toMap();
+    log("Character Saved: ${character.name}");
 
     prefs.setString("models", json.encode(_models));
     prefs.setString("characters", json.encode(_characters));
     prefs.setString("current_model", model.name);
-    prefs.setString("current_character", character.getName());
+    prefs.setString("current_character", character.name);
   }
 
   Future<void> updateModel(String newName) async {
@@ -59,9 +60,22 @@ class Settings {
     await save();
   }
 
+  Future<void> updateCharacter(String newName) async {
+    String oldName = character.name;
+    character.name = newName;
+    _characters.remove(oldName);
+    await save();
+  }
+
   Future<void> removeModel() async {
     _models.remove(model.name);
     model = Model.fromMap(_models[_models.keys.lastOrNull ?? "Default"] ?? {});
+    await save();
+  }
+
+  Future<void> removeCharacter() async {
+    _characters.remove(character.name);
+    character = Character.fromMap(_characters[_characters.keys.lastOrNull ?? "Default"] ?? {});
     await save();
   }
 

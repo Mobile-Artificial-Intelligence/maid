@@ -12,7 +12,7 @@ import 'package:maid/config/settings.dart';
 Character character = Character();
 
 class Character {  
-  TextEditingController nameController = TextEditingController();
+  String name = "Maid";
   
   TextEditingController promptController = TextEditingController();
   TextEditingController prePromptController = TextEditingController();
@@ -30,7 +30,7 @@ class Character {
   }
 
   Character.fromMap(Map<String, dynamic> inputJson) {
-    nameController.text = inputJson["name"] ?? "New Character";
+    name = inputJson["name"] ?? "Unknown";
 
     if (inputJson.isEmpty) {
       resetAll();
@@ -42,6 +42,8 @@ class Character {
 
     examplePromptControllers.clear();
     exampleResponseControllers.clear();
+
+    if (inputJson["example"] == null) return;
 
     int length = inputJson["example"].length ?? 0;
     for (var i = 0; i < length; i++) {
@@ -57,7 +59,7 @@ class Character {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> jsonCharacter = {};
 
-    jsonCharacter["name"] = getName();
+    jsonCharacter["name"] = name;
     
     jsonCharacter["pre_prompt"] = prePromptController.text;
     jsonCharacter["user_alias"] = userAliasController.text;
@@ -79,11 +81,6 @@ class Character {
     return jsonCharacter;
   }
 
-  String getName() {
-    if (nameController.text.isEmpty) return "New Character";
-    return nameController.text;
-  }
-
   void resetAll() async {
     // Reset all the internal state to the defaults
     String jsonString = await rootBundle.loadString('assets/default_character.json');
@@ -97,13 +94,15 @@ class Character {
     examplePromptControllers.clear();
     exampleResponseControllers.clear();
 
-    int length = jsonCharacter["example"]?.length ?? 0;
-    for (var i = 0; i < length; i++) {
-      String? examplePrompt = jsonCharacter["example"][i]["prompt"];
-      String? exampleResponse = jsonCharacter["example"][i]["response"];
-      if (examplePrompt != null && exampleResponse != null) {
-        examplePromptControllers.add(TextEditingController(text: examplePrompt));
-        exampleResponseControllers.add(TextEditingController(text: exampleResponse));
+    if (jsonCharacter["example"] != null) {
+      int length = jsonCharacter["example"]?.length ?? 0;
+      for (var i = 0; i < length; i++) {
+        String? examplePrompt = jsonCharacter["example"][i]["prompt"];
+        String? exampleResponse = jsonCharacter["example"][i]["response"];
+        if (examplePrompt != null && exampleResponse != null) {
+          examplePromptControllers.add(TextEditingController(text: examplePrompt));
+          exampleResponseControllers.add(TextEditingController(text: exampleResponse));
+        }
       }
     }
 
@@ -113,7 +112,7 @@ class Character {
   Future<String> saveCharacterToJson() async {
     Map<String, dynamic> jsonCharacter = {};
 
-    jsonCharacter["name"] = nameController.text;
+    jsonCharacter["name"] = name;
     
     jsonCharacter["pre_prompt"] = prePromptController.text;
     jsonCharacter["user_alias"] = userAliasController.text;
@@ -188,7 +187,7 @@ class Character {
         return "Failed to decode character";
       }
 
-      nameController.text = jsonCharacter["name"] ?? "";
+      name = jsonCharacter["name"] ?? "";
 
       prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
       userAliasController.text = jsonCharacter["user_alias"] ?? "";

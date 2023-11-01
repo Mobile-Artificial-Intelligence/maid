@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maid/widgets/preset_name_field.dart';
 import 'package:maid/widgets/settings_widgets.dart';
+import 'package:maid/config/settings.dart';
 import 'package:maid/config/character.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -11,6 +11,8 @@ class CharacterPage extends StatefulWidget {
 }
 
 class _CharacterPageState extends State<CharacterPage> {
+  TextEditingController presetController = TextEditingController();
+  
   @override
   initState() {
     super.initState();
@@ -40,7 +42,44 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                presetNameField(character.nameController),
+                DropdownMenu<String>(
+                  width: 250.0,
+                  initialSelection: character.name,
+                  controller: presetController,
+                  dropdownMenuEntries: settings.getCharacters().map<DropdownMenuEntry<String>>(
+                    (String value) {
+                      return DropdownMenuEntry<String>(
+                        value: value,
+                        label: value,
+                      );
+                    },
+                  ).toList(),
+                  onSelected: (value) => setState(() async {
+                    if (value == null) {
+                      await settings.updateCharacter(presetController.text);
+                    } else {
+                      await settings.setCharacter(value);
+                    }
+                    setState(() {});
+                  }),
+                ),
+                const SizedBox(height: 15.0),
+                doubleButtonRow(
+                  context,
+                  "New Preset",
+                  () async {
+                    await settings.save();
+                    character = Character();
+                    character.name = "New Preset";
+                    setState(() {});
+                  },
+                  "Delete Preset",
+                  () async {
+                    await settings.removeCharacter();
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 20.0),
                 Divider(
                   indent: 10,
                   endIndent: 10,

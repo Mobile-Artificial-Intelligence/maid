@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/settings.dart';
-import 'package:maid/widgets/preset_name_field.dart';
 import 'package:maid/widgets/settings_widgets.dart';
 
 class ModelPage extends StatefulWidget {
