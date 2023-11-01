@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:system_info2/system_info2.dart';
 
 import 'package:maid/config/settings.dart';
-import 'package:maid/config/character.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/butler.dart';
 
@@ -30,6 +29,7 @@ class MaidHomePage extends StatefulWidget {
 
 class _MaidHomePageState extends State<MaidHomePage> {
   final ScrollController _consoleScrollController = ScrollController();
+  TextEditingController promptController = TextEditingController();
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
   List<Widget> chatWidgets = [];
   ResponseMessage newResponse = ResponseMessage();
@@ -57,7 +57,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               FilledButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ModelPage(model: model)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
                 },
                 child: Text(
                   "Open Model Settings",
@@ -81,7 +81,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
   }
 
-  void execute() {
+  void execute() async {
     //close the keyboard if on mobile
     if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
@@ -89,20 +89,20 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
     setState(() {
       model.busy = true;
-      settings.save();
-      chatWidgets.add(UserMessage(message: character.promptController.text.trim()));
+      chatWidgets.add(UserMessage(message: promptController.text.trim()));
     });
 
     if (!Lib.instance.hasStarted()) {
-      Lib.instance.butlerStart(responseCallback);
+      await settings.save();
+      Lib.instance.butlerStart(promptController.text, responseCallback);
     } else {
-      Lib.instance.butlerContinue();
+      Lib.instance.butlerContinue(promptController.text);
     }
 
     setState(() {
       newResponse = ResponseMessage();
       chatWidgets.add(newResponse);
-      character.promptController.text = "";
+      promptController.clear();
     });
   }
 
@@ -174,7 +174,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CharacterPage(character: character)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CharacterPage()));
               },
             ),
             ListTile(
@@ -185,7 +185,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ModelPage(model: model)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
               },
             ),
             ListTile(
@@ -268,7 +268,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
                                 }                             
                               }                          
                             },
-                            controller: character.promptController,
+                            controller: promptController,
                             cursorColor:
                                 Theme.of(context).colorScheme.secondary,
                             decoration: InputDecoration(

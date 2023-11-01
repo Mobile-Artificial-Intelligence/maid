@@ -72,6 +72,9 @@ final class butler_params extends ffi.Struct {
   external int instruct;
 
   @ffi.UnsignedChar()
+  external int interactive;
+
+  @ffi.UnsignedChar()
   external int memory_f16;
 
   external ffi.Pointer<ffi.Char> model_path;

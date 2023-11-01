@@ -11,7 +11,8 @@ import 'package:maid/config/settings.dart';
 
 Model model = Model();
 
-class Model { 
+class Model {  
+  String name = "Default";
   Map<String, dynamic> parameters = {};
 
   bool busy = false;
@@ -24,13 +25,20 @@ class Model {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
+      name = inputJson["name"] ?? "Default";
+      Settings.log("Model created with name: ${inputJson["name"]}");
       parameters = inputJson;
     }
   }
 
-  String getName() {
-    if (parameters["model_name"] == null || parameters["model_name"].isEmpty) return "default";
-    return parameters["model_name"];
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> jsonModel = {};
+
+    jsonModel = parameters;
+    jsonModel["name"] = name;
+    Settings.log("JSON created with name: $name");
+
+    return jsonModel;
   }
 
   void resetAll() async {
@@ -43,6 +51,8 @@ class Model {
   }
 
   Future<String> saveParametersToJson() async {
+    parameters["name"] = name;
+    
     // Convert the map to a JSON string
     String jsonString = json.encode(parameters);
     String? filePath;
@@ -95,6 +105,8 @@ class Model {
       if (parameters.isEmpty) {
         resetAll();
         return "Failed to decode model";
+      } else {
+        name = parameters["name"] ?? "Default";
       }
     } catch (e) {
       resetAll();
