@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:maid/config/butler.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/character.dart';
 
@@ -51,6 +52,8 @@ class Settings {
     prefs.setString("characters", json.encode(_characters));
     prefs.setString("current_model", model.name);
     prefs.setString("current_character", character.name);
+
+    Lib.instance.butlerExit();
   }
 
   Future<void> updateModel(String newName) async {

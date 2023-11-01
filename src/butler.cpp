@@ -142,7 +142,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        const auto inp_text = ::llama_tokenize(model, buffer,                    false, false);
+        const auto inp_text = ::llama_tokenize(model, buffer, false, false);
 
         embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
         embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
@@ -383,12 +383,8 @@ void butler_stop(void) {
 
 void butler_exit(void) {
     stop_generation.store(true);
-
-    while (stop_generation.load()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-
     llama_print_timings(ctx);
     llama_free(ctx);
+    llama_free(ctx_guidance);
     llama_free_model(model);
 }

@@ -19,6 +19,14 @@ class _ModelPageState extends State<ModelPage> {
   }
 
   @override
+  void dispose() {
+    settings.save();
+    print("ModelPage dispose");
+    presetController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

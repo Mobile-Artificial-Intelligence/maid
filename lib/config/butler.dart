@@ -139,8 +139,10 @@ class Lib {
   }
 
   void butlerExit() {
-    _nativeLibrary.butler_exit();
-    _sendPort?.send(_sendPort);
+    if (_hasStarted) {
+      _nativeLibrary.butler_exit();
+      _sendPort?.send(_sendPort);
+    }
     _hasStarted = false;
   }
 }

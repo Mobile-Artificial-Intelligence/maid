@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:system_info2/system_info2.dart';
 
 import 'package:maid/config/settings.dart';
-import 'package:maid/config/character.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/butler.dart';
 
@@ -82,7 +81,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
   }
 
-  void execute() {
+  void execute() async {
     //close the keyboard if on mobile
     if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
@@ -90,11 +89,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
     setState(() {
       model.busy = true;
-      settings.save();
       chatWidgets.add(UserMessage(message: promptController.text.trim()));
     });
 
     if (!Lib.instance.hasStarted()) {
+      await settings.save();
       Lib.instance.butlerStart(promptController.text, responseCallback);
     } else {
       Lib.instance.butlerContinue(promptController.text);

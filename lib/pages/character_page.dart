@@ -19,6 +19,14 @@ class _CharacterPageState extends State<CharacterPage> {
   }
 
   @override
+  void dispose() {
+    settings.save();
+    print("CharacterPage disposed");
+    presetController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
