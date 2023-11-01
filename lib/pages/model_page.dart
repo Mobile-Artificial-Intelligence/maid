@@ -65,33 +65,20 @@ class _ModelPageState extends State<ModelPage> {
                   }),
                 ),
                 const SizedBox(height: 15.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () async {
-                        await settings.save();
-                        model = Model();
-                        model.name = "New Preset";
-                        setState(() {});
-                      },
-                      child: Text(
-                        "New Preset",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () async {
-                        await settings.removeModel();
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Delete Preset",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                doubleButtonRow(
+                  context,
+                  "New Preset",
+                  () async {
+                    await settings.save();
+                    model = Model();
+                    model.name = "New Preset";
+                    setState(() {});
+                  },
+                  "Delete Preset",
+                  () async {
+                    await settings.removeModel();
+                    setState(() {});
+                  },
                 ),
                 const SizedBox(height: 20.0),
                 Divider(
@@ -114,31 +101,18 @@ class _ModelPageState extends State<ModelPage> {
                   ),
                 ),
                 const SizedBox(height: 15.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () async {
-                        await storageOperationDialog(context, model.loadModelFile);
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Load Model",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () {
-                        model.resetAll();
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Reset All",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                doubleButtonRow(
+                  context,
+                  "Load Model",
+                  () async {
+                    await storageOperationDialog(context, model.loadModelFile);
+                    setState(() {});
+                  },
+                  "Reset All",
+                  () {
+                    model.resetAll();
+                    setState(() {});
+                  },
                 ),
                 Divider(
                   height: 20,
@@ -146,31 +120,18 @@ class _ModelPageState extends State<ModelPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () async {
-                        await storageOperationDialog(context, model.loadParametersFromJson);
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Load Parameters",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () async {
-                        await storageOperationDialog(context, model.saveParametersToJson);
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Save Parameters",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                doubleButtonRow(
+                  context,
+                  "Load Parameters",
+                  () async {
+                    await storageOperationDialog(context, model.loadParametersFromJson);
+                    setState(() {});
+                  },
+                  "Save Parameters",
+                  () async {
+                    await storageOperationDialog(context, model.saveParametersToJson);
+                    setState(() {});
+                  },
                 ),
                 const SizedBox(height: 15.0),
                 SwitchListTile(

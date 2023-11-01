@@ -65,6 +65,29 @@ Widget settingsSlider(String labelText, num inputValue,
   );
 }
 
+Widget doubleButtonRow(BuildContext context, String leftText, Function() leftOnPressed, String rightText, Function() rightOnPressed) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      FilledButton(
+        onPressed: leftOnPressed,
+        child: Text(
+          leftText,
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+      ),
+      const SizedBox(width: 10.0),
+      FilledButton(
+        onPressed: rightOnPressed,
+        child: Text(
+          rightText,
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+      ),
+    ],
+  );
+}
+
 Future<void> storageOperationDialog(BuildContext context, Future<String> Function() storageFunction) async {
   String ret = await storageFunction();
   // Ensure that the context is still valid before attempting to show the dialog.

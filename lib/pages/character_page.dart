@@ -46,31 +46,18 @@ class _CharacterPageState extends State<CharacterPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () async {
-                        await storageOperationDialog(context, character.loadCharacterFromJson);
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Load Character",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () async {
-                        await storageOperationDialog(context, character.saveCharacterToJson);
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Save Character",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                doubleButtonRow(
+                  context,
+                  "Load Character",
+                  () async {
+                    await storageOperationDialog(context, character.loadCharacterFromJson);
+                    setState(() {});
+                  },
+                  "Save Character",
+                  () async {
+                    await storageOperationDialog(context, character.saveCharacterToJson);
+                    setState(() {});
+                  },
                 ),
                 const SizedBox(height: 10.0),
                 FilledButton(
@@ -117,35 +104,22 @@ class _CharacterPageState extends State<CharacterPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () {
-                        setState(() {
-                          character.examplePromptControllers.add(TextEditingController());
-                          character.exampleResponseControllers.add(TextEditingController());
-                        });
-                      },
-                      child: Text(
-                        "Add Example",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () {
-                        setState(() {
-                          character.examplePromptControllers.removeLast();
-                          character.exampleResponseControllers.removeLast();
-                        });
-                      },
-                      child: Text(
-                        "Remove Example",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                doubleButtonRow(
+                  context,
+                  "Add Example",
+                  () {
+                    setState(() {
+                      character.examplePromptControllers.add(TextEditingController());
+                      character.exampleResponseControllers.add(TextEditingController());
+                    });
+                  },
+                  "Remove Example",
+                  () {
+                    setState(() {
+                      character.examplePromptControllers.removeLast();
+                      character.exampleResponseControllers.removeLast();
+                    });
+                  },
                 ),
                 const SizedBox(height: 10.0),
                 ...List.generate(
