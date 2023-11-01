@@ -147,10 +147,19 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
         const auto inp_text = ::llama_tokenize(model, buffer, false, false);
+        const auto nl_token = llama_token_nl(model);
 
-        embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
+        if (params.instruct) {
+            embd_inp.push_back(nl_token);
+            embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
+        }
+        
         embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
-        embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
+
+        if (params.instruct) {
+            embd_inp.push_back(nl_token);
+            embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
+        }
 
         n_remain -= inp_text.size();
     }
@@ -359,6 +368,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             }
 
             if (n_past > 0 && is_interacting) {
+                maid_output(return_code::STOP, "");
                 return 0;
             }
 
@@ -378,6 +388,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
         }
     }
 
+    maid_output(return_code::STOP, "");
     return 0;
 }
 
