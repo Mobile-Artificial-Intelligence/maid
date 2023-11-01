@@ -70,7 +70,7 @@ class Lib {
   }
 
 
-  void butlerStart(void Function(String) maidOutput) async {
+  void butlerStart(String input, void Function(String) maidOutput) async {
     if (_hasStarted) {
       butlerExit();
       await Future.delayed(const Duration(seconds: 1));
@@ -110,7 +110,7 @@ class Lib {
 
     ReceivePort receivePort = ReceivePort();
     _sendPort = receivePort.sendPort;
-    butlerContinue();
+    butlerContinue(input);
   
     Completer completer = Completer();
     receivePort.listen((data) {
@@ -126,8 +126,7 @@ class Lib {
     await completer.future;
   }
 
-  void butlerContinue() {
-    String input = character.promptController.text;
+  void butlerContinue(String input) {
     Settings.log("Input: $input");
     Isolate.spawn(butlerContinueIsolate, {
       'input': input,

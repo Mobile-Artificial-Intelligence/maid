@@ -14,7 +14,6 @@ Character character = Character();
 class Character {  
   String name = "Maid";
   
-  TextEditingController promptController = TextEditingController();
   TextEditingController prePromptController = TextEditingController();
   
   List<TextEditingController> examplePromptControllers = [];
