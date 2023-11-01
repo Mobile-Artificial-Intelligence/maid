@@ -34,17 +34,22 @@ static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
 static int n_remain;
-static int n_past       = 0;
-static int n_consumed   = 0;
-static int n_pfx        = 0;
-static int n_sfx        = 0;
-static signed int prior = 0;
+static int n_past;
+static int n_consumed;
+static int n_pfx;
+static int n_sfx;
+static signed int prior;
 
 static gpt_params params;
 static llama_context_params lparams;
 
 int butler_start(struct butler_params *butler) {
     llama_backend_init(false);
+
+    n_past       = 0;
+    n_consumed   = 0;
+    n_pfx        = 0;
+    n_sfx        = 0;
 
     params.instruct                 = (*butler).instruct          != 0;
     params.memory_f16               = (*butler).memory_f16        != 0;
@@ -83,6 +88,8 @@ int butler_start(struct butler_params *butler) {
     params.antiprompt.push_back("\n\n\n\n");
 
     n_remain = params.n_predict;
+
+    printf("Prompt: %s\n", params.prompt.c_str());
 
     std::tie(model, ctx) = llama_init_from_gpt_params(params);
     if (model == NULL) {
