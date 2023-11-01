@@ -20,7 +20,11 @@ class Settings {
     _logString += "$message\n";
   }
 
-  Future<void> init() async {
+  Settings() {
+    init();
+  }
+
+  void init() async {
     var prefs = await SharedPreferences.getInstance();
     
     _models = json.decode(prefs.getString("models") ?? "{}");

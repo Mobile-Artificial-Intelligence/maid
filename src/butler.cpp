@@ -36,8 +36,6 @@ static std::vector<llama_token> embd_inp;
 static int n_remain;
 static int n_past;
 static int n_consumed;
-static int n_pfx;
-static int n_sfx;
 static signed int prior;
 
 static gpt_params params;
@@ -48,8 +46,6 @@ int butler_start(struct butler_params *butler) {
 
     n_past       = 0;
     n_consumed   = 0;
-    n_pfx        = 0;
-    n_sfx        = 0;
 
     params.instruct                 = (*butler).instruct          != 0;
     params.memory_f16               = (*butler).memory_f16        != 0;
@@ -88,8 +84,6 @@ int butler_start(struct butler_params *butler) {
     params.antiprompt.push_back("\n\n\n\n");
 
     n_remain = params.n_predict;
-
-    printf("Prompt: %s\n", params.prompt.c_str());
 
     std::tie(model, ctx) = llama_init_from_gpt_params(params);
     if (model == NULL) {
@@ -138,6 +132,9 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     bool is_interacting = false;
     bool suffix_found = false;
 
+    int n_pfx = 0;
+    int n_sfx = 0;
+
     std::vector<llama_token> embd_cache;
 
     std::lock_guard<std::mutex> lock(continue_mutex);
@@ -150,10 +147,19 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
         const auto inp_text = ::llama_tokenize(model, buffer, false, false);
+        const auto nl_token = llama_token_nl(model);
 
-        embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
+        if (params.instruct) {
+            embd_inp.push_back(nl_token);
+            embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
+        }
+        
         embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
-        embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
+
+        if (params.instruct) {
+            embd_inp.push_back(nl_token);
+            embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
+        }
 
         n_remain -= inp_text.size();
     }
@@ -362,6 +368,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
             }
 
             if (n_past > 0 && is_interacting) {
+                maid_output(return_code::STOP, "");
                 return 0;
             }
 
@@ -381,6 +388,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
         }
     }
 
+    maid_output(return_code::STOP, "");
     return 0;
 }
 
@@ -396,5 +404,4 @@ void butler_exit(void) {
     llama_free_model(model);
     llama_sampling_free(ctx_sampling);
     llama_backend_free();
-    embd_inp.clear();
 }

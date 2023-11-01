@@ -127,13 +127,6 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   @override
-  Future<void> initState() async {
-    super.initState();
-    await settings.init();
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
