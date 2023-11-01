@@ -56,9 +56,11 @@ class _ModelPageState extends State<ModelPage> {
                   ).toList(),
                   onSelected: (value) => setState(() async {
                     if (value == null) {
+                      print("Null Value");
                       await settings.updateModel(presetController.text);
                     }
                     else {
+                      print("Value: $value");
                       await settings.setModel(value);
                     }
                     setState(() {});
@@ -72,7 +74,7 @@ class _ModelPageState extends State<ModelPage> {
                       onPressed: () async {
                         await settings.save();
                         model = Model();
-                        model.parameters["name"] = "New Preset";
+                        model.name = "New Preset";
                         setState(() {});
                       },
                       child: Text(

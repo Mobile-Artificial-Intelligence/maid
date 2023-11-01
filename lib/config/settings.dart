@@ -43,6 +43,7 @@ class Settings {
     prefs.clear();
     
     _models[model.name] = model.toMap();
+    log("Model Saved: ${model.name}");
     _characters[character.getName()] = character.toMap();
 
     prefs.setString("models", json.encode(_models));
@@ -53,7 +54,7 @@ class Settings {
 
   Future<void> updateModel(String newName) async {
     String oldName = model.name;
-    model.parameters["name"] = newName;
+    model.name = newName;
     _models.remove(oldName);
     await save();
   }

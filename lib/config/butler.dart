@@ -128,7 +128,6 @@ class Lib {
 
   void butlerContinue() {
     String input = character.promptController.text;
-    print("Input: $input");
     Settings.log("Input: $input");
     Isolate.spawn(butlerContinueIsolate, {
       'input': input,
