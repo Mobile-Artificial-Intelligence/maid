@@ -2,14 +2,15 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:maid/config/butler.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/character.dart';
 
 Settings settings = Settings();
 
 class Settings { 
-  Map<String, Model> _models = {};
-  Map<String, Character> _characters = {};
+  Map<String, dynamic> _models = {};
+  Map<String, dynamic> _characters = {};
   
   static String _logString = "";
 
@@ -22,46 +23,63 @@ class Settings {
   Future<void> init() async {
     var prefs = await SharedPreferences.getInstance();
     
-    var modelsJson = json.decode(prefs.getString("models") ?? "{}");
-    var charactersJson = json.decode(prefs.getString("characters") ?? "{}");
-
-    _models = modelsJson.map<String, Model>(
-      (String key, dynamic value) => MapEntry<String, Model>(
-        key, 
-        Model.fromMap(value)
-      )
-    );
-
-    _characters = charactersJson.map<String, Character>(
-      (String key, dynamic value) => MapEntry<String, Character>(
-        key, 
-        Character.fromMap(value)
-      )
-    );
+    _models = json.decode(prefs.getString("models") ?? "{}");
+    _characters = json.decode(prefs.getString("characters") ?? "{}");
 
     if (_models.isEmpty) {
-      _models["default"] = Model();
+      model = Model();
+    } else {
+      model = Model.fromMap(_models[prefs.getString("current_model") ?? "Default"] ?? {});
     }
 
     if (_characters.isEmpty) {
-      _characters["default"] = Character();
+      character = Character();
+    } else {
+      character = Character.fromMap(_characters[prefs.getString("current_character") ?? "Default"] ?? {});
     }
-
-    model = _models[prefs.getString("current_model") ?? "default"] ?? Model();
-    character = _characters[prefs.getString("current_character") ?? "default"] ?? Character();
   }
 
-  void save() async {
+  Future<void> save() async {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    
+    _models[model.name] = model.toMap();
+    log("Model Saved: ${model.name}");
+    _characters[character.name] = character.toMap();
+    log("Character Saved: ${character.name}");
 
-    _models[model.getName()] = model;
-    _characters[character.getName()] = character;
+    prefs.setString("models", json.encode(_models));
+    prefs.setString("characters", json.encode(_characters));
+    prefs.setString("current_model", model.name);
+    prefs.setString("current_character", character.name);
 
-    prefs.setString("models", json.encode(_models.map((key, value) => MapEntry(key, value.parameters))));
-    prefs.setString("characters", json.encode(_characters.map((key, value) => MapEntry(key, value.toMap()))));
-    prefs.setString("current_model", model.getName());
-    prefs.setString("current_character", character.getName());
+    Lib.instance.butlerExit();
+  }
+
+  Future<void> updateModel(String newName) async {
+    String oldName = model.name;
+    model.name = newName;
+    _models.remove(oldName);
+    await save();
+  }
+
+  Future<void> updateCharacter(String newName) async {
+    String oldName = character.name;
+    character.name = newName;
+    _characters.remove(oldName);
+    await save();
+  }
+
+  Future<void> removeModel() async {
+    _models.remove(model.name);
+    model = Model.fromMap(_models[_models.keys.lastOrNull ?? "Default"] ?? {});
+    await save();
+  }
+
+  Future<void> removeCharacter() async {
+    _characters.remove(character.name);
+    character = Character.fromMap(_characters[_characters.keys.lastOrNull ?? "Default"] ?? {});
+    await save();
   }
 
   List<String> getModels() {
@@ -72,11 +90,13 @@ class Settings {
     return _characters.keys.toList();
   }
 
-  void setModel(String modelName) {
-    model = _models[modelName] ?? Model();
+  Future<void> setModel(String? modelName) async {
+    await save();
+    model = Model.fromMap(_models[modelName ?? "Default"] ?? {});
   }
 
-  void setCharacter(String characterName) {
-    character = _characters[characterName] ?? Character();
+  Future<void> setCharacter(String? characterName) async {
+    await save();
+    character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
   }
 }

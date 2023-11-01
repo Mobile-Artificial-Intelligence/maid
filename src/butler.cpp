@@ -34,11 +34,11 @@ static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
 static int n_remain;
-static int n_past       = 0;
-static int n_consumed   = 0;
-static int n_pfx        = 0;
-static int n_sfx        = 0;
-static signed int prior = 0;
+static int n_past;
+static int n_consumed;
+static int n_pfx;
+static int n_sfx;
+static signed int prior;
 
 static gpt_params params;
 static llama_context_params lparams;
@@ -46,9 +46,14 @@ static llama_context_params lparams;
 int butler_start(struct butler_params *butler) {
     llama_backend_init(false);
 
+    n_past       = 0;
+    n_consumed   = 0;
+    n_pfx        = 0;
+    n_sfx        = 0;
+
     params.instruct                 = (*butler).instruct          != 0;
     params.memory_f16               = (*butler).memory_f16        != 0;
-    params.interactive = true; //   = (*butler).interactive       != 0;
+    params.interactive              = (*butler).interactive       != 0;
 
     params.seed                     = (*butler).seed              ? (*butler).seed              : -1;
     params.n_ctx                    = (*butler).n_ctx             ? (*butler).n_ctx             : 512;
@@ -83,6 +88,8 @@ int butler_start(struct butler_params *butler) {
     params.antiprompt.push_back("\n\n\n\n");
 
     n_remain = params.n_predict;
+
+    printf("Prompt: %s\n", params.prompt.c_str());
 
     std::tie(model, ctx) = llama_init_from_gpt_params(params);
     if (model == NULL) {
@@ -142,7 +149,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        const auto inp_text = ::llama_tokenize(model, buffer,                    false, false);
+        const auto inp_text = ::llama_tokenize(model, buffer, false, false);
 
         embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
         embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
@@ -383,12 +390,11 @@ void butler_stop(void) {
 
 void butler_exit(void) {
     stop_generation.store(true);
-
-    while (stop_generation.load()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-
     llama_print_timings(ctx);
     llama_free(ctx);
+    llama_free(ctx_guidance);
     llama_free_model(model);
+    llama_sampling_free(ctx_sampling);
+    llama_backend_free();
+    embd_inp.clear();
 }

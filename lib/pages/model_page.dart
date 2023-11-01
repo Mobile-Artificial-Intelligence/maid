@@ -1,56 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/settings.dart';
+import 'package:maid/widgets/settings_widgets.dart';
 
 class ModelPage extends StatefulWidget {
-  final Model model;
-  
-  const ModelPage({super.key, required this.model});
+  const ModelPage({super.key});
 
   @override
   State<ModelPage> createState() => _ModelPageState();
 }
 
 class _ModelPageState extends State<ModelPage> {
-  void _storageOperationDialog(Future<String> Function() storageFunction) async {
-    String ret = await storageFunction();
-    // Use a local reference to context to avoid using it across an async gap.
-    final localContext = context;
-    // Ensure that the context is still valid before attempting to show the dialog.
-    if (localContext.mounted) {
-      showDialog(
-        context: localContext,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(ret),
-            alignment: Alignment.center,
-            actionsAlignment: MainAxisAlignment.center,
-            backgroundColor: Theme.of(context).colorScheme.background,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Close",
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
-                ),
-            ],
-          );
-        },
-      );
-      settings.save();
-      setState(() {});
-    }
-  }
-
+  TextEditingController presetController = TextEditingController();
+  
   @override
   initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    settings.save();
+    print("ModelPage dispose");
+    presetController.dispose();
+    super.dispose();
   }
 
   @override
@@ -77,112 +50,149 @@ class _ModelPageState extends State<ModelPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                Text(
-                  widget.model.parameters["model_name"],
-                  style: Theme.of(context).textTheme.titleSmall
-                ),
-                Divider(
-                  indent: 10,
-                  endIndent: 10,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(widget.model.loadParametersFromJson);
-                      },
-                      child: Text(
-                        "Load Parameters",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(widget.model.saveParametersToJson);
-                      },
-                      child: Text(
-                        "Save Parameters",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                DropdownMenu<String>(
+                  width: 200.0,
+                  initialSelection: model.name,
+                  controller: presetController,
+                  dropdownMenuEntries: settings.getModels().map<DropdownMenuEntry<String>>(
+                    (String value) {
+                      return DropdownMenuEntry<String>(
+                        value: value,
+                        label: value,
+                      );
+                    },
+                  ).toList(),
+                  onSelected: (value) => setState(() async {
+                    if (value == null) {
+                      await settings.updateModel(presetController.text);
+                    } else {
+                      await settings.setModel(value);
+                    }
+                    setState(() {});
+                  }),
                 ),
                 const SizedBox(height: 15.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(widget.model.loadModelFile);
-                      },
-                      child: Text(
-                        "Load Model",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () {
-                        widget.model.resetAll();
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Reset All",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                doubleButtonRow(
+                  context,
+                  "New Preset",
+                  () async {
+                    await settings.save();
+                    model = Model();
+                    model.name = "New Preset";
+                    setState(() {});
+                  },
+                  "Delete Preset",
+                  () async {
+                    await settings.removeModel();
+                    setState(() {});
+                  },
                 ),
+                const SizedBox(height: 20.0),
                 Divider(
+                  height: 20,
                   indent: 10,
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Model Name: ${model.parameters["model_name"]}",
+                  ),
+                ),
+                const SizedBox(height: 15.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Model Path: ${model.parameters["model_path"]}",
+                  ),
+                ),
+                const SizedBox(height: 15.0),
+                doubleButtonRow(
+                  context,
+                  "Load Model",
+                  () async {
+                    await storageOperationDialog(context, model.loadModelFile);
+                    setState(() {});
+                  },
+                  "Reset All",
+                  () {
+                    model.resetAll();
+                    setState(() {});
+                  },
+                ),
+                Divider(
+                  height: 20,
+                  indent: 10,
+                  endIndent: 10,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                doubleButtonRow(
+                  context,
+                  "Load Parameters",
+                  () async {
+                    await storageOperationDialog(context, model.loadParametersFromJson);
+                    setState(() {});
+                  },
+                  "Save Parameters",
+                  () async {
+                    await storageOperationDialog(context, model.saveParametersToJson);
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 15.0),
                 SwitchListTile(
                   title: const Text('instruct'),
-                  value: widget.model.parameters["instruct"],
+                  value: model.parameters["instruct"],
                   onChanged: (value) {
                     setState(() {
-                      widget.model.parameters["instruct"] = value;
+                      model.parameters["instruct"] = value;
+                    });
+                  },
+                ),
+                SwitchListTile(
+                  title: const Text('interactive'),
+                  value: model.parameters["interactive"],
+                  onChanged: (value) {
+                    setState(() {
+                      model.parameters["interactive"] = value;
                     });
                   },
                 ),
                 SwitchListTile(
                   title: const Text('memory_f16'),
-                  value: widget.model.parameters["memory_f16"],
+                  value: model.parameters["memory_f16"],
                   onChanged: (value) {
                     setState(() {
-                      widget.model.parameters["memory_f16"] = value;
+                      model.parameters["memory_f16"] = value;
                     });
                   },
                 ),
                 SwitchListTile(
                   title: const Text('penalize_nl'),
-                  value: widget.model.parameters["penalize_nl"],
+                  value: model.parameters["penalize_nl"],
                   onChanged: (value) {
                     setState(() {
-                      widget.model.parameters["penalize_nl"] = value;
+                      model.parameters["penalize_nl"] = value;
                     });
                   },
                 ),
                 SwitchListTile(
                   title: const Text('random_seed'),
-                  value: widget.model.parameters["random_seed"],
+                  value: model.parameters["random_seed"],
                   onChanged: (value) {
                     setState(() {
-                      widget.model.parameters["random_seed"] = value;
+                      model.parameters["random_seed"] = value;
                     });
                   },
                 ),
                 Divider(
+                  height: 20,
                   indent: 10,
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                if (!widget.model.parameters["random_seed"])
+                if (!model.parameters["random_seed"])
                   ListTile(
                     title: Row(
                       children: [
@@ -196,169 +206,245 @@ class _ModelPageState extends State<ModelPage> {
                               labelText: 'seed',
                             ),
                             onChanged: (value) {
-                              widget.model.parameters["seed"] = int.parse(value);
+                              model.parameters["seed"] = int.parse(value);
                             },
                           ),
                         ),
                       ],
                     ),
                   ),
-                llamaParamSlider(
+                settingsSlider(
                   'n_threads', 
-                  widget.model.parameters["n_threads"],
+                  model.parameters["n_threads"],
                   1.0,
                   128.0,
                   127,
-                  (value) => widget.model.parameters["n_threads"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["n_threads"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'n_ctx',
-                  widget.model.parameters["n_ctx"],
+                  model.parameters["n_ctx"],
                   1.0,
                   4096.0,
                   4095,
-                  (value) => widget.model.parameters["n_ctx"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["n_ctx"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'n_batch',
-                  widget.model.parameters["n_batch"],
+                  model.parameters["n_batch"],
                   1.0,
                   4096.0,
                   4095,
-                  (value) => widget.model.parameters["n_batch"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["n_batch"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'n_predict',
-                  widget.model.parameters["n_predict"],
+                  model.parameters["n_predict"],
                   1.0,
                   1024.0,
                   1023,
-                  (value) => widget.model.parameters["n_predict"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["n_predict"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'n_keep',
-                  widget.model.parameters["n_keep"],
+                  model.parameters["n_keep"],
                   1.0,
                   1024.0,
                   1023,
-                  (value) => widget.model.parameters["n_keep"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["n_keep"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'n_prev',
-                  widget.model.parameters["n_prev"],
+                  model.parameters["n_prev"],
                   1.0,
                   1024.0,
                   1023,
-                  (value) => widget.model.parameters["n_prev"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["n_prev"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'n_probs',
-                  widget.model.parameters["n_probs"],
+                  model.parameters["n_probs"],
                   0.0,
                   128.0,
                   127,
-                  (value) => widget.model.parameters["n_probs"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["n_probs"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'top_k',
-                  widget.model.parameters["top_k"],
+                  model.parameters["top_k"],
                   1.0,
                   128.0,
                   127,
-                  (value) => widget.model.parameters["top_k"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["top_k"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'top_p',
-                  widget.model.parameters["top_p"],
+                  model.parameters["top_p"],
                   0.0,
                   1.0,
                   100,
-                  (value) => widget.model.parameters["top_p"] = value
+                  (value) => {
+                    setState(() {
+                      model.parameters["top_p"] = value;
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'tfs_z',
-                  widget.model.parameters["tfs_z"],
+                  model.parameters["tfs_z"],
                   0.0,
                   1.0,
                   100,
-                  (value) => widget.model.parameters["tfs_z"] = value
+                  (value) => {
+                    setState(() {
+                      model.parameters["tfs_z"] = value;
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'typical_p',
-                  widget.model.parameters["typical_p"],
+                  model.parameters["typical_p"],
                   0.0,
                   1.0,
                   100,
-                  (value) => widget.model.parameters["typical_p"] = value
+                  (value) => {
+                    setState(() {
+                      model.parameters["typical_p"] = value;
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'temperature',
-                  widget.model.parameters["temperature"],
+                  model.parameters["temperature"],
                   0.0,
                   1.0,
                   100,
-                  (value) => widget.model.parameters["temperature"] = value
+                  (value) => {
+                    setState(() {
+                      model.parameters["temperature"] = value;
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'penalty_last_n',
-                  widget.model.parameters["penalty_last_n"],
+                  model.parameters["penalty_last_n"],
                   0.0,
                   128.0,
                   127,
-                  (value) => widget.model.parameters["penalty_last_n"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["penalty_last_n"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'penalty_repeat',
-                  widget.model.parameters["penalty_repeat"],
+                  model.parameters["penalty_repeat"],
                   0.0,
                   2.0,
                   200,
-                  (value) => widget.model.parameters["penalty_repeat"] = value
+                  (value) => {
+                    setState(() {
+                      model.parameters["penalty_repeat"] = value;
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'penalty_freq',
-                  widget.model.parameters["penalty_freq"],
+                  model.parameters["penalty_freq"],
                   0.0,
                   1.0,
                   100,
-                  (value) => widget.model.parameters["penalty_freq"] = value
+                  (value) => {
+                    setState(() {
+                      model.parameters["penalty_freq"] = value;
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'penalty_present',
-                  widget.model.parameters["penalty_present"],
+                  model.parameters["penalty_present"],
                   0.0,
                   1.0,
                   100,
-                  (value) => widget.model.parameters["penalty_present"] = value
+                  (value) => {
+                    setState(() {
+                      model.parameters["penalty_present"] = value;
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'mirostat',
-                  widget.model.parameters["mirostat"],
+                  model.parameters["mirostat"],
                   0.0,
                   128.0,
                   127,
-                  (value) => widget.model.parameters["mirostat"] = value.round()
+                  (value) => {
+                    setState(() {
+                      model.parameters["mirostat"] = value.round();
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'mirostat_tau',
-                  widget.model.parameters["mirostat_tau"],
+                  model.parameters["mirostat_tau"],
                   0.0,
                   10.0,
                   100,
-                  (value) => widget.model.parameters["mirostat_tau"] = value
+                  (value) => {
+                    setState(() {
+                      model.parameters["mirostat_tau"] = value;
+                    })
+                  }
                 ),
-                llamaParamSlider(
+                settingsSlider(
                   'mirostat_eta',
-                  widget.model.parameters["mirostat_eta"],
+                  model.parameters["mirostat_eta"],
                   0.0,
                   1.0,
                   100,
-                  (value) => widget.model.parameters["mirostat_eta"] = value
+                  (value) => {
+                    setState(() {
+                      model.parameters["mirostat_eta"] = value;
+                    })
+                  }
                 ),
               ],
             ),
           ),
-          if (widget.model.busy)
+          if (model.busy)
             // This is a semi-transparent overlay that will cover the entire screen.
             Positioned.fill(
               child: Container(
@@ -370,72 +456,6 @@ class _ModelPageState extends State<ModelPage> {
             ),
         ],
       )
-    );
-  }
-
-  Widget llamaParamTextField(String labelText, TextEditingController controller) {
-    return ListTile(
-      title: Row(
-        children: [
-          Expanded(
-            child: Text(labelText),
-          ),
-          Expanded(
-            flex: 2,
-            child: TextField(
-              controller: controller,
-              decoration: InputDecoration(
-                labelText: labelText,
-              )
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget llamaParamSlider(String labelText, num inputValue, 
-    double sliderMin, double sliderMax, int sliderDivisions, 
-    Function(double) onValueChanged
-  ) {
-    String labelValue;
-
-    // I finput value is a double
-    if (inputValue is int) {
-      // If input value is an integer
-      labelValue = inputValue.round().toString();
-    } else {
-      labelValue = inputValue.toStringAsFixed(3);
-    }
-    
-    return ListTile(
-      title: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(labelText),
-          ),
-          Expanded(
-            flex: 7,
-            child: Slider(
-              value: inputValue.toDouble(),
-              min: sliderMin,
-              max: sliderMax,
-              divisions: sliderDivisions,
-              label: labelValue,
-              onChanged: (double value) {
-                setState(() {
-                  onValueChanged(value);
-                });
-              },
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text(labelValue),
-          ),
-        ],
-      ),
     );
   }
 }

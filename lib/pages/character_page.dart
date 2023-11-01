@@ -1,56 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:maid/config/character.dart';
+import 'package:maid/widgets/settings_widgets.dart';
 import 'package:maid/config/settings.dart';
+import 'package:maid/config/character.dart';
 
 class CharacterPage extends StatefulWidget {
-  final Character character;
-
-  const CharacterPage({super.key, required this.character});
+  const CharacterPage({super.key});
 
   @override
   State<CharacterPage> createState() => _CharacterPageState();
 }
 
 class _CharacterPageState extends State<CharacterPage> {
-  void _storageOperationDialog(Future<String> Function() storageFunction) async {
-    String ret = await storageFunction();
-    // Use a local reference to context to avoid using it across an async gap.
-    final localContext = context;
-    // Ensure that the context is still valid before attempting to show the dialog.
-    if (localContext.mounted) {
-      showDialog(
-        context: localContext,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(ret),
-            alignment: Alignment.center,
-            actionsAlignment: MainAxisAlignment.center,
-            backgroundColor: Theme.of(context).colorScheme.background,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Close",
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
-                ),
-            ],
-          );
-        },
-      );
-      settings.save();
-      setState(() {});
-    }
-  }
-
+  TextEditingController presetController = TextEditingController();
+  
   @override
   initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    settings.save();
+    print("CharacterPage disposed");
+    presetController.dispose();
+    super.dispose();
   }
 
   @override
@@ -77,43 +50,66 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                Text(
-                  widget.character.nameController.text,
-                  style: Theme.of(context).textTheme.titleSmall
+                DropdownMenu<String>(
+                  width: 250.0,
+                  initialSelection: character.name,
+                  controller: presetController,
+                  dropdownMenuEntries: settings.getCharacters().map<DropdownMenuEntry<String>>(
+                    (String value) {
+                      return DropdownMenuEntry<String>(
+                        value: value,
+                        label: value,
+                      );
+                    },
+                  ).toList(),
+                  onSelected: (value) => setState(() async {
+                    if (value == null) {
+                      await settings.updateCharacter(presetController.text);
+                    } else {
+                      await settings.setCharacter(value);
+                    }
+                    setState(() {});
+                  }),
                 ),
+                const SizedBox(height: 15.0),
+                doubleButtonRow(
+                  context,
+                  "New Preset",
+                  () async {
+                    await settings.save();
+                    character = Character();
+                    character.name = "New Preset";
+                    setState(() {});
+                  },
+                  "Delete Preset",
+                  () async {
+                    await settings.removeCharacter();
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 20.0),
                 Divider(
                   indent: 10,
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(widget.character.loadCharacterFromJson);
-                      },
-                      child: Text(
-                        "Load Character",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () {
-                        _storageOperationDialog(widget.character.saveCharacterToJson);
-                      },
-                      child: Text(
-                        "Save Character",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                doubleButtonRow(
+                  context,
+                  "Load Character",
+                  () async {
+                    await storageOperationDialog(context, character.loadCharacterFromJson);
+                    setState(() {});
+                  },
+                  "Save Character",
+                  () async {
+                    await storageOperationDialog(context, character.saveCharacterToJson);
+                    setState(() {});
+                  },
                 ),
                 const SizedBox(height: 10.0),
                 FilledButton(
                   onPressed: () {
-                    widget.character.resetAll();
+                    character.resetAll();
                     setState(() {});
                   },
                   child: Text(
@@ -126,10 +122,10 @@ class _CharacterPageState extends State<CharacterPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                llamaParamTextField(
-                  'User alias', widget.character.userAliasController),
-                llamaParamTextField(
-                  'Response alias', widget.character.responseAliasController),
+                settingsTextField(
+                  'User alias', character.userAliasController),
+                settingsTextField(
+                  'Response alias', character.responseAliasController),
                 ListTile(
                   title: Row(
                     children: [
@@ -141,7 +137,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         child: TextField(
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
-                          controller: widget.character.prePromptController,
+                          controller: character.prePromptController,
                           decoration: const InputDecoration(
                             labelText: 'PrePrompt',
                           ),
@@ -155,50 +151,37 @@ class _CharacterPageState extends State<CharacterPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.character.examplePromptControllers.add(TextEditingController());
-                          widget.character.exampleResponseControllers.add(TextEditingController());
-                        });
-                      },
-                      child: Text(
-                        "Add Example",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.character.examplePromptControllers.removeLast();
-                          widget.character.exampleResponseControllers.removeLast();
-                        });
-                      },
-                      child: Text(
-                        "Remove Example",
-                        style: Theme.of(context).textTheme.labelLarge
-                      ),
-                    ),
-                  ],
+                doubleButtonRow(
+                  context,
+                  "Add Example",
+                  () {
+                    setState(() {
+                      character.examplePromptControllers.add(TextEditingController());
+                      character.exampleResponseControllers.add(TextEditingController());
+                    });
+                  },
+                  "Remove Example",
+                  () {
+                    setState(() {
+                      character.examplePromptControllers.removeLast();
+                      character.exampleResponseControllers.removeLast();
+                    });
+                  },
                 ),
                 const SizedBox(height: 10.0),
                 ...List.generate(
-                  (widget.character.examplePromptControllers.length == widget.character.exampleResponseControllers.length) ? widget.character.examplePromptControllers.length : 0,
+                  (character.examplePromptControllers.length == character.exampleResponseControllers.length) ? character.examplePromptControllers.length : 0,
                   (index) => Column(
                     children: [
-                      llamaParamTextField('Example prompt', widget.character.examplePromptControllers[index]),
-                      llamaParamTextField('Example response', widget.character.exampleResponseControllers[index]),
+                      settingsTextField('Example prompt', character.examplePromptControllers[index]),
+                      settingsTextField('Example response', character.exampleResponseControllers[index]),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          if (widget.character.busy)
+          if (character.busy)
             // This is a semi-transparent overlay that will cover the entire screen.
             Positioned.fill(
               child: Container(
@@ -210,27 +193,6 @@ class _CharacterPageState extends State<CharacterPage> {
             ),
         ],
       )
-    );
-  }
-
-  Widget llamaParamTextField(String labelText, TextEditingController controller) {
-    return ListTile(
-      title: Row(
-        children: [
-          Expanded(
-            child: Text(labelText),
-          ),
-          Expanded(
-            flex: 2,
-            child: TextField(
-              controller: controller,
-              decoration: InputDecoration(
-                labelText: labelText,
-              )
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

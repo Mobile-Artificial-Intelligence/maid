@@ -70,7 +70,7 @@ class Lib {
   }
 
 
-  void butlerStart(void Function(String) maidOutput) async {
+  void butlerStart(String input, void Function(String) maidOutput) async {
     if (_hasStarted) {
       butlerExit();
       await Future.delayed(const Duration(seconds: 1));
@@ -81,15 +81,16 @@ class Lib {
     final params = calloc<butler_params>();
     params.ref.model_path = model.parameters["model_path"].toString().toNativeUtf8().cast<Char>();
     params.ref.preprompt = character.getPrePrompt().toNativeUtf8().cast<Char>();
-    params.ref.input_prefix = character.userAliasController.text.trim().toNativeUtf8().cast<Char>();
-    params.ref.input_suffix = character.responseAliasController.text.trim().toNativeUtf8().cast<Char>();
+    params.ref.input_prefix = "\n${character.userAliasController.text.trim()}".toNativeUtf8().cast<Char>();
+    params.ref.input_suffix = "\n${character.responseAliasController.text.trim()}".toNativeUtf8().cast<Char>();
     params.ref.seed = model.parameters["random_seed"] ? -1 : model.parameters["seed"];
     params.ref.n_ctx = model.parameters["n_ctx"];
     params.ref.n_threads = model.parameters["n_threads"];
     params.ref.n_batch = model.parameters["n_batch"];
     params.ref.n_predict = model.parameters["n_predict"];
-    params.ref.instruct = model.parameters["instruct"]       ? 1 : 0;
-    params.ref.memory_f16 = model.parameters["memory_f16"]   ? 1 : 0;
+    params.ref.instruct = model.parameters["instruct"]              ? 1 : 0;
+    params.ref.interactive = model.parameters["interactive"]        ? 1 : 0;
+    params.ref.memory_f16 = model.parameters["memory_f16"]          ? 1 : 0;
     params.ref.n_prev = model.parameters["n_prev"];
     params.ref.n_probs = model.parameters["n_probs"];
     params.ref.top_k = model.parameters["top_k"];
@@ -104,13 +105,13 @@ class Lib {
     params.ref.mirostat = model.parameters["mirostat"];
     params.ref.mirostat_tau = model.parameters["mirostat_tau"];
     params.ref.mirostat_eta = model.parameters["mirostat_eta"];
-    params.ref.penalize_nl = model.parameters["penalize_nl"]     ? 1 : 0;
+    params.ref.penalize_nl = model.parameters["penalize_nl"]        ? 1 : 0;
 
     _nativeLibrary.butler_start(params);
 
     ReceivePort receivePort = ReceivePort();
     _sendPort = receivePort.sendPort;
-    butlerContinue();
+    butlerContinue(input);
   
     Completer completer = Completer();
     receivePort.listen((data) {
@@ -126,9 +127,7 @@ class Lib {
     await completer.future;
   }
 
-  void butlerContinue() {
-    String input = character.promptController.text;
-    print("Input: $input");
+  void butlerContinue(String input) {
     Settings.log("Input: $input");
     Isolate.spawn(butlerContinueIsolate, {
       'input': input,
@@ -141,8 +140,10 @@ class Lib {
   }
 
   void butlerExit() {
-    _nativeLibrary.butler_exit();
-    _sendPort?.send(_sendPort);
+    if (_hasStarted) {
+      _nativeLibrary.butler_exit();
+      _sendPort?.send(_sendPort);
+    }
     _hasStarted = false;
   }
 }
