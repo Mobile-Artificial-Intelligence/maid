@@ -89,8 +89,6 @@ int butler_start(struct butler_params *butler) {
 
     n_remain = params.n_predict;
 
-    printf("Prompt: %s\n", params.prompt.c_str());
-
     std::tie(model, ctx) = llama_init_from_gpt_params(params);
     if (model == NULL) {
         fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*butler).model_path);

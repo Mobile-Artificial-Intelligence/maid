@@ -21,7 +21,6 @@ class _CharacterPageState extends State<CharacterPage> {
   @override
   void dispose() {
     settings.save();
-    print("CharacterPage disposed");
     presetController.dispose();
     super.dispose();
   }

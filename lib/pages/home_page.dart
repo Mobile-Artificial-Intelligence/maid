@@ -127,10 +127,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 
   @override
-  Future<void> initState() async {
+  initState() {
     super.initState();
-    await settings.init();
-    setState(() {});
+    setState(() {
+      settings.init();
+    });
   }
 
   @override

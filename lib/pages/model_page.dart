@@ -21,7 +21,6 @@ class _ModelPageState extends State<ModelPage> {
   @override
   void dispose() {
     settings.save();
-    print("ModelPage dispose");
     presetController.dispose();
     super.dispose();
   }
