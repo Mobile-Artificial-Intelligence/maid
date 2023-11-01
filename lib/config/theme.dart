@@ -10,6 +10,48 @@ class MaidTheme {
   static ThemeData get darkTheme => _darkTheme;
   static ThemeData get lightTheme => _lightTheme;
 
+  static final InputDecorationTheme darkInputDecorationTheme = InputDecorationTheme(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: BorderSide.none,
+    ),
+    labelStyle: const TextStyle(
+      fontWeight: FontWeight.normal,
+      color: Colors.grey,
+      fontSize: 15.0
+    ),
+    hintStyle: const TextStyle(
+      fontWeight: FontWeight.normal,
+      color: Colors.white,
+      fontSize: 15.0
+    ),
+    fillColor: Colors.grey.shade800,
+    filled: true,
+    floatingLabelBehavior: FloatingLabelBehavior.never,
+  );
+
+  static final InputDecorationTheme lightInputDecorationTheme = InputDecorationTheme(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: BorderSide.none,
+    ),
+    labelStyle: const TextStyle(
+      fontWeight: FontWeight.normal,
+      color: Colors.black,
+      fontSize: 15.0
+    ),
+    hintStyle: const TextStyle(
+      fontWeight: FontWeight.normal,
+      color: Colors.black,
+      fontSize: 15.0
+    ),
+    fillColor: Colors.white,
+    filled: true,
+    floatingLabelBehavior: FloatingLabelBehavior.never,
+  );
+
   static Future<void> loadThemePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? themePref = prefs.getString('theme');
@@ -96,32 +138,22 @@ class MaidTheme {
       backgroundColor: Colors.grey.shade900
     ),
 
+    dropdownMenuTheme: DropdownMenuThemeData(
+      textStyle: const TextStyle(
+        color: Colors.white,
+        fontSize: 20.0,
+      ),
+      inputDecorationTheme: darkInputDecorationTheme,
+    ),
+
     scaffoldBackgroundColor: Colors.grey.shade900,
+
     textSelectionTheme: TextSelectionThemeData(
       selectionHandleColor: Colors.blue,
       selectionColor: Colors.blue.shade800,
     ),
 
-    inputDecorationTheme: InputDecorationTheme(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30.0),
-        borderSide: BorderSide.none,
-      ),
-      labelStyle: const TextStyle(
-        fontWeight: FontWeight.normal,
-        color: Colors.grey,
-        fontSize: 15.0
-      ),
-      hintStyle: const TextStyle(
-        fontWeight: FontWeight.normal,
-        color: Colors.white,
-        fontSize: 15.0
-      ),
-      fillColor: Colors.grey.shade800,
-      filled: true,
-      floatingLabelBehavior: FloatingLabelBehavior.never,
-    ),
+    inputDecorationTheme: darkInputDecorationTheme,
 
     dialogTheme: DialogTheme(
       backgroundColor: Colors.grey.shade900,
@@ -198,6 +230,14 @@ class MaidTheme {
       backgroundColor: Colors.grey.shade300
     ),
 
+    dropdownMenuTheme: DropdownMenuThemeData(
+      textStyle: const TextStyle(
+        color: Colors.black,
+        fontSize: 20.0,
+      ),
+      inputDecorationTheme: lightInputDecorationTheme,
+    ),
+
     scaffoldBackgroundColor: Colors.grey.shade300,
 
     textSelectionTheme: TextSelectionThemeData(
@@ -205,26 +245,7 @@ class MaidTheme {
       selectionColor: Colors.blue.shade800,
     ),
 
-    inputDecorationTheme: InputDecorationTheme(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30.0),
-        borderSide: BorderSide.none,
-      ),
-      labelStyle: const TextStyle(
-        fontWeight: FontWeight.normal,
-        color: Colors.black,
-        fontSize: 15.0
-      ),
-      hintStyle: const TextStyle(
-        fontWeight: FontWeight.normal,
-        color: Colors.black,
-        fontSize: 15.0
-      ),
-      fillColor: Colors.white,
-      filled: true,
-      floatingLabelBehavior: FloatingLabelBehavior.never,
-    ),
+    inputDecorationTheme: lightInputDecorationTheme,
 
     dialogTheme: DialogTheme(
       backgroundColor: Colors.grey.shade300,

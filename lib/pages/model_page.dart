@@ -44,6 +44,7 @@ class _ModelPageState extends State<ModelPage> {
               children: [
                 const SizedBox(height: 10.0),
                 DropdownMenu<String>(
+                  width: 200.0,
                   initialSelection: model.name,
                   controller: presetController,
                   dropdownMenuEntries: settings.getModels().map<DropdownMenuEntry<String>>(
@@ -56,11 +57,8 @@ class _ModelPageState extends State<ModelPage> {
                   ).toList(),
                   onSelected: (value) => setState(() async {
                     if (value == null) {
-                      print("Null Value");
                       await settings.updateModel(presetController.text);
-                    }
-                    else {
-                      print("Value: $value");
+                    } else {
                       await settings.setModel(value);
                     }
                     setState(() {});
@@ -95,7 +93,9 @@ class _ModelPageState extends State<ModelPage> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 20.0),
                 Divider(
+                  height: 20,
                   indent: 10,
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
@@ -141,6 +141,7 @@ class _ModelPageState extends State<ModelPage> {
                   ],
                 ),
                 Divider(
+                  height: 20,
                   indent: 10,
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
@@ -209,6 +210,7 @@ class _ModelPageState extends State<ModelPage> {
                   },
                 ),
                 Divider(
+                  height: 20,
                   indent: 10,
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
