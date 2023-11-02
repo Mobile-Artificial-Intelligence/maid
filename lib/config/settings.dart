@@ -1,17 +1,20 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:maid/config/butler.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/character.dart';
+import 'package:maid/config/chat_node.dart';
 
 Settings settings = Settings();
 
 class Settings { 
   Map<String, dynamic> _models = {};
   Map<String, dynamic> _characters = {};
-  Map<int, dynamic> _chat = {};
+  ChatNode? rootNode;
+  Key? currentKey;
 
   Settings() {
     init();
@@ -53,12 +56,25 @@ class Settings {
     Lib.instance.butlerExit();
   }
 
-  void insertChat(int index, String message) {
-    _chat[index] = message;
+  void insertChat(int index, String message, bool userGenerated) {
+    if (rootNode == null || currentKey == null) {
+      rootNode = ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated);
+      currentKey = rootNode!.key;
+    } else {
+      var parent = rootNode!.find(currentKey!);
+      if (parent != null) {
+        parent.responses.add(ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated));
+        currentKey = ValueKey<int>(index);
+      }
+    }
   }
 
   String getChat(int index) {
-    return _chat[index] ?? "";
+    if (rootNode == null) {
+      return "";
+    } else {
+      return rootNode!.find(ValueKey<int>(index))?.message ?? "";
+    }
   }
 
   Future<void> updateModel(String newName) async {
