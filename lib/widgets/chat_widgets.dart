@@ -13,9 +13,9 @@ class ChatMessage extends StatefulWidget {
   final StreamController<int> finaliseController =
       StreamController<int>.broadcast();
   final String message;
-  final Alignment alignment;
+  final bool userGenerated;
 
-  ChatMessage({required super.key, this.message = "", this.alignment = Alignment.centerRight});
+  ChatMessage({required super.key, this.message = "", this.userGenerated = false});
 
   void addMessage(String message) {
     Logger.log("{$message}");
@@ -55,7 +55,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
       _finalised = true;
     } else if (widget.message.isNotEmpty) {
       _parseMessage(widget.message);
-      settings.insertChat(keyValue, widget.message, widget.alignment == Alignment.centerRight);
+      settings.insertChat(keyValue, widget.message, widget.userGenerated);
       _finalised = true;
     } else {
       widget.messageController.stream.listen((textChunk) {
@@ -96,7 +96,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
       widget.finaliseController.stream.listen((_) {
         setState(() {
-          settings.insertChat(keyValue, _message, widget.alignment == Alignment.centerRight);
+          settings.insertChat(keyValue, _message, widget.userGenerated);
           _finalised = true;
         });
       });
@@ -120,12 +120,12 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: widget.alignment,
+      alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: widget.alignment == Alignment.centerRight
+          color: widget.userGenerated
             ? Theme.of(context).colorScheme.secondary
             : Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(10),

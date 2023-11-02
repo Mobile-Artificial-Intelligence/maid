@@ -86,7 +86,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
     setState(() {
       model.busy = true;
-      chatWidgets.add(ChatMessage(key: ValueKey(chatWidgets.length), message: promptController.text.trim(), alignment: Alignment.centerRight));
+      chatWidgets.add(ChatMessage(key: ValueKey(chatWidgets.length), message: promptController.text.trim(), userGenerated: true));
     });
 
     if (!Lib.instance.hasStarted()) {
@@ -97,7 +97,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
 
     setState(() {
-      chatWidgets.add(ChatMessage(key: ValueKey(chatWidgets.length), alignment: Alignment.centerLeft));
+      chatWidgets.add(ChatMessage(key: ValueKey(chatWidgets.length), userGenerated: false));
       promptController.clear();
     });
   }
