@@ -104,5 +104,5 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
 set(CMAKE_INSTALL_BINDIR ${BUILD_BUNDLE_DIR})
 
 # Build the butler library.
-add_subdirectory(../src butler)
+add_subdirectory(../lib/butler butler)
 install(FILES ${PROJECT_BINARY_DIR}/butler/Release/butler.dll DESTINATION ${BUILD_BUNDLE_DIR})

@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
-import 'package:maid/config/butler_bindings.dart';
+import 'package:maid/butler/bindings.dart';
 import 'package:maid/config/character.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/settings.dart';

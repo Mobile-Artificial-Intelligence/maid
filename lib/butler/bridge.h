@@ -1,5 +1,5 @@
-#ifndef __BUTLER_H
-#define __BUTLER_H
+#ifndef __BRIDGE_H
+#define __BRIDGE_H
 
 #ifdef __cplusplus
 extern "C" {
