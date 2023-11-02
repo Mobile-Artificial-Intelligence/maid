@@ -11,14 +11,7 @@ Settings settings = Settings();
 class Settings { 
   Map<String, dynamic> _models = {};
   Map<String, dynamic> _characters = {};
-  
-  static String _logString = "";
-
-  static String get getLog => _logString;
-
-  static void log(String message) {
-    _logString += "$message\n";
-  }
+  Map<int, dynamic> _chat = {};
 
   Settings() {
     init();
@@ -48,9 +41,9 @@ class Settings {
     prefs.clear();
     
     _models[model.name] = model.toMap();
-    log("Model Saved: ${model.name}");
+    Logger.log("Model Saved: ${model.name}");
     _characters[character.name] = character.toMap();
-    log("Character Saved: ${character.name}");
+    Logger.log("Character Saved: ${character.name}");
 
     prefs.setString("models", json.encode(_models));
     prefs.setString("characters", json.encode(_characters));
@@ -58,6 +51,14 @@ class Settings {
     prefs.setString("current_character", character.name);
 
     Lib.instance.butlerExit();
+  }
+
+  void insertChat(int index, String message) {
+    _chat[index] = message;
+  }
+
+  String getChat(int index) {
+    return _chat[index] ?? "";
   }
 
   Future<void> updateModel(String newName) async {
@@ -102,5 +103,15 @@ class Settings {
   Future<void> setCharacter(String? characterName) async {
     await save();
     character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
+  }
+}
+
+class Logger {
+  static String _logString = "";
+
+  static String get getLog => _logString;
+
+  static void log(String message) {
+    _logString += "$message\n";
   }
 }

@@ -58,7 +58,7 @@ class Lib {
         _sendPort?.send(code);
       }
     } catch (e) {
-      Settings.log(e.toString());
+      Logger.log(e.toString());
     }
   }
 
@@ -128,7 +128,7 @@ class Lib {
   }
 
   void butlerContinue(String input) {
-    Settings.log("Input: $input");
+    Logger.log("Input: $input");
     Isolate.spawn(butlerContinueIsolate, {
       'input': input,
       'port': _sendPort
