@@ -334,7 +334,7 @@ class ResponseMessage extends StatefulWidget {
   ResponseMessage({super.key});
 
   void addMessage(String message) {
-    Settings.log("{$message}");
+    Logger.log("{$message}");
     messageController.add(message);
   }
 
