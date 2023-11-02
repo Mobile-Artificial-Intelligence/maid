@@ -31,8 +31,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   final ScrollController _consoleScrollController = ScrollController();
   TextEditingController promptController = TextEditingController();
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
-  List<Widget> chatWidgets = [];
-  ChatMessage newResponse = ChatMessage();
+  List<ChatMessage> chatWidgets = [];
 
   void _missingModelDialog() {
     // Use a local reference to context to avoid using it across an async gap.
@@ -100,8 +99,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
 
     setState(() {
-      newResponse = ChatMessage(alignment: Alignment.centerLeft);
-      chatWidgets.add(newResponse);
+      chatWidgets.add(ChatMessage(alignment: Alignment.centerLeft));
       promptController.clear();
     });
   }
@@ -116,12 +114,12 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
   void responseCallback(String message) {
     if (!model.busy) {
-      newResponse.trim();
-      newResponse.finalise();
+      chatWidgets.last.trim();
+      chatWidgets.last.finalise();
       setState(() {});
       return;
     } else if (message.isNotEmpty) {
-      newResponse.addMessage(message);
+      chatWidgets.last.addMessage(message);
       scrollDown();
     }
   }
