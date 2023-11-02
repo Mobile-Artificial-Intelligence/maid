@@ -7,14 +7,15 @@ class ChatNode {
   final String message;
   final bool userGenerated;
 
-  List<ChatNode> responses;
+  int currentChild = 0;
+  List<ChatNode> children;
 
   ChatNode({
     required this.key,
     required this.message,
-    List<ChatNode>? responses, // This now takes in a nullable list
+    List<ChatNode>? children, // This now takes in a nullable list
     this.userGenerated = false,
-  }) : this.responses = responses ?? [];
+  }) : this.children = children ?? [];
 
   ChatNode? find(Key targetKey) {
     final Queue<ChatNode> queue = Queue.from([this]);
@@ -26,7 +27,7 @@ class ChatNode {
         return current;
       }
 
-      for (var child in current.responses) {
+      for (var child in current.children) {
         queue.add(child);
       }
     }
@@ -58,7 +59,7 @@ class ChatNode {
         return path;
       }
 
-      for (var child in current.responses) {
+      for (var child in current.children) {
         parents[child] = current;
         queue.add(child);
       }
@@ -74,7 +75,7 @@ class ChatNode {
     while (queue.isNotEmpty) {
       final current = queue.removeFirst();
 
-      for (var child in current.responses) {
+      for (var child in current.children) {
         if (child == target) {
           return current;
         }

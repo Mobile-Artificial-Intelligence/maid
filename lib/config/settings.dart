@@ -63,7 +63,7 @@ class Settings {
     } else {
       var parent = rootNode!.find(currentKey!);
       if (parent != null) {
-        parent.responses.add(ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated));
+        parent.children.add(ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated));
         currentKey = ValueKey<int>(index);
       }
     }
