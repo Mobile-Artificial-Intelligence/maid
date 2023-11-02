@@ -32,7 +32,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   TextEditingController promptController = TextEditingController();
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
   List<Widget> chatWidgets = [];
-  ResponseMessage newResponse = ResponseMessage();
+  ChatMessage newResponse = ChatMessage();
 
   void _missingModelDialog() {
     // Use a local reference to context to avoid using it across an async gap.
@@ -89,7 +89,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
     setState(() {
       model.busy = true;
-      chatWidgets.add(UserMessage(message: promptController.text.trim()));
+      chatWidgets.add(ChatMessage(message: promptController.text.trim(), alignment: Alignment.centerRight));
     });
 
     if (!Lib.instance.hasStarted()) {
@@ -100,7 +100,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
 
     setState(() {
-      newResponse = ResponseMessage();
+      newResponse = ChatMessage(alignment: Alignment.centerLeft);
       chatWidgets.add(newResponse);
       promptController.clear();
     });
@@ -301,37 +301,17 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 }
 
-class UserMessage extends StatelessWidget {
-  final String message;
-
-  const UserMessage({super.key, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: SelectableText(message),
-      ),
-    );
-  }
-}
-
-class ResponseMessage extends StatefulWidget {
+class ChatMessage extends StatefulWidget {
   final StreamController<String> messageController =
       StreamController<String>.broadcast();
   final StreamController<int> trimController =
       StreamController<int>.broadcast();
   final StreamController<int> finaliseController =
       StreamController<int>.broadcast();
+  final String message;
+  final Alignment alignment;
 
-  ResponseMessage({super.key});
+  ChatMessage({super.key, this.message = "", this.alignment = Alignment.centerRight});
 
   void addMessage(String message) {
     Logger.log("{$message}");
@@ -347,10 +327,10 @@ class ResponseMessage extends StatefulWidget {
   }
 
   @override
-  ResponseMessageState createState() => ResponseMessageState();
+  ChatMessageState createState() => ChatMessageState();
 }
 
-class ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
+class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
   final List<Widget> _messageWidgets = [];
   String _message = "";
   bool _finalised = false; // Declare finalised here
@@ -359,56 +339,64 @@ class ResponseMessageState extends State<ResponseMessage> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    widget.messageController.stream.listen((textChunk) {
-      setState(() {
-        if (_messageWidgets.isEmpty) {
-          _messageWidgets.add(const Text("")); // Placeholder
-        }
-        
-        if (textChunk.contains('```')) {
-          if (_inCodeBox) {
-            _messageWidgets.last = CodeBox(code: _message.trim());
-          } else {
-            _messageWidgets.last = SelectableText(_message.trim());
+    
+    if (widget.message.isNotEmpty) {
+      _messageWidgets.add(SelectableText(widget.message));
+      _finalised = true;
+    } else {
+      widget.messageController.stream.listen((textChunk) {
+        setState(() {
+          if (_messageWidgets.isEmpty) {
+            _messageWidgets.add(const Text("")); // Placeholder
           }
-          _inCodeBox = !_inCodeBox;
-          _messageWidgets.add(const SizedBox(height: 10));
-          _messageWidgets.add(const Text("")); // Placeholder
-          _message = "";
-        } else {
-          if (_inCodeBox) {
-            _message += textChunk;
-            _messageWidgets.last = CodeBox(code: _message);
+
+          if (textChunk.contains('```')) {
+            if (_inCodeBox) {
+              _messageWidgets.last = CodeBox(code: _message.trim());
+            } else {
+              _messageWidgets.last = SelectableText(_message.trim());
+            }
+            _inCodeBox = !_inCodeBox;
+            _messageWidgets.add(const SizedBox(height: 10));
+            _messageWidgets.add(const Text("")); // Placeholder
+            _message = "";
           } else {
-            _message += textChunk;
-            _messageWidgets.last = SelectableText(_message);
+            if (_inCodeBox) {
+              _message += textChunk;
+              _messageWidgets.last = CodeBox(code: _message);
+            } else {
+              _message += textChunk;
+              _messageWidgets.last = SelectableText(_message);
+            }
           }
-        }
+        });
       });
-    });
 
-    widget.trimController.stream.listen((_) {
-      setState(() {
-        _message = _message.trimRight();
+      widget.trimController.stream.listen((_) {
+        setState(() {
+          _message = _message.trimRight();
+        });
       });
-    });
 
-    widget.finaliseController.stream.listen((_) {
-      setState(() {
-        _finalised = true;
+      widget.finaliseController.stream.listen((_) {
+        setState(() {
+          _finalised = true;
+        });
       });
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: widget.alignment,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
+          color: widget.alignment == Alignment.centerRight
+            ? Theme.of(context).colorScheme.secondary
+            : Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(10),
         ),
         child: !_finalised && _messageWidgets.isEmpty
