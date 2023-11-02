@@ -11,6 +11,7 @@ Settings settings = Settings();
 class Settings { 
   Map<String, dynamic> _models = {};
   Map<String, dynamic> _characters = {};
+  Map<int, dynamic> _chat = {};
 
   Settings() {
     init();
@@ -50,6 +51,14 @@ class Settings {
     prefs.setString("current_character", character.name);
 
     Lib.instance.butlerExit();
+  }
+
+  void insertChat(int index, String message) {
+    _chat[index] = message;
+  }
+
+  String getChat(int index) {
+    return _chat[index] ?? "";
   }
 
   Future<void> updateModel(String newName) async {

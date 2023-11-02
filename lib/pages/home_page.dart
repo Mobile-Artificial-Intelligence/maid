@@ -88,7 +88,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
     setState(() {
       model.busy = true;
-      chatWidgets.add(ChatMessage(message: promptController.text.trim(), alignment: Alignment.centerRight));
+      chatWidgets.add(ChatMessage(key: ValueKey(chatWidgets.length), message: promptController.text.trim(), alignment: Alignment.centerRight));
     });
 
     if (!Lib.instance.hasStarted()) {
@@ -99,7 +99,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
 
     setState(() {
-      chatWidgets.add(ChatMessage(alignment: Alignment.centerLeft));
+      chatWidgets.add(ChatMessage(key: ValueKey(chatWidgets.length), alignment: Alignment.centerLeft));
       promptController.clear();
     });
   }
@@ -309,7 +309,7 @@ class ChatMessage extends StatefulWidget {
   final String message;
   final Alignment alignment;
 
-  ChatMessage({super.key, this.message = "", this.alignment = Alignment.centerRight});
+  ChatMessage({required super.key, this.message = "", this.alignment = Alignment.centerRight});
 
   void addMessage(String message) {
     Logger.log("{$message}");
@@ -330,6 +330,7 @@ class ChatMessage extends StatefulWidget {
 
 class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
   final List<Widget> _messageWidgets = [];
+  String _buffer = "";
   String _message = "";
   bool _finalised = false; // Declare finalised here
   bool _inCodeBox = false;
@@ -338,33 +339,44 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   void initState() {
     super.initState();
     
-    if (widget.message.isNotEmpty) {
+    int keyValue = 0;
+    if (widget.key != null) {
+      keyValue = (widget.key as ValueKey<int>).value;
+    }
+
+    if (settings.getChat(keyValue).isNotEmpty) {
+      _messageWidgets.add(SelectableText(settings.getChat(keyValue)));
+      _finalised = true;
+    } else if (widget.message.isNotEmpty) {
       _messageWidgets.add(SelectableText(widget.message));
+      settings.insertChat(keyValue, widget.message);
       _finalised = true;
     } else {
       widget.messageController.stream.listen((textChunk) {
         setState(() {
+          _message += textChunk;
+          
           if (_messageWidgets.isEmpty) {
             _messageWidgets.add(const Text("")); // Placeholder
           }
 
           if (textChunk.contains('```')) {
             if (_inCodeBox) {
-              _messageWidgets.last = CodeBox(code: _message.trim());
+              _messageWidgets.last = CodeBox(code: _buffer.trim());
             } else {
-              _messageWidgets.last = SelectableText(_message.trim());
+              _messageWidgets.last = SelectableText(_buffer.trim());
             }
             _inCodeBox = !_inCodeBox;
             _messageWidgets.add(const SizedBox(height: 10));
             _messageWidgets.add(const Text("")); // Placeholder
-            _message = "";
+            _buffer = "";
           } else {
             if (_inCodeBox) {
-              _message += textChunk;
-              _messageWidgets.last = CodeBox(code: _message);
+              _buffer += textChunk;
+              _messageWidgets.last = CodeBox(code: _buffer);
             } else {
-              _message += textChunk;
-              _messageWidgets.last = SelectableText(_message);
+              _buffer += textChunk;
+              _messageWidgets.last = SelectableText(_buffer);
             }
           }
         });
@@ -378,6 +390,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
       widget.finaliseController.stream.listen((_) {
         setState(() {
+          settings.insertChat(keyValue, _message);
           _finalised = true;
         });
       });
