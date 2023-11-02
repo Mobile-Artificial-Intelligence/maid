@@ -345,10 +345,10 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     }
 
     if (settings.getChat(keyValue).isNotEmpty) {
-      _messageWidgets.add(SelectableText(settings.getChat(keyValue)));
+      _parseMessage(settings.getChat(keyValue));
       _finalised = true;
     } else if (widget.message.isNotEmpty) {
-      _messageWidgets.add(SelectableText(widget.message));
+      _parseMessage(widget.message);
       settings.insertChat(keyValue, widget.message);
       _finalised = true;
     } else {
@@ -394,6 +394,20 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
           _finalised = true;
         });
       });
+    }
+  }
+
+  void _parseMessage(String message) {
+    List<String> parts = message.split('```');
+    for (int i = 0; i < parts.length; i++) {
+      String part = parts[i].trim();
+      if (part.isEmpty) continue;
+
+      if (i % 2 == 0) { // Even index, regular text
+        _messageWidgets.add(SelectableText(part));
+      } else { // Odd index, code box
+        _messageWidgets.add(CodeBox(code: part));
+      }
     }
   }
 
