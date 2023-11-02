@@ -31,8 +31,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
   final ScrollController _consoleScrollController = ScrollController();
   TextEditingController promptController = TextEditingController();
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
-  List<Widget> chatWidgets = [];
-  ResponseMessage newResponse = ResponseMessage();
+  List<ChatMessage> chatWidgets = [];
 
   void _missingModelDialog() {
     // Use a local reference to context to avoid using it across an async gap.
@@ -89,7 +88,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
     setState(() {
       model.busy = true;
-      chatWidgets.add(UserMessage(message: promptController.text.trim()));
+      chatWidgets.add(ChatMessage(key: ValueKey(chatWidgets.length), message: promptController.text.trim(), alignment: Alignment.centerRight));
     });
 
     if (!Lib.instance.hasStarted()) {
@@ -100,8 +99,7 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
 
     setState(() {
-      newResponse = ResponseMessage();
-      chatWidgets.add(newResponse);
+      chatWidgets.add(ChatMessage(key: ValueKey(chatWidgets.length), alignment: Alignment.centerLeft));
       promptController.clear();
     });
   }
@@ -116,12 +114,12 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
   void responseCallback(String message) {
     if (!model.busy) {
-      newResponse.trim();
-      newResponse.finalise();
+      chatWidgets.last.trim();
+      chatWidgets.last.finalise();
       setState(() {});
       return;
     } else if (message.isNotEmpty) {
-      newResponse.addMessage(message);
+      chatWidgets.last.addMessage(message);
       scrollDown();
     }
   }
@@ -301,40 +299,20 @@ class _MaidHomePageState extends State<MaidHomePage> {
   }
 }
 
-class UserMessage extends StatelessWidget {
-  final String message;
-
-  const UserMessage({super.key, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: SelectableText(message),
-      ),
-    );
-  }
-}
-
-class ResponseMessage extends StatefulWidget {
+class ChatMessage extends StatefulWidget {
   final StreamController<String> messageController =
       StreamController<String>.broadcast();
   final StreamController<int> trimController =
       StreamController<int>.broadcast();
   final StreamController<int> finaliseController =
       StreamController<int>.broadcast();
+  final String message;
+  final Alignment alignment;
 
-  ResponseMessage({super.key});
+  ChatMessage({required super.key, this.message = "", this.alignment = Alignment.centerRight});
 
   void addMessage(String message) {
-    Settings.log("{$message}");
+    Logger.log("{$message}");
     messageController.add(message);
   }
 
@@ -347,11 +325,12 @@ class ResponseMessage extends StatefulWidget {
   }
 
   @override
-  ResponseMessageState createState() => ResponseMessageState();
+  ChatMessageState createState() => ChatMessageState();
 }
 
-class ResponseMessageState extends State<ResponseMessage> with SingleTickerProviderStateMixin {
+class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
   final List<Widget> _messageWidgets = [];
+  String _buffer = "";
   String _message = "";
   bool _finalised = false; // Declare finalised here
   bool _inCodeBox = false;
@@ -359,56 +338,90 @@ class ResponseMessageState extends State<ResponseMessage> with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    widget.messageController.stream.listen((textChunk) {
-      setState(() {
-        if (_messageWidgets.isEmpty) {
-          _messageWidgets.add(const Text("")); // Placeholder
-        }
-        
-        if (textChunk.contains('```')) {
-          if (_inCodeBox) {
-            _messageWidgets.last = CodeBox(code: _message.trim());
-          } else {
-            _messageWidgets.last = SelectableText(_message.trim());
-          }
-          _inCodeBox = !_inCodeBox;
-          _messageWidgets.add(const SizedBox(height: 10));
-          _messageWidgets.add(const Text("")); // Placeholder
-          _message = "";
-        } else {
-          if (_inCodeBox) {
-            _message += textChunk;
-            _messageWidgets.last = CodeBox(code: _message);
-          } else {
-            _message += textChunk;
-            _messageWidgets.last = SelectableText(_message);
-          }
-        }
-      });
-    });
+    
+    int keyValue = 0;
+    if (widget.key != null) {
+      keyValue = (widget.key as ValueKey<int>).value;
+    }
 
-    widget.trimController.stream.listen((_) {
-      setState(() {
-        _message = _message.trimRight();
-      });
-    });
+    if (settings.getChat(keyValue).isNotEmpty) {
+      _parseMessage(settings.getChat(keyValue));
+      _finalised = true;
+    } else if (widget.message.isNotEmpty) {
+      _parseMessage(widget.message);
+      settings.insertChat(keyValue, widget.message);
+      _finalised = true;
+    } else {
+      widget.messageController.stream.listen((textChunk) {
+        setState(() {
+          _message += textChunk;
+          
+          if (_messageWidgets.isEmpty) {
+            _messageWidgets.add(const Text("")); // Placeholder
+          }
 
-    widget.finaliseController.stream.listen((_) {
-      setState(() {
-        _finalised = true;
+          if (textChunk.contains('```')) {
+            if (_inCodeBox) {
+              _messageWidgets.last = CodeBox(code: _buffer.trim());
+            } else {
+              _messageWidgets.last = SelectableText(_buffer.trim());
+            }
+            _inCodeBox = !_inCodeBox;
+            _messageWidgets.add(const SizedBox(height: 10));
+            _messageWidgets.add(const Text("")); // Placeholder
+            _buffer = "";
+          } else {
+            if (_inCodeBox) {
+              _buffer += textChunk;
+              _messageWidgets.last = CodeBox(code: _buffer);
+            } else {
+              _buffer += textChunk;
+              _messageWidgets.last = SelectableText(_buffer);
+            }
+          }
+        });
       });
-    });
+
+      widget.trimController.stream.listen((_) {
+        setState(() {
+          _message = _message.trimRight();
+        });
+      });
+
+      widget.finaliseController.stream.listen((_) {
+        setState(() {
+          settings.insertChat(keyValue, _message);
+          _finalised = true;
+        });
+      });
+    }
+  }
+
+  void _parseMessage(String message) {
+    List<String> parts = message.split('```');
+    for (int i = 0; i < parts.length; i++) {
+      String part = parts[i].trim();
+      if (part.isEmpty) continue;
+
+      if (i % 2 == 0) { // Even index, regular text
+        _messageWidgets.add(SelectableText(part));
+      } else { // Odd index, code box
+        _messageWidgets.add(CodeBox(code: part));
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: widget.alignment,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
+          color: widget.alignment == Alignment.centerRight
+            ? Theme.of(context).colorScheme.secondary
+            : Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(10),
         ),
         child: !_finalised && _messageWidgets.isEmpty
