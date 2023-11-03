@@ -36,6 +36,7 @@ class ChatMessage extends StatefulWidget {
 
 class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
   final List<Widget> _messageWidgets = [];
+  Offset _tapPosition = Offset.zero;
   String _message = "";
   bool _finalised = false;
 
@@ -88,26 +89,59 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     }
   }
 
+  void _showContextMenu() {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+  
+    showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        _tapPosition & Size(40, 40), // Using size & position of longPress/rightClick on the screen
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        const PopupMenuItem(
+          value: 'edit',
+          child: Text('Edit'),
+        ),
+      ],
+    ).then((selectedValue) {
+      if (selectedValue == 'edit') {
+        _editMessage();
+      }
+    });
+  }
+  
+  void _editMessage() {
+    // Your logic to edit the message goes here.
+    print('Editing the message');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: widget.userGenerated
-            ? Theme.of(context).colorScheme.secondary
-            : Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(10),
+      child: GestureDetector(
+        onTapDown: (details) {
+          _tapPosition = details.globalPosition;
+          _showContextMenu();
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: widget.userGenerated
+              ? Theme.of(context).colorScheme.secondary
+              : Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: !_finalised && _messageWidgets.isEmpty
+            ? const TypingIndicator()
+            : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _messageWidgets,
+          ),
         ),
-        child: !_finalised && _messageWidgets.isEmpty
-          ? const TypingIndicator()
-          : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _messageWidgets,
-        ),
-      ),
+      )
     );
   }
 
