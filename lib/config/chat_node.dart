@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
+ChatNode? rootNode;
+
 class ChatNode {
   final Key key;
   final String message;
@@ -17,7 +19,7 @@ class ChatNode {
     this.userGenerated = false,
   }) : this.children = children ?? [];
 
-  ChatNode? find(Key targetKey) {
+  ChatNode? _find(Key targetKey) {
     final Queue<ChatNode> queue = Queue.from([this]);
 
     while (queue.isNotEmpty) {
@@ -35,25 +37,19 @@ class ChatNode {
     return null;
   }
 
-  ChatNode? findTail() {
+  ChatNode? _findTail() {
     final Queue<ChatNode> queue = Queue.from([this]);
 
     while (queue.isNotEmpty) {
       final current = queue.removeFirst();
 
-      if (current.children.isEmpty) {
+      if (current.children.isEmpty || current.currentChild == null) {
         return current;
-      }
-
-      if (current.currentChild != null) {
+      } else {
         for (var child in current.children) {
           if (child.key == current.currentChild) {
             queue.add(child);
           }
-        }
-      } else {
-        for (var child in current.children) {
-          queue.add(child);
         }
       }
     }
@@ -95,7 +91,7 @@ class ChatNode {
   }
 
 
-  ChatNode? getParent(Key targetKey) {
+  ChatNode? _getParent(Key targetKey) {
     final Queue<ChatNode> queue = Queue.from([this]);
 
     while (queue.isNotEmpty) {
@@ -112,12 +108,69 @@ class ChatNode {
     return null;
   }
 
-  int toIndex(Key targetKey) {
-    final ChatNode? parent = getParent(targetKey);
-    if (parent == null) {
-      return -1;
+  static String getChat(Key key) {
+    if (rootNode == null) {
+      return "";
     } else {
-      return parent.children.indexWhere((element) => element.key == targetKey);
+      return rootNode!._find(key)?.message ?? "";
+    }
+  }
+
+  static void insertChat(Key key, String message, bool userGenerated) {
+    if (rootNode == null) {
+      rootNode = ChatNode(key: key, message: message, userGenerated: userGenerated);
+    } else {
+      var parent = rootNode!._findTail();
+      if (parent != null) {
+        parent.children.add(ChatNode(key: key, message: message, userGenerated: userGenerated));
+      }
+    }
+  }
+
+  static void split(Key key) {
+    if (rootNode == null) {
+      return;
+    } else {
+      var parent = rootNode!._getParent(key);
+      if (parent != null) {
+        parent.currentChild = null;
+      }
+    }
+  }
+
+  static void nextChild(Key key) {
+    if (rootNode == null) {
+      return;
+    } else {
+      var parent = rootNode!._find(key);
+      if (parent != null) {
+        if (parent.currentChild == null) {
+          parent.currentChild = parent.children.first.key;
+        } else {
+          var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
+          if (currentChildIndex < parent.children.length - 1) {
+            parent.currentChild = parent.children[currentChildIndex + 1].key;
+          }
+        }
+      }
+    }
+  }
+
+  static void lastChild(Key key) {
+    if (rootNode == null) {
+      return;
+    } else {
+      var parent = rootNode!._find(key);
+      if (parent != null) {
+        if (parent.currentChild == null) {
+          parent.currentChild = parent.children.last.key;
+        } else {
+          var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
+          if (currentChildIndex > 0) {
+            parent.currentChild = parent.children[currentChildIndex - 1].key;
+          }
+        }
+      }
     }
   }
 }

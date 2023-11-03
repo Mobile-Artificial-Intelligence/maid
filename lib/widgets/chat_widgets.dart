@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/config/chat_node.dart';
 import 'package:maid/config/settings.dart';
 
 class ChatMessage extends StatefulWidget {
@@ -44,12 +45,12 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   void initState() {
     super.initState();
 
-    if (settings.getChat(widget.key!).isNotEmpty) {
-      _parseMessage(settings.getChat(widget.key!));
+    if (ChatNode.getChat(widget.key!).isNotEmpty) {
+      _parseMessage(ChatNode.getChat(widget.key!));
       _finalised = true;
     } else if (widget.message.isNotEmpty) {
       _parseMessage(widget.message);
-      settings.insertChat(widget.key!, widget.message, widget.userGenerated);
+      ChatNode.insertChat(widget.key!, widget.message, widget.userGenerated);
       _finalised = true;
     } else {
       widget.messageController.stream.listen((textChunk) {
@@ -68,7 +69,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
       widget.finaliseController.stream.listen((_) {
         setState(() {
-          settings.insertChat(widget.key!, _message, widget.userGenerated);
+          ChatNode.insertChat(widget.key!, _message, widget.userGenerated);
           _finalised = true;
         });
       });

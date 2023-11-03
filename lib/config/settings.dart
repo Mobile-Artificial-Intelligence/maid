@@ -13,7 +13,6 @@ Settings settings = Settings();
 class Settings { 
   Map<String, dynamic> _models = {};
   Map<String, dynamic> _characters = {};
-  ChatNode? rootNode;
 
   Settings() {
     init();
@@ -53,38 +52,6 @@ class Settings {
     prefs.setString("current_character", character.name);
 
     Lib.instance.butlerExit();
-  }
-
-  void insertChat(Key key, String message, bool userGenerated) {
-    if (rootNode == null) {
-      rootNode = ChatNode(key: key, message: message, userGenerated: userGenerated);
-    } else {
-      var parent = rootNode!.findTail();
-      if (parent != null) {
-        parent.children.add(ChatNode(key: key, message: message, userGenerated: userGenerated));
-      }
-    }
-  }
-
-  void createSibling(Key key, String message, bool userGenerated) {
-    if (rootNode == null) {
-      rootNode = ChatNode(key: key, message: message, userGenerated: userGenerated);
-    } else {
-      var parent = rootNode!.getParent(key);
-      if (parent != null) {
-        var siblingKey = UniqueKey();
-        parent.children.add(ChatNode(key: siblingKey, message: message, userGenerated: userGenerated));
-        parent.currentChild = siblingKey;
-      }
-    }
-  }
-
-  String getChat(Key key) {
-    if (rootNode == null) {
-      return "";
-    } else {
-      return rootNode!.find(key)?.message ?? "";
-    }
   }
 
   Future<void> updateModel(String newName) async {
