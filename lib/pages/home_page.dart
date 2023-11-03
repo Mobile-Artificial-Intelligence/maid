@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/config/chat_node.dart';
+import 'package:maid/config/message_manager.dart';
 
 import 'package:system_info2/system_info2.dart';
 
@@ -102,11 +102,11 @@ class MaidHomePageState extends State<MaidHomePage> {
 
   void updateCallback() {
     chatWidgets.clear();
-    List<ChatNode> history =  MessageManager.history();
-    for (var node in history) {
+    Map<Key, bool> history =  MessageManager.history();
+    for (var key in history.keys) {
       chatWidgets.add(ChatMessage(
-        key: node.key as UniqueKey,
-        userGenerated: node.userGenerated,
+        key: key,
+        userGenerated: history[key] ?? false,
       ));
     }
     setState(() {});

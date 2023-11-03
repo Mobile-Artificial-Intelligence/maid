@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/config/chat_node.dart';
+import 'package:maid/config/message_manager.dart';
 
 class ChatMessage extends StatefulWidget {
   final bool userGenerated;
 
   const ChatMessage({
-    required UniqueKey super.key, 
+    required super.key, 
     this.userGenerated = false, 
   });
 
