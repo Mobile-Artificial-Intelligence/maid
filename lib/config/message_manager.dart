@@ -72,14 +72,14 @@ class MessageManager {
     }
   }
 
-  static void nextChild(Key key) {
+  static void next(Key key) {
     if (_root == null) {
       return;
     } else {
-      var parent = _root!.find(key);
+      var parent = _root!.getParent(key);
       if (parent != null) {
         if (parent.currentChild == null) {
-          parent.currentChild = parent.children.first.key;
+          parent.currentChild = key;
         } else {
           var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
           if (currentChildIndex < parent.children.length - 1) {
@@ -92,14 +92,14 @@ class MessageManager {
     _callback?.call();
   }
 
-  static void lastChild(Key key) {
+  static void last(Key key) {
     if (_root == null) {
       return;
     } else {
-      var parent = _root!.find(key);
+      var parent = _root!.getParent(key);
       if (parent != null) {
         if (parent.currentChild == null) {
-          parent.currentChild = parent.children.last.key;
+          parent.currentChild = key;
         } else {
           var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
           if (currentChildIndex > 0) {
@@ -112,23 +112,28 @@ class MessageManager {
     _callback?.call();
   }
 
-  static int childCount(Key key) {
+  static int siblingCount(Key key) {
     if (_root == null) {
       return 0;
     } else {
-      return _root!.find(key)?.children.length ?? 0;
+      var parent = _root!.getParent(key);
+      if (parent != null) {
+        return parent.children.length;
+      } else {
+        return 0;
+      }
     }
   }
 
-  static int childIndex(Key key) {
+  static int index(Key key) {
     if (_root == null) {
       return 0;
     } else {
-      var child = _root!.find(key)?.currentChild;
-      if (child == null) {
-        return 0;
+      var parent = _root!.getParent(key);
+      if (parent != null) {
+        return parent.children.indexWhere((element) => element.key == key);
       } else {
-        return _root!.find(key)?.children.indexWhere((element) => element.key == child) ?? 0;
+        return 0;
       }
     }
   }

@@ -92,34 +92,35 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    int currentIndex = MessageManager.childIndex(widget.key!);
-    int childCount = MessageManager.childCount(widget.key!);
+    int currentIndex = MessageManager.index(widget.key!);
+    int siblingCount = MessageManager.siblingCount(widget.key!);
 
     return Column(
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            // Left button to go to the last child
-            ElevatedButton(
-              onPressed: () {
-                MessageManager.lastChild(widget.key!);
-                setState(() {});
-              },
-              child: const Icon(Icons.arrow_left),
-            ),
-            // Display the current index
-            Text('$currentIndex'),
-            // Right button to go to the next child
-            ElevatedButton(
-              onPressed: () {
-                MessageManager.nextChild(widget.key!);
-                setState(() {});
-              },
-              child: const Icon(Icons.arrow_right),
-            ),
-          ],
-        ),
+        if (siblingCount > 1)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              // Left button to go to the last child
+              ElevatedButton(
+                onPressed: () {
+                  MessageManager.last(widget.key!);
+                  setState(() {});
+                },
+                child: const Icon(Icons.arrow_left),
+              ),
+              // Display the current index
+              Text('$currentIndex'),
+              // Right button to go to the next child
+              ElevatedButton(
+                onPressed: () {
+                  MessageManager.next(widget.key!);
+                  setState(() {});
+                },
+                child: const Icon(Icons.arrow_right),
+              ),
+            ],
+          ),
         Align(
           alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
           child: GestureDetector(
