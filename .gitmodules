@@ -1,3 +1,4 @@
 [submodule "lib/core/llama.cpp"]
 	path = lib/core/llama.cpp
 	url = https://github.com/ggerganov/llama.cpp.git
+	branch = master
