@@ -1,10 +1,8 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maid/config/chat_node.dart';
-import 'package:maid/config/settings.dart';
 
 class ChatMessage extends StatefulWidget {
   final bool userGenerated;
@@ -34,7 +32,6 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     } else {
       MessageManager.getMessageStream(widget.key!).stream.listen((textChunk) {
         setState(() {
-          print("Message: $textChunk");
           _message += textChunk;
           _messageWidgets.clear();
           _parseMessage(_message);
@@ -199,7 +196,7 @@ class TypingIndicatorState extends State<TypingIndicator>
 class CodeBox extends StatelessWidget {
   final String code;
 
-  const CodeBox({Key? key, required this.code}) : super(key: key);
+  const CodeBox({super.key, required this.code});
 
   @override
   Widget build(BuildContext context) {

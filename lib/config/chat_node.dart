@@ -23,7 +23,7 @@ class ChatNode {
     this.message = "",
     List<ChatNode>? children,
     this.userGenerated = false,
-  }) : this.children = children ?? [];
+  }) : children = children ?? [];
 
   ChatNode? find(Key targetKey) {
     final Queue<ChatNode> queue = Queue.from([this]);
@@ -82,8 +82,13 @@ class ChatNode {
 }
 
 class MessageManager {
+  static void Function()? callback;
   static ChatNode? root;
   static ChatNode? tail;
+
+  static void registerCallback(void Function() onUpdate) {
+    callback = onUpdate;
+  }
 
   static String get(Key key) {
     if (root == null) {
@@ -98,7 +103,7 @@ class MessageManager {
     if (root == null) {
       root = node;
       tail = node;
-      homePageKey.currentState!.rebuildChat();
+      callback?.call();
       return;
     } 
     
@@ -112,7 +117,7 @@ class MessageManager {
       tail = tail!.findTail();
     }
 
-    homePageKey.currentState!.rebuildChat();
+    callback?.call();
   }
 
   static void stream(String message) async {
@@ -123,7 +128,7 @@ class MessageManager {
     tail!.messageController.add(message);
   }
 
-  static void split(Key key) {
+  static void branch(Key key) {
     if (root == null) {
       return;
     } else {
@@ -133,7 +138,7 @@ class MessageManager {
         tail = root!.findTail();
       }
     }
-    homePageKey.currentState!.rebuildChat();
+    callback?.call();
   }
 
   static void finalise() {
@@ -162,7 +167,7 @@ class MessageManager {
         }
       }
     }
-    homePageKey.currentState!.rebuildChat();
+    callback?.call();
   }
 
   static void lastChild(Key key) {
@@ -182,10 +187,10 @@ class MessageManager {
         }
       }
     }
-    homePageKey.currentState!.rebuildChat();
+    callback?.call();
   }
 
-  static List<ChatNode> getHistory() {
+  static List<ChatNode> history() {
     if (root == null) {
       return [];
     } else {

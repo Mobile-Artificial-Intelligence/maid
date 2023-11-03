@@ -230,9 +230,7 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
         if (suffix_found || !params.interactive) {
             // display text
             for (auto id : embd_out) {
-                const char* output = llama_token_to_piece(ctx, id).c_str();
-                maid_output(return_code::CONTINUE, output);
-                printf("Butler: %s\n", output);
+                maid_output(return_code::CONTINUE, llama_token_to_piece(ctx, id).c_str());
             }
         }
         

@@ -103,9 +103,9 @@ class MaidHomePageState extends State<MaidHomePage> {
     });
   }
 
-  Future<void> rebuildChat() async {
+  Future<void> updateCallback() async {
     chatWidgets.clear();
-    List<ChatNode> history =  MessageManager.getHistory();
+    List<ChatNode> history =  MessageManager.history();
     for (var node in history) {
       chatWidgets.add(ChatMessage(
         key: node.key as UniqueKey,
@@ -132,6 +132,12 @@ class MaidHomePageState extends State<MaidHomePage> {
       MessageManager.stream(message);
       scrollDown();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    MessageManager.registerCallback(updateCallback);
   }
 
   @override
