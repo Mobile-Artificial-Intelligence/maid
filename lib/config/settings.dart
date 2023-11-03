@@ -66,13 +66,15 @@ class Settings {
     }
   }
 
-  void createSibling(Key key, int newSibling, String message, bool userGenerated) {
+  void createSibling(Key key, String message, bool userGenerated) {
     if (rootNode == null) {
       rootNode = ChatNode(key: key, message: message, userGenerated: userGenerated);
     } else {
       var parent = rootNode!.getParent(key);
       if (parent != null) {
-        parent.children.add(ChatNode(key: ValueKey<int>(newSibling), message: message, userGenerated: userGenerated));
+        var siblingKey = UniqueKey();
+        parent.children.add(ChatNode(key: siblingKey, message: message, userGenerated: userGenerated));
+        parent.currentChild = siblingKey;
       }
     }
   }

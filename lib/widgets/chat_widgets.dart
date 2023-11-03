@@ -12,10 +12,10 @@ class ChatMessage extends StatefulWidget {
       StreamController<int>.broadcast();
   final StreamController<int> finaliseController =
       StreamController<int>.broadcast();
-  final String message;
   final bool userGenerated;
+  final String message;
 
-  ChatMessage({required ValueKey<int> super.key, this.message = "", this.userGenerated = false});
+  ChatMessage({required UniqueKey super.key, this.message = "", this.userGenerated = false});
 
   void addMessage(String message) {
     Logger.log("{$message}");
@@ -80,9 +80,9 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
       String part = parts[i].trim();
       if (part.isEmpty) continue;
 
-      if (i % 2 == 0) { // Even index, regular text
+      if (i % 2 == 0) {
         _messageWidgets.add(SelectableText(part));
-      } else { // Odd index, code box
+      } else {
         _messageWidgets.add(CodeBox(code: part));
       }
     }
