@@ -7,29 +7,12 @@ import 'package:maid/config/chat_node.dart';
 import 'package:maid/config/settings.dart';
 
 class ChatMessage extends StatefulWidget {
-  final StreamController<String> messageController =
-      StreamController<String>.broadcast();
-  final StreamController<int> trimController =
-      StreamController<int>.broadcast();
-  final StreamController<int> finaliseController =
-      StreamController<int>.broadcast();
   final bool userGenerated;
-  final String message;
 
-  ChatMessage({required UniqueKey super.key, this.message = "", this.userGenerated = false});
-
-  void addMessage(String message) {
-    Logger.log("{$message}");
-    messageController.add(message);
-  }
-
-  void trim() {
-    trimController.add(0);
-  }
-
-  void finalise() {
-    finaliseController.add(0);
-  }
+  const ChatMessage({
+    required UniqueKey super.key, 
+    this.userGenerated = false, 
+  });
 
   @override
   ChatMessageState createState() => ChatMessageState();
@@ -45,15 +28,12 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   void initState() {
     super.initState();
 
-    if (ChatNode.getChat(widget.key!).isNotEmpty) {
-      _parseMessage(ChatNode.getChat(widget.key!));
-      _finalised = true;
-    } else if (widget.message.isNotEmpty) {
-      _parseMessage(widget.message);
-      ChatNode.insertChat(widget.key!, widget.message, widget.userGenerated);
+    if (MessageManager.get(widget.key!).isNotEmpty) {
+      _parseMessage(MessageManager.get(widget.key!));
       _finalised = true;
     } else {
-      widget.messageController.stream.listen((textChunk) {
+      MessageManager.getMessageStream(widget.key!).stream.listen((textChunk) {
+        print("Stream: $textChunk");
         setState(() {
           _message += textChunk;
           _messageWidgets.clear();
@@ -61,15 +41,11 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
         });
       });
 
-      widget.trimController.stream.listen((_) {
+      MessageManager.getFinaliseStream(widget.key!).stream.listen((_) {
         setState(() {
-          _message = _message.trimRight();
-        });
-      });
-
-      widget.finaliseController.stream.listen((_) {
-        setState(() {
-          ChatNode.insertChat(widget.key!, _message, widget.userGenerated);
+          _message = _message.trim();
+          _parseMessage(_message);
+          MessageManager.add(widget.key!, message: _message, userGenerated: widget.userGenerated);
           _finalised = true;
         });
       });
@@ -77,6 +53,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   }
 
   void _parseMessage(String message) {
+    _messageWidgets.clear();
     List<String> parts = message.split('```');
     for (int i = 0; i < parts.length; i++) {
       String part = parts[i].trim();
@@ -96,7 +73,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     showMenu(
       context: context,
       position: RelativeRect.fromRect(
-        _tapPosition & Size(40, 40), // Using size & position of longPress/rightClick on the screen
+        _tapPosition & const Size(40, 40), // Using size & position of longPress/rightClick on the screen
         Offset.zero & overlay.size,
       ),
       items: [
@@ -148,8 +125,8 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
   @override
   void dispose() {
-    widget.messageController.close();
-    widget.trimController.close();
+    MessageManager.getMessageStream(widget.key!).close();
+    MessageManager.getFinaliseStream(widget.key!).close();
     super.dispose();
   }
 }

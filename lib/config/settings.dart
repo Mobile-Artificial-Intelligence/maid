@@ -1,12 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:maid/config/butler.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/character.dart';
-import 'package:maid/config/chat_node.dart';
 
 Settings settings = Settings();
 

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:maid/config/chat_node.dart';
 
 import 'package:system_info2/system_info2.dart';
 
@@ -20,12 +21,11 @@ class MaidHomePage extends StatefulWidget {
 
   const MaidHomePage({super.key, required this.title});
 
-
   @override
-  State<MaidHomePage> createState() => _MaidHomePageState();
+  MaidHomePageState createState() => MaidHomePageState();
 }
 
-class _MaidHomePageState extends State<MaidHomePage> {
+class MaidHomePageState extends State<MaidHomePage> {
   final ScrollController _consoleScrollController = ScrollController();
   TextEditingController promptController = TextEditingController();
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
@@ -86,7 +86,8 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
     setState(() {
       model.busy = true;
-      chatWidgets.add(ChatMessage(key: UniqueKey(), message: promptController.text.trim(), userGenerated: true));
+      MessageManager.add(UniqueKey(), message: promptController.text.trim(), userGenerated: true);
+      MessageManager.add(UniqueKey());
     });
 
     if (!Lib.instance.hasStarted()) {
@@ -97,9 +98,20 @@ class _MaidHomePageState extends State<MaidHomePage> {
     }
 
     setState(() {
-      chatWidgets.add(ChatMessage(key: UniqueKey(), userGenerated: false));
       promptController.clear();
     });
+  }
+
+  void rebuildChat() {
+    chatWidgets.clear();
+    List<ChatNode> history =  MessageManager.getHistory();
+    for (var node in history) {
+      chatWidgets.add(ChatMessage(
+        key: node.key as UniqueKey,
+        userGenerated: node.userGenerated,
+      ));
+    }
+    setState(() {});
   }
 
   void scrollDown() {
@@ -112,12 +124,11 @@ class _MaidHomePageState extends State<MaidHomePage> {
 
   void responseCallback(String message) {
     if (!model.busy) {
-      chatWidgets.last.trim();
-      chatWidgets.last.finalise();
+      MessageManager.finalise();
       setState(() {});
       return;
     } else if (message.isNotEmpty) {
-      chatWidgets.last.addMessage(message);
+      MessageManager.stream(message);
       scrollDown();
     }
   }
