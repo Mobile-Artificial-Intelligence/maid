@@ -84,10 +84,6 @@ class MaidHomePageState extends State<MaidHomePage> {
       FocusScope.of(context).unfocus();
     }
 
-    setState(() {
-      model.busy = true;
-    });
-
     MessageManager.add(UniqueKey(), message: promptController.text.trim(), userGenerated: true);
     MessageManager.add(UniqueKey());
 
@@ -99,11 +95,12 @@ class MaidHomePageState extends State<MaidHomePage> {
     }
 
     setState(() {
+      model.busy = true;
       promptController.clear();
     });
   }
 
-  Future<void> updateCallback() async {
+  void updateCallback() {
     chatWidgets.clear();
     List<ChatNode> history =  MessageManager.history();
     for (var node in history) {
@@ -115,14 +112,6 @@ class MaidHomePageState extends State<MaidHomePage> {
     setState(() {});
   }
 
-  void scrollDown() {
-    _consoleScrollController.animateTo(
-      _consoleScrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 50),
-      curve: Curves.easeOut,
-    );
-  }
-
   void responseCallback(String message) {
     if (!model.busy) {
       MessageManager.finalise();
@@ -130,7 +119,11 @@ class MaidHomePageState extends State<MaidHomePage> {
       return;
     } else if (message.isNotEmpty) {
       MessageManager.stream(message);
-      scrollDown();
+      _consoleScrollController.animateTo(
+        _consoleScrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 50),
+        curve: Curves.easeOut,
+      );
     }
   }
 
