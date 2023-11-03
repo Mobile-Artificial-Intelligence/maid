@@ -13,7 +13,7 @@ class ChatNode {
   ChatNode({
     required this.key,
     required this.message,
-    List<ChatNode>? children, // This now takes in a nullable list
+    List<ChatNode>? children,
     this.userGenerated = false,
   }) : this.children = children ?? [];
 
@@ -110,5 +110,14 @@ class ChatNode {
     }
 
     return null;
-  } 
+  }
+
+  int toIndex(Key targetKey) {
+    final ChatNode? parent = getParent(targetKey);
+    if (parent == null) {
+      return -1;
+    } else {
+      return parent.children.indexWhere((element) => element.key == targetKey);
+    }
+  }
 }

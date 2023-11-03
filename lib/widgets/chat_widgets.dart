@@ -38,7 +38,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   final List<Widget> _messageWidgets = [];
   String _buffer = "";
   String _message = "";
-  bool _finalised = false; // Declare finalised here
+  bool _finalised = false;
   bool _inCodeBox = false;
 
   @override
@@ -216,7 +216,7 @@ class TypingIndicatorState extends State<TypingIndicator>
 class CodeBox extends StatelessWidget {
   final String code;
 
-  const CodeBox({super.key, required this.code});
+  const CodeBox({Key? key, required this.code}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -230,9 +230,16 @@ class CodeBox extends StatelessWidget {
               color: Colors.black,
               borderRadius: BorderRadius.circular(5),
             ),
-            child: SelectableText(
-              code,
-              style: const TextStyle(fontFamily: 'monospace'),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,  // Allow horizontal scrolling
+              child: Row(
+                children: [
+                  SelectableText(
+                    code,
+                    style: const TextStyle(fontFamily: 'monospace'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
