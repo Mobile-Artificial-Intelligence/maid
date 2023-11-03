@@ -86,9 +86,10 @@ class MaidHomePageState extends State<MaidHomePage> {
 
     setState(() {
       model.busy = true;
-      MessageManager.add(UniqueKey(), message: promptController.text.trim(), userGenerated: true);
-      MessageManager.add(UniqueKey());
     });
+
+    MessageManager.add(UniqueKey(), message: promptController.text.trim(), userGenerated: true);
+    MessageManager.add(UniqueKey());
 
     if (!Lib.instance.hasStarted()) {
       await settings.save();
@@ -102,7 +103,7 @@ class MaidHomePageState extends State<MaidHomePage> {
     });
   }
 
-  void rebuildChat() {
+  Future<void> rebuildChat() async {
     chatWidgets.clear();
     List<ChatNode> history =  MessageManager.getHistory();
     for (var node in history) {

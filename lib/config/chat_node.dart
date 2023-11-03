@@ -99,31 +99,28 @@ class MessageManager {
       root = node;
       tail = node;
       homePageKey.currentState!.rebuildChat();
-      print("root");
       return;
     } 
     
     var found = root!.find(key);
     if (found != null) {
       found.message = message;
-      homePageKey.currentState!.rebuildChat();
-      return;
     } else { 
-      print("added");
       tail ??= root!.findTail();
       tail!.children.add(node);
       tail!.currentChild = key;
       tail = tail!.findTail();
     }
+
+    homePageKey.currentState!.rebuildChat();
   }
 
-  static void stream(String message) {
+  static void stream(String message) async {
     if (root == null) {
       return;
     }
     tail ??= root!.findTail();
     tail!.messageController.add(message);
-    homePageKey.currentState!.rebuildChat();
   }
 
   static void split(Key key) {

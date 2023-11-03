@@ -33,8 +33,8 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
       _finalised = true;
     } else {
       MessageManager.getMessageStream(widget.key!).stream.listen((textChunk) {
-        print("Stream: $textChunk");
         setState(() {
+          print("Message: $textChunk");
           _message += textChunk;
           _messageWidgets.clear();
           _parseMessage(_message);
