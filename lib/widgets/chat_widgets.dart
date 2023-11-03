@@ -87,8 +87,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   }
   
   void _editMessage() {
-    // Your logic to edit the message goes here.
-    print('Editing the message');
+    MessageManager.branch(widget.key!);
   }
 
   @override

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:maid/main.dart';
 
 class ChatNode {
   final StreamController<String> messageController =
