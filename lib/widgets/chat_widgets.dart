@@ -36,10 +36,8 @@ class ChatMessage extends StatefulWidget {
 
 class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
   final List<Widget> _messageWidgets = [];
-  String _buffer = "";
   String _message = "";
   bool _finalised = false;
-  bool _inCodeBox = false;
 
   @override
   void initState() {
