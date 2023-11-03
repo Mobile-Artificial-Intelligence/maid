@@ -14,7 +14,6 @@ class Settings {
   Map<String, dynamic> _models = {};
   Map<String, dynamic> _characters = {};
   ChatNode? rootNode;
-  Key? currentKey;
 
   Settings() {
     init();
@@ -57,14 +56,23 @@ class Settings {
   }
 
   void insertChat(int index, String message, bool userGenerated) {
-    if (rootNode == null || currentKey == null) {
+    if (rootNode == null) {
       rootNode = ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated);
-      currentKey = rootNode!.key;
     } else {
-      var parent = rootNode!.find(currentKey!);
+      var parent = rootNode!.findTail();
       if (parent != null) {
         parent.children.add(ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated));
-        currentKey = ValueKey<int>(index);
+      }
+    }
+  }
+
+  void createSibling(int index, int newSibling, String message, bool userGenerated) {
+    if (rootNode == null) {
+      rootNode = ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated);
+    } else {
+      var parent = rootNode!.getParent(ValueKey<int>(index));
+      if (parent != null) {
+        parent.children.add(ChatNode(key: ValueKey<int>(newSibling), message: message, userGenerated: userGenerated));
       }
     }
   }

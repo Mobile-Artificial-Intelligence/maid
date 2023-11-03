@@ -7,7 +7,7 @@ class ChatNode {
   final String message;
   final bool userGenerated;
 
-  int currentChild = 0;
+  Key? currentChild;
   List<ChatNode> children;
 
   ChatNode({
@@ -29,6 +29,32 @@ class ChatNode {
 
       for (var child in current.children) {
         queue.add(child);
+      }
+    }
+
+    return null;
+  }
+
+  ChatNode? findTail() {
+    final Queue<ChatNode> queue = Queue.from([this]);
+
+    while (queue.isNotEmpty) {
+      final current = queue.removeFirst();
+
+      if (current.children.isEmpty) {
+        return current;
+      }
+
+      if (current.currentChild != null) {
+        for (var child in current.children) {
+          if (child.key == current.currentChild) {
+            queue.add(child);
+          }
+        }
+      } else {
+        for (var child in current.children) {
+          queue.add(child);
+        }
       }
     }
 
@@ -69,14 +95,14 @@ class ChatNode {
   }
 
 
-  ChatNode? getParent(ChatNode target) {
+  ChatNode? getParent(Key targetKey) {
     final Queue<ChatNode> queue = Queue.from([this]);
 
     while (queue.isNotEmpty) {
       final current = queue.removeFirst();
 
       for (var child in current.children) {
-        if (child == target) {
+        if (child.key == targetKey) {
           return current;
         }
         queue.add(child);
@@ -84,5 +110,5 @@ class ChatNode {
     }
 
     return null;
-  }
+  } 
 }
