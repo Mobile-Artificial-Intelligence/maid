@@ -61,30 +61,8 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
       widget.messageController.stream.listen((textChunk) {
         setState(() {
           _message += textChunk;
-          
-          if (_messageWidgets.isEmpty) {
-            _messageWidgets.add(const Text("")); // Placeholder
-          }
-
-          if (textChunk.contains('```')) {
-            if (_inCodeBox) {
-              _messageWidgets.last = CodeBox(code: _buffer.trim());
-            } else {
-              _messageWidgets.last = SelectableText(_buffer.trim());
-            }
-            _inCodeBox = !_inCodeBox;
-            _messageWidgets.add(const SizedBox(height: 10));
-            _messageWidgets.add(const Text("")); // Placeholder
-            _buffer = "";
-          } else {
-            if (_inCodeBox) {
-              _buffer += textChunk;
-              _messageWidgets.last = CodeBox(code: _buffer);
-            } else {
-              _buffer += textChunk;
-              _messageWidgets.last = SelectableText(_buffer);
-            }
-          }
+          _messageWidgets.clear();
+          _parseMessage(_message);
         });
       });
 
