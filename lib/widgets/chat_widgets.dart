@@ -15,7 +15,7 @@ class ChatMessage extends StatefulWidget {
   final String message;
   final bool userGenerated;
 
-  ChatMessage({required super.key, this.message = "", this.userGenerated = false});
+  ChatMessage({required ValueKey<int> super.key, this.message = "", this.userGenerated = false});
 
   void addMessage(String message) {
     Logger.log("{$message}");
@@ -42,18 +42,13 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   @override
   void initState() {
     super.initState();
-    
-    int keyValue = 0;
-    if (widget.key != null) {
-      keyValue = (widget.key as ValueKey<int>).value;
-    }
 
-    if (settings.getChat(keyValue).isNotEmpty) {
-      _parseMessage(settings.getChat(keyValue));
+    if (settings.getChat(widget.key!).isNotEmpty) {
+      _parseMessage(settings.getChat(widget.key!));
       _finalised = true;
     } else if (widget.message.isNotEmpty) {
       _parseMessage(widget.message);
-      settings.insertChat(keyValue, widget.message, widget.userGenerated);
+      settings.insertChat(widget.key!, widget.message, widget.userGenerated);
       _finalised = true;
     } else {
       widget.messageController.stream.listen((textChunk) {
@@ -72,7 +67,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
       widget.finaliseController.stream.listen((_) {
         setState(() {
-          settings.insertChat(keyValue, _message, widget.userGenerated);
+          settings.insertChat(widget.key!, _message, widget.userGenerated);
           _finalised = true;
         });
       });

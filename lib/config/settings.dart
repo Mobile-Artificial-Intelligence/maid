@@ -55,33 +55,33 @@ class Settings {
     Lib.instance.butlerExit();
   }
 
-  void insertChat(int index, String message, bool userGenerated) {
+  void insertChat(Key key, String message, bool userGenerated) {
     if (rootNode == null) {
-      rootNode = ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated);
+      rootNode = ChatNode(key: key, message: message, userGenerated: userGenerated);
     } else {
       var parent = rootNode!.findTail();
       if (parent != null) {
-        parent.children.add(ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated));
+        parent.children.add(ChatNode(key: key, message: message, userGenerated: userGenerated));
       }
     }
   }
 
-  void createSibling(int index, int newSibling, String message, bool userGenerated) {
+  void createSibling(Key key, int newSibling, String message, bool userGenerated) {
     if (rootNode == null) {
-      rootNode = ChatNode(key: ValueKey<int>(index), message: message, userGenerated: userGenerated);
+      rootNode = ChatNode(key: key, message: message, userGenerated: userGenerated);
     } else {
-      var parent = rootNode!.getParent(ValueKey<int>(index));
+      var parent = rootNode!.getParent(key);
       if (parent != null) {
         parent.children.add(ChatNode(key: ValueKey<int>(newSibling), message: message, userGenerated: userGenerated));
       }
     }
   }
 
-  String getChat(int index) {
+  String getChat(Key key) {
     if (rootNode == null) {
       return "";
     } else {
-      return rootNode!.find(ValueKey<int>(index))?.message ?? "";
+      return rootNode!.find(key)?.message ?? "";
     }
   }
 
