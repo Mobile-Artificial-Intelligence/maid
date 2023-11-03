@@ -92,30 +92,60 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
-      child: GestureDetector(
-        onTapDown: (details) {
-          _tapPosition = details.globalPosition;
-          _showContextMenu();
-        },
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: widget.userGenerated
-              ? Theme.of(context).colorScheme.secondary
-              : Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: !_finalised && _messageWidgets.isEmpty
-            ? const TypingIndicator()
-            : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _messageWidgets,
-          ),
+    int currentIndex = MessageManager.childIndex(widget.key!);
+    int childCount = MessageManager.childCount(widget.key!);
+
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            // Left button to go to the last child
+            ElevatedButton(
+              onPressed: () {
+                MessageManager.lastChild(widget.key!);
+                setState(() {});
+              },
+              child: const Icon(Icons.arrow_left),
+            ),
+            // Display the current index
+            Text('$currentIndex'),
+            // Right button to go to the next child
+            ElevatedButton(
+              onPressed: () {
+                MessageManager.nextChild(widget.key!);
+                setState(() {});
+              },
+              child: const Icon(Icons.arrow_right),
+            ),
+          ],
         ),
-      )
+        Align(
+          alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
+          child: GestureDetector(
+            onTapDown: (details) {
+              _tapPosition = details.globalPosition;
+              _showContextMenu();
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: widget.userGenerated
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: !_finalised && _messageWidgets.isEmpty
+                ? const TypingIndicator()
+                : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _messageWidgets,
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 

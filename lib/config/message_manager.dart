@@ -112,6 +112,27 @@ class MessageManager {
     _callback?.call();
   }
 
+  static int childCount(Key key) {
+    if (_root == null) {
+      return 0;
+    } else {
+      return _root!.find(key)?.children.length ?? 0;
+    }
+  }
+
+  static int childIndex(Key key) {
+    if (_root == null) {
+      return 0;
+    } else {
+      var child = _root!.find(key)?.currentChild;
+      if (child == null) {
+        return 0;
+      } else {
+        return _root!.find(key)?.children.indexWhere((element) => element.key == child) ?? 0;
+      }
+    }
+  }
+
   static Map<Key, bool> history() {
     if (_root == null) {
       return {};
