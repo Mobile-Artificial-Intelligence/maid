@@ -1,4 +1,4 @@
-#include "maid-core.h"
+#include "core.h"
 #include "llama.h"
 #include "common.h"
 

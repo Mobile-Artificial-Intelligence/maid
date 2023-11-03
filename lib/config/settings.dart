@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:maid/config/core.dart';
+import 'package:maid/core/core.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/character.dart';
 

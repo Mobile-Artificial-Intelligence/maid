@@ -7,7 +7,7 @@ import 'package:system_info2/system_info2.dart';
 
 import 'package:maid/config/settings.dart';
 import 'package:maid/config/model.dart';
-import 'package:maid/config/core.dart';
+import 'package:maid/core/core.dart';
 
 import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/model_page.dart';

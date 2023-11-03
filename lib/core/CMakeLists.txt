@@ -12,7 +12,7 @@ endif()
 set(LLAMA_NATIVE OFF CACHE BOOL "llama: disable -march=native flag" FORCE)
 
 add_subdirectory(./llama.cpp)
-add_library(core SHARED maid-core.cpp)
+add_library(core SHARED core.cpp)
 target_include_directories(core PRIVATE ./llama.cpp ./llama.cpp/common)
 target_link_libraries(core llama common)
 
