@@ -7,7 +7,7 @@ import 'package:system_info2/system_info2.dart';
 
 import 'package:maid/config/settings.dart';
 import 'package:maid/config/model.dart';
-import 'package:maid/config/butler.dart';
+import 'package:maid/config/core.dart';
 
 import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/model_page.dart';
@@ -87,11 +87,11 @@ class MaidHomePageState extends State<MaidHomePage> {
     MessageManager.add(UniqueKey(), message: promptController.text.trim(), userGenerated: true);
     MessageManager.add(UniqueKey());
 
-    if (!Lib.instance.hasStarted()) {
+    if (!Core.instance.hasStarted()) {
       await settings.save();
-      Lib.instance.butlerStart(promptController.text, responseCallback);
+      Core.instance.init(promptController.text, responseCallback);
     } else {
-      Lib.instance.butlerContinue(promptController.text);
+      Core.instance.prompt(promptController.text);
     }
 
     setState(() {
@@ -246,7 +246,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                       children: [
                         if (model.busy)
                           IconButton(
-                            onPressed: Lib.instance.butlerStop,
+                            onPressed: Core.instance.stop,
                             iconSize: 50,
                             icon: const Icon(
                               Icons.stop_circle_sharp,

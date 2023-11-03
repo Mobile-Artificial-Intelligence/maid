@@ -58,10 +58,10 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 ffigen:
-  output: lib/butler/bindings.dart
+  output: lib/core/bindings.dart
   headers:
     entry-points:
-      - "lib/butler/bridge.h"
+      - "lib/core/maid-core.h"
 # The following section is specific to Flutter packages.
 flutter:
 

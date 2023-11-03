@@ -100,9 +100,9 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   CONFIGURATIONS Profile;Release
   COMPONENT Runtime)
 
-# Override the default install location for the butler library.
+# Override the default install location for the core library.
 set(CMAKE_INSTALL_BINDIR ${BUILD_BUNDLE_DIR})
 
-# Build the butler library.
-add_subdirectory(../lib/butler butler)
-install(FILES ${PROJECT_BINARY_DIR}/butler/Release/butler.dll DESTINATION ${BUILD_BUNDLE_DIR})
+# Build the core library.
+add_subdirectory(../lib/core core)
+install(FILES ${PROJECT_BINARY_DIR}/core/Release/core.dll DESTINATION ${BUILD_BUNDLE_DIR})

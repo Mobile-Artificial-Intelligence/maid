@@ -1,4 +1,4 @@
-#include "bridge.h"
+#include "maid-core.h"
 #include "llama.h"
 #include "common.h"
 
@@ -41,56 +41,56 @@ static signed int prior;
 static gpt_params params;
 static llama_context_params lparams;
 
-int butler_start(struct butler_params *butler) {
+int core_init(struct maid_params *mparams) {
     llama_backend_init(false);
 
     n_past       = 0;
     n_consumed   = 0;
 
-    params.instruct                 = (*butler).instruct          != 0;
-    params.memory_f16               = (*butler).memory_f16        != 0;
-    params.interactive              = (*butler).interactive       != 0;
+    params.instruct                 = (*mparams).instruct          != 0;
+    params.memory_f16               = (*mparams).memory_f16        != 0;
+    params.interactive              = (*mparams).interactive       != 0;
 
-    params.seed                     = (*butler).seed              ? (*butler).seed              : -1;
-    params.n_ctx                    = (*butler).n_ctx             ? (*butler).n_ctx             : 512;
-    params.n_batch                  = (*butler).n_batch           ? (*butler).n_batch           : 8;
-    params.n_threads                = (*butler).n_threads         ? (*butler).n_threads         : get_num_physical_cores();
-    params.n_threads_batch          = (*butler).n_threads_batch   ? (*butler).n_threads_batch   : -1;
-    params.n_predict                = (*butler).n_predict         ? (*butler).n_predict         : 256;
-    params.n_keep                   = (*butler).n_keep            ? (*butler).n_keep            : 48;
+    params.seed                     = (*mparams).seed              ? (*mparams).seed              : -1;
+    params.n_ctx                    = (*mparams).n_ctx             ? (*mparams).n_ctx             : 512;
+    params.n_batch                  = (*mparams).n_batch           ? (*mparams).n_batch           : 8;
+    params.n_threads                = (*mparams).n_threads         ? (*mparams).n_threads         : get_num_physical_cores();
+    params.n_threads_batch          = (*mparams).n_threads_batch   ? (*mparams).n_threads_batch   : -1;
+    params.n_predict                = (*mparams).n_predict         ? (*mparams).n_predict         : 256;
+    params.n_keep                   = (*mparams).n_keep            ? (*mparams).n_keep            : 48;
 
-    params.sparams.n_prev           = (*butler).n_prev            ? (*butler).n_prev            : 64;
-    params.sparams.n_probs          = (*butler).n_probs           ? (*butler).n_probs           : 0;
-    params.sparams.top_k            = (*butler).top_k             ? (*butler).top_k             : 40;
-    params.sparams.top_p            = (*butler).top_p             ? (*butler).top_p             : 0.95f;
-    params.sparams.tfs_z            = (*butler).tfs_z             ? (*butler).tfs_z             : 1.00f;
-    params.sparams.typical_p        = (*butler).typical_p         ? (*butler).typical_p         : 1.00f;
-    params.sparams.temp             = (*butler).temp              ? (*butler).temp              : 0.80f;
-    params.sparams.penalty_last_n   = (*butler).penalty_last_n    ? (*butler).penalty_last_n    : 64;
-    params.sparams.penalty_repeat   = (*butler).penalty_repeat    ? (*butler).penalty_repeat    : 1.10f;
-    params.sparams.penalty_freq     = (*butler).penalty_freq      ? (*butler).penalty_freq      : 0.00f;
-    params.sparams.penalty_present  = (*butler).penalty_present   ? (*butler).penalty_present   : 0.00f;
-    params.sparams.mirostat         = (*butler).mirostat          ? (*butler).mirostat          : 0;
-    params.sparams.mirostat_tau     = (*butler).mirostat_tau      ? (*butler).mirostat_tau      : 5.00f;
-    params.sparams.mirostat_eta     = (*butler).mirostat_eta      ? (*butler).mirostat_eta      : 0.10f;
-    params.sparams.penalize_nl      = (*butler).penalize_nl       != 0;
+    params.sparams.n_prev           = (*mparams).n_prev            ? (*mparams).n_prev            : 64;
+    params.sparams.n_probs          = (*mparams).n_probs           ? (*mparams).n_probs           : 0;
+    params.sparams.top_k            = (*mparams).top_k             ? (*mparams).top_k             : 40;
+    params.sparams.top_p            = (*mparams).top_p             ? (*mparams).top_p             : 0.95f;
+    params.sparams.tfs_z            = (*mparams).tfs_z             ? (*mparams).tfs_z             : 1.00f;
+    params.sparams.typical_p        = (*mparams).typical_p         ? (*mparams).typical_p         : 1.00f;
+    params.sparams.temp             = (*mparams).temp              ? (*mparams).temp              : 0.80f;
+    params.sparams.penalty_last_n   = (*mparams).penalty_last_n    ? (*mparams).penalty_last_n    : 64;
+    params.sparams.penalty_repeat   = (*mparams).penalty_repeat    ? (*mparams).penalty_repeat    : 1.10f;
+    params.sparams.penalty_freq     = (*mparams).penalty_freq      ? (*mparams).penalty_freq      : 0.00f;
+    params.sparams.penalty_present  = (*mparams).penalty_present   ? (*mparams).penalty_present   : 0.00f;
+    params.sparams.mirostat         = (*mparams).mirostat          ? (*mparams).mirostat          : 0;
+    params.sparams.mirostat_tau     = (*mparams).mirostat_tau      ? (*mparams).mirostat_tau      : 5.00f;
+    params.sparams.mirostat_eta     = (*mparams).mirostat_eta      ? (*mparams).mirostat_eta      : 0.10f;
+    params.sparams.penalize_nl      = (*mparams).penalize_nl       != 0;
 
-    params.model                    = (*butler).model_path;
-    params.prompt                   = (*butler).preprompt;
-    params.input_prefix             = (*butler).input_prefix;
-    params.input_suffix             = (*butler).input_suffix;
+    params.model                    = (*mparams).model_path;
+    params.prompt                   = (*mparams).preprompt;
+    params.input_prefix             = (*mparams).input_prefix;
+    params.input_suffix             = (*mparams).input_suffix;
 
-    params.antiprompt.push_back((*butler).input_prefix);
+    params.antiprompt.push_back((*mparams).input_prefix);
     params.antiprompt.push_back("\n\n\n\n");
 
     n_remain = params.n_predict;
 
     std::tie(model, ctx) = llama_init_from_gpt_params(params);
     if (model == NULL) {
-        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*butler).model_path);
+        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*mparams).model_path);
         return 1;
     } else if (ctx == NULL) {
-        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__, (*butler).model_path);
+        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__, (*mparams).model_path);
         llama_free_model(model);
         return 1;
     }
@@ -126,7 +126,7 @@ int butler_start(struct butler_params *butler) {
     return 0;
 }
 
-int butler_continue(const char *input, maid_output_cb *maid_output) {   
+int core_prompt(const char *input, maid_output_cb *maid_output) {   
     std::string buffer(input);
 
     bool is_interacting = false;
@@ -392,11 +392,11 @@ int butler_continue(const char *input, maid_output_cb *maid_output) {
     return 0;
 }
 
-void butler_stop(void) {
+void core_stop(void) {
     stop_generation.store(true);
 }
 
-void butler_exit(void) {
+void core_cleanup(void) {
     stop_generation.store(true);
     llama_print_timings(ctx);
     llama_free(ctx);

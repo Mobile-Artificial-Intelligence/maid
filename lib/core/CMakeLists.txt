@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(butler LANGUAGES CXX)
+project(maid-core LANGUAGES CXX)
 
 set(BUILD_SHARED_LIBS ON)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -12,11 +12,11 @@ endif()
 set(LLAMA_NATIVE OFF CACHE BOOL "llama: disable -march=native flag" FORCE)
 
 add_subdirectory(./llama.cpp)
-add_library(butler SHARED butler.cpp)
-target_include_directories(butler PRIVATE ./llama.cpp ./llama.cpp/common)
-target_link_libraries(butler llama common)
+add_library(maid-core SHARED maid-core.cpp)
+target_include_directories(maid-core PRIVATE ./llama.cpp ./llama.cpp/common)
+target_link_libraries(maid-core llama common)
 
-set_target_properties(butler PROPERTIES
+set_target_properties(maid-core PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
     INSTALL_RPATH "$ORIGIN"
 )

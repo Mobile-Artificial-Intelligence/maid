@@ -11,7 +11,7 @@ extern "C" {
    #define EXPORT __attribute__((visibility("default"))) __attribute__((used))
 #endif
 
-struct butler_params {
+struct maid_params {
    unsigned char instruct;
    unsigned char interactive;
    unsigned char memory_f16;
@@ -53,13 +53,13 @@ enum return_code {
 
 typedef void maid_output_cb(unsigned char code, const char *buffer);
 
-EXPORT int butler_start(struct butler_params *butler);
+EXPORT int core_init(struct maid_params *mparams);
 
-EXPORT int butler_continue(const char *input, maid_output_cb *maid_output);
+EXPORT int core_prompt(const char *input, maid_output_cb *maid_output);
 
-EXPORT void butler_stop(void);
+EXPORT void core_stop(void);
 
-EXPORT void butler_exit(void);
+EXPORT void core_cleanup(void);
 
 #ifdef __cplusplus
 }

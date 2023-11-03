@@ -4,23 +4,23 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
-import 'package:maid/butler/bindings.dart';
+import 'package:maid/core/bindings.dart';
 import 'package:maid/config/character.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/config/settings.dart';
 
-class Lib {
+class Core {
   static SendPort? _sendPort;
   late NativeLibrary _nativeLibrary;
 
   // Make the default constructor private
-  Lib._();
+  Core._();
 
   // Private reference to the global instance
-  static final Lib _instance = Lib._();
+  static final Core _instance = Core._();
 
   // Public accessor to the global instance
-  static Lib get instance {
+  static Core get instance {
     _instance._initialize();
     return _instance;
   }
@@ -39,15 +39,15 @@ class Lib {
   }
 
   void _loadNativeLibrary() {
-    DynamicLibrary butlerDynamic =
+    DynamicLibrary coreDynamic =
       Platform.isMacOS || Platform.isIOS
         ? DynamicLibrary.process() // macos and ios
         : (DynamicLibrary.open(
           Platform.isWindows // windows
-            ? 'butler.dll'
-            : 'libbutler.so')); // android and linux
+            ? 'core.dll'
+            : 'libcore.so')); // android and linux
 
-    _nativeLibrary = NativeLibrary(butlerDynamic);
+    _nativeLibrary = NativeLibrary(coreDynamic);
   }
 
   static void _maidOutputBridge(int code, Pointer<Char> buffer) {
@@ -62,23 +62,23 @@ class Lib {
     }
   }
 
-  static butlerContinueIsolate(Map<String, dynamic> args) async {
+  static promptIsolate(Map<String, dynamic> args) async {
     _sendPort = args['port'] as SendPort?;
     String input = args['input'];
     Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
-    Lib.instance._nativeLibrary.butler_continue(text, Pointer.fromFunction(_maidOutputBridge));
+    Core.instance._nativeLibrary.core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
   }
 
 
-  void butlerStart(String input, void Function(String) maidOutput) async {
+  void init(String input, void Function(String) maidOutput) async {
     if (_hasStarted) {
-      butlerExit();
+      cleanup();
       await Future.delayed(const Duration(seconds: 1));
     }
     
     _hasStarted = true;
     
-    final params = calloc<butler_params>();
+    final params = calloc<maid_params>();
     params.ref.model_path = model.parameters["model_path"].toString().toNativeUtf8().cast<Char>();
     params.ref.preprompt = character.getPrePrompt().toNativeUtf8().cast<Char>();
     params.ref.input_prefix = character.userAliasController.text.trim().toNativeUtf8().cast<Char>();
@@ -107,11 +107,11 @@ class Lib {
     params.ref.mirostat_eta = model.parameters["mirostat_eta"];
     params.ref.penalize_nl = model.parameters["penalize_nl"]        ? 1 : 0;
 
-    _nativeLibrary.butler_start(params);
+    _nativeLibrary.core_init(params);
 
     ReceivePort receivePort = ReceivePort();
     _sendPort = receivePort.sendPort;
-    butlerContinue(input);
+    prompt(input);
   
     Completer completer = Completer();
     receivePort.listen((data) {
@@ -127,21 +127,21 @@ class Lib {
     await completer.future;
   }
 
-  void butlerContinue(String input) {
+  void prompt(String input) {
     Logger.log("Input: $input");
-    Isolate.spawn(butlerContinueIsolate, {
+    Isolate.spawn(promptIsolate, {
       'input': input,
       'port': _sendPort
     });
   }
 
-  void butlerStop() {
-    _nativeLibrary.butler_stop();
+  void stop() {
+    _nativeLibrary.core_stop();
   }
 
-  void butlerExit() {
+  void cleanup() {
     if (_hasStarted) {
-      _nativeLibrary.butler_exit();
+      _nativeLibrary.core_cleanup();
       _sendPort?.send(_sendPort);
     }
     _hasStarted = false;
