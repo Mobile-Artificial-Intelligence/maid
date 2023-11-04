@@ -92,61 +92,37 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    int currentIndex = MessageManager.index(widget.key!);
     int siblingCount = MessageManager.siblingCount(widget.key!);
 
-    return Column(
-      children: <Widget>[
-        if (siblingCount > 1)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              // Left button to go to the last child
-              ElevatedButton(
-                onPressed: () {
-                  MessageManager.last(widget.key!);
-                  setState(() {});
-                },
-                child: const Icon(Icons.arrow_left),
-              ),
-              // Display the current index
-              Text('$currentIndex'),
-              // Right button to go to the next child
-              ElevatedButton(
-                onPressed: () {
-                  MessageManager.next(widget.key!);
-                  setState(() {});
-                },
-                child: const Icon(Icons.arrow_right),
-              ),
-            ],
-          ),
-        Align(
-          alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
-          child: GestureDetector(
+    return Container(
+      alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: widget.userGenerated
+          ? Theme.of(context).colorScheme.secondary
+          : Theme.of(context).colorScheme.primary,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_finalised && siblingCount > 1)
+            BranchSwitcher(key: widget.key!),
+          GestureDetector(
             onTapDown: (details) {
               _tapPosition = details.globalPosition;
               _showContextMenu();
             },
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: widget.userGenerated
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: !_finalised && _messageWidgets.isEmpty
-                ? const TypingIndicator()
-                : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _messageWidgets,
-              ),
+            child: !_finalised && _messageWidgets.isEmpty
+              ? const TypingIndicator()
+              : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _messageWidgets,
             ),
           ),
-        )
-      ],
+        ]
+      ),
     );
   }
 
@@ -266,6 +242,60 @@ class CodeBox extends StatelessWidget {
           tooltip: 'Copy Code',
         ),
       ],
+    );
+  }
+}
+
+class BranchSwitcher extends StatefulWidget {
+  const BranchSwitcher({required super.key});
+
+  @override
+  BranchSwitcherState createState() => BranchSwitcherState();
+}
+
+class BranchSwitcherState extends State<BranchSwitcher> {
+  @override
+  Widget build(BuildContext context) {
+    int currentIndex = MessageManager.index(widget.key!);
+    int siblingCount = MessageManager.siblingCount(widget.key!);
+
+    return SizedBox(
+      width: 120,
+      height: 40,
+      child: Container(
+        alignment: Alignment.center,
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        padding: const EdgeInsets.all(0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.tertiary,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              IconButton(
+                padding: const EdgeInsets.all(0),
+                onPressed: () {
+                  MessageManager.last(widget.key!);
+                  setState(() {});
+                },
+                icon: const Icon(Icons.arrow_left),
+              ),
+              Text('$currentIndex'),
+              IconButton(
+                padding: const EdgeInsets.all(0),
+                onPressed: () {
+                  MessageManager.next(widget.key!);
+                  setState(() {});
+                },
+                icon: const Icon(Icons.arrow_right),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
