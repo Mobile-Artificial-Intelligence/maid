@@ -78,26 +78,22 @@ class MaidHomePageState extends State<MaidHomePage> {
     }
   }
 
-  void execute() async {
-    //close the keyboard if on mobile
+  Future<void> execute(String prompt) async {
     if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
     }
 
-    MessageManager.add(UniqueKey(), message: promptController.text.trim(), userGenerated: true);
+    MessageManager.add(UniqueKey(), message: prompt.trim(), userGenerated: true);
     MessageManager.add(UniqueKey());
 
     if (!Core.instance.hasStarted()) {
       await settings.save();
-      Core.instance.init(promptController.text, responseCallback);
+      Core.instance.init(prompt, responseCallback);
     } else {
-      Core.instance.prompt(promptController.text);
+      Core.instance.prompt(prompt);
     }
 
-    setState(() {
-      model.busy = true;
-      promptController.clear();
-    });
+    model.busy = true;
   }
 
   void updateCallback() {
@@ -259,12 +255,15 @@ class MaidHomePageState extends State<MaidHomePage> {
                             minLines: 1,
                             maxLines: 9,
                             enableInteractiveSelection: true,
-                            onSubmitted:  (value) {
+                            onSubmitted:  (value) async {
                               if (!model.busy) {
                                 if (model.parameters["model_path"].toString().isEmpty) {
                                   _missingModelDialog();
                                 } else {
-                                  execute();
+                                  await execute(promptController.text);
+                                  setState(() {
+                                    promptController.clear();
+                                  });
                                 }                             
                               }                          
                             },
@@ -278,12 +277,15 @@ class MaidHomePageState extends State<MaidHomePage> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (!model.busy) {
                               if (model.parameters["model_path"].toString().isEmpty) {
                                 _missingModelDialog();
                               } else {
-                                execute();
+                                await execute(promptController.text);
+                                setState(() {
+                                  promptController.clear();
+                                });
                               }                             
                             }                          
                           },

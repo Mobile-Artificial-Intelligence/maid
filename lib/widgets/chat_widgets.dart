@@ -101,7 +101,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
         Align(
           alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
           child: GestureDetector(
-            onDoubleTapDown: (details) {
+            onTapDown: (details) {
               _tapPosition = details.globalPosition;
               _showContextMenu();
             },
