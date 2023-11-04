@@ -73,14 +73,25 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
         Offset.zero & overlay.size,
       ),
       items: [
-        const PopupMenuItem(
-          value: 'edit',
-          child: Text('Edit'),
-        ),
+        if (widget.userGenerated)
+          const PopupMenuItem(
+            value: 'edit',
+            child: Text('Edit'),
+          )
+        else
+          const PopupMenuItem(
+            value: 'regenerate',
+            child: Text('Regenerate'),
+          )
       ],
     ).then((selectedValue) {
-      if (selectedValue == 'edit') {
-        _editMessage();
+      switch (selectedValue) {
+        case 'edit':
+          _editMessage();
+          break;
+        case 'regenerate':
+          _regenerateMessage();
+          break;
       }
     });
   }
@@ -88,6 +99,10 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   void _editMessage() {
     MessageManager.branch(widget.key!);
     MessageManager.add(UniqueKey(), userGenerated: widget.userGenerated); // Placeholder for new message
+  }
+
+  void _regenerateMessage() {
+    //MessageManager.regenerate(widget.key!);
   }
 
   @override

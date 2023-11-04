@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:maid/config/message_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -217,6 +218,18 @@ class Character {
       if (prompt.isNotEmpty && response.isNotEmpty) {
         prePrompt += "\n$prompt\n$response";
       }
+    }
+
+    Map<String, bool> history = MessageManager.getMessages();
+    if (history.isNotEmpty) {
+      prePrompt += "\n";
+      history.forEach((key, value) {
+        if (value) {
+          prePrompt += "\n${userAliasController.text.trim()} $key";
+        } else {
+          prePrompt += "\n${responseAliasController.text.trim()} $key";
+        }
+      });
     }
 
     return prePrompt;

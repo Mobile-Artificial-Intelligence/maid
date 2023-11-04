@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:maid/core/core.dart';
 
 class MessageManager {
   static void Function()? _callback;
@@ -108,6 +109,7 @@ class MessageManager {
         }
       }
     }
+    Core.instance.cleanup();
     _callback?.call();
   }
 
@@ -128,6 +130,7 @@ class MessageManager {
         }
       }
     }
+    Core.instance.cleanup();
     _callback?.call();
   }
 
@@ -171,6 +174,23 @@ class MessageManager {
       }
 
       return history;
+    }
+  }
+
+  static Map<String, bool> getMessages() {
+    if (_root == null) {
+      return {};
+    } else {
+      final Map<String, bool> messages = {};
+      var current = _root!;
+
+      messages[current.message] = current.userGenerated;
+      while (current.currentChild != null) {
+        current = current.find(current.currentChild!)!;
+        messages[current.message] = current.userGenerated;
+      }
+
+      return messages;
     }
   }
 
