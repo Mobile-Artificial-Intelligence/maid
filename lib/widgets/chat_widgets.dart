@@ -28,7 +28,6 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
     if (MessageManager.get(widget.key!).isNotEmpty) {
       _parseMessage(MessageManager.get(widget.key!));
-      _finalised = true;
     } else {
       MessageManager.getMessageStream(widget.key!).stream.listen((textChunk) {
         setState(() {
@@ -88,6 +87,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   
   void _editMessage() {
     MessageManager.branch(widget.key!);
+    MessageManager.add(UniqueKey(), userGenerated: widget.userGenerated); // Placeholder for new message
   }
 
   @override
@@ -96,7 +96,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
     return Column(
       children: [
-        if (_finalised && siblingCount > 1)
+        if (siblingCount > 1)
           BranchSwitcher(key: widget.key!),
         Align(
           alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,

@@ -34,11 +34,30 @@ class MessageManager {
       found.message = message;
     } else { 
       _tail ??= _root!.findTail();
-      _tail!.children.add(node);
-      _tail!.currentChild = key;
-      _tail = _tail!.findTail();
+
+      if (_tail!.userGenerated == userGenerated) {
+        stream(message);
+        finalise();
+      } else {
+        _tail!.children.add(node);
+        _tail!.currentChild = key;
+        _tail = _tail!.findTail();
+      }
     }
 
+    _callback?.call();
+  }
+
+  static void remove(Key key) {
+    if (_root == null) {
+      return;
+    } else {
+      var parent = _root!.getParent(key);
+      if (parent != null) {
+        parent.children.removeWhere((element) => element.key == key);
+        _tail = _root!.findTail();
+      }
+    }
     _callback?.call();
   }
 
