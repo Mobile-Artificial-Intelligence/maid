@@ -61,7 +61,7 @@ ffigen:
   output: lib/core/bindings.dart
   headers:
     entry-points:
-      - "lib/core/core.h"
+      - "core/core.h"
 # The following section is specific to Flutter packages.
 flutter:
 
