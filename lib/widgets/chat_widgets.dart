@@ -94,35 +94,39 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   Widget build(BuildContext context) {
     int siblingCount = MessageManager.siblingCount(widget.key!);
 
-    return Container(
-      alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: widget.userGenerated
-          ? Theme.of(context).colorScheme.secondary
-          : Theme.of(context).colorScheme.primary,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (_finalised && siblingCount > 1)
-            BranchSwitcher(key: widget.key!),
-          GestureDetector(
-            onTapDown: (details) {
+    return Column(
+      children: [
+        if (_finalised && siblingCount > 1)
+          BranchSwitcher(key: widget.key!),
+        Align(
+          alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
+          child: GestureDetector(
+            onDoubleTapDown: (details) {
               _tapPosition = details.globalPosition;
               _showContextMenu();
             },
-            child: !_finalised && _messageWidgets.isEmpty
-              ? const TypingIndicator()
-              : Column(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: widget.userGenerated
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: _messageWidgets,
+                children: [
+                  if (!_finalised && _messageWidgets.isEmpty)
+                    const TypingIndicator()
+                  else
+                    ..._messageWidgets,
+                ],
+              )
             ),
-          ),
-        ]
-      ),
+          )
+        )
+      ]
     );
   }
 
