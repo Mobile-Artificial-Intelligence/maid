@@ -1,5 +1,5 @@
 name: maid
-description: A new Flutter project.
+description: A cross-platform Flutter app for interfacing with GGUF / Llama models.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2.2.1+8
+version: 1.0.6
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -58,12 +58,10 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 ffigen:
-  output: lib/config/butler_bindings.dart
+  output: lib/core/bindings.dart
   headers:
     entry-points:
-      # - "src/llama.cpp/utils.h"
-      # - "src/llama.cpp/ggml.cpp"
-      - "src/butler.h"
+      - "core/core.h"
 # The following section is specific to Flutter packages.
 flutter:
 

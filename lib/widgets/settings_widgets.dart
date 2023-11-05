@@ -1,6 +1,6 @@
   
 import 'package:flutter/material.dart';
-import 'package:maid/config/settings.dart';
+import 'package:maid/utilities/memory_manager.dart';
 
 Widget settingsTextField(String labelText, TextEditingController controller) {
   return ListTile(
@@ -107,7 +107,7 @@ Future<void> storageOperationDialog(BuildContext context, Future<String> Functio
             FilledButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  settings.save();
+                  memoryManager.save();
                 },
                 child: Text(
                   "Close",

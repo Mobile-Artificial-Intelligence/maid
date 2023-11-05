@@ -178,6 +178,7 @@ class MaidTheme {
       primary: Colors.grey.shade800,
       onPrimary: Colors.white,
       secondary: Colors.blue,
+      tertiary: Colors.blue.shade900,
       inversePrimary: const Color.fromARGB(255, 100, 20, 20),
     ),
   );
@@ -270,6 +271,7 @@ class MaidTheme {
       primary: Colors.white,
       onPrimary: Colors.black,
       secondary: Colors.blue,
+      tertiary: Colors.blue.shade900,
       inversePrimary: const Color.fromARGB(255, 100, 20, 20),
     ),
   );

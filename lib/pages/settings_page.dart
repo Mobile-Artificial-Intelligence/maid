@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/config/theme.dart';
+import 'package:maid/utilities/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -9,9 +9,7 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
-  
-  
+class _SettingsPageState extends State<SettingsPage> {  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,5 +58,4 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
-
 }

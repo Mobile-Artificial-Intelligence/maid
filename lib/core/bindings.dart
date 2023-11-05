@@ -19,55 +19,55 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  int butler_start(
-    ffi.Pointer<butler_params> butler,
+  int core_init(
+    ffi.Pointer<maid_params> mparams,
   ) {
-    return _butler_start(
-      butler,
+    return _core_init(
+      mparams,
     );
   }
 
-  late final _butler_startPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<butler_params>)>>(
-          'butler_start');
-  late final _butler_start =
-      _butler_startPtr.asFunction<int Function(ffi.Pointer<butler_params>)>();
+  late final _core_initPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<maid_params>)>>(
+          'core_init');
+  late final _core_init =
+      _core_initPtr.asFunction<int Function(ffi.Pointer<maid_params>)>();
 
-  int butler_continue(
+  int core_prompt(
     ffi.Pointer<ffi.Char> input,
     ffi.Pointer<maid_output_cb> maid_output,
   ) {
-    return _butler_continue(
+    return _core_prompt(
       input,
       maid_output,
     );
   }
 
-  late final _butler_continuePtr = _lookup<
+  late final _core_promptPtr = _lookup<
       ffi.NativeFunction<
           ffi.Int Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<maid_output_cb>)>>('butler_continue');
-  late final _butler_continue = _butler_continuePtr.asFunction<
+              ffi.Pointer<maid_output_cb>)>>('core_prompt');
+  late final _core_prompt = _core_promptPtr.asFunction<
       int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<maid_output_cb>)>();
 
-  void butler_stop() {
-    return _butler_stop();
+  void core_stop() {
+    return _core_stop();
   }
 
-  late final _butler_stopPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('butler_stop');
-  late final _butler_stop = _butler_stopPtr.asFunction<void Function()>();
+  late final _core_stopPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('core_stop');
+  late final _core_stop = _core_stopPtr.asFunction<void Function()>();
 
-  void butler_exit() {
-    return _butler_exit();
+  void core_cleanup() {
+    return _core_cleanup();
   }
 
-  late final _butler_exitPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('butler_exit');
-  late final _butler_exit = _butler_exitPtr.asFunction<void Function()>();
+  late final _core_cleanupPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('core_cleanup');
+  late final _core_cleanup = _core_cleanupPtr.asFunction<void Function()>();
 }
 
-final class butler_params extends ffi.Struct {
+final class maid_params extends ffi.Struct {
   @ffi.UnsignedChar()
   external int instruct;
 
