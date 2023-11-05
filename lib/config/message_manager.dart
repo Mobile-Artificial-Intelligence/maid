@@ -7,7 +7,7 @@ import 'package:maid/core/core.dart';
 
 class MessageManager {
   static void Function()? _callback;
-  static _ChatNode? _root;
+  static _ChatNode _root = _ChatNode(key: UniqueKey());
   static _ChatNode? _tail;
 
   static void registerCallback(void Function() onUpdate) {
@@ -15,27 +15,17 @@ class MessageManager {
   }
 
   static String get(Key key) {
-    if (_root == null) {
-      return "";
-    } else {
-      return _root!.find(key)?.message ?? "";
-    }
+    return _root.find(key)?.message ?? "";
   }
 
   static void add(Key key, {String message = "",  bool userGenerated = false}) {
     final node = _ChatNode(key: key, message: message, userGenerated: userGenerated);
-    if (_root == null) {
-      _root = node;
-      _tail = node;
-      _callback?.call();
-      return;
-    } 
     
-    var found = _root!.find(key);
+    var found = _root.find(key);
     if (found != null) {
       found.message = message;
     } else { 
-      _tail ??= _root!.findTail();
+      _tail ??= _root.findTail();
 
       if (_tail!.userGenerated == userGenerated) {
         stream(message);
@@ -51,23 +41,17 @@ class MessageManager {
   }
 
   static void remove(Key key) {
-    if (_root == null) {
-      return;
-    } else {
-      var parent = _root!.getParent(key);
-      if (parent != null) {
-        parent.children.removeWhere((element) => element.key == key);
-        _tail = _root!.findTail();
-      }
+    var parent = _root.getParent(key);
+    if (parent != null) {
+      parent.children.removeWhere((element) => element.key == key);
+      _tail = _root.findTail();
     }
     Core.instance.cleanup();
     _callback?.call();
   }
 
-  static void stream(String message) async {  
-    if (_root == null) return;
-    
-    _tail ??= _root!.findTail();
+  static void stream(String message) async {     
+    _tail ??= _root.findTail();
     if (!model.busy && !(_tail!.userGenerated)) {
       finalise();
     } else {
@@ -75,10 +59,8 @@ class MessageManager {
     }
   }
 
-  static void regenerate(Key key) {
-    if (_root == null) return;
-    
-    var parent = _root!.getParent(key);
+  static void regenerate(Key key) { 
+    var parent = _root.getParent(key);
     if (parent == null) {
       return;
     } else {
@@ -89,14 +71,10 @@ class MessageManager {
   }
 
   static void branch(Key key, bool userGenerated) {
-    if (_root == null) {
-      return;
-    } else {
-      var parent = _root!.getParent(key);
-      if (parent != null) {
-        parent.currentChild = null;
-        _tail = _root!.findTail();
-      }
+    var parent = _root.getParent(key);
+    if (parent != null) {
+      parent.currentChild = null;
+      _tail = _root.findTail();
     }
     add(UniqueKey(), userGenerated: userGenerated);
     Core.instance.cleanup();
@@ -104,137 +82,101 @@ class MessageManager {
   }
 
   static void finalise() {
-    if (_root == null) {
-      return;
-    } else {
-      _tail ??= _root!.findTail();
-      _tail!.finaliseController.add(0);
-    }
+    _tail ??= _root.findTail();
+    _tail!.finaliseController.add(0);
   }
 
   static void next(Key key) {
-    if (_root == null) {
-      return;
-    } else {
-      var parent = _root!.getParent(key);
-      if (parent != null) {
-        if (parent.currentChild == null) {
-          parent.currentChild = key;
-        } else {
-          var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
-          if (currentChildIndex < parent.children.length - 1) {
-            parent.currentChild = parent.children[currentChildIndex + 1].key;
-            _tail = _root!.findTail();
-          }
+    var parent = _root.getParent(key);
+    if (parent != null) {
+      if (parent.currentChild == null) {
+        parent.currentChild = key;
+      } else {
+        var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
+        if (currentChildIndex < parent.children.length - 1) {
+          parent.currentChild = parent.children[currentChildIndex + 1].key;
+          _tail = _root.findTail();
         }
       }
     }
+
     Core.instance.cleanup();
     _callback?.call();
   }
 
   static void last(Key key) {
-    if (_root == null) {
-      return;
-    } else {
-      var parent = _root!.getParent(key);
-      if (parent != null) {
-        if (parent.currentChild == null) {
-          parent.currentChild = key;
-        } else {
-          var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
-          if (currentChildIndex > 0) {
-            parent.currentChild = parent.children[currentChildIndex - 1].key;
-            _tail = _root!.findTail();
-          }
+    var parent = _root.getParent(key);
+    if (parent != null) {
+      if (parent.currentChild == null) {
+        parent.currentChild = key;
+      } else {
+        var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
+        if (currentChildIndex > 0) {
+          parent.currentChild = parent.children[currentChildIndex - 1].key;
+          _tail = _root.findTail();
         }
       }
     }
+
     Core.instance.cleanup();
     _callback?.call();
   }
 
   static int siblingCount(Key key) {
-    if (_root == null) {
-      return 0;
+    var parent = _root.getParent(key);
+    if (parent != null) {
+      return parent.children.length;
     } else {
-      var parent = _root!.getParent(key);
-      if (parent != null) {
-        return parent.children.length;
-      } else {
-        return 0;
-      }
+      return 0;
     }
   }
 
   static int index(Key key) {
-    if (_root == null) {
-      return 0;
+    var parent = _root.getParent(key);
+    if (parent != null) {
+      return parent.children.indexWhere((element) => element.key == key);
     } else {
-      var parent = _root!.getParent(key);
-      if (parent != null) {
-        return parent.children.indexWhere((element) => element.key == key);
-      } else {
-        return 0;
-      }
+      return 0;
     }
   }
 
   static Map<Key, bool> history() {
-    if (_root == null) {
-      return {};
-    } else {
-      final Map<Key, bool> history = {};
-      var current = _root!;
+    final Map<Key, bool> history = {};
+    var current = _root;
 
+    while (current.currentChild != null) {
+      current = current.find(current.currentChild!)!;
       history[current.key] = current.userGenerated;
-      while (current.currentChild != null) {
-        current = current.find(current.currentChild!)!;
-        history[current.key] = current.userGenerated;
-      }
-
-      return history;
     }
+
+    return history;
   }
 
   static Map<String, bool> getMessages() {
-    if (_root == null) {
-      return {};
-    } else {
-      final Map<String, bool> messages = {};
-      var current = _root!;
+    final Map<String, bool> messages = {};
+    var current = _root;
 
+    while (current.currentChild != null) {
+      current = current.find(current.currentChild!)!;
       messages[current.message] = current.userGenerated;
-      while (current.currentChild != null) {
-        current = current.find(current.currentChild!)!;
-        messages[current.message] = current.userGenerated;
-      }
-      
-      //remove last message if it is empty
-      if (messages.keys.last.isEmpty) {
-        messages.remove(messages.keys.last);
-      }
-
-      messages.remove(messages.keys.last); //remove last message
-
-      return messages;
     }
+    
+    //remove last message if it is empty
+    if (messages.keys.last.isEmpty) {
+      messages.remove(messages.keys.last);
+    }
+
+    messages.remove(messages.keys.last); //remove last message
+
+    return messages;
   }
 
   static StreamController<String> getMessageStream(Key key) {
-    if (_root == null) {
-      return StreamController<String>.broadcast();
-    } else {
-      return _root!.find(key)?.messageController ?? StreamController<String>.broadcast();
-    }
+    return _root.find(key)?.messageController ?? StreamController<String>.broadcast();
   }
 
   static StreamController<int> getFinaliseStream(Key key) {
-    if (_root == null) {
-      return StreamController<int>.broadcast();
-    } else {
-      return _root!.find(key)?.finaliseController ?? StreamController<int>.broadcast();
-    }
+    return _root.find(key)?.finaliseController ?? StreamController<int>.broadcast();
   }
 }
 
