@@ -135,7 +135,7 @@ class Model {
 
     try {
       var result = await FilesystemPicker.open(
-          allowedExtensions: [".gguf", ".ggml"],
+          allowedExtensions: [".gguf"],
           context: context,
           rootDirectory: appDocDir,
           fileTileSelectMode: FileTileSelectMode.wholeTile,
