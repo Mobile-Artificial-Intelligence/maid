@@ -64,7 +64,6 @@ class MessageManager {
   }
 
   static void stream(String message) async {  
-    print("Stream: $message");
     if (_root == null) {
       return;
     } else if (!model.busy) {
@@ -84,6 +83,7 @@ class MessageManager {
     } else {
       branch(key);
       add(UniqueKey());
+      model.busy = true;
       Core.instance.prompt(parent.message);
     }
   }
