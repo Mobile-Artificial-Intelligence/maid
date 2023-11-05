@@ -137,6 +137,7 @@ class Model {
         return "Failed to load model";
       }
       
+      Logger.log("Loading model from $filePath");
       parameters["model_path"] = filePath;
       parameters["model_name"] = path.basename(filePath);
     } catch (e) {
