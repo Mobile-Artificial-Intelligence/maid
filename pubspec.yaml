@@ -41,6 +41,7 @@ dependencies:
   system_info2: ^4.0.0
   flutter_linkify: ^6.0.0
   linkify: ^5.0.0
+  filesystem_picker: ^4.0.0
 
 dev_dependencies:
   msix: ^3.9.1
