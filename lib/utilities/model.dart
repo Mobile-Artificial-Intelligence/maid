@@ -133,10 +133,13 @@ class Model {
       }
     }
 
+    final localContext = context;
+    if (!context.mounted) return "Failed to load model";
+
     try {
       var result = await FilesystemPicker.open(
           allowedExtensions: [".gguf"],
-          context: context,
+          context: localContext,
           rootDirectory: appDocDir,
           fileTileSelectMode: FileTileSelectMode.wholeTile,
           fsType: FilesystemType.file);
