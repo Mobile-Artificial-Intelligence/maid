@@ -123,9 +123,14 @@ class Model {
   }
 
   Future<String> loadModelFile(BuildContext context) async {
-    Directory appDocDir = Platform.isAndroid
-        ? Directory("storage/emulated/0")
-        : await getApplicationDocumentsDirectory();
+    Directory appDocDir;
+    if (Platform.isAndroid) {
+      appDocDir = Directory("storage/emulated/0");
+    } else if (Platform.isLinux) {
+      appDocDir = Directory('${Platform.environment['HOME']}/');
+    } else {
+      appDocDir = await getApplicationDocumentsDirectory();
+    }
     if ((Platform.isAndroid || Platform.isIOS)) {
       await Permission.manageExternalStorage.request();
       if (!(await Permission.storage.request().isGranted)) {
