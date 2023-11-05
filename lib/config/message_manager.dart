@@ -208,6 +208,13 @@ class MessageManager {
         current = current.find(current.currentChild!)!;
         messages[current.message] = current.userGenerated;
       }
+      
+      //remove last message if it is empty
+      if (messages.keys.last.isEmpty) {
+        messages.remove(messages.keys.last);
+      }
+
+      messages.remove(messages.keys.last); //remove last message
 
       return messages;
     }
