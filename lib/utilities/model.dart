@@ -3,11 +3,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:maid/utilities/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:maid/config/settings.dart';
+import 'package:maid/utilities/memory_manager.dart';
 
 Model model = Model();
 
@@ -47,7 +48,7 @@ class Model {
 
     parameters = json.decode(jsonString);
 
-    settings.save();
+    memoryManager.save();
   }
 
   Future<String> saveParametersToJson() async {

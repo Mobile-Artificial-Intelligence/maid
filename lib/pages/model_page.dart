@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maid/config/model.dart';
-import 'package:maid/config/settings.dart';
+import 'package:maid/utilities/model.dart';
+import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/widgets/settings_widgets.dart';
 
 class ModelPage extends StatefulWidget {
@@ -20,7 +20,7 @@ class _ModelPageState extends State<ModelPage> {
 
   @override
   void dispose() {
-    settings.save();
+    memoryManager.save();
     presetController.dispose();
     super.dispose();
   }
@@ -53,7 +53,7 @@ class _ModelPageState extends State<ModelPage> {
                   width: 200.0,
                   initialSelection: model.name,
                   controller: presetController,
-                  dropdownMenuEntries: settings.getModels().map<DropdownMenuEntry<String>>(
+                  dropdownMenuEntries: memoryManager.getModels().map<DropdownMenuEntry<String>>(
                     (String value) {
                       return DropdownMenuEntry<String>(
                         value: value,
@@ -63,9 +63,9 @@ class _ModelPageState extends State<ModelPage> {
                   ).toList(),
                   onSelected: (value) => setState(() async {
                     if (value == null) {
-                      await settings.updateModel(presetController.text);
+                      await memoryManager.updateModel(presetController.text);
                     } else {
-                      await settings.setModel(value);
+                      await memoryManager.setModel(value);
                     }
                     setState(() {});
                   }),
@@ -75,14 +75,14 @@ class _ModelPageState extends State<ModelPage> {
                   context,
                   "New Preset",
                   () async {
-                    await settings.save();
+                    await memoryManager.save();
                     model = Model();
                     model.name = "New Preset";
                     setState(() {});
                   },
                   "Delete Preset",
                   () async {
-                    await settings.removeModel();
+                    await memoryManager.removeModel();
                     setState(() {});
                   },
                 ),
