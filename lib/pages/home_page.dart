@@ -13,7 +13,7 @@ import 'package:maid/pages/model_page.dart';
 import 'package:maid/pages/settings_page.dart';
 import 'package:maid/pages/about_page.dart';
 
-import 'package:maid/widgets/chat_widgets.dart';
+import 'package:maid/widgets/chat_widgets/chat_widgets.dart';
 
 class MaidHomePage extends StatefulWidget {
   final String title;

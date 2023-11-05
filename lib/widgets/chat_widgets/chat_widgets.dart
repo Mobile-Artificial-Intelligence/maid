@@ -18,7 +18,6 @@ class ChatMessage extends StatefulWidget {
 
 class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
   final List<Widget> _messageWidgets = [];
-  Offset _tapPosition = Offset.zero;
   String _message = "";
   bool _finalised = false;
 
@@ -63,83 +62,32 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     }
   }
 
-  void _showContextMenu() {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-  
-    showMenu(
-      context: context,
-      position: RelativeRect.fromRect(
-        _tapPosition & const Size(40, 40), // Using size & position of longPress/rightClick on the screen
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        if (widget.userGenerated)
-          const PopupMenuItem(
-            value: 'edit',
-            child: Text('Edit'),
-          )
-        else
-          const PopupMenuItem(
-            value: 'regenerate',
-            child: Text('Regenerate'),
-          )
-      ],
-    ).then((selectedValue) {
-      switch (selectedValue) {
-        case 'edit':
-          _editMessage();
-          break;
-        case 'regenerate':
-          _regenerateMessage();
-          break;
-      }
-    });
-  }
-  
-  void _editMessage() {
-    MessageManager.branch(widget.key!);
-    MessageManager.add(UniqueKey(), userGenerated: widget.userGenerated); // Placeholder for new message
-  }
-
-  void _regenerateMessage() {
-    MessageManager.regenerate(widget.key!);
-  }
-
   @override
   Widget build(BuildContext context) {
-    int siblingCount = MessageManager.siblingCount(widget.key!);
-
     return Column(
       children: [
-        if (siblingCount > 1)
-          BranchSwitcher(key: widget.key!),
+        ChatControls(key: widget.key, userGenerated: widget.userGenerated),
         Align(
           alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
-          child: GestureDetector(
-            onTapDown: (details) {
-              _tapPosition = details.globalPosition;
-              _showContextMenu();
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: widget.userGenerated
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (!_finalised && _messageWidgets.isEmpty)
-                    const TypingIndicator()
-                  else
-                    ..._messageWidgets,
-                ],
-              )
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: widget.userGenerated
+                ? Theme.of(context).colorScheme.secondary
+                : Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(10),
             ),
-          )
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!_finalised && _messageWidgets.isEmpty)
+                  const TypingIndicator()
+                else
+                  ..._messageWidgets,
+              ],
+            )
+          ),
         )
       ]
     );
@@ -150,6 +98,53 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     MessageManager.getMessageStream(widget.key!).close();
     MessageManager.getFinaliseStream(widget.key!).close();
     super.dispose();
+  }
+}
+
+class ChatControls extends StatefulWidget {
+  final bool userGenerated;
+  
+  const ChatControls({
+    required super.key, 
+    this.userGenerated = false, 
+  });
+
+  @override
+  ChatControlsState createState() => ChatControlsState();
+}
+
+class ChatControlsState extends State<ChatControls> {
+  @override
+  Widget build(BuildContext context) {
+    int siblingCount = MessageManager.siblingCount(widget.key!);
+
+    return Row(
+      mainAxisAlignment: widget.userGenerated
+        ? MainAxisAlignment.end
+        : MainAxisAlignment.start,
+      children: [
+        if (widget.userGenerated)
+          IconButton(
+            padding: const EdgeInsets.all(0),
+            onPressed: () {
+              MessageManager.branch(widget.key!, widget.userGenerated);
+              setState(() {});
+            },
+            icon: const Icon(Icons.edit),
+          ),
+        if (siblingCount > 1)
+          BranchSwitcher(key: widget.key!),
+        if (!widget.userGenerated)
+          IconButton(
+            padding: const EdgeInsets.all(0),
+            onPressed: () {
+              MessageManager.regenerate(widget.key!);
+              setState(() {});
+            },
+            icon: const Icon(Icons.refresh),
+          ),
+      ],
+    );
   }
 }
 
@@ -291,7 +286,6 @@ class BranchSwitcherState extends State<BranchSwitcher> {
         ),
         child: Center(
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               IconButton(
@@ -302,7 +296,7 @@ class BranchSwitcherState extends State<BranchSwitcher> {
                 },
                 icon: const Icon(Icons.arrow_left),
               ),
-              Text('$currentIndex'),
+              Text('$currentIndex/${siblingCount-1}'),
               IconButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {

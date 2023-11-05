@@ -60,16 +60,17 @@ class MessageManager {
         _tail = _root!.findTail();
       }
     }
+    Core.instance.cleanup();
     _callback?.call();
   }
 
   static void stream(String message) async {  
-    if (_root == null) {
-      return;
-    } else if (!model.busy) {
+    if (_root == null) return;
+    
+    _tail ??= _root!.findTail();
+    if (!model.busy && !(_tail!.userGenerated)) {
       finalise();
     } else {
-      _tail ??= _root!.findTail();
       _tail!.messageController.add(message);
     }
   }
@@ -81,14 +82,13 @@ class MessageManager {
     if (parent == null) {
       return;
     } else {
-      branch(key);
-      add(UniqueKey());
+      branch(key, false);
       model.busy = true;
       Core.instance.prompt(parent.message);
     }
   }
 
-  static void branch(Key key) {
+  static void branch(Key key, bool userGenerated) {
     if (_root == null) {
       return;
     } else {
@@ -98,6 +98,7 @@ class MessageManager {
         _tail = _root!.findTail();
       }
     }
+    add(UniqueKey(), userGenerated: userGenerated);
     Core.instance.cleanup();
     _callback?.call();
   }
