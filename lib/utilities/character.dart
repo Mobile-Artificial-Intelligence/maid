@@ -4,11 +4,11 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:maid/config/message_manager.dart';
+import 'package:maid/utilities/message_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:maid/config/settings.dart';
+import 'package:maid/utilities/memory_manager.dart';
 
 Character character = Character();
 
@@ -106,7 +106,7 @@ class Character {
       }
     }
 
-    settings.save();
+    memoryManager.save();
   }
 
   Future<String> saveCharacterToJson() async {

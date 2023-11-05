@@ -4,11 +4,12 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
-import 'package:maid/config/message_manager.dart';
+import 'package:maid/utilities/logger.dart';
+import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/core/bindings.dart';
-import 'package:maid/config/character.dart';
-import 'package:maid/config/model.dart';
-import 'package:maid/config/settings.dart';
+import 'package:maid/utilities/character.dart';
+import 'package:maid/utilities/model.dart';
+import 'package:maid/utilities/memory_manager.dart';
 
 class Core {
   static SendPort? _sendPort;
@@ -130,7 +131,7 @@ class Core {
 
   void prompt(String input) async {
     if (!_hasStarted) {
-      await settings.save();
+      await memoryManager.save();
       _init(input);
     } else {
       Logger.log("Input: $input");

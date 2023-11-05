@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:maid/config/model.dart';
+import 'package:maid/utilities/model.dart';
 import 'package:maid/core/core.dart';
 
 class MessageManager {
   static void Function()? _callback;
-  static _ChatNode _root = _ChatNode(key: UniqueKey());
+  static final _ChatNode _root = _ChatNode(key: UniqueKey());
   static _ChatNode? _tail;
 
   static void registerCallback(void Function() onUpdate) {
@@ -24,7 +24,7 @@ class MessageManager {
     var found = _root.find(key);
     if (found != null) {
       found.message = message;
-    } else { 
+    } else {
       _tail ??= _root.findTail();
 
       if (_tail!.userGenerated == userGenerated) {

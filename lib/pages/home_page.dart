@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/config/message_manager.dart';
+import 'package:maid/utilities/message_manager.dart';
 
 import 'package:system_info2/system_info2.dart';
 
-import 'package:maid/config/model.dart';
+import 'package:maid/utilities/model.dart';
 import 'package:maid/core/core.dart';
 
 import 'package:maid/pages/character_page.dart';
@@ -13,7 +13,7 @@ import 'package:maid/pages/model_page.dart';
 import 'package:maid/pages/settings_page.dart';
 import 'package:maid/pages/about_page.dart';
 
-import 'package:maid/widgets/chat_widgets/chat_widgets.dart';
+import 'package:maid/widgets/chat_widgets/chat_message.dart';
 
 class MaidHomePage extends StatefulWidget {
   final String title;

@@ -1,18 +1,19 @@
 import 'dart:convert';
 
+import 'package:maid/utilities/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:maid/core/core.dart';
-import 'package:maid/config/model.dart';
-import 'package:maid/config/character.dart';
+import 'package:maid/utilities/model.dart';
+import 'package:maid/utilities/character.dart';
 
-Settings settings = Settings();
+MemoryManager memoryManager = MemoryManager();
 
-class Settings { 
+class MemoryManager { 
   Map<String, dynamic> _models = {};
   Map<String, dynamic> _characters = {};
 
-  Settings() {
+  MemoryManager() {
     init();
   }
 
@@ -94,15 +95,5 @@ class Settings {
   Future<void> setCharacter(String? characterName) async {
     await save();
     character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
-  }
-}
-
-class Logger {
-  static String _logString = "";
-
-  static String get getLog => _logString;
-
-  static void log(String message) {
-    _logString += "$message\n";
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/config/theme.dart';
+import 'package:maid/utilities/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {

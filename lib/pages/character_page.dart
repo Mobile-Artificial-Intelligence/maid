@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/widgets/settings_widgets.dart';
-import 'package:maid/config/settings.dart';
-import 'package:maid/config/character.dart';
+import 'package:maid/utilities/memory_manager.dart';
+import 'package:maid/utilities/character.dart';
 
 class CharacterPage extends StatefulWidget {
   const CharacterPage({super.key});
@@ -20,7 +20,7 @@ class _CharacterPageState extends State<CharacterPage> {
 
   @override
   void dispose() {
-    settings.save();
+    memoryManager.save();
     presetController.dispose();
     super.dispose();
   }
@@ -53,7 +53,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   width: 250.0,
                   initialSelection: character.name,
                   controller: presetController,
-                  dropdownMenuEntries: settings.getCharacters().map<DropdownMenuEntry<String>>(
+                  dropdownMenuEntries: memoryManager.getCharacters().map<DropdownMenuEntry<String>>(
                     (String value) {
                       return DropdownMenuEntry<String>(
                         value: value,
@@ -63,9 +63,9 @@ class _CharacterPageState extends State<CharacterPage> {
                   ).toList(),
                   onSelected: (value) => setState(() async {
                     if (value == null) {
-                      await settings.updateCharacter(presetController.text);
+                      await memoryManager.updateCharacter(presetController.text);
                     } else {
-                      await settings.setCharacter(value);
+                      await memoryManager.setCharacter(value);
                     }
                     setState(() {});
                   }),
@@ -75,14 +75,14 @@ class _CharacterPageState extends State<CharacterPage> {
                   context,
                   "New Preset",
                   () async {
-                    await settings.save();
+                    await memoryManager.save();
                     character = Character();
                     character.name = "New Preset";
                     setState(() {});
                   },
                   "Delete Preset",
                   () async {
-                    await settings.removeCharacter();
+                    await memoryManager.removeCharacter();
                     setState(() {});
                   },
                 ),
