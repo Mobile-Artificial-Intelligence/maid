@@ -5,7 +5,6 @@ import 'package:maid/config/message_manager.dart';
 
 import 'package:system_info2/system_info2.dart';
 
-import 'package:maid/config/settings.dart';
 import 'package:maid/config/model.dart';
 import 'package:maid/core/core.dart';
 
@@ -78,7 +77,7 @@ class MaidHomePageState extends State<MaidHomePage> {
     }
   }
 
-  void send() async {
+  void send() {
     if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
     }
@@ -86,14 +85,12 @@ class MaidHomePageState extends State<MaidHomePage> {
     MessageManager.add(UniqueKey(), message: promptController.text.trim(), userGenerated: true);
     MessageManager.add(UniqueKey());
 
-    if (!Core.instance.hasStarted()) {
-      await settings.save();
-      Core.instance.init(promptController.text.trim(), responseCallback);
-    } else {
-      Core.instance.prompt(promptController.text.trim());
-    }
+    Core.instance.prompt(promptController.text.trim());
 
-    model.busy = true;
+    setState(() {
+      model.busy = true;
+      promptController.clear();
+    });
   }
 
   void updateCallback() {
@@ -105,22 +102,12 @@ class MaidHomePageState extends State<MaidHomePage> {
         userGenerated: history[key] ?? false,
       ));
     }
+    _consoleScrollController.animateTo(
+      _consoleScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 50),
+      curve: Curves.easeOut,
+    );
     setState(() {});
-  }
-
-  void responseCallback(String message) {
-    if (!model.busy) {
-      MessageManager.finalise();
-      setState(() {});
-      return;
-    } else if (message.isNotEmpty) {
-      MessageManager.stream(message);
-      _consoleScrollController.animateTo(
-        _consoleScrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 50),
-        curve: Curves.easeOut,
-      );
-    }
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:maid/config/model.dart';
 import 'package:maid/core/core.dart';
 
 class MessageManager {
@@ -62,12 +63,29 @@ class MessageManager {
     _callback?.call();
   }
 
-  static void stream(String message) async {
+  static void stream(String message) async {  
+    print("Stream: $message");
     if (_root == null) {
       return;
+    } else if (!model.busy) {
+      finalise();
+    } else {
+      _tail ??= _root!.findTail();
+      _tail!.messageController.add(message);
     }
-    _tail ??= _root!.findTail();
-    _tail!.messageController.add(message);
+  }
+
+  static void regenerate(Key key) {
+    if (_root == null) return;
+    
+    var parent = _root!.getParent(key);
+    if (parent == null) {
+      return;
+    } else {
+      branch(key);
+      add(UniqueKey());
+      Core.instance.prompt(parent.message);
+    }
   }
 
   static void branch(Key key) {
@@ -80,6 +98,7 @@ class MessageManager {
         _tail = _root!.findTail();
       }
     }
+    Core.instance.cleanup();
     _callback?.call();
   }
 

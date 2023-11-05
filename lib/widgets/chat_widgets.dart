@@ -102,7 +102,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   }
 
   void _regenerateMessage() {
-    //MessageManager.regenerate(widget.key!);
+    MessageManager.regenerate(widget.key!);
   }
 
   @override

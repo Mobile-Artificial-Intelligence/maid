@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
+import 'package:maid/config/message_manager.dart';
 import 'package:maid/core/bindings.dart';
 import 'package:maid/config/character.dart';
 import 'package:maid/config/model.dart';
@@ -70,7 +71,7 @@ class Core {
   }
 
 
-  void init(String input, void Function(String) maidOutput) async {
+  void _init(String input) async {
     if (_hasStarted) {
       cleanup();
       await Future.delayed(const Duration(seconds: 1));
@@ -116,23 +117,28 @@ class Core {
     Completer completer = Completer();
     receivePort.listen((data) {
       if (data is String) {
-        maidOutput(data);
+        MessageManager.stream(data);
       } else if (data is SendPort) {
         completer.complete();
       } else if (data is int) {
         model.busy = false;
-        maidOutput("");
+        MessageManager.stream("");
       }
     });
     await completer.future;
   }
 
-  void prompt(String input) {
-    Logger.log("Input: $input");
-    Isolate.spawn(promptIsolate, {
-      'input': input,
-      'port': _sendPort
-    });
+  void prompt(String input) async {
+    if (!Core.instance.hasStarted()) {
+      await settings.save();
+      _init(input);
+    } else {
+      Logger.log("Input: $input");
+      Isolate.spawn(promptIsolate, {
+        'input': input,
+        'port': _sendPort
+      });
+    }
   }
 
   void stop() {

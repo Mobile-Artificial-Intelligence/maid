@@ -220,17 +220,17 @@ class Character {
       }
     }
 
-    Map<String, bool> history = MessageManager.getMessages();
-    if (history.isNotEmpty) {
-      prePrompt += "\n";
-      history.forEach((key, value) {
-        if (value) {
-          prePrompt += "\n${userAliasController.text.trim()} $key";
-        } else {
-          prePrompt += "\n${responseAliasController.text.trim()} $key";
-        }
-      });
-    }
+    //Map<String, bool> history = MessageManager.getMessages();
+    //if (history.isNotEmpty) {
+    //  prePrompt += "\n";
+    //  history.forEach((key, value) {
+    //    if (value) {
+    //      prePrompt += "\n${userAliasController.text.trim()} $key";
+    //    } else {
+    //      prePrompt += "\n${responseAliasController.text.trim()} $key";
+    //    }
+    //  });
+    //}
 
     return prePrompt;
   }
