@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:path/path.dart' as path;
@@ -9,10 +10,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:maid/utilities/memory_manager.dart';
+import 'package:filesystem_picker/filesystem_picker.dart';
 
 Model model = Model();
 
-class Model {  
+class Model {
   String name = "Default";
   Map<String, dynamic> parameters = {};
 
@@ -44,7 +46,8 @@ class Model {
 
   void resetAll() async {
     // Reset all the internal state to the defaults
-    String jsonString = await rootBundle.loadString('assets/default_parameters.json');
+    String jsonString =
+        await rootBundle.loadString('assets/default_parameters.json');
 
     parameters = json.decode(jsonString);
 
@@ -53,7 +56,7 @@ class Model {
 
   Future<String> saveParametersToJson() async {
     parameters["name"] = name;
-    
+
     // Convert the map to a JSON string
     String jsonString = json.encode(parameters);
     String? filePath;
@@ -61,18 +64,20 @@ class Model {
     try {
       if (Platform.isAndroid || Platform.isIOS) {
         Directory? directory;
-        if (Platform.isAndroid && (await Permission.manageExternalStorage.request().isGranted)) {
-          directory = await Directory('/storage/emulated/0/Download/Maid').create();
-        } 
-        else if (Platform.isIOS && (await Permission.storage.request().isGranted)) {
+
+        if (Platform.isAndroid &&
+            (await Permission.manageExternalStorage.request().isGranted)) {
+          directory =
+              await Directory('/storage/emulated/0/Download/Maid').create();
+        } else if (Platform.isIOS &&
+            (await Permission.storage.request().isGranted)) {
           directory = await getDownloadsDirectory();
         } else {
           return "Permission Request Failed";
         }
 
         filePath = '${directory!.path}/maid_model.json';
-      }
-      else {
+      } else {
         filePath = await FilePicker.platform.saveFile(type: FileType.any);
       }
 
@@ -89,19 +94,19 @@ class Model {
   }
 
   Future<String> loadParametersFromJson() async {
-    if ((Platform.isAndroid || Platform.isIOS) && 
+    if ((Platform.isAndroid || Platform.isIOS) &&
         !(await Permission.storage.request().isGranted)) {
       return "Permission Request Failed";
     }
-    
-    try{
+
+    try {
       final result = await FilePicker.platform.pickFiles(type: FileType.any);
       if (result == null) return "No File Selected";
 
       File file = File(result.files.single.path!);
       String jsonString = await file.readAsString();
       if (jsonString.isEmpty) return "Failed to load model";
-      
+
       parameters = json.decode(jsonString);
       if (parameters.isEmpty) {
         resetAll();
@@ -117,33 +122,47 @@ class Model {
     return "Model Successfully Loaded";
   }
 
-  Future<String> loadModelFile() async {
+  Future<String> loadModelFile(BuildContext context) async {
+    Directory appDocDir;
+    if (Platform.isAndroid) {
+      appDocDir = Directory("storage/emulated/0");
+    } else if (Platform.isLinux) {
+      appDocDir = Directory('${Platform.environment['HOME']}/');
+    } else {
+      appDocDir = await getApplicationDocumentsDirectory();
+    }
     if ((Platform.isAndroid || Platform.isIOS)) {
+      await Permission.manageExternalStorage.request();
       if (!(await Permission.storage.request().isGranted)) {
         return "Permission Request Failed";
       }
     }
-  
+
+    final localContext = context;
+    if (!context.mounted) return "Failed to load model";
+
     try {
-      final result = await FilePicker.platform.pickFiles(
-        dialogTitle: "Select Model File",
-        type: FileType.any,
-        allowMultiple: false,
-        onFileLoading: (FilePickerStatus status) => busy = status == FilePickerStatus.picking
-      );
-      final filePath = result?.files.single.path;
-  
-      if (filePath == null) {
+      var result = await FilesystemPicker.open(
+          allowedExtensions: [".gguf"],
+          context: localContext,
+          rootDirectory: appDocDir,
+          fileTileSelectMode: FileTileSelectMode.wholeTile,
+          fsType: FilesystemType.file);
+
+      if (result == null) {
+        busy = false;
         return "Failed to load model";
       }
-      
-      Logger.log("Loading model from $filePath");
-      parameters["model_path"] = filePath;
-      parameters["model_name"] = path.basename(filePath);
+
+      File file = File(result);
+      Logger.log("Loading model from $file");
+
+      parameters["model_path"] = file.path;
+      parameters["model_name"] = path.basename(file.path);
     } catch (e) {
       return "Error: $e";
     }
-  
+
     return "Model Successfully Loaded";
   }
 }
