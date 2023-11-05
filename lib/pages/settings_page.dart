@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/theme.dart';
+import 'package:maid/widgets/chat_widgets/code_box.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -52,6 +54,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 "Clear Cache",
                 style: Theme.of(context).textTheme.labelLarge
               ),
+            ),
+            Divider(
+              height: 20,
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: CodeBox(code: Logger.getLog)
             ),
           ],
         ),
