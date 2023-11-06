@@ -112,64 +112,47 @@ class Character {
   }
 
   Future<String> saveCharacterToJson(BuildContext context) async {
-    Map<String, dynamic> jsonCharacter = {};
-
-    jsonCharacter["name"] = name;
-    
-    jsonCharacter["pre_prompt"] = prePromptController.text;
-    jsonCharacter["user_alias"] = userAliasController.text;
-    jsonCharacter["response_alias"] = responseAliasController.text;
-
-    // Initialize the "example" key to an empty list
-    jsonCharacter["example"] = [];
-
-    for (var i = 0; i < examplePromptControllers.length; i++) {
-      // Create a map for each example and add it to the "example" list
-      Map<String, String> example = {
-        "prompt": examplePromptControllers[i].text,
-        "response": exampleResponseControllers[i].text,
-      };
-
-      jsonCharacter["example"].add(example);
-    }
-
-    // Convert the map to a JSON string
-    String jsonString = json.encode(jsonCharacter);
-    String? filePath;
-
     try {
-      if (Platform.isAndroid || Platform.isIOS) {
-        Directory? directory;
-        if (Platform.isAndroid && (await Permission.manageExternalStorage.request().isGranted)) {
-          directory = await Directory('/storage/emulated/0/Download/Maid').create();
-        } 
-        else if (Platform.isIOS && (await Permission.storage.request().isGranted)) {
-          directory = await getDownloadsDirectory();
-        } else {
-          return "Permission Request Failed";
-        }
+      Map<String, dynamic> jsonCharacter = {};
 
-        filePath = '${directory!.path}/maid_character.json';
-      }
-      else {
-        filePath = await FilePicker.platform.saveFile(type: FileType.any);
+      jsonCharacter["name"] = name;
+
+      jsonCharacter["pre_prompt"] = prePromptController.text;
+      jsonCharacter["user_alias"] = userAliasController.text;
+      jsonCharacter["response_alias"] = responseAliasController.text;
+
+      // Initialize the "example" key to an empty list
+      jsonCharacter["example"] = [];
+
+      for (var i = 0; i < examplePromptControllers.length; i++) {
+        // Create a map for each example and add it to the "example" list
+        Map<String, String> example = {
+          "prompt": examplePromptControllers[i].text,
+          "response": exampleResponseControllers[i].text,
+        };
+
+        jsonCharacter["example"].add(example);
       }
 
-      if (filePath != null) {
-        File file = File(filePath);
-        await file.writeAsString(jsonString);
-      } else {
-        return "No File Selected";
-      }
+      // Convert the map to a JSON string
+      String jsonString = json.encode(jsonCharacter);
+
+    
+      File? file = await FileManager.save(context, name);
+
+      if (file == null) return "Error saving file";
+
+      await file.writeAsString(jsonString);
+
+      return "Character Successfully Saved to ${file.path}";
     } catch (e) {
       return "Error: $e";
     }
-    return "Character Successfully Saved to $filePath";
   }
 
   Future<String> loadCharacterFromJson(BuildContext context) async {
     try{
-      File? file = await FileManager.load(context, ['.json']);
+      File? file = await FileManager.load(context, [".json"]);
 
       if (file == null) return "Error loading file";
 
