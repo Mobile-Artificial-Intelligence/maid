@@ -4,13 +4,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/utilities/file_manager.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:maid/utilities/memory_manager.dart';
-import 'package:filesystem_picker/filesystem_picker.dart';
 
 Model model = Model();
 
@@ -55,73 +55,29 @@ class Model {
   }
 
   Future<String> saveParametersToJson(BuildContext context) async {
-    parameters["name"] = name;
-
-    // Convert the map to a JSON string
-    String jsonString = json.encode(parameters);
-    String? filePath;
-
     try {
-      if (Platform.isAndroid || Platform.isIOS) {
-        Directory? directory;
+      parameters["name"] = name;
 
-        if (Platform.isAndroid &&
-            (await Permission.manageExternalStorage.request().isGranted)) {
-          directory =
-              await Directory('/storage/emulated/0/Download/Maid').create();
-        } else if (Platform.isIOS &&
-            (await Permission.storage.request().isGranted)) {
-          directory = await getDownloadsDirectory();
-        } else {
-          return "Permission Request Failed";
-        }
+      String jsonString = json.encode(parameters);
+      
+      File? file = await FileManager.save(context, name);
 
-        filePath = '${directory!.path}/maid_model.json';
-      } else {
-        filePath = await FilePicker.platform.saveFile(type: FileType.any);
-      }
+      if (file == null) return "Error saving file";
 
-      if (filePath != null) {
-        File file = File(filePath);
-        await file.writeAsString(jsonString);
-      } else {
-        return "No File Selected";
-      }
+      await file.writeAsString(jsonString);
+
+      return "Model Successfully Saved to ${file.path}";
     } catch (e) {
       return "Error: $e";
     }
-    return "Model Successfully Saved to $filePath";
   }
 
   Future<String> loadParametersFromJson(BuildContext context) async {
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (!(await Permission.storage.request().isGranted) || 
-          !(await Permission.manageExternalStorage.request().isGranted)
-      ) {
-        return "Permission Request Failed";
-      }
-    }
-    
-    Directory initialDirectory = await MemoryManager.getInitialDirectory();
-
-    final localContext = context;
-    if (!context.mounted) return "Failed to load parameters";
-
     try {
-      var result = await FilesystemPicker.open(
-        allowedExtensions: [".json"],
-        context: localContext,
-        rootDirectory: initialDirectory,
-        fileTileSelectMode: FileTileSelectMode.wholeTile,
-        fsType: FilesystemType.file
-      );
+      File? file = await FileManager.load(context, [".json"]);
 
-      if (result == null) {
-        busy = false;
-        return "Failed to load parameters";
-      }
+      if (file == null) return "Error loading file";
 
-      File file = File(result);
       Logger.log("Loading parameters from $file");
 
       String jsonString = await file.readAsString();
@@ -143,34 +99,11 @@ class Model {
   }
 
   Future<String> loadModelFile(BuildContext context) async {
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (!(await Permission.storage.request().isGranted) || 
-          !(await Permission.manageExternalStorage.request().isGranted)
-      ) {
-        return "Permission Request Failed";
-      }
-    }
-    
-    Directory initialDirectory = await MemoryManager.getInitialDirectory();
-
-    final localContext = context;
-    if (!context.mounted) return "Failed to load model";
-
     try {
-      var result = await FilesystemPicker.open(
-        allowedExtensions: [".gguf"],
-        context: localContext,
-        rootDirectory: initialDirectory,
-        fileTileSelectMode: FileTileSelectMode.wholeTile,
-        fsType: FilesystemType.file
-      );
+      File? file = await FileManager.load(context, [".gguf"]);
 
-      if (result == null) {
-        busy = false;
-        return "Failed to load model";
-      }
-
-      File file = File(result);
+      if (file == null) return "Error loading file";
+      
       Logger.log("Loading model from $file");
 
       parameters["model_path"] = file.path;
