@@ -11,7 +11,7 @@ import 'package:maid/utilities/character.dart';
 
 MemoryManager memoryManager = MemoryManager();
 
-class MemoryManager { 
+class MemoryManager {
   Map<String, dynamic> _models = {};
   Map<String, dynamic> _characters = {};
 
@@ -21,27 +21,29 @@ class MemoryManager {
 
   void init() async {
     var prefs = await SharedPreferences.getInstance();
-    
+
     _models = json.decode(prefs.getString("models") ?? "{}");
     _characters = json.decode(prefs.getString("characters") ?? "{}");
 
     if (_models.isEmpty) {
       model = Model();
     } else {
-      model = Model.fromMap(_models[prefs.getString("current_model") ?? "Default"] ?? {});
+      model = Model.fromMap(
+          _models[prefs.getString("current_model") ?? "Default"] ?? {});
     }
 
     if (_characters.isEmpty) {
       character = Character();
     } else {
-      character = Character.fromMap(_characters[prefs.getString("current_character") ?? "Default"] ?? {});
+      character = Character.fromMap(
+          _characters[prefs.getString("current_character") ?? "Default"] ?? {});
     }
   }
 
   Future<void> save() async {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
-    
+
     _models[model.name] = model.toMap();
     Logger.log("Model Saved: ${model.name}");
     _characters[character.name] = character.toMap();
@@ -77,7 +79,8 @@ class MemoryManager {
 
   Future<void> removeCharacter() async {
     _characters.remove(character.name);
-    character = Character.fromMap(_characters[_characters.keys.lastOrNull ?? "Default"] ?? {});
+    character = Character.fromMap(
+        _characters[_characters.keys.lastOrNull ?? "Default"] ?? {});
     await save();
   }
 
@@ -96,6 +99,13 @@ class MemoryManager {
 
   Future<void> setCharacter(String? characterName) async {
     await save();
-    character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
+    character =
+        Character.fromMap(_characters[characterName ?? "Default"] ?? {});
   }
+
+  Future<bool> checkFileExists(String filePath) async {
+    File file = File(filePath);
+    return await file.exists();
+  }
+
 }
