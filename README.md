@@ -21,7 +21,8 @@ To use this app, follow these steps:
 
 ## Help Wanted
 - Add ability to import sillytavern character cards
-- Fix issue with models being cached
+- Themeing issues
+- Integrate Ollama API
 - Seperate Desktop UI from Mobile UI
 - Testing and Building on MacOS and IOS
 
