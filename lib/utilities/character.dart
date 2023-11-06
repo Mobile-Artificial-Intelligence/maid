@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/utilities/message_manager.dart';
@@ -109,7 +110,7 @@ class Character {
     memoryManager.save();
   }
 
-  Future<String> saveCharacterToJson() async {
+  Future<String> saveCharacterToJson(BuildContext context) async {
     Map<String, dynamic> jsonCharacter = {};
 
     jsonCharacter["name"] = name;
@@ -165,17 +166,35 @@ class Character {
     return "Character Successfully Saved to $filePath";
   }
 
-  Future<String> loadCharacterFromJson() async {
-    if ((Platform.isAndroid || Platform.isIOS) && 
-        !(await Permission.storage.request().isGranted)) {
-      return "Permission Request Failed";
+  Future<String> loadCharacterFromJson(BuildContext context) async {
+    if ((Platform.isAndroid || Platform.isIOS)) {
+      if (!(await Permission.storage.request().isGranted) || 
+          !(await Permission.manageExternalStorage.request().isGranted)
+      ) {
+        return "Permission Request Failed";
+      }
     }
     
-    try{
-      final result = await FilePicker.platform.pickFiles(type: FileType.any);
-      if (result == null) return "No File Selected";
+    Directory initialDirectory = await MemoryManager.getInitialDirectory();
 
-      File file = File(result.files.single.path!);
+    final localContext = context;
+    if (!context.mounted) return "Failed to load character";
+    
+    try{
+      var result = await FilesystemPicker.open(
+        allowedExtensions: [".json"],
+        context: localContext,
+        rootDirectory: initialDirectory,
+        fileTileSelectMode: FileTileSelectMode.wholeTile,
+        fsType: FilesystemType.file
+      );
+
+      if (result == null) {
+        busy = false;
+        return "Failed to load character";
+      }
+
+      File file = File(result);
       String jsonString = await file.readAsString();
       if (jsonString.isEmpty) return "Failed to load character";
       

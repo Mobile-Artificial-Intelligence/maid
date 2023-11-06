@@ -113,8 +113,7 @@ class _ModelPageState extends State<ModelPage> {
                     context,
                     "Load Model",
                     () async {
-                      await storageOperationDialog(
-                          context, () => model.loadModelFile(context));
+                      await storageOperationDialog(context, model.loadModelFile);
                       setState(() {});
                     },
                     "Reset All",
@@ -139,8 +138,7 @@ class _ModelPageState extends State<ModelPage> {
                     },
                     "Save Parameters",
                     () async {
-                      await storageOperationDialog(
-                          context, model.saveParametersToJson);
+                      await storageOperationDialog(context, model.saveParametersToJson);
                       setState(() {});
                     },
                   ),

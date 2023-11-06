@@ -54,7 +54,7 @@ class Model {
     memoryManager.save();
   }
 
-  Future<String> saveParametersToJson() async {
+  Future<String> saveParametersToJson(BuildContext context) async {
     parameters["name"] = name;
 
     // Convert the map to a JSON string
@@ -93,24 +93,44 @@ class Model {
     return "Model Successfully Saved to $filePath";
   }
 
-  Future<String> loadParametersFromJson() async {
-    if ((Platform.isAndroid || Platform.isIOS) &&
-        !(await Permission.storage.request().isGranted)) {
-      return "Permission Request Failed";
+  Future<String> loadParametersFromJson(BuildContext context) async {
+    if ((Platform.isAndroid || Platform.isIOS)) {
+      if (!(await Permission.storage.request().isGranted) || 
+          !(await Permission.manageExternalStorage.request().isGranted)
+      ) {
+        return "Permission Request Failed";
+      }
     }
+    
+    Directory initialDirectory = await MemoryManager.getInitialDirectory();
+
+    final localContext = context;
+    if (!context.mounted) return "Failed to load parameters";
 
     try {
-      final result = await FilePicker.platform.pickFiles(type: FileType.any);
-      if (result == null) return "No File Selected";
+      var result = await FilesystemPicker.open(
+        allowedExtensions: [".json"],
+        context: localContext,
+        rootDirectory: initialDirectory,
+        fileTileSelectMode: FileTileSelectMode.wholeTile,
+        fsType: FilesystemType.file
+      );
 
-      File file = File(result.files.single.path!);
+      if (result == null) {
+        busy = false;
+        return "Failed to load parameters";
+      }
+
+      File file = File(result);
+      Logger.log("Loading parameters from $file");
+
       String jsonString = await file.readAsString();
-      if (jsonString.isEmpty) return "Failed to load model";
+      if (jsonString.isEmpty) return "Failed to load parameters";
 
       parameters = json.decode(jsonString);
       if (parameters.isEmpty) {
         resetAll();
-        return "Failed to decode model";
+        return "Failed to decode parameters";
       } else {
         name = parameters["name"] ?? "Default";
       }
@@ -119,35 +139,31 @@ class Model {
       return "Error: $e";
     }
 
-    return "Model Successfully Loaded";
+    return "Parameters Successfully Loaded";
   }
 
   Future<String> loadModelFile(BuildContext context) async {
-    Directory appDocDir;
-    if (Platform.isAndroid) {
-      appDocDir = Directory("storage/emulated/0");
-    } else if (Platform.isLinux) {
-      appDocDir = Directory('${Platform.environment['HOME']}/');
-    } else {
-      appDocDir = await getApplicationDocumentsDirectory();
-    }
     if ((Platform.isAndroid || Platform.isIOS)) {
-      await Permission.manageExternalStorage.request();
-      if (!(await Permission.storage.request().isGranted)) {
+      if (!(await Permission.storage.request().isGranted) || 
+          !(await Permission.manageExternalStorage.request().isGranted)
+      ) {
         return "Permission Request Failed";
       }
     }
+    
+    Directory initialDirectory = await MemoryManager.getInitialDirectory();
 
     final localContext = context;
     if (!context.mounted) return "Failed to load model";
 
     try {
       var result = await FilesystemPicker.open(
-          allowedExtensions: [".gguf"],
-          context: localContext,
-          rootDirectory: appDocDir,
-          fileTileSelectMode: FileTileSelectMode.wholeTile,
-          fsType: FilesystemType.file);
+        allowedExtensions: [".gguf"],
+        context: localContext,
+        rootDirectory: initialDirectory,
+        fileTileSelectMode: FileTileSelectMode.wholeTile,
+        fsType: FilesystemType.file
+      );
 
       if (result == null) {
         busy = false;

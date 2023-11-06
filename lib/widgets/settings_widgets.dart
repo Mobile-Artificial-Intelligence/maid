@@ -88,8 +88,8 @@ Widget doubleButtonRow(BuildContext context, String leftText, Function() leftOnP
   );
 }
 
-Future<void> storageOperationDialog(BuildContext context, Future<String> Function() storageFunction) async {
-  String ret = await storageFunction();
+Future<void> storageOperationDialog(BuildContext context, Future<String> Function(BuildContext context) storageFunction) async {
+  String ret = await storageFunction(context);
   // Ensure that the context is still valid before attempting to show the dialog.
   if (context.mounted) {
     showDialog(
