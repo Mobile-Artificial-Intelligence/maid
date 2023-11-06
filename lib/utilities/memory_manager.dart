@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:maid/utilities/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:maid/core/core.dart';
@@ -95,5 +97,17 @@ class MemoryManager {
   Future<void> setCharacter(String? characterName) async {
     await save();
     character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
+  }
+
+  static Future<Directory> getInitialDirectory() async {
+    Directory initialDirectory;
+    if (Platform.isAndroid) {
+      initialDirectory = Directory("storage/emulated/0");
+    } else if (Platform.isLinux) {
+      initialDirectory = Directory('${Platform.environment['HOME']}/');
+    } else {
+      initialDirectory = await getApplicationDocumentsDirectory();
+    }
+    return initialDirectory;
   }
 }
