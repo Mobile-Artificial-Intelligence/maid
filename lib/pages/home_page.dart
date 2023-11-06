@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/message_manager.dart';
 
 import 'package:system_info2/system_info2.dart';
@@ -53,21 +54,20 @@ class MaidHomePageState extends State<MaidHomePage> {
               FilledButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ModelPage()));
                 },
-                child: Text(
-                  "Open Model Settings",
-                  style: Theme.of(context).textTheme.labelLarge
-                ),
+                child: Text("Open Model Settings",
+                    style: Theme.of(context).textTheme.labelLarge),
               ),
               FilledButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(
-                  "Close",
-                  style: Theme.of(context).textTheme.labelLarge
-                ),
+                child: Text("Close",
+                    style: Theme.of(context).textTheme.labelLarge),
               ),
             ],
           );
@@ -82,20 +82,31 @@ class MaidHomePageState extends State<MaidHomePage> {
       FocusScope.of(context).unfocus();
     }
 
-    MessageManager.add(UniqueKey(), message: promptController.text.trim(), userGenerated: true);
+    MessageManager.add(UniqueKey(),
+        message: promptController.text.trim(), userGenerated: true);
     MessageManager.add(UniqueKey());
 
-    Core.instance.prompt(promptController.text.trim());
-
-    setState(() {
-      model.busy = true;
-      promptController.clear();
+    // example
+    memoryManager.checkFileExists(model.parameters["model_path"]).then((exist) {
+      if (exist) {
+        Core.instance.prompt(promptController.text.trim());
+        setState(() {
+          model.busy = true;
+          promptController.clear();
+        });
+      } else {
+        _missingModelDialog();
+        setState(() {
+          model.busy = false;
+          promptController.clear();
+        });
+      }
     });
   }
 
   void updateCallback() {
     chatWidgets.clear();
-    Map<Key, bool> history =  MessageManager.history();
+    Map<Key, bool> history = MessageManager.history();
     for (var key in history.keys) {
       chatWidgets.add(ChatMessage(
         key: key,
@@ -140,7 +151,9 @@ class MaidHomePageState extends State<MaidHomePage> {
               ram == -1 ? 'RAM: Unknown' : 'RAM: $ram GB',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Color.lerp(Colors.red, Colors.green, ram.clamp(0, 8) / 8) ?? Colors.red,
+                color:
+                    Color.lerp(Colors.red, Colors.green, ram.clamp(0, 8) / 8) ??
+                        Colors.red,
                 fontSize: 15,
               ),
             ),
@@ -151,46 +164,46 @@ class MaidHomePageState extends State<MaidHomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.person),
-              title: Text(
-                'Character',
-                style: Theme.of(context).textTheme.labelLarge
-              ),
+              title: Text('Character',
+                  style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const CharacterPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CharacterPage()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.account_tree_rounded),
-              title: Text(
-                'Model',
-                style: Theme.of(context).textTheme.labelLarge
-              ),
+              title:
+                  Text('Model', style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ModelPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ModelPage()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: Text(
-                'Settings',
-                style: Theme.of(context).textTheme.labelLarge
-              ),
+              title: Text('Settings',
+                  style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsPage()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.info),
-              title: Text(
-                'About',
-                style: Theme.of(context).textTheme.labelLarge
-              ),
+              title:
+                  Text('About', style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const AboutPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AboutPage()));
               },
             )
           ],
@@ -229,55 +242,57 @@ class MaidHomePageState extends State<MaidHomePage> {
                       children: [
                         if (model.busy)
                           IconButton(
-                            onPressed: Core.instance.stop,
-                            iconSize: 50,
-                            icon: const Icon(
-                              Icons.stop_circle_sharp,
-                              color: Colors.red,
-                            )
-                          ),
+                              onPressed: Core.instance.stop,
+                              iconSize: 50,
+                              icon: const Icon(
+                                Icons.stop_circle_sharp,
+                                color: Colors.red,
+                              )),
                         Expanded(
                           child: TextField(
                             keyboardType: TextInputType.multiline,
                             minLines: 1,
                             maxLines: 9,
                             enableInteractiveSelection: true,
-                            onSubmitted:  (value) {
+                            onSubmitted: (value) {
                               if (!model.busy) {
-                                if (model.parameters["model_path"].toString().isEmpty) {
+                                if (model.parameters["model_path"]
+                                    .toString()
+                                    .isEmpty) {
                                   _missingModelDialog();
                                 } else {
                                   send();
-                                }                             
-                              }                          
+                                }
+                              }
                             },
                             controller: promptController,
                             cursorColor:
                                 Theme.of(context).colorScheme.secondary,
                             decoration: InputDecoration(
-                              labelText: 'Prompt',
-                              hintStyle: Theme.of(context).textTheme.labelSmall
-                            ),
+                                labelText: 'Prompt',
+                                hintStyle:
+                                    Theme.of(context).textTheme.labelSmall),
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
-                            if (!model.busy) {
-                              if (model.parameters["model_path"].toString().isEmpty) {
-                                _missingModelDialog();
-                              } else {
-                                send();
-                              }                             
-                            }                          
-                          },
-                          iconSize: 50,
-                          icon: Icon(
-                            Icons.arrow_circle_right,
-                            color: model.busy
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.secondary,
-                          )
-                        ),
+                            onPressed: () {
+                              if (!model.busy) {
+                                if (model.parameters["model_path"]
+                                    .toString()
+                                    .isEmpty) {
+                                  _missingModelDialog();
+                                } else {
+                                  send();
+                                }
+                              }
+                            },
+                            iconSize: 50,
+                            icon: Icon(
+                              Icons.arrow_circle_right,
+                              color: model.busy
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.secondary,
+                            )),
                       ],
                     ),
                   ),
