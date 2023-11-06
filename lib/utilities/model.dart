@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/utilities/file_manager.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -94,34 +95,11 @@ class Model {
   }
 
   Future<String> loadParametersFromJson(BuildContext context) async {
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (!(await Permission.storage.request().isGranted) || 
-          !(await Permission.manageExternalStorage.request().isGranted)
-      ) {
-        return "Permission Request Failed";
-      }
-    }
-    
-    Directory initialDirectory = await MemoryManager.getInitialDirectory();
-
-    final localContext = context;
-    if (!context.mounted) return "Failed to load parameters";
-
     try {
-      var result = await FilesystemPicker.open(
-        allowedExtensions: [".json"],
-        context: localContext,
-        rootDirectory: initialDirectory,
-        fileTileSelectMode: FileTileSelectMode.wholeTile,
-        fsType: FilesystemType.file
-      );
+      File? file = await FileManager.load(context, ['.json']);
 
-      if (result == null) {
-        busy = false;
-        return "Failed to load parameters";
-      }
-
-      File file = File(result);
+      if (file == null) return "Error loading file";
+      
       Logger.log("Loading parameters from $file");
 
       String jsonString = await file.readAsString();
@@ -143,34 +121,11 @@ class Model {
   }
 
   Future<String> loadModelFile(BuildContext context) async {
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (!(await Permission.storage.request().isGranted) || 
-          !(await Permission.manageExternalStorage.request().isGranted)
-      ) {
-        return "Permission Request Failed";
-      }
-    }
-    
-    Directory initialDirectory = await MemoryManager.getInitialDirectory();
-
-    final localContext = context;
-    if (!context.mounted) return "Failed to load model";
-
     try {
-      var result = await FilesystemPicker.open(
-        allowedExtensions: [".gguf"],
-        context: localContext,
-        rootDirectory: initialDirectory,
-        fileTileSelectMode: FileTileSelectMode.wholeTile,
-        fsType: FilesystemType.file
-      );
+      File? file = await FileManager.load(context, ['.gguf']);
 
-      if (result == null) {
-        busy = false;
-        return "Failed to load model";
-      }
-
-      File file = File(result);
+      if (file == null) return "Error loading file";
+      
       Logger.log("Loading model from $file");
 
       parameters["model_path"] = file.path;

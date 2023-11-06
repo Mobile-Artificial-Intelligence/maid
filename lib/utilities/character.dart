@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/file_manager.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
@@ -167,34 +168,11 @@ class Character {
   }
 
   Future<String> loadCharacterFromJson(BuildContext context) async {
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (!(await Permission.storage.request().isGranted) || 
-          !(await Permission.manageExternalStorage.request().isGranted)
-      ) {
-        return "Permission Request Failed";
-      }
-    }
-    
-    Directory initialDirectory = await MemoryManager.getInitialDirectory();
-
-    final localContext = context;
-    if (!context.mounted) return "Failed to load character";
-    
     try{
-      var result = await FilesystemPicker.open(
-        allowedExtensions: [".json"],
-        context: localContext,
-        rootDirectory: initialDirectory,
-        fileTileSelectMode: FileTileSelectMode.wholeTile,
-        fsType: FilesystemType.file
-      );
+      File? file = await FileManager.load(context, ['.json']);
 
-      if (result == null) {
-        busy = false;
-        return "Failed to load character";
-      }
+      if (file == null) return "Error loading file";
 
-      File file = File(result);
       String jsonString = await file.readAsString();
       if (jsonString.isEmpty) return "Failed to load character";
       
