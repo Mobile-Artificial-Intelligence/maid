@@ -163,7 +163,8 @@ class MaidHomePageState extends State<MaidHomePage> {
               color: Theme.of(context).colorScheme.primary,
             ),
             ListTile(
-              leading: const Icon(Icons.person),
+              leading: Icon(Icons.person,
+                  color: Theme.of(context).colorScheme.onPrimary),
               title: Text('Character',
                   style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
@@ -175,9 +176,12 @@ class MaidHomePageState extends State<MaidHomePage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.account_tree_rounded),
-              title:
-                  Text('Model', style: Theme.of(context).textTheme.labelLarge),
+              leading: Icon(Icons.account_tree_rounded,
+                  color: Theme.of(context).colorScheme.onPrimary),
+              title: Text(
+                'Model',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(context,
@@ -185,7 +189,8 @@ class MaidHomePageState extends State<MaidHomePage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.settings),
+              leading: Icon(Icons.settings,
+                  color: Theme.of(context).colorScheme.onPrimary),
               title: Text('Settings',
                   style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
@@ -197,7 +202,8 @@ class MaidHomePageState extends State<MaidHomePage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.info),
+              leading: Icon(Icons.info,
+                  color: Theme.of(context).colorScheme.onPrimary),
               title:
                   Text('About', style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
@@ -266,11 +272,12 @@ class MaidHomePageState extends State<MaidHomePage> {
                               }
                             },
                             controller: promptController,
-                            cursorColor: Theme.of(context).colorScheme.secondary,
+                            cursorColor:
+                                Theme.of(context).colorScheme.secondary,
                             decoration: InputDecoration(
-                              labelText: 'Prompt',
-                              hintStyle: Theme.of(context).textTheme.labelSmall
-                            ),
+                                labelText: 'Prompt',
+                                hintStyle:
+                                    Theme.of(context).textTheme.labelSmall),
                           ),
                         ),
                         IconButton(
