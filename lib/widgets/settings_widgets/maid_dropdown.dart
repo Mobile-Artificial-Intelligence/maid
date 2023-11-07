@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 class MaidDropDown extends StatefulWidget {
