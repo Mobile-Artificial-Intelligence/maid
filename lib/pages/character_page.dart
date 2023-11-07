@@ -129,25 +129,10 @@ class _CharacterPageState extends State<CharacterPage> {
                   labelText: 'Response alias', 
                   controller: character.responseAliasController
                 ),
-                ListTile(
-                  title: Row(
-                    children: [
-                      const Expanded(
-                        child: Text('PrePrompt'),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: TextField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: character.prePromptController,
-                          decoration: const InputDecoration(
-                            labelText: 'PrePrompt',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                MaidTextField(
+                  labelText: 'PrePrompt',
+                  controller: character.prePromptController,
+                  multiline: true,
                 ),
                 Divider(
                   indent: 10,
