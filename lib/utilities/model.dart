@@ -7,9 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:maid/utilities/file_manager.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:maid/utilities/memory_manager.dart';
 
 Model model = Model();
