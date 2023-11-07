@@ -51,16 +51,7 @@ class _ModelPageState extends State<ModelPage> {
                   const SizedBox(height: 10.0),
                   MaidDropDown(
                     initialSelection: model.name, 
-                    dropdownMenuEntries: memoryManager
-                        .getModels()
-                        .map<DropdownMenuEntry<String>>(
-                      (String value) {
-                        return DropdownMenuEntry<String>(
-                          value: value,
-                          label: value,
-                        );
-                      },
-                    ).toList(),
+                    getMenuStrings: memoryManager.getModels,
                     update: memoryManager.updateModel,
                     set: memoryManager.setModel,
                   ),

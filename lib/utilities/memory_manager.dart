@@ -58,6 +58,7 @@ class MemoryManager {
 
   Future<void> updateModel(String newName) async {
     String oldName = model.name;
+    Logger.log("Updating model $oldName ====> $newName");
     model.name = newName;
     _models.remove(oldName);
     await save();
@@ -65,6 +66,7 @@ class MemoryManager {
 
   Future<void> updateCharacter(String newName) async {
     String oldName = character.name;
+    Logger.log("Updating character $oldName ====> $newName");
     character.name = newName;
     _characters.remove(oldName);
     await save();

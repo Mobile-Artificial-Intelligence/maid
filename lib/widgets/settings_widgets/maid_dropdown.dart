@@ -5,14 +5,14 @@ import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 class MaidDropDown extends StatefulWidget {
   final TextEditingController presetController = TextEditingController();
   final String initialSelection;
-  final List<DropdownMenuEntry<String>> dropdownMenuEntries;
+  final List<String> Function() getMenuStrings;
   final Future<void> Function(String) update;
   final Future<void> Function(String) set;
 
 
   MaidDropDown({super.key, 
     required this.initialSelection, 
-    required this.dropdownMenuEntries, 
+    required this.getMenuStrings, 
     required this.update,
     required this.set,
   });
@@ -51,7 +51,7 @@ class _MaidDropDownState extends State<MaidDropDown> {
             ),
             FilledButton(
               onPressed: () {
-                memoryManager.save();
+                widget.update(widget.presetController.text);
                 Navigator.of(context).pop();
               },
               child: Text(
@@ -81,7 +81,16 @@ class _MaidDropDownState extends State<MaidDropDown> {
         width: 250.0,
         initialSelection: widget.initialSelection,
         controller: widget.presetController,
-        dropdownMenuEntries: widget.dropdownMenuEntries,
+        dropdownMenuEntries: widget
+          .getMenuStrings()
+          .map<DropdownMenuEntry<String>>(
+          (String value) {
+            return DropdownMenuEntry<String>(
+              value: value,
+              label: value,
+            );
+          },
+        ).toList(),
         onSelected: (value) => setState(() async {
           if (value == null) {
             await widget.update(widget.presetController.text);

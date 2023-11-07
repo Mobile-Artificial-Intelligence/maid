@@ -51,20 +51,12 @@ class _CharacterPageState extends State<CharacterPage> {
                 const SizedBox(height: 10.0),
                 MaidDropDown(
                   initialSelection: character.name, 
-                  dropdownMenuEntries: memoryManager.getCharacters().map<DropdownMenuEntry<String>>(
-                    (String value) {
-                      return DropdownMenuEntry<String>(
-                        value: value,
-                        label: value,
-                      );
-                    },
-                  ).toList(),
+                  getMenuStrings: memoryManager.getCharacters,
                   update: memoryManager.updateCharacter,
                   set: memoryManager.setCharacter,
                 ),
                 const SizedBox(height: 15.0),
                 DoubleButtonRow(
-                  
                   leftText: "New Preset",
                   leftOnPressed: () async {
                     await memoryManager.save();
@@ -85,7 +77,6 @@ class _CharacterPageState extends State<CharacterPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 DoubleButtonRow(
-                  
                   leftText: "Load Character",
                   leftOnPressed: () async {
                     await storageOperationDialog(context, character.loadCharacterFromJson);
@@ -132,7 +123,6 @@ class _CharacterPageState extends State<CharacterPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 DoubleButtonRow(
-                  
                   leftText: "Add Example",
                   leftOnPressed: () {
                     setState(() {
