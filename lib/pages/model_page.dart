@@ -3,6 +3,7 @@ import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
+import 'package:maid/widgets/settings_widgets/maid_dropdown.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
 
 class ModelPage extends StatefulWidget {
@@ -13,8 +14,6 @@ class ModelPage extends StatefulWidget {
 }
 
 class _ModelPageState extends State<ModelPage> {
-  TextEditingController presetController = TextEditingController();
-
   @override
   initState() {
     super.initState();
@@ -23,7 +22,6 @@ class _ModelPageState extends State<ModelPage> {
   @override
   void dispose() {
     memoryManager.save();
-    presetController.dispose();
     super.dispose();
   }
 
@@ -51,10 +49,8 @@ class _ModelPageState extends State<ModelPage> {
               child: Column(
                 children: [
                   const SizedBox(height: 10.0),
-                  DropdownMenu<String>(
-                    width: 200.0,
-                    initialSelection: model.name,
-                    controller: presetController,
+                  MaidDropDown(
+                    initialSelection: model.name, 
                     dropdownMenuEntries: memoryManager
                         .getModels()
                         .map<DropdownMenuEntry<String>>(
@@ -65,14 +61,8 @@ class _ModelPageState extends State<ModelPage> {
                         );
                       },
                     ).toList(),
-                    onSelected: (value) => setState(() async {
-                      if (value == null) {
-                        await memoryManager.updateModel(presetController.text);
-                      } else {
-                        await memoryManager.setModel(value);
-                      }
-                      setState(() {});
-                    }),
+                    update: memoryManager.updateModel,
+                    set: memoryManager.setModel,
                   ),
                   const SizedBox(height: 15.0),
                   DoubleButtonRow(

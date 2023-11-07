@@ -3,6 +3,7 @@ import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
+import 'package:maid/widgets/settings_widgets/maid_dropdown.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -12,9 +13,7 @@ class CharacterPage extends StatefulWidget {
   State<CharacterPage> createState() => _CharacterPageState();
 }
 
-class _CharacterPageState extends State<CharacterPage> {
-  TextEditingController presetController = TextEditingController();
-  
+class _CharacterPageState extends State<CharacterPage> { 
   @override
   initState() {
     super.initState();
@@ -23,7 +22,6 @@ class _CharacterPageState extends State<CharacterPage> {
   @override
   void dispose() {
     memoryManager.save();
-    presetController.dispose();
     super.dispose();
   }
 
@@ -51,10 +49,8 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                DropdownMenu<String>(
-                  width: 250.0,
-                  initialSelection: character.name,
-                  controller: presetController,
+                MaidDropDown(
+                  initialSelection: character.name, 
                   dropdownMenuEntries: memoryManager.getCharacters().map<DropdownMenuEntry<String>>(
                     (String value) {
                       return DropdownMenuEntry<String>(
@@ -63,14 +59,8 @@ class _CharacterPageState extends State<CharacterPage> {
                       );
                     },
                   ).toList(),
-                  onSelected: (value) => setState(() async {
-                    if (value == null) {
-                      await memoryManager.updateCharacter(presetController.text);
-                    } else {
-                      await memoryManager.setCharacter(value);
-                    }
-                    setState(() {});
-                  }),
+                  update: memoryManager.updateCharacter,
+                  set: memoryManager.setCharacter,
                 ),
                 const SizedBox(height: 15.0),
                 DoubleButtonRow(
