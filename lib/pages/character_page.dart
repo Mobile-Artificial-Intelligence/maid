@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:maid/widgets/settings_widgets.dart';
+import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
+import 'package:maid/widgets/settings_widgets/double_button_row.dart';
+import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 class CharacterPage extends StatefulWidget {
   const CharacterPage({super.key});
@@ -71,17 +73,17 @@ class _CharacterPageState extends State<CharacterPage> {
                   }),
                 ),
                 const SizedBox(height: 15.0),
-                doubleButtonRow(
-                  context,
-                  "New Preset",
-                  () async {
+                DoubleButtonRow(
+                  
+                  leftText: "New Preset",
+                  leftOnPressed: () async {
                     await memoryManager.save();
                     character = Character();
                     character.name = "New Preset";
                     setState(() {});
                   },
-                  "Delete Preset",
-                  () async {
+                  rightText: "Delete Preset",
+                  rightOnPressed: () async {
                     await memoryManager.removeCharacter();
                     setState(() {});
                   },
@@ -92,15 +94,15 @@ class _CharacterPageState extends State<CharacterPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                doubleButtonRow(
-                  context,
-                  "Load Character",
-                  () async {
+                DoubleButtonRow(
+                  
+                  leftText: "Load Character",
+                  leftOnPressed: () async {
                     await storageOperationDialog(context, character.loadCharacterFromJson);
                     setState(() {});
                   },
-                  "Save Character",
-                  () async {
+                  rightText: "Save Character",
+                  rightOnPressed: () async {
                     await storageOperationDialog(context, character.saveCharacterToJson);
                     setState(() {});
                   },
@@ -139,17 +141,17 @@ class _CharacterPageState extends State<CharacterPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                doubleButtonRow(
-                  context,
-                  "Add Example",
-                  () {
+                DoubleButtonRow(
+                  
+                  leftText: "Add Example",
+                  leftOnPressed: () {
                     setState(() {
                       character.examplePromptControllers.add(TextEditingController());
                       character.exampleResponseControllers.add(TextEditingController());
                     });
                   },
-                  "Remove Example",
-                  () {
+                  rightText: "Remove Example",
+                  rightOnPressed: () {
                     setState(() {
                       character.examplePromptControllers.removeLast();
                       character.exampleResponseControllers.removeLast();
