@@ -130,6 +130,7 @@ class Core {
   }
 
   void prompt(String input) async {
+    MessageManager.busy = true;
     if (!_hasStarted) {
       await memoryManager.save();
       _init(input);

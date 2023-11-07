@@ -28,6 +28,7 @@ class ChatControlsState extends State<ChatControls> {
           IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
+              if (MessageManager.busy) return;
               MessageManager.branch(widget.key!, widget.userGenerated);
               setState(() {});
             },
@@ -39,6 +40,7 @@ class ChatControlsState extends State<ChatControls> {
           IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
+              if (MessageManager.busy) return;
               MessageManager.regenerate(widget.key!);
               setState(() {});
             },
