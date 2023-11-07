@@ -160,7 +160,7 @@ class MaidHomePageState extends State<MaidHomePage> {
             Divider(
               indent: 10,
               endIndent: 10,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
             ListTile(
               leading: Icon(Icons.person,
@@ -296,7 +296,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                             icon: Icon(
                               Icons.arrow_circle_right,
                               color: model.busy
-                                  ? Theme.of(context).colorScheme.primary
+                                  ? Theme.of(context).colorScheme.onPrimary
                                   : Theme.of(context).colorScheme.secondary,
                             )),
                       ],

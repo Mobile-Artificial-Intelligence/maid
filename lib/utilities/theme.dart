@@ -164,83 +164,90 @@ class MaidTheme {
   );
 
   static final ThemeData _lightTheme = ThemeData(
-    useMaterial3: true,
-    iconTheme: const IconThemeData(color: Colors.black),
-    textTheme: const TextTheme(
-      titleLarge: TextStyle(
-        color: Colors.black,
-        fontSize: 30.0,
-        fontWeight: FontWeight.bold,
-      ),
-      titleMedium: TextStyle(
-        color: Colors.black,
-        fontSize: 15.0,
-      ),
-      titleSmall: TextStyle(
-        color: Colors.black,
-        fontSize: 20.0,
-      ),
-      bodyMedium: TextStyle(
-        color: Colors.black,
-        fontSize: 15.0,
-        fontWeight: FontWeight.bold,
-      ),
-      labelLarge: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.grey.shade300,
-      foregroundColor: Colors.black,
-      titleTextStyle: const TextStyle(
-        color: Colors.black,
-        fontSize: 20.0,
-        fontWeight: FontWeight.bold,
-      ),
+      useMaterial3: true,
       iconTheme: const IconThemeData(color: Colors.black),
-    ),
-    drawerTheme: DrawerThemeData(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+      textTheme: const TextTheme(
+        titleLarge: TextStyle(
+          color: Colors.black,
+          fontSize: 30.0,
+          fontWeight: FontWeight.bold,
         ),
-        backgroundColor: Colors.grey.shade300),
-    dropdownMenuTheme: DropdownMenuThemeData(
-      textStyle: const TextStyle(
-        color: Colors.black,
-        fontSize: 20.0,
+        titleMedium: TextStyle(
+          color: Colors.black,
+          fontSize: 15.0,
+        ),
+        titleSmall: TextStyle(
+          color: Colors.black,
+          fontSize: 20.0,
+        ),
+        bodyMedium: TextStyle(
+          color: Colors.black,
+          fontSize: 15.0,
+          fontWeight: FontWeight.bold,
+        ),
+        labelLarge: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.grey.shade200,
+        foregroundColor: Colors.black,
+        titleTextStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold,
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      drawerTheme: DrawerThemeData(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20)),
+          ),
+          backgroundColor: Colors.grey.shade200),
+      dropdownMenuTheme: DropdownMenuThemeData(
+        textStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 20.0,
+        ),
+        inputDecorationTheme: lightInputDecorationTheme,
+      ),
+      scaffoldBackgroundColor: Colors.grey.shade300,
+      textSelectionTheme: TextSelectionThemeData(
+        selectionHandleColor: Colors.blue,
+        selectionColor: Colors.blue.shade800,
       ),
       inputDecorationTheme: lightInputDecorationTheme,
-    ),
-    scaffoldBackgroundColor: Colors.grey.shade300,
-    textSelectionTheme: TextSelectionThemeData(
-      selectionHandleColor: Colors.blue,
-      selectionColor: Colors.blue.shade800,
-    ),
-    inputDecorationTheme: lightInputDecorationTheme,
-    dialogTheme: DialogTheme(
-      backgroundColor: Colors.grey.shade300,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
-      titleTextStyle: const TextStyle(
-        color: Colors.black,
-        fontSize: 20.0,
+      dialogTheme: DialogTheme(
+        backgroundColor: Colors.grey.shade300,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        titleTextStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 20.0,
+        ),
       ),
-    ),
-    sliderTheme: SliderThemeData(
-      activeTrackColor: Colors.blue.shade800,
-      inactiveTrackColor: Colors.white,
-      thumbColor: Colors.blue,
-      overlayColor: Colors.blue.shade800,
-    ),
-    colorScheme: ColorScheme.dark(
-      background: Colors.grey.shade300,
-      primary: Colors.white,
-      onPrimary: Colors.black,
-      secondary: Colors.blue,
-      tertiary: Colors.blue.shade900,
-      inversePrimary: const Color.fromARGB(255, 100, 20, 20),
-    ),
-  );
+      sliderTheme: SliderThemeData(
+        activeTrackColor: Colors.blue.shade800,
+        inactiveTrackColor: Colors.white,
+        thumbColor: Colors.blue,
+        overlayColor: Colors.blue.shade800,
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: MaterialStateProperty.all(Colors.blue),
+        trackColor: MaterialStateProperty.all(Colors.white),
+      ),
+      colorScheme: ColorScheme.light(
+        primary: Colors.white, // Change primary color
+        onPrimary: Colors.black, // Change text color on primary background
+        secondary: Colors.blue.shade300, // Change secondary color
+        background: Colors.grey.shade300, // Change background color
+        surface: Colors.grey.shade300, // Change surface color
+        onBackground: Colors.black, // Change text color on background
+        onSurface: Colors.black, // Change text color on surface
+        error: Colors.red, // Change error color
+        onError: Colors.white, // Change text color on error
+      ));
 }
