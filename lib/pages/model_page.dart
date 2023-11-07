@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/memory_manager.dart';
-import 'package:maid/widgets/settings_widgets.dart';
+import 'package:maid/widgets/dialogs.dart';
+import 'package:maid/widgets/settings_widgets/double_button_row.dart';
+import 'package:maid/widgets/settings_widgets/maid_dropdown.dart';
+import 'package:maid/widgets/settings_widgets/maid_slider.dart';
 
 class ModelPage extends StatefulWidget {
   const ModelPage({super.key});
@@ -11,8 +14,6 @@ class ModelPage extends StatefulWidget {
 }
 
 class _ModelPageState extends State<ModelPage> {
-  TextEditingController presetController = TextEditingController();
-
   @override
   initState() {
     super.initState();
@@ -21,7 +22,6 @@ class _ModelPageState extends State<ModelPage> {
   @override
   void dispose() {
     memoryManager.save();
-    presetController.dispose();
     super.dispose();
   }
 
@@ -49,41 +49,23 @@ class _ModelPageState extends State<ModelPage> {
               child: Column(
                 children: [
                   const SizedBox(height: 10.0),
-                  DropdownMenu<String>(
-                    width: 200.0,
-                    initialSelection: model.name,
-                    controller: presetController,
-                    dropdownMenuEntries: memoryManager
-                        .getModels()
-                        .map<DropdownMenuEntry<String>>(
-                      (String value) {
-                        return DropdownMenuEntry<String>(
-                          value: value,
-                          label: value,
-                        );
-                      },
-                    ).toList(),
-                    onSelected: (value) => setState(() async {
-                      if (value == null) {
-                        await memoryManager.updateModel(presetController.text);
-                      } else {
-                        await memoryManager.setModel(value);
-                      }
-                      setState(() {});
-                    }),
+                  MaidDropDown(
+                    initialSelection: model.name, 
+                    getMenuStrings: memoryManager.getModels,
+                    update: memoryManager.updateModel,
+                    set: memoryManager.setModel,
                   ),
                   const SizedBox(height: 15.0),
-                  doubleButtonRow(
-                    context,
-                    "New Preset",
-                    () async {
+                  DoubleButtonRow(
+                    leftText: "New Preset",
+                    leftOnPressed: () async {
                       await memoryManager.save();
                       model = Model();
                       model.name = "New Preset";
                       setState(() {});
                     },
-                    "Delete Preset",
-                    () async {
+                    rightText: "Delete Preset",
+                    rightOnPressed: () async {
                       await memoryManager.removeModel();
                       setState(() {});
                     },
@@ -109,15 +91,15 @@ class _ModelPageState extends State<ModelPage> {
                     ),
                   ),
                   const SizedBox(height: 15.0),
-                  doubleButtonRow(
-                    context,
-                    "Load Model",
-                    () async {
+                  DoubleButtonRow(
+                    
+                    leftText: "Load Model",
+                    leftOnPressed: () async {
                       await storageOperationDialog(context, model.loadModelFile);
                       setState(() {});
                     },
-                    "Reset All",
-                    () {
+                    rightText: "Reset All",
+                    rightOnPressed: () {
                       model.resetAll();
                       setState(() {});
                     },
@@ -128,16 +110,16 @@ class _ModelPageState extends State<ModelPage> {
                     endIndent: 10,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  doubleButtonRow(
-                    context,
-                    "Load Parameters",
-                    () async {
+                  DoubleButtonRow(
+                    
+                    leftText: "Load Parameters",
+                    leftOnPressed: () async {
                       await storageOperationDialog(
                           context, model.loadParametersFromJson);
                       setState(() {});
                     },
-                    "Save Parameters",
-                    () async {
+                    rightText: "Save Parameters",
+                    rightOnPressed: () async {
                       await storageOperationDialog(context, model.saveParametersToJson);
                       setState(() {});
                     },
@@ -215,212 +197,212 @@ class _ModelPageState extends State<ModelPage> {
                         ],
                       ),
                     ),
-                  settingsSlider(
-                      'n_threads',
-                      model.parameters["n_threads"],
-                      1.0,
-                      128.0,
-                      127,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'n_threads',
+                      inputValue: model.parameters["n_threads"],
+                      sliderMin: 1.0,
+                      sliderMax: 128.0,
+                      sliderDivisions: 127,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["n_threads"] = value.round();
                             })
                           }),
-                  settingsSlider(
-                      'n_ctx',
-                      model.parameters["n_ctx"],
-                      1.0,
-                      4096.0,
-                      4095,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'n_ctx',
+                      inputValue: model.parameters["n_ctx"],
+                      sliderMin: 1.0,
+                      sliderMax: 4096.0,
+                      sliderDivisions: 4095,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["n_ctx"] = value.round();
                             })
                           }),
-                  settingsSlider(
-                      'n_batch',
-                      model.parameters["n_batch"],
-                      1.0,
-                      4096.0,
-                      4095,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'n_batch',
+                      inputValue: model.parameters["n_batch"],
+                      sliderMin: 1.0,
+                      sliderMax: 4096.0,
+                      sliderDivisions: 4095,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["n_batch"] = value.round();
                             })
                           }),
-                  settingsSlider(
-                      'n_predict',
-                      model.parameters["n_predict"],
-                      1.0,
-                      1024.0,
-                      1023,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'n_predict',
+                      inputValue: model.parameters["n_predict"],
+                      sliderMin: 1.0,
+                      sliderMax: 1024.0,
+                      sliderDivisions: 1023,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["n_predict"] = value.round();
                             })
                           }),
-                  settingsSlider(
-                      'n_keep',
-                      model.parameters["n_keep"],
-                      1.0,
-                      1024.0,
-                      1023,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'n_keep',
+                      inputValue: model.parameters["n_keep"],
+                      sliderMin: 1.0,
+                      sliderMax: 1024.0,
+                      sliderDivisions: 1023,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["n_keep"] = value.round();
                             })
                           }),
-                  settingsSlider(
-                      'n_prev',
-                      model.parameters["n_prev"],
-                      1.0,
-                      1024.0,
-                      1023,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'n_prev',
+                      inputValue: model.parameters["n_prev"],
+                      sliderMin: 1.0,
+                      sliderMax: 1024.0,
+                      sliderDivisions: 1023,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["n_prev"] = value.round();
                             })
                           }),
-                  settingsSlider(
-                      'n_probs',
-                      model.parameters["n_probs"],
-                      0.0,
-                      128.0,
-                      127,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'n_probs',
+                      inputValue: model.parameters["n_probs"],
+                      sliderMin: 0.0,
+                      sliderMax: 128.0,
+                      sliderDivisions: 127,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["n_probs"] = value.round();
                             })
                           }),
-                  settingsSlider(
-                      'top_k',
-                      model.parameters["top_k"],
-                      1.0,
-                      128.0,
-                      127,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'top_k',
+                      inputValue: model.parameters["top_k"],
+                      sliderMin: 1.0,
+                      sliderMax: 128.0,
+                      sliderDivisions: 127,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["top_k"] = value.round();
                             })
                           }),
-                  settingsSlider(
-                      'top_p',
-                      model.parameters["top_p"],
-                      0.0,
-                      1.0,
-                      100,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'top_p',
+                      inputValue: model.parameters["top_p"],
+                      sliderMin: 0.0,
+                      sliderMax: 1.0,
+                      sliderDivisions: 100,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["top_p"] = value;
                             })
                           }),
-                  settingsSlider(
-                      'tfs_z',
-                      model.parameters["tfs_z"],
-                      0.0,
-                      1.0,
-                      100,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'tfs_z',
+                      inputValue: model.parameters["tfs_z"],
+                      sliderMin: 0.0,
+                      sliderMax: 1.0,
+                      sliderDivisions: 100,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["tfs_z"] = value;
                             })
                           }),
-                  settingsSlider(
-                      'typical_p',
-                      model.parameters["typical_p"],
-                      0.0,
-                      1.0,
-                      100,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'typical_p',
+                      inputValue: model.parameters["typical_p"],
+                      sliderMin: 0.0,
+                      sliderMax: 1.0,
+                      sliderDivisions: 100,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["typical_p"] = value;
                             })
                           }),
-                  settingsSlider(
-                      'temperature',
-                      model.parameters["temperature"],
-                      0.0,
-                      1.0,
-                      100,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'temperature',
+                      inputValue: model.parameters["temperature"],
+                      sliderMin: 0.0,
+                      sliderMax: 1.0,
+                      sliderDivisions: 100,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["temperature"] = value;
                             })
                           }),
-                  settingsSlider(
-                      'penalty_last_n',
-                      model.parameters["penalty_last_n"],
-                      0.0,
-                      128.0,
-                      127,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'penalty_last_n',
+                      inputValue: model.parameters["penalty_last_n"],
+                      sliderMin: 0.0,
+                      sliderMax: 128.0,
+                      sliderDivisions: 127,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["penalty_last_n"] =
                                   value.round();
                             })
                           }),
-                  settingsSlider(
-                      'penalty_repeat',
-                      model.parameters["penalty_repeat"],
-                      0.0,
-                      2.0,
-                      200,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'penalty_repeat',
+                      inputValue: model.parameters["penalty_repeat"],
+                      sliderMin: 0.0,
+                      sliderMax: 2.0,
+                      sliderDivisions: 200,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["penalty_repeat"] = value;
                             })
                           }),
-                  settingsSlider(
-                      'penalty_freq',
-                      model.parameters["penalty_freq"],
-                      0.0,
-                      1.0,
-                      100,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'penalty_freq',
+                      inputValue: model.parameters["penalty_freq"],
+                      sliderMin: 0.0,
+                      sliderMax: 1.0,
+                      sliderDivisions: 100,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["penalty_freq"] = value;
                             })
                           }),
-                  settingsSlider(
-                      'penalty_present',
-                      model.parameters["penalty_present"],
-                      0.0,
-                      1.0,
-                      100,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'penalty_present',
+                      inputValue: model.parameters["penalty_present"],
+                      sliderMin: 0.0,
+                      sliderMax: 1.0,
+                      sliderDivisions: 100,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["penalty_present"] = value;
                             })
                           }),
-                  settingsSlider(
-                      'mirostat',
-                      model.parameters["mirostat"],
-                      0.0,
-                      128.0,
-                      127,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'mirostat',
+                      inputValue: model.parameters["mirostat"],
+                      sliderMin: 0.0,
+                      sliderMax: 128.0,
+                      sliderDivisions: 127,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["mirostat"] = value.round();
                             })
                           }),
-                  settingsSlider(
-                      'mirostat_tau',
-                      model.parameters["mirostat_tau"],
-                      0.0,
-                      10.0,
-                      100,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'mirostat_tau',
+                      inputValue: model.parameters["mirostat_tau"],
+                      sliderMin: 0.0,
+                      sliderMax: 10.0,
+                      sliderDivisions: 100,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["mirostat_tau"] = value;
                             })
                           }),
-                  settingsSlider(
-                      'mirostat_eta',
-                      model.parameters["mirostat_eta"],
-                      0.0,
-                      1.0,
-                      100,
-                      (value) => {
+                  MaidSlider(
+                      labelText: 'mirostat_eta',
+                      inputValue: model.parameters["mirostat_eta"],
+                      sliderMin: 0.0,
+                      sliderMax: 1.0,
+                      sliderDivisions: 100,
+                      onValueChanged: (value) => {
                             setState(() {
                               model.parameters["mirostat_eta"] = value;
                             })
