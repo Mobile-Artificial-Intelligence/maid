@@ -50,7 +50,7 @@ class _ModelPageState extends State<ModelPage> {
                 children: [
                   const SizedBox(height: 10.0),
                   MaidDropDown(
-                    initialSelection: model.name, 
+                    initialSelection: model.name,
                     getMenuStrings: memoryManager.getModels,
                     update: memoryManager.updateModel,
                     set: memoryManager.setModel,
@@ -92,10 +92,10 @@ class _ModelPageState extends State<ModelPage> {
                   ),
                   const SizedBox(height: 15.0),
                   DoubleButtonRow(
-                    
                     leftText: "Load Model",
                     leftOnPressed: () async {
-                      await storageOperationDialog(context, model.loadModelFile);
+                      await storageOperationDialog(
+                          context, model.loadModelFile);
                       setState(() {});
                     },
                     rightText: "Reset All",
@@ -111,7 +111,6 @@ class _ModelPageState extends State<ModelPage> {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   DoubleButtonRow(
-                    
                     leftText: "Load Parameters",
                     leftOnPressed: () async {
                       await storageOperationDialog(
@@ -120,7 +119,8 @@ class _ModelPageState extends State<ModelPage> {
                     },
                     rightText: "Save Parameters",
                     rightOnPressed: () async {
-                      await storageOperationDialog(context, model.saveParametersToJson);
+                      await storageOperationDialog(
+                          context, model.saveParametersToJson);
                       setState(() {});
                     },
                   ),
@@ -133,6 +133,12 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["instruct"] = value;
                       });
                     },
+                    trackColor: (model.parameters["instruct"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
+                    trackOutlineColor: (model.parameters["instruct"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
                   ),
                   SwitchListTile(
                     title: const Text('interactive'),
@@ -142,6 +148,12 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["interactive"] = value;
                       });
                     },
+                    trackColor: (model.parameters["interactive"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
+                    trackOutlineColor: (model.parameters["interactive"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
                   ),
                   SwitchListTile(
                     title: const Text('memory_f16'),
@@ -151,6 +163,12 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["memory_f16"] = value;
                       });
                     },
+                    trackColor: (model.parameters["memory_f16"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
+                    trackOutlineColor: (model.parameters["memory_f16"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
                   ),
                   SwitchListTile(
                     title: const Text('penalize_nl'),
@@ -160,6 +178,12 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["penalize_nl"] = value;
                       });
                     },
+                    trackColor: (model.parameters["penalize_nl"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
+                    trackOutlineColor: (model.parameters["penalize_nl"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
                   ),
                   SwitchListTile(
                     title: const Text('random_seed'),
@@ -169,6 +193,12 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["random_seed"] = value;
                       });
                     },
+                    trackColor: (model.parameters["random_seed"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
+                    trackOutlineColor: (model.parameters["random_seed"])
+                        ? MaterialStateProperty.all(Colors.blue)
+                        : null,
                   ),
                   Divider(
                     height: 20,

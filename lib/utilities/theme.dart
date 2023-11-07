@@ -154,8 +154,9 @@ class MaidTheme {
       overlayColor: Colors.blue.shade800,
     ),
     switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.all(Colors.black),
-      trackColor: MaterialStateProperty.all(Colors.white),
+      thumbColor: MaterialStateProperty.all(Colors.grey.shade900),
+      trackColor: MaterialStateProperty.all(Colors.grey),
+      trackOutlineColor: MaterialStateProperty.all(Colors.grey),
     ),
     colorScheme: ColorScheme.dark(
       background: Colors.grey.shade900,
@@ -240,18 +241,19 @@ class MaidTheme {
         overlayColor: Colors.blue.shade800,
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.all(Colors.black),
-        trackColor: MaterialStateProperty.all(Colors.white),
+        thumbColor: MaterialStateProperty.all(Colors.grey.shade900),
+        trackColor: MaterialStateProperty.all(Colors.grey),
+        trackOutlineColor: MaterialStateProperty.all(Colors.grey),
       ),
       colorScheme: ColorScheme.light(
-        primary: Colors.white, // Change primary color
-        onPrimary: Colors.black, // Change text color on primary background
-        secondary: Colors.blue.shade300, // Change secondary color
-        background: Colors.grey.shade300, // Change background color
-        surface: Colors.grey.shade300, // Change surface color
-        onBackground: Colors.black, // Change text color on background
-        onSurface: Colors.black, // Change text color on surface
-        error: Colors.red, // Change error color
-        onError: Colors.white, // Change text color on error
+        primary: Colors.white,
+        onPrimary: Colors.black,
+        secondary: Colors.blue.shade300,
+        background: Colors.grey.shade300,
+        surface: Colors.grey.shade300,
+        onBackground: Colors.black,
+        onSurface: Colors.black,
+        error: Colors.red,
+        onError: Colors.white,
       ));
 }
