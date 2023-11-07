@@ -2,26 +2,38 @@
 import 'package:flutter/material.dart';
 import 'package:maid/utilities/memory_manager.dart';
 
-Widget settingsTextField(String labelText, TextEditingController controller) {
-  return ListTile(
-    title: Row(
-      children: [
-        Expanded(
-          child: Text(labelText),
-        ),
-        Expanded(
-          flex: 2,
-          child: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              labelText: labelText,
-            )
+class MaidTextField extends StatelessWidget{
+  final String labelText;
+  final TextEditingController controller;
+
+  const MaidTextField({super.key, 
+    required this.labelText,
+    required this.controller,
+  });
+
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(labelText),
           ),
-        ),
-      ],
-    ),
-  );
+          Expanded(
+            flex: 2,
+            child: TextField(
+              cursorColor: Theme.of(context).colorScheme.secondary,
+              controller: controller,
+              decoration: InputDecoration(
+                labelText: labelText,
+              )
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
 Widget settingsSlider(String labelText, num inputValue, 
   double sliderMin, double sliderMax, int sliderDivisions, 
   Function(double) onValueChanged

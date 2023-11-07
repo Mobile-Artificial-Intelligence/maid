@@ -266,12 +266,11 @@ class MaidHomePageState extends State<MaidHomePage> {
                               }
                             },
                             controller: promptController,
-                            cursorColor:
-                                Theme.of(context).colorScheme.secondary,
+                            cursorColor: Theme.of(context).colorScheme.secondary,
                             decoration: InputDecoration(
-                                labelText: 'Prompt',
-                                hintStyle:
-                                    Theme.of(context).textTheme.labelSmall),
+                              labelText: 'Prompt',
+                              hintStyle: Theme.of(context).textTheme.labelSmall
+                            ),
                           ),
                         ),
                         IconButton(
