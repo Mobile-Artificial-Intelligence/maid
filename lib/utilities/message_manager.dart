@@ -9,6 +9,7 @@ class MessageManager {
   static void Function()? _callback;
   static final _ChatNode _root = _ChatNode(key: UniqueKey());
   static _ChatNode? _tail;
+  static bool busy = false;
 
   static void registerCallback(void Function() onUpdate) {
     _callback = onUpdate;
@@ -53,6 +54,7 @@ class MessageManager {
   static void stream(String message) async {     
     _tail ??= _root.findTail();
     if (!model.busy && !(_tail!.userGenerated)) {
+      busy = false;
       finalise();
     } else {
       _tail!.messageController.add(message);

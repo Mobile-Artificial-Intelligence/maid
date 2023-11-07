@@ -28,6 +28,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
     if (MessageManager.get(widget.key!).isNotEmpty) {
       _parseMessage(MessageManager.get(widget.key!));
+      _finalised = true;
     } else {
       MessageManager.getMessageStream(widget.key!).stream.listen((textChunk) {
         setState(() {
@@ -67,7 +68,8 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ChatControls(key: widget.key, userGenerated: widget.userGenerated),
+        if (_finalised)
+          ChatControls(key: widget.key, userGenerated: widget.userGenerated),
         Align(
           alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(

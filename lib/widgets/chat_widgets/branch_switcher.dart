@@ -21,7 +21,9 @@ class BranchSwitcherState extends State<BranchSwitcher> {
       width: 150,
       height: 30,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.tertiary,
+        color: MessageManager.busy 
+             ? Theme.of(context).colorScheme.primary 
+             : Theme.of(context).colorScheme.tertiary,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -31,6 +33,7 @@ class BranchSwitcherState extends State<BranchSwitcher> {
           IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
+              if (MessageManager.busy) return;
               MessageManager.last(widget.key!);
               setState(() {});
             },
@@ -40,6 +43,7 @@ class BranchSwitcherState extends State<BranchSwitcher> {
           IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
+              if (MessageManager.busy) return;
               MessageManager.next(widget.key!);
               setState(() {});
             },
