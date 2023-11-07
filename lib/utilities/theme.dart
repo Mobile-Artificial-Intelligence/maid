@@ -153,6 +153,10 @@ class MaidTheme {
       thumbColor: Colors.blue,
       overlayColor: Colors.blue.shade800,
     ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.all(Colors.black),
+      trackColor: MaterialStateProperty.all(Colors.white),
+    ),
     colorScheme: ColorScheme.dark(
       background: Colors.grey.shade900,
       primary: Colors.grey.shade800,
@@ -236,7 +240,7 @@ class MaidTheme {
         overlayColor: Colors.blue.shade800,
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.all(Colors.blue),
+        thumbColor: MaterialStateProperty.all(Colors.black),
         trackColor: MaterialStateProperty.all(Colors.white),
       ),
       colorScheme: ColorScheme.light(
