@@ -24,7 +24,10 @@ class CodeBox extends StatelessWidget {
                 children: [
                   SelectableText(
                     code,
-                    style: const TextStyle(fontFamily: 'monospace'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'monospace'
+                    ),
                   ),
                 ],
               ),

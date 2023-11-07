@@ -121,29 +121,18 @@ class _CharacterPageState extends State<CharacterPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                settingsTextField(
-                  'User alias', character.userAliasController),
-                settingsTextField(
-                  'Response alias', character.responseAliasController),
-                ListTile(
-                  title: Row(
-                    children: [
-                      const Expanded(
-                        child: Text('PrePrompt'),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: TextField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: character.prePromptController,
-                          decoration: const InputDecoration(
-                            labelText: 'PrePrompt',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                MaidTextField(
+                  labelText: 'User alias', 
+                  controller: character.userAliasController
+                ),
+                MaidTextField(
+                  labelText: 'Response alias', 
+                  controller: character.responseAliasController
+                ),
+                MaidTextField(
+                  labelText: 'PrePrompt',
+                  controller: character.prePromptController,
+                  multiline: true,
                 ),
                 Divider(
                   indent: 10,
@@ -172,8 +161,14 @@ class _CharacterPageState extends State<CharacterPage> {
                   (character.examplePromptControllers.length == character.exampleResponseControllers.length) ? character.examplePromptControllers.length : 0,
                   (index) => Column(
                     children: [
-                      settingsTextField('Example prompt', character.examplePromptControllers[index]),
-                      settingsTextField('Example response', character.exampleResponseControllers[index]),
+                      MaidTextField(
+                        labelText: 'Example prompt', 
+                        controller: character.examplePromptControllers[index]
+                      ),
+                      MaidTextField(
+                        labelText: 'Example response', 
+                        controller: character.exampleResponseControllers[index]
+                      ),
                     ],
                   ),
                 ),
