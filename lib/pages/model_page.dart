@@ -50,7 +50,7 @@ class _ModelPageState extends State<ModelPage> {
                 children: [
                   const SizedBox(height: 10.0),
                   MaidDropDown(
-                    initialSelection: model.name, 
+                    initialSelection: model.name,
                     getMenuStrings: memoryManager.getModels,
                     update: memoryManager.updateModel,
                     set: memoryManager.setModel,
@@ -92,10 +92,10 @@ class _ModelPageState extends State<ModelPage> {
                   ),
                   const SizedBox(height: 15.0),
                   DoubleButtonRow(
-                    
                     leftText: "Load Model",
                     leftOnPressed: () async {
-                      await storageOperationDialog(context, model.loadModelFile);
+                      await storageOperationDialog(
+                          context, model.loadModelFile);
                       setState(() {});
                     },
                     rightText: "Reset All",
@@ -111,7 +111,6 @@ class _ModelPageState extends State<ModelPage> {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   DoubleButtonRow(
-                    
                     leftText: "Load Parameters",
                     leftOnPressed: () async {
                       await storageOperationDialog(
@@ -120,7 +119,8 @@ class _ModelPageState extends State<ModelPage> {
                     },
                     rightText: "Save Parameters",
                     rightOnPressed: () async {
-                      await storageOperationDialog(context, model.saveParametersToJson);
+                      await storageOperationDialog(
+                          context, model.saveParametersToJson);
                       setState(() {});
                     },
                   ),

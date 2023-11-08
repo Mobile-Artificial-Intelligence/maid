@@ -11,7 +11,7 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {  
+class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,10 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 prefs.clear();
                 setState(() {});
               },
-              child: Text(
-                "Clear Cache",
-                style: Theme.of(context).textTheme.labelLarge
-              ),
+              child: Text("Clear Cache",
+                  style: Theme.of(context).textTheme.labelLarge),
             ),
             Divider(
               height: 20,
@@ -62,9 +60,8 @@ class _SettingsPageState extends State<SettingsPage> {
               color: Theme.of(context).colorScheme.primary,
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
-              child: CodeBox(code: Logger.getLog)
-            ),
+                padding: const EdgeInsets.all(10),
+                child: CodeBox(code: Logger.getLog)),
           ],
         ),
       ),
