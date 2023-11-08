@@ -133,12 +133,6 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["instruct"] = value;
                       });
                     },
-                    trackColor: (model.parameters["instruct"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
-                    trackOutlineColor: (model.parameters["instruct"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
                   ),
                   SwitchListTile(
                     title: const Text('interactive'),
@@ -148,12 +142,6 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["interactive"] = value;
                       });
                     },
-                    trackColor: (model.parameters["interactive"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
-                    trackOutlineColor: (model.parameters["interactive"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
                   ),
                   SwitchListTile(
                     title: const Text('memory_f16'),
@@ -163,12 +151,6 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["memory_f16"] = value;
                       });
                     },
-                    trackColor: (model.parameters["memory_f16"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
-                    trackOutlineColor: (model.parameters["memory_f16"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
                   ),
                   SwitchListTile(
                     title: const Text('penalize_nl'),
@@ -178,12 +160,6 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["penalize_nl"] = value;
                       });
                     },
-                    trackColor: (model.parameters["penalize_nl"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
-                    trackOutlineColor: (model.parameters["penalize_nl"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
                   ),
                   SwitchListTile(
                     title: const Text('random_seed'),
@@ -193,12 +169,6 @@ class _ModelPageState extends State<ModelPage> {
                         model.parameters["random_seed"] = value;
                       });
                     },
-                    trackColor: (model.parameters["random_seed"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
-                    trackOutlineColor: (model.parameters["random_seed"])
-                        ? MaterialStateProperty.all(Colors.blue)
-                        : null,
                   ),
                   Divider(
                     height: 20,

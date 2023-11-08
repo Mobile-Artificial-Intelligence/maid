@@ -43,12 +43,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   MaidTheme.setTheme(ThemeType.light);
                 }
               },
-              trackColor: (MaidTheme.theme == MaidTheme.darkTheme)
-                  ? MaterialStateProperty.all(Colors.blue)
-                  : null,
-              trackOutlineColor: (MaidTheme.theme == MaidTheme.darkTheme)
-                  ? MaterialStateProperty.all(Colors.blue)
-                  : null,
             ),
             FilledButton(
               onPressed: () async {

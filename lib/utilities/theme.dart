@@ -83,7 +83,6 @@ class MaidTheme {
   }
 
   static final ThemeData _darkTheme = ThemeData(
-    useMaterial3: true,
     iconTheme: const IconThemeData(color: Colors.white),
     textTheme: const TextTheme(
       titleLarge: TextStyle(
@@ -153,11 +152,6 @@ class MaidTheme {
       thumbColor: Colors.blue,
       overlayColor: Colors.blue.shade800,
     ),
-    switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.all(Colors.grey.shade900),
-      trackColor: MaterialStateProperty.all(Colors.grey),
-      trackOutlineColor: MaterialStateProperty.all(Colors.grey),
-    ),
     colorScheme: ColorScheme.dark(
       background: Colors.grey.shade900,
       primary: Colors.grey.shade800,
@@ -169,7 +163,6 @@ class MaidTheme {
   );
 
   static final ThemeData _lightTheme = ThemeData(
-      useMaterial3: true,
       iconTheme: const IconThemeData(color: Colors.black),
       textTheme: const TextTheme(
         titleLarge: TextStyle(
@@ -239,11 +232,6 @@ class MaidTheme {
         inactiveTrackColor: Colors.white,
         thumbColor: Colors.blue,
         overlayColor: Colors.blue.shade800,
-      ),
-      switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.all(Colors.grey.shade900),
-        trackColor: MaterialStateProperty.all(Colors.grey),
-        trackOutlineColor: MaterialStateProperty.all(Colors.grey),
       ),
       colorScheme: ColorScheme.light(
         primary: Colors.white,
