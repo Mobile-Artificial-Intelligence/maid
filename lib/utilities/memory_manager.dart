@@ -43,37 +43,37 @@ class MemoryManager {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
 
-    _models[model.name] = model.toMap();
-    Logger.log("Model Saved: ${model.name}");
-    _characters[character.name] = character.toMap();
-    Logger.log("Character Saved: ${character.name}");
+    _models[model.nameController.text] = model.toMap();
+    Logger.log("Model Saved: ${model.nameController.text}");
+    _characters[character.nameController.text] = character.toMap();
+    Logger.log("Character Saved: ${character.nameController.text}");
 
     prefs.setString("models", json.encode(_models));
     prefs.setString("characters", json.encode(_characters));
-    prefs.setString("current_model", model.name);
-    prefs.setString("current_character", character.name);
+    prefs.setString("current_model", model.nameController.text);
+    prefs.setString("current_character", character.nameController.text);
 
     Core.instance.cleanup();
   }
 
   Future<void> updateModel(String newName) async {
-    String oldName = model.name;
+    String oldName = model.nameController.text;
     Logger.log("Updating model $oldName ====> $newName");
-    model.name = newName;
+    model.nameController.text = newName;
     _models.remove(oldName);
     await save();
   }
 
   Future<void> updateCharacter(String newName) async {
-    String oldName = character.name;
+    String oldName = character.nameController.text;
     Logger.log("Updating character $oldName ====> $newName");
-    character.name = newName;
+    character.nameController.text = newName;
     _characters.remove(oldName);
     await save();
   }
 
   Future<void> removeModel() async {
-    _models.remove(model.name);
+    _models.remove(model.nameController.text);
     model = Model.fromMap(
       _models[_models.keys.lastOrNull ?? "Default"] ?? {}
     );
@@ -81,7 +81,7 @@ class MemoryManager {
   }
 
   Future<void> removeCharacter() async {
-    _characters.remove(character.name);
+    _characters.remove(character.nameController.text);
     character = Character.fromMap(
       _characters[_characters.keys.lastOrNull ?? "Default"] ?? {}
     );
@@ -96,15 +96,17 @@ class MemoryManager {
     return _characters.keys.toList();
   }
 
-  Future<void> setModel(String? modelName) async {
-    model = Model.fromMap(_models[modelName ?? "Default"] ?? {});
-    Logger.log("Model Set: ${model.name}");
+  Future<void> setModel(String modelName) async {
+    await save();
+    model = Model.fromMap(_models[modelName] ?? {});
+    Logger.log("Model Set: ${model.nameController.text}");
     await save();
   }
 
-  Future<void> setCharacter(String? characterName) async {
-    character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
-    Logger.log("Character Set: ${character.name}");
+  Future<void> setCharacter(String characterName) async {
+    await save();
+    character = Character.fromMap(_characters[characterName] ?? {});
+    Logger.log("Character Set: ${character.nameController.text}");
     await save();
   }
 

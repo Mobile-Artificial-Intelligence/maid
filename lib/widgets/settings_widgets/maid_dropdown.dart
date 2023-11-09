@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
 class MaidDropDown extends StatefulWidget {
-  final TextEditingController presetController = TextEditingController();
-  final String initialSelection;
+  final TextEditingController presetController;
   final List<String> Function() getMenuStrings;
   final Future<void> Function(String) update;
   final Future<void> Function(String) set;
 
 
-  MaidDropDown({super.key, 
-    required this.initialSelection, 
+  const MaidDropDown({super.key, 
+    required this.presetController, 
     required this.getMenuStrings, 
     required this.update,
     required this.set,
@@ -20,12 +19,6 @@ class MaidDropDown extends StatefulWidget {
 }
 
 class _MaidDropDownState extends State<MaidDropDown> {
-  @override
-  void initState() {
-    super.initState();
-    widget.presetController.text = widget.initialSelection;
-  }
-
   Future<void> _switcherDialog(BuildContext context) async {    
       // Create a variable to determine if the dialog is visible
     bool isDialogVisible = true;
@@ -58,6 +51,7 @@ class _MaidDropDownState extends State<MaidDropDown> {
                     widget.presetController.text = widget.getMenuStrings()[index];
                     await widget.set(widget.getMenuStrings()[index]);
                     closeDialog();
+                    setState(() {});
                   },
                 );
               },
@@ -102,9 +96,10 @@ class _MaidDropDownState extends State<MaidDropDown> {
           if (widget.getMenuStrings().contains(value)) {
             print("Setting preset to $value");
             await widget.set(value);
-          } else {
+          } else if (value.isNotEmpty) {
             await widget.update(widget.presetController.text);
           }
+          setState(() {});
         },
       ),
     );

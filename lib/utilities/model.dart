@@ -12,7 +12,7 @@ import 'package:maid/utilities/memory_manager.dart';
 Model model = Model();
 
 class Model {
-  String name = "Default";
+  TextEditingController nameController = TextEditingController()..text = "Default";
   Map<String, dynamic> parameters = {};
 
   bool busy = false;
@@ -25,7 +25,7 @@ class Model {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
-      name = inputJson["name"] ?? "Default";
+      nameController.text = inputJson["name"] ?? "Default";
       parameters = inputJson;
       Logger.log("Model created with name: ${inputJson["name"]}");
     }
@@ -35,8 +35,8 @@ class Model {
     Map<String, dynamic> jsonModel = {};
 
     jsonModel = parameters;
-    jsonModel["name"] = name;
-    Logger.log("Model JSON created with name: $name");
+    jsonModel["name"] = nameController.text;
+    Logger.log("Model JSON created with name: ${nameController.text}");
 
     return jsonModel;
   }
@@ -53,11 +53,11 @@ class Model {
 
   Future<String> saveParametersToJson(BuildContext context) async {
     try {
-      parameters["name"] = name;
+      parameters["name"] = nameController.text;
 
       String jsonString = json.encode(parameters);
       
-      File? file = await FileManager.save(context, name);
+      File? file = await FileManager.save(context, nameController.text);
 
       if (file == null) return "Error saving file";
 
@@ -85,7 +85,7 @@ class Model {
         resetAll();
         return "Failed to decode parameters";
       } else {
-        name = parameters["name"] ?? "Default";
+        nameController.text = parameters["name"] ?? "Default";
       }
     } catch (e) {
       resetAll();

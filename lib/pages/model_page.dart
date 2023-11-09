@@ -50,7 +50,7 @@ class _ModelPageState extends State<ModelPage> {
                 children: [
                   const SizedBox(height: 10.0),
                   MaidDropDown(
-                    initialSelection: model.name,
+                    presetController: model.nameController,
                     getMenuStrings: memoryManager.getModels,
                     update: memoryManager.updateModel,
                     set: memoryManager.setModel,
@@ -61,7 +61,7 @@ class _ModelPageState extends State<ModelPage> {
                     leftOnPressed: () async {
                       await memoryManager.save();
                       model = Model();
-                      model.name = "New Preset";
+                      model.nameController.text = "New Preset";
                       setState(() {});
                     },
                     rightText: "Delete Preset",

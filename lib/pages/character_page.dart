@@ -50,7 +50,7 @@ class _CharacterPageState extends State<CharacterPage> {
               children: [
                 const SizedBox(height: 10.0),
                 MaidDropDown(
-                  initialSelection: character.name, 
+                  presetController: character.nameController, 
                   getMenuStrings: memoryManager.getCharacters,
                   update: memoryManager.updateCharacter,
                   set: memoryManager.setCharacter,
@@ -61,7 +61,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   leftOnPressed: () async {
                     await memoryManager.save();
                     character = Character();
-                    character.name = "New Preset";
+                    character.nameController.text = "New Preset";
                     setState(() {});
                   },
                   rightText: "Delete Preset",
