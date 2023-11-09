@@ -27,77 +27,86 @@ class _MaidDropDownState extends State<MaidDropDown> {
     widget.presetController.text = widget.initialSelection;
   }
 
-  Future<void> _textFieldDialog(BuildContext context, String title, String labelText, TextEditingController controller) async {
+  Future<void> _switcherDialog(BuildContext context) async {    
+      // Create a variable to determine if the dialog is visible
+    bool isDialogVisible = true;
+
+    // Define a function to close the dialog if it's visible
+    void closeDialog() {
+      if (isDialogVisible) {
+        Navigator.of(context).pop();
+        isDialogVisible = false; // Set the flag to false after closing the dialog
+      }
+    }
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title),
-          content: MaidTextField(
-            labelText: labelText,
-            controller: controller,
-            multiline: false,
+          title: const Text(
+            "Switch Preset",
+            textAlign: TextAlign.center,
+          ),
+          content: SizedBox(
+            height: 200,
+            width: 200,
+            child: ListView.builder(
+              itemCount: widget.getMenuStrings().length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(widget.getMenuStrings()[index]),
+                  onTap: () async {
+                    widget.presetController.text = widget.getMenuStrings()[index];
+                    await widget.set(widget.getMenuStrings()[index]);
+                    closeDialog();
+                  },
+                );
+              },
+            ),
           ),
           actions: [
             FilledButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                closeDialog();
               },
               child: Text(
                 "Cancel",
                 style: Theme.of(context).textTheme.labelLarge,
               ),
             ),
-            FilledButton(
-              onPressed: () {
-                widget.update(widget.presetController.text);
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                "Save",
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-            ),
           ],
+          actionsAlignment: MainAxisAlignment.center,
         );
       },
-    );
+    ).then((_) {
+      // When the dialog is dismissed, set the flag to false
+      isDialogVisible = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onLongPress: () async {
-        await _textFieldDialog(
-          context, 
-          "Rename Preset", 
-          widget.presetController.text, 
-          widget.presetController
+        await _switcherDialog(
+          context
         );
         setState(() {});
       },
-      child: DropdownMenu<String>(
-        width: 250.0,
-        initialSelection: widget.initialSelection,
+      child: TextField(
+        cursorColor: Theme.of(context).colorScheme.secondary,
         controller: widget.presetController,
-        dropdownMenuEntries: widget
-          .getMenuStrings()
-          .map<DropdownMenuEntry<String>>(
-          (String value) {
-            return DropdownMenuEntry<String>(
-              value: value,
-              label: value,
-            );
-          },
-        ).toList(),
-        onSelected: (value) => setState(() async {
-          if (value == null) {
-            await widget.update(widget.presetController.text);
-          } else {
+        decoration: const InputDecoration(
+          labelText: "Preset",
+        ),
+        onSubmitted: (value) => () async {
+          if (widget.getMenuStrings().contains(value)) {
             await widget.set(value);
+          } else {
+            await widget.update(widget.presetController.text);
           }
           setState(() {});
-        }),
+        },
       ),
     );
   }
