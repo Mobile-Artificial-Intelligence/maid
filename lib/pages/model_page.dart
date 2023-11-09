@@ -3,7 +3,7 @@ import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/maid_dropdown.dart';
+import 'package:maid/widgets/settings_widgets/preset_switcher.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
 
 class ModelPage extends StatefulWidget {
@@ -21,7 +21,7 @@ class _ModelPageState extends State<ModelPage> {
 
   @override
   void dispose() {
-    memoryManager.save();
+    MemoryManager.save();
     super.dispose();
   }
 
@@ -49,24 +49,25 @@ class _ModelPageState extends State<ModelPage> {
               child: Column(
                 children: [
                   const SizedBox(height: 10.0),
-                  MaidDropDown(
-                    initialSelection: model.name,
-                    getMenuStrings: memoryManager.getModels,
-                    update: memoryManager.updateModel,
-                    set: memoryManager.setModel,
+                  PresetSwitcher(
+                    presetController: model.nameController,
+                    getMenuStrings: MemoryManager.getModels,
+                    update: MemoryManager.updateModel,
+                    set: MemoryManager.setModel,
+                    refresh: () => setState(() {}),
                   ),
                   const SizedBox(height: 15.0),
                   DoubleButtonRow(
                     leftText: "New Preset",
                     leftOnPressed: () async {
-                      await memoryManager.save();
+                      MemoryManager.save();
                       model = Model();
-                      model.name = "New Preset";
+                      model.nameController.text = "New Preset";
                       setState(() {});
                     },
                     rightText: "Delete Preset",
                     rightOnPressed: () async {
-                      await memoryManager.removeModel();
+                      MemoryManager.removeModel();
                       setState(() {});
                     },
                   ),

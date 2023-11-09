@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/memory_manager.dart';
 
 class MaidTextField extends StatelessWidget{
   final String labelText;
@@ -28,7 +29,8 @@ class MaidTextField extends StatelessWidget{
               controller: controller,
               decoration: InputDecoration(
                 labelText: labelText,
-              )
+              ),
+              onSubmitted: (value) => MemoryManager.save(),
             ),
           ),
         ],

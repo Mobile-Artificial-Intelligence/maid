@@ -11,18 +11,18 @@ import 'package:maid/utilities/character.dart';
 import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/memory_manager.dart';
 
-class Core {
+class LocalGeneration {
   static SendPort? _sendPort;
   late NativeLibrary _nativeLibrary;
 
   // Make the default constructor private
-  Core._();
+  LocalGeneration._();
 
   // Private reference to the global instance
-  static final Core _instance = Core._();
+  static final LocalGeneration _instance = LocalGeneration._();
 
   // Public accessor to the global instance
-  static Core get instance {
+  static LocalGeneration get instance {
     _instance._initialize();
     return _instance;
   }
@@ -64,11 +64,11 @@ class Core {
     }
   }
 
-  static promptIsolate(Map<String, dynamic> args) async {
+  static _promptIsolate(Map<String, dynamic> args) async {
     _sendPort = args['port'] as SendPort?;
     String input = args['input'];
     Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
-    Core.instance._nativeLibrary.core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
+    LocalGeneration.instance._nativeLibrary.core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
   }
 
 
@@ -132,11 +132,11 @@ class Core {
   void prompt(String input) async {
     MessageManager.busy = true;
     if (!_hasStarted) {
-      await memoryManager.save();
+      await MemoryManager.asave();
       _init(input);
     } else {
       Logger.log("Input: $input");
-      Isolate.spawn(promptIsolate, {
+      Isolate.spawn(_promptIsolate, {
         'input': input,
         'port': _sendPort
       });

@@ -3,7 +3,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:maid/utilities/model.dart';
-import 'package:maid/core/core.dart';
+import 'package:maid/core/local_generation.dart';
 
 class MessageManager {
   static void Function()? _callback;
@@ -47,7 +47,7 @@ class MessageManager {
       parent.children.removeWhere((element) => element.key == key);
       _tail = _root.findTail();
     }
-    Core.instance.cleanup();
+    LocalGeneration.instance.cleanup();
     _callback?.call();
   }
 
@@ -68,7 +68,7 @@ class MessageManager {
     } else {
       branch(key, false);
       model.busy = true;
-      Core.instance.prompt(parent.message);
+      LocalGeneration.instance.prompt(parent.message);
     }
   }
 
@@ -79,7 +79,7 @@ class MessageManager {
       _tail = _root.findTail();
     }
     add(UniqueKey(), userGenerated: userGenerated);
-    Core.instance.cleanup();
+    LocalGeneration.instance.cleanup();
     _callback?.call();
   }
 
@@ -102,7 +102,7 @@ class MessageManager {
       }
     }
 
-    Core.instance.cleanup();
+    LocalGeneration.instance.cleanup();
     _callback?.call();
   }
 
@@ -120,7 +120,7 @@ class MessageManager {
       }
     }
 
-    Core.instance.cleanup();
+    LocalGeneration.instance.cleanup();
     _callback?.call();
   }
 
