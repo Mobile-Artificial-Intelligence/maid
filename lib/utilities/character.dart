@@ -5,13 +5,14 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/utilities/file_manager.dart';
+import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/memory_manager.dart';
 
 Character character = Character();
 
 class Character {  
-  String name = "Maid";
+  TextEditingController nameController = TextEditingController()..text = "Maid";
   
   TextEditingController prePromptController = TextEditingController();
   
@@ -28,7 +29,7 @@ class Character {
   }
 
   Character.fromMap(Map<String, dynamic> inputJson) {
-    name = inputJson["name"] ?? "Unknown";
+    nameController.text = inputJson["name"] ?? "Unknown";
 
     if (inputJson.isEmpty) {
       resetAll();
@@ -52,12 +53,14 @@ class Character {
         exampleResponseControllers.add(TextEditingController(text: exampleResponse));
       }
     }
+
+    Logger.log("Character created with name: ${inputJson["name"]}");
   }
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> jsonCharacter = {};
 
-    jsonCharacter["name"] = name;
+    jsonCharacter["name"] = nameController.text;
     
     jsonCharacter["pre_prompt"] = prePromptController.text;
     jsonCharacter["user_alias"] = userAliasController.text;
@@ -76,6 +79,7 @@ class Character {
       jsonCharacter["example"].add(example);
     }
 
+    Logger.log("Character JSON created with name: ${nameController.text}");
     return jsonCharacter;
   }
 
@@ -104,14 +108,14 @@ class Character {
       }
     }
 
-    memoryManager.save();
+    MemoryManager.save();
   }
 
   Future<String> saveCharacterToJson(BuildContext context) async {
     try {
       Map<String, dynamic> jsonCharacter = {};
 
-      jsonCharacter["name"] = name;
+      jsonCharacter["name"] = nameController.text;
 
       jsonCharacter["pre_prompt"] = prePromptController.text;
       jsonCharacter["user_alias"] = userAliasController.text;
@@ -134,7 +138,7 @@ class Character {
       String jsonString = json.encode(jsonCharacter);
 
     
-      File? file = await FileManager.save(context, name);
+      File? file = await FileManager.save(context, nameController.text);
 
       if (file == null) return "Error saving file";
 
@@ -163,7 +167,7 @@ class Character {
         return "Failed to decode character";
       }
 
-      name = jsonCharacter["name"] ?? "";
+      nameController.text = jsonCharacter["name"] ?? "";
 
       prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
       userAliasController.text = jsonCharacter["user_alias"] ?? "";

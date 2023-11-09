@@ -21,7 +21,7 @@ Future<void> storageOperationDialog(BuildContext context, Future<String> Functio
             FilledButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  memoryManager.save();
+                  MemoryManager.save();
                 },
                 child: Text(
                   "Close",

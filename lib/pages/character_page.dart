@@ -3,7 +3,7 @@ import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/maid_dropdown.dart';
+import 'package:maid/widgets/settings_widgets/preset_switcher.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -21,7 +21,7 @@ class _CharacterPageState extends State<CharacterPage> {
 
   @override
   void dispose() {
-    memoryManager.save();
+    MemoryManager.save();
     super.dispose();
   }
 
@@ -49,24 +49,25 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                MaidDropDown(
-                  initialSelection: character.name, 
-                  getMenuStrings: memoryManager.getCharacters,
-                  update: memoryManager.updateCharacter,
-                  set: memoryManager.setCharacter,
+                PresetSwitcher(
+                  presetController: character.nameController, 
+                  getMenuStrings: MemoryManager.getCharacters,
+                  update: MemoryManager.updateCharacter,
+                  set: MemoryManager.setCharacter,
+                  refresh: () => setState(() {}),
                 ),
                 const SizedBox(height: 15.0),
                 DoubleButtonRow(
                   leftText: "New Preset",
                   leftOnPressed: () async {
-                    await memoryManager.save();
+                    MemoryManager.save();
                     character = Character();
-                    character.name = "New Preset";
+                    character.nameController.text = "New Preset";
                     setState(() {});
                   },
                   rightText: "Delete Preset",
                   rightOnPressed: () async {
-                    await memoryManager.removeCharacter();
+                    MemoryManager.removeCharacter();
                     setState(() {});
                   },
                 ),
