@@ -5,6 +5,7 @@ class MaidDropDown extends StatefulWidget {
   final List<String> Function() getMenuStrings;
   final void Function(String) update;
   final void Function(String) set;
+  final void Function() refresh;
 
 
   const MaidDropDown({super.key, 
@@ -12,6 +13,7 @@ class MaidDropDown extends StatefulWidget {
     required this.getMenuStrings, 
     required this.update,
     required this.set,
+    required this.refresh,
   });
 
   @override
@@ -52,6 +54,7 @@ class _MaidDropDownState extends State<MaidDropDown> {
                     widget.set(widget.getMenuStrings()[index]);
                     closeDialog();
                     setState(() {});
+                    widget.refresh();
                   }),
                 );
               },
@@ -100,6 +103,7 @@ class _MaidDropDownState extends State<MaidDropDown> {
             widget.update(widget.presetController.text);
           }
           setState(() {});
+          widget.refresh();
         }),
       ),
     );

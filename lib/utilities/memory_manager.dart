@@ -8,17 +8,11 @@ import 'package:maid/core/core.dart';
 import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/character.dart';
 
-MemoryManager memoryManager = MemoryManager();
-
 class MemoryManager {
-  Map<String, dynamic> _models = {};
-  Map<String, dynamic> _characters = {};
+  static Map<String, dynamic> _models = {};
+  static Map<String, dynamic> _characters = {};
 
-  MemoryManager() {
-    init();
-  }
-
-  void init() async {
+  static void init() {
     SharedPreferences.getInstance().then((prefs) {
       _models = json.decode(prefs.getString("models") ?? "{}");
       _characters = json.decode(prefs.getString("characters") ?? "{}");
@@ -39,7 +33,7 @@ class MemoryManager {
     });
   }
 
-  void save() {
+  static void save() {
     SharedPreferences.getInstance().then((prefs) {
       prefs.clear();
 
@@ -57,7 +51,7 @@ class MemoryManager {
     });
   }
 
-  void updateModel(String newName) {
+  static void updateModel(String newName) {
     String oldName = model.nameController.text;
     Logger.log("Updating model $oldName ====> $newName");
     model.nameController.text = newName;
@@ -65,7 +59,7 @@ class MemoryManager {
     save();
   }
 
-  void updateCharacter(String newName) {
+  static void updateCharacter(String newName) {
     String oldName = character.nameController.text;
     Logger.log("Updating character $oldName ====> $newName");
     character.nameController.text = newName;
@@ -73,7 +67,7 @@ class MemoryManager {
     save();
   }
 
-  void removeModel() {
+  static void removeModel() {
     _models.remove(model.nameController.text);
     model = Model.fromMap(
       _models[_models.keys.lastOrNull ?? "Default"] ?? {}
@@ -81,7 +75,7 @@ class MemoryManager {
     save();
   }
 
-  void removeCharacter() {
+  static void removeCharacter() {
     _characters.remove(character.nameController.text);
     character = Character.fromMap(
       _characters[_characters.keys.lastOrNull ?? "Default"] ?? {}
@@ -89,29 +83,29 @@ class MemoryManager {
     save();
   }
 
-  List<String> getModels() {
+  static List<String> getModels() {
     return _models.keys.toList();
   }
 
-  List<String> getCharacters() {
+  static List<String> getCharacters() {
     return _characters.keys.toList();
   }
 
-  void setModel(String modelName) {
+  static void setModel(String modelName) {
     save();
     model = Model.fromMap(_models[modelName] ?? {});
     Logger.log("Model Set: ${model.nameController.text}");
     save();
   }
 
-  void setCharacter(String characterName) {
+  static void setCharacter(String characterName) {
     save();
     character = Character.fromMap(_characters[characterName] ?? {});
     Logger.log("Character Set: ${character.nameController.text}");
     save();
   }
 
-  bool checkFileExists(String filePath) {
+  static bool checkFileExists(String filePath) {
     File file = File(filePath);
     return file.existsSync();
   }

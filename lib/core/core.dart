@@ -132,7 +132,7 @@ class Core {
   void prompt(String input) {
     MessageManager.busy = true;
     if (!_hasStarted) {
-      memoryManager.save();
+      MemoryManager.save();
       _init(input);
     } else {
       Logger.log("Input: $input");

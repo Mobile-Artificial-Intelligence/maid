@@ -21,7 +21,7 @@ class _CharacterPageState extends State<CharacterPage> {
 
   @override
   void dispose() {
-    memoryManager.save();
+    MemoryManager.save();
     super.dispose();
   }
 
@@ -51,22 +51,23 @@ class _CharacterPageState extends State<CharacterPage> {
                 const SizedBox(height: 10.0),
                 MaidDropDown(
                   presetController: character.nameController, 
-                  getMenuStrings: memoryManager.getCharacters,
-                  update: memoryManager.updateCharacter,
-                  set: memoryManager.setCharacter,
+                  getMenuStrings: MemoryManager.getCharacters,
+                  update: MemoryManager.updateCharacter,
+                  set: MemoryManager.setCharacter,
+                  refresh: () => setState(() {}),
                 ),
                 const SizedBox(height: 15.0),
                 DoubleButtonRow(
                   leftText: "New Preset",
                   leftOnPressed: () async {
-                    memoryManager.save();
+                    MemoryManager.save();
                     character = Character();
                     character.nameController.text = "New Preset";
                     setState(() {});
                   },
                   rightText: "Delete Preset",
                   rightOnPressed: () async {
-                    memoryManager.removeCharacter();
+                    MemoryManager.removeCharacter();
                     setState(() {});
                   },
                 ),

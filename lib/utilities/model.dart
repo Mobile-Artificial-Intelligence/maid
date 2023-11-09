@@ -48,7 +48,7 @@ class Model {
 
     parameters = json.decode(jsonString);
 
-    memoryManager.save();
+    MemoryManager.save();
   }
 
   Future<String> saveParametersToJson(BuildContext context) async {

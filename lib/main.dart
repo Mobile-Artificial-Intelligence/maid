@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
 final maidAppKey = GlobalKey<MaidAppState>();
 
 void main() {
+  MemoryManager.init();
   runApp(MaidApp(key: maidAppKey));
 }
 

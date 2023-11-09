@@ -108,7 +108,7 @@ class Character {
       }
     }
 
-    memoryManager.save();
+    MemoryManager.save();
   }
 
   Future<String> saveCharacterToJson(BuildContext context) async {

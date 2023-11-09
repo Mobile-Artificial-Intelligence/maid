@@ -88,7 +88,7 @@ class MaidHomePageState extends State<MaidHomePage> {
     );
     MessageManager.add(UniqueKey());
 
-    if (memoryManager.checkFileExists(model.parameters["model_path"]))  {
+    if (MemoryManager.checkFileExists(model.parameters["model_path"]))  {
       Core.instance.prompt(promptController.text.trim());
       setState(() {
         model.busy = true;

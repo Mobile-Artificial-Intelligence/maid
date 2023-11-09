@@ -21,7 +21,7 @@ class _ModelPageState extends State<ModelPage> {
 
   @override
   void dispose() {
-    memoryManager.save();
+    MemoryManager.save();
     super.dispose();
   }
 
@@ -51,22 +51,23 @@ class _ModelPageState extends State<ModelPage> {
                   const SizedBox(height: 10.0),
                   MaidDropDown(
                     presetController: model.nameController,
-                    getMenuStrings: memoryManager.getModels,
-                    update: memoryManager.updateModel,
-                    set: memoryManager.setModel,
+                    getMenuStrings: MemoryManager.getModels,
+                    update: MemoryManager.updateModel,
+                    set: MemoryManager.setModel,
+                    refresh: () => setState(() {}),
                   ),
                   const SizedBox(height: 15.0),
                   DoubleButtonRow(
                     leftText: "New Preset",
                     leftOnPressed: () async {
-                      memoryManager.save();
+                      MemoryManager.save();
                       model = Model();
                       model.nameController.text = "New Preset";
                       setState(() {});
                     },
                     rightText: "Delete Preset",
                     rightOnPressed: () async {
-                      memoryManager.removeModel();
+                      MemoryManager.removeModel();
                       setState(() {});
                     },
                   ),
