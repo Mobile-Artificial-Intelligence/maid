@@ -9,7 +9,7 @@ class HostedGeneration {
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
       "model": "llama2:7b", // TODO: Make this configurable
-      "prompt": prompt,
+      "prompt": input,
     });
 
     try {

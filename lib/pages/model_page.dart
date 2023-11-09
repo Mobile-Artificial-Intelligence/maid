@@ -115,13 +115,13 @@ class _ModelPageState extends State<ModelPage> {
                     leftText: "Load Parameters",
                     leftOnPressed: () async {
                       await storageOperationDialog(
-                          context, model.loadParametersFromJson);
+                          context, model.importModelParameters);
                       setState(() {});
                     },
                     rightText: "Save Parameters",
                     rightOnPressed: () async {
                       await storageOperationDialog(
-                          context, model.saveParametersToJson);
+                          context, model.exportModelParameters);
                       setState(() {});
                     },
                   ),
