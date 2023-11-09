@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:maid/utilities/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:maid/core/core.dart';
+import 'package:maid/core/local_generation.dart';
 import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/character.dart';
 
@@ -33,22 +33,31 @@ class MemoryManager {
     });
   }
 
+  static void _save(SharedPreferences prefs) {
+    prefs.clear();
+
+    _models[model.nameController.text] = model.toMap();
+    Logger.log("Model Saved: ${model.nameController.text}");
+    _characters[character.nameController.text] = character.toMap();
+    Logger.log("Character Saved: ${character.nameController.text}");
+
+    prefs.setString("models", json.encode(_models));
+    prefs.setString("characters", json.encode(_characters));
+    prefs.setString("current_model", model.nameController.text);
+    prefs.setString("current_character", character.nameController.text);
+
+    LocalGeneration.instance.cleanup();
+  }
+
   static void save() {
     SharedPreferences.getInstance().then((prefs) {
-      prefs.clear();
-
-      _models[model.nameController.text] = model.toMap();
-      Logger.log("Model Saved: ${model.nameController.text}");
-      _characters[character.nameController.text] = character.toMap();
-      Logger.log("Character Saved: ${character.nameController.text}");
-
-      prefs.setString("models", json.encode(_models));
-      prefs.setString("characters", json.encode(_characters));
-      prefs.setString("current_model", model.nameController.text);
-      prefs.setString("current_character", character.nameController.text);
-
-      Core.instance.cleanup();
+      _save(prefs);
     });
+  }
+
+  static Future<void> asave() async {
+    var prefs = await SharedPreferences.getInstance();
+    _save(prefs);
   }
 
   static void updateModel(String newName) {

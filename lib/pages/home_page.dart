@@ -7,7 +7,7 @@ import 'package:maid/utilities/message_manager.dart';
 import 'package:system_info2/system_info2.dart';
 
 import 'package:maid/utilities/model.dart';
-import 'package:maid/core/core.dart';
+import 'package:maid/core/local_generation.dart';
 
 import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/model_page.dart';
@@ -89,7 +89,7 @@ class MaidHomePageState extends State<MaidHomePage> {
     MessageManager.add(UniqueKey());
 
     if (MemoryManager.checkFileExists(model.parameters["model_path"]))  {
-      Core.instance.prompt(promptController.text.trim());
+      LocalGeneration.instance.prompt(promptController.text.trim());
       setState(() {
         model.busy = true;
         promptController.clear();
@@ -247,7 +247,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                       children: [
                         if (model.busy)
                           IconButton(
-                              onPressed: Core.instance.stop,
+                              onPressed: LocalGeneration.instance.stop,
                               iconSize: 50,
                               icon: const Icon(
                                 Icons.stop_circle_sharp,
