@@ -3,7 +3,7 @@ import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/maid_dropdown.dart';
+import 'package:maid/widgets/settings_widgets/preset_switcher.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
 
 class ModelPage extends StatefulWidget {
@@ -49,7 +49,7 @@ class _ModelPageState extends State<ModelPage> {
               child: Column(
                 children: [
                   const SizedBox(height: 10.0),
-                  MaidDropDown(
+                  PresetSwitcher(
                     presetController: model.nameController,
                     getMenuStrings: MemoryManager.getModels,
                     update: MemoryManager.updateModel,

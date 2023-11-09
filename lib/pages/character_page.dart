@@ -3,7 +3,7 @@ import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/maid_dropdown.dart';
+import 'package:maid/widgets/settings_widgets/preset_switcher.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -49,7 +49,7 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                MaidDropDown(
+                PresetSwitcher(
                   presetController: character.nameController, 
                   getMenuStrings: MemoryManager.getCharacters,
                   update: MemoryManager.updateCharacter,

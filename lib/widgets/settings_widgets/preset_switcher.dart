@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MaidDropDown extends StatefulWidget {
+class PresetSwitcher extends StatefulWidget {
   final TextEditingController presetController;
   final List<String> Function() getMenuStrings;
   final void Function(String) update;
@@ -8,7 +8,7 @@ class MaidDropDown extends StatefulWidget {
   final void Function() refresh;
 
 
-  const MaidDropDown({super.key, 
+  const PresetSwitcher({super.key, 
     required this.presetController, 
     required this.getMenuStrings, 
     required this.update,
@@ -17,10 +17,10 @@ class MaidDropDown extends StatefulWidget {
   });
 
   @override
-  State<MaidDropDown> createState() => _MaidDropDownState();
+  State<PresetSwitcher> createState() => _PresetSwitcherState();
 }
 
-class _MaidDropDownState extends State<MaidDropDown> {
+class _PresetSwitcherState extends State<PresetSwitcher> {
   Future<void> _switcherDialog(BuildContext context) async {    
       // Create a variable to determine if the dialog is visible
     bool isDialogVisible = true;
