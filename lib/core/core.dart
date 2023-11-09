@@ -129,10 +129,10 @@ class Core {
     await completer.future;
   }
 
-  void prompt(String input) async {
+  void prompt(String input) {
     MessageManager.busy = true;
     if (!_hasStarted) {
-      await memoryManager.save();
+      memoryManager.save();
       _init(input);
     } else {
       Logger.log("Input: $input");

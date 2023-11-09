@@ -59,14 +59,14 @@ class _ModelPageState extends State<ModelPage> {
                   DoubleButtonRow(
                     leftText: "New Preset",
                     leftOnPressed: () async {
-                      await memoryManager.save();
+                      memoryManager.save();
                       model = Model();
                       model.nameController.text = "New Preset";
                       setState(() {});
                     },
                     rightText: "Delete Preset",
                     rightOnPressed: () async {
-                      await memoryManager.removeModel();
+                      memoryManager.removeModel();
                       setState(() {});
                     },
                   ),

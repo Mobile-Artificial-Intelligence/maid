@@ -59,14 +59,14 @@ class _CharacterPageState extends State<CharacterPage> {
                 DoubleButtonRow(
                   leftText: "New Preset",
                   leftOnPressed: () async {
-                    await memoryManager.save();
+                    memoryManager.save();
                     character = Character();
                     character.nameController.text = "New Preset";
                     setState(() {});
                   },
                   rightText: "Delete Preset",
                   rightOnPressed: () async {
-                    await memoryManager.removeCharacter();
+                    memoryManager.removeCharacter();
                     setState(() {});
                   },
                 ),

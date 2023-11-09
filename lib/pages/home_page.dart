@@ -82,26 +82,25 @@ class MaidHomePageState extends State<MaidHomePage> {
       FocusScope.of(context).unfocus();
     }
 
-    MessageManager.add(UniqueKey(),
-        message: promptController.text.trim(), userGenerated: true);
+    MessageManager.add(UniqueKey(), 
+      message: promptController.text.trim(), 
+      userGenerated: true
+    );
     MessageManager.add(UniqueKey());
 
-    // example
-    memoryManager.checkFileExists(model.parameters["model_path"]).then((exist) {
-      if (exist) {
-        Core.instance.prompt(promptController.text.trim());
-        setState(() {
-          model.busy = true;
-          promptController.clear();
-        });
-      } else {
-        _missingModelDialog();
-        setState(() {
-          model.busy = false;
-          promptController.clear();
-        });
-      }
-    });
+    if (memoryManager.checkFileExists(model.parameters["model_path"]))  {
+      Core.instance.prompt(promptController.text.trim());
+      setState(() {
+        model.busy = true;
+        promptController.clear();
+      });
+    } else {
+      _missingModelDialog();
+      setState(() {
+        model.busy = false;
+        promptController.clear();
+      });
+    };
   }
 
   void updateCallback() {

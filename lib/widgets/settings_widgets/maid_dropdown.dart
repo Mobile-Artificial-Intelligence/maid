@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class MaidDropDown extends StatefulWidget {
   final TextEditingController presetController;
   final List<String> Function() getMenuStrings;
-  final Future<void> Function(String) update;
-  final Future<void> Function(String) set;
+  final void Function(String) update;
+  final void Function(String) set;
 
 
   const MaidDropDown({super.key, 
@@ -47,12 +47,12 @@ class _MaidDropDownState extends State<MaidDropDown> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   title: Text(widget.getMenuStrings()[index]),
-                  onTap: () async {
+                  onTap: () => setState(() {
                     widget.presetController.text = widget.getMenuStrings()[index];
-                    await widget.set(widget.getMenuStrings()[index]);
+                    widget.set(widget.getMenuStrings()[index]);
                     closeDialog();
                     setState(() {});
-                  },
+                  }),
                 );
               },
             ),
@@ -92,15 +92,15 @@ class _MaidDropDownState extends State<MaidDropDown> {
         decoration: const InputDecoration(
           labelText: "Preset",
         ),
-        onSubmitted: (value) async {
+        onSubmitted: (value) => setState(() {
           if (widget.getMenuStrings().contains(value)) {
             print("Setting preset to $value");
-            await widget.set(value);
+            widget.set(value);
           } else if (value.isNotEmpty) {
-            await widget.update(widget.presetController.text);
+            widget.update(widget.presetController.text);
           }
           setState(() {});
-        },
+        }),
       ),
     );
   }

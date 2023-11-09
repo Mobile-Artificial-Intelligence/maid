@@ -19,73 +19,74 @@ class MemoryManager {
   }
 
   void init() async {
-    var prefs = await SharedPreferences.getInstance();
+    SharedPreferences.getInstance().then((prefs) {
+      _models = json.decode(prefs.getString("models") ?? "{}");
+      _characters = json.decode(prefs.getString("characters") ?? "{}");
 
-    _models = json.decode(prefs.getString("models") ?? "{}");
-    _characters = json.decode(prefs.getString("characters") ?? "{}");
+      if (_models.isEmpty) {
+        model = Model();
+      } else {
+        model = Model.fromMap(
+            _models[prefs.getString("current_model") ?? "Default"] ?? {});
+      }
 
-    if (_models.isEmpty) {
-      model = Model();
-    } else {
-      model = Model.fromMap(
-          _models[prefs.getString("current_model") ?? "Default"] ?? {});
-    }
-
-    if (_characters.isEmpty) {
-      character = Character();
-    } else {
-      character = Character.fromMap(
-          _characters[prefs.getString("current_character") ?? "Default"] ?? {});
-    }
+      if (_characters.isEmpty) {
+        character = Character();
+      } else {
+        character = Character.fromMap(
+            _characters[prefs.getString("current_character") ?? "Default"] ?? {});
+      }
+    });
   }
 
-  Future<void> save() async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+  void save() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.clear();
 
-    _models[model.nameController.text] = model.toMap();
-    Logger.log("Model Saved: ${model.nameController.text}");
-    _characters[character.nameController.text] = character.toMap();
-    Logger.log("Character Saved: ${character.nameController.text}");
+      _models[model.nameController.text] = model.toMap();
+      Logger.log("Model Saved: ${model.nameController.text}");
+      _characters[character.nameController.text] = character.toMap();
+      Logger.log("Character Saved: ${character.nameController.text}");
 
-    prefs.setString("models", json.encode(_models));
-    prefs.setString("characters", json.encode(_characters));
-    prefs.setString("current_model", model.nameController.text);
-    prefs.setString("current_character", character.nameController.text);
+      prefs.setString("models", json.encode(_models));
+      prefs.setString("characters", json.encode(_characters));
+      prefs.setString("current_model", model.nameController.text);
+      prefs.setString("current_character", character.nameController.text);
 
-    Core.instance.cleanup();
+      Core.instance.cleanup();
+    });
   }
 
-  Future<void> updateModel(String newName) async {
+  void updateModel(String newName) {
     String oldName = model.nameController.text;
     Logger.log("Updating model $oldName ====> $newName");
     model.nameController.text = newName;
     _models.remove(oldName);
-    await save();
+    save();
   }
 
-  Future<void> updateCharacter(String newName) async {
+  void updateCharacter(String newName) {
     String oldName = character.nameController.text;
     Logger.log("Updating character $oldName ====> $newName");
     character.nameController.text = newName;
     _characters.remove(oldName);
-    await save();
+    save();
   }
 
-  Future<void> removeModel() async {
+  void removeModel() {
     _models.remove(model.nameController.text);
     model = Model.fromMap(
       _models[_models.keys.lastOrNull ?? "Default"] ?? {}
     );
-    await save();
+    save();
   }
 
-  Future<void> removeCharacter() async {
+  void removeCharacter() {
     _characters.remove(character.nameController.text);
     character = Character.fromMap(
       _characters[_characters.keys.lastOrNull ?? "Default"] ?? {}
     );
-    await save();
+    save();
   }
 
   List<String> getModels() {
@@ -96,22 +97,22 @@ class MemoryManager {
     return _characters.keys.toList();
   }
 
-  Future<void> setModel(String modelName) async {
-    await save();
+  void setModel(String modelName) {
+    save();
     model = Model.fromMap(_models[modelName] ?? {});
     Logger.log("Model Set: ${model.nameController.text}");
-    await save();
+    save();
   }
 
-  Future<void> setCharacter(String characterName) async {
-    await save();
+  void setCharacter(String characterName) {
+    save();
     character = Character.fromMap(_characters[characterName] ?? {});
     Logger.log("Character Set: ${character.nameController.text}");
-    await save();
+    save();
   }
 
-  Future<bool> checkFileExists(String filePath) async {
+  bool checkFileExists(String filePath) {
     File file = File(filePath);
-    return await file.exists();
+    return file.existsSync();
   }
 }
