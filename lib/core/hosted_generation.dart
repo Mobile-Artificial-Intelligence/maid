@@ -1,30 +1,40 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:maid/utilities/host.dart';
+import 'package:maid/utilities/message_manager.dart';
 
 class HostedGeneration {
   static void prompt(String input) async {
-    final url = Uri.parse(Host.urlController.text);
+    final url = Uri.parse("${Host.urlController.text}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
-      "model": "llama2:7b",
+      "model": "llama2:7b", // TODO: Make this configurable
       "prompt": prompt,
     });
 
     try {
-      final response = await http.post(url, headers: headers, body: body);
-      if (response.statusCode == 200) {
-        // Assuming the server returns a JSON object with the generated text
-        var responseData = json.decode(response.body);
-        // You need to check the structure of your response and access it accordingly
-        //return responseData['generatedText']; // This key might be different based on your actual response
-      } else {
-        // Handle the case where the server returns a non-200 status code
-        //return 'Error: Server returned a status of ${response.statusCode}';
+      var request = http.Request("POST", url)
+        ..headers.addAll(headers)
+        ..body = body;
+
+      final streamedResponse = await request.send();
+
+      await for (var value in streamedResponse.stream.transform(utf8.decoder).transform(const LineSplitter())) {
+        final data = json.decode(value);
+        final responseText = data['response'] as String?;
+        final done = data['done'] as bool?;
+
+        if (responseText != null && responseText.isNotEmpty) {
+          MessageManager.stream(responseText);
+        }
+
+        if (done ?? false) {
+          break;
+        }
       }
     } catch (e) {
       // Handle any errors that occur during the POST
-      //return 'Error: $e';
+      print('Error: $e');
     }
   }
 }

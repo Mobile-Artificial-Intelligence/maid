@@ -230,32 +230,13 @@ class MaidHomePageState extends State<MaidHomePage> {
             ),
             if (GenerationManager.hosted)
               ListTile(
-                title: Column(
-                  children: [
-                    TextField(
-                      cursorColor: Theme.of(context).colorScheme.secondary,
-                      controller: Host.urlController,
-                      decoration: const InputDecoration(
-                        labelText: 'URL',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      cursorColor: Theme.of(context).colorScheme.secondary,
-                      decoration: const InputDecoration(
-                        labelText: 'Port',
-                      ),
-                      onSubmitted: (value) {
-                        if (value.isNotEmpty && value is int) {
-                          Host.port = int.tryParse(value) ?? 11434;
-                        }
-                      }
-                    ),
-                  ],
-                )
+                title: TextField(
+                  cursorColor: Theme.of(context).colorScheme.secondary,
+                  controller: Host.urlController,
+                  decoration: const InputDecoration(
+                    labelText: 'URL',
+                  ),
+                ),
               ),
           ],
         ),
