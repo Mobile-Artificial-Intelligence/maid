@@ -129,10 +129,10 @@ class LocalGeneration {
     await completer.future;
   }
 
-  void prompt(String input) {
+  void prompt(String input) async {
     MessageManager.busy = true;
     if (!_hasStarted) {
-      MemoryManager.save();
+      await MemoryManager.asave();
       _init(input);
     } else {
       Logger.log("Input: $input");
