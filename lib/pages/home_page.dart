@@ -272,7 +272,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (model.busy)
+                        if (model.busy && !GenerationManager.hosted)
                           IconButton(
                               onPressed: LocalGeneration.instance.stop,
                               iconSize: 50,

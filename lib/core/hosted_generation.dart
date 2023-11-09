@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:maid/utilities/host.dart';
+import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
+import 'package:maid/utilities/model.dart';
 
 class HostedGeneration {
   static void prompt(String input) async {
@@ -33,8 +35,10 @@ class HostedGeneration {
         }
       }
     } catch (e) {
-      // Handle any errors that occur during the POST
-      print('Error: $e');
+      Logger.log('Error: $e');
     }
+
+    model.busy = false;
+    MessageManager.stream("");
   }
 }
