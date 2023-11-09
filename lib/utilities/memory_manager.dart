@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:maid/utilities/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:maid/core/core.dart';
+import 'package:maid/core/local_generation.dart';
 import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/character.dart';
 
@@ -47,7 +47,7 @@ class MemoryManager {
       prefs.setString("current_model", model.nameController.text);
       prefs.setString("current_character", character.nameController.text);
 
-      Core.instance.cleanup();
+      LocalGeneration.instance.cleanup();
     });
   }
 
