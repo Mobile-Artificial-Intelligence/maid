@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 class MaidDropDown extends StatefulWidget {
   final TextEditingController presetController = TextEditingController();
@@ -99,13 +98,13 @@ class _MaidDropDownState extends State<MaidDropDown> {
         decoration: const InputDecoration(
           labelText: "Preset",
         ),
-        onSubmitted: (value) => () async {
+        onSubmitted: (value) async {
           if (widget.getMenuStrings().contains(value)) {
+            print("Setting preset to $value");
             await widget.set(value);
           } else {
             await widget.update(widget.presetController.text);
           }
-          setState(() {});
         },
       ),
     );

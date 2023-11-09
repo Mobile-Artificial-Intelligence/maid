@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/utilities/file_manager.dart';
+import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/memory_manager.dart';
 
@@ -52,6 +53,8 @@ class Character {
         exampleResponseControllers.add(TextEditingController(text: exampleResponse));
       }
     }
+
+    Logger.log("Character created with name: ${inputJson["name"]}");
   }
 
   Map<String, dynamic> toMap() {
@@ -76,6 +79,7 @@ class Character {
       jsonCharacter["example"].add(example);
     }
 
+    Logger.log("Character JSON created with name: $name");
     return jsonCharacter;
   }
 

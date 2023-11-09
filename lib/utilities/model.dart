@@ -26,8 +26,8 @@ class Model {
       resetAll();
     } else {
       name = inputJson["name"] ?? "Default";
-      Logger.log("Model created with name: ${inputJson["name"]}");
       parameters = inputJson;
+      Logger.log("Model created with name: ${inputJson["name"]}");
     }
   }
 
@@ -36,7 +36,7 @@ class Model {
 
     jsonModel = parameters;
     jsonModel["name"] = name;
-    Logger.log("JSON created with name: $name");
+    Logger.log("Model JSON created with name: $name");
 
     return jsonModel;
   }

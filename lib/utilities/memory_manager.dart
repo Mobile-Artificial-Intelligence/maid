@@ -74,14 +74,17 @@ class MemoryManager {
 
   Future<void> removeModel() async {
     _models.remove(model.name);
-    model = Model.fromMap(_models[_models.keys.lastOrNull ?? "Default"] ?? {});
+    model = Model.fromMap(
+      _models[_models.keys.lastOrNull ?? "Default"] ?? {}
+    );
     await save();
   }
 
   Future<void> removeCharacter() async {
     _characters.remove(character.name);
     character = Character.fromMap(
-        _characters[_characters.keys.lastOrNull ?? "Default"] ?? {});
+      _characters[_characters.keys.lastOrNull ?? "Default"] ?? {}
+    );
     await save();
   }
 
@@ -94,19 +97,19 @@ class MemoryManager {
   }
 
   Future<void> setModel(String? modelName) async {
-    await save();
     model = Model.fromMap(_models[modelName ?? "Default"] ?? {});
+    Logger.log("Model Set: ${model.name}");
+    await save();
   }
 
   Future<void> setCharacter(String? characterName) async {
+    character = Character.fromMap(_characters[characterName ?? "Default"] ?? {});
+    Logger.log("Character Set: ${character.name}");
     await save();
-    character =
-        Character.fromMap(_characters[characterName ?? "Default"] ?? {});
   }
 
   Future<bool> checkFileExists(String filePath) async {
     File file = File(filePath);
     return await file.exists();
   }
-
 }
