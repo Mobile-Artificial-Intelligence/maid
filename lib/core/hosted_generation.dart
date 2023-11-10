@@ -30,6 +30,7 @@ class HostedGeneration {
         "top_p": model.parameters["top_p"],
         "tfs_z": model.parameters["tfs_z"],
         "typical_p": model.parameters["typical_p"],
+        "repeat_last_n": model.parameters["penalty_last_n"],
         "temperature": model.parameters["temperature"],
         "repeat_penalty": model.parameters["penalty_repeat"],
         "presence_penalty": model.parameters["penalty_present"],

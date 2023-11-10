@@ -98,19 +98,10 @@ final class maid_params extends ffi.Struct {
   external int n_threads;
 
   @ffi.Int()
-  external int n_threads_batch;
-
-  @ffi.Int()
   external int n_predict;
 
   @ffi.Int()
   external int n_keep;
-
-  @ffi.Int()
-  external int n_prev;
-
-  @ffi.Int()
-  external int n_probs;
 
   @ffi.Int()
   external int top_k;

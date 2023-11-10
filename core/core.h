@@ -25,12 +25,9 @@ struct maid_params {
    int n_ctx;                             // context size
    int n_batch;                           // batch size for prompt processing (must be >=32 to use BLAS)
    int n_threads;                         // number of threads to use for processing
-   int n_threads_batch; //Not used        // number of threads to use for batch processing
    int n_predict;                         // new tokens to predict
    int n_keep;                            // number of tokens to keep from initial prompt
 
-   int n_prev;                            // number of previous tokens to remember
-   int n_probs;                           // if greater than 0, output the probabilities of top n_probs tokens.
    int top_k;                             // <= 0 to use vocab size
    float top_p;                           // 1.0 = disabled
    float tfs_z;                           // 1.0 = disabled

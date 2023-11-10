@@ -254,28 +254,6 @@ class _ModelPageState extends State<ModelPage> {
                             })
                           }),
                   MaidSlider(
-                      labelText: 'n_prev',
-                      inputValue: model.parameters["n_prev"],
-                      sliderMin: 1.0,
-                      sliderMax: 1024.0,
-                      sliderDivisions: 1023,
-                      onValueChanged: (value) => {
-                            setState(() {
-                              model.parameters["n_prev"] = value.round();
-                            })
-                          }),
-                  MaidSlider(
-                      labelText: 'n_probs',
-                      inputValue: model.parameters["n_probs"],
-                      sliderMin: 0.0,
-                      sliderMax: 128.0,
-                      sliderDivisions: 127,
-                      onValueChanged: (value) => {
-                            setState(() {
-                              model.parameters["n_probs"] = value.round();
-                            })
-                          }),
-                  MaidSlider(
                       labelText: 'top_k',
                       inputValue: model.parameters["top_k"],
                       sliderMin: 1.0,
