@@ -15,6 +15,7 @@ class Model {
   TextEditingController nameController = TextEditingController()..text = "Default";
   Map<String, dynamic> parameters = {};
 
+  bool hosted = false;
   bool busy = false;
 
   Model() {
@@ -51,9 +52,10 @@ class Model {
     MemoryManager.save();
   }
 
-  Future<String> saveParametersToJson(BuildContext context) async {
+  Future<String> exportModelParameters(BuildContext context) async {
     try {
       parameters["name"] = nameController.text;
+      parameters["hosted"] = hosted;
 
       String jsonString = json.encode(parameters);
       
@@ -69,7 +71,7 @@ class Model {
     }
   }
 
-  Future<String> loadParametersFromJson(BuildContext context) async {
+  Future<String> importModelParameters(BuildContext context) async {
     try {
       File? file = await FileManager.load(context, [".json"]);
 
@@ -85,6 +87,7 @@ class Model {
         resetAll();
         return "Failed to decode parameters";
       } else {
+        hosted = parameters["hosted"] ?? false;
         nameController.text = parameters["name"] ?? "Default";
       }
     } catch (e) {

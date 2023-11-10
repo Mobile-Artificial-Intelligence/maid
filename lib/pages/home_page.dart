@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/generation_manager.dart';
+import 'package:maid/utilities/host.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/message_manager.dart';
+import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 import 'package:system_info2/system_info2.dart';
 
@@ -89,7 +92,7 @@ class MaidHomePageState extends State<MaidHomePage> {
     MessageManager.add(UniqueKey());
 
     if (MemoryManager.checkFileExists(model.parameters["model_path"]))  {
-      LocalGeneration.instance.prompt(promptController.text.trim());
+      GenerationManager.prompt(promptController.text.trim());
       setState(() {
         model.busy = true;
         promptController.clear();
@@ -101,6 +104,8 @@ class MaidHomePageState extends State<MaidHomePage> {
         promptController.clear();
       });
     };
+
+    MemoryManager.save();
   }
 
   void updateCallback() {
@@ -210,7 +215,31 @@ class MaidHomePageState extends State<MaidHomePage> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const AboutPage()));
               },
-            )
+            ),
+            Divider(
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            SwitchListTile(
+              title: const Text('Local / Hosted'),
+              value: GenerationManager.hosted,
+              onChanged: (value) {
+                setState(() {
+                  GenerationManager.hosted = value;
+                });
+              },
+            ),
+            if (GenerationManager.hosted)
+              ListTile(
+                title: TextField(
+                  cursorColor: Theme.of(context).colorScheme.secondary,
+                  controller: Host.urlController,
+                  decoration: const InputDecoration(
+                    labelText: 'URL',
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -245,7 +274,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (model.busy)
+                        if (model.busy && !GenerationManager.hosted)
                           IconButton(
                               onPressed: LocalGeneration.instance.stop,
                               iconSize: 50,
