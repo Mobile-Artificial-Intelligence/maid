@@ -23,6 +23,7 @@ class HostedGeneration {
       "system": character.prePromptController.text,
       "messages": _messages,
       "options": {
+        "num_keep": model.parameters["n_keep"],
         "seed": model.parameters["random_seed"] ? -1 : model.parameters["seed"],
         "num_predict": model.parameters["n_predict"],
         "top_k": model.parameters["top_k"],

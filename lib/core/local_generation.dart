@@ -90,6 +90,7 @@ class LocalGeneration {
     params.ref.n_threads          = model.parameters["n_threads"];
     params.ref.n_batch            = model.parameters["n_batch"];
     params.ref.n_predict          = model.parameters["n_predict"];
+    params.ref.n_keep             = model.parameters["n_keep"];
     params.ref.instruct           = model.parameters["instruct"]            ? 1 : 0;
     params.ref.interactive        = model.parameters["interactive"]         ? 1 : 0;
     params.ref.memory_f16         = model.parameters["memory_f16"]          ? 1 : 0;
