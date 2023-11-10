@@ -83,31 +83,29 @@ class _PresetSwitcherState extends State<PresetSwitcher> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: GestureDetector(
-        onLongPress: () async {
-          await _switcherDialog(
-            context
-          );
-          setState(() {});
-        },
-        child: TextField(
-          cursorColor: Theme.of(context).colorScheme.secondary,
-          controller: widget.presetController,
-          textAlign: TextAlign.center,
-          decoration: const InputDecoration(
-            labelText: "Preset",
-          ),
-          onSubmitted: (value) => setState(() {
-            if (widget.getMenuStrings().contains(value)) {
-              widget.set(value);
-            } else if (value.isNotEmpty) {
-              widget.update(widget.presetController.text);
-            }
-            setState(() {});
-            widget.refresh();
-          }),
+      onLongPress: () async {
+        await _switcherDialog(
+          context
+        );
+        setState(() {});
+      },
+      title: TextField(
+        cursorColor: Theme.of(context).colorScheme.secondary,
+        controller: widget.presetController,
+        textAlign: TextAlign.center,
+        decoration: const InputDecoration(
+          labelText: "Preset",
         ),
-      )
+        onSubmitted: (value) => setState(() {
+          if (widget.getMenuStrings().contains(value)) {
+            widget.set(value);
+          } else if (value.isNotEmpty) {
+            widget.update(widget.presetController.text);
+          }
+          setState(() {});
+          widget.refresh();
+        }),
+      ),
     );
   }
 }
