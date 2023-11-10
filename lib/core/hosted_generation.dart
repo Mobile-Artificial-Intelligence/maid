@@ -1,17 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:maid/utilities/character.dart';
 import 'package:maid/utilities/host.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/model.dart';
 
 class HostedGeneration {
+  static List<int> _context = [];
+  
   static void prompt(String input) async {
     final url = Uri.parse("${Host.urlController.text}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
       "model": "llama2:7b", // TODO: Make this configurable
       "prompt": input,
+      "context": _context,
+      "system": character.prePromptController.text,
     });
 
     try {
@@ -24,7 +29,12 @@ class HostedGeneration {
       await for (var value in streamedResponse.stream.transform(utf8.decoder).transform(const LineSplitter())) {
         final data = json.decode(value);
         final responseText = data['response'] as String?;
+        final newContext = data['context'] as List<dynamic>?; 
         final done = data['done'] as bool?;
+
+        if (newContext != null) {
+          _context = newContext.cast<int>();
+        }
 
         if (responseText != null && responseText.isNotEmpty) {
           MessageManager.stream(responseText);

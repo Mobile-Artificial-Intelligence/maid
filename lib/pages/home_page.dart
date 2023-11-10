@@ -104,6 +104,8 @@ class MaidHomePageState extends State<MaidHomePage> {
         promptController.clear();
       });
     };
+
+    MemoryManager.save();
   }
 
   void updateCallback() {
