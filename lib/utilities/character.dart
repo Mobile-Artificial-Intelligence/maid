@@ -13,7 +13,6 @@ Character character = Character();
 
 class Character {  
   TextEditingController nameController = TextEditingController()..text = "Maid";
-  
   TextEditingController prePromptController = TextEditingController();
   
   List<TextEditingController> examplePromptControllers = [];
@@ -203,17 +202,30 @@ class Character {
       }
     }
 
-    Map<String, bool> history = MessageManager.getMessages();
+    List<Map<String, dynamic>> history = MessageManager.getMessages();
     if (history.isNotEmpty) {
-      history.forEach((key, value) {
-        if (value) {
-          prePrompt += "\n${userAliasController.text.trim()} $key";
-        } else {
-          prePrompt += "\n${responseAliasController.text.trim()} $key";
+      for (var i = 0; i < history.length; i++) {
+        var prompt = '${userAliasController.text.trim()} ${history[i]["prompt"].trim()}';
+        var response = '${responseAliasController.text.trim()} ${history[i]["response"].trim()}';
+        if (prompt.isNotEmpty && response.isNotEmpty) {
+          prePrompt += "\n$prompt\n$response";
         }
-      });
+      }
     }
 
     return prePrompt;
+  }
+
+  List<Map<String, dynamic>> getExamples() {
+    List<Map<String, dynamic>> examples = [];
+
+    for (var i = 0; i < examplePromptControllers.length; i++) {
+      examples.add({
+        "prompt": examplePromptControllers[i].text,
+        "response": exampleResponseControllers[i].text,
+      });
+    }
+
+    return examples;
   }
 }
