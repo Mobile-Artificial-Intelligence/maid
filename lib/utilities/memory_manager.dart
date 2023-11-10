@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:maid/utilities/generation_manager.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,8 @@ class MemoryManager {
 
   static void init() {
     SharedPreferences.getInstance().then((prefs) {
+      GenerationManager.hosted = prefs.getBool("hosted") ?? false;
+
       _models = json.decode(prefs.getString("models") ?? "{}");
       _characters = json.decode(prefs.getString("characters") ?? "{}");
 
@@ -35,6 +38,8 @@ class MemoryManager {
 
   static void _save(SharedPreferences prefs) {
     prefs.clear();
+
+    prefs.setBool("hosted", GenerationManager.hosted);
 
     _models[model.nameController.text] = model.toMap();
     Logger.log("Model Saved: ${model.nameController.text}");

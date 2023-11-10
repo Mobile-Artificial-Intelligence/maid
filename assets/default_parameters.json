@@ -8,7 +8,7 @@
     "seed":-1,
     "n_ctx":512,
     "n_batch":8,
-    "n_threads":4,
+    "n_threads":8,
     "n_predict":512,
     "n_keep":48,
     "n_prev":64,

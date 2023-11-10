@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/generation_manager.dart';
 import 'package:maid/utilities/model.dart';
 import 'package:maid/core/local_generation.dart';
 
@@ -68,7 +69,7 @@ class MessageManager {
     } else {
       branch(key, false);
       model.busy = true;
-      LocalGeneration.instance.prompt(parent.message);
+      GenerationManager.prompt(parent.message);
     }
   }
 
