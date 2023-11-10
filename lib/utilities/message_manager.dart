@@ -155,21 +155,28 @@ class MessageManager {
     return history;
   }
 
-  static Map<String, bool> getMessages() {
-    final Map<String, bool> messages = {};
+  static List<Map<String, dynamic>> getMessages() {
+    final List<Map<String, dynamic>> messages = [];
     var current = _root;
+    var index = 0;
 
     while (current.currentChild != null) {
       current = current.find(current.currentChild!)!;
-      messages[current.message] = current.userGenerated;
+      if (current.userGenerated) {
+        messages.add({
+          "prompt": current.message,
+        });
+      } else {
+        messages.last["response"] = current.message;
+      }
     }
     
     //remove last message if it is empty
-    if (messages.keys.last.isEmpty) {
-      messages.remove(messages.keys.last);
+    if (messages.last.isEmpty) {
+      messages.remove(messages.last);
     }
 
-    messages.remove(messages.keys.last); //remove last message
+    messages.remove(messages.last); //remove last message
 
     return messages;
   }

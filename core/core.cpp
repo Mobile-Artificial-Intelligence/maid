@@ -55,12 +55,9 @@ int core_init(struct maid_params *mparams) {
     params.n_ctx                    = (*mparams).n_ctx             ? (*mparams).n_ctx             : 512;
     params.n_batch                  = (*mparams).n_batch           ? (*mparams).n_batch           : 8;
     params.n_threads                = (*mparams).n_threads         ? (*mparams).n_threads         : get_num_physical_cores();
-    params.n_threads_batch          = (*mparams).n_threads_batch   ? (*mparams).n_threads_batch   : -1;
     params.n_predict                = (*mparams).n_predict         ? (*mparams).n_predict         : 256;
     params.n_keep                   = (*mparams).n_keep            ? (*mparams).n_keep            : 48;
 
-    params.sparams.n_prev           = (*mparams).n_prev            ? (*mparams).n_prev            : 64;
-    params.sparams.n_probs          = (*mparams).n_probs           ? (*mparams).n_probs           : 0;
     params.sparams.top_k            = (*mparams).top_k             ? (*mparams).top_k             : 40;
     params.sparams.top_p            = (*mparams).top_p             ? (*mparams).top_p             : 0.95f;
     params.sparams.tfs_z            = (*mparams).tfs_z             ? (*mparams).tfs_z             : 1.00f;

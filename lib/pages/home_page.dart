@@ -81,31 +81,31 @@ class MaidHomePageState extends State<MaidHomePage> {
   }
 
   void send() {
-    if (Platform.isAndroid || Platform.isIOS) {
-      FocusScope.of(context).unfocus();
-    }
+    MemoryManager.asave().then((value) {
+      if (Platform.isAndroid || Platform.isIOS) {
+        FocusScope.of(context).unfocus();
+      }
 
-    MessageManager.add(UniqueKey(), 
-      message: promptController.text.trim(), 
-      userGenerated: true
-    );
-    MessageManager.add(UniqueKey());
+      MessageManager.add(UniqueKey(), 
+        message: promptController.text.trim(), 
+        userGenerated: true
+      );
+      MessageManager.add(UniqueKey());
 
-    if (MemoryManager.checkFileExists(model.parameters["model_path"]))  {
-      GenerationManager.prompt(promptController.text.trim());
-      setState(() {
-        model.busy = true;
-        promptController.clear();
-      });
-    } else {
-      _missingModelDialog();
-      setState(() {
-        model.busy = false;
-        promptController.clear();
-      });
-    };
-
-    MemoryManager.save();
+      if (MemoryManager.checkFileExists(model.parameters["model_path"]))  {
+        GenerationManager.prompt(promptController.text.trim());
+        setState(() {
+          model.busy = true;
+          promptController.clear();
+        });
+      } else {
+        _missingModelDialog();
+        setState(() {
+          model.busy = false;
+          promptController.clear();
+        });
+      }
+    });
   }
 
   void updateCallback() {

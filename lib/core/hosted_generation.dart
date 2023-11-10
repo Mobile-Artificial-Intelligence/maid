@@ -8,22 +8,29 @@ import 'package:maid/utilities/model.dart';
 
 class HostedGeneration {
   static List<int> _context = [];
+  static List<Map<String, dynamic>> _messages = [];
   
   static void prompt(String input) async {
+    _messages = character.getExamples();
+    _messages.addAll(MessageManager.getMessages());
+    
     final url = Uri.parse("${Host.urlController.text}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
       "model": "llama2:7b", // TODO: Make this configurable
       "prompt": input,
-      "context": _context,
+      "context": _context, // TODO: DEPRECATED SOON
       "system": character.prePromptController.text,
+      "messages": _messages,
       "options": {
+        "num_keep": model.parameters["n_keep"],
         "seed": model.parameters["random_seed"] ? -1 : model.parameters["seed"],
         "num_predict": model.parameters["n_predict"],
         "top_k": model.parameters["top_k"],
         "top_p": model.parameters["top_p"],
         "tfs_z": model.parameters["tfs_z"],
         "typical_p": model.parameters["typical_p"],
+        "repeat_last_n": model.parameters["penalty_last_n"],
         "temperature": model.parameters["temperature"],
         "repeat_penalty": model.parameters["penalty_repeat"],
         "presence_penalty": model.parameters["penalty_present"],
@@ -37,6 +44,8 @@ class HostedGeneration {
         "num_thread": model.parameters["n_threads"],
       }
     });
+
+    print(_messages);
 
     try {
       var request = http.Request("POST", url)
