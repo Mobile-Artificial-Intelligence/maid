@@ -17,6 +17,25 @@ class HostedGeneration {
       "prompt": input,
       "context": _context,
       "system": character.prePromptController.text,
+      "options": {
+        "seed": model.parameters["random_seed"] ? -1 : model.parameters["seed"],
+        "num_predict": model.parameters["n_predict"],
+        "top_k": model.parameters["top_k"],
+        "top_p": model.parameters["top_p"],
+        "tfs_z": model.parameters["tfs_z"],
+        "typical_p": model.parameters["typical_p"],
+        "temperature": model.parameters["temperature"],
+        "repeat_penalty": model.parameters["penalty_repeat"],
+        "presence_penalty": model.parameters["penalty_present"],
+        "frequency_penalty": model.parameters["penalty_freq"],
+        "mirostat": model.parameters["mirostat"],
+        "mirostat_tau": model.parameters["mirostat_tau"],
+        "mirostat_eta": model.parameters["mirostat_eta"],
+        "penalize_newline": model.parameters["penalize_nl"],
+        "num_ctx": model.parameters["n_ctx"],
+        "num_batch": model.parameters["n_batch"],
+        "num_thread": model.parameters["n_threads"],
+      }
     });
 
     try {
