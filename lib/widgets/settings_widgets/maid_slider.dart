@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MaidSlider extends StatelessWidget{
+class MaidSlider extends StatelessWidget {
   final String labelText;
   final num inputValue;
   final double sliderMin;
@@ -8,7 +8,8 @@ class MaidSlider extends StatelessWidget{
   final int sliderDivisions;
   final Function(double) onValueChanged;
 
-  const MaidSlider({super.key, 
+  const MaidSlider({
+    super.key,
     required this.labelText,
     required this.inputValue,
     required this.sliderMin,
@@ -20,6 +21,9 @@ class MaidSlider extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     String labelValue;
+    TextEditingController textController = TextEditingController(
+      text: inputValue.toString(),
+    );
 
     // I finput value is a double
     if (inputValue is int) {
@@ -28,7 +32,7 @@ class MaidSlider extends StatelessWidget{
     } else {
       labelValue = inputValue.toStringAsFixed(3);
     }
-    
+
     return ListTile(
       title: Row(
         children: [
@@ -37,7 +41,7 @@ class MaidSlider extends StatelessWidget{
             child: Text(labelText),
           ),
           Expanded(
-            flex: 7,
+            flex: 6,
             child: Slider(
               value: inputValue.toDouble(),
               min: sliderMin,
@@ -50,8 +54,23 @@ class MaidSlider extends StatelessWidget{
             ),
           ),
           Expanded(
-            flex: 1,
-            child: Text(labelValue),
+            flex: 2,
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              controller: textController,
+              onEditingComplete: () {
+                final parsedValue =
+                    double.tryParse(textController.text) ?? sliderMin;
+                if (parsedValue < sliderMin) {
+                  onValueChanged(sliderMin);
+                } else if (parsedValue > sliderMax) {
+                  onValueChanged(sliderMax);
+                } else {
+                  onValueChanged(parsedValue);
+                }
+              },
+            ),
           ),
         ],
       ),
