@@ -12,10 +12,10 @@ import 'package:maid/utilities/memory_manager.dart';
 Model model = Model();
 
 class Model {
-  TextEditingController nameController = TextEditingController()..text = "Default";
+  String preset = "Default";
   Map<String, dynamic> parameters = {};
 
-  bool hosted = false;
+  bool local = false;
   bool busy = false;
 
   Model() {
@@ -26,7 +26,8 @@ class Model {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
-      nameController.text = inputJson["name"] ?? "Default";
+      preset = inputJson["preset"] ?? "Default";
+      local = inputJson["local"] ?? false;
       parameters = inputJson;
       Logger.log("Model created with name: ${inputJson["name"]}");
     }
@@ -36,8 +37,9 @@ class Model {
     Map<String, dynamic> jsonModel = {};
 
     jsonModel = parameters;
-    jsonModel["name"] = nameController.text;
-    Logger.log("Model JSON created with name: ${nameController.text}");
+    jsonModel["preset"] = preset;
+    jsonModel["local"] = local;
+    Logger.log("Model JSON created with name: $preset");
 
     return jsonModel;
   }
@@ -48,18 +50,19 @@ class Model {
         await rootBundle.loadString('assets/default_parameters.json');
 
     parameters = json.decode(jsonString);
+    local = false;
 
     MemoryManager.save();
   }
 
   Future<String> exportModelParameters(BuildContext context) async {
     try {
-      parameters["name"] = nameController.text;
-      parameters["hosted"] = hosted;
+      parameters["preset"] = preset;
+      parameters["local"] = local;
 
       String jsonString = json.encode(parameters);
       
-      File? file = await FileManager.save(context, nameController.text);
+      File? file = await FileManager.save(context, preset);
 
       if (file == null) return "Error saving file";
 
@@ -87,8 +90,8 @@ class Model {
         resetAll();
         return "Failed to decode parameters";
       } else {
-        hosted = parameters["hosted"] ?? false;
-        nameController.text = parameters["name"] ?? "Default";
+        local = parameters["local"] ?? false;
+        preset = parameters["preset"] ?? "Default";
       }
     } catch (e) {
       resetAll();
@@ -106,8 +109,7 @@ class Model {
       
       Logger.log("Loading model from $file");
 
-      parameters["model_path"] = file.path;
-      parameters["model_name"] = path.basename(file.path);
+      parameters["path"] = file.path;
     } catch (e) {
       return "Error: $e";
     }

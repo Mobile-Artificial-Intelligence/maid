@@ -6,21 +6,26 @@ import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/model.dart';
 
-class HostedGeneration {
+class RemoteGeneration {
   static List<int> _context = [];
   static List<Map<String, dynamic>> _messages = [];
   
   static void prompt(String input) async {
-    _messages = character.getExamples();
+    _messages = character.examples;
     _messages.addAll(MessageManager.getMessages());
+
+    var remoteModel = model.parameters["remote_model"] ?? "llama2";
+    if (model.parameters["remote_tag"] != null) {
+      remoteModel += ":${model.parameters["remote_tag"]}";
+    }
     
     final url = Uri.parse("${Host.urlController.text}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
-      "model": "llama2:7b", // TODO: Make this configurable
+      "model": remoteModel,
       "prompt": input,
       "context": _context, // TODO: DEPRECATED SOON
-      "system": character.prePromptController.text,
+      "system": character.prePrompt,
       "messages": _messages,
       "options": {
         "num_keep": model.parameters["n_keep"],
@@ -44,8 +49,6 @@ class HostedGeneration {
         "num_thread": model.parameters["n_threads"],
       }
     });
-
-    print(_messages);
 
     try {
       var request = http.Request("POST", url)

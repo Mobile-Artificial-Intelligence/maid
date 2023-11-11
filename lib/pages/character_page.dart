@@ -3,7 +3,6 @@ import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/preset_switcher.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -49,27 +48,60 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                PresetSwitcher(
-                  presetController: character.nameController, 
-                  getMenuStrings: MemoryManager.getCharacters,
-                  update: MemoryManager.updateCharacter,
-                  set: MemoryManager.setCharacter,
-                  refresh: () => setState(() {}),
+                Text(
+                  character.name,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 20.0),
+                FilledButton(
+                  onPressed: () {
+                    switcherDialog(
+                      context, 
+                      MemoryManager.getCharacters, 
+                      MemoryManager.setCharacter,
+                      MemoryManager.removeCharacter,
+                      () => setState(() {}),
+                      () async {
+                        MemoryManager.save();
+                        character = Character();
+                        character.name = "New Character";
+                        setState(() {});
+                      }
+                    );
+                  },
+                  child: Text(
+                    "Switch Character",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                 ),
                 const SizedBox(height: 15.0),
-                DoubleButtonRow(
-                  leftText: "New Preset",
-                  leftOnPressed: () async {
-                    MemoryManager.save();
-                    character = Character();
-                    character.nameController.text = "New Preset";
-                    setState(() {});
-                  },
-                  rightText: "Delete Preset",
-                  rightOnPressed: () async {
-                    MemoryManager.removeCharacter();
-                    setState(() {});
-                  },
+                ListTile(
+                  title: Row(
+                    children: [
+                      const Expanded(
+                        child: Text("Character Name"),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: TextField(
+                          cursorColor: Theme.of(context).colorScheme.secondary,
+                          decoration: const InputDecoration(
+                            labelText: "Name",
+                          ),
+                          controller: TextEditingController(text: character.name),
+                          onSubmitted: (value) {
+                            if (MemoryManager.getCharacters().contains(value)) {
+                              MemoryManager.setCharacter(value);
+                            } else if (value.isNotEmpty) {
+                              MemoryManager.updateCharacter(value);
+                            }
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20.0),
                 Divider(
@@ -106,17 +138,34 @@ class _CharacterPageState extends State<CharacterPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 MaidTextField(
-                  labelText: 'User alias', 
-                  controller: character.userAliasController
+                  headingText: 'User alias', 
+                  labelText: 'Alias',
+                  initialValue: character.userAlias,
+                  onSubmitted: (value) {
+                    setState(() {
+                      character.userAlias = value;
+                    });
+                  },
                 ),
                 MaidTextField(
-                  labelText: 'Response alias', 
-                  controller: character.responseAliasController
+                  headingText: 'Response alias',
+                  labelText: 'Alias',
+                  initialValue: character.responseAlias,
+                  onSubmitted: (value) {
+                    setState(() {
+                      character.responseAlias = value;
+                    });
+                  },
                 ),
                 MaidTextField(
+                  headingText: 'PrePrompt',
                   labelText: 'PrePrompt',
-                  controller: character.prePromptController,
-                  multiline: true,
+                  initialValue: character.prePrompt,
+                  onSubmitted: (value) {
+                    setState(() {
+                      character.prePrompt = value;
+                    });
+                  },
                 ),
                 Divider(
                   indent: 10,
@@ -127,30 +176,40 @@ class _CharacterPageState extends State<CharacterPage> {
                   leftText: "Add Example",
                   leftOnPressed: () {
                     setState(() {
-                      character.examplePromptControllers.add(TextEditingController());
-                      character.exampleResponseControllers.add(TextEditingController());
+                      character.examples.add({"prompt": "", "response": ""});
                     });
                   },
                   rightText: "Remove Example",
                   rightOnPressed: () {
                     setState(() {
-                      character.examplePromptControllers.removeLast();
-                      character.exampleResponseControllers.removeLast();
+                      character.examples.removeLast();
                     });
                   },
                 ),
                 const SizedBox(height: 10.0),
                 ...List.generate(
-                  (character.examplePromptControllers.length == character.exampleResponseControllers.length) ? character.examplePromptControllers.length : 0,
+                  character.examples.length,
                   (index) => Column(
                     children: [
                       MaidTextField(
-                        labelText: 'Example prompt', 
-                        controller: character.examplePromptControllers[index]
+                        headingText: 'Example prompt',
+                        labelText: 'Prompt',
+                        initialValue: character.examples[index]["prompt"],
+                        onSubmitted: (value) {
+                          setState(() {
+                            character.examples[index]["prompt"] = value;
+                          });
+                        },
                       ),
                       MaidTextField(
-                        labelText: 'Example response', 
-                        controller: character.exampleResponseControllers[index]
+                        headingText: 'Example response',
+                        labelText: 'Response',
+                        initialValue: character.examples[index]["response"],
+                        onSubmitted: (value) {
+                          setState(() {
+                            character.examples[index]["response"] = value;
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -159,7 +218,6 @@ class _CharacterPageState extends State<CharacterPage> {
             ),
           ),
           if (character.busy)
-            // This is a semi-transparent overlay that will cover the entire screen.
             Positioned.fill(
               child: Container(
                 color: Colors.black.withOpacity(0.4),

@@ -12,14 +12,12 @@ import 'package:maid/utilities/memory_manager.dart';
 Character character = Character();
 
 class Character {  
-  TextEditingController nameController = TextEditingController()..text = "Maid";
-  TextEditingController prePromptController = TextEditingController();
-  
-  List<TextEditingController> examplePromptControllers = [];
-  List<TextEditingController> exampleResponseControllers = [];
+  String name = "Maid";
+  String prePrompt = "";
+  String userAlias = "";
+  String responseAlias = "";
 
-  TextEditingController userAliasController = TextEditingController();
-  TextEditingController responseAliasController = TextEditingController();
+  List<Map<String,dynamic>> examples = [];
 
   bool busy = false;
 
@@ -28,30 +26,18 @@ class Character {
   }
 
   Character.fromMap(Map<String, dynamic> inputJson) {
-    nameController.text = inputJson["name"] ?? "Unknown";
+    name = inputJson["name"] ?? "Unknown";
 
     if (inputJson.isEmpty) {
       resetAll();
     }
 
-    prePromptController.text = inputJson["pre_prompt"] ?? "";
-    userAliasController.text = inputJson["user_alias"] ?? "";
-    responseAliasController.text = inputJson["response_alias"] ?? "";
+    prePrompt = inputJson["pre_prompt"] ?? "";
+    userAlias = inputJson["user_alias"] ?? "";
+    responseAlias = inputJson["response_alias"] ?? "";
 
-    examplePromptControllers.clear();
-    exampleResponseControllers.clear();
-
-    if (inputJson["example"] == null) return;
-
-    int length = inputJson["example"].length ?? 0;
-    for (var i = 0; i < length; i++) {
-      String? examplePrompt = inputJson["example"][i]["prompt"];
-      String? exampleResponse = inputJson["example"][i]["response"];
-      if (examplePrompt != null && exampleResponse != null) {
-        examplePromptControllers.add(TextEditingController(text: examplePrompt));
-        exampleResponseControllers.add(TextEditingController(text: exampleResponse));
-      }
-    }
+    final length = inputJson["examples"].length ?? 0;
+    examples = List<Map<String,dynamic>>.generate(length, (i) => inputJson["examples"][i]);
 
     Logger.log("Character created with name: ${inputJson["name"]}");
   }
@@ -59,26 +45,14 @@ class Character {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> jsonCharacter = {};
 
-    jsonCharacter["name"] = nameController.text;
+    jsonCharacter["name"] = name;
     
-    jsonCharacter["pre_prompt"] = prePromptController.text;
-    jsonCharacter["user_alias"] = userAliasController.text;
-    jsonCharacter["response_alias"] = responseAliasController.text;
+    jsonCharacter["pre_prompt"] = prePrompt;
+    jsonCharacter["user_alias"] = userAlias;
+    jsonCharacter["response_alias"] = responseAlias;
+    jsonCharacter["examples"] = examples;
 
-    // Initialize the "example" key to an empty list
-    jsonCharacter["example"] = [];
-
-    for (var i = 0; i < examplePromptControllers.length; i++) {
-      // Create a map for each example and add it to the "example" list
-      Map<String, String> example = {
-        "prompt": examplePromptControllers[i].text,
-        "response": exampleResponseControllers[i].text,
-      };
-
-      jsonCharacter["example"].add(example);
-    }
-
-    Logger.log("Character JSON created with name: ${nameController.text}");
+    Logger.log("Character JSON created with name: $name");
     return jsonCharacter;
   }
 
@@ -88,24 +62,12 @@ class Character {
 
     Map<String, dynamic> jsonCharacter = json.decode(jsonString);
 
-    prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
-    userAliasController.text = jsonCharacter["user_alias"] ?? "";
-    responseAliasController.text = jsonCharacter["response_alias"] ?? "";
+    prePrompt = jsonCharacter["pre_prompt"] ?? "";
+    userAlias = jsonCharacter["user_alias"] ?? "";
+    responseAlias = jsonCharacter["response_alias"] ?? "";
 
-    examplePromptControllers.clear();
-    exampleResponseControllers.clear();
-
-    if (jsonCharacter["example"] != null) {
-      int length = jsonCharacter["example"]?.length ?? 0;
-      for (var i = 0; i < length; i++) {
-        String? examplePrompt = jsonCharacter["example"][i]["prompt"];
-        String? exampleResponse = jsonCharacter["example"][i]["response"];
-        if (examplePrompt != null && exampleResponse != null) {
-          examplePromptControllers.add(TextEditingController(text: examplePrompt));
-          exampleResponseControllers.add(TextEditingController(text: exampleResponse));
-        }
-      }
-    }
+    final length = jsonCharacter["examples"].length ?? 0;
+    examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
 
     MemoryManager.save();
   }
@@ -114,30 +76,18 @@ class Character {
     try {
       Map<String, dynamic> jsonCharacter = {};
 
-      jsonCharacter["name"] = nameController.text;
+      jsonCharacter["name"] = name;
 
-      jsonCharacter["pre_prompt"] = prePromptController.text;
-      jsonCharacter["user_alias"] = userAliasController.text;
-      jsonCharacter["response_alias"] = responseAliasController.text;
-
-      // Initialize the "example" key to an empty list
-      jsonCharacter["example"] = [];
-
-      for (var i = 0; i < examplePromptControllers.length; i++) {
-        // Create a map for each example and add it to the "example" list
-        Map<String, String> example = {
-          "prompt": examplePromptControllers[i].text,
-          "response": exampleResponseControllers[i].text,
-        };
-
-        jsonCharacter["example"].add(example);
-      }
+      jsonCharacter["pre_prompt"] = prePrompt;
+      jsonCharacter["user_alias"] = userAlias;
+      jsonCharacter["response_alias"] = responseAlias;
+      jsonCharacter["examples"] = examples;
 
       // Convert the map to a JSON string
       String jsonString = json.encode(jsonCharacter);
 
     
-      File? file = await FileManager.save(context, nameController.text);
+      File? file = await FileManager.save(context, name);
 
       if (file == null) return "Error saving file";
 
@@ -166,24 +116,14 @@ class Character {
         return "Failed to decode character";
       }
 
-      nameController.text = jsonCharacter["name"] ?? "";
+      name = jsonCharacter["name"] ?? "";
 
-      prePromptController.text = jsonCharacter["pre_prompt"] ?? "";
-      userAliasController.text = jsonCharacter["user_alias"] ?? "";
-      responseAliasController.text = jsonCharacter["response_alias"] ?? "";
+      prePrompt = jsonCharacter["pre_prompt"] ?? "";
+      userAlias = jsonCharacter["user_alias"] ?? "";
+      responseAlias = jsonCharacter["response_alias"] ?? "";
 
-      examplePromptControllers.clear();
-      exampleResponseControllers.clear();
-
-      int length = jsonCharacter["example"]?.length ?? 0;
-      for (var i = 0; i < length; i++) {
-        String? examplePrompt = jsonCharacter["example"][i]["prompt"];
-        String? exampleResponse = jsonCharacter["example"][i]["response"];
-        if (examplePrompt != null && exampleResponse != null) {
-          examplePromptControllers.add(TextEditingController(text: examplePrompt));
-          exampleResponseControllers.add(TextEditingController(text: exampleResponse));
-        }
-      }
+      final length = jsonCharacter["examples"].length ?? 0;
+      examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
     } catch (e) {
       resetAll();
       return "Error: $e";
@@ -193,39 +133,20 @@ class Character {
   }
   
   String getPrePrompt() {
-    String prePrompt = prePromptController.text.isNotEmpty ? prePromptController.text.trim() : "";
-    for (var i = 0; i < examplePromptControllers.length; i++) {
-      var prompt = '${userAliasController.text.trim()} ${examplePromptControllers[i].text.trim()}';
-      var response = '${responseAliasController.text.trim()} ${exampleResponseControllers[i].text.trim()}';
-      if (prompt.isNotEmpty && response.isNotEmpty) {
-        prePrompt += "\n$prompt\n$response";
-      }
-    }
+    String result = prePrompt.isNotEmpty ? prePrompt.trim() : "";
 
-    List<Map<String, dynamic>> history = MessageManager.getMessages();
+    List<Map<String, dynamic>> history = examples;
+    history += MessageManager.getMessages();
     if (history.isNotEmpty) {
       for (var i = 0; i < history.length; i++) {
-        var prompt = '${userAliasController.text.trim()} ${history[i]["prompt"].trim()}';
-        var response = '${responseAliasController.text.trim()} ${history[i]["response"].trim()}';
+        var prompt = '${userAlias.trim()} ${history[i]["prompt"].trim()}';
+        var response = '${responseAlias.trim()} ${history[i]["response"].trim()}';
         if (prompt.isNotEmpty && response.isNotEmpty) {
-          prePrompt += "\n$prompt\n$response";
+          result += "\n$prompt\n$response";
         }
       }
     }
 
-    return prePrompt;
-  }
-
-  List<Map<String, dynamic>> getExamples() {
-    List<Map<String, dynamic>> examples = [];
-
-    for (var i = 0; i < examplePromptControllers.length; i++) {
-      examples.add({
-        "prompt": examplePromptControllers[i].text,
-        "response": exampleResponseControllers[i].text,
-      });
-    }
-
-    return examples;
+    return result;
   }
 }

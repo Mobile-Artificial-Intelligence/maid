@@ -5,7 +5,6 @@ import 'package:maid/utilities/generation_manager.dart';
 import 'package:maid/utilities/host.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/message_manager.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 import 'package:system_info2/system_info2.dart';
 
@@ -92,7 +91,7 @@ class MaidHomePageState extends State<MaidHomePage> {
       );
       MessageManager.add(UniqueKey());
 
-      if (MemoryManager.checkFileExists(model.parameters["model_path"]))  {
+      if (MemoryManager.checkFileExists(model.parameters["path"]))  {
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
           model.busy = true;
@@ -222,15 +221,15 @@ class MaidHomePageState extends State<MaidHomePage> {
               color: Theme.of(context).colorScheme.onPrimary,
             ),
             SwitchListTile(
-              title: const Text('Local / Hosted'),
-              value: GenerationManager.hosted,
+              title: const Text('Local / Remote'),
+              value: GenerationManager.remote,
               onChanged: (value) {
                 setState(() {
-                  GenerationManager.hosted = value;
+                  GenerationManager.remote = value;
                 });
               },
             ),
-            if (GenerationManager.hosted)
+            if (GenerationManager.remote)
               ListTile(
                 title: TextField(
                   cursorColor: Theme.of(context).colorScheme.secondary,
@@ -274,7 +273,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (model.busy && !GenerationManager.hosted)
+                        if (model.busy && !GenerationManager.remote)
                           IconButton(
                               onPressed: LocalGeneration.instance.stop,
                               iconSize: 50,
@@ -290,7 +289,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                             enableInteractiveSelection: true,
                             onSubmitted: (value) {
                               if (!model.busy) {
-                                if (model.parameters["model_path"]
+                                if (model.parameters["path"]
                                     .toString()
                                     .isEmpty) {
                                   _missingModelDialog();
@@ -311,7 +310,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                         IconButton(
                             onPressed: () {
                               if (!model.busy) {
-                                if (model.parameters["model_path"]
+                                if (model.parameters["path"]
                                     .toString()
                                     .isEmpty) {
                                   _missingModelDialog();

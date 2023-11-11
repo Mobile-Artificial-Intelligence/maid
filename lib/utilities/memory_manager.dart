@@ -15,7 +15,7 @@ class MemoryManager {
 
   static void init() {
     SharedPreferences.getInstance().then((prefs) {
-      GenerationManager.hosted = prefs.getBool("hosted") ?? false;
+      GenerationManager.remote = prefs.getBool("remote") ?? false;
 
       _models = json.decode(prefs.getString("models") ?? "{}");
       _characters = json.decode(prefs.getString("characters") ?? "{}");
@@ -39,17 +39,17 @@ class MemoryManager {
   static void _save(SharedPreferences prefs) {
     prefs.clear();
 
-    prefs.setBool("hosted", GenerationManager.hosted);
+    prefs.setBool("remote", GenerationManager.remote);
 
-    _models[model.nameController.text] = model.toMap();
-    Logger.log("Model Saved: ${model.nameController.text}");
-    _characters[character.nameController.text] = character.toMap();
-    Logger.log("Character Saved: ${character.nameController.text}");
+    _models[model.preset] = model.toMap();
+    Logger.log("Model Saved: ${model.preset}");
+    _characters[character.name] = character.toMap();
+    Logger.log("Character Saved: ${character.name}");
 
     prefs.setString("models", json.encode(_models));
     prefs.setString("characters", json.encode(_characters));
-    prefs.setString("current_model", model.nameController.text);
-    prefs.setString("current_character", character.nameController.text);
+    prefs.setString("current_model", model.preset);
+    prefs.setString("current_character", character.name);
 
     LocalGeneration.instance.cleanup();
   }
@@ -66,31 +66,31 @@ class MemoryManager {
   }
 
   static void updateModel(String newName) {
-    String oldName = model.nameController.text;
+    String oldName = model.preset;
     Logger.log("Updating model $oldName ====> $newName");
-    model.nameController.text = newName;
+    model.preset = newName;
     _models.remove(oldName);
     save();
   }
 
   static void updateCharacter(String newName) {
-    String oldName = character.nameController.text;
+    String oldName = character.name;
     Logger.log("Updating character $oldName ====> $newName");
-    character.nameController.text = newName;
+    character.name = newName;
     _characters.remove(oldName);
     save();
   }
 
-  static void removeModel() {
-    _models.remove(model.nameController.text);
+  static void removeModel(String modelName) {
+    _models.remove(modelName);
     model = Model.fromMap(
       _models[_models.keys.lastOrNull ?? "Default"] ?? {}
     );
     save();
   }
 
-  static void removeCharacter() {
-    _characters.remove(character.nameController.text);
+  static void removeCharacter(String characterName) {
+    _characters.remove(characterName);
     character = Character.fromMap(
       _characters[_characters.keys.lastOrNull ?? "Default"] ?? {}
     );
@@ -108,14 +108,14 @@ class MemoryManager {
   static void setModel(String modelName) {
     save();
     model = Model.fromMap(_models[modelName] ?? {});
-    Logger.log("Model Set: ${model.nameController.text}");
+    Logger.log("Model Set: ${model.preset}");
     save();
   }
 
   static void setCharacter(String characterName) {
     save();
     character = Character.fromMap(_characters[characterName] ?? {});
-    Logger.log("Character Set: ${character.nameController.text}");
+    Logger.log("Character Set: ${character.name}");
     save();
   }
 
