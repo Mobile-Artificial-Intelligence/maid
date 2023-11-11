@@ -91,7 +91,13 @@ class MaidHomePageState extends State<MaidHomePage> {
       );
       MessageManager.add(UniqueKey());
 
-      if (MemoryManager.checkFileExists(model.parameters["path"]))  {
+      if (GenerationManager.remote){
+        setState(() {
+          GenerationManager.prompt(promptController.text.trim());
+          model.busy = true;
+          promptController.clear();
+        });
+      } else if (MemoryManager.checkFileExists(model.parameters["path"]))  {
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
           model.busy = true;
@@ -291,7 +297,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                               if (!model.busy) {
                                 if (model.parameters["path"]
                                     .toString()
-                                    .isEmpty) {
+                                    .isEmpty && !GenerationManager.remote) {
                                   _missingModelDialog();
                                 } else {
                                   send();
@@ -312,7 +318,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                               if (!model.busy) {
                                 if (model.parameters["path"]
                                     .toString()
-                                    .isEmpty) {
+                                    .isEmpty && !GenerationManager.remote) {
                                   _missingModelDialog();
                                 } else {
                                   send();
