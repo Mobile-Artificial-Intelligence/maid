@@ -7,6 +7,7 @@ class MaidTextField extends StatelessWidget{
   final TextEditingController? controller;
   final bool multiline;
   final void Function(String)? onSubmitted;
+  final void Function(String)? onChanged;
 
   const MaidTextField({super.key, 
     required this.headingText,
@@ -15,6 +16,7 @@ class MaidTextField extends StatelessWidget{
     this.controller,
     this.multiline = false,
     this.onSubmitted,
+    this.onChanged,
   });
 
   @override
@@ -36,6 +38,7 @@ class MaidTextField extends StatelessWidget{
                 labelText: labelText,
               ),
               onSubmitted: onSubmitted,
+              onChanged: onChanged,
             ),
           ),
         ],

@@ -107,10 +107,8 @@ class _ModelPageState extends State<ModelPage> {
                 headingText: "Remote Model", 
                 labelText: "Model",
                 initialValue: model.parameters["remote_model"],
-                onSubmitted: (value) {
-                  setState(() {
-                    model.parameters["remote_model"] = value;
-                  });
+                onChanged: (value) {
+                  model.parameters["remote_model"] = value;
                 },
               ),
               const SizedBox(height: 8.0),
@@ -118,10 +116,8 @@ class _ModelPageState extends State<ModelPage> {
                 headingText: "Remote Tag", 
                 labelText: "Tag",
                 initialValue: model.parameters["remote_tag"],
-                onSubmitted: (value) {
-                  setState(() {
-                    model.parameters["remote_tag"] = value;
-                  });
+                onChanged: (value) {
+                  model.parameters["remote_tag"] = value;
                 },
               ),
               const SizedBox(height: 20.0),
