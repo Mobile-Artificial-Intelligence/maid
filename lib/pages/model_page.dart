@@ -131,7 +131,7 @@ class _ModelPageState extends State<ModelPage> {
                           labelText: "Model",
                         ),
                         controller: TextEditingController(text: model.parameters["remote_model"]),
-                        onSubmitted: (value) {
+                        onChanged: (value) {
                           setState(() {
                             model.parameters["remote_model"] = value;
                           });
@@ -156,7 +156,7 @@ class _ModelPageState extends State<ModelPage> {
                           labelText: "Tag",
                         ),
                         controller: TextEditingController(text: model.parameters["remote_tag"]),
-                        onSubmitted: (value) {
+                        onChanged: (value) {
                           setState(() {
                             model.parameters["remote_tag"] = value;
                           });

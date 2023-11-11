@@ -13,11 +13,16 @@ class RemoteGeneration {
   static void prompt(String input) async {
     _messages = character.getExamples();
     _messages.addAll(MessageManager.getMessages());
+
+    var remote_model = model.parameters["remote_model"] ?? "llama2";
+    if (model.parameters["remote_tag"] != null) {
+      remote_model += ":${model.parameters["remote_tag"]}";
+    }
     
     final url = Uri.parse("${Host.urlController.text}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
-      "model": "llama2:7b", // TODO: Make this configurable
+      "model": remote_model,
       "prompt": input,
       "context": _context, // TODO: DEPRECATED SOON
       "system": character.prePromptController.text,
