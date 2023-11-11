@@ -55,12 +55,9 @@ int core_init(struct maid_params *mparams) {
     params.n_ctx                    = (*mparams).n_ctx             ? (*mparams).n_ctx             : 512;
     params.n_batch                  = (*mparams).n_batch           ? (*mparams).n_batch           : 8;
     params.n_threads                = (*mparams).n_threads         ? (*mparams).n_threads         : get_num_physical_cores();
-    params.n_threads_batch          = (*mparams).n_threads_batch   ? (*mparams).n_threads_batch   : -1;
     params.n_predict                = (*mparams).n_predict         ? (*mparams).n_predict         : 256;
     params.n_keep                   = (*mparams).n_keep            ? (*mparams).n_keep            : 48;
 
-    params.sparams.n_prev           = (*mparams).n_prev            ? (*mparams).n_prev            : 64;
-    params.sparams.n_probs          = (*mparams).n_probs           ? (*mparams).n_probs           : 0;
     params.sparams.top_k            = (*mparams).top_k             ? (*mparams).top_k             : 40;
     params.sparams.top_p            = (*mparams).top_p             ? (*mparams).top_p             : 0.95f;
     params.sparams.tfs_z            = (*mparams).tfs_z             ? (*mparams).tfs_z             : 1.00f;
@@ -75,7 +72,7 @@ int core_init(struct maid_params *mparams) {
     params.sparams.mirostat_eta     = (*mparams).mirostat_eta      ? (*mparams).mirostat_eta      : 0.10f;
     params.sparams.penalize_nl      = (*mparams).penalize_nl       != 0;
 
-    params.model                    = (*mparams).model_path;
+    params.model                    = (*mparams).path;
     params.prompt                   = (*mparams).preprompt;
     params.input_prefix             = (*mparams).input_prefix;
     params.input_suffix             = (*mparams).input_suffix;
@@ -87,10 +84,10 @@ int core_init(struct maid_params *mparams) {
 
     std::tie(model, ctx) = llama_init_from_gpt_params(params);
     if (model == NULL) {
-        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*mparams).model_path);
+        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*mparams).path);
         return 1;
     } else if (ctx == NULL) {
-        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__, (*mparams).model_path);
+        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__, (*mparams).path);
         llama_free_model(model);
         return 1;
     }

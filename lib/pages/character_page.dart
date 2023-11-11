@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/model.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/preset_switcher.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -49,27 +49,60 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                PresetSwitcher(
-                  presetController: character.nameController, 
-                  getMenuStrings: MemoryManager.getCharacters,
-                  update: MemoryManager.updateCharacter,
-                  set: MemoryManager.setCharacter,
-                  refresh: () => setState(() {}),
+                Text(
+                  character.name,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 20.0),
+                FilledButton(
+                  onPressed: () {
+                    switcherDialog(
+                      context, 
+                      MemoryManager.getCharacters, 
+                      MemoryManager.setCharacter,
+                      MemoryManager.removeCharacter,
+                      () => setState(() {}),
+                      () async {
+                        MemoryManager.save();
+                        character = Character();
+                        character.name = "New Character";
+                        setState(() {});
+                      }
+                    );
+                  },
+                  child: Text(
+                    "Switch Character",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                 ),
                 const SizedBox(height: 15.0),
-                DoubleButtonRow(
-                  leftText: "New Preset",
-                  leftOnPressed: () async {
-                    MemoryManager.save();
-                    character = Character();
-                    character.nameController.text = "New Preset";
-                    setState(() {});
-                  },
-                  rightText: "Delete Preset",
-                  rightOnPressed: () async {
-                    MemoryManager.removeCharacter();
-                    setState(() {});
-                  },
+                ListTile(
+                  title: Row(
+                    children: [
+                      const Expanded(
+                        child: Text("Character Name"),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: TextField(
+                          cursorColor: Theme.of(context).colorScheme.secondary,
+                          decoration: const InputDecoration(
+                            labelText: "Name",
+                          ),
+                          controller: TextEditingController(text: character.name),
+                          onSubmitted: (value) {
+                            if (MemoryManager.getCharacters().contains(value)) {
+                              MemoryManager.setCharacter(value);
+                            } else if (value.isNotEmpty) {
+                              MemoryManager.updateCharacter(value);
+                            }
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20.0),
                 Divider(
