@@ -41,15 +41,15 @@ class MemoryManager {
 
     prefs.setBool("hosted", GenerationManager.hosted);
 
-    _models[model.nameController.text] = model.toMap();
-    Logger.log("Model Saved: ${model.nameController.text}");
-    _characters[character.nameController.text] = character.toMap();
-    Logger.log("Character Saved: ${character.nameController.text}");
+    _models[model.name] = model.toMap();
+    Logger.log("Model Saved: ${model.name}");
+    _characters[character.name] = character.toMap();
+    Logger.log("Character Saved: ${character.name}");
 
     prefs.setString("models", json.encode(_models));
     prefs.setString("characters", json.encode(_characters));
-    prefs.setString("current_model", model.nameController.text);
-    prefs.setString("current_character", character.nameController.text);
+    prefs.setString("current_model", model.name);
+    prefs.setString("current_character", character.name);
 
     LocalGeneration.instance.cleanup();
   }
@@ -66,23 +66,23 @@ class MemoryManager {
   }
 
   static void updateModel(String newName) {
-    String oldName = model.nameController.text;
+    String oldName = model.name;
     Logger.log("Updating model $oldName ====> $newName");
-    model.nameController.text = newName;
+    model.name = newName;
     _models.remove(oldName);
     save();
   }
 
   static void updateCharacter(String newName) {
-    String oldName = character.nameController.text;
+    String oldName = character.name;
     Logger.log("Updating character $oldName ====> $newName");
-    character.nameController.text = newName;
+    character.name = newName;
     _characters.remove(oldName);
     save();
   }
 
   static void removeModel() {
-    _models.remove(model.nameController.text);
+    _models.remove(model.name);
     model = Model.fromMap(
       _models[_models.keys.lastOrNull ?? "Default"] ?? {}
     );
@@ -90,7 +90,7 @@ class MemoryManager {
   }
 
   static void removeCharacter() {
-    _characters.remove(character.nameController.text);
+    _characters.remove(character.name);
     character = Character.fromMap(
       _characters[_characters.keys.lastOrNull ?? "Default"] ?? {}
     );
@@ -108,14 +108,14 @@ class MemoryManager {
   static void setModel(String modelName) {
     save();
     model = Model.fromMap(_models[modelName] ?? {});
-    Logger.log("Model Set: ${model.nameController.text}");
+    Logger.log("Model Set: ${model.name}");
     save();
   }
 
   static void setCharacter(String characterName) {
     save();
     character = Character.fromMap(_characters[characterName] ?? {});
-    Logger.log("Character Set: ${character.nameController.text}");
+    Logger.log("Character Set: ${character.name}");
     save();
   }
 

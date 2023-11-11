@@ -50,7 +50,7 @@ class _ModelPageState extends State<ModelPage> {
                 children: [
                   const SizedBox(height: 10.0),
                   Text(
-                    model.nameController.text,
+                    model.name,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
@@ -65,7 +65,7 @@ class _ModelPageState extends State<ModelPage> {
                         () async {
                           MemoryManager.save();
                           model = Model();
-                          model.nameController.text = "New Preset";
+                          model.name= "New Preset";
                           setState(() {});
                         }
                       );
@@ -86,15 +86,18 @@ class _ModelPageState extends State<ModelPage> {
                           flex: 2,
                           child: TextField(
                             cursorColor: Theme.of(context).colorScheme.secondary,
-                            controller: model.nameController,
                             decoration: const InputDecoration(
                               labelText: "Name",
                             ),
+                            controller: TextEditingController(text: model.name),
                             onSubmitted: (value) {
+                              print(value);
                               if (MemoryManager.getModels().contains(value)) {
+                                print("model exists");
                                 MemoryManager.setModel(value);
                               } else if (value.isNotEmpty) {
-                                MemoryManager.updateModel(model.nameController.text);
+                                print("model does not exist");
+                                MemoryManager.updateModel(value);
                               }
                               setState(() {});
                             },

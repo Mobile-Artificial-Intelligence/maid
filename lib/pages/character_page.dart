@@ -49,7 +49,7 @@ class _CharacterPageState extends State<CharacterPage> {
               children: [
                 const SizedBox(height: 10.0),
                 Text(
-                  character.nameController.text,
+                  character.name,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
@@ -64,7 +64,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       () async {
                         MemoryManager.save();
                         character = Character();
-                        character.nameController.text = "New Character";
+                        character.name = "New Character";
                         setState(() {});
                       }
                     );
@@ -85,15 +85,15 @@ class _CharacterPageState extends State<CharacterPage> {
                         flex: 2,
                         child: TextField(
                           cursorColor: Theme.of(context).colorScheme.secondary,
-                          controller: character.nameController,
                           decoration: const InputDecoration(
                             labelText: "Name",
                           ),
+                          controller: TextEditingController(text: character.name),
                           onSubmitted: (value) {
                             if (MemoryManager.getCharacters().contains(value)) {
                               MemoryManager.setCharacter(value);
                             } else if (value.isNotEmpty) {
-                              MemoryManager.updateCharacter(character.nameController.text);
+                              MemoryManager.updateCharacter(value);
                             }
                             setState(() {});
                           },
@@ -108,7 +108,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   leftOnPressed: () async {
                     MemoryManager.save();
                     character = Character();
-                    character.nameController.text = "New Preset";
+                    character.name = "New Preset";
                     setState(() {});
                   },
                   rightText: "Delete Preset",
