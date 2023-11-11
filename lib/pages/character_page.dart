@@ -146,30 +146,24 @@ class _CharacterPageState extends State<CharacterPage> {
                   headingText: 'User alias', 
                   labelText: 'Alias',
                   initialValue: character.userAlias,
-                  onSubmitted: (value) {
-                    setState(() {
-                      character.userAlias = value;
-                    });
+                  onChanged: (value) {
+                    character.userAlias = value;
                   },
                 ),
                 MaidTextField(
                   headingText: 'Response alias',
                   labelText: 'Alias',
                   initialValue: character.responseAlias,
-                  onSubmitted: (value) {
-                    setState(() {
-                      character.responseAlias = value;
-                    });
+                  onChanged: (value) {
+                    character.responseAlias = value;
                   },
                 ),
                 MaidTextField(
                   headingText: 'PrePrompt',
                   labelText: 'PrePrompt',
                   initialValue: character.prePrompt,
-                  onSubmitted: (value) {
-                    setState(() {
-                      character.prePrompt = value;
-                    });
+                  onChanged: (value) {
+                    character.prePrompt = value;
                   },
                 ),
                 Divider(
@@ -200,20 +194,16 @@ class _CharacterPageState extends State<CharacterPage> {
                         headingText: 'Example prompt',
                         labelText: 'Prompt',
                         initialValue: character.examples[index]["prompt"],
-                        onSubmitted: (value) {
-                          setState(() {
-                            character.examples[index]["prompt"] = value;
-                          });
+                        onChanged: (value) {
+                          character.examples[index]["prompt"] = value;
                         },
                       ),
                       MaidTextField(
                         headingText: 'Example response',
                         labelText: 'Response',
                         initialValue: character.examples[index]["response"],
-                        onSubmitted: (value) {
-                          setState(() {
-                            character.examples[index]["response"] = value;
-                          });
+                        onChanged: (value) {
+                          character.examples[index]["response"] = value;
                         },
                       ),
                     ],
