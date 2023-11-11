@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/model.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
@@ -139,17 +138,34 @@ class _CharacterPageState extends State<CharacterPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 MaidTextField(
-                  labelText: 'User alias', 
-                  controller: character.userAliasController
+                  headingText: 'User alias', 
+                  labelText: 'Alias',
+                  initialValue: character.userAlias,
+                  onSubmitted: (value) {
+                    setState(() {
+                      character.userAlias = value;
+                    });
+                  },
                 ),
                 MaidTextField(
-                  labelText: 'Response alias', 
-                  controller: character.responseAliasController
+                  headingText: 'Response alias',
+                  labelText: 'Alias',
+                  initialValue: character.responseAlias,
+                  onSubmitted: (value) {
+                    setState(() {
+                      character.responseAlias = value;
+                    });
+                  },
                 ),
                 MaidTextField(
+                  headingText: 'PrePrompt',
                   labelText: 'PrePrompt',
-                  controller: character.prePromptController,
-                  multiline: true,
+                  initialValue: character.prePrompt,
+                  onSubmitted: (value) {
+                    setState(() {
+                      character.prePrompt = value;
+                    });
+                  },
                 ),
                 Divider(
                   indent: 10,
@@ -160,30 +176,40 @@ class _CharacterPageState extends State<CharacterPage> {
                   leftText: "Add Example",
                   leftOnPressed: () {
                     setState(() {
-                      character.examplePromptControllers.add(TextEditingController());
-                      character.exampleResponseControllers.add(TextEditingController());
+                      character.examples.add({"prompt": "", "response": ""});
                     });
                   },
                   rightText: "Remove Example",
                   rightOnPressed: () {
                     setState(() {
-                      character.examplePromptControllers.removeLast();
-                      character.exampleResponseControllers.removeLast();
+                      character.examples.removeLast();
                     });
                   },
                 ),
                 const SizedBox(height: 10.0),
                 ...List.generate(
-                  (character.examplePromptControllers.length == character.exampleResponseControllers.length) ? character.examplePromptControllers.length : 0,
+                  character.examples.length,
                   (index) => Column(
                     children: [
                       MaidTextField(
-                        labelText: 'Example prompt', 
-                        controller: character.examplePromptControllers[index]
+                        headingText: 'Example prompt',
+                        labelText: 'Prompt',
+                        initialValue: character.examples[index]["prompt"],
+                        onSubmitted: (value) {
+                          setState(() {
+                            character.examples[index]["prompt"] = value;
+                          });
+                        },
                       ),
                       MaidTextField(
-                        labelText: 'Example response', 
-                        controller: character.exampleResponseControllers[index]
+                        headingText: 'Example response',
+                        labelText: 'Response',
+                        initialValue: character.examples[index]["response"],
+                        onSubmitted: (value) {
+                          setState(() {
+                            character.examples[index]["response"] = value;
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -192,7 +218,6 @@ class _CharacterPageState extends State<CharacterPage> {
             ),
           ),
           if (character.busy)
-            // This is a semi-transparent overlay that will cover the entire screen.
             Positioned.fill(
               child: Container(
                 color: Colors.black.withOpacity(0.4),

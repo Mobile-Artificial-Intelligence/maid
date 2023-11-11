@@ -11,21 +11,21 @@ class RemoteGeneration {
   static List<Map<String, dynamic>> _messages = [];
   
   static void prompt(String input) async {
-    _messages = character.getExamples();
+    _messages = character.examples;
     _messages.addAll(MessageManager.getMessages());
 
-    var remote_model = model.parameters["remote_model"] ?? "llama2";
+    var remoteModel = model.parameters["remote_model"] ?? "llama2";
     if (model.parameters["remote_tag"] != null) {
-      remote_model += ":${model.parameters["remote_tag"]}";
+      remoteModel += ":${model.parameters["remote_tag"]}";
     }
     
     final url = Uri.parse("${Host.urlController.text}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
-      "model": remote_model,
+      "model": remoteModel,
       "prompt": input,
       "context": _context, // TODO: DEPRECATED SOON
-      "system": character.prePromptController.text,
+      "system": character.prePrompt,
       "messages": _messages,
       "options": {
         "num_keep": model.parameters["n_keep"],

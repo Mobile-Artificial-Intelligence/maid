@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/memory_manager.dart';
 
 class MaidTextField extends StatelessWidget{
+  final String headingText;
   final String labelText;
-  final TextEditingController controller;
+  final String? initialValue;
+  final TextEditingController? controller;
   final bool multiline;
+  final void Function(String)? onSubmitted;
 
   const MaidTextField({super.key, 
+    required this.headingText,
     required this.labelText,
-    required this.controller,
+    this.initialValue,
+    this.controller,
     this.multiline = false,
+    this.onSubmitted,
   });
 
   @override
@@ -18,7 +23,7 @@ class MaidTextField extends StatelessWidget{
       title: Row(
         children: [
           Expanded(
-            child: Text(labelText),
+            child: Text(headingText),
           ),
           Expanded(
             flex: 2,
@@ -26,11 +31,11 @@ class MaidTextField extends StatelessWidget{
               keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
               maxLines: multiline ? null : 1,
               cursorColor: Theme.of(context).colorScheme.secondary,
-              controller: controller,
+              controller: controller ?? TextEditingController(text: initialValue),
               decoration: InputDecoration(
                 labelText: labelText,
               ),
-              onSubmitted: (value) => MemoryManager.save(),
+              onSubmitted: onSubmitted,
             ),
           ),
         ],

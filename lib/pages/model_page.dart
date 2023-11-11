@@ -77,32 +77,18 @@ class _ModelPageState extends State<ModelPage> {
                 ),
               ),
               const SizedBox(height: 15.0),
-              ListTile(
-                title: Row(
-                  children: [
-                    const Expanded(
-                      child: Text("Preset Name"),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        cursorColor: Theme.of(context).colorScheme.secondary,
-                        decoration: const InputDecoration(
-                          labelText: "Preset",
-                        ),
-                        controller: TextEditingController(text: model.preset),
-                        onSubmitted: (value) {
-                          if (MemoryManager.getModels().contains(value)) {
-                            MemoryManager.setModel(value);
-                          } else if (value.isNotEmpty) {
-                            MemoryManager.updateModel(value);
-                          }
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              MaidTextField(
+                headingText: "Preset Name",
+                labelText: "Preset",
+                initialValue: model.preset,
+                onSubmitted: (value) {
+                  if (MemoryManager.getModels().contains(value)) {
+                    MemoryManager.setModel(value);
+                  } else if (value.isNotEmpty) {
+                    MemoryManager.updateModel(value);
+                  }
+                  setState(() {});
+                },
               ),
               const SizedBox(height: 20.0),
               Divider(
@@ -117,54 +103,26 @@ class _ModelPageState extends State<ModelPage> {
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(height: 20.0),
-              ListTile(
-                title: Row(
-                  children: [
-                    const Expanded(
-                      child: Text("Remote Model"),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        cursorColor: Theme.of(context).colorScheme.secondary,
-                        decoration: const InputDecoration(
-                          labelText: "Model",
-                        ),
-                        controller: TextEditingController(text: model.parameters["remote_model"]),
-                        onChanged: (value) {
-                          setState(() {
-                            model.parameters["remote_model"] = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              MaidTextField(
+                headingText: "Remote Model", 
+                labelText: "Model",
+                initialValue: model.parameters["remote_model"],
+                onSubmitted: (value) {
+                  setState(() {
+                    model.parameters["remote_model"] = value;
+                  });
+                },
               ),
               const SizedBox(height: 8.0),
-              ListTile(
-                title: Row(
-                  children: [
-                    const Expanded(
-                      child: Text("Remote Tag"),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        cursorColor: Theme.of(context).colorScheme.secondary,
-                        decoration: const InputDecoration(
-                          labelText: "Tag",
-                        ),
-                        controller: TextEditingController(text: model.parameters["remote_tag"]),
-                        onChanged: (value) {
-                          setState(() {
-                            model.parameters["remote_tag"] = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              MaidTextField(
+                headingText: "Remote Tag", 
+                labelText: "Tag",
+                initialValue: model.parameters["remote_tag"],
+                onSubmitted: (value) {
+                  setState(() {
+                    model.parameters["remote_tag"] = value;
+                  });
+                },
               ),
               const SizedBox(height: 20.0),
               Divider(
@@ -311,7 +269,7 @@ class _ModelPageState extends State<ModelPage> {
                           decoration: const InputDecoration(
                             labelText: 'seed',
                           ),
-                          onChanged: (value) {
+                          onSubmitted: (value) {
                             model.parameters["seed"] = int.parse(value);
                           },
                         ),
