@@ -3,7 +3,6 @@ import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/preset_switcher.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -49,12 +48,59 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                PresetSwitcher(
-                  presetController: character.nameController, 
-                  getMenuStrings: MemoryManager.getCharacters,
-                  update: MemoryManager.updateCharacter,
-                  set: MemoryManager.setCharacter,
-                  refresh: () => setState(() {}),
+                Text(
+                  character.nameController.text,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 20.0),
+                FilledButton(
+                  onPressed: () {
+                    switcherDialog(
+                      context, 
+                      MemoryManager.getModels, 
+                      MemoryManager.setModel, 
+                      () => setState(() {}),
+                      () async {
+                        MemoryManager.save();
+                        character = Character();
+                        character.nameController.text = "New Character";
+                        setState(() {});
+                      }
+                    );
+                  },
+                  child: Text(
+                    "Switch Character",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ),
+                const SizedBox(height: 15.0),
+                ListTile(
+                  title: Row(
+                    children: [
+                      const Expanded(
+                        child: Text("Character Name"),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: TextField(
+                          cursorColor: Theme.of(context).colorScheme.secondary,
+                          controller: character.nameController,
+                          decoration: const InputDecoration(
+                            labelText: "Name",
+                          ),
+                          onSubmitted: (value) {
+                            if (MemoryManager.getCharacters().contains(value)) {
+                              MemoryManager.setCharacter(value);
+                            } else if (value.isNotEmpty) {
+                              MemoryManager.updateCharacter(character.nameController.text);
+                            }
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 15.0),
                 DoubleButtonRow(

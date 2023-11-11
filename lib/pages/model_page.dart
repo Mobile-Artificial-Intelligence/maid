@@ -3,7 +3,7 @@ import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/preset_switcher.dart';
+import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
 
 class ModelPage extends StatefulWidget {
@@ -49,27 +49,59 @@ class _ModelPageState extends State<ModelPage> {
               child: Column(
                 children: [
                   const SizedBox(height: 10.0),
-                  PresetSwitcher(
-                    presetController: model.nameController,
-                    getMenuStrings: MemoryManager.getModels,
-                    update: MemoryManager.updateModel,
-                    set: MemoryManager.setModel,
-                    refresh: () => setState(() {}),
+                  Text(
+                    model.nameController.text,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 20.0),
+                  FilledButton(
+                    onPressed: () {
+                      switcherDialog(
+                        context, 
+                        MemoryManager.getModels, 
+                        MemoryManager.setModel, 
+                        () => setState(() {}),
+                        () async {
+                          MemoryManager.save();
+                          model = Model();
+                          model.nameController.text = "New Preset";
+                          setState(() {});
+                        }
+                      );
+                    },
+                    child: Text(
+                      "Switch Preset",
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
                   ),
                   const SizedBox(height: 15.0),
-                  DoubleButtonRow(
-                    leftText: "New Preset",
-                    leftOnPressed: () async {
-                      MemoryManager.save();
-                      model = Model();
-                      model.nameController.text = "New Preset";
-                      setState(() {});
-                    },
-                    rightText: "Delete Preset",
-                    rightOnPressed: () async {
-                      MemoryManager.removeModel();
-                      setState(() {});
-                    },
+                  ListTile(
+                    title: Row(
+                      children: [
+                        const Expanded(
+                          child: Text("Preset Name"),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            cursorColor: Theme.of(context).colorScheme.secondary,
+                            controller: model.nameController,
+                            decoration: const InputDecoration(
+                              labelText: "Name",
+                            ),
+                            onSubmitted: (value) {
+                              if (MemoryManager.getModels().contains(value)) {
+                                MemoryManager.setModel(value);
+                              } else if (value.isNotEmpty) {
+                                MemoryManager.updateModel(model.nameController.text);
+                              }
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 20.0),
                   Divider(
