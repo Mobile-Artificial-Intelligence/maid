@@ -15,6 +15,7 @@ class Model {
   String name = "Default";
   Map<String, dynamic> parameters = {};
 
+  bool local = true;
   bool hosted = false;
   bool busy = false;
 
