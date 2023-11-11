@@ -92,8 +92,8 @@ class MaidHomePageState extends State<MaidHomePage> {
       MessageManager.add(UniqueKey());
 
       if (GenerationManager.remote){
+        GenerationManager.prompt(promptController.text.trim());
         setState(() {
-          GenerationManager.prompt(promptController.text.trim());
           model.busy = true;
           promptController.clear();
         });
