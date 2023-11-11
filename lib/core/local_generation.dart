@@ -83,8 +83,8 @@ class LocalGeneration {
     final params = calloc<maid_params>();
     params.ref.path         = model.parameters["path"].toString().toNativeUtf8().cast<Char>();
     params.ref.preprompt          = character.getPrePrompt().toNativeUtf8().cast<Char>();
-    params.ref.input_prefix       = character.userAliasController.text.trim().toNativeUtf8().cast<Char>();
-    params.ref.input_suffix       = character.responseAliasController.text.trim().toNativeUtf8().cast<Char>();
+    params.ref.input_prefix       = character.userAlias.trim().toNativeUtf8().cast<Char>();
+    params.ref.input_suffix       = character.responseAlias.trim().toNativeUtf8().cast<Char>();
     params.ref.seed               = model.parameters["random_seed"] ? -1 : model.parameters["seed"];
     params.ref.n_ctx              = model.parameters["n_ctx"];
     params.ref.n_threads          = model.parameters["n_threads"];

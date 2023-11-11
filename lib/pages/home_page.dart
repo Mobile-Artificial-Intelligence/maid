@@ -5,7 +5,6 @@ import 'package:maid/utilities/generation_manager.dart';
 import 'package:maid/utilities/host.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/message_manager.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 import 'package:system_info2/system_info2.dart';
 
