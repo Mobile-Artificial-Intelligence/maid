@@ -48,6 +48,11 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
+                const CircleAvatar(
+                  backgroundImage: AssetImage("assets/defaultResponseProfile.png"),
+                  radius: 75,
+                ),
+                const SizedBox(height: 20.0),
                 Text(
                   character.name,
                   textAlign: TextAlign.center,

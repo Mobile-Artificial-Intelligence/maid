@@ -33,7 +33,15 @@ class ChatControlsState extends State<ChatControls> {
               setState(() {});
             },
             icon: const Icon(Icons.edit),
-          ),
+          )
+        else
+          ...[
+            const SizedBox(width: 10.0),
+            const CircleAvatar(
+              backgroundImage: AssetImage("assets/defaultResponseProfile.png"),
+              radius: 16,
+            )
+          ],
         if (siblingCount > 1)
           BranchSwitcher(key: widget.key!),
         if (!widget.userGenerated)
