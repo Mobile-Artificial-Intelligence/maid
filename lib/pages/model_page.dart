@@ -128,7 +128,7 @@ class _ModelPageState extends State<ModelPage> {
                   setState(() {});
                 }
               ),
-              //if (model.hosted)
+              //if (model.remote)
               //  _remoteOptions(),
               Divider(
                 height: 20,
@@ -444,13 +444,6 @@ class _ModelPageState extends State<ModelPage> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          "Model Name: ${model.parameters["model_name"]}",
-        ),
-      ),
-      const SizedBox(height: 15.0),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
           "Model Path: ${model.parameters["model_path"]}",
         ),
       ),
@@ -460,7 +453,13 @@ class _ModelPageState extends State<ModelPage> {
 
   List<Widget> _remoteOptions() {
     return [
-
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          "Model Name: ${model.parameters["model_name"]}",
+        ),
+      ),
+      const SizedBox(height: 15.0),
     ];
   }
 }

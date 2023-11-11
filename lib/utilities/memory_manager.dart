@@ -15,7 +15,7 @@ class MemoryManager {
 
   static void init() {
     SharedPreferences.getInstance().then((prefs) {
-      GenerationManager.hosted = prefs.getBool("hosted") ?? false;
+      GenerationManager.remote = prefs.getBool("remote") ?? false;
 
       _models = json.decode(prefs.getString("models") ?? "{}");
       _characters = json.decode(prefs.getString("characters") ?? "{}");
@@ -39,7 +39,7 @@ class MemoryManager {
   static void _save(SharedPreferences prefs) {
     prefs.clear();
 
-    prefs.setBool("hosted", GenerationManager.hosted);
+    prefs.setBool("remote", GenerationManager.remote);
 
     _models[model.name] = model.toMap();
     Logger.log("Model Saved: ${model.name}");

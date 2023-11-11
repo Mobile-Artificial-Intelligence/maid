@@ -16,7 +16,7 @@ class Model {
   Map<String, dynamic> parameters = {};
 
   bool local = true;
-  bool hosted = false;
+  bool remote = false;
   bool busy = false;
 
   Model() {
@@ -56,7 +56,7 @@ class Model {
   Future<String> exportModelParameters(BuildContext context) async {
     try {
       parameters["name"] = name;
-      parameters["hosted"] = hosted;
+      parameters["remote"] = remote;
 
       String jsonString = json.encode(parameters);
       
@@ -88,7 +88,7 @@ class Model {
         resetAll();
         return "Failed to decode parameters";
       } else {
-        hosted = parameters["hosted"] ?? false;
+        remote = parameters["remote"] ?? false;
         name = parameters["name"] ?? "Default";
       }
     } catch (e) {

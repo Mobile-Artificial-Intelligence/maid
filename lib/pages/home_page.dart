@@ -222,15 +222,15 @@ class MaidHomePageState extends State<MaidHomePage> {
               color: Theme.of(context).colorScheme.onPrimary,
             ),
             SwitchListTile(
-              title: const Text('Local / Hosted'),
-              value: GenerationManager.hosted,
+              title: const Text('Local / Remote'),
+              value: GenerationManager.remote,
               onChanged: (value) {
                 setState(() {
-                  GenerationManager.hosted = value;
+                  GenerationManager.remote = value;
                 });
               },
             ),
-            if (GenerationManager.hosted)
+            if (GenerationManager.remote)
               ListTile(
                 title: TextField(
                   cursorColor: Theme.of(context).colorScheme.secondary,
@@ -274,7 +274,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (model.busy && !GenerationManager.hosted)
+                        if (model.busy && !GenerationManager.remote)
                           IconButton(
                               onPressed: LocalGeneration.instance.stop,
                               iconSize: 50,

@@ -6,7 +6,7 @@ import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/model.dart';
 
-class HostedGeneration {
+class RemoteGeneration {
   static List<int> _context = [];
   static List<Map<String, dynamic>> _messages = [];
   
