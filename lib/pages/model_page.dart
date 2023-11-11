@@ -181,10 +181,20 @@ class _ModelPageState extends State<ModelPage> {
               const SizedBox(height: 20.0),
               if (model.local)
                 ...[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Model Path: ${model.parameters["path"]}",
+                  ListTile(
+                    title: Row(
+                      children: [
+                        const Expanded(
+                          child: Text("Model Path"),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            model.parameters["path"],
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 15.0),

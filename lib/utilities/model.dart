@@ -27,6 +27,7 @@ class Model {
       resetAll();
     } else {
       preset = inputJson["preset"] ?? "Default";
+      local = inputJson["local"] ?? false;
       parameters = inputJson;
       Logger.log("Model created with name: ${inputJson["name"]}");
     }
