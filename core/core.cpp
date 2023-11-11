@@ -72,7 +72,7 @@ int core_init(struct maid_params *mparams) {
     params.sparams.mirostat_eta     = (*mparams).mirostat_eta      ? (*mparams).mirostat_eta      : 0.10f;
     params.sparams.penalize_nl      = (*mparams).penalize_nl       != 0;
 
-    params.model                    = (*mparams).model_path;
+    params.model                    = (*mparams).path;
     params.prompt                   = (*mparams).preprompt;
     params.input_prefix             = (*mparams).input_prefix;
     params.input_suffix             = (*mparams).input_suffix;
@@ -84,10 +84,10 @@ int core_init(struct maid_params *mparams) {
 
     std::tie(model, ctx) = llama_init_from_gpt_params(params);
     if (model == NULL) {
-        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*mparams).model_path);
+        fprintf(stderr, "%s: error: failed to load model '%s'\n", __func__, (*mparams).path);
         return 1;
     } else if (ctx == NULL) {
-        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__, (*mparams).model_path);
+        fprintf(stderr, "%s: error: failed to create context with model '%s'\n", __func__, (*mparams).path);
         llama_free_model(model);
         return 1;
     }

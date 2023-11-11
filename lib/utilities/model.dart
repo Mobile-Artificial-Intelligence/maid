@@ -12,11 +12,10 @@ import 'package:maid/utilities/memory_manager.dart';
 Model model = Model();
 
 class Model {
-  String name = "Default";
+  String preset = "Default";
   Map<String, dynamic> parameters = {};
 
-  bool local = true;
-  bool remote = false;
+  bool local = false;
   bool busy = false;
 
   Model() {
@@ -27,7 +26,7 @@ class Model {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
-      name = inputJson["name"] ?? "Default";
+      preset = inputJson["preset"] ?? "Default";
       parameters = inputJson;
       Logger.log("Model created with name: ${inputJson["name"]}");
     }
@@ -37,8 +36,9 @@ class Model {
     Map<String, dynamic> jsonModel = {};
 
     jsonModel = parameters;
-    jsonModel["name"] = name;
-    Logger.log("Model JSON created with name: $name");
+    jsonModel["preset"] = preset;
+    jsonModel["local"] = local;
+    Logger.log("Model JSON created with name: $preset");
 
     return jsonModel;
   }
@@ -49,18 +49,19 @@ class Model {
         await rootBundle.loadString('assets/default_parameters.json');
 
     parameters = json.decode(jsonString);
+    local = false;
 
     MemoryManager.save();
   }
 
   Future<String> exportModelParameters(BuildContext context) async {
     try {
-      parameters["name"] = name;
-      parameters["remote"] = remote;
+      parameters["preset"] = preset;
+      parameters["local"] = local;
 
       String jsonString = json.encode(parameters);
       
-      File? file = await FileManager.save(context, name);
+      File? file = await FileManager.save(context, preset);
 
       if (file == null) return "Error saving file";
 
@@ -88,8 +89,8 @@ class Model {
         resetAll();
         return "Failed to decode parameters";
       } else {
-        remote = parameters["remote"] ?? false;
-        name = parameters["name"] ?? "Default";
+        local = parameters["local"] ?? false;
+        preset = parameters["preset"] ?? "Default";
       }
     } catch (e) {
       resetAll();
@@ -107,8 +108,7 @@ class Model {
       
       Logger.log("Loading model from $file");
 
-      parameters["model_path"] = file.path;
-      parameters["model_name"] = path.basename(file.path);
+      parameters["path"] = file.path;
     } catch (e) {
       return "Error: $e";
     }

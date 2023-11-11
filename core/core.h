@@ -16,7 +16,7 @@ struct maid_params {
    unsigned char interactive;
    unsigned char memory_f16;
 
-   char *model_path;
+   char *path;
    char *preprompt;
    char *input_prefix;                    // string to prefix user inputs with
    char *input_suffix;                    // string to suffix user inputs with

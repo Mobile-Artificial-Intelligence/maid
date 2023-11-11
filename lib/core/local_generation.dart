@@ -81,7 +81,7 @@ class LocalGeneration {
     _hasStarted = true;
     
     final params = calloc<maid_params>();
-    params.ref.model_path         = model.parameters["model_path"].toString().toNativeUtf8().cast<Char>();
+    params.ref.path         = model.parameters["path"].toString().toNativeUtf8().cast<Char>();
     params.ref.preprompt          = character.getPrePrompt().toNativeUtf8().cast<Char>();
     params.ref.input_prefix       = character.userAliasController.text.trim().toNativeUtf8().cast<Char>();
     params.ref.input_suffix       = character.responseAliasController.text.trim().toNativeUtf8().cast<Char>();

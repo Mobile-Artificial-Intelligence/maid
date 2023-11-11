@@ -92,7 +92,7 @@ class MaidHomePageState extends State<MaidHomePage> {
       );
       MessageManager.add(UniqueKey());
 
-      if (MemoryManager.checkFileExists(model.parameters["model_path"]))  {
+      if (MemoryManager.checkFileExists(model.parameters["path"]))  {
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
           model.busy = true;
@@ -290,7 +290,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                             enableInteractiveSelection: true,
                             onSubmitted: (value) {
                               if (!model.busy) {
-                                if (model.parameters["model_path"]
+                                if (model.parameters["path"]
                                     .toString()
                                     .isEmpty) {
                                   _missingModelDialog();
@@ -311,7 +311,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                         IconButton(
                             onPressed: () {
                               if (!model.busy) {
-                                if (model.parameters["model_path"]
+                                if (model.parameters["path"]
                                     .toString()
                                     .isEmpty) {
                                   _missingModelDialog();

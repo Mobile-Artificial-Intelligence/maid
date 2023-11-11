@@ -41,14 +41,14 @@ class MemoryManager {
 
     prefs.setBool("remote", GenerationManager.remote);
 
-    _models[model.name] = model.toMap();
-    Logger.log("Model Saved: ${model.name}");
+    _models[model.preset] = model.toMap();
+    Logger.log("Model Saved: ${model.preset}");
     _characters[character.name] = character.toMap();
     Logger.log("Character Saved: ${character.name}");
 
     prefs.setString("models", json.encode(_models));
     prefs.setString("characters", json.encode(_characters));
-    prefs.setString("current_model", model.name);
+    prefs.setString("current_model", model.preset);
     prefs.setString("current_character", character.name);
 
     LocalGeneration.instance.cleanup();
@@ -66,9 +66,9 @@ class MemoryManager {
   }
 
   static void updateModel(String newName) {
-    String oldName = model.name;
+    String oldName = model.preset;
     Logger.log("Updating model $oldName ====> $newName");
-    model.name = newName;
+    model.preset = newName;
     _models.remove(oldName);
     save();
   }
@@ -108,7 +108,7 @@ class MemoryManager {
   static void setModel(String modelName) {
     save();
     model = Model.fromMap(_models[modelName] ?? {});
-    Logger.log("Model Set: ${model.name}");
+    Logger.log("Model Set: ${model.preset}");
     save();
   }
 

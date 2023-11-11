@@ -77,7 +77,7 @@ final class maid_params extends ffi.Struct {
   @ffi.UnsignedChar()
   external int memory_f16;
 
-  external ffi.Pointer<ffi.Char> model_path;
+  external ffi.Pointer<ffi.Char> path;
 
   external ffi.Pointer<ffi.Char> preprompt;
 

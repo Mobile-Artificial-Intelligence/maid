@@ -45,8 +45,6 @@ class RemoteGeneration {
       }
     });
 
-    print(_messages);
-
     try {
       var request = http.Request("POST", url)
         ..headers.addAll(headers)

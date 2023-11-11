@@ -50,7 +50,7 @@ class _ModelPageState extends State<ModelPage> {
             children: [
               const SizedBox(height: 10.0),
               Text(
-                model.name,
+                model.preset,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
@@ -66,7 +66,7 @@ class _ModelPageState extends State<ModelPage> {
                     () async {
                       MemoryManager.save();
                       model = Model();
-                      model.name= "New Preset";
+                      model.preset= "New Preset";
                       setState(() {});
                     }
                   );
@@ -88,9 +88,9 @@ class _ModelPageState extends State<ModelPage> {
                       child: TextField(
                         cursorColor: Theme.of(context).colorScheme.secondary,
                         decoration: const InputDecoration(
-                          labelText: "Name",
+                          labelText: "Preset",
                         ),
-                        controller: TextEditingController(text: model.name),
+                        controller: TextEditingController(text: model.preset),
                         onSubmitted: (value) {
                           if (MemoryManager.getModels().contains(value)) {
                             MemoryManager.setModel(value);
@@ -111,25 +111,91 @@ class _ModelPageState extends State<ModelPage> {
                 endIndent: 10,
                 color: Theme.of(context).colorScheme.primary,
               ),
+              Text(
+                "Remote Model",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const SizedBox(height: 20.0),
+              ListTile(
+                title: Row(
+                  children: [
+                    const Expanded(
+                      child: Text("Remote Model"),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        cursorColor: Theme.of(context).colorScheme.secondary,
+                        decoration: const InputDecoration(
+                          labelText: "Model",
+                        ),
+                        controller: TextEditingController(text: model.parameters["remote_model"]),
+                        onSubmitted: (value) {
+                          setState(() {
+                            model.parameters["remote_model"] = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              ListTile(
+                title: Row(
+                  children: [
+                    const Expanded(
+                      child: Text("Remote Tag"),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        cursorColor: Theme.of(context).colorScheme.secondary,
+                        decoration: const InputDecoration(
+                          labelText: "Tag",
+                        ),
+                        controller: TextEditingController(text: model.parameters["remote_tag"]),
+                        onSubmitted: (value) {
+                          setState(() {
+                            model.parameters["remote_tag"] = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              Divider(
+                height: 20,
+                indent: 10,
+                endIndent: 10,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              Text(
+                "Local Model",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const SizedBox(height: 20.0),
               if (model.local)
                 ..._localOptions(),
               DoubleButtonRow(
-                leftText: "Load Model", 
+                leftText: "Load GGUF", 
                 leftOnPressed: () async {
                   await storageOperationDialog(context, model.loadModelFile);
-                  if (model.parameters["model_path"] != null) model.local = true;
+                  if (model.parameters["path"] != null) model.local = true;
                   setState(() {});
                 }, 
-                rightText: "Unload Model", 
+                rightText: "Unload GGUF", 
                 rightOnPressed: () {
-                  model.parameters["model_path"] = null;
-                  model.parameters["model_name"] = null;
+                  model.parameters["path"] = null;
                   model.local = false;
                   setState(() {});
                 }
               ),
-              //if (model.remote)
-              //  _remoteOptions(),
+              const SizedBox(height: 20.0),
               Divider(
                 height: 20,
                 indent: 10,
@@ -444,19 +510,7 @@ class _ModelPageState extends State<ModelPage> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          "Model Path: ${model.parameters["model_path"]}",
-        ),
-      ),
-      const SizedBox(height: 15.0),
-    ];
-  }
-
-  List<Widget> _remoteOptions() {
-    return [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          "Model Name: ${model.parameters["model_name"]}",
+          "Model Path: ${model.parameters["path"]}",
         ),
       ),
       const SizedBox(height: 15.0),
