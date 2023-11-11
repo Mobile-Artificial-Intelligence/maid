@@ -113,6 +113,21 @@ class _ModelPageState extends State<ModelPage> {
               ),
               if (model.local)
                 ..._localOptions(),
+              DoubleButtonRow(
+                leftText: "Load Model", 
+                leftOnPressed: () async {
+                  await storageOperationDialog(context, model.loadModelFile);
+                  if (model.parameters["model_path"] != null) model.local = true;
+                  setState(() {});
+                }, 
+                rightText: "Unload Model", 
+                rightOnPressed: () {
+                  model.parameters["model_path"] = null;
+                  model.parameters["model_name"] = null;
+                  model.local = false;
+                  setState(() {});
+                }
+              ),
               //if (model.hosted)
               //  _remoteOptions(),
               Divider(
@@ -440,17 +455,12 @@ class _ModelPageState extends State<ModelPage> {
         ),
       ),
       const SizedBox(height: 15.0),
-      FilledButton(
-        onPressed: () async {
-          await storageOperationDialog(
-              context, model.loadModelFile);
-          setState(() {});
-        },
-        child: Text(
-          "Load Model",
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
-      ),
+    ];
+  }
+
+  List<Widget> _remoteOptions() {
+    return [
+
     ];
   }
 }
