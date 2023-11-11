@@ -81,16 +81,16 @@ class MemoryManager {
     save();
   }
 
-  static void removeModel() {
-    _models.remove(model.name);
+  static void removeModel(String modelName) {
+    _models.remove(modelName);
     model = Model.fromMap(
       _models[_models.keys.lastOrNull ?? "Default"] ?? {}
     );
     save();
   }
 
-  static void removeCharacter() {
-    _characters.remove(character.name);
+  static void removeCharacter(String characterName) {
+    _characters.remove(characterName);
     character = Character.fromMap(
       _characters[_characters.keys.lastOrNull ?? "Default"] ?? {}
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/model.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
@@ -58,8 +59,9 @@ class _CharacterPageState extends State<CharacterPage> {
                   onPressed: () {
                     switcherDialog(
                       context, 
-                      MemoryManager.getModels, 
-                      MemoryManager.setModel, 
+                      MemoryManager.getCharacters, 
+                      MemoryManager.setCharacter,
+                      MemoryManager.removeCharacter,
                       () => setState(() {}),
                       () async {
                         MemoryManager.save();
@@ -101,21 +103,6 @@ class _CharacterPageState extends State<CharacterPage> {
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 15.0),
-                DoubleButtonRow(
-                  leftText: "New Preset",
-                  leftOnPressed: () async {
-                    MemoryManager.save();
-                    character = Character();
-                    character.name = "New Preset";
-                    setState(() {});
-                  },
-                  rightText: "Delete Preset",
-                  rightOnPressed: () async {
-                    MemoryManager.removeCharacter();
-                    setState(() {});
-                  },
                 ),
                 const SizedBox(height: 20.0),
                 Divider(

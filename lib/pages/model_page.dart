@@ -60,7 +60,8 @@ class _ModelPageState extends State<ModelPage> {
                       switcherDialog(
                         context, 
                         MemoryManager.getModels, 
-                        MemoryManager.setModel, 
+                        MemoryManager.setModel,
+                        MemoryManager.removeModel,
                         () => setState(() {}),
                         () async {
                           MemoryManager.save();
@@ -91,12 +92,9 @@ class _ModelPageState extends State<ModelPage> {
                             ),
                             controller: TextEditingController(text: model.name),
                             onSubmitted: (value) {
-                              print(value);
                               if (MemoryManager.getModels().contains(value)) {
-                                print("model exists");
                                 MemoryManager.setModel(value);
                               } else if (value.isNotEmpty) {
-                                print("model does not exist");
                                 MemoryManager.updateModel(value);
                               }
                               setState(() {});

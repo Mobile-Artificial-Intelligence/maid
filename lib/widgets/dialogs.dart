@@ -38,7 +38,8 @@ Future<void> storageOperationDialog(BuildContext context, Future<String> Functio
 Future<void> switcherDialog(
   BuildContext context, 
   List<String> Function() getMenuStrings, 
-  void Function(String) set, 
+  void Function(String) set,
+  void Function(String) remove,
   void Function() refresh,
   void Function() newPreset
 ) async {    
@@ -67,16 +68,27 @@ Future<void> switcherDialog(
           child: ListView.builder(
             itemCount: getMenuStrings().length,
             itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(
-                  getMenuStrings()[index],
-                  textAlign: TextAlign.center,
-                ),
-                onTap: () {
-                  set(getMenuStrings()[index]);
-                  closeDialog();
+              final item = getMenuStrings()[index];
+              
+              return Dismissible(
+                key: ValueKey(item),
+                onDismissed: (direction) {
+                  // Remove the item from your list and refresh the UI
+                  getMenuStrings().removeAt(index);
                   refresh();
                 },
+                background: Container(color: Colors.red),
+                child: ListTile(
+                  title: Text(
+                    getMenuStrings()[index],
+                    textAlign: TextAlign.center,
+                  ),
+                  onTap: () {
+                    set(getMenuStrings()[index]);
+                    closeDialog();
+                    refresh();
+                  },
+                )
               );
             },
           ),
