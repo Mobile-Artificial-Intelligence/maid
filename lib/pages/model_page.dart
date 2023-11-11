@@ -180,7 +180,15 @@ class _ModelPageState extends State<ModelPage> {
               ),
               const SizedBox(height: 20.0),
               if (model.local)
-                ..._localOptions(),
+                ...[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Model Path: ${model.parameters["path"]}",
+                    ),
+                  ),
+                  const SizedBox(height: 15.0),
+                ],
               DoubleButtonRow(
                 leftText: "Load GGUF", 
                 leftOnPressed: () async {
@@ -228,33 +236,34 @@ class _ModelPageState extends State<ModelPage> {
                 ),
               ),
               const SizedBox(height: 15.0),
-              SwitchListTile(
-                title: const Text('instruct'),
-                value: model.parameters["instruct"],
-                onChanged: (value) {
-                  setState(() {
-                    model.parameters["instruct"] = value;
-                  });
-                },
-              ),
-              SwitchListTile(
-                title: const Text('interactive'),
-                value: model.parameters["interactive"],
-                onChanged: (value) {
-                  setState(() {
-                    model.parameters["interactive"] = value;
-                  });
-                },
-              ),
-              SwitchListTile(
-                title: const Text('memory_f16'),
-                value: model.parameters["memory_f16"],
-                onChanged: (value) {
-                  setState(() {
-                    model.parameters["memory_f16"] = value;
-                  });
-                },
-              ),
+              if (model.local)
+                ...[SwitchListTile(
+                  title: const Text('instruct'),
+                  value: model.parameters["instruct"],
+                  onChanged: (value) {
+                    setState(() {
+                      model.parameters["instruct"] = value;
+                    });
+                  },
+                ),
+                SwitchListTile(
+                  title: const Text('interactive'),
+                  value: model.parameters["interactive"],
+                  onChanged: (value) {
+                    setState(() {
+                      model.parameters["interactive"] = value;
+                    });
+                  },
+                ),
+                SwitchListTile(
+                  title: const Text('memory_f16'),
+                  value: model.parameters["memory_f16"],
+                  onChanged: (value) {
+                    setState(() {
+                      model.parameters["memory_f16"] = value;
+                    });
+                  },
+                )],
               SwitchListTile(
                 title: const Text('penalize_nl'),
                 value: model.parameters["penalize_nl"],
@@ -503,17 +512,5 @@ class _ModelPageState extends State<ModelPage> {
           ),
       ],
     ));
-  }
-
-  List<Widget> _localOptions() {
-    return [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          "Model Path: ${model.parameters["path"]}",
-        ),
-      ),
-      const SizedBox(height: 15.0),
-    ];
   }
 }
