@@ -1,6 +1,6 @@
   
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/memory_manager.dart';
+import 'package:maid/static/memory_manager.dart';
 
 Future<void> storageOperationDialog(BuildContext context, Future<String> Function(BuildContext context) storageFunction) async {
   String ret = await storageFunction(context);

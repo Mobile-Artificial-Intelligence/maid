@@ -4,10 +4,10 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/file_manager.dart';
-import 'package:maid/utilities/logger.dart';
-import 'package:maid/utilities/message_manager.dart';
-import 'package:maid/utilities/memory_manager.dart';
+import 'package:maid/static/file_manager.dart';
+import 'package:maid/static/logger.dart';
+import 'package:maid/static/message_manager.dart';
+import 'package:maid/static/memory_manager.dart';
 import 'package:image/image.dart';
 
 Character character = Character();

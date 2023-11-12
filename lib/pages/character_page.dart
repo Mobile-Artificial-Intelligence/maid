@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/message_manager.dart';
+import 'package:maid/static/message_manager.dart';
 import 'package:maid/widgets/dialogs.dart';
-import 'package:maid/utilities/memory_manager.dart';
-import 'package:maid/utilities/character.dart';
+import 'package:maid/static/memory_manager.dart';
+import 'package:maid/types/character.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 

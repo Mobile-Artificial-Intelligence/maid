@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/generation_manager.dart';
-import 'package:maid/utilities/host.dart';
-import 'package:maid/utilities/memory_manager.dart';
-import 'package:maid/utilities/message_manager.dart';
+import 'package:maid/static/generation_manager.dart';
+import 'package:maid/static/host.dart';
+import 'package:maid/static/memory_manager.dart';
+import 'package:maid/static/message_manager.dart';
 
 import 'package:system_info2/system_info2.dart';
 
-import 'package:maid/utilities/model.dart';
+import 'package:maid/types/model.dart';
 import 'package:maid/core/local_generation.dart';
 
 import 'package:maid/pages/character_page.dart';

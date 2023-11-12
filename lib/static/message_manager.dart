@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/chat_node.dart';
-import 'package:maid/utilities/generation_manager.dart';
+import 'package:maid/types/chat_node.dart';
+import 'package:maid/static/generation_manager.dart';
 
 class MessageManager {
   static void Function()? _callback;

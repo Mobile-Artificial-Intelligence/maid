@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/message_manager.dart';
+import 'package:maid/static/message_manager.dart';
 
 class BranchSwitcher extends StatefulWidget {
   const BranchSwitcher({required super.key});
