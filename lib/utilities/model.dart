@@ -15,7 +15,6 @@ class Model {
   Map<String, dynamic> parameters = {};
 
   bool local = false;
-  bool busy = false;
 
   Model() {
     resetAll();

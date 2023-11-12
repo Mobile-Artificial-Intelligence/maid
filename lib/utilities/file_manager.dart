@@ -3,17 +3,19 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FileManager {
-  static bool busy = false;
-
   static Future<File?> load(BuildContext context, List<String> allowedExtensions) async {
     if ((Platform.isAndroid || Platform.isIOS)) {
       if (!(await Permission.storage.request().isGranted) || 
           !(await Permission.manageExternalStorage.request().isGranted)
       ) {
+        Logger.log("Storage - Permission denied");
         return null;
+      } else {
+        Logger.log("Storage - Permission granted");
       }
     }
 
@@ -37,7 +39,6 @@ class FileManager {
         dialogTitle: "Select Model File",
         type: FileType.any,
         allowMultiple: false,
-        onFileLoading: (FilePickerStatus status) => busy = status == FilePickerStatus.picking
       );
 
       if (pick != null) {
@@ -46,7 +47,6 @@ class FileManager {
     }
 
     if (result == null) {
-      busy = false;
       return null;
     }
 
@@ -91,7 +91,6 @@ class FileManager {
     }
 
     if (result == null) {
-      busy = false;
       return null;
     }
 

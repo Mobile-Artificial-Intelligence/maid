@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/widgets/dialogs.dart';
@@ -464,7 +465,7 @@ class _ModelPageState extends State<ModelPage> {
             ],
           ),
         ),
-        if (model.busy)
+        if (MessageManager.busy)
           // This is a semi-transparent overlay that will cover the entire screen.
           Positioned.fill(
             child: Container(

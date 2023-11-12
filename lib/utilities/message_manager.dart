@@ -3,8 +3,6 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:maid/utilities/generation_manager.dart';
-import 'package:maid/utilities/model.dart';
-import 'package:maid/core/local_generation.dart';
 
 class MessageManager {
   static void Function()? _callback;
@@ -48,14 +46,13 @@ class MessageManager {
       parent.children.removeWhere((element) => element.key == key);
       _tail = _root.findTail();
     }
-    LocalGeneration.instance.cleanup();
+    GenerationManager.cleanup();
     _callback?.call();
   }
 
   static void stream(String message) async {     
     _tail ??= _root.findTail();
-    if (!model.busy && !(_tail!.userGenerated)) {
-      busy = false;
+    if (!MessageManager.busy && !(_tail!.userGenerated)) {
       finalise();
     } else {
       _tail!.messageController.add(message);
@@ -68,7 +65,7 @@ class MessageManager {
       return;
     } else {
       branch(key, false);
-      model.busy = true;
+      MessageManager.busy = true;
       GenerationManager.prompt(parent.message);
     }
   }
@@ -80,7 +77,7 @@ class MessageManager {
       _tail = _root.findTail();
     }
     add(UniqueKey(), userGenerated: userGenerated);
-    LocalGeneration.instance.cleanup();
+    GenerationManager.cleanup();
     _callback?.call();
   }
 
@@ -103,7 +100,7 @@ class MessageManager {
       }
     }
 
-    LocalGeneration.instance.cleanup();
+    GenerationManager.cleanup();
     _callback?.call();
   }
 
@@ -121,7 +118,7 @@ class MessageManager {
       }
     }
 
-    LocalGeneration.instance.cleanup();
+    GenerationManager.cleanup();
     _callback?.call();
   }
 
@@ -158,7 +155,6 @@ class MessageManager {
   static List<Map<String, dynamic>> getMessages() {
     final List<Map<String, dynamic>> messages = [];
     var current = _root;
-    var index = 0;
 
     while (current.currentChild != null) {
       current = current.find(current.currentChild!)!;

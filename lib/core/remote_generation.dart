@@ -16,9 +16,9 @@ class RemoteGeneration {
   static void prompt(String input) async {
     if ((Platform.isAndroid || Platform.isIOS)) {
       if (await Permission.nearbyWifiDevices.request().isGranted) {
-        Logger.log("Permission granted");
+        Logger.log("Nearby Devices - Permission granted");
       } else {
-        Logger.log("Permission denied");
+        Logger.log("Nearby Devices - Permission denied");
         return;
       }
     }
@@ -91,7 +91,7 @@ class RemoteGeneration {
       Logger.log('Error: $e');
     }
 
-    model.busy = false;
+    MessageManager.busy = false;
     MessageManager.stream("");
   }
 }

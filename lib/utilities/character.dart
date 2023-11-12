@@ -19,8 +19,6 @@ class Character {
 
   List<Map<String,dynamic>> examples = [];
 
-  bool busy = false;
-
   Character() {
     resetAll();
   }

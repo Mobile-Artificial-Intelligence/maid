@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
@@ -212,7 +213,7 @@ class _CharacterPageState extends State<CharacterPage> {
               ],
             ),
           ),
-          if (character.busy)
+          if (MessageManager.busy)
             Positioned.fill(
               child: Container(
                 color: Colors.black.withOpacity(0.4),
