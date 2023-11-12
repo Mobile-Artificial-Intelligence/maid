@@ -129,9 +129,13 @@ class Character {
 
       if (image == null) return "Error decoding image";
 
-      String jsonString = json.encode(toMap());
-
-      image.textData = {"character": jsonString};
+      image.textData = {
+        "name": name,
+        "pre_prompt": prePrompt,
+        "user_alias": userAlias,
+        "response_alias": responseAlias,
+        "examples": json.encode(examples),
+      };
 
       File? file = await FileManager.save(context, "$name.png");
       
@@ -155,18 +159,11 @@ class Character {
       final image = decodePng(file.readAsBytesSync());
 
       if (image != null && image.textData != null) {
-        String jsonString = image.textData!["character"] ?? "";
-        Map<String, dynamic> jsonCharacter = json.decode(jsonString);
-
-        if (jsonCharacter.isNotEmpty) {
-          name = jsonCharacter["name"] ?? "";
-          prePrompt = jsonCharacter["pre_prompt"] ?? "";
-          userAlias = jsonCharacter["user_alias"] ?? "";
-          responseAlias = jsonCharacter["response_alias"] ?? "";
-
-          final length = jsonCharacter["examples"].length ?? 0;
-          examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
-        }
+        name = image.textData!["name"] ?? "";
+        prePrompt = image.textData!["pre_prompt"] ?? "";
+        userAlias = image.textData!["user_alias"] ?? "";
+        responseAlias = image.textData!["response_alias"] ?? "";
+        examples = List<Map<String,dynamic>>.from(json.decode(image.textData!["examples"] ?? "[]"));        
       }
 
       profile = file;
