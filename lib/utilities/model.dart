@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maid/utilities/file_manager.dart';
 import 'package:maid/utilities/logger.dart';
-import 'package:path/path.dart' as path;
 import 'package:maid/utilities/memory_manager.dart';
 
 Model model = Model();
