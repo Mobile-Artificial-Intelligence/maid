@@ -125,7 +125,7 @@ class Character {
 
   Future<String> exportImage(BuildContext context) async {
     try {
-      final image = decodePng(profile.readAsBytesSync());
+      final image = decodeImage(profile.readAsBytesSync());
 
       if (image == null) return "Error decoding image";
 
