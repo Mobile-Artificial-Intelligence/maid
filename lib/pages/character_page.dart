@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/character.dart';
@@ -48,8 +49,9 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                const CircleAvatar(
-                  backgroundImage: AssetImage("assets/defaultResponseProfile.png"),
+                CircleAvatar(
+                  backgroundImage: const AssetImage("assets/defaultResponseProfile.png"),
+                  foregroundImage: character.profile.image,
                   radius: 75,
                 ),
                 const SizedBox(height: 20.0),
@@ -59,8 +61,9 @@ class _CharacterPageState extends State<CharacterPage> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 20.0),
-                FilledButton(
-                  onPressed: () {
+                DoubleButtonRow(
+                  leftText: "Switch Character", 
+                  leftOnPressed: () {
                     switcherDialog(
                       context, 
                       MemoryManager.getCharacters, 
@@ -74,13 +77,32 @@ class _CharacterPageState extends State<CharacterPage> {
                         setState(() {});
                       }
                     );
-                  },
-                  child: Text(
-                    "Switch Character",
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
+                  }, 
+                  rightText: "Reset All", 
+                  rightOnPressed: () {
+                    character.resetAll();
+                    setState(() {});
+                  }
                 ),
                 const SizedBox(height: 15.0),
+                DoubleButtonRow(
+                  leftText: "Load JSON",
+                  leftOnPressed: () async {
+                    await storageOperationDialog(context, character.loadCharacterFromJson);
+                    setState(() {});
+                  },
+                  rightText: "Save JSON",
+                  rightOnPressed: () async {
+                    await storageOperationDialog(context, character.saveCharacterToJson);
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 20.0),
+                Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 ListTile(
                   title: Row(
                     children: [
@@ -108,40 +130,6 @@ class _CharacterPageState extends State<CharacterPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20.0),
-                Divider(
-                  indent: 10,
-                  endIndent: 10,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                DoubleButtonRow(
-                  leftText: "Load Character",
-                  leftOnPressed: () async {
-                    await storageOperationDialog(context, character.loadCharacterFromJson);
-                    setState(() {});
-                  },
-                  rightText: "Save Character",
-                  rightOnPressed: () async {
-                    await storageOperationDialog(context, character.saveCharacterToJson);
-                    setState(() {});
-                  },
-                ),
-                const SizedBox(height: 10.0),
-                FilledButton(
-                  onPressed: () {
-                    character.resetAll();
-                    setState(() {});
-                  },
-                  child: Text(
-                    "Reset All",
-                    style: Theme.of(context).textTheme.labelLarge
-                  ),
-                ),
-                Divider(
-                  indent: 10,
-                  endIndent: 10,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
                 MaidTextField(
                   headingText: 'User alias', 
                   labelText: 'Alias',
@@ -165,6 +153,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   onChanged: (value) {
                     character.prePrompt = value;
                   },
+                  multiline: true,
                 ),
                 Divider(
                   indent: 10,
@@ -212,7 +201,7 @@ class _CharacterPageState extends State<CharacterPage> {
               ],
             ),
           ),
-          if (character.busy)
+          if (MessageManager.busy)
             Positioned.fill(
               child: Container(
                 color: Colors.black.withOpacity(0.4),

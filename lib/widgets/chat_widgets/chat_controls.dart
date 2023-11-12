@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/utilities/character.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/widgets/chat_widgets/branch_switcher.dart';
 
@@ -37,8 +38,9 @@ class ChatControlsState extends State<ChatControls> {
         else
           ...[
             const SizedBox(width: 10.0),
-            const CircleAvatar(
-              backgroundImage: AssetImage("assets/defaultResponseProfile.png"),
+            CircleAvatar(
+              backgroundImage: const AssetImage("assets/defaultResponseProfile.png"),
+              foregroundImage: character.profile.image,
               radius: 16,
             )
           ],

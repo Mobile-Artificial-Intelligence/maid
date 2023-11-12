@@ -121,7 +121,7 @@ class LocalGeneration {
       } else if (data is SendPort) {
         completer.complete();
       } else if (data is int) {
-        model.busy = false;
+        MessageManager.busy = false;
         MessageManager.stream("");
       }
     });
