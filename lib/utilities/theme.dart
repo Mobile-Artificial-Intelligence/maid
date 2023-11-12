@@ -108,15 +108,15 @@ class MaidTheme {
         fontWeight: FontWeight.bold,
       ),
     ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.grey.shade900,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.transparent,
       foregroundColor: Colors.white,
-      titleTextStyle: const TextStyle(
+      titleTextStyle:  TextStyle(
         color: Colors.white,
         fontSize: 20.0,
         fontWeight: FontWeight.bold,
       ),
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: IconThemeData(color: Colors.white),
     ),
     drawerTheme: DrawerThemeData(
         shape: const RoundedRectangleBorder(
@@ -188,15 +188,15 @@ class MaidTheme {
           fontWeight: FontWeight.bold,
         ),
       ),
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.grey.shade200,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
-        titleTextStyle: const TextStyle(
+        titleTextStyle:  TextStyle(
           color: Colors.black,
           fontSize: 20.0,
           fontWeight: FontWeight.bold,
         ),
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       drawerTheme: DrawerThemeData(
           shape: const RoundedRectangleBorder(
