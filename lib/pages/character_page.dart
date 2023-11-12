@@ -51,7 +51,7 @@ class _CharacterPageState extends State<CharacterPage> {
                 const SizedBox(height: 10.0),
                 CircleAvatar(
                   backgroundImage: const AssetImage("assets/defaultResponseProfile.png"),
-                  foregroundImage: character.profile.image,
+                  foregroundImage: Image.file(character.profile).image,
                   radius: 75,
                 ),
                 const SizedBox(height: 20.0),

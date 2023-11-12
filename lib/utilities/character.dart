@@ -8,11 +8,12 @@ import 'package:maid/utilities/file_manager.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/memory_manager.dart';
+import 'package:steg/steg.dart';
 
 Character character = Character();
 
 class Character {
-  Image profile = Image.asset("assets/defaultResponseProfile.png");
+  File profile = File("assets/defaultResponseProfile.png");
   String name = "Maid";
   String prePrompt = "";
   String userAlias = "";
@@ -73,18 +74,8 @@ class Character {
 
   Future<String> saveCharacterToJson(BuildContext context) async {
     try {
-      Map<String, dynamic> jsonCharacter = {};
-
-      jsonCharacter["name"] = name;
-
-      jsonCharacter["pre_prompt"] = prePrompt;
-      jsonCharacter["user_alias"] = userAlias;
-      jsonCharacter["response_alias"] = responseAlias;
-      jsonCharacter["examples"] = examples;
-
       // Convert the map to a JSON string
-      String jsonString = json.encode(jsonCharacter);
-
+      String jsonString = json.encode(toMap());
     
       File? file = await FileManager.save(context, "$name.json");
 
@@ -94,6 +85,7 @@ class Character {
 
       return "Character Successfully Saved to ${file.path}";
     } catch (e) {
+      Logger.log("Error: $e");
       return "Error: $e";
     }
   }
@@ -125,18 +117,43 @@ class Character {
       examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
     } catch (e) {
       resetAll();
+      Logger.log("Error: $e");
       return "Error: $e";
     }
 
     return "Character Successfully Loaded";
   }
 
+  Future<String> saveCharacterPNG(BuildContext context) async {
+    try {
+      File? image = await FileManager.save(context, "$name.png");
+      
+      if (image == null) return "Error saving file";
+      
+      await profile.copy(image.path);
+
+      String jsonString = json.encode(toMap());
+
+      File? file = await Steganograph.encode(
+        image: image, 
+        message: jsonString
+      );
+
+      if (file == null) return "Error saving file";
+    } catch (e) {
+      Logger.log("Error: $e");
+      return "Error: $e";
+    }
+
+    return "Character Successfully Saved";
+  }
+
   Future<void> loadProfileImage(BuildContext context) async {
-    File? file = await FileManager.load(context, "Load Character Image", [".png", ".jpg", ".jpeg"]);
+    File? file = await FileManager.loadImage(context, "Load Character Image");
 
     if (file == null) return;
 
-    profile = Image.file(file);
+    profile = file;
   }
   
   String getPrePrompt() {
