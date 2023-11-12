@@ -5,7 +5,6 @@ import 'package:maid/utilities/generation_manager.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:maid/core/local_generation.dart';
 import 'package:maid/utilities/model.dart';
 import 'package:maid/utilities/character.dart';
 
@@ -51,7 +50,7 @@ class MemoryManager {
     prefs.setString("current_model", model.preset);
     prefs.setString("current_character", character.name);
 
-    LocalGeneration.instance.cleanup();
+    GenerationManager.cleanup();
   }
 
   static void save() {

@@ -11,4 +11,8 @@ class GenerationManager {
       LocalGeneration.instance.prompt(input);
     }
   }
+
+  static void cleanup() {
+    LocalGeneration.instance.cleanup();
+  }
 }
