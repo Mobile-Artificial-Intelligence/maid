@@ -37,7 +37,7 @@ class BranchSwitcherState extends State<BranchSwitcher> {
               MessageManager.last(widget.key!);
               setState(() {});
             },
-            icon: const Icon(Icons.arrow_left_rounded),
+            icon: const Icon(Icons.arrow_left_rounded, size: 30),
           ),
           Text('$currentIndex/${siblingCount - 1}'),
           IconButton(
@@ -47,7 +47,7 @@ class BranchSwitcherState extends State<BranchSwitcher> {
               MessageManager.next(widget.key!);
               setState(() {});
             },
-            icon: const Icon(Icons.arrow_right_rounded),
+            icon: const Icon(Icons.arrow_right_rounded, size: 30),
           ),
         ],
       ),
