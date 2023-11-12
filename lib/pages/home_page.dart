@@ -330,7 +330,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                             },
                             iconSize: 50,
                             icon: Icon(
-                              Icons.arrow_circle_right,
+                              Icons.arrow_circle_right_rounded,
                               color: MessageManager.busy
                                   ? Theme.of(context).colorScheme.onPrimary
                                   : Theme.of(context).colorScheme.secondary,

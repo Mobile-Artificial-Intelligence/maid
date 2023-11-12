@@ -21,9 +21,9 @@ class BranchSwitcherState extends State<BranchSwitcher> {
       width: 150,
       height: 30,
       decoration: BoxDecoration(
-        color: MessageManager.busy 
-             ? Theme.of(context).colorScheme.primary 
-             : Theme.of(context).colorScheme.tertiary,
+        color: MessageManager.busy
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).colorScheme.tertiary,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -37,9 +37,9 @@ class BranchSwitcherState extends State<BranchSwitcher> {
               MessageManager.last(widget.key!);
               setState(() {});
             },
-            icon: const Icon(Icons.arrow_left),
+            icon: const Icon(Icons.arrow_left_rounded),
           ),
-          Text('$currentIndex/${siblingCount-1}'),
+          Text('$currentIndex/${siblingCount - 1}'),
           IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
@@ -47,7 +47,7 @@ class BranchSwitcherState extends State<BranchSwitcher> {
               MessageManager.next(widget.key!);
               setState(() {});
             },
-            icon: const Icon(Icons.arrow_right),
+            icon: const Icon(Icons.arrow_right_rounded),
           ),
         ],
       ),

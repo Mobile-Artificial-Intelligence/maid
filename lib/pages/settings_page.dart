@@ -18,7 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         elevation: 0.0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () {
             Navigator.of(context).pop();
           },
