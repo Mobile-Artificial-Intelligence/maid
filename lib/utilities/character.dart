@@ -72,7 +72,7 @@ class Character {
     MemoryManager.save();
   }
 
-  Future<String> saveCharacterToJson(BuildContext context) async {
+  Future<String> exportJSON(BuildContext context) async {
     try {
       // Convert the map to a JSON string
       String jsonString = json.encode(toMap());
@@ -90,7 +90,7 @@ class Character {
     }
   }
 
-  Future<String> loadCharacterFromJson(BuildContext context) async {
+  Future<String> importJSON(BuildContext context) async {
     try{
       File? file = await FileManager.load(context, "Load Character JSON", [".json"]);
 
@@ -99,9 +99,8 @@ class Character {
       String jsonString = await file.readAsString();
       if (jsonString.isEmpty) return "Failed to load character";
       
-      Map<String, dynamic> jsonCharacter = {};
+      Map<String, dynamic> jsonCharacter = json.decode(jsonString);
 
-      jsonCharacter = json.decode(jsonString);
       if (jsonCharacter.isEmpty) {
         resetAll();
         return "Failed to decode character";
@@ -115,16 +114,16 @@ class Character {
 
       final length = jsonCharacter["examples"].length ?? 0;
       examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
+
+      return "Character Successfully Loaded";
     } catch (e) {
       resetAll();
       Logger.log("Error: $e");
       return "Error: $e";
     }
-
-    return "Character Successfully Loaded";
   }
 
-  Future<String> saveCharacterPNG(BuildContext context) async {
+  Future<String> exportImage(BuildContext context) async {
     try {
       File? image = await FileManager.save(context, "$name.png");
       
@@ -140,20 +139,44 @@ class Character {
       );
 
       if (file == null) return "Error saving file";
+
+      return "Character Successfully Saved";
     } catch (e) {
       Logger.log("Error: $e");
       return "Error: $e";
     }
-
-    return "Character Successfully Saved";
   }
 
-  Future<void> loadProfileImage(BuildContext context) async {
-    File? file = await FileManager.loadImage(context, "Load Character Image");
+  Future<String> importImage(BuildContext context) async {
+    try{
+      File? file = await FileManager.loadImage(context, "Load Character Image");
 
-    if (file == null) return;
+      if (file == null) return "Error loading file";
 
-    profile = file;
+      String? jsonString = await Steganograph.decode(image: file);
+
+      if (jsonString != null) {
+        Map<String, dynamic> jsonCharacter = json.decode(jsonString);
+
+        if (jsonCharacter.isNotEmpty) {
+          name = jsonCharacter["name"] ?? "";
+          prePrompt = jsonCharacter["pre_prompt"] ?? "";
+          userAlias = jsonCharacter["user_alias"] ?? "";
+          responseAlias = jsonCharacter["response_alias"] ?? "";
+    
+          final length = jsonCharacter["examples"].length ?? 0;
+          examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
+        }
+      }
+
+      profile = file;
+
+      return "Character Successfully Loaded";
+    } catch (e) {
+      resetAll();
+      Logger.log("Error: $e");
+      return "Error: $e";
+    }
   }
   
   String getPrePrompt() {
