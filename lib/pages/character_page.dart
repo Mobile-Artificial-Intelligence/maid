@@ -88,12 +88,12 @@ class _CharacterPageState extends State<CharacterPage> {
                 DoubleButtonRow(
                   leftText: "Load JSON",
                   leftOnPressed: () async {
-                    await storageOperationDialog(context, character.loadCharacterFromJson);
+                    await storageOperationDialog(context, character.importJSON);
                     setState(() {});
                   },
                   rightText: "Save JSON",
                   rightOnPressed: () async {
-                    await storageOperationDialog(context, character.saveCharacterToJson);
+                    await storageOperationDialog(context, character.exportJSON);
                     setState(() {});
                   },
                 ),
