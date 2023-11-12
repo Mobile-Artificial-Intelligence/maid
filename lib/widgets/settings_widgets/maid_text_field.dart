@@ -40,6 +40,9 @@ class MaidTextField extends StatelessWidget{
                 controller: controller ?? TextEditingController(text: initialValue),
                 decoration: InputDecoration(
                   labelText: labelText,
+                  labelStyle: const TextStyle(
+                    color: Colors.grey,
+                  ),
                 ),
                 onSubmitted: onSubmitted,
                 onChanged: onChanged,
