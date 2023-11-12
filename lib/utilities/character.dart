@@ -100,7 +100,7 @@ class Character {
 
   Future<String> loadCharacterFromJson(BuildContext context) async {
     try{
-      File? file = await FileManager.load(context, [".json"]);
+      File? file = await FileManager.load(context, "Load Character JSON", [".json"]);
 
       if (file == null) return "Error loading file";
 
@@ -129,6 +129,14 @@ class Character {
     }
 
     return "Character Successfully Loaded";
+  }
+
+  Future<void> loadImage(BuildContext context) async {
+    File? file = await FileManager.load(context, "Load Character Image", [".png", ".jpg", ".jpeg"]);
+
+    if (file == null) return;
+
+    profile = Image.file(file);
   }
   
   String getPrePrompt() {

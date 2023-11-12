@@ -74,7 +74,7 @@ class Model {
 
   Future<String> importModelParameters(BuildContext context) async {
     try {
-      File? file = await FileManager.load(context, [".json"]);
+      File? file = await FileManager.load(context, "Load Model JSON", [".json"]);
 
       if (file == null) return "Error loading file";
 
@@ -101,7 +101,7 @@ class Model {
 
   Future<String> loadModelFile(BuildContext context) async {
     try {
-      File? file = await FileManager.load(context, [".gguf"]);
+      File? file = await FileManager.load(context, "Load Model File", [".gguf"]);
 
       if (file == null) return "Error loading file";
       

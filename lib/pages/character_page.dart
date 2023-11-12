@@ -49,10 +49,26 @@ class _CharacterPageState extends State<CharacterPage> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                CircleAvatar(
-                  backgroundImage: const AssetImage("assets/defaultResponseProfile.png"),
-                  foregroundImage: character.profile?.image,
-                  radius: 75,
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: const AssetImage("assets/defaultResponseProfile.png"),
+                      foregroundImage: character.profile?.image,
+                      radius: 75,
+                    ),
+                    Positioned(
+                      bottom: -10,
+                      left: -10,
+                      child: IconButton(
+                        icon: const Icon(Icons.image),
+                        onPressed: () async {
+                          await character.loadImage(context);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20.0),
                 Text(

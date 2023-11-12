@@ -7,7 +7,7 @@ import 'package:maid/utilities/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FileManager {
-  static Future<File?> load(BuildContext context, List<String> allowedExtensions) async {
+  static Future<File?> load(BuildContext context, String dialogTitle, List<String> allowedExtensions) async {
     if ((Platform.isAndroid || Platform.isIOS)) {
       if (!(await Permission.storage.request().isGranted) || 
           !(await Permission.manageExternalStorage.request().isGranted)
@@ -36,7 +36,7 @@ class FileManager {
       );
     } else {
       FilePickerResult? pick = await FilePicker.platform.pickFiles(
-        dialogTitle: "Select Model File",
+        dialogTitle: dialogTitle,
         type: FileType.any,
         allowMultiple: false,
       );
