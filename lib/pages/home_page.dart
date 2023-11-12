@@ -285,7 +285,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                               onPressed: LocalGeneration.instance.stop,
                               iconSize: 50,
                               icon: const Icon(
-                                Icons.stop_circle_sharp,
+                                Icons.stop_circle_rounded,
                                 color: Colors.red,
                               )),
                         Expanded(
