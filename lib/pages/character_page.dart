@@ -86,6 +86,19 @@ class _CharacterPageState extends State<CharacterPage> {
                 ),
                 const SizedBox(height: 15.0),
                 DoubleButtonRow(
+                  leftText: "Load Image",
+                  leftOnPressed: () async {
+                    await storageOperationDialog(context, character.importImage);
+                    setState(() {});
+                  },
+                  rightText: "Save Image",
+                  rightOnPressed: () async {
+                    await storageOperationDialog(context, character.exportImage);
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 15.0),
+                DoubleButtonRow(
                   leftText: "Load JSON",
                   leftOnPressed: () async {
                     await storageOperationDialog(context, character.importJSON);

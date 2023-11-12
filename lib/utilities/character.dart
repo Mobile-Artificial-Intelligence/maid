@@ -8,7 +8,7 @@ import 'package:maid/utilities/file_manager.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/memory_manager.dart';
-import 'package:steg/steg.dart';
+import 'package:image/image.dart';
 
 Character character = Character();
 
@@ -125,20 +125,23 @@ class Character {
 
   Future<String> exportImage(BuildContext context) async {
     try {
-      File? image = await FileManager.save(context, "$name.png");
+      final image = decodePng(profile.readAsBytesSync());
+
+      if (image == null) return "Error decoding image";
+
+      image.textData = {
+        "name": name,
+        "pre_prompt": prePrompt,
+        "user_alias": userAlias,
+        "response_alias": responseAlias,
+        "examples": json.encode(examples),
+      };
+
+      File? file = await FileManager.save(context, "$name.png");
       
-      if (image == null) return "Error saving file";
-      
-      await profile.copy(image.path);
-
-      String jsonString = json.encode(toMap());
-
-      File? file = await Steganograph.encode(
-        image: image, 
-        message: jsonString
-      );
-
       if (file == null) return "Error saving file";
+
+      await file.writeAsBytes(encodePng(image));
 
       return "Character Successfully Saved";
     } catch (e) {
@@ -153,20 +156,14 @@ class Character {
 
       if (file == null) return "Error loading file";
 
-      String? jsonString = await Steganograph.decode(image: file);
+      final image = decodePng(file.readAsBytesSync());
 
-      if (jsonString != null) {
-        Map<String, dynamic> jsonCharacter = json.decode(jsonString);
-
-        if (jsonCharacter.isNotEmpty) {
-          name = jsonCharacter["name"] ?? "";
-          prePrompt = jsonCharacter["pre_prompt"] ?? "";
-          userAlias = jsonCharacter["user_alias"] ?? "";
-          responseAlias = jsonCharacter["response_alias"] ?? "";
-    
-          final length = jsonCharacter["examples"].length ?? 0;
-          examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
-        }
+      if (image != null && image.textData != null) {
+        name = image.textData!["name"] ?? "";
+        prePrompt = image.textData!["pre_prompt"] ?? "";
+        userAlias = image.textData!["user_alias"] ?? "";
+        responseAlias = image.textData!["response_alias"] ?? "";
+        examples = List<Map<String,dynamic>>.from(json.decode(image.textData!["examples"] ?? "[]"));        
       }
 
       profile = file;
