@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:maid/utilities/character.dart';
-import 'package:maid/utilities/host.dart';
-import 'package:maid/utilities/logger.dart';
-import 'package:maid/utilities/message_manager.dart';
-import 'package:maid/utilities/model.dart';
+import 'package:maid/types/character.dart';
+import 'package:maid/static/host.dart';
+import 'package:maid/static/logger.dart';
+import 'package:maid/static/message_manager.dart';
+import 'package:maid/types/model.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RemoteGeneration {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/utilities/memory_manager.dart';
-import 'package:maid/utilities/theme.dart';
+import 'package:maid/static/memory_manager.dart';
+import 'package:maid/static/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
 final maidAppKey = GlobalKey<MaidAppState>();

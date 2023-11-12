@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/utilities/message_manager.dart';
+import 'package:maid/static/message_manager.dart';
 
 import 'package:maid/widgets/chat_widgets/code_box.dart';
 import 'package:maid/widgets/chat_widgets/typing_indicator.dart';

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:maid/utilities/generation_manager.dart';
-import 'package:maid/utilities/logger.dart';
+import 'package:maid/static/generation_manager.dart';
+import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:maid/utilities/model.dart';
-import 'package:maid/utilities/character.dart';
+import 'package:maid/types/model.dart';
+import 'package:maid/types/character.dart';
 
 class MemoryManager {
   static Map<String, dynamic> _models = {};
