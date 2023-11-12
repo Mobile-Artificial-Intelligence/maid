@@ -96,4 +96,33 @@ class FileManager {
 
     return File(result);
   }
+
+  static Future<File?> loadImage(BuildContext context, String dialogTitle) async {
+    if ((Platform.isAndroid || Platform.isIOS)) {
+      if (!(await Permission.storage.request().isGranted) || 
+          !(await Permission.manageExternalStorage.request().isGranted)
+      ) {
+        return null;
+      }
+    }
+
+    String? result;
+    
+    FilePickerResult? pick = await FilePicker.platform.pickFiles(
+      dialogTitle: dialogTitle,
+      type: FileType.image,
+      allowedExtensions: ["png", "jpg", "jpeg"],
+      allowMultiple: false,
+    );
+    
+    if (pick != null) {
+      result = pick.files.single.path;
+    }
+
+    if (result == null) {
+      return null;
+    }
+
+    return File(result);
+  }
 }
