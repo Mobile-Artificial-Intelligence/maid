@@ -60,7 +60,7 @@ class Model {
 
       String jsonString = json.encode(parameters);
       
-      File? file = await FileManager.saveJSON(context, preset);
+      File? file = await FileManager.save(context, "$preset.json");
 
       if (file == null) return "Error saving file";
 

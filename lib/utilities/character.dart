@@ -86,7 +86,7 @@ class Character {
       String jsonString = json.encode(jsonCharacter);
 
     
-      File? file = await FileManager.saveJSON(context, name);
+      File? file = await FileManager.save(context, "$name.json");
 
       if (file == null) return "Error saving file";
 
