@@ -53,7 +53,7 @@ class FileManager {
     return File(result);
   }
 
-  static Future<File?> save(BuildContext context, String character) async {
+  static Future<File?> saveJSON(BuildContext context, String fileName) async {
     if ((Platform.isAndroid || Platform.isIOS)) {
       if (!(await Permission.storage.request().isGranted) || 
           !(await Permission.manageExternalStorage.request().isGranted)
@@ -79,7 +79,7 @@ class FileManager {
       );
 
       if (result != null) {
-        result = "$result/$character.json";
+        result = "$result/$fileName.json";
       }
     } else {
       result = await FilePicker.platform.saveFile(

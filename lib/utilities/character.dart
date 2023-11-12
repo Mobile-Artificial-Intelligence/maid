@@ -12,7 +12,7 @@ import 'package:maid/utilities/memory_manager.dart';
 Character character = Character();
 
 class Character {
-  Image? profile;
+  Image profile = Image.asset("assets/defaultResponseProfile.png");
   String name = "Maid";
   String prePrompt = "";
   String userAlias = "";
@@ -86,7 +86,7 @@ class Character {
       String jsonString = json.encode(jsonCharacter);
 
     
-      File? file = await FileManager.save(context, name);
+      File? file = await FileManager.saveJSON(context, name);
 
       if (file == null) return "Error saving file";
 
@@ -131,7 +131,7 @@ class Character {
     return "Character Successfully Loaded";
   }
 
-  Future<void> loadImage(BuildContext context) async {
+  Future<void> loadProfileImage(BuildContext context) async {
     File? file = await FileManager.load(context, "Load Character Image", [".png", ".jpg", ".jpeg"]);
 
     if (file == null) return;
