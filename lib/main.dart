@@ -6,6 +6,7 @@ import 'package:maid/pages/home_page.dart';
 final maidAppKey = GlobalKey<MaidAppState>();
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   MemoryManager.init();
   runApp(MaidApp(key: maidAppKey));
 }
