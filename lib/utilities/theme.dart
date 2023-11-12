@@ -111,7 +111,7 @@ class MaidTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.white,
-      titleTextStyle:  TextStyle(
+      titleTextStyle: TextStyle(
         color: Colors.white,
         fontSize: 20.0,
         fontWeight: FontWeight.bold,
@@ -152,11 +152,11 @@ class MaidTheme {
       thumbColor: Colors.blue,
       overlayColor: Colors.blue.shade800,
     ),
-    filledButtonTheme:  FilledButtonThemeData( 
-    style:  ButtonStyle(
-      elevation: const MaterialStatePropertyAll(2.0),
-      shadowColor: MaterialStatePropertyAll(Colors.black.withOpacity(0.8))
-    ),),
+    filledButtonTheme: FilledButtonThemeData(
+      style: ButtonStyle(
+          elevation: const MaterialStatePropertyAll(2.0),
+          shadowColor: MaterialStatePropertyAll(Colors.black.withOpacity(0.8))),
+    ),
     colorScheme: ColorScheme.dark(
       background: Colors.grey.shade900,
       primary: Colors.grey.shade800,
@@ -194,9 +194,9 @@ class MaidTheme {
         ),
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         foregroundColor: Colors.black,
-        titleTextStyle:  TextStyle(
+        titleTextStyle: TextStyle(
           color: Colors.black,
           fontSize: 20.0,
           fontWeight: FontWeight.bold,
@@ -238,11 +238,12 @@ class MaidTheme {
         thumbColor: Colors.blue,
         overlayColor: Colors.blue.shade800,
       ),
-      filledButtonTheme:  FilledButtonThemeData( 
-        style:  ButtonStyle(
-          elevation:  const MaterialStatePropertyAll(1.0),
+      filledButtonTheme: FilledButtonThemeData(
+        style: ButtonStyle(
+          elevation: const MaterialStatePropertyAll(1.0),
           shadowColor: MaterialStatePropertyAll(Colors.grey.withOpacity(0.5)),
-      ),),
+        ),
+      ),
       colorScheme: ColorScheme.light(
         primary: Colors.white,
         onPrimary: Colors.black,

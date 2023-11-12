@@ -85,24 +85,20 @@ class MaidHomePageState extends State<MaidHomePage> {
         FocusScope.of(context).unfocus();
       }
 
-      MessageManager.add(UniqueKey(), 
-        message: promptController.text.trim(), 
-        userGenerated: true
-      );
+      MessageManager.add(UniqueKey(),
+          message: promptController.text.trim(), userGenerated: true);
       MessageManager.add(UniqueKey());
 
-      if (GenerationManager.remote && 
-        Host.urlController.text.isNotEmpty && 
-        model.parameters["remote_model"] != null
-      ) {
+      if (GenerationManager.remote &&
+          Host.urlController.text.isNotEmpty &&
+          model.parameters["remote_model"] != null) {
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
           MessageManager.busy = true;
           promptController.clear();
         });
-      } else if (!GenerationManager.remote && 
-        MemoryManager.checkFileExists(model.parameters["path"])
-      )  {
+      } else if (!GenerationManager.remote &&
+          MemoryManager.checkFileExists(model.parameters["path"])) {
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
           MessageManager.busy = true;
@@ -242,16 +238,11 @@ class MaidHomePageState extends State<MaidHomePage> {
             ),
             if (GenerationManager.remote)
               ListTile(
-                title: Material(
-                  elevation: 1,
-                  borderRadius: BorderRadius.circular(30),
-                  shadowColor: Colors.black.withOpacity(0.7),
-                  child: TextField(
-                    cursorColor: Theme.of(context).colorScheme.secondary,
-                    controller: Host.urlController,
-                    decoration: const InputDecoration(
-                      labelText: 'URL',
-                    ),
+                title: TextField(
+                  cursorColor: Theme.of(context).colorScheme.secondary,
+                  controller: Host.urlController,
+                  decoration: const InputDecoration(
+                    labelText: 'URL',
                   ),
                 ),
               ),
@@ -298,42 +289,39 @@ class MaidHomePageState extends State<MaidHomePage> {
                                 color: Colors.red,
                               )),
                         Expanded(
-                          child: Material(
-                            elevation: 1,
-                            borderRadius: BorderRadius.circular(30),
-                            shadowColor: Colors.black.withOpacity(0.7),
-                            child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              maxLines: 9,
-                              enableInteractiveSelection: true,
-                              onSubmitted: (value) {
-                                if (!MessageManager.busy) {
-                                  if (model.parameters["path"]
-                                      .toString()
-                                      .isEmpty && !GenerationManager.remote) {
-                                    _missingModelDialog();
-                                  } else {
-                                    send();
-                                  }
+                          child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            maxLines: 9,
+                            enableInteractiveSelection: true,
+                            onSubmitted: (value) {
+                              if (!MessageManager.busy) {
+                                if (model.parameters["path"]
+                                        .toString()
+                                        .isEmpty &&
+                                    !GenerationManager.remote) {
+                                  _missingModelDialog();
+                                } else {
+                                  send();
                                 }
-                              },
-                              controller: promptController,
-                              cursorColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              decoration: InputDecoration(
-                                  labelText: 'Prompt',
-                                  hintStyle:
-                                      Theme.of(context).textTheme.labelSmall),
-                            ),
+                              }
+                            },
+                            controller: promptController,
+                            cursorColor:
+                                Theme.of(context).colorScheme.secondary,
+                            decoration: InputDecoration(
+                                labelText: 'Prompt',
+                                hintStyle:
+                                    Theme.of(context).textTheme.labelSmall),
                           ),
                         ),
                         IconButton(
                             onPressed: () {
                               if (!MessageManager.busy) {
                                 if (model.parameters["path"]
-                                    .toString()
-                                    .isEmpty && !GenerationManager.remote) {
+                                        .toString()
+                                        .isEmpty &&
+                                    !GenerationManager.remote) {
                                   _missingModelDialog();
                                 } else {
                                   send();
