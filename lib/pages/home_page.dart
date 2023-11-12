@@ -91,13 +91,18 @@ class MaidHomePageState extends State<MaidHomePage> {
       );
       MessageManager.add(UniqueKey());
 
-      if (GenerationManager.remote){
+      if (GenerationManager.remote && 
+        Host.urlController.text.isNotEmpty && 
+        model.parameters["remote_model"] != null
+      ) {
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
           MessageManager.busy = true;
           promptController.clear();
         });
-      } else if (MemoryManager.checkFileExists(model.parameters["path"]))  {
+      } else if (!GenerationManager.remote && 
+        MemoryManager.checkFileExists(model.parameters["path"])
+      )  {
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
           MessageManager.busy = true;
