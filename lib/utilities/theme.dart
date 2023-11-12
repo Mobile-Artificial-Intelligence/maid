@@ -194,8 +194,6 @@ class MaidTheme {
         ),
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.black,
         titleTextStyle: TextStyle(
           color: Colors.black,
           fontSize: 20.0,

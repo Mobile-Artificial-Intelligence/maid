@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:maid/utilities/memory_manager.dart';
 import 'package:maid/utilities/theme.dart';
 import 'package:maid/pages/home_page.dart';
@@ -9,6 +10,13 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MemoryManager.init();
   runApp(MaidApp(key: maidAppKey));
+  // Override status bar colors
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light),
+  );
 }
 
 class MaidApp extends StatefulWidget {
