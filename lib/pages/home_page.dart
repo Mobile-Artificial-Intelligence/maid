@@ -94,19 +94,19 @@ class MaidHomePageState extends State<MaidHomePage> {
       if (GenerationManager.remote){
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
-          model.busy = true;
+          MessageManager.busy = true;
           promptController.clear();
         });
       } else if (MemoryManager.checkFileExists(model.parameters["path"]))  {
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
-          model.busy = true;
+          MessageManager.busy = true;
           promptController.clear();
         });
       } else {
         _missingModelDialog();
         setState(() {
-          model.busy = false;
+          MessageManager.busy = false;
           promptController.clear();
         });
       }
@@ -279,7 +279,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        if (model.busy && !GenerationManager.remote)
+                        if (MessageManager.busy && !GenerationManager.remote)
                           IconButton(
                               onPressed: LocalGeneration.instance.stop,
                               iconSize: 50,
@@ -294,7 +294,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                             maxLines: 9,
                             enableInteractiveSelection: true,
                             onSubmitted: (value) {
-                              if (!model.busy) {
+                              if (!MessageManager.busy) {
                                 if (model.parameters["path"]
                                     .toString()
                                     .isEmpty && !GenerationManager.remote) {
@@ -315,7 +315,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                         ),
                         IconButton(
                             onPressed: () {
-                              if (!model.busy) {
+                              if (!MessageManager.busy) {
                                 if (model.parameters["path"]
                                     .toString()
                                     .isEmpty && !GenerationManager.remote) {
@@ -328,7 +328,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                             iconSize: 50,
                             icon: Icon(
                               Icons.arrow_circle_right,
-                              color: model.busy
+                              color: MessageManager.busy
                                   ? Theme.of(context).colorScheme.onPrimary
                                   : Theme.of(context).colorScheme.secondary,
                             )),

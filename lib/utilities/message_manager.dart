@@ -54,8 +54,7 @@ class MessageManager {
 
   static void stream(String message) async {     
     _tail ??= _root.findTail();
-    if (!model.busy && !(_tail!.userGenerated)) {
-      busy = false;
+    if (!MessageManager.busy && !(_tail!.userGenerated)) {
       finalise();
     } else {
       _tail!.messageController.add(message);
@@ -68,7 +67,7 @@ class MessageManager {
       return;
     } else {
       branch(key, false);
-      model.busy = true;
+      MessageManager.busy = true;
       GenerationManager.prompt(parent.message);
     }
   }
