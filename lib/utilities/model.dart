@@ -60,7 +60,7 @@ class Model {
 
       String jsonString = json.encode(parameters);
       
-      File? file = await FileManager.save(context, preset);
+      File? file = await FileManager.save(context, "$preset.json");
 
       if (file == null) return "Error saving file";
 
@@ -74,7 +74,7 @@ class Model {
 
   Future<String> importModelParameters(BuildContext context) async {
     try {
-      File? file = await FileManager.load(context, [".json"]);
+      File? file = await FileManager.load(context, "Load Model JSON", [".json"]);
 
       if (file == null) return "Error loading file";
 
@@ -101,7 +101,7 @@ class Model {
 
   Future<String> loadModelFile(BuildContext context) async {
     try {
-      File? file = await FileManager.load(context, [".gguf"]);
+      File? file = await FileManager.load(context, "Load Model File", [".gguf"]);
 
       if (file == null) return "Error loading file";
       

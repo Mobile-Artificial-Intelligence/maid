@@ -39,6 +39,7 @@ dependencies:
   file_picker: ^6.0.0
   path: ^1.8.3
   system_info2: ^4.0.0
+  steg: ^1.0.0
   flutter_linkify: ^6.0.0
   linkify: ^5.0.0
   filesystem_picker: ^4.0.0

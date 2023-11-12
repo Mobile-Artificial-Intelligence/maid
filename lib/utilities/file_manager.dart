@@ -7,7 +7,7 @@ import 'package:maid/utilities/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FileManager {
-  static Future<File?> load(BuildContext context, List<String> allowedExtensions) async {
+  static Future<File?> load(BuildContext context, String dialogTitle, List<String> allowedExtensions) async {
     if ((Platform.isAndroid || Platform.isIOS)) {
       if (!(await Permission.storage.request().isGranted) || 
           !(await Permission.manageExternalStorage.request().isGranted)
@@ -36,7 +36,7 @@ class FileManager {
       );
     } else {
       FilePickerResult? pick = await FilePicker.platform.pickFiles(
-        dialogTitle: "Select Model File",
+        dialogTitle: dialogTitle,
         type: FileType.any,
         allowMultiple: false,
       );
@@ -53,7 +53,7 @@ class FileManager {
     return File(result);
   }
 
-  static Future<File?> save(BuildContext context, String character) async {
+  static Future<File?> save(BuildContext context, String fileName) async {
     if ((Platform.isAndroid || Platform.isIOS)) {
       if (!(await Permission.storage.request().isGranted) || 
           !(await Permission.manageExternalStorage.request().isGranted)
@@ -79,7 +79,7 @@ class FileManager {
       );
 
       if (result != null) {
-        result = "$result/$character.json";
+        result = "$result/$fileName";
       }
     } else {
       result = await FilePicker.platform.saveFile(
@@ -88,6 +88,35 @@ class FileManager {
       );
 
       result.toString();
+    }
+
+    if (result == null) {
+      return null;
+    }
+
+    return File(result);
+  }
+
+  static Future<File?> loadImage(BuildContext context, String dialogTitle) async {
+    if ((Platform.isAndroid || Platform.isIOS)) {
+      if (!(await Permission.storage.request().isGranted) || 
+          !(await Permission.manageExternalStorage.request().isGranted)
+      ) {
+        return null;
+      }
+    }
+
+    String? result;
+    
+    FilePickerResult? pick = await FilePicker.platform.pickFiles(
+      dialogTitle: dialogTitle,
+      type: FileType.image,
+      allowedExtensions: ["png", "jpg", "jpeg"],
+      allowMultiple: false,
+    );
+    
+    if (pick != null) {
+      result = pick.files.single.path;
     }
 
     if (result == null) {
