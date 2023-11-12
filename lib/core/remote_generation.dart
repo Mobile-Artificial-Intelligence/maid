@@ -1,16 +1,28 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:maid/utilities/character.dart';
 import 'package:maid/utilities/host.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/model.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class RemoteGeneration {
   static List<int> _context = [];
   static List<Map<String, dynamic>> _messages = [];
   
   static void prompt(String input) async {
+    if ((Platform.isAndroid || Platform.isIOS)) {
+      if (await Permission.nearbyWifiDevices.request().isGranted) {
+        Logger.log("Permission granted");
+      } else {
+        Logger.log("Permission denied");
+        return;
+      }
+    }
+    
     _messages = character.examples;
     _messages.addAll(MessageManager.getMessages());
 
