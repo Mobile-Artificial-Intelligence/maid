@@ -8,7 +8,7 @@ import 'package:maid/utilities/file_manager.dart';
 import 'package:maid/utilities/logger.dart';
 import 'package:maid/utilities/message_manager.dart';
 import 'package:maid/utilities/memory_manager.dart';
-import 'package:steg/steg.dart';
+import 'package:image/image.dart';
 
 Character character = Character();
 
@@ -125,20 +125,19 @@ class Character {
 
   Future<String> exportImage(BuildContext context) async {
     try {
-      File? image = await FileManager.save(context, "$name.png");
-      
-      if (image == null) return "Error saving file";
-      
-      await profile.copy(image.path);
+      final image = decodePng(profile.readAsBytesSync());
+
+      if (image == null) return "Error decoding image";
 
       String jsonString = json.encode(toMap());
 
-      File? file = await Steganograph.encode(
-        image: image, 
-        message: jsonString
-      );
+      image.textData = {"character": jsonString};
 
+      File? file = await FileManager.save(context, "$name.png");
+      
       if (file == null) return "Error saving file";
+
+      await file.writeAsBytes(encodePng(image));
 
       return "Character Successfully Saved";
     } catch (e) {
@@ -153,9 +152,10 @@ class Character {
 
       if (file == null) return "Error loading file";
 
-      String? jsonString = await Steganograph.decode(image: file);
+      final image = decodePng(file.readAsBytesSync());
 
-      if (jsonString != null) {
+      if (image != null && image.textData != null) {
+        String jsonString = image.textData!["character"] ?? "";
         Map<String, dynamic> jsonCharacter = json.decode(jsonString);
 
         if (jsonCharacter.isNotEmpty) {
@@ -163,7 +163,7 @@ class Character {
           prePrompt = jsonCharacter["pre_prompt"] ?? "";
           userAlias = jsonCharacter["user_alias"] ?? "";
           responseAlias = jsonCharacter["response_alias"] ?? "";
-    
+
           final length = jsonCharacter["examples"].length ?? 0;
           examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
         }

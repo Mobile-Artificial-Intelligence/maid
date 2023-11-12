@@ -17,14 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.2"
-  asn1lib:
-    dependency: transitive
-    description:
-      name: asn1lib
-      sha256: "21afe4333076c02877d14f4a89df111e658a6d466cbfc802eb705eb91bd5adfd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.0"
   async:
     dependency: transitive
     description:
@@ -105,14 +97,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  crypton:
-    dependency: transitive
-    description:
-      name: crypton
-      sha256: "17b6631fbf89e389d421b46629132287ed37d601b2ad1357445826ab85022271"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -240,14 +224,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  hashcodes:
-    dependency: transitive
-    description:
-      name: hashcodes
-      sha256: "80f9410a5b3c8e110c4b7604546034749259f5d6dcca63e0d3c17c9258f1a651"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   http:
     dependency: "direct main"
     description:
@@ -264,30 +240,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  igodo:
-    dependency: transitive
-    description:
-      name: igodo
-      sha256: e12ef48b8ed3ca5f5a89dec5955d7b7ee368b6d37c34569b006180f23640529a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image
       sha256: "028f61960d56f26414eb616b48b04eb37d700cbe477b7fb09bf1d7ce57fd9271"
       url: "https://pub.dev"
     source: hosted
     version: "4.1.3"
-  image_size_getter:
-    dependency: transitive
-    description:
-      name: image_size_getter
-      sha256: "75befb508dd28845d4b276654a8420be3d7458b8424e943ee84bbfe7c2c052e0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.2"
   js:
     dependency: transitive
     description:
@@ -589,14 +549,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
-  steg:
-    dependency: "direct main"
-    description:
-      name: steg
-      sha256: "3fb4e3dbd329574a0aa16b725a04ddf9b3b38d53f6dfeebc583fc75d4097e492"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:
