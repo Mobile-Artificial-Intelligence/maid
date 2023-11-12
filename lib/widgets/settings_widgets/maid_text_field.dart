@@ -29,16 +29,21 @@ class MaidTextField extends StatelessWidget{
           ),
           Expanded(
             flex: 2,
-            child: TextField(
-              keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
-              maxLines: multiline ? null : 1,
-              cursorColor: Theme.of(context).colorScheme.secondary,
-              controller: controller ?? TextEditingController(text: initialValue),
-              decoration: InputDecoration(
-                labelText: labelText,
+            child: Material(
+              elevation: 1,
+              shadowColor: Colors.grey.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(30.0),
+              child: TextField(
+                keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
+                maxLines: multiline ? null : 1,
+                cursorColor: Theme.of(context).colorScheme.secondary,
+                controller: controller ?? TextEditingController(text: initialValue),
+                decoration: InputDecoration(
+                  labelText: labelText,
+                ),
+                onSubmitted: onSubmitted,
+                onChanged: onChanged,
               ),
-              onSubmitted: onSubmitted,
-              onChanged: onChanged,
             ),
           ),
         ],

@@ -152,6 +152,11 @@ class MaidTheme {
       thumbColor: Colors.blue,
       overlayColor: Colors.blue.shade800,
     ),
+    filledButtonTheme:  FilledButtonThemeData( 
+    style:  ButtonStyle(
+      elevation: const MaterialStatePropertyAll(2.0),
+      shadowColor: MaterialStatePropertyAll(Colors.black.withOpacity(0.8))
+    ),),
     colorScheme: ColorScheme.dark(
       background: Colors.grey.shade900,
       primary: Colors.grey.shade800,
@@ -233,6 +238,11 @@ class MaidTheme {
         thumbColor: Colors.blue,
         overlayColor: Colors.blue.shade800,
       ),
+      filledButtonTheme:  FilledButtonThemeData( 
+        style:  ButtonStyle(
+          elevation:  const MaterialStatePropertyAll(1.0),
+          shadowColor: MaterialStatePropertyAll(Colors.grey.withOpacity(0.5)),
+      ),),
       colorScheme: ColorScheme.light(
         primary: Colors.white,
         onPrimary: Colors.black,

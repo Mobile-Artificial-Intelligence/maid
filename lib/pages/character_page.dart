@@ -111,20 +111,24 @@ class _CharacterPageState extends State<CharacterPage> {
                       ),
                       Expanded(
                         flex: 2,
-                        child: TextField(
-                          cursorColor: Theme.of(context).colorScheme.secondary,
-                          decoration: const InputDecoration(
-                            labelText: "Name",
+                        child: Material(
+                          elevation: 2,
+                          borderRadius: BorderRadius.circular(30),
+                          child: TextField(
+                            cursorColor: Theme.of(context).colorScheme.secondary,
+                            decoration: const InputDecoration(
+                              labelText: "Name",
+                            ),
+                            controller: TextEditingController(text: character.name),
+                            onSubmitted: (value) {
+                              if (MemoryManager.getCharacters().contains(value)) {
+                                MemoryManager.setCharacter(value);
+                              } else if (value.isNotEmpty) {
+                                MemoryManager.updateCharacter(value);
+                              }
+                              setState(() {});
+                            },
                           ),
-                          controller: TextEditingController(text: character.name),
-                          onSubmitted: (value) {
-                            if (MemoryManager.getCharacters().contains(value)) {
-                              MemoryManager.setCharacter(value);
-                            } else if (value.isNotEmpty) {
-                              MemoryManager.updateCharacter(value);
-                            }
-                            setState(() {});
-                          },
                         ),
                       ),
                     ],
