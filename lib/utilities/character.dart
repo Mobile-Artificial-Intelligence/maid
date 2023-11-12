@@ -11,7 +11,8 @@ import 'package:maid/utilities/memory_manager.dart';
 
 Character character = Character();
 
-class Character {  
+class Character {
+  Image? profile;
   String name = "Maid";
   String prePrompt = "";
   String userAlias = "";
