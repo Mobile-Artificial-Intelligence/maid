@@ -7,13 +7,13 @@ import 'package:maid/pages/home_page.dart';
 final maidAppKey = GlobalKey<MaidAppState>();
 
 void main() {
-  MemoryManager.init();
   WidgetsFlutterBinding.ensureInitialized();
+  MemoryManager.init();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.dark),
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.dark),
   );
   runApp(MaidApp(key: maidAppKey));
 }
