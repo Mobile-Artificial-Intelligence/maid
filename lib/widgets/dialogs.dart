@@ -74,8 +74,9 @@ Future<void> switcherDialog(
                 key: ValueKey(item),
                 onDismissed: (direction) {
                   // Remove the item from your list and refresh the UI
-                  getMenuStrings().removeAt(index);
+                  remove(getMenuStrings()[index]);
                   refresh();
+                  if (getMenuStrings().isEmpty) closeDialog();
                 },
                 background: Container(color: Colors.red),
                 child: ListTile(
@@ -85,8 +86,8 @@ Future<void> switcherDialog(
                   ),
                   onTap: () {
                     set(getMenuStrings()[index]);
-                    closeDialog();
                     refresh();
+                    closeDialog();
                   },
                 )
               );

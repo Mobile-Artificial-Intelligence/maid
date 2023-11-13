@@ -202,19 +202,6 @@ class MaidHomePageState extends State<MaidHomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.account_tree_rounded,
-                  color: Theme.of(context).colorScheme.onPrimary),
-              title: Text(
-                'Model',
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ModelPage()));
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.chat_rounded,
                   color: Theme.of(context).colorScheme.onPrimary),
               title: Text(
@@ -225,6 +212,19 @@ class MaidHomePageState extends State<MaidHomePage> {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const SessionPage()));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.account_tree_rounded,
+                  color: Theme.of(context).colorScheme.onPrimary),
+              title: Text(
+                'Model',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ModelPage()));
               },
             ),
             ListTile(

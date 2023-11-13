@@ -32,12 +32,24 @@ class _SessionPageState extends State<SessionPage> {
         itemBuilder: (context, index) {
           List<String> sessions = MemoryManager.getSessions();
           
-          return ListTile(
-            title: Text(sessions[index]),
-            onTap: () {
-              MemoryManager.setSession(sessions[index]);
-              Navigator.of(context).pop();
+          return Dismissible(
+            key: ValueKey(sessions[index]),
+            onDismissed: (direction) {
+              // Remove the item from your list and refresh the UI
+              MemoryManager.removeSession(sessions[index]);
+              setState(() {});
             },
+            background: Container(color: Colors.red),
+            child: ListTile(
+              title: Text(
+                sessions[index],
+                textAlign: TextAlign.center
+              ),
+              onTap: () {
+                MemoryManager.setSession(sessions[index]);
+                Navigator.of(context).pop();
+              },
+            )
           );
         },
       )

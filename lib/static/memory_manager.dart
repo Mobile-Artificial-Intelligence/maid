@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/message_manager.dart';
+import 'package:maid/types/chat_node.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:maid/types/model.dart';
@@ -127,25 +129,40 @@ class MemoryManager {
 
   static void removeModel(String modelName) {
     _models.remove(modelName);
-    model = Model.fromMap(
-      _models[_models.keys.lastOrNull ?? "Default"] ?? {}
-    );
+    String? key = _models.keys.lastOrNull;
+
+    if (key == null) {
+      model = Model();
+    } else {
+      model = Model.fromMap(_models[key]!);
+    }
+
     saveModels();
   }
 
   static void removeCharacter(String characterName) {
     _characters.remove(characterName);
-    character = Character.fromMap(
-      _characters[_characters.keys.lastOrNull ?? "Default"] ?? {}
-    );
+    String? key = _characters.keys.lastOrNull;
+
+    if (key == null) {
+      character = Character();
+    } else {
+      character = Character.fromMap(_characters[key]!);
+    }
+
     saveCharacters();
   }
 
   static void removeSession(String sessionName) {
     _sessions.remove(sessionName);
-    MessageManager.fromMap(
-      _sessions[_sessions.keys.lastOrNull ?? "New Session"] ?? {}
-    );
+    String? key = _sessions.keys.lastOrNull;
+    
+    if (key == null) {
+      MessageManager.root = ChatNode(key: UniqueKey());
+    } else {
+      MessageManager.fromMap(_sessions[key]!);
+    }
+    
     saveSessions();
   }
 
