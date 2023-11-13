@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/logger.dart';
+import 'package:maid/static/message_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:maid/types/model.dart';
@@ -42,6 +43,7 @@ class MemoryManager {
 
     prefs.setBool("remote", GenerationManager.remote);
     prefs.setString("remote_url", Host.url);
+    prefs.setString("root", json.encode(MessageManager.root.toMap()));
   }
 
   static void _saveModels(SharedPreferences prefs) {
