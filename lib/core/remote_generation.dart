@@ -14,9 +14,7 @@ class RemoteGeneration {
   static List<int> _context = [];
   static List<Map<String, dynamic>> _messages = [];
   
-  static void prompt(String input) async {
-    MemoryManager.saveMisc();
-    
+  static void prompt(String input) async {   
     if ((Platform.isAndroid || Platform.isIOS)) {
       if (await Permission.nearbyWifiDevices.request().isGranted) {
         Logger.log("Nearby Devices - Permission granted");
@@ -96,5 +94,6 @@ class RemoteGeneration {
 
     MessageManager.busy = false;
     MessageManager.stream("");
+    MemoryManager.saveMisc();
   }
 }

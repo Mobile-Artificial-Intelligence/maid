@@ -16,6 +16,7 @@ class MessageManager {
 
   static void fromMap(Map<String, dynamic> inputJson) {
     root = ChatNode.fromMap(inputJson);
+    tail = root.findTail();
     _callback?.call();
   }
 

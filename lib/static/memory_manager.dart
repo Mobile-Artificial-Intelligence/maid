@@ -22,7 +22,7 @@ class MemoryManager {
 
       _models = json.decode(prefs.getString("models") ?? "{}");
       _characters = json.decode(prefs.getString("characters") ?? "{}");
-      MessageManager.root = ChatNode.fromMap(
+      MessageManager.fromMap(
           json.decode(prefs.getString("root") ?? "{}") ?? {});
 
       if (_models.isEmpty) {

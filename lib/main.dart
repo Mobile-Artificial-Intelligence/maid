@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
 final maidAppKey = GlobalKey<MaidAppState>();
 
 void main() {
+  MemoryManager.init();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

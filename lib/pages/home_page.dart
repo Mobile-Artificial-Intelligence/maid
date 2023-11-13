@@ -139,8 +139,15 @@ class MaidHomePageState extends State<MaidHomePage> {
   @override
   void initState() {
     super.initState();
+    chatWidgets.clear();
+    Map<Key, bool> history = MessageManager.history();
+    for (var key in history.keys) {
+      chatWidgets.add(ChatMessage(
+        key: key,
+        userGenerated: history[key] ?? false,
+      ));
+    }
     MessageManager.registerCallback(updateCallback);
-    MemoryManager.init();
   }
 
   @override
