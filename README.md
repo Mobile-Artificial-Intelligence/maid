@@ -20,8 +20,8 @@ To use this app, follow these steps:
 7. Enter a prompt
 
 ## Help Wanted
-- Add ability to import sillytavern character cards
-- Integrate Ollama API
+- Write code comments
+- Documentation
 - Seperate Desktop UI from Mobile UI
 - Testing and Building on MacOS and IOS
 
