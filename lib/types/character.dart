@@ -52,7 +52,6 @@ class Character {
     jsonCharacter["response_alias"] = responseAlias;
     jsonCharacter["examples"] = examples;
 
-    Logger.log("Character JSON created with name: $name");
     return jsonCharacter;
   }
 

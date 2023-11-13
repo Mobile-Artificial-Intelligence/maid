@@ -37,7 +37,6 @@ class Model {
     jsonModel = parameters;
     jsonModel["preset"] = preset;
     jsonModel["local"] = local;
-    Logger.log("Model JSON created with name: $preset");
 
     return jsonModel;
   }

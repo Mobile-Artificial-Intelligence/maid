@@ -140,6 +140,7 @@ class MaidHomePageState extends State<MaidHomePage> {
   void initState() {
     super.initState();
     MessageManager.registerCallback(updateCallback);
+    MemoryManager.init();
   }
 
   @override

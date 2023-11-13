@@ -5,6 +5,7 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/message_manager.dart';
+import 'package:maid/types/chat_node.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:maid/types/model.dart';
@@ -21,6 +22,8 @@ class MemoryManager {
 
       _models = json.decode(prefs.getString("models") ?? "{}");
       _characters = json.decode(prefs.getString("characters") ?? "{}");
+      MessageManager.root = ChatNode.fromMap(
+          json.decode(prefs.getString("root") ?? "{}") ?? {});
 
       if (_models.isEmpty) {
         model = Model();
@@ -38,46 +41,38 @@ class MemoryManager {
     });
   }
 
-  static void _saveMisc(SharedPreferences prefs) {
-    prefs.remove("remote");
+  static void saveMisc() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool("remote", GenerationManager.remote);
+      Logger.log("Remote Flag Saved: ${GenerationManager.remote}");
 
-    prefs.setBool("remote", GenerationManager.remote);
-    prefs.setString("remote_url", Host.url);
-    prefs.setString("root", json.encode(MessageManager.root.toMap()));
-  }
+      prefs.setString("remote_url", Host.url);
+      Logger.log("Remote URL Saved: ${Host.url}");
 
-  static void _saveModels(SharedPreferences prefs) {
-    prefs.remove("models");
-    prefs.remove("current_model");
-
-    _models[model.preset] = model.toMap();
-    Logger.log("Model Saved: ${model.preset}");
-
-    prefs.setString("models", json.encode(_models));
-    prefs.setString("current_model", model.preset);
-  }
-
-  static void _saveCharacters(SharedPreferences prefs) {
-    prefs.remove("characters");
-    prefs.remove("current_character");
-    
-    _characters[character.name] = character.toMap();
-    Logger.log("Character Saved: ${character.name}");
-
-    prefs.setString("characters", json.encode(_characters));
-    prefs.setString("current_character", character.name);
+      prefs.setString("root", json.encode(MessageManager.root.toMap()));
+      Logger.log("Message Tree Saved: ${MessageManager.root.toMap()}");
+    });
+    GenerationManager.cleanup();
   }
 
   static void saveModels() {
     SharedPreferences.getInstance().then((prefs) {
-      _saveModels(prefs);
+      _models[model.preset] = model.toMap();
+      Logger.log("Model Saved: ${model.preset}");
+
+      prefs.setString("models", json.encode(_models));
+      prefs.setString("current_model", model.preset);
     });
     GenerationManager.cleanup();
   }
 
   static void saveCharacters() {
     SharedPreferences.getInstance().then((prefs) {
-      _saveCharacters(prefs);
+      _characters[character.name] = character.toMap();
+      Logger.log("Character Saved: ${character.name}");
+
+      prefs.setString("characters", json.encode(_characters));
+      prefs.setString("current_character", character.name);
     });
     GenerationManager.cleanup();
   }
@@ -85,9 +80,9 @@ class MemoryManager {
   static Future<void> saveAll() async {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
-    _saveMisc(prefs);
-    _saveModels(prefs);
-    _saveCharacters(prefs);
+    saveMisc();
+    saveModels();
+    saveCharacters();
     GenerationManager.cleanup();
   }
 

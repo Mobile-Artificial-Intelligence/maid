@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
@@ -8,7 +7,6 @@ final maidAppKey = GlobalKey<MaidAppState>();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MemoryManager.init();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -25,25 +23,11 @@ class MaidApp extends StatefulWidget {
   MaidAppState createState() => MaidAppState();
 }
 
-class MaidAppState extends State<MaidApp> with WidgetsBindingObserver {
+class MaidAppState extends State<MaidApp> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _loadTheme();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      MemoryManager.saveAll();
-    }
   }
 
   _loadTheme() async {
