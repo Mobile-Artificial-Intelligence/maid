@@ -1,3 +1,3 @@
 class Host {
-  static String url = "http://localhost:11434";
+  static String url = "http://0.0.0.0:11434";
 }
