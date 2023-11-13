@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:maid/static/memory_manager.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
 
@@ -90,6 +91,7 @@ class MessageManager {
   static void finalise() {
     tail ??= root.findTail();
     tail!.finaliseController.add(0);
+    MemoryManager.saveSessions();
   }
 
   static void next(Key key) {
