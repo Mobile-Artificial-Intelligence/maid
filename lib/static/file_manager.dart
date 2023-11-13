@@ -125,4 +125,9 @@ class FileManager {
 
     return File(result);
   }
+
+  static bool checkFileExists(String filePath) {
+    File file = File(filePath);
+    return file.existsSync();
+  }
 }

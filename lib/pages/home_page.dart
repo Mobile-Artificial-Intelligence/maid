@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:maid/pages/session_page.dart';
+import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/memory_manager.dart';
@@ -102,7 +104,7 @@ class MaidHomePageState extends State<MaidHomePage> {
           promptController.clear();
         });
       } else if (!GenerationManager.remote && 
-        MemoryManager.checkFileExists(model.parameters["path"])
+        FileManager.checkFileExists(model.parameters["path"])
       )  {
         GenerationManager.prompt(promptController.text.trim());
         setState(() {
@@ -188,14 +190,15 @@ class MaidHomePageState extends State<MaidHomePage> {
             ListTile(
               leading: Icon(Icons.person,
                   color: Theme.of(context).colorScheme.onPrimary),
-              title: Text('Character',
-                  style: Theme.of(context).textTheme.labelLarge),
+              title: Text(
+                'Character',
+                style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CharacterPage()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CharacterPage()));
               },
             ),
             ListTile(
@@ -209,6 +212,19 @@ class MaidHomePageState extends State<MaidHomePage> {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const ModelPage()));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.chat_rounded,
+                  color: Theme.of(context).colorScheme.onPrimary),
+              title: Text(
+                'Sessions',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const SessionPage()));
               },
             ),
             ListTile(

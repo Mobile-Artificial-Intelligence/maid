@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/message_manager.dart';
-import 'package:maid/types/chat_node.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:maid/types/model.dart';
@@ -14,6 +12,7 @@ import 'package:maid/types/character.dart';
 class MemoryManager {
   static Map<String, dynamic> _models = {};
   static Map<String, dynamic> _characters = {};
+  static Map<String, dynamic> _sessions = {};
 
   static void init() {
     SharedPreferences.getInstance().then((prefs) {
@@ -22,21 +21,25 @@ class MemoryManager {
 
       _models = json.decode(prefs.getString("models") ?? "{}");
       _characters = json.decode(prefs.getString("characters") ?? "{}");
-      MessageManager.fromMap(
-          json.decode(prefs.getString("root") ?? "{}") ?? {});
+      _sessions = json.decode(prefs.getString("sessions") ?? "{}");
 
       if (_models.isEmpty) {
         model = Model();
       } else {
         model = Model.fromMap(
-            _models[prefs.getString("current_model") ?? "Default"] ?? {});
+            _models[prefs.getString("last_model") ?? "Default"] ?? {});
       }
 
       if (_characters.isEmpty) {
         character = Character();
       } else {
         character = Character.fromMap(
-            _characters[prefs.getString("current_character") ?? "Default"] ?? {});
+            _characters[prefs.getString("last_character") ?? "Default"] ?? {});
+      }
+
+      if (_sessions.isNotEmpty) {
+        MessageManager.fromMap(
+            _sessions[prefs.getString("last_session") ?? "New Session"] ?? {});
       }
     });
   }
@@ -48,9 +51,6 @@ class MemoryManager {
 
       prefs.setString("remote_url", Host.url);
       Logger.log("Remote URL Saved: ${Host.url}");
-
-      prefs.setString("root", json.encode(MessageManager.root.toMap()));
-      Logger.log("Message Tree Saved: ${MessageManager.root.toMap()}");
     });
     GenerationManager.cleanup();
   }
@@ -61,7 +61,7 @@ class MemoryManager {
       Logger.log("Model Saved: ${model.preset}");
 
       prefs.setString("models", json.encode(_models));
-      prefs.setString("current_model", model.preset);
+      prefs.setString("last_model", model.preset);
     });
     GenerationManager.cleanup();
   }
@@ -72,7 +72,21 @@ class MemoryManager {
       Logger.log("Character Saved: ${character.name}");
 
       prefs.setString("characters", json.encode(_characters));
-      prefs.setString("current_character", character.name);
+      prefs.setString("last_character", character.name);
+    });
+    GenerationManager.cleanup();
+  }
+
+  static void saveSessions() {
+    SharedPreferences.getInstance().then((prefs) {
+      String key = MessageManager.root.message;
+      if (key.isEmpty) key = "New Session";
+
+      _sessions[key] = MessageManager.root.toMap();
+      Logger.log("Session Saved: $key");
+
+      prefs.setString("sessions", json.encode(_sessions));
+      prefs.setString("last_session", key);
     });
     GenerationManager.cleanup();
   }
@@ -83,6 +97,7 @@ class MemoryManager {
     saveMisc();
     saveModels();
     saveCharacters();
+    saveSessions();
     GenerationManager.cleanup();
   }
 
@@ -102,6 +117,14 @@ class MemoryManager {
     saveCharacters();
   }
 
+  static void updateSession(String newName) {
+    String oldName = MessageManager.root.message;
+    Logger.log("Updating session $oldName ====> $newName");
+    MessageManager.root.message = newName;
+    _sessions.remove(oldName);
+    saveSessions();
+  }
+
   static void removeModel(String modelName) {
     _models.remove(modelName);
     model = Model.fromMap(
@@ -118,12 +141,24 @@ class MemoryManager {
     saveCharacters();
   }
 
+  static void removeSession(String sessionName) {
+    _sessions.remove(sessionName);
+    MessageManager.fromMap(
+      _sessions[_sessions.keys.lastOrNull ?? "New Session"] ?? {}
+    );
+    saveSessions();
+  }
+
   static List<String> getModels() {
     return _models.keys.toList();
   }
 
   static List<String> getCharacters() {
     return _characters.keys.toList();
+  }
+
+  static List<String> getSessions() {
+    return _sessions.keys.toList();
   }
 
   static void setModel(String modelName) {
@@ -140,8 +175,10 @@ class MemoryManager {
     saveCharacters();
   }
 
-  static bool checkFileExists(String filePath) {
-    File file = File(filePath);
-    return file.existsSync();
+  static void setSession(String sessionName) {
+    saveSessions();
+    MessageManager.fromMap(_sessions[sessionName] ?? {});
+    Logger.log("Session Set: ${MessageManager.root.message}");
+    saveSessions();
   }
 }

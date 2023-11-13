@@ -36,8 +36,10 @@ class Character {
     userAlias = inputJson["user_alias"] ?? "";
     responseAlias = inputJson["response_alias"] ?? "";
 
-    final length = inputJson["examples"].length ?? 0;
-    examples = List<Map<String,dynamic>>.generate(length, (i) => inputJson["examples"][i]);
+    if (inputJson["examples"] != null) {
+      final length = inputJson["examples"].length ?? 0;
+      examples = List<Map<String,dynamic>>.generate(length, (i) => inputJson["examples"][i]);
+    }
 
     Logger.log("Character created with name: ${inputJson["name"]}");
   }
@@ -65,8 +67,10 @@ class Character {
     userAlias = jsonCharacter["user_alias"] ?? "";
     responseAlias = jsonCharacter["response_alias"] ?? "";
 
-    final length = jsonCharacter["examples"].length ?? 0;
-    examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
+    if (jsonCharacter["examples"] != null) {
+      final length = jsonCharacter["examples"].length ?? 0;
+      examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
+    }
 
     MemoryManager.saveCharacters();
   }
