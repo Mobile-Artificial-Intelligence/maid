@@ -21,7 +21,7 @@ class _CharacterPageState extends State<CharacterPage> {
 
   @override
   void dispose() {
-    MemoryManager.save();
+    MemoryManager.saveCharacters();
     super.dispose();
   }
 
@@ -71,7 +71,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       MemoryManager.removeCharacter,
                       () => setState(() {}),
                       () async {
-                        MemoryManager.save();
+                        MemoryManager.saveCharacters();
                         character = Character();
                         character.name = "New Character";
                         setState(() {});

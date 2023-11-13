@@ -11,9 +11,9 @@ void main() {
   MemoryManager.init();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.dark),
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.dark),
   );
   runApp(MaidApp(key: maidAppKey));
 }
@@ -25,11 +25,25 @@ class MaidApp extends StatefulWidget {
   MaidAppState createState() => MaidAppState();
 }
 
-class MaidAppState extends State<MaidApp> {
+class MaidAppState extends State<MaidApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadTheme();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      MemoryManager.saveAll();
+    }
   }
 
   _loadTheme() async {

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:maid/static/generation_manager.dart';
+import 'package:maid/static/host.dart';
 import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +16,7 @@ class MemoryManager {
   static void init() {
     SharedPreferences.getInstance().then((prefs) {
       GenerationManager.remote = prefs.getBool("remote") ?? false;
+      Host.url = prefs.getString("remote_url") ?? Host.url;
 
       _models = json.decode(prefs.getString("models") ?? "{}");
       _characters = json.decode(prefs.getString("characters") ?? "{}");
@@ -35,33 +37,56 @@ class MemoryManager {
     });
   }
 
-  static void _save(SharedPreferences prefs) {
-    prefs.clear();
+  static void _saveMisc(SharedPreferences prefs) {
+    prefs.remove("remote");
 
     prefs.setBool("remote", GenerationManager.remote);
+    prefs.setString("remote_url", Host.url);
+  }
+
+  static void _saveModels(SharedPreferences prefs) {
+    prefs.remove("models");
+    prefs.remove("current_model");
 
     _models[model.preset] = model.toMap();
     Logger.log("Model Saved: ${model.preset}");
+
+    prefs.setString("models", json.encode(_models));
+    prefs.setString("current_model", model.preset);
+  }
+
+  static void _saveCharacters(SharedPreferences prefs) {
+    prefs.remove("characters");
+    prefs.remove("current_character");
+    
     _characters[character.name] = character.toMap();
     Logger.log("Character Saved: ${character.name}");
 
-    prefs.setString("models", json.encode(_models));
     prefs.setString("characters", json.encode(_characters));
-    prefs.setString("current_model", model.preset);
     prefs.setString("current_character", character.name);
+  }
 
+  static void saveModels() {
+    SharedPreferences.getInstance().then((prefs) {
+      _saveModels(prefs);
+    });
     GenerationManager.cleanup();
   }
 
-  static void save() {
+  static void saveCharacters() {
     SharedPreferences.getInstance().then((prefs) {
-      _save(prefs);
+      _saveCharacters(prefs);
     });
+    GenerationManager.cleanup();
   }
 
-  static Future<void> asave() async {
+  static Future<void> saveAll() async {
     var prefs = await SharedPreferences.getInstance();
-    _save(prefs);
+    prefs.clear();
+    _saveMisc(prefs);
+    _saveModels(prefs);
+    _saveCharacters(prefs);
+    GenerationManager.cleanup();
   }
 
   static void updateModel(String newName) {
@@ -69,7 +94,7 @@ class MemoryManager {
     Logger.log("Updating model $oldName ====> $newName");
     model.preset = newName;
     _models.remove(oldName);
-    save();
+    saveModels();
   }
 
   static void updateCharacter(String newName) {
@@ -77,7 +102,7 @@ class MemoryManager {
     Logger.log("Updating character $oldName ====> $newName");
     character.name = newName;
     _characters.remove(oldName);
-    save();
+    saveCharacters();
   }
 
   static void removeModel(String modelName) {
@@ -85,7 +110,7 @@ class MemoryManager {
     model = Model.fromMap(
       _models[_models.keys.lastOrNull ?? "Default"] ?? {}
     );
-    save();
+    saveModels();
   }
 
   static void removeCharacter(String characterName) {
@@ -93,7 +118,7 @@ class MemoryManager {
     character = Character.fromMap(
       _characters[_characters.keys.lastOrNull ?? "Default"] ?? {}
     );
-    save();
+    saveCharacters();
   }
 
   static List<String> getModels() {
@@ -105,17 +130,17 @@ class MemoryManager {
   }
 
   static void setModel(String modelName) {
-    save();
+    saveModels();
     model = Model.fromMap(_models[modelName] ?? {});
     Logger.log("Model Set: ${model.preset}");
-    save();
+    saveModels();
   }
 
   static void setCharacter(String characterName) {
-    save();
+    saveCharacters();
     character = Character.fromMap(_characters[characterName] ?? {});
     Logger.log("Character Set: ${character.name}");
-    save();
+    saveCharacters();
   }
 
   static bool checkFileExists(String filePath) {

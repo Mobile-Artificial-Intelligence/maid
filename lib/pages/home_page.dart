@@ -5,6 +5,7 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/message_manager.dart';
+import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 import 'package:system_info2/system_info2.dart';
 
@@ -80,7 +81,7 @@ class MaidHomePageState extends State<MaidHomePage> {
   }
 
   void send() {
-    MemoryManager.asave().then((value) {
+    MemoryManager.saveAll().then((value) {
       if (Platform.isAndroid || Platform.isIOS) {
         FocusScope.of(context).unfocus();
       }
@@ -92,7 +93,7 @@ class MaidHomePageState extends State<MaidHomePage> {
       MessageManager.add(UniqueKey());
 
       if (GenerationManager.remote && 
-        Host.urlController.text.isNotEmpty && 
+        Host.url.isNotEmpty && 
         model.parameters["remote_model"] != null
       ) {
         GenerationManager.prompt(promptController.text.trim());
@@ -241,14 +242,13 @@ class MaidHomePageState extends State<MaidHomePage> {
               },
             ),
             if (GenerationManager.remote)
-              ListTile(
-                title: TextField(
-                  cursorColor: Theme.of(context).colorScheme.secondary,
-                  controller: Host.urlController,
-                  decoration: const InputDecoration(
-                    labelText: 'URL',
-                  ),
-                ),
+              MaidTextField(
+                headingText: 'URL', 
+                labelText: 'URL',
+                initialValue: Host.url,
+                onChanged: (value) {
+                  Host.url = value;
+                },
               ),
           ],
         ),

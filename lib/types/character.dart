@@ -69,7 +69,7 @@ class Character {
     final length = jsonCharacter["examples"].length ?? 0;
     examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
 
-    MemoryManager.save();
+    MemoryManager.saveCharacters();
   }
 
   Future<String> exportJSON(BuildContext context) async {

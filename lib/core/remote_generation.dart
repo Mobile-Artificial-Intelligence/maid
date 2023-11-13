@@ -31,7 +31,7 @@ class RemoteGeneration {
       remoteModel += ":${model.parameters["remote_tag"]}";
     }
     
-    final url = Uri.parse("${Host.urlController.text}/api/generate");
+    final url = Uri.parse("${Host.url}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
       "model": remoteModel,

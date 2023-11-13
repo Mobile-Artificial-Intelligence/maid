@@ -50,7 +50,7 @@ class Model {
     parameters = json.decode(jsonString);
     local = false;
 
-    MemoryManager.save();
+    MemoryManager.saveModels();
   }
 
   Future<String> exportModelParameters(BuildContext context) async {

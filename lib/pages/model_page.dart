@@ -22,7 +22,7 @@ class _ModelPageState extends State<ModelPage> {
 
   @override
   void dispose() {
-    MemoryManager.save();
+    MemoryManager.saveModels();
     super.dispose();
   }
 
@@ -65,7 +65,7 @@ class _ModelPageState extends State<ModelPage> {
                     MemoryManager.removeModel,
                     () => setState(() {}),
                     () async {
-                      MemoryManager.save();
+                      MemoryManager.saveModels();
                       model = Model();
                       model.preset= "New Preset";
                       setState(() {});

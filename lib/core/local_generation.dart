@@ -131,7 +131,7 @@ class LocalGeneration {
   void prompt(String input) async {
     MessageManager.busy = true;
     if (!_hasStarted) {
-      await MemoryManager.asave();
+      await MemoryManager.saveAll();
       _init(input);
     } else {
       Logger.log("Input: $input");
