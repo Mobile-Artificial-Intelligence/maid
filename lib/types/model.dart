@@ -37,7 +37,6 @@ class Model {
     jsonModel = parameters;
     jsonModel["preset"] = preset;
     jsonModel["local"] = local;
-    Logger.log("Model JSON created with name: $preset");
 
     return jsonModel;
   }
@@ -50,7 +49,7 @@ class Model {
     parameters = json.decode(jsonString);
     local = false;
 
-    MemoryManager.save();
+    MemoryManager.saveModels();
   }
 
   Future<String> exportModelParameters(BuildContext context) async {

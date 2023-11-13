@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:maid/static/memory_manager.dart';
 import 'package:maid/types/character.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/logger.dart';
@@ -13,7 +14,7 @@ class RemoteGeneration {
   static List<int> _context = [];
   static List<Map<String, dynamic>> _messages = [];
   
-  static void prompt(String input) async {
+  static void prompt(String input) async {   
     if ((Platform.isAndroid || Platform.isIOS)) {
       if (await Permission.nearbyWifiDevices.request().isGranted) {
         Logger.log("Nearby Devices - Permission granted");
@@ -31,7 +32,7 @@ class RemoteGeneration {
       remoteModel += ":${model.parameters["remote_tag"]}";
     }
     
-    final url = Uri.parse("${Host.urlController.text}/api/generate");
+    final url = Uri.parse("${Host.url}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
       "model": remoteModel,
@@ -93,5 +94,6 @@ class RemoteGeneration {
 
     MessageManager.busy = false;
     MessageManager.stream("");
+    MemoryManager.saveMisc();
   }
 }

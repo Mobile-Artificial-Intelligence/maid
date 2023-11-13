@@ -14,6 +14,12 @@ class MessageManager {
     _callback = onUpdate;
   }
 
+  static void fromMap(Map<String, dynamic> inputJson) {
+    root = ChatNode.fromMap(inputJson);
+    tail = root.findTail();
+    _callback?.call();
+  }
+
   static String get(Key key) {
     return root.find(key)?.message ?? "";
   }

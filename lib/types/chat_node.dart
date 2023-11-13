@@ -24,6 +24,28 @@ class ChatNode {
     this.userGenerated = false,
   }) : children = children ?? [];
 
+  ChatNode.fromMap(Map<String, dynamic> map)
+      : key = ValueKey(map['key']),
+        message = map['message'] ?? "",
+        userGenerated = map['userGenerated'] ?? false,
+        currentChild = map['currentChild'] != null
+            ? ValueKey(map['currentChild'])
+            : null,
+        children = (map['children'] ?? [])
+          .map((childMap) => ChatNode.fromMap(childMap))
+          .toList()
+          .cast<ChatNode>();
+
+  Map<String, dynamic> toMap() {
+    return {
+      'key': key.toString(),
+      'message': message,
+      'currentChild': currentChild?.toString(),
+      'userGenerated': userGenerated,
+      'children': children.map((child) => child.toMap()).toList(),
+    };
+  }
+
   ChatNode? find(Key targetKey) {
     final Queue<ChatNode> queue = Queue.from([this]);
 
