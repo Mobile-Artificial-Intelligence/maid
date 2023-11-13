@@ -89,6 +89,10 @@ Future<void> switcherDialog(
                     refresh();
                     closeDialog();
                   },
+                  tileColor: Theme.of(context).colorScheme.primary,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
                 )
               );
             },
