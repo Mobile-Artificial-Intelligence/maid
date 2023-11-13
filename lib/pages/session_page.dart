@@ -37,7 +37,7 @@ class _SessionPageState extends State<SessionPage> {
             onDismissed: (direction) {
               // Remove the item from your list and refresh the UI
               MemoryManager.removeSession(sessions[index]);
-              setState(() {});
+              if (MemoryManager.getSessions().isEmpty) Navigator.of(context).pop();
             },
             background: Container(color: Colors.red),
             child: ListTile(
