@@ -41,7 +41,7 @@ class MemoryManager {
 
       if (_sessions.isNotEmpty) {
         MessageManager.fromMap(
-            _sessions[prefs.getString("last_session") ?? "New Session"] ?? {});
+            _sessions[prefs.getString("last_session") ?? "Session"] ?? {});
       }
     });
   }
@@ -82,7 +82,7 @@ class MemoryManager {
   static void saveSessions() {
     SharedPreferences.getInstance().then((prefs) {
       String key = MessageManager.root.message;
-      if (key.isEmpty) key = "New Session";
+      if (key.isEmpty) key = "Session";
 
       _sessions[key] = MessageManager.root.toMap();
       Logger.log("Session Saved: $key");
@@ -194,7 +194,14 @@ class MemoryManager {
 
   static void setSession(String sessionName) {
     saveSessions();
-    MessageManager.fromMap(_sessions[sessionName] ?? {});
+
+    if (_sessions.keys.contains(sessionName)) {
+      MessageManager.fromMap(_sessions[sessionName] ?? {});
+    } else {
+      MessageManager.root = ChatNode(key: UniqueKey());
+      MessageManager.root.message = sessionName;
+    }
+
     Logger.log("Session Set: ${MessageManager.root.message}");
     saveSessions();
   }

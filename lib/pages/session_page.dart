@@ -27,36 +27,59 @@ class _SessionPageState extends State<SessionPage> {
         ),
         title: const Text('Sessions'),
       ),
-      body: ListView.builder(
-        itemCount: MemoryManager.getSessions().length,
-        itemBuilder: (context, index) {
-          List<String> sessions = MemoryManager.getSessions();
-          
-          return Dismissible(
-            key: ValueKey(sessions[index]),
-            onDismissed: (direction) {
-              // Remove the item from your list and refresh the UI
-              MemoryManager.removeSession(sessions[index]);
-              if (MemoryManager.getSessions().isEmpty) Navigator.of(context).pop();
-            },
-            background: Container(color: Colors.red),
-            child: ListTile(
-              title: Text(
-                sessions[index],
-                textAlign: TextAlign.center
-              ),
-              onTap: () {
-                MemoryManager.setSession(sessions[index]);
-                Navigator.of(context).pop();
+      body: Column(
+        children: [
+          FilledButton(
+            onPressed: () {
+              final index = MemoryManager.getSessions().length;
+              MemoryManager.setSession("Session $index");
+              setState(() {});
+            }, 
+            child: Text(
+              "New Session",
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+          ),
+          const SizedBox(height: 20.0),
+          Divider(
+            indent: 10,
+            endIndent: 10,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: MemoryManager.getSessions().length,
+              itemBuilder: (context, index) {
+                List<String> sessions = MemoryManager.getSessions();
+
+                return Dismissible(
+                  key: ValueKey(sessions[index]),
+                  onDismissed: (direction) {
+                    // Remove the item from your list and refresh the UI
+                    MemoryManager.removeSession(sessions[index]);
+                    if (MemoryManager.getSessions().isEmpty) Navigator.of(context).pop();
+                  },
+                  background: Container(color: Colors.red),
+                  child: ListTile(
+                    title: Text(
+                      sessions[index],
+                      textAlign: TextAlign.center
+                    ),
+                    onTap: () {
+                      MemoryManager.setSession(sessions[index]);
+                      Navigator.of(context).pop();
+                    },
+                    tileColor: Theme.of(context).colorScheme.primary,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                  )
+                );
               },
-              tileColor: Theme.of(context).colorScheme.primary,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              ),
-            )
-          );
-        },
-      )
+            ),
+          )
+        ]
+      ),
     );
   }
 }
