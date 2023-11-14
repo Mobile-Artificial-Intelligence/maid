@@ -69,6 +69,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       MemoryManager.getCharacters, 
                       MemoryManager.setCharacter,
                       MemoryManager.removeCharacter,
+                      MemoryManager.isCurrentCharacter,
                       () => setState(() {}),
                       () async {
                         MemoryManager.saveCharacters();

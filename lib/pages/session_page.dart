@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/static/memory_manager.dart';
+import 'package:maid/static/message_manager.dart';
 
 class SessionPage extends StatefulWidget {
   const SessionPage({super.key});
@@ -63,7 +64,9 @@ class _SessionPageState extends State<SessionPage> {
                     background: Container(color: Colors.red),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary, // Set color here
+                        color: MemoryManager.isCurrentSession(sessions[index]) ? 
+                               Theme.of(context).colorScheme.tertiary : 
+                               Theme.of(context).colorScheme.primary,
                         borderRadius: const BorderRadius.all(Radius.circular(15.0)),
                       ),
                       child: ListTile(

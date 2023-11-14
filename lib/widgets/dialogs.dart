@@ -40,6 +40,7 @@ Future<void> switcherDialog(
   List<String> Function() getMenuStrings, 
   void Function(String) set,
   void Function(String) remove,
+  bool Function(String) isCurrent,
   void Function() refresh,
   void Function() newPreset
 ) async {    
@@ -82,7 +83,9 @@ Future<void> switcherDialog(
                   background: Container(color: Colors.red),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary, // Set color here
+                      color: isCurrent(item) ? 
+                             Theme.of(context).colorScheme.tertiary : 
+                             Theme.of(context).colorScheme.primary,
                       borderRadius: const BorderRadius.all(Radius.circular(15.0)),
                     ),
                     child: ListTile(

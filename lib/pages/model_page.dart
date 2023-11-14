@@ -72,6 +72,7 @@ class _ModelPageState extends State<ModelPage> {
                           MemoryManager.getModels,
                           MemoryManager.setModel,
                           MemoryManager.removeModel,
+                          MemoryManager.isCurrentModel,
                           () => setState(() {}), () async {
                         MemoryManager.saveModels();
                         model = Model();
