@@ -52,28 +52,32 @@ class _SessionPageState extends State<SessionPage> {
               itemBuilder: (context, index) {
                 List<String> sessions = MemoryManager.getSessions();
 
-                return Dismissible(
-                  key: ValueKey(sessions[index]),
-                  onDismissed: (direction) {
-                    // Remove the item from your list and refresh the UI
-                    MemoryManager.removeSession(sessions[index]);
-                    if (MemoryManager.getSessions().isEmpty) Navigator.of(context).pop();
-                  },
-                  background: Container(color: Colors.red),
-                  child: ListTile(
-                    title: Text(
-                      sessions[index],
-                      textAlign: TextAlign.center
-                    ),
-                    onTap: () {
-                      MemoryManager.setSession(sessions[index]);
-                      Navigator.of(context).pop();
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Dismissible(
+                    key: ValueKey(sessions[index]),
+                    onDismissed: (direction) {
+                      MemoryManager.removeSession(sessions[index]);
+                      if (MemoryManager.getSessions().isEmpty) Navigator.of(context).pop();
                     },
-                    tileColor: Theme.of(context).colorScheme.primary,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    background: Container(color: Colors.red),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary, // Set color here
+                        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          sessions[index],
+                          textAlign: TextAlign.center
+                        ),
+                        onTap: () {
+                          MemoryManager.setSession(sessions[index]);
+                          Navigator.of(context).pop();
+                        },
+                      ),
                     ),
-                  )
+                  ),
                 );
               },
             ),
