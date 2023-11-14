@@ -206,6 +206,14 @@ class MemoryManager {
     saveSessions();
   }
 
+  static bool isCurrentModel(String modelName) {
+    return model.preset == modelName;
+  }
+
+  static bool isCurrentCharacter(String characterName) {
+    return character.name == characterName;
+  }
+
   static bool isCurrentSession(String sessionName) {
     String key = MessageManager.root.message;
     if (key.isEmpty) key = "Session";
