@@ -16,8 +16,8 @@ Maid is a cross-platform Flutter app for interfacing with GGUF / Llama models.
     </tr>
     <tr>
       <td><img src="https://github.com/MaidFoundation/Maid/blob/main/.images/demo4.jpg?raw=true" width="100"></td>
-      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/..images/demo5.jpg?raw=true" width="100"></td>
-      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/..images/demo6.jpg?raw=true" width="100"></td>
+      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/.images/demo5.jpg?raw=true" width="100"></td>
+      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/.images/demo6.jpg?raw=true" width="100"></td>
     </tr>
   </table>
 </div>
