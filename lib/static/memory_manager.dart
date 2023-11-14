@@ -205,4 +205,10 @@ class MemoryManager {
     Logger.log("Session Set: ${MessageManager.root.message}");
     saveSessions();
   }
+
+  static bool isCurrentSession(String sessionName) {
+    String key = MessageManager.root.message;
+    if (key.isEmpty) key = "Session";
+    return key == sessionName;
+  }
 }
