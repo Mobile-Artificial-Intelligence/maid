@@ -70,28 +70,32 @@ Future<void> switcherDialog(
             itemBuilder: (BuildContext context, int index) {
               final item = getMenuStrings()[index];
               
-              return Dismissible(
-                key: ValueKey(item),
-                onDismissed: (direction) {
-                  // Remove the item from your list and refresh the UI
-                  remove(getMenuStrings()[index]);
-                  refresh();
-                  if (getMenuStrings().isEmpty) closeDialog();
-                },
-                background: Container(color: Colors.red),
-                child: ListTile(
-                  title: Text(
-                    getMenuStrings()[index],
-                    textAlign: TextAlign.center,
-                  ),
-                  onTap: () {
-                    set(getMenuStrings()[index]);
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                  child: Dismissible(
+                  key: ValueKey(item),
+                  onDismissed: (direction) {
+                    remove(item);
                     refresh();
-                    closeDialog();
+                    if (getMenuStrings().isEmpty) closeDialog();
                   },
-                  tileColor: Theme.of(context).colorScheme.primary,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  background: Container(color: Colors.red),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary, // Set color here
+                      borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        item,
+                        textAlign: TextAlign.center,
+                      ),
+                      onTap: () {
+                        set(item);
+                        refresh();
+                        closeDialog();
+                      },
+                    ),
                   ),
                 )
               );
