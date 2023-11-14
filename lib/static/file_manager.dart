@@ -111,7 +111,6 @@ class FileManager {
     FilePickerResult? pick = await FilePicker.platform.pickFiles(
       dialogTitle: dialogTitle,
       type: FileType.image,
-      allowedExtensions: ["png", "jpg", "jpeg"],
       allowMultiple: false,
     );
     
