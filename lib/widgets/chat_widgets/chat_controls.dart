@@ -39,7 +39,7 @@ class ChatControlsState extends State<ChatControls> {
           ...[
             const SizedBox(width: 10.0),
             CircleAvatar(
-              backgroundImage: const AssetImage("assets/defaultResponseProfile.png"),
+              backgroundImage: const AssetImage("assets/default_profile.png"),
               foregroundImage: Image.file(character.profile).image,
               radius: 16,
             )

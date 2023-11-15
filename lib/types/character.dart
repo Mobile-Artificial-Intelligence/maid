@@ -13,7 +13,7 @@ import 'package:image/image.dart';
 Character character = Character();
 
 class Character {
-  File profile = File("assets/defaultResponseProfile.png");
+  File profile = File("assets/default_profile.png").absolute;
   String name = "Maid";
   String prePrompt = "";
   String userAlias = "";
@@ -94,7 +94,7 @@ class Character {
   }
 
   Future<String> importJSON(BuildContext context) async {
-    try{
+    try {
       File? file = await FileManager.load(context, "Load Character JSON", [".json"]);
 
       if (file == null) return "Error loading file";
