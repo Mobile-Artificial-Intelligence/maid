@@ -112,19 +112,8 @@ msix_config:
   logo_path: assets/maid.png
 flutter_icons:
   android: "launcher_icon"
-  ios: true
   image_path: "assets/maid.png"
-  web:
-    generate: true
-    image_path: "assets/maid.png"
-    background_color: "#hexcode"
-    theme_color: "#hexcode"
   windows:
     generate: true
     image_path: "assets/maid.png"
     icon_size: 48 # min:48, max:256, default: 48
-  macos:
-    generate: true
-    image_path: "assets/maid.png"
-
-    # flutter pub run msix:create
