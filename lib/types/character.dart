@@ -9,11 +9,12 @@ import 'package:maid/static/logger.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:image/image.dart';
+import 'package:path_provider/path_provider.dart';
 
 Character character = Character();
 
 class Character {
-  File profile = File("assets/defaultResponseProfile.png");
+  File profile = File("/assets/default_profile.png");
   String name = "Maid";
   String prePrompt = "";
   String userAlias = "";
@@ -22,10 +23,16 @@ class Character {
   List<Map<String,dynamic>> examples = [];
 
   Character() {
-    resetAll();
+    _initProfile().then((value) => resetAll());
   }
 
   Character.fromMap(Map<String, dynamic> inputJson) {
+    if (inputJson["profile"] != null) {
+      profile = File(inputJson["profile"]);
+    } else {
+      _initProfile().then((value) => resetAll());
+    }
+    
     name = inputJson["name"] ?? "Unknown";
 
     if (inputJson.isEmpty) {
@@ -55,6 +62,20 @@ class Character {
     jsonCharacter["examples"] = examples;
 
     return jsonCharacter;
+  }
+
+  Future<void> _initProfile() async {
+    Directory docDir = await getApplicationDocumentsDirectory();
+    String filePath = '${docDir.path}/default_profile.png';
+
+    File newProfileFile = File(filePath);
+    if (!await newProfileFile.exists()) {
+      ByteData data = await rootBundle.load('assets/default_profile.png');
+      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      await newProfileFile.writeAsBytes(bytes);
+    }
+
+    profile = newProfileFile;
   }
 
   void resetAll() async {
@@ -94,7 +115,7 @@ class Character {
   }
 
   Future<String> importJSON(BuildContext context) async {
-    try{
+    try {
       File? file = await FileManager.load(context, "Load Character JSON", [".json"]);
 
       if (file == null) return "Error loading file";
