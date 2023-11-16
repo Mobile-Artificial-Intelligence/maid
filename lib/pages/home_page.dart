@@ -21,6 +21,8 @@ import 'package:maid/pages/about_page.dart';
 
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 
+TextEditingController promptController = TextEditingController();	
+
 class MaidHomePage extends StatefulWidget {
   final String title;
 
@@ -32,7 +34,6 @@ class MaidHomePage extends StatefulWidget {
 
 class MaidHomePageState extends State<MaidHomePage> {
   final ScrollController _consoleScrollController = ScrollController();
-  TextEditingController promptController = TextEditingController();
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
   List<ChatMessage> chatWidgets = [];
 

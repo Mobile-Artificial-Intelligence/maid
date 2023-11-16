@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/pages/home_page.dart';
 import 'package:maid/types/character.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/widgets/chat_widgets/branch_switcher.dart';
@@ -30,6 +31,7 @@ class ChatControlsState extends State<ChatControls> {
             padding: const EdgeInsets.all(0),
             onPressed: () {
               if (MessageManager.busy) return;
+		          promptController.text = MessageManager.get(widget.key!); 
               MessageManager.branch(widget.key!, widget.userGenerated);
               setState(() {});
             },
