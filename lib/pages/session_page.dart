@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/static/memory_manager.dart';
-import 'package:maid/static/message_manager.dart';
 
 class SessionPage extends StatefulWidget {
   const SessionPage({super.key});
@@ -77,6 +76,48 @@ class _SessionPageState extends State<SessionPage> {
                         onTap: () {
                           MemoryManager.setSession(sessions[index]);
                           Navigator.of(context).pop();
+                        },
+                        onLongPress: () { // Rename session Dialog
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              final TextEditingController controller = TextEditingController(text: sessions[index]);
+                              return AlertDialog(
+                                title: const Text(
+                                  "Rename Session",
+                                  textAlign: TextAlign.center,
+                                ),
+                                content: TextField(
+                                  controller: controller,
+                                  decoration: const InputDecoration(
+                                    hintText: "Enter new name",
+                                  ),
+                                ),
+                                actions: [
+                                  FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      "Cancel",
+                                      style: Theme.of(context).textTheme.labelLarge,
+                                    ),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {
+                                      MemoryManager.updateSession(controller.text);
+                                      Navigator.of(context).pop();
+                                      setState(() {});
+                                    },
+                                    child: Text(
+                                      "Rename",
+                                      style: Theme.of(context).textTheme.labelLarge,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                       ),
                     ),
