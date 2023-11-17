@@ -69,7 +69,10 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     return Column(
       children: [
         if (_finalised)
-          ChatControls(key: widget.key, userGenerated: widget.userGenerated),
+          ChatControls(
+            key: widget.key, 
+            userGenerated: widget.userGenerated
+          ),
         Align(
           alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(

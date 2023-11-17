@@ -6,6 +6,8 @@ import 'package:maid/types/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
 
 class MessageManager {
+  static TextEditingController promptController = TextEditingController();
+  static FocusNode promptFocusNode = FocusNode();
   static void Function()? _callback;
   static ChatNode root = ChatNode(key: UniqueKey());
   static ChatNode? tail;
