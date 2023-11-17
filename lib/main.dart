@@ -47,7 +47,7 @@ class MaidAppState extends State<MaidApp> {
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: MaidTheme.theme,
-      home: const MaidHomePage(title: 'Maid'),
+      home: MaidHomePage(key: homePageKey, title: 'Maid'),
     );
   }
 }
