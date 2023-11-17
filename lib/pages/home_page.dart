@@ -7,6 +7,7 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/message_manager.dart';
+import 'package:maid/widgets/chat_widgets/chat_controls.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 import 'package:system_info2/system_info2.dart';
@@ -21,6 +22,7 @@ import 'package:maid/pages/about_page.dart';
 
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 
+
 class MaidHomePage extends StatefulWidget {
   final String title;
 
@@ -32,7 +34,6 @@ class MaidHomePage extends StatefulWidget {
 
 class MaidHomePageState extends State<MaidHomePage> {
   final ScrollController _consoleScrollController = ScrollController();
-  TextEditingController promptController = TextEditingController();
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
   List<ChatMessage> chatWidgets = [];
 
@@ -322,6 +323,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                             minLines: 1,
                             maxLines: 9,
                             enableInteractiveSelection: true,
+                            focusNode: promptFocusNode,
                             onSubmitted: (value) {
                               if (!MessageManager.busy) {
                                 if (model.parameters["path"]
