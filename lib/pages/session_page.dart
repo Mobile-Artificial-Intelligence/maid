@@ -32,7 +32,7 @@ class _SessionPageState extends State<SessionPage> {
         children: [
           FilledButton(
             onPressed: () {
-              if (MessageManager.busy) return;  // add sessions while busy
+              if (MessageManager.busy) return;
               final index = MemoryManager.getSessions().length;
               MemoryManager.setSession("Session $index");
               setState(() {});
@@ -59,7 +59,7 @@ class _SessionPageState extends State<SessionPage> {
                   child: Dismissible(
                     key: ValueKey(sessions[index]),
                     onDismissed: (direction) {
-                      if (MessageManager.busy) return;  // remove sessions while busy
+                      if (MessageManager.busy) return;
                       MemoryManager.removeSession(sessions[index]);
                       if (MemoryManager.getSessions().isEmpty) Navigator.of(context).pop();
                     },
