@@ -35,7 +35,7 @@ class ChatControlsState extends State<ChatControls> {
             onPressed: () {
               if (MessageManager.busy) return;
 		          promptController.text = MessageManager.get(widget.key!);
-              focusPrompt(); 
+              promptFocusNode.requestFocus(); 
               MessageManager.branch(widget.key!, widget.userGenerated);
               setState(() {});
             },
@@ -64,8 +64,5 @@ class ChatControlsState extends State<ChatControls> {
           ),
       ],
     );
-  }
-  void focusPrompt() {
-    promptFocusNode.requestFocus();
   }
 }
