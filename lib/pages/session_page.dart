@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/static/memory_manager.dart';
+import 'package:maid/static/message_manager.dart';
 
 class SessionPage extends StatefulWidget {
   const SessionPage({super.key});
@@ -31,6 +32,7 @@ class _SessionPageState extends State<SessionPage> {
         children: [
           FilledButton(
             onPressed: () {
+              if (MessageManager.busy) return;
               final index = MemoryManager.getSessions().length;
               MemoryManager.setSession("Session $index");
               setState(() {});
@@ -57,6 +59,7 @@ class _SessionPageState extends State<SessionPage> {
                   child: Dismissible(
                     key: ValueKey(sessions[index]),
                     onDismissed: (direction) {
+                      if (MessageManager.busy) return;
                       MemoryManager.removeSession(sessions[index]);
                       if (MemoryManager.getSessions().isEmpty) Navigator.of(context).pop();
                     },
