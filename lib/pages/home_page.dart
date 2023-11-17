@@ -323,6 +323,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                             minLines: 1,
                             maxLines: 9,
                             enableInteractiveSelection: true,
+                            focusNode: promptFocusNode,
                             onSubmitted: (value) {
                               if (!MessageManager.busy) {
                                 if (model.parameters["path"]

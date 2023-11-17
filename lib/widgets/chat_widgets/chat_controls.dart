@@ -3,7 +3,9 @@ import 'package:maid/types/character.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/widgets/chat_widgets/branch_switcher.dart';
 
-TextEditingController promptController = TextEditingController();	
+TextEditingController promptController = TextEditingController();
+FocusNode promptFocusNode = FocusNode();
+
 
 class ChatControls extends StatefulWidget {
   final bool userGenerated;
@@ -32,7 +34,8 @@ class ChatControlsState extends State<ChatControls> {
             padding: const EdgeInsets.all(0),
             onPressed: () {
               if (MessageManager.busy) return;
-		          promptController.text = MessageManager.get(widget.key!); 
+		          promptController.text = MessageManager.get(widget.key!);
+              focusPrompt(); 
               MessageManager.branch(widget.key!, widget.userGenerated);
               setState(() {});
             },
@@ -61,5 +64,8 @@ class ChatControlsState extends State<ChatControls> {
           ),
       ],
     );
+  }
+  void focusPrompt() {
+    promptFocusNode.requestFocus();
   }
 }
