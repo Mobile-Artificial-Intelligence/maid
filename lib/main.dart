@@ -4,9 +4,6 @@ import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
-final maidAppKey = GlobalKey<MaidAppState>();
-final homePageKey = GlobalKey<MaidHomePageState>();
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MemoryManager.init();
@@ -17,7 +14,7 @@ void main() {
       statusBarBrightness: Brightness.dark
     ),
   );
-  runApp(MaidApp(key: maidAppKey));
+  runApp(const MaidApp());
 }
 
 class MaidApp extends StatefulWidget {
@@ -31,6 +28,7 @@ class MaidAppState extends State<MaidApp> {
   @override
   void initState() {
     super.initState();
+    MaidTheme.registerCallback(refreshApp);
     _loadTheme();
   }
 
@@ -49,7 +47,7 @@ class MaidAppState extends State<MaidApp> {
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: MaidTheme.theme,
-      home: MaidHomePage(key: homePageKey, title: 'Maid'),
+      home: const MaidHomePage(title: 'Maid'),
     );
   }
 }
