@@ -7,6 +7,7 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/message_manager.dart';
+import 'package:maid/widgets/chat_widgets/chat_controls.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 import 'package:system_info2/system_info2.dart';
@@ -21,7 +22,6 @@ import 'package:maid/pages/about_page.dart';
 
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 
-TextEditingController promptController = TextEditingController();	
 
 class MaidHomePage extends StatefulWidget {
   final String title;

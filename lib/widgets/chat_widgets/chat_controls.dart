@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:maid/pages/home_page.dart';
 import 'package:maid/types/character.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/widgets/chat_widgets/branch_switcher.dart';
+
+TextEditingController promptController = TextEditingController();	
 
 class ChatControls extends StatefulWidget {
   final bool userGenerated;
