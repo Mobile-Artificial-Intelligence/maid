@@ -7,7 +7,6 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/message_manager.dart';
-import 'package:maid/widgets/chat_widgets/chat_controls.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 import 'package:system_info2/system_info2.dart';
@@ -90,7 +89,7 @@ class MaidHomePageState extends State<MaidHomePage> {
       }
 
       MessageManager.add(UniqueKey(), 
-        message: promptController.text.trim(), 
+        message: MessageManager.promptController.text.trim(), 
         userGenerated: true
       );
       MessageManager.add(UniqueKey());
@@ -99,24 +98,24 @@ class MaidHomePageState extends State<MaidHomePage> {
         Host.url.isNotEmpty && 
         model.parameters["remote_model"] != null
       ) {
-        GenerationManager.prompt(promptController.text.trim());
+        GenerationManager.prompt(MessageManager.promptController.text.trim());
         setState(() {
           MessageManager.busy = true;
-          promptController.clear();
+          MessageManager.promptController.clear();
         });
       } else if (!GenerationManager.remote && 
         FileManager.checkFileExists(model.parameters["path"])
       )  {
-        GenerationManager.prompt(promptController.text.trim());
+        GenerationManager.prompt(MessageManager.promptController.text.trim());
         setState(() {
           MessageManager.busy = true;
-          promptController.clear();
+          MessageManager.promptController.clear();
         });
       } else {
         _missingModelDialog();
         setState(() {
           MessageManager.busy = false;
-          promptController.clear();
+          MessageManager.promptController.clear();
         });
       }
     });
@@ -323,7 +322,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                             minLines: 1,
                             maxLines: 9,
                             enableInteractiveSelection: true,
-                            focusNode: promptFocusNode,
+                            focusNode: MessageManager.promptFocusNode,
                             onSubmitted: (value) {
                               if (!MessageManager.busy) {
                                 if (model.parameters["path"]
@@ -335,7 +334,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                                 }
                               }
                             },
-                            controller: promptController,
+                            controller: MessageManager.promptController,
                             cursorColor:
                                 Theme.of(context).colorScheme.secondary,
                             decoration: InputDecoration(

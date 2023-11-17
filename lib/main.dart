@@ -5,6 +5,7 @@ import 'package:maid/static/theme.dart';
 import 'package:maid/pages/home_page.dart';
 
 final maidAppKey = GlobalKey<MaidAppState>();
+final homePageKey = GlobalKey<MaidHomePageState>();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +49,7 @@ class MaidAppState extends State<MaidApp> {
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: MaidTheme.theme,
-      home: const MaidHomePage(title: 'Maid'),
+      home: MaidHomePage(key: homePageKey, title: 'Maid'),
     );
   }
 }
