@@ -5,10 +5,15 @@ import 'package:maid/main.dart';
 enum ThemeType { dark, light }
 
 class MaidTheme {
+  static void Function()? _callback;
   static ThemeData _theme = _darkTheme;
   static ThemeData get theme => _theme;
   static ThemeData get darkTheme => _darkTheme;
   static ThemeData get lightTheme => _lightTheme;
+
+  static void registerCallback(void Function() refresh) {
+    _callback = refresh;
+  }
 
   static final InputDecorationTheme darkInputDecorationTheme =
       InputDecorationTheme(
@@ -79,7 +84,7 @@ class MaidTheme {
         break;
     }
 
-    maidAppKey.currentState!.refreshApp();
+    _callback?.call();
   }
 
   static final ThemeData _darkTheme = ThemeData(
