@@ -77,10 +77,12 @@ class _SessionPageState extends State<SessionPage> {
                           textAlign: TextAlign.center
                         ),
                         onTap: () {
+                          if (MessageManager.busy) return;
                           MemoryManager.setSession(sessions[index]);
                           Navigator.of(context).pop();
                         },
                         onLongPress: () { // Rename session Dialog
+                          if (MessageManager.busy) return;
                           showDialog(
                             context: context,
                             builder: (context) {
