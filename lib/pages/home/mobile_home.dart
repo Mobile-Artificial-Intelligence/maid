@@ -13,16 +13,16 @@ import 'package:maid/pages/settings_page.dart';
 import 'package:maid/pages/about_page.dart';
 
 
-class MaidHomePage extends StatefulWidget {
+class MobileHomePage extends StatefulWidget {
   final String title;
 
-  const MaidHomePage({super.key, required this.title});
+  const MobileHomePage({super.key, required this.title});
 
   @override
-  MaidHomePageState createState() => MaidHomePageState();
+  MobileHomePageState createState() => MobileHomePageState();
 }
 
-class MaidHomePageState extends State<MaidHomePage> {
+class MobileHomePageState extends State<MobileHomePage> {
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
 
   @override

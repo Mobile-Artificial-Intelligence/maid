@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/theme.dart';
-import 'package:maid/pages/home_page.dart';
+import 'package:maid/pages/home/mobile_home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +47,7 @@ class MaidAppState extends State<MaidApp> {
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: MaidTheme.theme,
-      home: const MaidHomePage(title: 'Maid'),
+      home: const MobileHomePage(title: 'Maid'),
     );
   }
 }
