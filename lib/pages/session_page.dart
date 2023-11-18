@@ -82,6 +82,7 @@ class _SessionPageState extends State<SessionPage> {
                           Navigator.of(context).pop();
                         },
                         onLongPress: () { // Rename session Dialog
+                          if (MessageManager.busy) return;
                           showDialog(
                             context: context,
                             builder: (context) {
