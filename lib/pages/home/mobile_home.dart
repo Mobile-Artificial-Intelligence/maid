@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/pages/session_page.dart';
-import 'package:maid/static/generation_manager.dart';
-import 'package:maid/static/host.dart';
 import 'package:maid/widgets/chat_widgets/chat_ui.dart';
 import 'package:maid/widgets/home_app_bar.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 import 'package:system_info2/system_info2.dart';
 
@@ -75,8 +72,12 @@ class MobileHomePageState extends State<MobileHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const SessionPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SessionPage()
+                  )
+                );
               },
             ),
             ListTile(
@@ -88,8 +89,12 @@ class MobileHomePageState extends State<MobileHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ModelPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ModelPage()
+                  )
+                );
               },
             ),
             ListTile(
@@ -100,9 +105,11 @@ class MobileHomePageState extends State<MobileHomePage> {
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SettingsPage()));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsPage()
+                  )
+                );
               },
             ),
             ListTile(
@@ -112,8 +119,12 @@ class MobileHomePageState extends State<MobileHomePage> {
                   Text('About', style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const AboutPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AboutPage()
+                  )
+                );
               },
             ),
           ],
