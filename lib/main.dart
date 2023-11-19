@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/pages/home/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/theme.dart';
 import 'package:maid/pages/home/mobile_home.dart';
@@ -47,7 +48,7 @@ class MaidAppState extends State<MaidApp> {
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: MaidTheme.theme,
-      home: const MobileHomePage(title: 'Maid'),
+      home: const DesktopHomePage(title: 'Maid'),
     );
   }
 }

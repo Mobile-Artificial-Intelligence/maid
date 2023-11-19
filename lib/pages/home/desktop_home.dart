@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:maid/widgets/chat_widgets/chat_ui.dart';
-import 'package:maid/widgets/settings_widgets/double_button_row.dart';
 
 class DesktopHomePage extends StatefulWidget {
   final String title;
@@ -16,30 +14,41 @@ class DesktopHomePageState extends State<DesktopHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+      body: Row(
+        children: [
+          NavigationRail(
+            destinations: const <NavigationRailDestination>[
+              NavigationRailDestination(
+                icon: Icon(Icons.person),
+                selectedIcon: Icon(Icons.person),
+                label: Text('Character'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.chat_rounded),
+                selectedIcon: Icon(Icons.chat_rounded),
+                label: Text('Sessions'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.account_tree_rounded),
+                selectedIcon: Icon(Icons.account_tree_rounded),
+                label: Text('Model')
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.settings),
+                selectedIcon: Icon(Icons.settings),
+                label: Text('Settings'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.info),
+                selectedIcon: Icon(Icons.info),
+                label: Text('About'),
+              ),
+            ], 
+            selectedIndex: null,
           ),
-        ),
-        title: DoubleButtonRow(
-          leftText: "Local",
-          leftOnPressed: () {
-            setState(() {
-              GenerationManager.remote = false;
-            });
-          },
-          rightText: "Remote",
-          rightOnPressed: () {
-            setState(() {
-              GenerationManager.remote = true;
-            });
-          },
-        ),
+          const ChatUI()
+        ]
       ),
-      body: const ChatUI(),
     );
   }
 }
