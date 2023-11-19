@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
+import 'package:maid/static/host.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/types/model.dart';
 import 'package:maid/static/memory_manager.dart';
@@ -110,6 +111,15 @@ class _ModelPageState extends State<ModelPage> {
                     "Remote Model",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 20.0),
+                  MaidTextField(
+                    headingText: 'Remote URL', 
+                    labelText: 'Remote URL',
+                    initialValue: Host.url,
+                    onChanged: (value) {
+                      Host.url = value;
+                    },
                   ),
                   const SizedBox(height: 20.0),
                   MaidTextField(

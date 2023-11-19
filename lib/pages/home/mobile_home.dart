@@ -3,6 +3,7 @@ import 'package:maid/pages/session_page.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/widgets/chat_widgets/chat_ui.dart';
+import 'package:maid/widgets/home_app_bar.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 
 import 'package:system_info2/system_info2.dart';
@@ -28,16 +29,7 @@ class MobileHomePageState extends State<MobileHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-          ),
-        ),
-        title: Text(widget.title),
-      ),
+      appBar: const HomeAppBar(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -124,29 +116,6 @@ class MobileHomePageState extends State<MobileHomePage> {
                     MaterialPageRoute(builder: (context) => const AboutPage()));
               },
             ),
-            Divider(
-              indent: 10,
-              endIndent: 10,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-            SwitchListTile(
-              title: const Text('Local / Remote'),
-              value: GenerationManager.remote,
-              onChanged: (value) {
-                setState(() {
-                  GenerationManager.remote = value;
-                });
-              },
-            ),
-            if (GenerationManager.remote)
-              MaidTextField(
-                headingText: 'URL', 
-                labelText: 'URL',
-                initialValue: Host.url,
-                onChanged: (value) {
-                  Host.url = value;
-                },
-              ),
           ],
         ),
       ),
