@@ -81,10 +81,7 @@ class _ChatBodyState extends State<ChatBody> {
       );
       MessageManager.add(UniqueKey());
 
-      if (GenerationManager.remote && 
-        Host.url.isNotEmpty && 
-        model.parameters["remote_model"] != null
-      ) {
+      if (GenerationManager.remote && Host.url.isNotEmpty) {
         GenerationManager.prompt(MessageManager.promptController.text.trim());
         setState(() {
           MessageManager.busy = true;
