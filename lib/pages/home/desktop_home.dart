@@ -46,7 +46,9 @@ class DesktopHomePageState extends State<DesktopHomePage> {
             ], 
             selectedIndex: null,
           ),
-          const ChatUI()
+          const Expanded(
+            child: ChatUI(),
+          ),
         ]
       ),
     );
