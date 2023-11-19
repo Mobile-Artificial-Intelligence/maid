@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/pages/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/theme.dart';
-import 'package:maid/pages/home_page.dart';
+import 'package:maid/pages/mobile_home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,11 +44,21 @@ class MaidAppState extends State<MaidApp> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final aspectRatio = screenSize.width / screenSize.height;
+
+    final Widget homePage;
+    if (aspectRatio > 0.9) {
+      homePage = const DesktopHomePage(title: 'Maid');
+    } else {
+      homePage = const MobileHomePage(title: 'Maid');
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: MaidTheme.theme,
-      home: const MaidHomePage(title: 'Maid'),
+      home: homePage,
     );
   }
 }

@@ -1,43 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:maid/pages/session_page.dart';
-import 'package:maid/static/generation_manager.dart';
-import 'package:maid/static/host.dart';
-import 'package:maid/widgets/chat_widgets/chat_ui.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
+import 'package:maid/pages/generic_page.dart';
+import 'package:maid/widgets/home_app_bar.dart';
+import 'package:maid/widgets/page_bodies/about_body.dart';
+import 'package:maid/widgets/page_bodies/character_body.dart';
+import 'package:maid/widgets/page_bodies/chat_body.dart';
+import 'package:maid/widgets/page_bodies/model_body.dart';
+import 'package:maid/widgets/page_bodies/sessions_body.dart';
+import 'package:maid/widgets/page_bodies/settings_body.dart';
 
 import 'package:system_info2/system_info2.dart';
 
-import 'package:maid/pages/character_page.dart';
-import 'package:maid/pages/model_page.dart';
-import 'package:maid/pages/settings_page.dart';
-import 'package:maid/pages/about_page.dart';
-
-
-class MaidHomePage extends StatefulWidget {
+class MobileHomePage extends StatefulWidget {
   final String title;
 
-  const MaidHomePage({super.key, required this.title});
+  const MobileHomePage({super.key, required this.title});
 
   @override
-  MaidHomePageState createState() => MaidHomePageState();
+  MobileHomePageState createState() => MobileHomePageState();
 }
 
-class MaidHomePageState extends State<MaidHomePage> {
+class MobileHomePageState extends State<MobileHomePage> {
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-          ),
-        ),
-        title: Text(widget.title),
-      ),
+      appBar: const HomeAppBar(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -71,7 +59,7 @@ class MaidHomePageState extends State<MaidHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CharacterPage()));
+                      builder: (context) => const GenericPage(title: "Character", body: CharacterBody())));
               },
             ),
             ListTile(
@@ -83,8 +71,12 @@ class MaidHomePageState extends State<MaidHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const SessionPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GenericPage(title: "Sessions", body: SessionsBody())
+                  )
+                );
               },
             ),
             ListTile(
@@ -96,8 +88,12 @@ class MaidHomePageState extends State<MaidHomePage> {
               ),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ModelPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GenericPage(title: "Model", body: ModelBody())
+                  )
+                );
               },
             ),
             ListTile(
@@ -108,9 +104,11 @@ class MaidHomePageState extends State<MaidHomePage> {
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SettingsPage()));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GenericPage(title: "Settings", body: SettingsBody())
+                  )
+                );
               },
             ),
             ListTile(
@@ -120,37 +118,18 @@ class MaidHomePageState extends State<MaidHomePage> {
                   Text('About', style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const AboutPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GenericPage(title: "About", body: AboutBody())
+                  )
+                );
               },
             ),
-            Divider(
-              indent: 10,
-              endIndent: 10,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-            SwitchListTile(
-              title: const Text('Local / Remote'),
-              value: GenerationManager.remote,
-              onChanged: (value) {
-                setState(() {
-                  GenerationManager.remote = value;
-                });
-              },
-            ),
-            if (GenerationManager.remote)
-              MaidTextField(
-                headingText: 'URL', 
-                labelText: 'URL',
-                initialValue: Host.url,
-                onChanged: (value) {
-                  Host.url = value;
-                },
-              ),
           ],
         ),
       ),
-      body: const ChatUI()
+      body: const ChatBody()
     );
   }
 }

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maid/core/local_generation.dart';
-import 'package:maid/pages/model_page.dart';
+import 'package:maid/pages/generic_page.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
@@ -10,15 +10,16 @@ import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/types/model.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
+import 'package:maid/widgets/page_bodies/model_body.dart';
 
-class ChatUI extends StatefulWidget {
-  const ChatUI({super.key});
+class ChatBody extends StatefulWidget {
+  const ChatBody({super.key});
 
   @override
-  _ChatUIState createState() => _ChatUIState();
+  State<ChatBody> createState() => _ChatBodyState();
 }
 
-class _ChatUIState extends State<ChatUI> {
+class _ChatBodyState extends State<ChatBody> {
   final ScrollController _consoleScrollController = ScrollController();
   List<ChatMessage> chatWidgets = [];
 
@@ -48,7 +49,7 @@ class _ChatUIState extends State<ChatUI> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ModelPage()));
+                          builder: (context) => const GenericPage(title: "Model", body: ModelBody())));
                 },
                 child: Text("Open Model Settings",
                     style: Theme.of(context).textTheme.labelLarge),

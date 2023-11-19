@@ -238,14 +238,11 @@ class MaidTheme {
         overlayColor: Colors.blue.shade800,
       ),
       colorScheme: ColorScheme.light(
-        primary: Colors.white,
+        background: Colors.white,
+        primary: Colors.grey.shade300,
         onPrimary: Colors.black,
-        secondary: Colors.blue.shade300,
-        background: Colors.grey.shade300,
-        surface: Colors.grey.shade300,
-        onBackground: Colors.black,
-        onSurface: Colors.black,
-        error: Colors.red,
-        onError: Colors.white,
+        secondary: Colors.blue,
+        tertiary: Colors.blue.shade900,
+        inversePrimary: const Color.fromARGB(255, 100, 20, 20),
       ));
 }
