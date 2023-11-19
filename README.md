@@ -56,8 +56,8 @@ To use this app in remote mode, follow these steps:
 ## Help Wanted
 - Write code comments
 - Documentation
-- Seperate Desktop UI from Mobile UI
 - Testing and Building on MacOS and IOS
+- Spreading the word
 
 ## Testing
 Android version tested on a Oneplus 10 Pro 11gb phone.
