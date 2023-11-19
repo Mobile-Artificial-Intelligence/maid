@@ -11,45 +11,66 @@ class DesktopHomePage extends StatefulWidget {
 }
 
 class DesktopHomePageState extends State<DesktopHomePage> {
+  int? _selectedIndex;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
           NavigationRail(
+            onDestinationSelected: (int index) {
+              setState(() {
+                if (_selectedIndex == index) {
+                  _selectedIndex = null;
+                } else {
+                  _selectedIndex = index;
+                }
+              });
+            },
             destinations: <NavigationRailDestination>[
               NavigationRailDestination(
                 icon: const Icon(Icons.person),
-                selectedIcon: const Icon(Icons.person),
-                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                selectedIcon: Icon(
+                  Icons.person,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 label: const Text('Character'),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.chat_rounded),
-                selectedIcon: const Icon(Icons.chat_rounded),
-                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                selectedIcon: Icon(
+                  Icons.chat_rounded,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 label: const Text('Sessions'),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.account_tree_rounded),
-                selectedIcon: const Icon(Icons.account_tree_rounded),
-                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                selectedIcon: Icon(
+                  Icons.account_tree_rounded,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 label: const Text('Model')
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.settings),
-                selectedIcon: const Icon(Icons.settings),
-                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                selectedIcon: Icon(
+                  Icons.settings,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 label: const Text('Settings'),
               ),
               NavigationRailDestination(
                 icon: const Icon(Icons.info),
-                selectedIcon: const Icon(Icons.info),
-                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                selectedIcon: Icon(
+                  Icons.info,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
                 label: const Text('About'),
               ),
             ], 
-            selectedIndex: null,
+            selectedIndex: _selectedIndex,
           ),
           const Expanded(
             child: ChatUI(),
