@@ -44,11 +44,21 @@ class MaidAppState extends State<MaidApp> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final aspectRatio = screenSize.width / screenSize.height;
+
+    final Widget homePage;
+    if (aspectRatio > 0.9) {
+      homePage = const DesktopHomePage(title: 'Maid');
+    } else {
+      homePage = const MobileHomePage(title: 'Maid');
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: MaidTheme.theme,
-      home: const DesktopHomePage(title: 'Maid'),
+      home: homePage,
     );
   }
 }
