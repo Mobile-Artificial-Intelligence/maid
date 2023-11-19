@@ -27,6 +27,11 @@ class Model {
       preset = inputJson["preset"] ?? "Default";
       local = inputJson["local"] ?? false;
       parameters = inputJson;
+
+      if (parameters["n_threads"] > Platform.numberOfProcessors) {
+        parameters["n_threads"] = Platform.numberOfProcessors;
+      }
+      
       Logger.log("Model created with name: ${inputJson["name"]}");
     }
   }
@@ -42,11 +47,14 @@ class Model {
   }
 
   void resetAll() async {
-    // Reset all the internal state to the defaults
-    String jsonString =
-        await rootBundle.loadString('assets/default_parameters.json');
+    String jsonString = await rootBundle.loadString('assets/default_parameters.json');
 
     parameters = json.decode(jsonString);
+
+    if (parameters["n_threads"] > Platform.numberOfProcessors) {
+      parameters["n_threads"] = Platform.numberOfProcessors;
+    }
+
     local = false;
 
     MemoryManager.saveModels();

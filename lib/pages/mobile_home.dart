@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:maid/pages/session_page.dart';
-import 'package:maid/widgets/chat_widgets/chat_ui.dart';
+import 'package:maid/pages/generic_page.dart';
 import 'package:maid/widgets/home_app_bar.dart';
+import 'package:maid/widgets/page_bodies/about_body.dart';
+import 'package:maid/widgets/page_bodies/character_body.dart';
+import 'package:maid/widgets/page_bodies/chat_body.dart';
+import 'package:maid/widgets/page_bodies/model_body.dart';
+import 'package:maid/widgets/page_bodies/sessions_body.dart';
+import 'package:maid/widgets/page_bodies/settings_body.dart';
 
 import 'package:system_info2/system_info2.dart';
-
-import 'package:maid/pages/character_page.dart';
-import 'package:maid/pages/model_page.dart';
-import 'package:maid/pages/settings_page.dart';
-import 'package:maid/pages/about_page.dart';
-
 
 class MobileHomePage extends StatefulWidget {
   final String title;
@@ -60,7 +59,7 @@ class MobileHomePageState extends State<MobileHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CharacterPage()));
+                      builder: (context) => const GenericPage(title: "Character", body: CharacterBody())));
               },
             ),
             ListTile(
@@ -75,7 +74,7 @@ class MobileHomePageState extends State<MobileHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SessionPage()
+                    builder: (context) => const GenericPage(title: "Sessions", body: SessionsBody())
                   )
                 );
               },
@@ -92,7 +91,7 @@ class MobileHomePageState extends State<MobileHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ModelPage()
+                    builder: (context) => const GenericPage(title: "Model", body: ModelBody())
                   )
                 );
               },
@@ -107,7 +106,7 @@ class MobileHomePageState extends State<MobileHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SettingsPage()
+                    builder: (context) => const GenericPage(title: "Settings", body: SettingsBody())
                   )
                 );
               },
@@ -122,7 +121,7 @@ class MobileHomePageState extends State<MobileHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const AboutPage()
+                    builder: (context) => const GenericPage(title: "About", body: AboutBody())
                   )
                 );
               },
@@ -130,7 +129,7 @@ class MobileHomePageState extends State<MobileHomePage> {
           ],
         ),
       ),
-      body: const ChatUI()
+      body: const ChatBody()
     );
   }
 }

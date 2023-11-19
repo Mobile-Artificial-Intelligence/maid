@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/pages/home/desktop_home.dart';
+import 'package:maid/pages/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/theme.dart';
-import 'package:maid/pages/home/mobile_home.dart';
+import 'package:maid/pages/mobile_home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

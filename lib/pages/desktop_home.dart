@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:maid/pages/about_page.dart';
-import 'package:maid/pages/character_page.dart';
-import 'package:maid/pages/model_page.dart';
-import 'package:maid/pages/session_page.dart';
-import 'package:maid/pages/settings_page.dart';
-import 'package:maid/static/generation_manager.dart';
-import 'package:maid/widgets/chat_widgets/chat_ui.dart';
 import 'package:maid/widgets/home_app_bar.dart';
+import 'package:maid/widgets/page_bodies/about_body.dart';
+import 'package:maid/widgets/page_bodies/character_body.dart';
+import 'package:maid/widgets/page_bodies/chat_body.dart';
+import 'package:maid/widgets/page_bodies/model_body.dart';
+import 'package:maid/widgets/page_bodies/sessions_body.dart';
+import 'package:maid/widgets/page_bodies/settings_body.dart';
 
 class DesktopHomePage extends StatefulWidget {
   final String title;
@@ -19,6 +18,28 @@ class DesktopHomePage extends StatefulWidget {
 
 class DesktopHomePageState extends State<DesktopHomePage> {
   int? _selectedIndex;
+
+  Widget _getSelectedPage() {
+    switch (_selectedIndex) {
+      case 0:
+        return const Expanded(child: Scaffold(body: CharacterBody()));
+      case 1:
+        return const Expanded(child: Scaffold(body: SessionsBody()));
+      case 2:
+        return const Expanded(child: Scaffold(body: ModelBody()));
+      case 3:
+        return const Expanded(child: Scaffold(body: SettingsBody()));
+      case 4:
+        return const Expanded(child: Scaffold(body: AboutBody()));
+      default:
+        return const Expanded(
+          child: Scaffold(
+            appBar: HomeAppBar(),
+            body: ChatBody(),
+          ),
+        );
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -78,23 +99,7 @@ class DesktopHomePageState extends State<DesktopHomePage> {
           ], 
           selectedIndex: _selectedIndex,
         ),
-        if (_selectedIndex == null)
-          const Expanded(
-            child: Scaffold(
-              appBar: HomeAppBar(),
-              body: ChatUI(),
-            ),
-          )
-        else if (_selectedIndex == 0)
-          const Expanded(child:CharacterPage())
-        else if (_selectedIndex == 1)
-          const Expanded(child:SessionPage())
-        else if (_selectedIndex == 2)
-          const Expanded(child:ModelPage())
-        else if (_selectedIndex == 3)
-          const Expanded(child:SettingsPage())
-        else if (_selectedIndex == 4)
-          const Expanded(child:AboutPage())
+        _getSelectedPage(),
       ]
     );
   }
