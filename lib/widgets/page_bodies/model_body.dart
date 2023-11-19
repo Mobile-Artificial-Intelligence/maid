@@ -94,7 +94,7 @@ class _ModelBodyState extends State<ModelBody> {
                   Host.url = value;
                 },
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 8.0),
               MaidTextField(
                 headingText: "Remote Model",
                 labelText: "Model",
