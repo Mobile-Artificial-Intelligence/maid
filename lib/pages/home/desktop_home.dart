@@ -17,31 +17,36 @@ class DesktopHomePageState extends State<DesktopHomePage> {
       body: Row(
         children: [
           NavigationRail(
-            destinations: const <NavigationRailDestination>[
+            destinations: <NavigationRailDestination>[
               NavigationRailDestination(
-                icon: Icon(Icons.person),
-                selectedIcon: Icon(Icons.person),
-                label: Text('Character'),
+                icon: const Icon(Icons.person),
+                selectedIcon: const Icon(Icons.person),
+                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                label: const Text('Character'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.chat_rounded),
-                selectedIcon: Icon(Icons.chat_rounded),
-                label: Text('Sessions'),
+                icon: const Icon(Icons.chat_rounded),
+                selectedIcon: const Icon(Icons.chat_rounded),
+                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                label: const Text('Sessions'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.account_tree_rounded),
-                selectedIcon: Icon(Icons.account_tree_rounded),
-                label: Text('Model')
+                icon: const Icon(Icons.account_tree_rounded),
+                selectedIcon: const Icon(Icons.account_tree_rounded),
+                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                label: const Text('Model')
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.settings),
-                selectedIcon: Icon(Icons.settings),
-                label: Text('Settings'),
+                icon: const Icon(Icons.settings),
+                selectedIcon: const Icon(Icons.settings),
+                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                label: const Text('Settings'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.info),
-                selectedIcon: Icon(Icons.info),
-                label: Text('About'),
+                icon: const Icon(Icons.info),
+                selectedIcon: const Icon(Icons.info),
+                indicatorColor: Theme.of(context).colorScheme.tertiary,
+                label: const Text('About'),
               ),
             ], 
             selectedIndex: null,
