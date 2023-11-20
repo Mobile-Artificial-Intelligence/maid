@@ -11,6 +11,24 @@ class SessionsBody extends StatefulWidget {
 }
 
 class _SessionsBodyState extends State<SessionsBody> {
+  late String _currentSession;
+  
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _currentSession = MessageManager.root.message.isNotEmpty ? 
+                        MessageManager.root.message : 
+                        "Session";
+    });
+  }
+
+  @override
+  void dispose() {
+    MemoryManager.setSession(_currentSession);
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,12 +65,16 @@ class _SessionsBodyState extends State<SessionsBody> {
                   onDismissed: (direction) {
                     if (MessageManager.busy) return;
                     MemoryManager.removeSession(sessions[index]);
-                    if (MemoryManager.getSessions().isEmpty) Navigator.of(context).pop();
+                    if (MemoryManager.getSessions().isEmpty) {
+                      setState(() {
+                        _currentSession = MessageManager.root.message;
+                      });
+                    }
                   },
                   background: Container(color: Colors.red),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: MemoryManager.isCurrentSession(sessions[index]) ? 
+                      color: sessions[index] == _currentSession ? 
                              Theme.of(context).colorScheme.tertiary : 
                              Theme.of(context).colorScheme.primary,
                       borderRadius: const BorderRadius.all(Radius.circular(15.0)),
@@ -65,8 +87,9 @@ class _SessionsBodyState extends State<SessionsBody> {
                       ),
                       onTap: () {
                         if (MessageManager.busy) return;
-                        MemoryManager.setSession(sessions[index]);
-                        Navigator.of(context).pop();
+                        setState(() {
+                          _currentSession = sessions[index];
+                        });
                       },
                       onLongPress: () { // Rename session Dialog
                         if (MessageManager.busy) return;

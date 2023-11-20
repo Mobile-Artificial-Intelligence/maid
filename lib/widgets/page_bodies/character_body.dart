@@ -48,7 +48,9 @@ class _CharacterBodyState extends State<CharacterBody> {
                     MemoryManager.getCharacters, 
                     MemoryManager.setCharacter,
                     MemoryManager.removeCharacter,
-                    MemoryManager.isCurrentCharacter,
+                    (String characterName) {
+                      return character.name == characterName;
+                    },
                     () => setState(() {}),
                     () async {
                       MemoryManager.saveCharacters();

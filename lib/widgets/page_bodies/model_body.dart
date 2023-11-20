@@ -47,7 +47,9 @@ class _ModelBodyState extends State<ModelBody> {
                       MemoryManager.getModels,
                       MemoryManager.setModel,
                       MemoryManager.removeModel,
-                      MemoryManager.isCurrentModel,
+                      (String modelName) {
+                        return model.preset == modelName;
+                      },
                       () => setState(() {}), () async {
                     MemoryManager.saveModels();
                     model = Model();
