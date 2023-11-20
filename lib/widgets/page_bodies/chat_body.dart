@@ -83,7 +83,8 @@ class _ChatBodyState extends State<ChatBody> {
 
       if (GenerationManager.remote && 
         Host.url.isNotEmpty && 
-        model.parameters["remote_model"] != null
+        model.parameters["remote_model"] != null &&
+        model.parameters["remote_model"].toString().isNotEmpty
       ) {
         GenerationManager.prompt(MessageManager.promptController.text.trim());
         setState(() {
