@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/static/message_manager.dart';
+import 'package:maid/static/theme.dart';
 
 class BranchSwitcher extends StatefulWidget {
   const BranchSwitcher({required super.key});
@@ -37,9 +38,11 @@ class BranchSwitcherState extends State<BranchSwitcher> {
               MessageManager.last(widget.key!);
               setState(() {});
             },
-            icon: const Icon(Icons.arrow_left),
+            icon: Icon(
+              Icons.arrow_left, 
+              color: MaidTheme.branchSwitcherTextStyle.color)
           ),
-          Text('$currentIndex/${siblingCount-1}'),
+          Text('$currentIndex/${siblingCount-1}', style: MaidTheme.branchSwitcherTextStyle),
           IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
@@ -47,7 +50,9 @@ class BranchSwitcherState extends State<BranchSwitcher> {
               MessageManager.next(widget.key!);
               setState(() {});
             },
-            icon: const Icon(Icons.arrow_right),
+            icon: Icon(
+              Icons.arrow_right,
+              color: MaidTheme.branchSwitcherTextStyle.color),
           ),
         ],
       ),

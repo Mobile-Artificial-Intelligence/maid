@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/message_manager.dart';
+import 'package:maid/static/theme.dart';
 
 class SessionsBody extends StatefulWidget {
   const SessionsBody({super.key});
@@ -59,7 +60,8 @@ class _SessionsBodyState extends State<SessionsBody> {
                     child: ListTile(
                       title: Text(
                         sessions[index],
-                        textAlign: TextAlign.center
+                        textAlign: TextAlign.center,
+                        style: MaidTheme.sessionTextStyle,
                       ),
                       onTap: () {
                         if (MessageManager.busy) return;
