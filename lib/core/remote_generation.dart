@@ -15,27 +15,19 @@ class RemoteGeneration {
   static List<Map<String, dynamic>> _messages = [];
   
   static void prompt(String input) async {   
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (await Permission.nearbyWifiDevices.request().isGranted) {
-        Logger.log("Nearby Devices - Permission granted");
-      } else {
-        Logger.log("Nearby Devices - Permission denied");
+    _requestPermission().then((value) {
+      if (!value) {
         return;
       }
-    }
+    });
     
     _messages = character.examples;
     _messages.addAll(MessageManager.getMessages());
-
-    var remoteModel = model.parameters["remote_model"] ?? "llama2";
-    if (model.parameters["remote_tag"] != null) {
-      remoteModel += ":${model.parameters["remote_tag"]}";
-    }
     
     final url = Uri.parse("${Host.url}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
-      "model": remoteModel,
+      "model": model.parameters["remote_model"] ?? "llama2:7b-chat",
       "prompt": input,
       "context": _context, // TODO: DEPRECATED SOON
       "system": character.prePrompt,
@@ -95,5 +87,50 @@ class RemoteGeneration {
     MessageManager.busy = false;
     MessageManager.stream("");
     MemoryManager.saveMisc();
+  }
+
+  static Future<List<String>> getModels() async {
+    bool permissionGranted = await _requestPermission();
+    if (!permissionGranted) {
+      return [];
+    }
+
+    final url = Uri.parse("${Host.url}/api/tags");
+    final headers = {"Accept": "application/json"};
+
+    try {
+      var request = http.Request("GET", url)
+        ..headers.addAll(headers);
+
+      var response = await request.send();
+      var responseString = await response.stream.bytesToString();
+      var data = json.decode(responseString);
+
+      List<String> models = [];
+      if (data['models'] != null) {
+        for (var model in data['models']) {
+          models.add(model['name']);
+        }
+      }
+
+      print(models);
+      return models;
+    } catch (e) {
+      Logger.log('Error: $e');
+      return [];
+    }
+  }
+
+  static Future<bool> _requestPermission() async {
+    if ((Platform.isAndroid || Platform.isIOS)) {
+      if (await Permission.nearbyWifiDevices.request().isGranted) {
+        Logger.log("Nearby Devices - Permission granted");
+        return true;
+      } else {
+        Logger.log("Nearby Devices - Permission denied");
+        return false;
+      }
+    }
+    return true;
   }
 }
