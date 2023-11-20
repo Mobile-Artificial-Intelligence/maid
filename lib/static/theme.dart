@@ -10,6 +10,10 @@ class MaidTheme {
   static ThemeData get darkTheme => _darkTheme;
   static ThemeData get lightTheme => _lightTheme;
 
+  // CUSTOM STYLES
+  static final sessionTextStyle = TextStyle(color: Colors.grey.shade300);
+  static final branchSwitcherTextStyle = TextStyle(color: Colors.grey.shade300);
+
   static void registerCallback(void Function() refresh) {
     _callback = refresh;
   }
@@ -42,8 +46,8 @@ class MaidTheme {
     labelStyle: const TextStyle(
         fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15.0),
     hintStyle: const TextStyle(
-        fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15.0),
-    fillColor: Colors.white,
+        fontWeight: FontWeight.normal, color: Colors.grey, fontSize: 15.0),
+    fillColor: Colors.grey.shade300,
     filled: true,
     floatingLabelBehavior: FloatingLabelBehavior.never,
   );
@@ -202,13 +206,13 @@ class MaidTheme {
         ),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      drawerTheme: DrawerThemeData(
-          shape: const RoundedRectangleBorder(
+      drawerTheme: const DrawerThemeData(
+          shape:RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20),
                 bottomRight: Radius.circular(20)),
           ),
-          backgroundColor: Colors.grey.shade200),
+          backgroundColor: Colors.white),
       dropdownMenuTheme: DropdownMenuThemeData(
         textStyle: const TextStyle(
           color: Colors.black,
@@ -216,7 +220,7 @@ class MaidTheme {
         ),
         inputDecorationTheme: lightInputDecorationTheme,
       ),
-      scaffoldBackgroundColor: Colors.grey.shade300,
+      scaffoldBackgroundColor: Colors.white,
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: Colors.blue,
         selectionColor: Colors.blue.shade800,

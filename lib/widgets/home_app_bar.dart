@@ -22,24 +22,27 @@ class HomeAppBarState extends State<HomeAppBar> {
           color: Theme.of(context).colorScheme.background,
         ),
       ),
-      title: SegmentedButton<bool>(
-        segments: const [
-          ButtonSegment(
-            label: Text("Local"),
-            value: false
-          ),
-          ButtonSegment(
-            label: Text("Remote"),
-            value: true
-          ),
-        ],
-        selected: <bool>{GenerationManager.remote},
-        onSelectionChanged: (value) {
-          setState(() {
-            GenerationManager.remote = value.first;
-          });
-        },
-        showSelectedIcon: false,
+      title: SizedBox(
+        width: 160,
+        child: SegmentedButton<bool>(
+          segments: const [
+            ButtonSegment(
+              label: Text("Local"),
+              value: false
+            ),
+            ButtonSegment(
+              label: Text("Remote"),
+              value: true
+            ),
+          ],
+          selected: <bool>{GenerationManager.remote},
+          onSelectionChanged: (value) {
+            setState(() {
+              GenerationManager.remote = value.first;
+            });
+          },
+          showSelectedIcon: false,
+        ),
       ),
     );
   }
