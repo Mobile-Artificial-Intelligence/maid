@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:maid/types/character.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/widgets/chat_widgets/branch_switcher.dart';
@@ -59,22 +58,6 @@ class ChatControlsState extends State<ChatControls> {
             },
             icon: const Icon(Icons.refresh),
           ),
-        if (!widget.userGenerated)
-        IconButton(
-          iconSize: 20,
-          padding: const EdgeInsets.all(0),
-          onPressed: () {
-            final ctx = context;
-            final text = MessageManager.get(widget.key!);
-            Clipboard.setData(ClipboardData(text: text)).then((_) {
-              ScaffoldMessenger.of(ctx).showSnackBar(
-                const SnackBar(content: Text("Text copied to clipboard!")),
-              );
-            });
-          },
-          icon: const Icon(Icons.copy),
-          tooltip: "Copy Text",
-        ),
       ],
     );
   }
