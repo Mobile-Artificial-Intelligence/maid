@@ -10,6 +10,7 @@ import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
+import 'package:maid/widgets/settings_widgets/remote_dropdown.dart';
 
 class ModelBody extends StatefulWidget {
   const ModelBody({super.key});
@@ -95,23 +96,7 @@ class _ModelBodyState extends State<ModelBody> {
                 },
               ),
               const SizedBox(height: 8.0),
-              MaidTextField(
-                headingText: "Remote Model",
-                labelText: "Model",
-                initialValue: model.parameters["remote_model"],
-                onChanged: (value) {
-                  model.parameters["remote_model"] = value;
-                },
-              ),
-              const SizedBox(height: 8.0),
-              MaidTextField(
-                headingText: "Remote Tag",
-                labelText: "Tag",
-                initialValue: model.parameters["remote_tag"],
-                onChanged: (value) {
-                  model.parameters["remote_tag"] = value;
-                },
-              ),
+              const RemoteDropdown(),
               const SizedBox(height: 20.0),
               Divider(
                 height: 20,
