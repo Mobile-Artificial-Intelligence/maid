@@ -8,15 +8,23 @@ import 'package:permission_handler/permission_handler.dart';
 
 class FileManager {
   static Future<File?> load(BuildContext context, String dialogTitle, List<String> allowedExtensions) async {
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (!(await Permission.storage.request().isGranted) || 
-          !(await Permission.manageExternalStorage.request().isGranted)
-      ) {
-        Logger.log("Storage - Permission denied");
-        return null;
+    if (Platform.isAndroid || Platform.isIOS) {
+      // Check if the SDK version is Android 11 (API level 30) or higher
+      if (Platform.isAndroid && Platform.operatingSystemVersion.contains("API 30")) {
+        // Request for Manage External Storage
+        if (!(await Permission.manageExternalStorage.request().isGranted)) {
+          Logger.log("Storage - Permission denied");
+          return null;
+        }
       } else {
-        Logger.log("Storage - Permission granted");
+        // For older versions, use the storage permission
+        if (!(await Permission.storage.request().isGranted)) {
+          Logger.log("Storage - Permission denied");
+          return null;
+        }
       }
+
+      Logger.log("Storage - Permission granted");
     }
 
     String? result;
@@ -54,12 +62,23 @@ class FileManager {
   }
 
   static Future<File?> save(BuildContext context, String fileName) async {
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (!(await Permission.storage.request().isGranted) || 
-          !(await Permission.manageExternalStorage.request().isGranted)
-      ) {
-        return null;
+    if (Platform.isAndroid || Platform.isIOS) {
+      // Check if the SDK version is Android 11 (API level 30) or higher
+      if (Platform.isAndroid && Platform.operatingSystemVersion.contains("API 30")) {
+        // Request for Manage External Storage
+        if (!(await Permission.manageExternalStorage.request().isGranted)) {
+          Logger.log("Storage - Permission denied");
+          return null;
+        }
+      } else {
+        // For older versions, use the storage permission
+        if (!(await Permission.storage.request().isGranted)) {
+          Logger.log("Storage - Permission denied");
+          return null;
+        }
       }
+
+      Logger.log("Storage - Permission granted");
     }
 
     String? result;
@@ -98,12 +117,23 @@ class FileManager {
   }
 
   static Future<File?> loadImage(BuildContext context, String dialogTitle) async {
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      if (!(await Permission.storage.request().isGranted) || 
-          !(await Permission.manageExternalStorage.request().isGranted)
-      ) {
-        return null;
+    if (Platform.isAndroid || Platform.isIOS) {
+      // Check if the SDK version is Android 11 (API level 30) or higher
+      if (Platform.isAndroid && Platform.operatingSystemVersion.contains("API 30")) {
+        // Request for Manage External Storage
+        if (!(await Permission.manageExternalStorage.request().isGranted)) {
+          Logger.log("Storage - Permission denied");
+          return null;
+        }
+      } else {
+        // For older versions, use the storage permission
+        if (!(await Permission.storage.request().isGranted)) {
+          Logger.log("Storage - Permission denied");
+          return null;
+        }
       }
+    
+      Logger.log("Storage - Permission granted");
     }
 
     String? result;
