@@ -17,35 +17,27 @@ class DesktopHomePage extends StatefulWidget {
 }
 
 class DesktopHomePageState extends State<DesktopHomePage> {
-  int _selectedIndex = 0;
+  int? _selectedIndex;
 
   Widget _getSelectedPage() {
     switch (_selectedIndex) {
       case 0:
-        return const Expanded(
-          child: Scaffold(
-            appBar: HomeAppBar(),
-            body: ChatBody(),
-          ),
-        );
-      case 1:
         return const Expanded(child: Scaffold(body: CharacterBody()));
-      case 2:
+      case 1:
         return const Expanded(child: Scaffold(body: SessionsBody()));
-      case 3:
+      case 2:
         return const Expanded(child: Scaffold(body: ModelBody()));
-      case 4:
+      case 3:
         return const Expanded(child: Scaffold(body: SettingsBody()));
-      case 5:
+      case 4:
         return const Expanded(child: Scaffold(body: AboutBody()));
-      default: 
+      default:
         return const Expanded(
           child: Scaffold(
             appBar: HomeAppBar(),
             body: ChatBody(),
           ),
         );
-        
     }
   }
   
@@ -56,20 +48,14 @@ class DesktopHomePageState extends State<DesktopHomePage> {
         NavigationRail(
           onDestinationSelected: (int index) {
             setState(() {
-              if (_selectedIndex != index) {
+              if (_selectedIndex == index) {
+                _selectedIndex = null;
+              } else {
                 _selectedIndex = index;
               }
             });
           },
           destinations: <NavigationRailDestination>[
-            NavigationRailDestination(
-              icon: const Icon(Icons.home),
-              selectedIcon: Icon(
-                Icons.home,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              label: const Text('Home'),
-            ),
             NavigationRailDestination(
               icon: const Icon(Icons.person),
               selectedIcon: Icon(
