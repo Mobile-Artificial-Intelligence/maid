@@ -22,28 +22,50 @@ class HomeAppBarState extends State<HomeAppBar> {
           color: Theme.of(context).colorScheme.background,
         ),
       ),
-      title: SizedBox(
-        width: 160,
-        child: SegmentedButton<bool>(
-          segments: const [
-            ButtonSegment(
-              label: Text("Local"),
-              value: false
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FilledButton(
+            onPressed: () {
+              setState(() {
+                GenerationManager.remote = false;
+              });
+            },
+            style: ButtonStyle(
+              fixedSize: MaterialStateProperty.all(const Size(100, 25)),
+              backgroundColor: MaterialStateProperty.all(
+                !GenerationManager.remote ? 
+                Theme.of(context).colorScheme.tertiary :
+                Theme.of(context).colorScheme.primary
+              ),
             ),
-            ButtonSegment(
-              label: Text("Remote"),
-              value: true
+            child: Text(
+              "Local",
+              style: Theme.of(context).textTheme.labelLarge,
+            )
+          ),
+          const SizedBox(width: 10.0),
+          FilledButton(
+            onPressed: () {
+              setState(() {
+                GenerationManager.remote = true;
+              });
+            },
+            style: ButtonStyle(
+              fixedSize: MaterialStateProperty.all(const Size(100, 25)),
+              backgroundColor: MaterialStateProperty.all(
+                GenerationManager.remote ? 
+                Theme.of(context).colorScheme.tertiary :
+                Theme.of(context).colorScheme.primary
+              ),
             ),
-          ],
-          selected: <bool>{GenerationManager.remote},
-          onSelectionChanged: (value) {
-            setState(() {
-              GenerationManager.remote = value.first;
-            });
-          },
-          showSelectedIcon: false,
-        ),
-      ),
+            child: Text(
+              "Remote",
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+          ),
+        ],
+      )
     );
   }
 }
