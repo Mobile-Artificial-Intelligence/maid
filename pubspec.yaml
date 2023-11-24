@@ -44,6 +44,7 @@ dependencies:
   linkify: ^5.0.0
   filesystem_picker: ^4.0.0
   http: ^1.1.0
+  device_info_plus: ^9.1.1
 
 dev_dependencies:
   msix: ^3.9.1
