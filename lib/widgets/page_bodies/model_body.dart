@@ -93,12 +93,13 @@ class _ModelBodyState extends State<ModelBody> {
                 headingText: 'Remote URL', 
                 labelText: 'Remote URL',
                 initialValue: Host.url,
-                onChanged: (value) {
+                onSubmitted: (value) {
                   Host.url = value;
-                },
+                  setState(() {});
+                } ,
               ),
               const SizedBox(height: 8.0),
-              const RemoteDropdown(),
+              RemoteDropdown(url: Host.url),
               const SizedBox(height: 20.0),
               Divider(
                 height: 20,
