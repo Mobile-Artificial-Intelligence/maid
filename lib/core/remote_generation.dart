@@ -113,7 +113,6 @@ class RemoteGeneration {
         }
       }
 
-      print(models);
       return models;
     } catch (e) {
       Logger.log('Error: $e');
