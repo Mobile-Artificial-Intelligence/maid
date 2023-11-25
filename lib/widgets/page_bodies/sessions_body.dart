@@ -12,15 +12,15 @@ class SessionsBody extends StatefulWidget {
 
 class _SessionsBodyState extends State<SessionsBody> {
   late String _currentSession;
+  late List<String> sessions;
   
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _currentSession = MessageManager.root.message.isNotEmpty ? 
-                        MessageManager.root.message : 
-                        "Session";
-    });
+    sessions = MemoryManager.getSessions(); // Initialize sessions here
+    _currentSession = MessageManager.root.message.isNotEmpty ? 
+                      MessageManager.root.message : 
+                      "Session";
   }
 
   @override
@@ -39,6 +39,7 @@ class _SessionsBodyState extends State<SessionsBody> {
             if (MessageManager.busy) return;
             final index = MemoryManager.getSessions().length;
             MemoryManager.setSession("Session $index");
+            sessions = MemoryManager.getSessions();
             setState(() {});
           }, 
           child: Text(
@@ -54,22 +55,24 @@ class _SessionsBodyState extends State<SessionsBody> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: MemoryManager.getSessions().length,
+            itemCount: sessions.length, // Use the member variable
             itemBuilder: (context, index) {
-              List<String> sessions = MemoryManager.getSessions();
-
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Dismissible(
                   key: ValueKey(sessions[index]),
                   onDismissed: (direction) {
                     if (MessageManager.busy) return;
-                    MemoryManager.removeSession(sessions[index]);
-                    if (MemoryManager.getSessions().isEmpty) {
-                      setState(() {
-                        _currentSession = MessageManager.root.message;
-                      });
-                    }
+                    String dismissedSession = sessions[index];
+                    MemoryManager.removeSession(dismissedSession);
+                    setState(() {
+                      sessions.removeAt(index); // Update the sessions list
+                      if (dismissedSession == _currentSession) {
+                        _currentSession = MessageManager.root.message.isNotEmpty ? 
+                                          MessageManager.root.message : 
+                                          "Session";
+                      }
+                    });
                   },
                   background: Container(color: Colors.red),
                   child: Container(
