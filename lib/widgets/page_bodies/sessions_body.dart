@@ -17,7 +17,7 @@ class _SessionsBodyState extends State<SessionsBody> {
   @override
   void initState() {
     super.initState();
-    sessions = MemoryManager.getSessions(); // Initialize sessions here
+    sessions = MemoryManager.getSessions();
     _currentSession = MessageManager.root.message.isNotEmpty ? 
                       MessageManager.root.message : 
                       "Session";
@@ -37,10 +37,10 @@ class _SessionsBodyState extends State<SessionsBody> {
         FilledButton(
           onPressed: () {
             if (MessageManager.busy) return;
-            final index = MemoryManager.getSessions().length;
-            MemoryManager.setSession("Session $index");
-            sessions = MemoryManager.getSessions();
-            setState(() {});
+            setState(() {
+              MemoryManager.setSession("Session ${UniqueKey().toString()}");
+              sessions = MemoryManager.getSessions();
+            });
           }, 
           child: Text(
             "New Session",
@@ -55,7 +55,7 @@ class _SessionsBodyState extends State<SessionsBody> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: sessions.length, // Use the member variable
+            itemCount: sessions.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -66,7 +66,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                     String dismissedSession = sessions[index];
                     MemoryManager.removeSession(dismissedSession);
                     setState(() {
-                      sessions.removeAt(index); // Update the sessions list
+                      sessions.removeAt(index);
                       if (dismissedSession == _currentSession) {
                         _currentSession = MessageManager.root.message.isNotEmpty ? 
                                           MessageManager.root.message : 
@@ -94,7 +94,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                           _currentSession = sessions[index];
                         });
                       },
-                      onLongPress: () { // Rename session Dialog
+                      onLongPress: () {
                         if (MessageManager.busy) return;
                         showDialog(
                           context: context,
