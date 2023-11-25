@@ -55,88 +55,103 @@ class _SessionsBodyState extends State<SessionsBody> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: sessions.length, // Use the member variable
+            itemCount: sessions.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Dismissible(
-                  key: ValueKey(sessions[index]),
-                  onDismissed: (direction) {
-                    if (MessageManager.busy) return;
-                    String dismissedSession = sessions[index];
-                    MemoryManager.removeSession(dismissedSession);
-                    setState(() {
-                      sessions.removeAt(index); // Update the sessions list
-                      if (dismissedSession == _currentSession) {
-                        _currentSession = MessageManager.root.message.isNotEmpty ? 
-                                          MessageManager.root.message : 
-                                          "Session";
-                      }
-                    });
-                  },
-                  background: Container(color: Colors.red),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: sessions[index] == _currentSession ? 
-                             Theme.of(context).colorScheme.tertiary : 
-                             Theme.of(context).colorScheme.primary,
-                      borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                child: ClipRect(
+                  child: Dismissible(
+                    key: ValueKey(sessions[index]),
+                    dismissThresholds: const {
+                      DismissDirection.endToStart: 0.25,
+                      DismissDirection.startToEnd: 0.25,
+                    },
+                    onDismissed: (direction) {
+                      if (MessageManager.busy) return;
+                      String dismissedSession = sessions[index];
+                      MemoryManager.removeSession(dismissedSession);
+                      setState(() {
+                        sessions.removeAt(index);
+                        if (dismissedSession == _currentSession) {
+                          _currentSession = MessageManager.root.message.isNotEmpty ? 
+                                            MessageManager.root.message : 
+                                            "Session";
+                        }
+                      });
+                    },
+                    background: Container(
+                      color: Colors.red,
+                      child: const Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 8.0),
+                          child: Icon(Icons.delete, color: Colors.white)
+                        )
+                      )
                     ),
-                    child: ListTile(
-                      title: Text(
-                        sessions[index],
-                        textAlign: TextAlign.center,
-                        style: MaidTheme.sessionTextStyle,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: sessions[index] == _currentSession ? 
+                               Theme.of(context).colorScheme.tertiary : 
+                               Theme.of(context).colorScheme.primary,
+                        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
                       ),
-                      onTap: () {
-                        if (MessageManager.busy) return;
-                        setState(() {
-                          _currentSession = sessions[index];
-                        });
-                      },
-                      onLongPress: () { // Rename session Dialog
-                        if (MessageManager.busy) return;
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            final TextEditingController controller = TextEditingController(text: sessions[index]);
-                            return AlertDialog(
-                              title: const Text(
-                                "Rename Session",
-                                textAlign: TextAlign.center,
-                              ),
-                              content: TextField(
-                                controller: controller,
-                                decoration: const InputDecoration(
-                                  hintText: "Enter new name",
+                      child: ListTile(
+                        title: Text(
+                          sessions[index],
+                          textAlign: TextAlign.center,
+                          style: MaidTheme.sessionTextStyle,
+                        ),
+                        onTap: () {
+                          if (MessageManager.busy) return;
+                          setState(() {
+                            _currentSession = sessions[index];
+                          });
+                        },
+                        onLongPress: () {
+                          if (MessageManager.busy) return;
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              final TextEditingController controller = TextEditingController(text: sessions[index]);
+                              return AlertDialog(
+                                title: const Text(
+                                  "Rename Session",
+                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                              actions: [
-                                FilledButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    "Cancel",
-                                    style: Theme.of(context).textTheme.labelLarge,
+                                content: TextField(
+                                  controller: controller,
+                                  decoration: const InputDecoration(
+                                    hintText: "Enter new name",
                                   ),
                                 ),
-                                FilledButton(
-                                  onPressed: () {
-                                    MemoryManager.updateSession(controller.text);
-                                    Navigator.of(context).pop();
-                                    setState(() {});
-                                  },
-                                  child: Text(
-                                    "Rename",
-                                    style: Theme.of(context).textTheme.labelLarge,
+                                actions: [
+                                  FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      "Cancel",
+                                      style: Theme.of(context).textTheme.labelLarge,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                                  FilledButton(
+                                    onPressed: () {
+                                      MemoryManager.updateSession(controller.text);
+                                      Navigator.of(context).pop();
+                                      setState(() {});
+                                    },
+                                    child: Text(
+                                      "Rename",
+                                      style: Theme.of(context).textTheme.labelLarge,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
