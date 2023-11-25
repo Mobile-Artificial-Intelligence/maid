@@ -17,7 +17,7 @@ class _SessionsBodyState extends State<SessionsBody> {
   @override
   void initState() {
     super.initState();
-    sessions = MemoryManager.getSessions(); // Initialize sessions here
+    sessions = MemoryManager.getSessions();
     _currentSession = MessageManager.root.message.isNotEmpty ? 
                       MessageManager.root.message : 
                       "Session";
@@ -37,10 +37,10 @@ class _SessionsBodyState extends State<SessionsBody> {
         FilledButton(
           onPressed: () {
             if (MessageManager.busy) return;
-            final index = MemoryManager.getSessions().length;
-            MemoryManager.setSession("Session $index");
-            sessions = MemoryManager.getSessions();
-            setState(() {});
+            setState(() {
+              MemoryManager.setSession("Session ${UniqueKey().toString()}");
+              sessions = MemoryManager.getSessions();
+            });
           }, 
           child: Text(
             "New Session",
