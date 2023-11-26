@@ -87,7 +87,7 @@ class _ChatBodyState extends State<ChatBody> {
         Provider.of<Model>(context, listen: false).parameters["remote_model"] != null &&
         Provider.of<Model>(context, listen: false).parameters["remote_model"].toString().isNotEmpty
       ) {
-        GenerationManager.prompt(MessageManager.promptController.text.trim());
+        GenerationManager.prompt(MessageManager.promptController.text.trim(), Provider.of<Model>(context, listen: false));
         setState(() {
           MessageManager.busy = true;
           MessageManager.promptController.clear();
@@ -95,7 +95,7 @@ class _ChatBodyState extends State<ChatBody> {
       } else if (!GenerationManager.remote && 
         FileManager.checkFileExists(Provider.of<Model>(context, listen: false).parameters["path"])
       )  {
-        GenerationManager.prompt(MessageManager.promptController.text.trim());
+        GenerationManager.prompt(MessageManager.promptController.text.trim(), Provider.of<Model>(context, listen: false));
         setState(() {
           MessageManager.busy = true;
           MessageManager.promptController.clear();
