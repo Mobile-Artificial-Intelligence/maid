@@ -27,22 +27,6 @@ class MaidApp extends StatefulWidget {
 
 class MaidAppState extends State<MaidApp> {
   @override
-  void initState() {
-    super.initState();
-    MaidTheme.registerCallback(refreshApp);
-    _loadTheme();
-  }
-
-  _loadTheme() async {
-    await MaidTheme.loadThemePreference();
-    setState(() {});
-  }
-
-  void refreshApp() {
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final aspectRatio = screenSize.width / screenSize.height;
@@ -57,7 +41,9 @@ class MaidAppState extends State<MaidApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Maid',
-      theme: MaidTheme.theme,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.dark,
       home: homePage,
     );
   }
