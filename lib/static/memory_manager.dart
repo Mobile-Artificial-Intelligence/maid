@@ -8,11 +8,9 @@ import 'package:maid/static/message_manager.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:maid/types/model.dart';
 import 'package:maid/types/character.dart';
 
 class MemoryManager {
-  static Map<String, dynamic> _models = {};
   static Map<String, dynamic> _characters = {};
   static Map<String, dynamic> _sessions = {};
 
@@ -21,16 +19,8 @@ class MemoryManager {
       GenerationManager.remote = prefs.getBool("remote") ?? false;
       Host.url = prefs.getString("remote_url") ?? Host.url;
 
-      _models = json.decode(prefs.getString("models") ?? "{}");
       _characters = json.decode(prefs.getString("characters") ?? "{}");
       _sessions = json.decode(prefs.getString("sessions") ?? "{}");
-
-      if (_models.isEmpty) {
-        model = Model();
-      } else {
-        model = Model.fromMap(
-            _models[prefs.getString("last_model") ?? "Default"] ?? {});
-      }
 
       if (_characters.isEmpty) {
         character = Character();
@@ -53,17 +43,6 @@ class MemoryManager {
 
       prefs.setString("remote_url", Host.url);
       Logger.log("Remote URL Saved: ${Host.url}");
-    });
-    GenerationManager.cleanup();
-  }
-
-  static void saveModels() {
-    SharedPreferences.getInstance().then((prefs) {
-      _models[model.preset] = model.toMap();
-      Logger.log("Model Saved: ${model.preset}");
-
-      prefs.setString("models", json.encode(_models));
-      prefs.setString("last_model", model.preset);
     });
     GenerationManager.cleanup();
   }
@@ -97,18 +76,9 @@ class MemoryManager {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
     saveMisc();
-    saveModels();
     saveCharacters();
     saveSessions();
     GenerationManager.cleanup();
-  }
-
-  static void updateModel(String newName) {
-    String oldName = model.preset;
-    Logger.log("Updating model $oldName ====> $newName");
-    model.preset = newName;
-    _models.remove(oldName);
-    saveModels();
   }
 
   static void updateCharacter(String newName) {
@@ -125,19 +95,6 @@ class MemoryManager {
     MessageManager.root.message = newName;
     _sessions.remove(oldName);
     saveSessions();
-  }
-
-  static void removeModel(String modelName) {
-    _models.remove(modelName);
-    String? key = _models.keys.lastOrNull;
-
-    if (key == null) {
-      model = Model();
-    } else {
-      model = Model.fromMap(_models[key]!);
-    }
-
-    saveModels();
   }
 
   static void removeCharacter(String characterName) {
@@ -166,23 +123,12 @@ class MemoryManager {
     saveSessions();
   }
 
-  static List<String> getModels() {
-    return _models.keys.toList();
-  }
-
   static List<String> getCharacters() {
     return _characters.keys.toList();
   }
 
   static List<String> getSessions() {
     return _sessions.keys.toList();
-  }
-
-  static void setModel(String modelName) {
-    saveModels();
-    model = Model.fromMap(_models[modelName] ?? {});
-    Logger.log("Model Set: ${model.preset}");
-    saveModels();
   }
 
   static void setCharacter(String characterName) {

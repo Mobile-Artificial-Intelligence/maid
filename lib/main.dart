@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/types/model.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';
@@ -17,8 +18,11 @@ void main() {
     ),
   );
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => Model())
+      ],
       child: const MaidApp(),
     ),
   );
