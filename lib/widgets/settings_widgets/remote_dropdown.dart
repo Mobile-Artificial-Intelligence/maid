@@ -51,7 +51,7 @@ class _RemoteDropdownState extends State<RemoteDropdown> {
                   dropdownMenuEntries: dropdownEntries,
                   onSelected: (String? value) {
                     if (value != null) {
-                      Provider.of<Model>(context, listen: false).parameters["remote_model"] = value;
+                      Provider.of<Model>(context, listen: false).setParameter("remote_model", value);
                     }
                   },
                   width: 200,
