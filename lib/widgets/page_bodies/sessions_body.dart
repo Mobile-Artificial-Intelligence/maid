@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/message_manager.dart';
-import 'package:maid/static/theme.dart';
 
 class SessionsBody extends StatefulWidget {
   const SessionsBody({super.key});
@@ -100,7 +99,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                         title: Text(
                           sessions[index],
                           textAlign: TextAlign.center,
-                          style: MaidTheme.sessionTextStyle,
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                         onTap: () {
                           if (MessageManager.busy) return;

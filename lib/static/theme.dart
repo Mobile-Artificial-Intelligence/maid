@@ -10,10 +10,6 @@ class MaidTheme {
   static ThemeData get darkTheme => _darkTheme;
   static ThemeData get lightTheme => _lightTheme;
 
-  // CUSTOM STYLES
-  static final sessionTextStyle = TextStyle(color: Colors.grey.shade300);
-  static final branchSwitcherTextStyle = TextStyle(color: Colors.grey.shade300);
-
   static void registerCallback(void Function() refresh) {
     _callback = refresh;
   }
