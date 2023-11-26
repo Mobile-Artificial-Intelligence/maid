@@ -22,87 +22,32 @@ class DesktopHomePageState extends State<DesktopHomePage> {
   Widget _getSelectedPage() {
     switch (_selectedIndex) {
       case 0:
-        return Expanded(
+        return const Expanded(
           child: Scaffold(
-            appBar: const HomeAppBar(),
-            body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: calculatePadding()),
-              child: const ChatBody(),
-            ),
+            appBar: HomeAppBar(),
+            body: ChatBody(),
           ),
         );
       case 1:
-        return Expanded(
-          child: Scaffold(
-            body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: calculatePadding()),
-              child: const CharacterBody(),
-            ),
-          ),
-        );
+        return const Expanded(child: Scaffold(body: CharacterBody()));
       case 2:
-        return Expanded(
-          child: Scaffold(
-            body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: calculatePadding()),
-              child: const SessionsBody(),
-            ),
-          ),
-        );
+        return const Expanded(child: Scaffold(body: SessionsBody()));
       case 3:
-        return Expanded(
-          child: Scaffold(
-            body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: calculatePadding()),
-              child: const ModelBody(),
-            ),
-          ),
-        );
+        return const Expanded(child: Scaffold(body: ModelBody()));
       case 4:
-      return Expanded(
-        child: Scaffold(
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: calculatePadding()),
-            child: const SettingsBody(),
-          ),
-        ),
-      );
+        return const Expanded(child: Scaffold(body: SettingsBody()));
       case 5:
-      return Expanded(
-        child: Scaffold(
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: calculatePadding()),
-            child: const AboutBody(),
-          ),
-        ),
-      );
+        return const Expanded(child: Scaffold(body: AboutBody()));
       default: 
-        return Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: calculatePadding()),
-            child: const Scaffold(
-              body: ChatBody(),
-            ),
+        return const Expanded(
+          child: Scaffold(
+            appBar: HomeAppBar(),
+            body: ChatBody(),
           ),
         );
         
     }
   }
-
-double calculatePadding() {
-  double screenWidth = MediaQuery.of(context).size.width;
-  double baseScreenWidth = 640.0;
-  double basePaddingPercent = 0.05; // 5%
-  double scaleFactor = 0.015; // Adjust this to control how much extra padding is added per pixel
-
-  double additionalPadding = (screenWidth - baseScreenWidth) * scaleFactor;
-  additionalPadding = additionalPadding.clamp(0, 0.27); // Ensure the additional padding stays within a reasonable range
-
-  double calculatedPadding = basePaddingPercent + additionalPadding;
-  calculatedPadding = calculatedPadding.clamp(0.05, 0.32); // Clamp the final padding percentage between 5% and 32%
-
-  return screenWidth * calculatedPadding;
-}
   
   @override
   Widget build(BuildContext context) {
