@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
@@ -6,42 +7,60 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/memory_manager.dart';
 
-Model model = Model();
+class Model extends ChangeNotifier {
+  String _preset = "Default";
+  Map<String, dynamic> _parameters = {};
 
-class Model {
-  String preset = "Default";
-  Map<String, dynamic> parameters = {};
-
-  bool local = false;
+  bool _local = false;
 
   Model() {
     resetAll();
   }
 
-  Model.fromMap(Map<String, dynamic> inputJson) {
+  void setPreset(String preset) {
+    _preset = preset;
+    notifyListeners();
+  }
+
+  void setParameter(String key, dynamic value) {
+    _parameters[key] = value;
+    notifyListeners();
+  }
+
+  void setLocal(bool local) {
+    _local = local;
+    notifyListeners();
+  }
+
+  String get preset => _preset;
+  bool get local => _local;
+  Map<String, dynamic> get parameters => _parameters;
+
+
+  void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
-      preset = inputJson["preset"] ?? "Default";
-      local = inputJson["local"] ?? false;
-      parameters = inputJson;
+      _preset = inputJson["preset"] ?? "Default";
+      _local = inputJson["local"] ?? false;
+      _parameters = inputJson;
 
-      if (parameters["n_threads"] > Platform.numberOfProcessors) {
-        parameters["n_threads"] = Platform.numberOfProcessors;
+      if (_parameters["n_threads"] > Platform.numberOfProcessors) {
+        _parameters["n_threads"] = Platform.numberOfProcessors;
       }
       
       Logger.log("Model created with name: ${inputJson["name"]}");
+      notifyListeners();
     }
   }
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> jsonModel = {};
 
-    jsonModel = parameters;
-    jsonModel["preset"] = preset;
-    jsonModel["local"] = local;
+    jsonModel = _parameters;
+    jsonModel["preset"] = _preset;
+    jsonModel["local"] = _local;
 
     return jsonModel;
   }
@@ -49,25 +68,25 @@ class Model {
   void resetAll() async {
     String jsonString = await rootBundle.loadString('assets/default_parameters.json');
 
-    parameters = json.decode(jsonString);
+    _parameters = json.decode(jsonString);
 
-    if (parameters["n_threads"] > Platform.numberOfProcessors) {
-      parameters["n_threads"] = Platform.numberOfProcessors;
+    if (_parameters["n_threads"] > Platform.numberOfProcessors) {
+      _parameters["n_threads"] = Platform.numberOfProcessors;
     }
 
-    local = false;
+    _local = false;
 
-    MemoryManager.saveModels();
+    notifyListeners();
   }
 
   Future<String> exportModelParameters(BuildContext context) async {
     try {
-      parameters["preset"] = preset;
-      parameters["local"] = local;
+      _parameters["preset"] = _preset;
+      _parameters["local"] = _local;
 
-      String jsonString = json.encode(parameters);
+      String jsonString = json.encode(_parameters);
       
-      File? file = await FileManager.save(context, "$preset.json");
+      File? file = await FileManager.save(context, "$_preset.json");
 
       if (file == null) return "Error saving file";
 
@@ -90,19 +109,20 @@ class Model {
       String jsonString = await file.readAsString();
       if (jsonString.isEmpty) return "Failed to load parameters";
 
-      parameters = json.decode(jsonString);
-      if (parameters.isEmpty) {
+      _parameters = json.decode(jsonString);
+      if (_parameters.isEmpty) {
         resetAll();
         return "Failed to decode parameters";
       } else {
-        local = parameters["local"] ?? false;
-        preset = parameters["preset"] ?? "Default";
+        _local = _parameters["local"] ?? false;
+        _preset = _parameters["preset"] ?? "Default";
       }
     } catch (e) {
       resetAll();
       return "Error: $e";
     }
 
+    notifyListeners();
     return "Parameters Successfully Loaded";
   }
 
@@ -114,7 +134,7 @@ class Model {
       
       Logger.log("Loading model from $file");
 
-      parameters["path"] = file.path;
+      _parameters["path"] = file.path;
     } catch (e) {
       return "Error: $e";
     }

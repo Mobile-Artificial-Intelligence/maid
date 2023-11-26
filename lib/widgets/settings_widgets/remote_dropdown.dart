@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/core/remote_generation.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/types/model.dart';
+import 'package:provider/provider.dart';
 
 class RemoteDropdown extends StatefulWidget {
   final String url;
@@ -50,7 +51,7 @@ class _RemoteDropdownState extends State<RemoteDropdown> {
                   dropdownMenuEntries: dropdownEntries,
                   onSelected: (String? value) {
                     if (value != null) {
-                      model.parameters["remote_model"] = value;
+                      Provider.of<Model>(context, listen: false).setParameter("remote_model", value);
                     }
                   },
                   width: 200,

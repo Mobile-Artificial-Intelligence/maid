@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:maid/types/character.dart';
 import 'package:maid/static/message_manager.dart';
+import 'package:maid/types/model.dart';
+import 'package:provider/provider.dart';
 
 class ChatControls extends StatefulWidget {
 	final bool userGenerated;
@@ -95,7 +97,7 @@ class ChatControlsState extends State<ChatControls> {
             padding: const EdgeInsets.all(0),
             onPressed: () {
               if (MessageManager.busy) return;
-              MessageManager.regenerate(widget.key!);
+              MessageManager.regenerate(widget.key!, Provider.of<Model>(context, listen: false));
               setState(() {});
             },
             icon: const Icon(Icons.refresh),

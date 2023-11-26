@@ -11,6 +11,7 @@ import 'package:maid/static/message_manager.dart';
 import 'package:maid/types/model.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
+import 'package:provider/provider.dart';
 
 class ChatBody extends StatefulWidget {
   const ChatBody({super.key});
@@ -83,18 +84,18 @@ class _ChatBodyState extends State<ChatBody> {
 
       if (GenerationManager.remote && 
         Host.url.isNotEmpty && 
-        model.parameters["remote_model"] != null &&
-        model.parameters["remote_model"].toString().isNotEmpty
+        Provider.of<Model>(context, listen: false).parameters["remote_model"] != null &&
+        Provider.of<Model>(context, listen: false).parameters["remote_model"].toString().isNotEmpty
       ) {
-        GenerationManager.prompt(MessageManager.promptController.text.trim());
+        GenerationManager.prompt(MessageManager.promptController.text.trim(), Provider.of<Model>(context, listen: false));
         setState(() {
           MessageManager.busy = true;
           MessageManager.promptController.clear();
         });
       } else if (!GenerationManager.remote && 
-        FileManager.checkFileExists(model.parameters["path"])
+        FileManager.checkFileExists(Provider.of<Model>(context, listen: false).parameters["path"])
       )  {
-        GenerationManager.prompt(MessageManager.promptController.text.trim());
+        GenerationManager.prompt(MessageManager.promptController.text.trim(), Provider.of<Model>(context, listen: false));
         setState(() {
           MessageManager.busy = true;
           MessageManager.promptController.clear();
@@ -198,7 +199,7 @@ class _ChatBodyState extends State<ChatBody> {
                           focusNode: MessageManager.promptFocusNode,
                           onSubmitted: (value) {
                             if (!MessageManager.busy) {
-                              if (model.parameters["path"]
+                              if (Provider.of<Model>(context, listen: false).parameters["path"]
                                   .toString()
                                   .isEmpty && !GenerationManager.remote) {
                                 _missingModelDialog();
@@ -219,7 +220,7 @@ class _ChatBodyState extends State<ChatBody> {
                       IconButton(
                           onPressed: () {
                             if (!MessageManager.busy) {
-                              if (model.parameters["path"]
+                              if (Provider.of<Model>(context, listen: false).parameters["path"]
                                   .toString()
                                   .isEmpty && !GenerationManager.remote) {
                                 _missingModelDialog();

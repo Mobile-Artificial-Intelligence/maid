@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
+import 'package:maid/types/model.dart';
 
 class MessageManager {
   static TextEditingController promptController = TextEditingController();
@@ -72,14 +73,14 @@ class MessageManager {
     }
   }
 
-  static void regenerate(Key key) { 
+  static void regenerate(Key key, Model model) { 
     var parent = root.getParent(key);
     if (parent == null) {
       return;
     } else {
       branch(key, false);
       MessageManager.busy = true;
-      GenerationManager.prompt(parent.message);
+      GenerationManager.prompt(parent.message, model);
     }
   }
 
