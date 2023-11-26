@@ -17,17 +17,13 @@ class _SettingsBodyState extends State<SettingsBody> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SwitchListTile(
-            title: const Text('Theme (Light/Dark)'),
-            value: (MaidTheme.theme == MaidTheme.darkTheme) ? true : false,
-            onChanged: (value) {
-              if (value) {
-                MaidTheme.setTheme(ThemeType.dark);
-              } else {
-                MaidTheme.setTheme(ThemeType.light);
-              }
-            },
-          ),
+          //SwitchListTile(
+          //  title: const Text('Theme (Light/Dark)'),
+          //  value: (true) ? true : false,
+          //  onChanged: (value) {
+          //    // TODO: Fix toggle
+          //  },
+          //),
           FilledButton(
             onPressed: () async {
               var prefs = await SharedPreferences.getInstance();
