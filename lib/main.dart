@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/theme.dart';
@@ -15,7 +16,12 @@ void main() {
       statusBarBrightness: Brightness.dark
     ),
   );
-  runApp(const MaidApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MaidApp(),
+    ),
+  );
 }
 
 class MaidApp extends StatefulWidget {
@@ -38,13 +44,17 @@ class MaidAppState extends State<MaidApp> {
       homePage = const MobileHomePage(title: 'Maid');
     }
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Maid',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.dark,
-      home: homePage,
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Maid',
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: themeProvider.themeMode,
+          home: homePage
+        );
+      },
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/theme.dart';
 import 'package:maid/widgets/chat_widgets/code_box.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsBody extends StatefulWidget {
@@ -17,13 +18,13 @@ class _SettingsBodyState extends State<SettingsBody> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          //SwitchListTile(
-          //  title: const Text('Theme (Light/Dark)'),
-          //  value: (true) ? true : false,
-          //  onChanged: (value) {
-          //    // TODO: Fix toggle
-          //  },
-          //),
+          SwitchListTile(
+            title: const Text('Theme (Light/Dark)'),
+            value: Provider.of<ThemeProvider>(context, listen: false).isDarkMode,
+            onChanged: (value) {
+              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+            },
+          ),
           FilledButton(
             onPressed: () async {
               var prefs = await SharedPreferences.getInstance();
