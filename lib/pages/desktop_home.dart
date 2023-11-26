@@ -89,31 +89,20 @@ class DesktopHomePageState extends State<DesktopHomePage> {
     }
   }
 
-  double calculatePadding(){
-    double screenWidth = MediaQuery.of(context).size.width;
-    double calculatedPadding = screenWidth * 0.05;
+double calculatePadding() {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double baseScreenWidth = 640.0;
+  double basePaddingPercent = 0.05; // 5%
+  double scaleFactor = 0.015; // Adjust this to control how much extra padding is added per pixel
 
-    if (screenWidth >= 640) {
-      calculatedPadding = screenWidth * 0.08;
-    } 
-    if (screenWidth >= 800) {
-      calculatedPadding = screenWidth * 0.12;
-    } 
-    if (screenWidth >= 1024) {
-      calculatedPadding = screenWidth * 0.16;
-    }
-    if (screenWidth >= 1280) {
-      calculatedPadding = screenWidth * 0.20;
-    }
-    if (screenWidth >= 1920) {
-      calculatedPadding = screenWidth * 0.25;
-    }
-    if (screenWidth >= 2560) {
-      calculatedPadding = screenWidth * 0.32;
-    }
+  double additionalPadding = (screenWidth - baseScreenWidth) * scaleFactor;
+  additionalPadding = additionalPadding.clamp(0, 0.27); // Ensure the additional padding stays within a reasonable range
 
-    return calculatedPadding;
-  }
+  double calculatedPadding = basePaddingPercent + additionalPadding;
+  calculatedPadding = calculatedPadding.clamp(0.05, 0.32); // Clamp the final padding percentage between 5% and 32%
+
+  return screenWidth * calculatedPadding;
+}
   
   @override
   Widget build(BuildContext context) {
