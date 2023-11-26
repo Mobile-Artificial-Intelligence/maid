@@ -111,28 +111,25 @@ class _ChatBodyState extends State<ChatBody> {
 
   void updateCallback() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        chatWidgets.clear();
-        Map<Key, bool> history = MessageManager.history();
-        for (var key in history.keys) {
-          chatWidgets.add(ChatMessage(
-            key: key,
-            userGenerated: history[key] ?? false,
-          ));
-        }
-        _consoleScrollController.animateTo(
-          _consoleScrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 50),
-          curve: Curves.easeOut,
-        );
-        setState(() {});
+      chatWidgets.clear();
+      Map<Key, bool> history = MessageManager.history();
+      for (var key in history.keys) {
+        chatWidgets.add(ChatMessage(
+          key: key,
+          userGenerated: history[key] ?? false,
+        ));
       }
+      _consoleScrollController.animateTo(
+        _consoleScrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 50),
+        curve: Curves.easeOut,
+      );
+      setState(() {});
     });
   }
 
   @override
   void initState() {
-    super.initState();
     chatWidgets.clear();
     Map<Key, bool> history = MessageManager.history();
     for (var key in history.keys) {
@@ -142,6 +139,13 @@ class _ChatBodyState extends State<ChatBody> {
       ));
     }
     MessageManager.registerCallback(updateCallback);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    MessageManager.deregisterCallback();
+    super.dispose();
   }
   
   @override
