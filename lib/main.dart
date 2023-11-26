@@ -16,7 +16,12 @@ void main() {
       statusBarBrightness: Brightness.dark
     ),
   );
-  runApp(const MaidApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MaidApp(),
+    ),
+  );
 }
 
 class MaidApp extends StatefulWidget {
