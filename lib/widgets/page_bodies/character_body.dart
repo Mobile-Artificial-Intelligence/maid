@@ -24,15 +24,19 @@ class _CharacterBodyState extends State<CharacterBody> {
   @override
   void initState() {
     super.initState();
-    SharedPreferences.getInstance().then((prefs) {
-      _characters = json.decode(prefs.getString("characters") ?? "{}");
-
-      if (_characters.isEmpty) {
-        Provider.of<Character>(context, listen: false).resetAll();
-      } else {
-        Provider.of<Character>(context, listen: false).fromMap(
-          _characters[prefs.getString("last_character") ?? "Default"] ?? {});
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final characterProvider = Provider.of<Character>(context, listen: false);
+      
+      SharedPreferences.getInstance().then((prefs) {
+        _characters = json.decode(prefs.getString("characters") ?? "{}");
+  
+        if (_characters.isEmpty) {
+          characterProvider.resetAll();
+        } else {
+          characterProvider.fromMap(
+            _characters[prefs.getString("last_character") ?? "Default"] ?? {});
+        }
+      });
     });
   }
   

@@ -28,16 +28,20 @@ class _ModelBodyState extends State<ModelBody> {
   @override
   void initState() {
     super.initState();
-    SharedPreferences.getInstance().then((prefs) {     
-      GenerationManager.remote = prefs.getBool("remote") ?? false;
-      Host.url = prefs.getString("remote_url") ?? Host.url;
-      _models = json.decode(prefs.getString("models") ?? "{}");
-      if (_models.isEmpty) {
-        Provider.of<Model>(context, listen: false).resetAll();
-      } else {
-        Provider.of<Model>(context, listen: false).fromMap(
-            _models[prefs.getString("last_model") ?? "Default"] ?? {});
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final modelProvider = Provider.of<Model>(context, listen: false);
+
+      SharedPreferences.getInstance().then((prefs) {     
+        GenerationManager.remote = prefs.getBool("remote") ?? false;
+        Host.url = prefs.getString("remote_url") ?? Host.url;
+        _models = json.decode(prefs.getString("models") ?? "{}");
+        if (_models.isEmpty) {
+          modelProvider.resetAll();
+        } else {
+          modelProvider.fromMap(
+              _models[prefs.getString("last_model") ?? "Default"] ?? {});
+        }
+      });
     });
   }
 
@@ -47,7 +51,7 @@ class _ModelBodyState extends State<ModelBody> {
       builder: (context, model, child) {
         SharedPreferences.getInstance().then((prefs) {
           _models[model.preset] = model.toMap();
-          Logger.log("Model Saved: ${model.preset}");
+          Logger.log("Model Saved: ${model.parameters["path"]}");
 
           prefs.setString("models", json.encode(_models));
           prefs.setString("last_model", model.preset);
@@ -93,7 +97,8 @@ class _ModelBodyState extends State<ModelBody> {
                         (String modelName) {
                           return model.preset == modelName;
                         },
-                        () => setState(() {}), () async {
+                        () => setState(() {}), 
+                        () async {
                           final prefs = await SharedPreferences.getInstance();
                           _models[model.preset] = model.toMap();
                           Logger.log("Model Saved: ${model.preset}");
@@ -196,14 +201,12 @@ class _ModelBodyState extends State<ModelBody> {
                           if (model.parameters["path"] != null) {
                             model.setLocal(true);
                           }
-                          setState(() {});
                         });
                       },
                       rightText: "Unload GGUF",
                       rightOnPressed: () {
-                        model.parameters["path"] = null;
+                        model.setParameter("path", null);
                         model.setLocal(false);
-                        setState(() {});
                       }),
                   const SizedBox(height: 20.0),
                   Divider(
@@ -217,20 +220,17 @@ class _ModelBodyState extends State<ModelBody> {
                     leftOnPressed: () async {
                       await storageOperationDialog(
                           context, model.importModelParameters);
-                      setState(() {});
                     },
                     rightText: "Save Parameters",
                     rightOnPressed: () async {
                       await storageOperationDialog(
                           context, model.exportModelParameters);
-                      setState(() {});
                     },
                   ),
                   const SizedBox(height: 15.0),
                   FilledButton(
                     onPressed: () {
                       model.resetAll();
-                      setState(() {});
                     },
                     child: Text(
                       "Reset All",
