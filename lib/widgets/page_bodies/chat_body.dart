@@ -5,7 +5,6 @@ import 'package:maid/core/local_generation.dart';
 import 'package:maid/pages/generic_page.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/static/host.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/types/character.dart';
@@ -84,9 +83,10 @@ class _ChatBodyState extends State<ChatBody> {
       MessageManager.add(UniqueKey());
 
       if (GenerationManager.remote && 
-        Host.url.isNotEmpty && 
-        Provider.of<Model>(context, listen: false).parameters["remote_model"] != null &&
-        Provider.of<Model>(context, listen: false).parameters["remote_model"].toString().isNotEmpty
+        context.read<Model>().parameters["remote_url"]!= null &&
+        context.read<Model>().parameters["remote_url"].toString().isNotEmpty &&
+        context.read<Model>().parameters["remote_model"] != null &&
+        context.read<Model>().parameters["remote_model"].toString().isNotEmpty
       ) {
         GenerationManager.prompt(
           MessageManager.promptController.text.trim(), 

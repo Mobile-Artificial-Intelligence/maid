@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/static/host.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/types/model.dart';
@@ -29,18 +28,8 @@ class _ModelBodyState extends State<ModelBody> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final modelProvider = Provider.of<Model>(context, listen: false);
       final prefs = await SharedPreferences.getInstance();
- 
-      GenerationManager.remote = prefs.getBool("remote") ?? false;
-      Host.url = prefs.getString("remote_url") ?? Host.url;
       _models = json.decode(prefs.getString("models") ?? "{}");
-      if (_models.isEmpty) {
-        modelProvider.resetAll();
-      } else {
-        modelProvider.fromMap(
-            _models[prefs.getString("last_model") ?? "Default"] ?? {});
-      }
     });
   }
 
@@ -51,7 +40,7 @@ class _ModelBodyState extends State<ModelBody> {
     Logger.log("Model Saved: ${model.parameters["path"]}");
     
     prefs.setString("models", json.encode(_models));
-    prefs.setString("last_model", model.preset);
+    prefs.setString("last_model", json.encode(model.toMap()));
     GenerationManager.cleanup();
   }
 
@@ -154,14 +143,13 @@ class _ModelBodyState extends State<ModelBody> {
                   MaidTextField(
                     headingText: 'Remote URL', 
                     labelText: 'Remote URL',
-                    initialValue: Host.url,
+                    initialValue: model.parameters["remote_url"] ?? "http://0.0.0.0:11434",
                     onSubmitted: (value) {
-                      Host.url = value;
-                      setState(() {});
+                      model.setParameter("remote_url", value);
                     } ,
                   ),
                   const SizedBox(height: 8.0),
-                  RemoteDropdown(url: Host.url),
+                  RemoteDropdown(url: model.parameters["remote_url"] ?? "http://0.0.0.0:11434"),
                   const SizedBox(height: 20.0),
                   Divider(
                     height: 20,

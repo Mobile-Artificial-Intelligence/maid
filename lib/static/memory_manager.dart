@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/static/host.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/types/chat_node.dart';
@@ -14,7 +13,6 @@ class MemoryManager {
   static void init() {
     SharedPreferences.getInstance().then((prefs) {
       GenerationManager.remote = prefs.getBool("remote") ?? false;
-      Host.url = prefs.getString("remote_url") ?? Host.url;
 
       _sessions = json.decode(prefs.getString("sessions") ?? "{}");
 
@@ -29,9 +27,6 @@ class MemoryManager {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setBool("remote", GenerationManager.remote);
       Logger.log("Remote Flag Saved: ${GenerationManager.remote}");
-
-      prefs.setString("remote_url", Host.url);
-      Logger.log("Remote URL Saved: ${Host.url}");
     });
     GenerationManager.cleanup();
   }
