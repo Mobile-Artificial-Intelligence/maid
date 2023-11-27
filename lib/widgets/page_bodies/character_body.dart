@@ -24,34 +24,38 @@ class _CharacterBodyState extends State<CharacterBody> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final characterProvider = Provider.of<Character>(context, listen: false);
-      
-      SharedPreferences.getInstance().then((prefs) {
-        _characters = json.decode(prefs.getString("characters") ?? "{}");
-  
-        if (_characters.isEmpty) {
-          characterProvider.resetAll();
-        } else {
-          characterProvider.fromMap(
-            _characters[prefs.getString("last_character") ?? "Default"] ?? {});
-        }
-      });
+      final prefs = await SharedPreferences.getInstance();
+      _characters = json.decode(prefs.getString("characters") ?? "{}");
+
+      if (_characters.isEmpty) {
+        characterProvider.resetAll();
+      } else {
+        characterProvider.fromMap(
+          _characters[
+            prefs.getString("last_character") ?? "Default"
+          ] ?? {}
+        );
+      }
     });
+  }
+
+  void _save(Character character) async {
+    final prefs = await SharedPreferences.getInstance();
+    _characters[character.name] = character.toMap();
+    Logger.log("Character Saved: ${character.name}");
+    
+    prefs.setString("characters", json.encode(_characters));
+    prefs.setString("last_character", character.name);
+    GenerationManager.cleanup();
   }
   
   @override
   Widget build(BuildContext context) {
     return Consumer<Character>(
       builder: (context, character, child) {
-        SharedPreferences.getInstance().then((prefs) {
-          _characters[character.name] = character.toMap();
-          Logger.log("Character Saved: ${character.name}");
-    
-          prefs.setString("characters", json.encode(_characters));
-          prefs.setString("last_character", character.name);
-        });
-        GenerationManager.cleanup();
+        _save(character);
         
         return Stack(
           children: [

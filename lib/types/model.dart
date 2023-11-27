@@ -45,7 +45,9 @@ class Model extends ChangeNotifier {
       _local = inputJson["local"] ?? false;
       _parameters = inputJson;
 
-      if (_parameters["n_threads"] > Platform.numberOfProcessors) {
+      if (_parameters["n_threads"] == null || 
+          _parameters["n_threads"] > Platform.numberOfProcessors
+      ) {
         _parameters["n_threads"] = Platform.numberOfProcessors;
       }
       
