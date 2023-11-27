@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/core/remote_generation.dart';
-import 'package:maid/static/host.dart';
 import 'package:maid/types/model.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +18,7 @@ class _RemoteDropdownState extends State<RemoteDropdown> {
   @override
   void initState() {
     super.initState();
-    _urlNotifier = ValueNotifier<String>(Host.url);
+    _urlNotifier = ValueNotifier<String>(widget.url);
   }
   
   @override
@@ -34,7 +33,7 @@ class _RemoteDropdownState extends State<RemoteDropdown> {
               child: Text("Remote Model"),
             ),
             FutureBuilder<List<String>>(
-              future: RemoteGeneration.getModels(),
+              future: RemoteGeneration.getModels(widget.url),
               builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
                 if (snapshot.data == null) {
                   return const SizedBox(height: 8.0);
@@ -51,9 +50,10 @@ class _RemoteDropdownState extends State<RemoteDropdown> {
                   dropdownMenuEntries: dropdownEntries,
                   onSelected: (String? value) {
                     if (value != null) {
-                      Provider.of<Model>(context, listen: false).setParameter("remote_model", value);
+                      context.read<Model>().setParameter("remote_model", value);
                     }
                   },
+                  initialSelection: context.watch<Model>().parameters["remote_model"] ?? "",
                   width: 200,
                 );
               },

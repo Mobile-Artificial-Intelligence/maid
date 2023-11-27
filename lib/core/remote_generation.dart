@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/types/character.dart';
-import 'package:maid/static/host.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/types/model.dart';
@@ -24,7 +23,7 @@ class RemoteGeneration {
     _messages = character.examples;
     _messages.addAll(MessageManager.getMessages());
     
-    final url = Uri.parse("${Host.url}/api/generate");
+    final url = Uri.parse("${model.parameters["remote_url"]}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
       "model": model.parameters["remote_model"] ?? "llama2:7b-chat",
@@ -89,13 +88,13 @@ class RemoteGeneration {
     MemoryManager.saveMisc();
   }
 
-  static Future<List<String>> getModels() async {
+  static Future<List<String>> getModels(String domain) async {
     bool permissionGranted = await _requestPermission();
     if (!permissionGranted) {
       return [];
     }
 
-    final url = Uri.parse("${Host.url}/api/tags");
+    final url = Uri.parse("$domain/api/tags");
     final headers = {"Accept": "application/json"};
 
     try {

@@ -99,8 +99,8 @@ class ChatControlsState extends State<ChatControls> {
               if (MessageManager.busy) return;
               MessageManager.regenerate(
                 widget.key!, 
-                Provider.of<Model>(context, listen: false), 
-                Provider.of<Character>(context, listen: false)
+                context.read<Model>(), 
+                context.read<Character>()
               );
               setState(() {});
             },

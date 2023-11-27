@@ -79,6 +79,8 @@ class LocalGeneration {
     }
     
     _hasStarted = true;
+
+    print(model.parameters.toString());
     
     final params = calloc<maid_params>();
     params.ref.path         = model.parameters["path"].toString().toNativeUtf8().cast<Char>();

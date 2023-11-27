@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Model extends ChangeNotifier {
   String _preset = "Default";
@@ -14,7 +15,9 @@ class Model extends ChangeNotifier {
   bool _local = false;
 
   Model() {
-    resetAll();
+    SharedPreferences.getInstance().then((prefs) {
+      fromMap(json.decode(prefs.getString("last_model") ?? "{}"));
+    });
   }
 
   void setPreset(String preset) {
