@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/types/character.dart';
 import 'package:maid/types/model.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
@@ -21,7 +22,8 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        ChangeNotifierProvider(create: (context) => Model())
+        ChangeNotifierProvider(create: (context) => Model()),
+        ChangeNotifierProvider(create: (context) => Character()),
       ],
       child: const MaidApp(),
     ),

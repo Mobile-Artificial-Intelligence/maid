@@ -8,10 +8,7 @@ import 'package:maid/static/message_manager.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:maid/types/character.dart';
-
 class MemoryManager {
-  static Map<String, dynamic> _characters = {};
   static Map<String, dynamic> _sessions = {};
 
   static void init() {
@@ -19,15 +16,7 @@ class MemoryManager {
       GenerationManager.remote = prefs.getBool("remote") ?? false;
       Host.url = prefs.getString("remote_url") ?? Host.url;
 
-      _characters = json.decode(prefs.getString("characters") ?? "{}");
       _sessions = json.decode(prefs.getString("sessions") ?? "{}");
-
-      if (_characters.isEmpty) {
-        character = Character();
-      } else {
-        character = Character.fromMap(
-            _characters[prefs.getString("last_character") ?? "Default"] ?? {});
-      }
 
       if (_sessions.isNotEmpty) {
         MessageManager.fromMap(
@@ -43,17 +32,6 @@ class MemoryManager {
 
       prefs.setString("remote_url", Host.url);
       Logger.log("Remote URL Saved: ${Host.url}");
-    });
-    GenerationManager.cleanup();
-  }
-
-  static void saveCharacters() {
-    SharedPreferences.getInstance().then((prefs) {
-      _characters[character.name] = character.toMap();
-      Logger.log("Character Saved: ${character.name}");
-
-      prefs.setString("characters", json.encode(_characters));
-      prefs.setString("last_character", character.name);
     });
     GenerationManager.cleanup();
   }
@@ -76,17 +54,8 @@ class MemoryManager {
     var prefs = await SharedPreferences.getInstance();
     prefs.clear();
     saveMisc();
-    saveCharacters();
     saveSessions();
     GenerationManager.cleanup();
-  }
-
-  static void updateCharacter(String newName) {
-    String oldName = character.name;
-    Logger.log("Updating character $oldName ====> $newName");
-    character.name = newName;
-    _characters.remove(oldName);
-    saveCharacters();
   }
 
   static void updateSession(String newName) {
@@ -95,19 +64,6 @@ class MemoryManager {
     MessageManager.root.message = newName;
     _sessions.remove(oldName);
     saveSessions();
-  }
-
-  static void removeCharacter(String characterName) {
-    _characters.remove(characterName);
-    String? key = _characters.keys.lastOrNull;
-
-    if (key == null) {
-      character = Character();
-    } else {
-      character = Character.fromMap(_characters[key]!);
-    }
-
-    saveCharacters();
   }
 
   static void removeSession(String sessionName) {
@@ -123,19 +79,8 @@ class MemoryManager {
     saveSessions();
   }
 
-  static List<String> getCharacters() {
-    return _characters.keys.toList();
-  }
-
   static List<String> getSessions() {
     return _sessions.keys.toList();
-  }
-
-  static void setCharacter(String characterName) {
-    saveCharacters();
-    character = Character.fromMap(_characters[characterName] ?? {});
-    Logger.log("Character Set: ${character.name}");
-    saveCharacters();
   }
 
   static void setSession(String sessionName) {

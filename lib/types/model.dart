@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
@@ -139,6 +138,7 @@ class Model extends ChangeNotifier {
       return "Error: $e";
     }
 
+    notifyListeners();
     return "Model Successfully Loaded";
   }
 }

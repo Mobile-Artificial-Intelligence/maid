@@ -72,7 +72,7 @@ class LocalGeneration {
   }
 
 
-  void _init(String input, Model model) async {
+  void _init(String input, Model model, Character character) async {
     if (_hasStarted) {
       cleanup();
       await Future.delayed(const Duration(seconds: 1));
@@ -112,7 +112,7 @@ class LocalGeneration {
 
     ReceivePort receivePort = ReceivePort();
     _sendPort = receivePort.sendPort;
-    prompt(input, model);
+    prompt(input, model, character);
   
     Completer completer = Completer();
     receivePort.listen((data) {
@@ -128,11 +128,11 @@ class LocalGeneration {
     await completer.future;
   }
 
-  void prompt(String input, Model model) async {
+  void prompt(String input, Model model, Character character) async {
     MessageManager.busy = true;
     if (!_hasStarted) {
       await MemoryManager.saveAll();
-      _init(input, model);
+      _init(input, model, character);
     } else {
       Logger.log("Input: $input");
       Isolate.spawn(_promptIsolate, {
