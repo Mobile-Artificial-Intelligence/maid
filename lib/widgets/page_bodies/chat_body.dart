@@ -90,8 +90,8 @@ class _ChatBodyState extends State<ChatBody> {
       ) {
         GenerationManager.prompt(
           MessageManager.promptController.text.trim(), 
-          Provider.of<Model>(context, listen: false), 
-          Provider.of<Character>(context, listen: false)
+          context.read<Model>(), 
+          context.read<Character>()
         );
         setState(() {
           MessageManager.busy = true;
@@ -102,8 +102,8 @@ class _ChatBodyState extends State<ChatBody> {
       )  {
         GenerationManager.prompt(
           MessageManager.promptController.text.trim(), 
-          Provider.of<Model>(context, listen: false), 
-          Provider.of<Character>(context, listen: false)
+          context.read<Model>(), 
+          context.read<Character>()
         );
         setState(() {
           MessageManager.busy = true;
