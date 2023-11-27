@@ -23,40 +23,43 @@ class ModelBody extends StatefulWidget {
 }
 
 class _ModelBodyState extends State<ModelBody> {
-  late Map<String, dynamic> _models;
+  static Map<String, dynamic> _models = {};
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final modelProvider = Provider.of<Model>(context, listen: false);
-
-      SharedPreferences.getInstance().then((prefs) {     
-        GenerationManager.remote = prefs.getBool("remote") ?? false;
-        Host.url = prefs.getString("remote_url") ?? Host.url;
-        _models = json.decode(prefs.getString("models") ?? "{}");
-        if (_models.isEmpty) {
-          modelProvider.resetAll();
-        } else {
-          modelProvider.fromMap(
-              _models[prefs.getString("last_model") ?? "Default"] ?? {});
-        }
-      });
+      final prefs = await SharedPreferences.getInstance();
+ 
+      GenerationManager.remote = prefs.getBool("remote") ?? false;
+      Host.url = prefs.getString("remote_url") ?? Host.url;
+      _models = json.decode(prefs.getString("models") ?? "{}");
+      if (_models.isEmpty) {
+        modelProvider.resetAll();
+      } else {
+        modelProvider.fromMap(
+            _models[prefs.getString("last_model") ?? "Default"] ?? {});
+      }
     });
+  }
+
+  void _save(Model model) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    _models[model.preset] = model.toMap();
+    Logger.log("Model Saved: ${model.parameters["path"]}");
+    
+    prefs.setString("models", json.encode(_models));
+    prefs.setString("last_model", model.preset);
+    GenerationManager.cleanup();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Model>(
       builder: (context, model, child) {
-        SharedPreferences.getInstance().then((prefs) {
-          _models[model.preset] = model.toMap();
-          Logger.log("Model Saved: ${model.parameters["path"]}");
-
-          prefs.setString("models", json.encode(_models));
-          prefs.setString("last_model", model.preset);
-        });
-        GenerationManager.cleanup();
+        _save(model);
         
         return Stack(
           children: [
@@ -241,7 +244,7 @@ class _ModelBodyState extends State<ModelBody> {
                   if (model.local) ...[
                     SwitchListTile(
                       title: const Text('instruct'),
-                      value: model.parameters["instruct"],
+                      value: model.parameters["instruct"] ?? true,
                       onChanged: (value) {
                         setState(() {
                           model.setParameter("instruct", value);
@@ -250,7 +253,7 @@ class _ModelBodyState extends State<ModelBody> {
                     ),
                     SwitchListTile(
                       title: const Text('interactive'),
-                      value: model.parameters["interactive"],
+                      value: model.parameters["interactive"] ?? true,
                       onChanged: (value) {
                         setState(() {
                           model.setParameter("interactive", value);
@@ -259,7 +262,7 @@ class _ModelBodyState extends State<ModelBody> {
                     ),
                     SwitchListTile(
                       title: const Text('memory_f16'),
-                      value: model.parameters["memory_f16"],
+                      value: model.parameters["memory_f16"] ?? false,
                       onChanged: (value) {
                         setState(() {
                           model.setParameter("memory_f16", value);
@@ -269,7 +272,7 @@ class _ModelBodyState extends State<ModelBody> {
                   ],
                   SwitchListTile(
                     title: const Text('penalize_nl'),
-                    value: model.parameters["penalize_nl"],
+                    value: model.parameters["penalize_nl"] ?? true,
                     onChanged: (value) {
                       setState(() {
                         model.setParameter("penalize_nl", value);
@@ -278,7 +281,7 @@ class _ModelBodyState extends State<ModelBody> {
                   ),
                   SwitchListTile(
                     title: const Text('random_seed'),
-                    value: model.parameters["random_seed"],
+                    value: model.parameters["random_seed"] ?? true,
                     onChanged: (value) {
                       setState(() {
                         model.setParameter("random_seed", value);
@@ -291,7 +294,7 @@ class _ModelBodyState extends State<ModelBody> {
                     endIndent: 10,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  if (!model.parameters["random_seed"])
+                  if (!(model.parameters["random_seed"] ?? true))
                     ListTile(
                       title: Row(
                         children: [
@@ -314,7 +317,7 @@ class _ModelBodyState extends State<ModelBody> {
                     ),
                   MaidSlider(
                       labelText: 'n_threads',
-                      inputValue: model.parameters["n_threads"],
+                      inputValue: model.parameters["n_threads"] ?? Platform.numberOfProcessors,
                       sliderMin: 1.0,
                       sliderMax: !GenerationManager.remote
                           ? Platform.numberOfProcessors.toDouble()
@@ -330,7 +333,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'n_ctx',
-                      inputValue: model.parameters["n_ctx"],
+                      inputValue: model.parameters["n_ctx"] ?? 512,
                       sliderMin: 1.0,
                       sliderMax: 4096.0,
                       sliderDivisions: 4095,
@@ -341,7 +344,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'n_batch',
-                      inputValue: model.parameters["n_batch"],
+                      inputValue: model.parameters["n_batch"] ?? 8,
                       sliderMin: 1.0,
                       sliderMax: 4096.0,
                       sliderDivisions: 4095,
@@ -352,7 +355,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'n_predict',
-                      inputValue: model.parameters["n_predict"],
+                      inputValue: model.parameters["n_predict"] ?? 512,
                       sliderMin: 1.0,
                       sliderMax: 1024.0,
                       sliderDivisions: 1023,
@@ -363,7 +366,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'n_keep',
-                      inputValue: model.parameters["n_keep"],
+                      inputValue: model.parameters["n_keep"] ?? 48,
                       sliderMin: 1.0,
                       sliderMax: 1024.0,
                       sliderDivisions: 1023,
@@ -374,7 +377,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'top_k',
-                      inputValue: model.parameters["top_k"],
+                      inputValue: model.parameters["top_k"] ?? 40,
                       sliderMin: 1.0,
                       sliderMax: 128.0,
                       sliderDivisions: 127,
@@ -385,7 +388,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'top_p',
-                      inputValue: model.parameters["top_p"],
+                      inputValue: model.parameters["top_p"] ?? 0.95,
                       sliderMin: 0.0,
                       sliderMax: 1.0,
                       sliderDivisions: 100,
@@ -396,7 +399,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'tfs_z',
-                      inputValue: model.parameters["tfs_z"],
+                      inputValue: model.parameters["tfs_z"] ?? 1.0,
                       sliderMin: 0.0,
                       sliderMax: 1.0,
                       sliderDivisions: 100,
@@ -407,7 +410,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'typical_p',
-                      inputValue: model.parameters["typical_p"],
+                      inputValue: model.parameters["typical_p"] ?? 1.0,
                       sliderMin: 0.0,
                       sliderMax: 1.0,
                       sliderDivisions: 100,
@@ -418,7 +421,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'temperature',
-                      inputValue: model.parameters["temperature"],
+                      inputValue: model.parameters["temperature"] ?? 0.8,
                       sliderMin: 0.0,
                       sliderMax: 1.0,
                       sliderDivisions: 100,
@@ -429,7 +432,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'penalty_last_n',
-                      inputValue: model.parameters["penalty_last_n"],
+                      inputValue: model.parameters["penalty_last_n"] ?? 64,
                       sliderMin: 0.0,
                       sliderMax: 128.0,
                       sliderDivisions: 127,
@@ -440,7 +443,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'penalty_repeat',
-                      inputValue: model.parameters["penalty_repeat"],
+                      inputValue: model.parameters["penalty_repeat"] ?? 1.1,
                       sliderMin: 0.0,
                       sliderMax: 2.0,
                       sliderDivisions: 200,
@@ -451,7 +454,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'penalty_freq',
-                      inputValue: model.parameters["penalty_freq"],
+                      inputValue: model.parameters["penalty_freq"] ?? 0.0,
                       sliderMin: 0.0,
                       sliderMax: 1.0,
                       sliderDivisions: 100,
@@ -462,7 +465,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'penalty_present',
-                      inputValue: model.parameters["penalty_present"],
+                      inputValue: model.parameters["penalty_present"] ?? 0.0,
                       sliderMin: 0.0,
                       sliderMax: 1.0,
                       sliderDivisions: 100,
@@ -473,7 +476,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'mirostat',
-                      inputValue: model.parameters["mirostat"],
+                      inputValue: model.parameters["mirostat"] ?? 0.0,
                       sliderMin: 0.0,
                       sliderMax: 128.0,
                       sliderDivisions: 127,
@@ -484,7 +487,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'mirostat_tau',
-                      inputValue: model.parameters["mirostat_tau"],
+                      inputValue: model.parameters["mirostat_tau"] ?? 5.0,
                       sliderMin: 0.0,
                       sliderMax: 10.0,
                       sliderDivisions: 100,
@@ -495,7 +498,7 @@ class _ModelBodyState extends State<ModelBody> {
                           }),
                   MaidSlider(
                       labelText: 'mirostat_eta',
-                      inputValue: model.parameters["mirostat_eta"],
+                      inputValue: model.parameters["mirostat_eta"] ?? 0.1,
                       sliderMin: 0.0,
                       sliderMax: 1.0,
                       sliderDivisions: 100,
