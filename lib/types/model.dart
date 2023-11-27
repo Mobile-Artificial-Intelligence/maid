@@ -138,6 +138,7 @@ class Model extends ChangeNotifier {
       return "Error: $e";
     }
 
+    notifyListeners();
     return "Model Successfully Loaded";
   }
 }

@@ -98,7 +98,7 @@ class _ChatBodyState extends State<ChatBody> {
           MessageManager.promptController.clear();
         });
       } else if (!GenerationManager.remote && 
-        FileManager.checkFileExists(Provider.of<Model>(context, listen: false).parameters["path"])
+        FileManager.checkFileExists(Provider.of<Model>(context, listen: false).parameters["path"] ?? "")
       )  {
         GenerationManager.prompt(
           MessageManager.promptController.text.trim(), 
