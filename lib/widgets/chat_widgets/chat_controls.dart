@@ -44,7 +44,7 @@ class ChatControlsState extends State<ChatControls> {
             const SizedBox(width: 10.0),
             CircleAvatar(
               backgroundImage: const AssetImage("assets/default_profile.png"),
-              foregroundImage: Image.file(character.profile).image,
+              foregroundImage: Image.file(Provider.of<Character>(context, listen: false).profile).image,
               radius: 16,
             )
           ],
@@ -97,7 +97,11 @@ class ChatControlsState extends State<ChatControls> {
             padding: const EdgeInsets.all(0),
             onPressed: () {
               if (MessageManager.busy) return;
-              MessageManager.regenerate(widget.key!, Provider.of<Model>(context, listen: false));
+              MessageManager.regenerate(
+                widget.key!, 
+                Provider.of<Model>(context, listen: false), 
+                Provider.of<Character>(context, listen: false)
+              );
               setState(() {});
             },
             icon: const Icon(Icons.refresh),

@@ -14,7 +14,7 @@ class RemoteGeneration {
   static List<int> _context = [];
   static List<Map<String, dynamic>> _messages = [];
   
-  static void prompt(String input, Model model) async {   
+  static void prompt(String input, Model model, Character character) async {   
     _requestPermission().then((value) {
       if (!value) {
         return;

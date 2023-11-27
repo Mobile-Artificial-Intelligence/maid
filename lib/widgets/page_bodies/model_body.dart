@@ -52,6 +52,7 @@ class _ModelBodyState extends State<ModelBody> {
           prefs.setString("models", json.encode(_models));
           prefs.setString("last_model", model.preset);
         });
+        GenerationManager.cleanup();
         
         return Stack(
           children: [
@@ -68,37 +69,44 @@ class _ModelBodyState extends State<ModelBody> {
                   FilledButton(
                     onPressed: () {
                       switcherDialog(
-                          context,
-                          () {
-                            return _models.keys.toList();
-                          },
-                          (String modelName) {
-                            
-                            model.fromMap(_models[modelName] ?? {});
-                            Logger.log("Model Set: ${model.preset}");
-                            
-                          },
-                          (String modelName) {
-                            _models.remove(modelName);
-                            String? key = _models.keys.lastOrNull;
+                        context,
+                        () {
+                          return _models.keys.toList();
+                        },
+                        (String modelName) {
+                          
+                          model.fromMap(_models[modelName] ?? {});
+                          Logger.log("Model Set: ${model.preset}");
+                          
+                        },
+                        (String modelName) {
+                          _models.remove(modelName);
+                          String? key = _models.keys.lastOrNull;
 
-                            if (key == null) {
-                              model.resetAll();
-                            } else {
-                              model.fromMap(_models[key]!);
-                            }
+                          if (key == null) {
+                            model.resetAll();
+                          } else {
+                            model.fromMap(_models[key]!);
+                          }
+                          
+                        },
+                        (String modelName) {
+                          return model.preset == modelName;
+                        },
+                        () => setState(() {}), () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          _models[model.preset] = model.toMap();
+                          Logger.log("Model Saved: ${model.preset}");
+                          
+                          prefs.setString("models", json.encode(_models));
+                          prefs.setString("last_model", model.preset);
 
-                            
-                          },
-                          (String modelName) {
-                            return model.preset == modelName;
-                          },
-                          () => setState(() {}), () async {
-                        
-                        model.resetAll();
-                        model.setPreset("New Preset");
-                        setState(() {});
-                      });
+                          GenerationManager.cleanup();
+
+                          model.resetAll();
+                          model.setPreset("New Preset");
+                        }
+                      );
                     },
                     child: Text(
                       "Switch Preset",
@@ -119,9 +127,7 @@ class _ModelBodyState extends State<ModelBody> {
                         Logger.log("Updating model $oldName ====> $value");
                         model.setPreset(value);
                         _models.remove(oldName);
-                        
                       }
-                      setState(() {});
                     },
                   ),
                   const SizedBox(height: 20.0),

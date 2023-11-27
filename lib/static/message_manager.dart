@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:maid/static/memory_manager.dart';
+import 'package:maid/types/character.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/types/model.dart';
@@ -73,14 +74,14 @@ class MessageManager {
     }
   }
 
-  static void regenerate(Key key, Model model) { 
+  static void regenerate(Key key, Model model, Character character) { 
     var parent = root.getParent(key);
     if (parent == null) {
       return;
     } else {
       branch(key, false);
       MessageManager.busy = true;
-      GenerationManager.prompt(parent.message, model);
+      GenerationManager.prompt(parent.message, model, character);
     }
   }
 

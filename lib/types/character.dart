@@ -7,15 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/message_manager.dart';
-import 'package:maid/static/memory_manager.dart';
 import 'package:image/image.dart';
 import 'package:path_provider/path_provider.dart';
 
-Character character = Character();
-
-class Character {
+class Character extends ChangeNotifier {
   File profile = File("/assets/default_profile.png");
-  String name = "Maid";
+  String _name = "Maid";
   String prePrompt = "";
   String userAlias = "";
   String responseAlias = "";
@@ -26,14 +23,14 @@ class Character {
     _initProfile().then((value) => resetAll());
   }
 
-  Character.fromMap(Map<String, dynamic> inputJson) {
+  void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson["profile"] != null) {
       profile = File(inputJson["profile"]);
     } else {
       _initProfile().then((value) => resetAll());
     }
     
-    name = inputJson["name"] ?? "Unknown";
+    _name = inputJson["name"] ?? "Unknown";
 
     if (inputJson.isEmpty) {
       resetAll();
@@ -49,12 +46,13 @@ class Character {
     }
 
     Logger.log("Character created with name: ${inputJson["name"]}");
+    notifyListeners();
   }
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> jsonCharacter = {};
 
-    jsonCharacter["name"] = name;
+    jsonCharacter["name"] = _name;
     
     jsonCharacter["pre_prompt"] = prePrompt;
     jsonCharacter["user_alias"] = userAlias;
@@ -63,6 +61,13 @@ class Character {
 
     return jsonCharacter;
   }
+
+  void setName(String newName) {
+    _name = newName;
+    notifyListeners();
+  }
+
+  String get name => _name;
 
   Future<void> _initProfile() async {
     Directory docDir = await getApplicationDocumentsDirectory();
@@ -93,7 +98,7 @@ class Character {
       examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
     }
 
-    MemoryManager.saveCharacters();
+    notifyListeners();
   }
 
   Future<String> exportJSON(BuildContext context) async {
@@ -101,7 +106,7 @@ class Character {
       // Convert the map to a JSON string
       String jsonString = json.encode(toMap());
     
-      File? file = await FileManager.save(context, "$name.json");
+      File? file = await FileManager.save(context, "$_name.json");
 
       if (file == null) return "Error saving file";
 
@@ -130,7 +135,7 @@ class Character {
         return "Failed to decode character";
       }
 
-      name = jsonCharacter["name"] ?? "";
+      _name = jsonCharacter["name"] ?? "";
 
       prePrompt = jsonCharacter["pre_prompt"] ?? "";
       userAlias = jsonCharacter["user_alias"] ?? "";
@@ -139,6 +144,7 @@ class Character {
       final length = jsonCharacter["examples"].length ?? 0;
       examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
 
+      notifyListeners();
       return "Character Successfully Loaded";
     } catch (e) {
       resetAll();
@@ -154,14 +160,14 @@ class Character {
       if (image == null) return "Error decoding image";
 
       image.textData = {
-        "name": name,
+        "name": _name,
         "pre_prompt": prePrompt,
         "user_alias": userAlias,
         "response_alias": responseAlias,
         "examples": json.encode(examples),
       };
 
-      File? file = await FileManager.save(context, "$name.png");
+      File? file = await FileManager.save(context, "$_name.png");
       
       if (file == null) return "Error saving file";
 
@@ -183,7 +189,7 @@ class Character {
       final image = decodePng(file.readAsBytesSync());
 
       if (image != null && image.textData != null) {
-        name = image.textData!["name"] ?? "";
+        _name = image.textData!["name"] ?? "";
         prePrompt = image.textData!["pre_prompt"] ?? "";
         userAlias = image.textData!["user_alias"] ?? "";
         responseAlias = image.textData!["response_alias"] ?? "";
@@ -192,6 +198,7 @@ class Character {
 
       profile = file;
 
+      notifyListeners();
       return "Character Successfully Loaded";
     } catch (e) {
       resetAll();

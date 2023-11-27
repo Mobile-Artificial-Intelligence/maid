@@ -8,6 +8,7 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/host.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/message_manager.dart';
+import 'package:maid/types/character.dart';
 import 'package:maid/types/model.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
@@ -87,7 +88,11 @@ class _ChatBodyState extends State<ChatBody> {
         Provider.of<Model>(context, listen: false).parameters["remote_model"] != null &&
         Provider.of<Model>(context, listen: false).parameters["remote_model"].toString().isNotEmpty
       ) {
-        GenerationManager.prompt(MessageManager.promptController.text.trim(), Provider.of<Model>(context, listen: false));
+        GenerationManager.prompt(
+          MessageManager.promptController.text.trim(), 
+          Provider.of<Model>(context, listen: false), 
+          Provider.of<Character>(context, listen: false)
+        );
         setState(() {
           MessageManager.busy = true;
           MessageManager.promptController.clear();
@@ -95,7 +100,11 @@ class _ChatBodyState extends State<ChatBody> {
       } else if (!GenerationManager.remote && 
         FileManager.checkFileExists(Provider.of<Model>(context, listen: false).parameters["path"])
       )  {
-        GenerationManager.prompt(MessageManager.promptController.text.trim(), Provider.of<Model>(context, listen: false));
+        GenerationManager.prompt(
+          MessageManager.promptController.text.trim(), 
+          Provider.of<Model>(context, listen: false), 
+          Provider.of<Character>(context, listen: false)
+        );
         setState(() {
           MessageManager.busy = true;
           MessageManager.promptController.clear();
