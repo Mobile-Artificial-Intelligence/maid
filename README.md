@@ -1,6 +1,6 @@
 <div align="center">
   <picture>
-    <img alt="logo" height="200px" src="https://github.com/MaidFoundation/Maid/blob/main/.images/logo.png?raw=true">
+    <img alt="logo" height="200px" src="https://github.com/MaidFoundation/maid/blob/main/.images/logo.png?raw=true">
   </picture>
 </div>
 
@@ -10,14 +10,14 @@ Maid is a cross-platform Flutter app for interfacing with GGUF / llama.cpp model
 <div align="center">
   <table>
     <tr>
-      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/.images/demo1.jpg?raw=true" width="200"></td>
-      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/.images/demo2.jpg?raw=true" width="200"></td>
-      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/.images/demo3.jpg?raw=true" width="200"></td>
+      <td><img src="https://github.com/MaidFoundation/maid/blob/main/.images/demo1.jpg?raw=true" width="200"></td>
+      <td><img src="https://github.com/MaidFoundation/maid/blob/main/.images/demo2.jpg?raw=true" width="200"></td>
+      <td><img src="https://github.com/MaidFoundation/maid/blob/main/.images/demo3.jpg?raw=true" width="200"></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/.images/demo4.jpg?raw=true" width="200"></td>
-      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/.images/demo5.jpg?raw=true" width="200"></td>
-      <td><img src="https://github.com/MaidFoundation/Maid/blob/main/.images/demo6.jpg?raw=true" width="200"></td>
+      <td><img src="https://github.com/MaidFoundation/maid/blob/main/.images/demo4.jpg?raw=true" width="200"></td>
+      <td><img src="https://github.com/MaidFoundation/maid/blob/main/.images/demo5.jpg?raw=true" width="200"></td>
+      <td><img src="https://github.com/MaidFoundation/maid/blob/main/.images/demo6.jpg?raw=true" width="200"></td>
     </tr>
   </table>
 </div>
