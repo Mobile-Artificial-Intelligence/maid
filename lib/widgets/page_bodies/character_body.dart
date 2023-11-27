@@ -180,7 +180,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     labelText: 'Alias',
                     initialValue: character.userAlias,
                     onChanged: (value) {
-                      character.userAlias = value;
+                      character.setUserAlias(value);
                     },
                   ),
                   MaidTextField(
@@ -188,7 +188,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     labelText: 'Alias',
                     initialValue: character.responseAlias,
                     onChanged: (value) {
-                      character.responseAlias = value;
+                      character.setResponseAlias(value);
                     },
                   ),
                   MaidTextField(
@@ -196,7 +196,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     labelText: 'PrePrompt',
                     initialValue: character.prePrompt,
                     onChanged: (value) {
-                      character.prePrompt = value;
+                      character.setPrePrompt(value);
                     },
                     multiline: true,
                   ),
@@ -209,13 +209,13 @@ class _CharacterBodyState extends State<CharacterBody> {
                     leftText: "Add Example",
                     leftOnPressed: () {
                       setState(() {
-                        character.examples.add({"prompt": "", "response": ""});
+                        character.newExample();
                       });
                     },
                     rightText: "Remove Example",
                     rightOnPressed: () {
                       setState(() {
-                        character.examples.removeLast();
+                        character.removeLastExample();
                       });
                     },
                   ),
@@ -229,7 +229,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                           labelText: 'Prompt',
                           initialValue: character.examples[index]["prompt"],
                           onChanged: (value) {
-                            character.examples[index]["prompt"] = value;
+                            character.updateExample(index, "prompt", value);
                           },
                         ),
                         MaidTextField(
@@ -237,7 +237,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                           labelText: 'Response',
                           initialValue: character.examples[index]["response"],
                           onChanged: (value) {
-                            character.examples[index]["response"] = value;
+                            character.updateExample(index, "response", value);
                           },
                         ),
                       ],

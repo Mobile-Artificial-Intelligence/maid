@@ -13,11 +13,11 @@ import 'package:path_provider/path_provider.dart';
 class Character extends ChangeNotifier {
   File profile = File("/assets/default_profile.png");
   String _name = "Maid";
-  String prePrompt = "";
-  String userAlias = "";
-  String responseAlias = "";
+  String _prePrompt = "";
+  String _userAlias = "";
+  String _responseAlias = "";
 
-  List<Map<String,dynamic>> examples = [];
+  List<Map<String,dynamic>> _examples = [];
 
   Character() {
     _initProfile().then((value) => resetAll());
@@ -36,13 +36,13 @@ class Character extends ChangeNotifier {
       resetAll();
     }
 
-    prePrompt = inputJson["pre_prompt"] ?? "";
-    userAlias = inputJson["user_alias"] ?? "";
-    responseAlias = inputJson["response_alias"] ?? "";
+    _prePrompt = inputJson["pre_prompt"] ?? "";
+    _userAlias = inputJson["user_alias"] ?? "";
+    _responseAlias = inputJson["response_alias"] ?? "";
 
     if (inputJson["examples"] != null) {
       final length = inputJson["examples"].length ?? 0;
-      examples = List<Map<String,dynamic>>.generate(length, (i) => inputJson["examples"][i]);
+      _examples = List<Map<String,dynamic>>.generate(length, (i) => inputJson["examples"][i]);
     }
 
     Logger.log("Character created with name: ${inputJson["name"]}");
@@ -54,10 +54,10 @@ class Character extends ChangeNotifier {
 
     jsonCharacter["name"] = _name;
     
-    jsonCharacter["pre_prompt"] = prePrompt;
-    jsonCharacter["user_alias"] = userAlias;
-    jsonCharacter["response_alias"] = responseAlias;
-    jsonCharacter["examples"] = examples;
+    jsonCharacter["pre_prompt"] = _prePrompt;
+    jsonCharacter["user_alias"] = _userAlias;
+    jsonCharacter["response_alias"] = _responseAlias;
+    jsonCharacter["examples"] = _examples;
 
     return jsonCharacter;
   }
@@ -67,7 +67,53 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setUserAlias(String newAlias) {
+    _userAlias = newAlias;
+    notifyListeners();
+  }
+
+  void setResponseAlias(String newAlias) {
+    _responseAlias = newAlias;
+    notifyListeners();
+  }
+
+  void setPrePrompt(String newPrePrompt) {
+    _prePrompt = newPrePrompt;
+    notifyListeners();
+  }
+
+  void newExample() {
+    _examples.add({
+      "prompt": "",
+      "response": "",
+    });
+    notifyListeners();
+  }
+
+  void updateExample(int index, String role, String value) {
+    _examples[index][role] = value;
+    notifyListeners();
+  }
+
+  void removeExample(int index) {
+    _examples.removeAt(index);
+    notifyListeners();
+  }
+
+  void removeLastExample() {
+    _examples.removeLast();
+    notifyListeners();
+  }
+
   String get name => _name;
+
+  String get userAlias => _userAlias;
+
+  String get responseAlias => _responseAlias;
+
+  String get prePrompt => _prePrompt;
+
+  List<Map<String,dynamic>> get examples => _examples;
 
   Future<void> _initProfile() async {
     Directory docDir = await getApplicationDocumentsDirectory();
@@ -89,13 +135,13 @@ class Character extends ChangeNotifier {
 
     Map<String, dynamic> jsonCharacter = json.decode(jsonString);
 
-    prePrompt = jsonCharacter["pre_prompt"] ?? "";
-    userAlias = jsonCharacter["user_alias"] ?? "";
-    responseAlias = jsonCharacter["response_alias"] ?? "";
+    _prePrompt = jsonCharacter["pre_prompt"] ?? "";
+    _userAlias = jsonCharacter["user_alias"] ?? "";
+    _responseAlias = jsonCharacter["response_alias"] ?? "";
 
     if (jsonCharacter["examples"] != null) {
       final length = jsonCharacter["examples"].length ?? 0;
-      examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
+      _examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
     }
 
     notifyListeners();
@@ -137,12 +183,12 @@ class Character extends ChangeNotifier {
 
       _name = jsonCharacter["name"] ?? "";
 
-      prePrompt = jsonCharacter["pre_prompt"] ?? "";
-      userAlias = jsonCharacter["user_alias"] ?? "";
-      responseAlias = jsonCharacter["response_alias"] ?? "";
+      _prePrompt = jsonCharacter["pre_prompt"] ?? "";
+      _userAlias = jsonCharacter["user_alias"] ?? "";
+      _responseAlias = jsonCharacter["response_alias"] ?? "";
 
       final length = jsonCharacter["examples"].length ?? 0;
-      examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
+      _examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
 
       notifyListeners();
       return "Character Successfully Loaded";
@@ -161,10 +207,10 @@ class Character extends ChangeNotifier {
 
       image.textData = {
         "name": _name,
-        "pre_prompt": prePrompt,
-        "user_alias": userAlias,
-        "response_alias": responseAlias,
-        "examples": json.encode(examples),
+        "pre_prompt": _prePrompt,
+        "user_alias": _userAlias,
+        "response_alias": _responseAlias,
+        "examples": json.encode(_examples),
       };
 
       File? file = await FileManager.save(context, "$_name.png");
@@ -190,10 +236,10 @@ class Character extends ChangeNotifier {
 
       if (image != null && image.textData != null) {
         _name = image.textData!["name"] ?? "";
-        prePrompt = image.textData!["pre_prompt"] ?? "";
-        userAlias = image.textData!["user_alias"] ?? "";
-        responseAlias = image.textData!["response_alias"] ?? "";
-        examples = List<Map<String,dynamic>>.from(json.decode(image.textData!["examples"] ?? "[]"));        
+        _prePrompt = image.textData!["pre_prompt"] ?? "";
+        _userAlias = image.textData!["user_alias"] ?? "";
+        _responseAlias = image.textData!["response_alias"] ?? "";
+        _examples = List<Map<String,dynamic>>.from(json.decode(image.textData!["examples"] ?? "[]"));        
       }
 
       profile = file;
@@ -208,14 +254,14 @@ class Character extends ChangeNotifier {
   }
   
   String getPrePrompt() {
-    String result = prePrompt.isNotEmpty ? prePrompt.trim() : "";
+    String result = _prePrompt.isNotEmpty ? _prePrompt.trim() : "";
 
-    List<Map<String, dynamic>> history = examples;
+    List<Map<String, dynamic>> history = _examples;
     history += MessageManager.getMessages();
     if (history.isNotEmpty) {
       for (var i = 0; i < history.length; i++) {
-        var prompt = '${userAlias.trim()} ${history[i]["prompt"].trim()}';
-        var response = '${responseAlias.trim()} ${history[i]["response"].trim()}';
+        var prompt = '${_userAlias.trim()} ${history[i]["prompt"].trim()}';
+        var response = '${_responseAlias.trim()} ${history[i]["response"].trim()}';
         if (prompt.isNotEmpty && response.isNotEmpty) {
           result += "\n$prompt\n$response";
         }
