@@ -36,14 +36,7 @@ class _ModelBodyState extends State<ModelBody> {
   @override
   void dispose() {
     final model = context.read<Model>();
-
-    SharedPreferences.getInstance().then((prefs) {
-      _models[model.preset] = model.toMap();
-      Logger.log("Model Saved: ${model.parameters["path"]}");
-
-      prefs.setString("models", json.encode(_models));
-    });
-    model.save();
+    model.save(_models);
 
     GenerationManager.cleanup();
 

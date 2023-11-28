@@ -103,8 +103,9 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
   @override
   void dispose() {
-    context.read<Session>().getMessageStream(widget.key!).close();
-    context.read<Session>().getFinaliseStream(widget.key!).close();
+    final session = context.read<Session>();
+    session.getMessageStream(widget.key!).close();
+    session.getFinaliseStream(widget.key!).close();
     super.dispose();
   }
 }

@@ -33,14 +33,7 @@ class _CharacterBodyState extends State<CharacterBody> {
   @override
   void dispose() {
     final character = context.read<Character>();
-
-    SharedPreferences.getInstance().then((prefs) {
-      _characters[character.name] = character.toMap();
-      Logger.log("Character Saved: ${character.name}");
-
-      prefs.setString("characters", json.encode(_characters));
-    });
-    character.save();
+    character.save(_characters);
 
     GenerationManager.cleanup();
 

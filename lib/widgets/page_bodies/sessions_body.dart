@@ -28,9 +28,8 @@ class _SessionsBodyState extends State<SessionsBody> {
 
   @override
   void dispose() {
+    final session = context.read<Session>();
     SharedPreferences.getInstance().then((prefs) {
-      final session = context.read<Session>();
-
       String key = session.rootMessage;
       if (key.isEmpty) key = "Session";
 
