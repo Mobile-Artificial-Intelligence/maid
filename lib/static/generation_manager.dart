@@ -1,7 +1,7 @@
 import 'package:maid/core/remote_generation.dart';
 import 'package:maid/core/local_generation.dart';
-import 'package:maid/types/character.dart';
-import 'package:maid/types/model.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/model.dart';
 
 class GenerationManager {
   static bool remote = false;

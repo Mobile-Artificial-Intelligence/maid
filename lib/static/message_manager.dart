@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:maid/static/memory_manager.dart';
-import 'package:maid/types/character.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/types/model.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/model.dart';
 
 class MessageManager {
   static TextEditingController promptController = TextEditingController();

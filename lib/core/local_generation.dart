@@ -7,8 +7,8 @@ import 'package:ffi/ffi.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/message_manager.dart';
 import 'package:maid/core/bindings.dart';
-import 'package:maid/types/character.dart';
-import 'package:maid/types/model.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/model.dart';
 import 'package:maid/static/memory_manager.dart';
 
 class LocalGeneration {
