@@ -33,23 +33,27 @@ class _ModelBodyState extends State<ModelBody> {
     });
   }
 
-  void _save(Model model) async {
-    final prefs = await SharedPreferences.getInstance();
+  @override
+  void dispose() {
+    final model = context.read<Model>();
 
-    _models[model.preset] = model.toMap();
-    Logger.log("Model Saved: ${model.parameters["path"]}");
-    
-    prefs.setString("models", json.encode(_models));
-    prefs.setString("last_model", json.encode(model.toMap()));
+    SharedPreferences.getInstance().then((prefs) {
+      _models[model.preset] = model.toMap();
+      Logger.log("Model Saved: ${model.parameters["path"]}");
+
+      prefs.setString("models", json.encode(_models));
+    });
+    model.save();
+
     GenerationManager.cleanup();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Model>(
       builder: (context, model, child) {
-        _save(model);
-        
         return Stack(
           children: [
             SingleChildScrollView(

@@ -25,38 +25,32 @@ class _CharacterBodyState extends State<CharacterBody> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final characterProvider = Provider.of<Character>(context, listen: false);
       final prefs = await SharedPreferences.getInstance();
       _characters = json.decode(prefs.getString("characters") ?? "{}");
-
-      if (_characters.isEmpty) {
-        characterProvider.resetAll();
-      } else {
-        characterProvider.fromMap(
-          _characters[
-            prefs.getString("last_character") ?? "Default"
-          ] ?? {}
-        );
-      }
     });
   }
 
-  void _save(Character character) async {
-    final prefs = await SharedPreferences.getInstance();
-    _characters[character.name] = character.toMap();
-    Logger.log("Character Saved: ${character.name}");
-    
-    prefs.setString("characters", json.encode(_characters));
-    prefs.setString("last_character", character.name);
+  @override
+  void dispose() {
+    final character = context.read<Character>();
+
+    SharedPreferences.getInstance().then((prefs) {
+      _characters[character.name] = character.toMap();
+      Logger.log("Character Saved: ${character.name}");
+
+      prefs.setString("characters", json.encode(_characters));
+    });
+    character.save();
+
     GenerationManager.cleanup();
+
+    super.dispose();
   }
   
   @override
   Widget build(BuildContext context) {
     return Consumer<Character>(
-      builder: (context, character, child) {
-        _save(character);
-        
+      builder: (context, character, child) {       
         return Stack(
           children: [
             SingleChildScrollView(
@@ -176,7 +170,6 @@ class _CharacterBodyState extends State<CharacterBody> {
                                 character.setName(value);
                                 _characters.remove(oldName);
                               }
-                              setState(() {});
                             },
                           ),
                         ),

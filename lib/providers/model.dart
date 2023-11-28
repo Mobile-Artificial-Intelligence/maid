@@ -20,6 +20,12 @@ class Model extends ChangeNotifier {
     });
   }
 
+  void save() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("last_model", json.encode(toMap()));
+    });
+  }
+
   void setPreset(String preset) {
     _preset = preset;
     notifyListeners();
