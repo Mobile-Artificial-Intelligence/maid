@@ -1,46 +1,59 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/static/memory_manager.dart';
-import 'package:maid/types/character.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/types/model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class MessageManager {
-  static TextEditingController promptController = TextEditingController();
-  static FocusNode promptFocusNode = FocusNode();
-  static void Function()? _callback;
-  static ChatNode root = ChatNode(key: UniqueKey());
-  static ChatNode? tail;
-  static bool busy = false;
+class Session extends ChangeNotifier {
+  ChatNode _root = ChatNode(key: UniqueKey());
+  ChatNode? tail;
 
-  static void registerCallback(void Function() onUpdate) {
-    _callback = onUpdate;
+  Session() {
+    SharedPreferences.getInstance().then((prefs) {
+      fromMap(json.decode(prefs.getString("last_session") ?? "{}"));
+    });
   }
 
-  static void deregisterCallback() {
-    _callback = null;
+  void newSession() {
+    final key = UniqueKey();
+    _root = ChatNode(key: key);
+    _root.message = "Session ${key.toString()}";
+    tail = null;
+    notifyListeners();
   }
 
-  static void fromMap(Map<String, dynamic> inputJson) {
-    root = ChatNode.fromMap(inputJson);
-    tail = root.findTail();
-    _callback?.call();
+  void fromMap(Map<String, dynamic> inputJson) {
+    _root = ChatNode.fromMap(inputJson);
+    tail = _root.findTail();
+    notifyListeners();
   }
 
-  static String get(Key key) {
-    return root.find(key)?.message ?? "";
+  Map<String, dynamic> toMap() {
+    return _root.toMap();
   }
 
-  static void add(Key key, {String message = "",  bool userGenerated = false}) {
+  String get(Key key) {
+    return _root.find(key)?.message ?? "";
+  }
+
+  void setRootMessage(String message) {
+    _root.message = message;
+    notifyListeners();
+  }
+
+  String get rootMessage => _root.message;
+  Key get key => _root.key;
+
+  void add(Key key, {String message = "",  bool userGenerated = false}) {
     final node = ChatNode(key: key, message: message, userGenerated: userGenerated);
     
-    var found = root.find(key);
+    var found = _root.find(key);
     if (found != null) {
       found.message = message;
     } else {
-      tail ??= root.findTail();
+      tail ??= _root.findTail();
 
       if (tail!.userGenerated == userGenerated) {
         stream(message);
@@ -52,58 +65,58 @@ class MessageManager {
       }
     }
 
-    _callback?.call();
+    notifyListeners();
   }
 
-  static void remove(Key key) {
-    var parent = root.getParent(key);
+  void remove(Key key) {
+    var parent = _root.getParent(key);
     if (parent != null) {
       parent.children.removeWhere((element) => element.key == key);
-      tail = root.findTail();
+      tail = _root.findTail();
     }
     GenerationManager.cleanup();
-    _callback?.call();
+    notifyListeners();
   }
 
-  static void stream(String message) async {     
-    tail ??= root.findTail();
-    if (!MessageManager.busy && !(tail!.userGenerated)) {
+  void stream(String message) async {     
+    tail ??= _root.findTail();
+    if (!GenerationManager.busy && !(tail!.userGenerated)) {
       finalise();
     } else {
       tail!.messageController.add(message);
     }
   }
 
-  static void regenerate(Key key, Model model, Character character) { 
-    var parent = root.getParent(key);
+  void regenerate(Key key, BuildContext context) { 
+    var parent = _root.getParent(key);
     if (parent == null) {
       return;
     } else {
       branch(key, false);
-      MessageManager.busy = true;
-      GenerationManager.prompt(parent.message, model, character);
+      GenerationManager.busy = true;
+      GenerationManager.prompt(parent.message, context);
     }
   }
 
-  static void branch(Key key, bool userGenerated) {
-    var parent = root.getParent(key);
+  void branch(Key key, bool userGenerated) {
+    var parent = _root.getParent(key);
     if (parent != null) {
       parent.currentChild = null;
-      tail = root.findTail();
+      tail = _root.findTail();
     }
     add(UniqueKey(), userGenerated: userGenerated);
     GenerationManager.cleanup();
-    _callback?.call();
+    notifyListeners();
   }
 
-  static void finalise() {
-    tail ??= root.findTail();
+  void finalise() {
+    tail ??= _root.findTail();
     tail!.finaliseController.add(0);
-    MemoryManager.saveSessions();
+    notifyListeners();
   }
 
-  static void next(Key key) {
-    var parent = root.getParent(key);
+  void next(Key key) {
+    var parent = _root.getParent(key);
     if (parent != null) {
       if (parent.currentChild == null) {
         parent.currentChild = key;
@@ -111,17 +124,17 @@ class MessageManager {
         var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
         if (currentChildIndex < parent.children.length - 1) {
           parent.currentChild = parent.children[currentChildIndex + 1].key;
-          tail = root.findTail();
+          tail = _root.findTail();
         }
       }
     }
 
     GenerationManager.cleanup();
-    _callback?.call();
+    notifyListeners();
   }
 
-  static void last(Key key) {
-    var parent = root.getParent(key);
+  void last(Key key) {
+    var parent = _root.getParent(key);
     if (parent != null) {
       if (parent.currentChild == null) {
         parent.currentChild = key;
@@ -129,17 +142,17 @@ class MessageManager {
         var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
         if (currentChildIndex > 0) {
           parent.currentChild = parent.children[currentChildIndex - 1].key;
-          tail = root.findTail();
+          tail = _root.findTail();
         }
       }
     }
 
     GenerationManager.cleanup();
-    _callback?.call();
+    notifyListeners();
   }
 
-  static int siblingCount(Key key) {
-    var parent = root.getParent(key);
+  int siblingCount(Key key) {
+    var parent = _root.getParent(key);
     if (parent != null) {
       return parent.children.length;
     } else {
@@ -147,8 +160,8 @@ class MessageManager {
     }
   }
 
-  static int index(Key key) {
-    var parent = root.getParent(key);
+  int index(Key key) {
+    var parent = _root.getParent(key);
     if (parent != null) {
       return parent.children.indexWhere((element) => element.key == key);
     } else {
@@ -156,9 +169,9 @@ class MessageManager {
     }
   }
 
-  static Map<Key, bool> history() {
+  Map<Key, bool> history() {
     final Map<Key, bool> history = {};
-    var current = root;
+    var current = _root;
 
     while (current.currentChild != null) {
       current = current.find(current.currentChild!)!;
@@ -168,9 +181,9 @@ class MessageManager {
     return history;
   }
 
-  static List<Map<String, dynamic>> getMessages() {
+  List<Map<String, dynamic>> getMessages() {
     final List<Map<String, dynamic>> messages = [];
-    var current = root;
+    var current = _root;
 
     while (current.currentChild != null) {
       current = current.find(current.currentChild!)!;
@@ -193,11 +206,11 @@ class MessageManager {
     return messages;
   }
 
-  static StreamController<String> getMessageStream(Key key) {
-    return root.find(key)?.messageController ?? StreamController<String>.broadcast();
+  StreamController<String> getMessageStream(Key key) {
+    return _root.find(key)?.messageController ?? StreamController<String>.broadcast();
   }
 
-  static StreamController<int> getFinaliseStream(Key key) {
-    return root.find(key)?.finaliseController ?? StreamController<int>.broadcast();
+  StreamController<int> getFinaliseStream(Key key) {
+    return _root.find(key)?.finaliseController ?? StreamController<int>.broadcast();
   }
 }
