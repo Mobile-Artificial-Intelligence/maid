@@ -9,6 +9,7 @@ import 'package:maid/static/logger.dart';
 import 'package:maid/providers/session.dart';
 import 'package:image/image.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
   File profile = File("/assets/default_profile.png");
@@ -21,6 +22,15 @@ class Character extends ChangeNotifier {
 
   Character() {
     _initProfile().then((value) => resetAll());
+    SharedPreferences.getInstance().then((prefs) {
+      fromMap(json.decode(prefs.getString("last_character") ?? "{}"));
+    });
+  }
+
+  void save() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("last_character", json.encode(toMap()));
+    });
   }
 
   void fromMap(Map<String, dynamic> inputJson) {

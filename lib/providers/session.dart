@@ -12,7 +12,13 @@ class Session extends ChangeNotifier {
 
   Session() {
     SharedPreferences.getInstance().then((prefs) {
-      fromMap(json.decode(prefs.getString("last_session") ?? "{}"));
+      fromMap(json.decode(prefs.getString("last_session") ?? "{}") ?? {});
+    });
+  }
+
+  void _save() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("last_session", json.encode(toMap()));
     });
   }
 
@@ -112,6 +118,8 @@ class Session extends ChangeNotifier {
   void finalise() {
     tail ??= _root.findTail();
     tail!.finaliseController.add(0);
+
+    _save();
     notifyListeners();
   }
 

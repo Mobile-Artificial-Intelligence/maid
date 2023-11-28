@@ -32,7 +32,6 @@ class LocalGeneration {
   // Flag to check if the instance has been initialized
   bool _isInitialized = false;
   bool _hasStarted = false;
-  bool hasStarted() => _hasStarted;
 
   // Initialization logic
   void _initialize() {

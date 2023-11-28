@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/memory_manager.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,26 +26,28 @@ class _SessionsBodyState extends State<SessionsBody> {
     });
   }
 
-  void _save(Session session) async {
-    final prefs = await SharedPreferences.getInstance();
+  @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      final session = context.read<Session>();
 
-    String key = session.rootMessage;
-    if (key.isEmpty) key = "Session";
+      String key = session.rootMessage;
+      if (key.isEmpty) key = "Session";
 
-    _sessions[key] = session.toMap();
-    Logger.log("Session Saved: $key");
+      _sessions[key] = session.toMap();
+      Logger.log("Session Saved: $key");
 
-    prefs.setString("sessions", json.encode(_sessions));
-    prefs.setString("last_session", json.encode(session.toMap()));
+      prefs.setString("sessions", json.encode(_sessions));
+    });
     GenerationManager.cleanup();
+
+    super.dispose();
   }
   
   @override
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
-        _save(session);
-
         return Column(
           children: [
             const SizedBox(height: 20.0),
@@ -114,7 +115,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                             ),
                             onTap: () {
                               if (GenerationManager.busy) return;
-                              session.fromMap(_sessions[sessionKey]);
+                              session.fromMap(_sessions[sessionKey] ?? {});
                             },
                             onLongPress: () {
                               if (GenerationManager.busy) return;
