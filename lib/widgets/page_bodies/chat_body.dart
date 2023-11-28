@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatBody extends StatefulWidget {
   const ChatBody({super.key});
@@ -123,7 +125,12 @@ class _ChatBodyState extends State<ChatBody> {
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString("last_session", json.encode(session.toMap()));
+        });
+
         Map<Key, bool> history = session.history();
+        chatWidgets.clear();
         for (var key in history.keys) {
           chatWidgets.add(ChatMessage(
             key: key,
@@ -131,11 +138,13 @@ class _ChatBodyState extends State<ChatBody> {
           ));
         }
 
-        _consoleScrollController.animateTo(
-          _consoleScrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 50),
-          curve: Curves.easeOut,
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          _consoleScrollController.animateTo(
+            _consoleScrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 50),
+            curve: Curves.easeOut,
+          );
+        });
 
         return Builder(
           builder: (BuildContext context) => GestureDetector(
