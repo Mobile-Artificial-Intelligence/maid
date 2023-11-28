@@ -27,8 +27,12 @@ class Character extends ChangeNotifier {
     });
   }
 
-  void save() {
+  void save(Map<String,dynamic> characters) {
     SharedPreferences.getInstance().then((prefs) {
+      characters[name] = toMap();
+      Logger.log("Character Saved: $name");
+
+      prefs.setString("characters", json.encode(characters));
       prefs.setString("last_character", json.encode(toMap()));
     });
   }

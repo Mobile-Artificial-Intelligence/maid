@@ -28,9 +28,8 @@ class _SessionsBodyState extends State<SessionsBody> {
 
   @override
   void dispose() {
+    final session = context.read<Session>();
     SharedPreferences.getInstance().then((prefs) {
-      final session = context.read<Session>();
-
       String key = session.rootMessage;
       if (key.isEmpty) key = "Session";
 
@@ -72,21 +71,21 @@ class _SessionsBodyState extends State<SessionsBody> {
                 itemCount: _sessions.length,
                 itemBuilder: (context, index) {
                   String sessionKey = _sessions.keys.elementAt(index);
+                  var sessionData = _sessions[sessionKey];
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ClipRect(
                       child: Dismissible(
-                        key: _sessions[sessionKey].key,
+                        key: sessionData.key,
                         dismissThresholds: const {
                           DismissDirection.endToStart: 0.25,
                           DismissDirection.startToEnd: 0.25,
                         },
                         onDismissed: (direction) {
                           if (GenerationManager.busy) return;
-                          Session dismissedSession = _sessions[sessionKey];
                           _sessions.remove(sessionKey);
-                          if (dismissedSession == session) {
+                          if (sessionData == session) {
                             session.fromMap(_sessions.values.firstOrNull ?? {});
                           }
                         },
@@ -102,27 +101,27 @@ class _SessionsBodyState extends State<SessionsBody> {
                         ),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: _sessions[sessionKey] == session ? 
+                            color: sessionData == session ? 
                                    Theme.of(context).colorScheme.tertiary : 
                                    Theme.of(context).colorScheme.primary,
                             borderRadius: const BorderRadius.all(Radius.circular(15.0)),
                           ),
                           child: ListTile(
                             title: Text(
-                              _sessions[sessionKey],
+                              sessionData,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                             onTap: () {
                               if (GenerationManager.busy) return;
-                              session.fromMap(_sessions[sessionKey] ?? {});
+                              session.fromMap(sessionData ?? {});
                             },
                             onLongPress: () {
                               if (GenerationManager.busy) return;
                               showDialog(
                                 context: context,
                                 builder: (context) {
-                                  final TextEditingController controller = TextEditingController(text: _sessions[sessionKey]);
+                                  final TextEditingController controller = TextEditingController(text: sessionData);
                                   return AlertDialog(
                                     title: const Text(
                                       "Rename Session",
