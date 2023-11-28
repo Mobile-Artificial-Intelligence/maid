@@ -6,8 +6,7 @@ import 'package:maid/pages/generic_page.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/memory_manager.dart';
-import 'package:maid/static/message_manager.dart';
-import 'package:maid/providers/character.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
@@ -21,6 +20,7 @@ class ChatBody extends StatefulWidget {
 }
 
 class _ChatBodyState extends State<ChatBody> {
+  final TextEditingController _promptController = TextEditingController();
   final ScrollController _consoleScrollController = ScrollController();
   List<ChatMessage> chatWidgets = [];
 
@@ -76,11 +76,13 @@ class _ChatBodyState extends State<ChatBody> {
         FocusScope.of(context).unfocus();
       }
 
-      MessageManager.add(UniqueKey(), 
-        message: MessageManager.promptController.text.trim(), 
+      final session = context.read<Session>();
+
+      session.add(UniqueKey(), 
+        message: _promptController.text.trim(), 
         userGenerated: true
       );
-      MessageManager.add(UniqueKey());
+      session.add(UniqueKey());
 
       if (GenerationManager.remote && 
         context.read<Model>().parameters["remote_url"]!= null &&
@@ -89,170 +91,146 @@ class _ChatBodyState extends State<ChatBody> {
         context.read<Model>().parameters["remote_model"].toString().isNotEmpty
       ) {
         GenerationManager.prompt(
-          MessageManager.promptController.text.trim(), 
-          context.read<Model>(), 
-          context.read<Character>()
+          _promptController.text.trim(), 
+          context
         );
         setState(() {
-          MessageManager.busy = true;
-          MessageManager.promptController.clear();
+          GenerationManager.busy = true;
+          _promptController.clear();
         });
       } else if (!GenerationManager.remote && 
         FileManager.checkFileExists(Provider.of<Model>(context, listen: false).parameters["path"] ?? "")
       )  {
         GenerationManager.prompt(
-          MessageManager.promptController.text.trim(), 
-          context.read<Model>(), 
-          context.read<Character>()
+          _promptController.text.trim(), 
+          context
         );
         setState(() {
-          MessageManager.busy = true;
-          MessageManager.promptController.clear();
+          GenerationManager.busy = true;
+          _promptController.clear();
         });
       } else {
         _missingModelDialog();
         setState(() {
-          MessageManager.busy = false;
-          MessageManager.promptController.clear();
+          GenerationManager.busy = false;
+          _promptController.clear();
         });
       }
     });
   }
 
-  void updateCallback() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      chatWidgets.clear();
-      Map<Key, bool> history = MessageManager.history();
-      for (var key in history.keys) {
-        chatWidgets.add(ChatMessage(
-          key: key,
-          userGenerated: history[key] ?? false,
-        ));
-      }
-      _consoleScrollController.animateTo(
-        _consoleScrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 50),
-        curve: Curves.easeOut,
-      );
-      setState(() {});
-    });
-  }
-
-  @override
-  void initState() {
-    chatWidgets.clear();
-    Map<Key, bool> history = MessageManager.history();
-    for (var key in history.keys) {
-      chatWidgets.add(ChatMessage(
-        key: key,
-        userGenerated: history[key] ?? false,
-      ));
-    }
-    MessageManager.registerCallback(updateCallback);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    MessageManager.deregisterCallback();
-    super.dispose();
-  }
-  
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (BuildContext context) => GestureDetector(
-        onHorizontalDragEnd: (details) {
-          // Check if the drag is towards right with a certain velocity
-          if (details.primaryVelocity! > 100) {
-            // Open the drawer
-            Scaffold.of(context).openDrawer();
-          }
-        },
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-              ),
-            ),
-            Column(
+    return Consumer<Session>(
+      builder: (context, session, child) {
+        Map<Key, bool> history = session.history();
+        for (var key in history.keys) {
+          chatWidgets.add(ChatMessage(
+            key: key,
+            userGenerated: history[key] ?? false,
+          ));
+        }
+
+        _consoleScrollController.animateTo(
+          _consoleScrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 50),
+          curve: Curves.easeOut,
+        );
+
+        return Builder(
+          builder: (BuildContext context) => GestureDetector(
+            onHorizontalDragEnd: (details) {
+              // Check if the drag is towards right with a certain velocity
+              if (details.primaryVelocity! > 100) {
+                // Open the drawer
+                Scaffold.of(context).openDrawer();
+              }
+            },
+            child: Stack(
               children: [
-                Expanded(
-                  child: ListView.builder(
-                    controller: _consoleScrollController,
-                    itemCount: chatWidgets.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return chatWidgets[index];
-                    },
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      if (MessageManager.busy && !GenerationManager.remote)
-                        IconButton(
-                            onPressed: LocalGeneration.instance.stop,
-                            iconSize: 50,
-                            icon: const Icon(
-                              Icons.stop_circle_sharp,
-                              color: Colors.red,
-                            )),
-                      Expanded(
-                        child: TextField(
-                          keyboardType: TextInputType.multiline,
-                          minLines: 1,
-                          maxLines: 9,
-                          enableInteractiveSelection: true,
-                          focusNode: MessageManager.promptFocusNode,
-                          onSubmitted: (value) {
-                            if (!MessageManager.busy) {
-                              if (Provider.of<Model>(context, listen: false).parameters["path"]
-                                  .toString()
-                                  .isEmpty && !GenerationManager.remote) {
-                                _missingModelDialog();
-                              } else {
-                                send();
-                              }
-                            }
-                          },
-                          controller: MessageManager.promptController,
-                          cursorColor:
-                              Theme.of(context).colorScheme.secondary,
-                          decoration: InputDecoration(
-                              labelText: 'Prompt',
-                              hintStyle:
-                                  Theme.of(context).textTheme.labelSmall),
-                        ),
+                Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        controller: _consoleScrollController,
+                        itemCount: chatWidgets.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return chatWidgets[index];
+                        },
                       ),
-                      IconButton(
-                          onPressed: () {
-                            if (!MessageManager.busy) {
-                              if (Provider.of<Model>(context, listen: false).parameters["path"]
-                                  .toString()
-                                  .isEmpty && !GenerationManager.remote) {
-                                _missingModelDialog();
-                              } else {
-                                send();
-                              }
-                            }
-                          },
-                          iconSize: 50,
-                          icon: Icon(
-                            Icons.arrow_circle_right,
-                            color: MessageManager.busy
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).colorScheme.secondary,
-                          )),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          if (GenerationManager.busy && !GenerationManager.remote)
+                            IconButton(
+                                onPressed: LocalGeneration.instance.stop,
+                                iconSize: 50,
+                                icon: const Icon(
+                                  Icons.stop_circle_sharp,
+                                  color: Colors.red,
+                                )),
+                          Expanded(
+                            child: TextField(
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              maxLines: 9,
+                              enableInteractiveSelection: true,
+                              onSubmitted: (value) {
+                                if (!GenerationManager.busy) {
+                                  if (Provider.of<Model>(context, listen: false).parameters["path"]
+                                      .toString()
+                                      .isEmpty && !GenerationManager.remote) {
+                                    _missingModelDialog();
+                                  } else {
+                                    send();
+                                  }
+                                }
+                              },
+                              controller: _promptController,
+                              cursorColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              decoration: InputDecoration(
+                                  labelText: 'Prompt',
+                                  hintStyle:
+                                      Theme.of(context).textTheme.labelSmall),
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                if (!GenerationManager.busy) {
+                                  if (Provider.of<Model>(context, listen: false).parameters["path"]
+                                      .toString()
+                                      .isEmpty && !GenerationManager.remote) {
+                                    _missingModelDialog();
+                                  } else {
+                                    send();
+                                  }
+                                }
+                              },
+                              iconSize: 50,
+                              icon: Icon(
+                                Icons.arrow_circle_right,
+                                color: GenerationManager.busy
+                                    ? Theme.of(context).colorScheme.onPrimary
+                                    : Theme.of(context).colorScheme.secondary,
+                              )),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

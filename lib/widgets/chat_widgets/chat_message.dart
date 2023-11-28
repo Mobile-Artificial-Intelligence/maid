@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:maid/static/message_manager.dart';
+import 'package:maid/providers/session.dart';
 
 import 'package:maid/widgets/chat_widgets/code_box.dart';
 import 'package:maid/widgets/chat_widgets/typing_indicator.dart';
 import 'package:maid/widgets/chat_widgets/chat_controls.dart';
+import 'package:provider/provider.dart';
 
 class ChatMessage extends StatefulWidget {
   final bool userGenerated;
@@ -25,12 +26,13 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   @override
   void initState() {
     super.initState();
+    final session = context.read<Session>();
 
-    if (MessageManager.get(widget.key!).isNotEmpty) {
-      _parseMessage(MessageManager.get(widget.key!));
+    if (session.get(widget.key!).isNotEmpty) {
+      _parseMessage(session.get(widget.key!));
       _finalised = true;
     } else {
-      MessageManager.getMessageStream(widget.key!).stream.listen((textChunk) {
+      session.getMessageStream(widget.key!).stream.listen((textChunk) {
         setState(() {
           _message += textChunk;
           _messageWidgets.clear();
@@ -38,11 +40,11 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
         });
       });
 
-      MessageManager.getFinaliseStream(widget.key!).stream.listen((_) {
+      session.getFinaliseStream(widget.key!).stream.listen((_) {
         setState(() {
           _message = _message.trim();
           _parseMessage(_message);
-          MessageManager.add(widget.key!, message: _message, userGenerated: widget.userGenerated);
+          session.add(widget.key!, message: _message, userGenerated: widget.userGenerated);
           _finalised = true;
         });
       });
@@ -101,8 +103,8 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
   @override
   void dispose() {
-    MessageManager.getMessageStream(widget.key!).close();
-    MessageManager.getFinaliseStream(widget.key!).close();
+    context.read<Session>().getMessageStream(widget.key!).close();
+    context.read<Session>().getFinaliseStream(widget.key!).close();
     super.dispose();
   }
 }

@@ -1,17 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:maid/core/remote_generation.dart';
 import 'package:maid/core/local_generation.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/model.dart';
 
 class GenerationManager {
+  static bool busy = false;
   static bool remote = false;
 
-  static void prompt(String input, Model model, Character character) {
+  static void prompt(String input, BuildContext context) {
     if (remote) {
-      RemoteGeneration.prompt(input, model, character);
+      RemoteGeneration.prompt(input, context);
     } else {
-      LocalGeneration.instance.prompt(input, model, character);
+      LocalGeneration.instance.prompt(input, context);
     }
+  }
+
+  static void stop() {
+    LocalGeneration.instance.stop();
   }
 
   static void cleanup() {

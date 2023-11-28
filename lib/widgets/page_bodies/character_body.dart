@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/message_manager.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
@@ -254,7 +254,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                 ],
               ),
             ),
-            if (MessageManager.busy)
+            if (GenerationManager.busy)
               Positioned.fill(
                 child: Container(
                   color: Colors.black.withOpacity(0.4),
