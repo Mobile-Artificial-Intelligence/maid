@@ -20,6 +20,7 @@ class CharacterBody extends StatefulWidget {
 
 class _CharacterBodyState extends State<CharacterBody> {
   static Map<String, dynamic> _characters = {};
+  late Character cachedCharacter;
   
   @override
   void initState() {
@@ -32,8 +33,13 @@ class _CharacterBodyState extends State<CharacterBody> {
 
   @override
   void dispose() {
-    final character = context.read<Character>();
-    character.save(_characters);
+    SharedPreferences.getInstance().then((prefs) {
+      _characters[cachedCharacter.name] = cachedCharacter.toMap();
+      Logger.log("Character Saved: ${cachedCharacter.name}");
+
+      prefs.setString("characters", json.encode(_characters));
+      prefs.setString("last_character", json.encode(cachedCharacter.toMap()));
+    });
 
     GenerationManager.cleanup();
 
@@ -44,6 +50,8 @@ class _CharacterBodyState extends State<CharacterBody> {
   Widget build(BuildContext context) {
     return Consumer<Character>(
       builder: (context, character, child) {       
+        cachedCharacter = character;
+        
         return Stack(
           children: [
             SingleChildScrollView(

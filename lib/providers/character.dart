@@ -27,16 +27,6 @@ class Character extends ChangeNotifier {
     });
   }
 
-  void save(Map<String,dynamic> characters) {
-    SharedPreferences.getInstance().then((prefs) {
-      characters[name] = toMap();
-      Logger.log("Character Saved: $name");
-
-      prefs.setString("characters", json.encode(characters));
-      prefs.setString("last_character", json.encode(toMap()));
-    });
-  }
-
   void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson["profile"] != null) {
       profile = File(inputJson["profile"]);
