@@ -56,7 +56,10 @@ class _SessionsBodyState extends State<SessionsBody> {
             FilledButton(
               onPressed: () {
                 if (GenerationManager.busy) return;
-                session.newSession();
+                final newSession = Session.newSession();
+                setState(() {
+                  _sessions[newSession.rootMessage] = newSession.toMap();
+                });
               }, 
               child: Text(
                 "New Session",
@@ -73,9 +76,8 @@ class _SessionsBodyState extends State<SessionsBody> {
               child: ListView.builder(
                 itemCount: _sessions.length,
                 itemBuilder: (context, index) {
-                  Session sessionData = Session();
                   String sessionKey = _sessions.keys.elementAt(index);
-                  sessionData.fromMap(_sessions[sessionKey]);
+                  Session sessionData = Session.fromMap(_sessions[sessionKey]);
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),

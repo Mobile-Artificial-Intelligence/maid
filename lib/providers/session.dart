@@ -21,6 +21,14 @@ class Session extends ChangeNotifier {
     });
   }
 
+  Session.fromMap(Map<String, dynamic> inputJson) {
+    fromMap(inputJson);
+  }
+
+  Session.newSession() {
+    newSession();
+  }
+
   void _save() {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setString("last_session", json.encode(toMap()));
