@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/types/character.dart';
-import 'package:maid/types/model.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/model.dart';
+import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';
-import 'package:maid/static/theme.dart';
+import 'package:maid/providers/theme.dart';
 import 'package:maid/pages/mobile_home.dart';
 
 void main() {
@@ -24,6 +25,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => Model()),
         ChangeNotifierProvider(create: (context) => Character()),
+        ChangeNotifierProvider(create: (context) => Session()),
       ],
       child: const MaidApp(),
     ),
@@ -55,8 +57,8 @@ class MaidAppState extends State<MaidApp> {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Maid',
-          theme: lightTheme,
-          darkTheme: darkTheme,
+          theme: ThemeProvider.lightTheme(),
+          darkTheme: ThemeProvider.darkTheme(),
           themeMode: themeProvider.themeMode,
           home: homePage
         );

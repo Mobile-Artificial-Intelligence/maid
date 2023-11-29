@@ -6,9 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/message_manager.dart';
+import 'package:maid/providers/session.dart';
 import 'package:image/image.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
   File profile = File("/assets/default_profile.png");
@@ -21,6 +22,9 @@ class Character extends ChangeNotifier {
 
   Character() {
     _initProfile().then((value) => resetAll());
+    SharedPreferences.getInstance().then((prefs) {
+      fromMap(json.decode(prefs.getString("last_character") ?? "{}"));
+    });
   }
 
   void fromMap(Map<String, dynamic> inputJson) {
@@ -253,11 +257,11 @@ class Character extends ChangeNotifier {
     }
   }
   
-  String getPrePrompt() {
+  String getPrePrompt(Session session) {
     String result = _prePrompt.isNotEmpty ? _prePrompt.trim() : "";
 
     List<Map<String, dynamic>> history = _examples;
-    history += MessageManager.getMessages();
+    history += session.getMessages();
     if (history.isNotEmpty) {
       for (var i = 0; i < history.length; i++) {
         var prompt = '${_userAlias.trim()} ${history[i]["prompt"].trim()}';

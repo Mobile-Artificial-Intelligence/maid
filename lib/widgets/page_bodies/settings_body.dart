@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/theme.dart';
+import 'package:maid/providers/theme.dart';
 import 'package:maid/widgets/chat_widgets/code_box.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

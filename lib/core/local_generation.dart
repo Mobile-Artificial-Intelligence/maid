@@ -4,12 +4,14 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
+import 'package:flutter/material.dart';
+import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/message_manager.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/core/bindings.dart';
-import 'package:maid/types/character.dart';
-import 'package:maid/types/model.dart';
-import 'package:maid/static/memory_manager.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/model.dart';
+import 'package:provider/provider.dart';
 
 class LocalGeneration {
   static SendPort? _sendPort;
@@ -30,7 +32,6 @@ class LocalGeneration {
   // Flag to check if the instance has been initialized
   bool _isInitialized = false;
   bool _hasStarted = false;
-  bool hasStarted() => _hasStarted;
 
   // Initialization logic
   void _initialize() {
@@ -72,19 +73,21 @@ class LocalGeneration {
   }
 
 
-  void _init(String input, Model model, Character character) async {
+  void prompt(String input, BuildContext context) async {   
     if (_hasStarted) {
-      cleanup();
-      await Future.delayed(const Duration(seconds: 1));
+      _send(input);
+      return;
     }
     
     _hasStarted = true;
 
-    print(model.parameters.toString());
+    final model = context.read<Model>();
+    final character = context.read<Character>();
+    final session = context.read<Session>();
     
     final params = calloc<maid_params>();
     params.ref.path         = model.parameters["path"].toString().toNativeUtf8().cast<Char>();
-    params.ref.preprompt          = character.getPrePrompt().toNativeUtf8().cast<Char>();
+    params.ref.preprompt          = character.getPrePrompt(session).toNativeUtf8().cast<Char>();
     params.ref.input_prefix       = character.userAlias.trim().toNativeUtf8().cast<Char>();
     params.ref.input_suffix       = character.responseAlias.trim().toNativeUtf8().cast<Char>();
     params.ref.seed               = model.parameters["random_seed"] ? -1 : model.parameters["seed"];
@@ -114,34 +117,28 @@ class LocalGeneration {
 
     ReceivePort receivePort = ReceivePort();
     _sendPort = receivePort.sendPort;
-    prompt(input, model, character);
+    _send(input);
   
     Completer completer = Completer();
     receivePort.listen((data) {
       if (data is String) {
-        MessageManager.stream(data);
+        session.stream(data);
       } else if (data is SendPort) {
         completer.complete();
       } else if (data is int) {
-        MessageManager.busy = false;
-        MessageManager.stream("");
+        GenerationManager.busy = false;
+        session.stream("");
       }
     });
     await completer.future;
   }
 
-  void prompt(String input, Model model, Character character) async {
-    MessageManager.busy = true;
-    if (!_hasStarted) {
-      await MemoryManager.saveAll();
-      _init(input, model, character);
-    } else {
-      Logger.log("Input: $input");
-      Isolate.spawn(_promptIsolate, {
-        'input': input,
-        'port': _sendPort
-      });
-    }
+  void _send(String input) async {
+    Logger.log("Input: $input");
+    Isolate.spawn(_promptIsolate, {
+      'input': input,
+      'port': _sendPort
+    });
   }
 
   void stop() {

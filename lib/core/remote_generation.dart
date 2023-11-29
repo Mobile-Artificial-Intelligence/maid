@@ -1,19 +1,26 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/memory_manager.dart';
-import 'package:maid/types/character.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/message_manager.dart';
-import 'package:maid/types/model.dart';
+import 'package:maid/providers/session.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/model.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class RemoteGeneration {
   static List<int> _context = [];
   static List<Map<String, dynamic>> _messages = [];
   
-  static void prompt(String input, Model model, Character character) async {   
+  static void prompt(String input, BuildContext context) async {
+    final model = context.read<Model>();
+    final character = context.read<Character>();
+    final session = context.read<Session>();
+    
     _requestPermission().then((value) {
       if (!value) {
         return;
@@ -21,7 +28,7 @@ class RemoteGeneration {
     });
     
     _messages = character.examples;
-    _messages.addAll(MessageManager.getMessages());
+    _messages.addAll(session.getMessages());
     
     final url = Uri.parse("${model.parameters["remote_url"]}/api/generate");
     final headers = {"Content-Type": "application/json"};
@@ -72,7 +79,7 @@ class RemoteGeneration {
         }
 
         if (responseText != null && responseText.isNotEmpty) {
-          MessageManager.stream(responseText);
+          session.stream(responseText);
         }
 
         if (done ?? false) {
@@ -83,8 +90,8 @@ class RemoteGeneration {
       Logger.log('Error: $e');
     }
 
-    MessageManager.busy = false;
-    MessageManager.stream("");
+    GenerationManager.busy = false;
+    session.stream("");
     MemoryManager.saveMisc();
   }
 

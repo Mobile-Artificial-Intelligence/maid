@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/core/remote_generation.dart';
-import 'package:maid/types/model.dart';
+import 'package:maid/providers/model.dart';
 import 'package:provider/provider.dart';
 
 class RemoteDropdown extends StatefulWidget {

@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/message_manager.dart';
-import 'package:maid/types/character.dart';
+import 'package:maid/providers/character.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
@@ -20,42 +19,38 @@ class CharacterBody extends StatefulWidget {
 
 class _CharacterBodyState extends State<CharacterBody> {
   static Map<String, dynamic> _characters = {};
+  late Character cachedCharacter;
   
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final characterProvider = Provider.of<Character>(context, listen: false);
       final prefs = await SharedPreferences.getInstance();
       _characters = json.decode(prefs.getString("characters") ?? "{}");
-
-      if (_characters.isEmpty) {
-        characterProvider.resetAll();
-      } else {
-        characterProvider.fromMap(
-          _characters[
-            prefs.getString("last_character") ?? "Default"
-          ] ?? {}
-        );
-      }
+      setState(() {});
     });
   }
 
-  void _save(Character character) async {
-    final prefs = await SharedPreferences.getInstance();
-    _characters[character.name] = character.toMap();
-    Logger.log("Character Saved: ${character.name}");
-    
-    prefs.setString("characters", json.encode(_characters));
-    prefs.setString("last_character", character.name);
+  @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      _characters[cachedCharacter.name] = cachedCharacter.toMap();
+      Logger.log("Character Saved: ${cachedCharacter.name}");
+
+      prefs.setString("characters", json.encode(_characters));
+      prefs.setString("last_character", json.encode(cachedCharacter.toMap()));
+    });
+
     GenerationManager.cleanup();
+
+    super.dispose();
   }
   
   @override
   Widget build(BuildContext context) {
     return Consumer<Character>(
-      builder: (context, character, child) {
-        _save(character);
+      builder: (context, character, child) {       
+        cachedCharacter = character;
         
         return Stack(
           children: [
@@ -169,14 +164,13 @@ class _CharacterBodyState extends State<CharacterBody> {
                             onSubmitted: (value) {
                               if (_characters.keys.contains(value)) {
                                 character.fromMap(_characters[value] ?? {});
-                                Logger.log("Character Set: ${character.name}");;
+                                Logger.log("Character Set: ${character.name}");
                               } else if (value.isNotEmpty) {
                                 String oldName = character.name;
                                 Logger.log("Updating character $oldName ====> $value");
                                 character.setName(value);
                                 _characters.remove(oldName);
                               }
-                              setState(() {});
                             },
                           ),
                         ),
@@ -254,7 +248,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                 ],
               ),
             ),
-            if (MessageManager.busy)
+            if (GenerationManager.busy)
               Positioned.fill(
                 child: Container(
                   color: Colors.black.withOpacity(0.4),

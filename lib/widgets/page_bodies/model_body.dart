@@ -4,8 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/message_manager.dart';
-import 'package:maid/types/model.dart';
+import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
@@ -23,6 +22,7 @@ class ModelBody extends StatefulWidget {
 
 class _ModelBodyState extends State<ModelBody> {
   static Map<String, dynamic> _models = {};
+  late Model cachedModel;
 
   @override
   void initState() {
@@ -30,25 +30,29 @@ class _ModelBodyState extends State<ModelBody> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
       _models = json.decode(prefs.getString("models") ?? "{}");
+      setState(() {});
     });
   }
 
-  void _save(Model model) async {
-    final prefs = await SharedPreferences.getInstance();
+  @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      _models[cachedModel.preset] = cachedModel.toMap();
+      Logger.log("Model Saved: ${cachedModel.parameters["path"]}");
 
-    _models[model.preset] = model.toMap();
-    Logger.log("Model Saved: ${model.parameters["path"]}");
-    
-    prefs.setString("models", json.encode(_models));
-    prefs.setString("last_model", json.encode(model.toMap()));
+      prefs.setString("models", json.encode(_models));
+      prefs.setString("last_model", json.encode(cachedModel.toMap()));
+    });
     GenerationManager.cleanup();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Model>(
       builder: (context, model, child) {
-        _save(model);
+        cachedModel = model;
         
         return Stack(
           children: [
@@ -498,7 +502,7 @@ class _ModelBodyState extends State<ModelBody> {
                 ],
               ),
             ),
-            if (MessageManager.busy)
+            if (GenerationManager.busy)
               Positioned.fill(
                 child: Container(
                   color: Colors.black.withOpacity(0.4),
