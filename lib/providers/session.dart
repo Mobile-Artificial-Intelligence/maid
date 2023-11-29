@@ -12,7 +12,12 @@ class Session extends ChangeNotifier {
 
   Session() {
     SharedPreferences.getInstance().then((prefs) {
-      fromMap(json.decode(prefs.getString("last_session") ?? "{}") ?? {});
+      Map<String, dynamic> lastSession = json.decode(prefs.getString("last_session") ?? "{}") ?? {};
+      if (lastSession.isNotEmpty) {
+        fromMap(lastSession);
+      } else {
+        newSession();
+      }
     });
   }
 

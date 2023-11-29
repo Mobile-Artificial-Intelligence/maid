@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/providers/session.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
@@ -31,6 +30,7 @@ class _ModelBodyState extends State<ModelBody> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
       _models = json.decode(prefs.getString("models") ?? "{}");
+      setState(() {});
     });
   }
 

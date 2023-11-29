@@ -24,6 +24,7 @@ class _SessionsBodyState extends State<SessionsBody> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
       _sessions = json.decode(prefs.getString("sessions") ?? "{}");
+      setState(() {});
     });
   }
 
@@ -88,7 +89,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                         onDismissed: (direction) {
                           if (GenerationManager.busy) return;
                           _sessions.remove(sessionKey);
-                          if (sessionData.key == session.key) {
+                          if (sessionKey == session.rootMessage) {
                             session.fromMap(_sessions.values.firstOrNull ?? {});
                           }
                         },
