@@ -20,16 +20,6 @@ class Model extends ChangeNotifier {
     });
   }
 
-  void save(Map<String, dynamic> models) {
-    SharedPreferences.getInstance().then((prefs) {
-      models[preset] = toMap();
-      Logger.log("Model Saved: ${parameters["path"]}");
-
-      prefs.setString("models", json.encode(models));
-      prefs.setString("last_model", json.encode(toMap()));
-    });
-  }
-
   void setPreset(String preset) {
     _preset = preset;
     notifyListeners();

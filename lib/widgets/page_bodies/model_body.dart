@@ -23,6 +23,7 @@ class ModelBody extends StatefulWidget {
 
 class _ModelBodyState extends State<ModelBody> {
   static Map<String, dynamic> _models = {};
+  late Model cachedModel;
 
   @override
   void initState() {
@@ -35,9 +36,13 @@ class _ModelBodyState extends State<ModelBody> {
 
   @override
   void dispose() {
-    final model = context.read<Model>();
-    model.save(_models);
+    SharedPreferences.getInstance().then((prefs) {
+      _models[cachedModel.preset] = cachedModel.toMap();
+      Logger.log("Model Saved: ${cachedModel.parameters["path"]}");
 
+      prefs.setString("models", json.encode(_models));
+      prefs.setString("last_model", json.encode(cachedModel.toMap()));
+    });
     GenerationManager.cleanup();
 
     super.dispose();
@@ -47,6 +52,8 @@ class _ModelBodyState extends State<ModelBody> {
   Widget build(BuildContext context) {
     return Consumer<Model>(
       builder: (context, model, child) {
+        cachedModel = model;
+        
         return Stack(
           children: [
             SingleChildScrollView(

@@ -16,6 +16,7 @@ class SessionsBody extends StatefulWidget {
 
 class _SessionsBodyState extends State<SessionsBody> {
   static Map<String, dynamic> _sessions = {};
+  late Session cachedSession;
 
   @override
   void initState() {
@@ -28,12 +29,11 @@ class _SessionsBodyState extends State<SessionsBody> {
 
   @override
   void dispose() {
-    final session = context.read<Session>();
     SharedPreferences.getInstance().then((prefs) {
-      String key = session.rootMessage;
+      String key = cachedSession.rootMessage;
       if (key.isEmpty) key = "Session";
 
-      _sessions[key] = session.toMap();
+      _sessions[key] = cachedSession.toMap();
       Logger.log("Session Saved: $key");
 
       prefs.setString("sessions", json.encode(_sessions));
@@ -47,6 +47,8 @@ class _SessionsBodyState extends State<SessionsBody> {
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
+        cachedSession = session;
+        
         return Column(
           children: [
             const SizedBox(height: 20.0),
@@ -70,8 +72,9 @@ class _SessionsBodyState extends State<SessionsBody> {
               child: ListView.builder(
                 itemCount: _sessions.length,
                 itemBuilder: (context, index) {
+                  Session sessionData = Session();
                   String sessionKey = _sessions.keys.elementAt(index);
-                  var sessionData = _sessions[sessionKey];
+                  sessionData.fromMap(_sessions[sessionKey]);
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -108,20 +111,20 @@ class _SessionsBodyState extends State<SessionsBody> {
                           ),
                           child: ListTile(
                             title: Text(
-                              sessionData,
+                              sessionData.rootMessage,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                             onTap: () {
                               if (GenerationManager.busy) return;
-                              session.fromMap(sessionData ?? {});
+                              session.fromMap(sessionData.toMap());
                             },
                             onLongPress: () {
                               if (GenerationManager.busy) return;
                               showDialog(
                                 context: context,
                                 builder: (context) {
-                                  final TextEditingController controller = TextEditingController(text: sessionData);
+                                  final TextEditingController controller = TextEditingController(text: sessionData.rootMessage);
                                   return AlertDialog(
                                     title: const Text(
                                       "Rename Session",
