@@ -20,13 +20,14 @@ class ChatMessage extends StatefulWidget {
 
 class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
   final List<Widget> _messageWidgets = [];
+  late Session session;
   String _message = "";
   bool _finalised = false;
 
   @override
   void initState() {
     super.initState();
-    final session = context.read<Session>();
+    session = context.read<Session>();
 
     if (session.get(widget.key!).isNotEmpty) {
       _parseMessage(session.get(widget.key!));
@@ -103,7 +104,6 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
   @override
   void dispose() {
-    final session = context.read<Session>();
     session.getMessageStream(widget.key!).close();
     session.getFinaliseStream(widget.key!).close();
     super.dispose();

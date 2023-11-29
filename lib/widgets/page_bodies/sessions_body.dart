@@ -88,7 +88,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                         onDismissed: (direction) {
                           if (GenerationManager.busy) return;
                           _sessions.remove(sessionKey);
-                          if (sessionData == session) {
+                          if (sessionData.key == session.key) {
                             session.fromMap(_sessions.values.firstOrNull ?? {});
                           }
                         },
