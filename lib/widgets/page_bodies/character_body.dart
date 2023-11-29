@@ -28,6 +28,7 @@ class _CharacterBodyState extends State<CharacterBody> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
       _characters = json.decode(prefs.getString("characters") ?? "{}");
+      setState(() {});
     });
   }
 

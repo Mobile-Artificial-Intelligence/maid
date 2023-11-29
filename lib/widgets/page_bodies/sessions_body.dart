@@ -24,6 +24,7 @@ class _SessionsBodyState extends State<SessionsBody> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
       _sessions = json.decode(prefs.getString("sessions") ?? "{}");
+      setState(() {});
     });
   }
 
@@ -55,7 +56,10 @@ class _SessionsBodyState extends State<SessionsBody> {
             FilledButton(
               onPressed: () {
                 if (GenerationManager.busy) return;
-                session.newSession();
+                final newSession = Session.newSession();
+                setState(() {
+                  _sessions[newSession.rootMessage] = newSession.toMap();
+                });
               }, 
               child: Text(
                 "New Session",
@@ -72,9 +76,8 @@ class _SessionsBodyState extends State<SessionsBody> {
               child: ListView.builder(
                 itemCount: _sessions.length,
                 itemBuilder: (context, index) {
-                  Session sessionData = Session();
                   String sessionKey = _sessions.keys.elementAt(index);
-                  sessionData.fromMap(_sessions[sessionKey]);
+                  Session sessionData = Session.fromMap(_sessions[sessionKey]);
 
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -88,7 +91,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                         onDismissed: (direction) {
                           if (GenerationManager.busy) return;
                           _sessions.remove(sessionKey);
-                          if (sessionData == session) {
+                          if (sessionKey == session.rootMessage) {
                             session.fromMap(_sessions.values.firstOrNull ?? {});
                           }
                         },
@@ -104,7 +107,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                         ),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: sessionData == session ? 
+                            color: sessionKey == session.rootMessage ? 
                                    Theme.of(context).colorScheme.tertiary : 
                                    Theme.of(context).colorScheme.primary,
                             borderRadius: const BorderRadius.all(Radius.circular(15.0)),
@@ -117,7 +120,8 @@ class _SessionsBodyState extends State<SessionsBody> {
                             ),
                             onTap: () {
                               if (GenerationManager.busy) return;
-                              session.fromMap(sessionData.toMap());
+                              session.fromMap(_sessions[sessionKey]);
+                              setState(() {});
                             },
                             onLongPress: () {
                               if (GenerationManager.busy) return;
