@@ -6,7 +6,7 @@ import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';
-import 'package:maid/static/theme.dart';
+import 'package:maid/providers/theme.dart';
 import 'package:maid/pages/mobile_home.dart';
 
 void main() {
@@ -57,8 +57,8 @@ class MaidAppState extends State<MaidApp> {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Maid',
-          theme: lightTheme,
-          darkTheme: darkTheme,
+          theme: ThemeProvider.lightTheme(),
+          darkTheme: ThemeProvider.darkTheme(),
           themeMode: themeProvider.themeMode,
           home: homePage
         );
