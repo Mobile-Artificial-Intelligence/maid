@@ -105,7 +105,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                         ),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: sessionData == session ? 
+                            color: sessionKey == session.rootMessage ? 
                                    Theme.of(context).colorScheme.tertiary : 
                                    Theme.of(context).colorScheme.primary,
                             borderRadius: const BorderRadius.all(Radius.circular(15.0)),
@@ -118,7 +118,8 @@ class _SessionsBodyState extends State<SessionsBody> {
                             ),
                             onTap: () {
                               if (GenerationManager.busy) return;
-                              session.fromMap(sessionData.toMap());
+                              session.fromMap(_sessions[sessionKey]);
+                              setState(() {});
                             },
                             onLongPress: () {
                               if (GenerationManager.busy) return;
