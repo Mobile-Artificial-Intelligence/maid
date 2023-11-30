@@ -43,8 +43,13 @@ class ChatControlsState extends State<ChatControls> {
                 const SizedBox(width: 10.0),
                 CircleAvatar(
                   backgroundImage: const AssetImage("assets/default_profile.png"),
-                  foregroundImage: Image.file(Provider.of<Character>(context, listen: false).profile).image,
+                  foregroundImage: Image.file(context.read<Character>().profile).image,
                   radius: 16,
+                ),
+                const SizedBox(width: 10.0),
+                Text(
+                  context.read<Character>().name,
+                  style: Theme.of(context).textTheme.labelLarge,
                 )
               ],
             if (siblingCount > 1)
