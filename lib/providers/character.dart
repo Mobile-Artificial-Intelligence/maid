@@ -23,7 +23,12 @@ class Character extends ChangeNotifier {
   Character() {
     _initProfile().then((value) => resetAll());
     SharedPreferences.getInstance().then((prefs) {
-      fromMap(json.decode(prefs.getString("last_character") ?? "{}"));
+      Map<String, dynamic> lastCharacter = json.decode(prefs.getString("last_character") ?? "{}");
+      if (lastCharacter.isNotEmpty) {
+        fromMap(lastCharacter);
+      } else {
+        resetAll();
+      }
     });
   }
 

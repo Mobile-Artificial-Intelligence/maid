@@ -16,7 +16,12 @@ class Model extends ChangeNotifier {
 
   Model() {
     SharedPreferences.getInstance().then((prefs) {
-      fromMap(json.decode(prefs.getString("last_model") ?? "{}"));
+      Map<String, dynamic> lastModel= json.decode(prefs.getString("last_model") ?? "{}");
+      if (lastModel.isNotEmpty) {
+        fromMap(lastModel);
+      } else {
+        resetAll();
+      }
     });
   }
 
