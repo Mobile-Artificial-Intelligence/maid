@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(core LANGUAGES CXX)
 
-include(GNUInstallDirs)
 set(CMAKE_INSTALL_LIBDIR lib)
 
 set(BUILD_SHARED_LIBS ON)
