@@ -42,13 +42,10 @@ class LocalGeneration {
   }
 
   void _loadNativeLibrary() {
-    DynamicLibrary coreDynamic =
-      Platform.isMacOS || Platform.isIOS
-        ? DynamicLibrary.process() // macos and ios
-        : (DynamicLibrary.open(
-          Platform.isWindows // windows
-            ? 'core.dll'
-            : 'libcore.so')); // android and linux
+    DynamicLibrary coreDynamic = DynamicLibrary.process();
+
+    if (Platform.isWindows) coreDynamic = DynamicLibrary.open('core.dll');
+    if (Platform.isLinux) coreDynamic = DynamicLibrary.open('libcore.so');
 
     _nativeLibrary = NativeLibrary(coreDynamic);
   }
