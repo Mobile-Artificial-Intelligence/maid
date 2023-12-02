@@ -4,11 +4,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/core/local_generation.dart';
 import 'package:maid/pages/generic_page.dart';
+import 'package:maid/providers/character.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/model.dart';
+import 'package:maid/types/generation_context.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +54,8 @@ class _ChatBodyState extends State<ChatBody> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const GenericPage(title: "Model", body: ModelBody())));
+                          builder: (context) => const GenericPage(
+                              title: "Model", body: ModelBody())));
                 },
                 child: Text("Open Model Settings",
                     style: Theme.of(context).textTheme.labelLarge),
@@ -80,33 +83,45 @@ class _ChatBodyState extends State<ChatBody> {
 
       final session = context.read<Session>();
 
-      session.add(UniqueKey(), 
-        message: _promptController.text.trim(), 
-        userGenerated: true
-      );
+      session.add(UniqueKey(),
+          message: _promptController.text.trim(), userGenerated: true);
       session.add(UniqueKey());
 
-      if (GenerationManager.remote && 
-        context.read<Model>().parameters["remote_url"]!= null &&
-        context.read<Model>().parameters["remote_url"].toString().isNotEmpty &&
-        context.read<Model>().parameters["remote_model"] != null &&
-        context.read<Model>().parameters["remote_model"].toString().isNotEmpty
-      ) {
-        GenerationManager.prompt(
-          _promptController.text.trim(), 
+      if (GenerationManager.remote &&
+          context.read<Model>().parameters["remote_url"] != null &&
           context
-        );
+              .read<Model>()
+              .parameters["remote_url"]
+              .toString()
+              .isNotEmpty &&
+          context.read<Model>().parameters["remote_model"] != null &&
+          context
+              .read<Model>()
+              .parameters["remote_model"]
+              .toString()
+              .isNotEmpty) {
+        GenerationManager.prompt(
+            _promptController.text.trim(),
+            GenerationContext(
+                model: context.read<Model>(),
+                character: context.read<Character>(),
+                session: context.read<Session>()),
+            context.read<Session>().stream);
         setState(() {
           GenerationManager.busy = true;
           _promptController.clear();
         });
-      } else if (!GenerationManager.remote && 
-        FileManager.checkFileExists(Provider.of<Model>(context, listen: false).parameters["path"] ?? "")
-      )  {
+      } else if (!GenerationManager.remote &&
+          FileManager.checkFileExists(
+              Provider.of<Model>(context, listen: false).parameters["path"] ??
+                  "")) {
         GenerationManager.prompt(
-          _promptController.text.trim(), 
-          context
-        );
+            _promptController.text.trim(),
+            GenerationContext(
+                model: context.read<Model>(),
+                character: context.read<Character>(),
+                session: context.read<Session>()),
+            context.read<Session>().stream);
         setState(() {
           GenerationManager.busy = true;
           _promptController.clear();
@@ -177,7 +192,8 @@ class _ChatBodyState extends State<ChatBody> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          if (GenerationManager.busy && !GenerationManager.remote)
+                          if (GenerationManager.busy &&
+                              !GenerationManager.remote)
                             IconButton(
                                 onPressed: LocalGeneration.instance.stop,
                                 iconSize: 50,
@@ -193,9 +209,11 @@ class _ChatBodyState extends State<ChatBody> {
                               enableInteractiveSelection: true,
                               onSubmitted: (value) {
                                 if (!GenerationManager.busy) {
-                                  if (Provider.of<Model>(context, listen: false).parameters["path"]
-                                      .toString()
-                                      .isEmpty && !GenerationManager.remote) {
+                                  if (Provider.of<Model>(context, listen: false)
+                                          .parameters["path"]
+                                          .toString()
+                                          .isEmpty &&
+                                      !GenerationManager.remote) {
                                     _missingModelDialog();
                                   } else {
                                     send();
@@ -214,9 +232,11 @@ class _ChatBodyState extends State<ChatBody> {
                           IconButton(
                               onPressed: () {
                                 if (!GenerationManager.busy) {
-                                  if (Provider.of<Model>(context, listen: false).parameters["path"]
-                                      .toString()
-                                      .isEmpty && !GenerationManager.remote) {
+                                  if (Provider.of<Model>(context, listen: false)
+                                          .parameters["path"]
+                                          .toString()
+                                          .isEmpty &&
+                                      !GenerationManager.remote) {
                                     _missingModelDialog();
                                   } else {
                                     send();

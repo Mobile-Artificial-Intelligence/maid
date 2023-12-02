@@ -2,8 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/model.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
+import 'package:maid/types/generation_context.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
@@ -12,7 +16,8 @@ class Session extends ChangeNotifier {
 
   Session() {
     SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> lastSession = json.decode(prefs.getString("last_session") ?? "{}") ?? {};
+      Map<String, dynamic> lastSession =
+          json.decode(prefs.getString("last_session") ?? "{}") ?? {};
       if (lastSession.isNotEmpty) {
         fromMap(lastSession);
       } else {
@@ -65,9 +70,10 @@ class Session extends ChangeNotifier {
   String get rootMessage => _root.message;
   Key get key => _root.key;
 
-  void add(Key key, {String message = "",  bool userGenerated = false}) {
-    final node = ChatNode(key: key, message: message, userGenerated: userGenerated);
-    
+  void add(Key key, {String message = "", bool userGenerated = false}) {
+    final node =
+        ChatNode(key: key, message: message, userGenerated: userGenerated);
+
     var found = _root.find(key);
     if (found != null) {
       found.message = message;
@@ -97,7 +103,7 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  void stream(String message) async {     
+  void stream(String message) async {
     tail ??= _root.findTail();
     if (!GenerationManager.busy && !(tail!.userGenerated)) {
       finalise();
@@ -106,14 +112,20 @@ class Session extends ChangeNotifier {
     }
   }
 
-  void regenerate(Key key, BuildContext context) { 
+  void regenerate(Key key, BuildContext context) {
     var parent = _root.getParent(key);
     if (parent == null) {
       return;
     } else {
       branch(key, false);
       GenerationManager.busy = true;
-      GenerationManager.prompt(parent.message, context);
+      GenerationManager.prompt(
+          parent.message,
+          GenerationContext(
+              model: context.read<Model>(),
+              character: context.read<Character>(),
+              session: context.read<Session>()),
+          context.read<Session>().stream);
     }
   }
 
@@ -142,7 +154,8 @@ class Session extends ChangeNotifier {
       if (parent.currentChild == null) {
         parent.currentChild = key;
       } else {
-        var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
+        var currentChildIndex = parent.children
+            .indexWhere((element) => element.key == parent.currentChild);
         if (currentChildIndex < parent.children.length - 1) {
           parent.currentChild = parent.children[currentChildIndex + 1].key;
           tail = _root.findTail();
@@ -160,7 +173,8 @@ class Session extends ChangeNotifier {
       if (parent.currentChild == null) {
         parent.currentChild = key;
       } else {
-        var currentChildIndex = parent.children.indexWhere((element) => element.key == parent.currentChild);
+        var currentChildIndex = parent.children
+            .indexWhere((element) => element.key == parent.currentChild);
         if (currentChildIndex > 0) {
           parent.currentChild = parent.children[currentChildIndex - 1].key;
           tail = _root.findTail();
@@ -216,7 +230,7 @@ class Session extends ChangeNotifier {
         messages.last["response"] = current.message;
       }
     }
-    
+
     //remove last message if it is empty
     if (messages.last.isEmpty) {
       messages.remove(messages.last);
@@ -228,10 +242,12 @@ class Session extends ChangeNotifier {
   }
 
   StreamController<String> getMessageStream(Key key) {
-    return _root.find(key)?.messageController ?? StreamController<String>.broadcast();
+    return _root.find(key)?.messageController ??
+        StreamController<String>.broadcast();
   }
 
   StreamController<int> getFinaliseStream(Key key) {
-    return _root.find(key)?.finaliseController ?? StreamController<int>.broadcast();
+    return _root.find(key)?.finaliseController ??
+        StreamController<int>.broadcast();
   }
 }

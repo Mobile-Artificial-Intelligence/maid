@@ -1,63 +1,52 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/providers/session.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/types/generation_context.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 
 class RemoteGeneration {
   static List<int> _context = [];
-  static List<Map<String, dynamic>> _messages = [];
-  
-  static void prompt(String input, BuildContext context) async {
-    final model = context.read<Model>();
-    final character = context.read<Character>();
-    final session = context.read<Session>();
-    
+
+  static void prompt(String input, GenerationContext context,
+      void Function(String) callback) async {
     _requestPermission().then((value) {
       if (!value) {
         return;
       }
     });
-    
-    _messages = character.examples;
-    _messages.addAll(session.getMessages());
-    
-    final url = Uri.parse("${model.parameters["remote_url"]}/api/generate");
+
+    final url = Uri.parse("${context.remoteUrl}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
-      "model": model.parameters["remote_model"] ?? "llama2:7b-chat",
+      "model": context.remoteModel ?? "llama2:7b-chat",
       "prompt": input,
       "context": _context, // TODO: DEPRECATED SOON
-      "system": character.prePrompt,
-      "messages": _messages,
+      "system": context.prePrompt,
+      "messages": context.messages,
       "options": {
-        "num_keep": model.parameters["n_keep"],
-        "seed": model.parameters["random_seed"] ? -1 : model.parameters["seed"],
-        "num_predict": model.parameters["n_predict"],
-        "top_k": model.parameters["top_k"],
-        "top_p": model.parameters["top_p"],
-        "tfs_z": model.parameters["tfs_z"],
-        "typical_p": model.parameters["typical_p"],
-        "repeat_last_n": model.parameters["penalty_last_n"],
-        "temperature": model.parameters["temperature"],
-        "repeat_penalty": model.parameters["penalty_repeat"],
-        "presence_penalty": model.parameters["penalty_present"],
-        "frequency_penalty": model.parameters["penalty_freq"],
-        "mirostat": model.parameters["mirostat"],
-        "mirostat_tau": model.parameters["mirostat_tau"],
-        "mirostat_eta": model.parameters["mirostat_eta"],
-        "penalize_newline": model.parameters["penalize_nl"],
-        "num_ctx": model.parameters["n_ctx"],
-        "num_batch": model.parameters["n_batch"],
-        "num_thread": model.parameters["n_threads"],
+        "num_keep": context.nKeep,
+        "seed": context.seed,
+        "num_predict": context.nPredict,
+        "top_k": context.topK,
+        "top_p": context.topP,
+        "tfs_z": context.tfsZ,
+        "typical_p": context.typicalP,
+        "repeat_last_n": context.penaltyLastN,
+        "temperature": context.temperature,
+        "repeat_penalty": context.penaltyRepeat,
+        "presence_penalty": context.penaltyPresent,
+        "frequency_penalty": context.penaltyFreq,
+        "mirostat": context.mirostat,
+        "mirostat_tau": context.mirostatTau,
+        "mirostat_eta": context.mirostatEta,
+        "penalize_newline": context.penalizeNewline,
+        "num_ctx": context.nCtx,
+        "num_batch": context.nBatch,
+        "num_thread": context.nThread,
       }
     });
 
@@ -68,10 +57,12 @@ class RemoteGeneration {
 
       final streamedResponse = await request.send();
 
-      await for (var value in streamedResponse.stream.transform(utf8.decoder).transform(const LineSplitter())) {
+      await for (var value in streamedResponse.stream
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())) {
         final data = json.decode(value);
         final responseText = data['response'] as String?;
-        final newContext = data['context'] as List<dynamic>?; 
+        final newContext = data['context'] as List<dynamic>?;
         final done = data['done'] as bool?;
 
         if (newContext != null) {
@@ -79,7 +70,7 @@ class RemoteGeneration {
         }
 
         if (responseText != null && responseText.isNotEmpty) {
-          session.stream(responseText);
+          callback.call(responseText);
         }
 
         if (done ?? false) {
@@ -91,7 +82,7 @@ class RemoteGeneration {
     }
 
     GenerationManager.busy = false;
-    session.stream("");
+    callback.call("");
     MemoryManager.saveMisc();
   }
 
@@ -105,8 +96,7 @@ class RemoteGeneration {
     final headers = {"Accept": "application/json"};
 
     try {
-      var request = http.Request("GET", url)
-        ..headers.addAll(headers);
+      var request = http.Request("GET", url)..headers.addAll(headers);
 
       var response = await request.send();
       var responseString = await response.stream.bytesToString();

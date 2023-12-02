@@ -4,14 +4,10 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
-import 'package:flutter/material.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/providers/session.dart';
 import 'package:maid/core/bindings.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/model.dart';
-import 'package:provider/provider.dart';
+import 'package:maid/types/generation_context.dart';
 
 class LocalGeneration {
   static SendPort? _sendPort;
@@ -66,65 +62,64 @@ class LocalGeneration {
     _sendPort = args['port'] as SendPort?;
     String input = args['input'];
     Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
-    LocalGeneration.instance._nativeLibrary.core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
+    LocalGeneration.instance._nativeLibrary
+        .core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
   }
 
-
-  void prompt(String input, BuildContext context) async {   
+  void prompt(String input, GenerationContext context,
+      void Function(String) callback) async {
     if (_hasStarted) {
       _send(input);
       return;
     }
-    
+
     _hasStarted = true;
 
-    final model = context.read<Model>();
-    final character = context.read<Character>();
-    final session = context.read<Session>();
-    
     final params = calloc<maid_params>();
-    params.ref.path         = model.parameters["path"].toString().toNativeUtf8().cast<Char>();
-    params.ref.preprompt          = character.getPrePrompt(session).toNativeUtf8().cast<Char>();
-    params.ref.input_prefix       = character.userAlias.trim().toNativeUtf8().cast<Char>();
-    params.ref.input_suffix       = character.responseAlias.trim().toNativeUtf8().cast<Char>();
-    params.ref.seed               = model.parameters["random_seed"] ? -1 : model.parameters["seed"];
-    params.ref.n_ctx              = model.parameters["n_ctx"];
-    params.ref.n_threads          = model.parameters["n_threads"];
-    params.ref.n_batch            = model.parameters["n_batch"];
-    params.ref.n_predict          = model.parameters["n_predict"];
-    params.ref.n_keep             = model.parameters["n_keep"];
-    params.ref.instruct           = model.parameters["instruct"]            ? 1 : 0;
-    params.ref.interactive        = model.parameters["interactive"]         ? 1 : 0;
-    params.ref.memory_f16         = model.parameters["memory_f16"]          ? 1 : 0;
-    params.ref.penalize_nl        = model.parameters["penalize_nl"]         ? 1 : 0;
-    params.ref.top_k              = model.parameters["top_k"];
-    params.ref.top_p              = model.parameters["top_p"];
-    params.ref.tfs_z              = model.parameters["tfs_z"];
-    params.ref.typical_p          = model.parameters["typical_p"];
-    params.ref.temp               = model.parameters["temperature"];
-    params.ref.penalty_last_n     = model.parameters["penalty_last_n"];
-    params.ref.penalty_repeat     = model.parameters["penalty_repeat"];
-    params.ref.penalty_freq       = model.parameters["penalty_freq"];
-    params.ref.penalty_present    = model.parameters["penalty_present"];
-    params.ref.mirostat           = model.parameters["mirostat"];
-    params.ref.mirostat_tau       = model.parameters["mirostat_tau"];
-    params.ref.mirostat_eta       = model.parameters["mirostat_eta"];
+    params.ref.path = context.path.toString().toNativeUtf8().cast<Char>();
+    params.ref.preprompt = context.prePrompt.toNativeUtf8().cast<Char>();
+    params.ref.input_prefix =
+        context.userAlias.trim().toNativeUtf8().cast<Char>();
+    params.ref.input_suffix =
+        context.responseAlias.trim().toNativeUtf8().cast<Char>();
+    params.ref.seed = context.seed;
+    params.ref.n_ctx = context.nCtx;
+    params.ref.n_threads = context.nThread;
+    params.ref.n_batch = context.nBatch;
+    params.ref.n_predict = context.nPredict;
+    params.ref.n_keep = context.nKeep;
+    params.ref.instruct = context.instruct;
+    params.ref.interactive = context.interactive;
+    params.ref.memory_f16 = context.memoryF16;
+    params.ref.penalize_nl = context.penalizeNewline;
+    params.ref.top_k = context.topK;
+    params.ref.top_p = context.topP;
+    params.ref.tfs_z = context.tfsZ;
+    params.ref.typical_p = context.typicalP;
+    params.ref.temp = context.temperature;
+    params.ref.penalty_last_n = context.penaltyLastN;
+    params.ref.penalty_repeat = context.penaltyRepeat;
+    params.ref.penalty_freq = context.penaltyFreq;
+    params.ref.penalty_present = context.penaltyPresent;
+    params.ref.mirostat = context.mirostat;
+    params.ref.mirostat_tau = context.mirostatTau;
+    params.ref.mirostat_eta = context.mirostatEta;
 
     _nativeLibrary.core_init(params);
 
     ReceivePort receivePort = ReceivePort();
     _sendPort = receivePort.sendPort;
     _send(input);
-  
+
     Completer completer = Completer();
     receivePort.listen((data) {
       if (data is String) {
-        session.stream(data);
+        callback.call(data);
       } else if (data is SendPort) {
         completer.complete();
       } else if (data is int) {
         GenerationManager.busy = false;
-        session.stream("");
+        callback.call("");
       }
     });
     await completer.future;
@@ -132,10 +127,7 @@ class LocalGeneration {
 
   void _send(String input) async {
     Logger.log("Input: $input");
-    Isolate.spawn(_promptIsolate, {
-      'input': input,
-      'port': _sendPort
-    });
+    Isolate.spawn(_promptIsolate, {'input': input, 'port': _sendPort});
   }
 
   void stop() {
