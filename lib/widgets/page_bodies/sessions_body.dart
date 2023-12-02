@@ -56,7 +56,7 @@ class _SessionsBodyState extends State<SessionsBody> {
             FilledButton(
               onPressed: () {
                 if (GenerationManager.busy) return;
-                final newSession = Session.newSession();
+                final newSession = Session();
                 setState(() {
                   _sessions[newSession.rootMessage] = newSession.toMap();
                 });

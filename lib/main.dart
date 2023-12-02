@@ -42,6 +42,10 @@ class MaidApp extends StatefulWidget {
 class MaidAppState extends State<MaidApp> {
   @override
   Widget build(BuildContext context) {
+    context.read<Model>().init();
+    context.read<Character>().init();
+    context.read<Session>().init();
+
     final screenSize = MediaQuery.of(context).size;
     final aspectRatio = screenSize.width / screenSize.height;
 

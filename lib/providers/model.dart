@@ -14,17 +14,19 @@ class Model extends ChangeNotifier {
 
   bool _local = false;
 
-  Model() {
-    Logger.log("Model Created");
-    SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> lastModel= json.decode(prefs.getString("last_model") ?? "{}");
-      if (lastModel.isNotEmpty) {
-        fromMap(lastModel);
-        Logger.log(lastModel.toString());
-      } else {
-        resetAll();
-      }
-    });
+  void init() async {
+    Logger.log("Model Initialised");
+
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastModel= json.decode(prefs.getString("last_model") ?? "{}");
+
+    if (lastModel.isNotEmpty) {
+      fromMap(lastModel);
+      Logger.log(lastModel.toString());
+    } else {
+      resetAll();
+    }
   }
 
   void setPreset(String preset) {

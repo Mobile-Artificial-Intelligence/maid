@@ -15,24 +15,26 @@ class Session extends ChangeNotifier {
   ChatNode _root = ChatNode(key: UniqueKey());
   ChatNode? tail;
 
+  void init() async {
+    Logger.log("Session Initialised");
+
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastSession = json.decode(prefs.getString("last_session") ?? "{}") ?? {};
+
+    if (lastSession.isNotEmpty) {
+      fromMap(lastSession);
+    } else {
+      newSession();
+    }
+  }
+
   Session() {
-    Logger.log("Session Created");
-    SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> lastSession = json.decode(prefs.getString("last_session") ?? "{}") ?? {};
-      if (lastSession.isNotEmpty) {
-        fromMap(lastSession);
-      } else {
-        newSession();
-      }
-    });
+    newSession();
   }
 
   Session.fromMap(Map<String, dynamic> inputJson) {
     fromMap(inputJson);
-  }
-
-  Session.newSession() {
-    newSession();
   }
 
   void _save() {
