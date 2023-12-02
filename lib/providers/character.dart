@@ -21,14 +21,17 @@ class Character extends ChangeNotifier {
   List<Map<String,dynamic>> _examples = [];
 
   Character() {
-    _initProfile().then((value) => resetAll());
-    SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> lastCharacter = json.decode(prefs.getString("last_character") ?? "{}");
-      if (lastCharacter.isNotEmpty) {
-        fromMap(lastCharacter);
-      } else {
-        resetAll();
-      }
+    Logger.log("Character Created");
+    _initProfile().then((value) {
+      SharedPreferences.getInstance().then((prefs) {
+        Map<String, dynamic> lastCharacter = json.decode(prefs.getString("last_character") ?? "{}");
+        if (lastCharacter.isNotEmpty) {
+          Logger.log(lastCharacter.toString());
+          fromMap(lastCharacter);
+        } else {
+          resetAll();
+        }
+      });
     });
   }
 

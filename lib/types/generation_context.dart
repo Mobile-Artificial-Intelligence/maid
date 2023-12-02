@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
-import 'package:provider/provider.dart';
 
 class GenerationContext {
   late List<Map<String, dynamic>> _messages;
@@ -83,6 +81,8 @@ class GenerationContext {
       _remoteModel = model.parameters["remote_model"];
       _path = model.parameters["path"];
       _prePrompt = character.prePrompt;
+      _userAlias = character.userAlias;
+      _responseAlias = character.responseAlias;
       _nKeep = model.parameters["n_keep"];
       _seed = model.parameters["random_seed"] ? -1 : model.parameters["seed"];
       _nPredict = model.parameters["n_predict"];

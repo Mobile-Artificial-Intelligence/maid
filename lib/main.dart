@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/providers/character.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
+import 'package:maid/providers/character.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/model.dart';
+import 'package:maid/static/logger.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/types/generation_context.dart';
@@ -15,9 +16,9 @@ class Session extends ChangeNotifier {
   ChatNode? tail;
 
   Session() {
+    Logger.log("Session Created");
     SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> lastSession =
-          json.decode(prefs.getString("last_session") ?? "{}") ?? {};
+      Map<String, dynamic> lastSession = json.decode(prefs.getString("last_session") ?? "{}") ?? {};
       if (lastSession.isNotEmpty) {
         fromMap(lastSession);
       } else {
