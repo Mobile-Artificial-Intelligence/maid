@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/providers/theme.dart';
+import 'package:maid/main.dart';
 import 'package:maid/widgets/chat_widgets/code_box.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,9 +20,9 @@ class _SettingsBodyState extends State<SettingsBody> {
         children: [
           SwitchListTile(
             title: const Text('Theme (Light/Dark)'),
-            value: Provider.of<ThemeProvider>(context, listen: false).isDarkMode,
+            value: Provider.of<MainProvider>(context, listen: false).isDarkMode,
             onChanged: (value) {
-              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+              Provider.of<MainProvider>(context, listen: false).toggleTheme();
             },
           ),
           FilledButton(

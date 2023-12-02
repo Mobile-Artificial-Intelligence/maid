@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/character.dart';
+import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';
-import 'package:maid/providers/theme.dart';
 import 'package:maid/pages/mobile_home.dart';
 
 void main() {
@@ -22,7 +22,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => MainProvider()),
         ChangeNotifierProvider(create: (context) => Model()),
         ChangeNotifierProvider(create: (context) => Character()),
         ChangeNotifierProvider(create: (context) => Session()),
@@ -30,6 +30,19 @@ void main() {
       child: const MaidApp(),
     ),
   );
+}
+
+class MainProvider extends ChangeNotifier {
+  ThemeMode _themeMode = ThemeMode.dark;
+
+  ThemeMode get themeMode => _themeMode;
+
+  bool get isDarkMode => _themeMode == ThemeMode.dark;
+
+  void toggleTheme() {
+    _themeMode = _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    notifyListeners();
+  }
 }
 
 class MaidApp extends StatefulWidget {
@@ -56,14 +69,14 @@ class MaidAppState extends State<MaidApp> {
       homePage = const MobileHomePage(title: 'Maid');
     }
 
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
+    return Consumer<MainProvider>(
+      builder: (context, MainProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Maid',
-          theme: ThemeProvider.lightTheme(),
-          darkTheme: ThemeProvider.darkTheme(),
-          themeMode: themeProvider.themeMode,
+          theme: Themes.lightTheme(),
+          darkTheme: Themes.darkTheme(),
+          themeMode: MainProvider.themeMode,
           home: homePage
         );
       },
