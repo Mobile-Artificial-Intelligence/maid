@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/providers/character.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
+import 'package:maid/providers/character.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
 import 'package:maid/static/memory_manager.dart';
@@ -42,6 +42,10 @@ class MaidApp extends StatefulWidget {
 class MaidAppState extends State<MaidApp> {
   @override
   Widget build(BuildContext context) {
+    context.read<Model>().init();
+    context.read<Character>().init();
+    context.read<Session>().init();
+
     final screenSize = MediaQuery.of(context).size;
     final aspectRatio = screenSize.width / screenSize.height;
 

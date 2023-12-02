@@ -20,23 +20,38 @@ class Character extends ChangeNotifier {
 
   List<Map<String,dynamic>> _examples = [];
 
-  Character() {
-    _initProfile().then((value) => resetAll());
-    SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> lastCharacter = json.decode(prefs.getString("last_character") ?? "{}");
-      if (lastCharacter.isNotEmpty) {
-        fromMap(lastCharacter);
-      } else {
-        resetAll();
-      }
-    });
+  void init() async {
+    Logger.log("Character Initialised");
+
+    Directory docDir = await getApplicationDocumentsDirectory();
+    String filePath = '${docDir.path}/default_profile.png';
+
+    File newProfileFile = File(filePath);
+    if (!await newProfileFile.exists()) {
+      ByteData data = await rootBundle.load('assets/default_profile.png');
+      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      await newProfileFile.writeAsBytes(bytes);
+    }
+
+    profile = newProfileFile;
+
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastCharacter = json.decode(prefs.getString("last_character") ?? "{}");
+
+    if (lastCharacter.isNotEmpty) {
+      Logger.log(lastCharacter.toString());
+      fromMap(lastCharacter);
+    } else {
+      resetAll();
+    }
   }
 
   void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson["profile"] != null) {
       profile = File(inputJson["profile"]);
     } else {
-      _initProfile().then((value) => resetAll());
+      init();
     }
     
     _name = inputJson["name"] ?? "Unknown";
@@ -123,20 +138,6 @@ class Character extends ChangeNotifier {
   String get prePrompt => _prePrompt;
 
   List<Map<String,dynamic>> get examples => _examples;
-
-  Future<void> _initProfile() async {
-    Directory docDir = await getApplicationDocumentsDirectory();
-    String filePath = '${docDir.path}/default_profile.png';
-
-    File newProfileFile = File(filePath);
-    if (!await newProfileFile.exists()) {
-      ByteData data = await rootBundle.load('assets/default_profile.png');
-      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-      await newProfileFile.writeAsBytes(bytes);
-    }
-
-    profile = newProfileFile;
-  }
 
   void resetAll() async {
     // Reset all the internal state to the defaults
