@@ -41,7 +41,7 @@ class LocalGeneration {
     DynamicLibrary coreDynamic = DynamicLibrary.process();
 
     if (Platform.isWindows) coreDynamic = DynamicLibrary.open('core.dll');
-    if (Platform.isLinux) coreDynamic = DynamicLibrary.open('libcore.so');
+    if (Platform.isLinux || Platform.isAndroid) coreDynamic = DynamicLibrary.open('libcore.so');
 
     _nativeLibrary = NativeLibrary(coreDynamic);
   }
