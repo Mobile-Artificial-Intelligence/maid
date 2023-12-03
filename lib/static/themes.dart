@@ -4,6 +4,7 @@ class Themes {
   static ThemeData lightTheme() {
     return genericTheme(
       Colors.white,
+      Colors.grey.shade700,
       Colors.grey.shade300,
       Colors.black,
       Colors.blue,
@@ -15,6 +16,7 @@ class Themes {
   static ThemeData darkTheme() {
     return genericTheme(
       Colors.grey.shade900,
+      Colors.black,
       Colors.grey.shade800,
       Colors.white,
       Colors.blue,
@@ -25,6 +27,7 @@ class Themes {
 
   static ThemeData genericTheme(
     Color background,
+    Color onBackground,
     Color primary,
     Color onPrimary,
     Color secondary,
@@ -129,11 +132,16 @@ class Themes {
         thumbColor: secondary,
         overlayColor: tertiary,
       ),
-      navigationRailTheme: const NavigationRailThemeData(
-        selectedIconTheme: IconThemeData(color: Colors.white)
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: onBackground,
+        indicatorColor: background,
+        selectedIconTheme: IconThemeData(
+          color: secondary
+        )
       ),
       colorScheme: ColorScheme.dark(
         background: background,
+        onBackground: onBackground,
         primary: primary,
         onPrimary: onPrimary,
         secondary: secondary,
