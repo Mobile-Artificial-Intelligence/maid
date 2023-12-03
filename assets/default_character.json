@@ -5,8 +5,12 @@
     "response_alias":"ASSISTANT:",
     "examples":[
         {
-            "prompt": "Hello how are you today", 
-            "response": "Hello Monsieur, I am doing wonderful today. How are you?"
+            "role": "user",
+            "content": "Hello how are you today"
+        },
+        {
+            "role": "assistant",
+            "content": "Hello Monsieur, I am doing wonderful today. How are you?"
         }
     ]
 }

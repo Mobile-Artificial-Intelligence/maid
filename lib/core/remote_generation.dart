@@ -48,6 +48,23 @@ class RemoteGeneration {
       ..body = body;
   }
 
+  static Request openAiRequest(String input, GenerationContext context) {
+    final url = Uri.parse("${context.remoteUrl}/v1/chat/completions");
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${context.apiKey}"
+    };
+    final body = json.encode({
+      "model": context.remoteModel ?? "gpt-3.5-turbo",
+      "messages": context.messages,
+      "temperature": context.temperature,
+    });
+
+    return Request("POST", url)
+      ..headers.addAll(headers)
+      ..body = body;
+  }
+
   static void prompt(String input, GenerationContext context,
       void Function(String) callback) async {
     _requestPermission().then((value) {

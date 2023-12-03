@@ -225,13 +225,16 @@ class Session extends ChangeNotifier {
 
     while (current.currentChild != null) {
       current = current.find(current.currentChild!)!;
+      String role;
       if (current.userGenerated) {
-        messages.add({
-          "prompt": current.message,
-        });
+        role = "user";
       } else {
-        messages.last["response"] = current.message;
+        role = "assistant";
       }
+      messages.add({
+        "role": role,
+        "content": current.message
+      });
     }
 
     //remove last message if it is empty
