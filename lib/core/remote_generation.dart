@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/logger.dart';
@@ -11,14 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 class RemoteGeneration {
   static List<int> _context = [];
 
-  static void prompt(String input, GenerationContext context,
-      void Function(String) callback) async {
-    _requestPermission().then((value) {
-      if (!value) {
-        return;
-      }
-    });
-
+  static Request ollamaRequest(String input, GenerationContext context) {
     final url = Uri.parse("${context.remoteUrl}/api/generate");
     final headers = {"Content-Type": "application/json"};
     final body = json.encode({
@@ -50,10 +43,21 @@ class RemoteGeneration {
       }
     });
 
+    return Request("POST", url)
+      ..headers.addAll(headers)
+      ..body = body;
+  }
+
+  static void prompt(String input, GenerationContext context,
+      void Function(String) callback) async {
+    _requestPermission().then((value) {
+      if (!value) {
+        return;
+      }
+    });
+
     try {
-      var request = http.Request("POST", url)
-        ..headers.addAll(headers)
-        ..body = body;
+      var request = ollamaRequest(input, context);
 
       final streamedResponse = await request.send();
 
@@ -96,7 +100,7 @@ class RemoteGeneration {
     final headers = {"Accept": "application/json"};
 
     try {
-      var request = http.Request("GET", url)..headers.addAll(headers);
+      var request = Request("GET", url)..headers.addAll(headers);
 
       var response = await request.send();
       var responseString = await response.stream.bytesToString();
