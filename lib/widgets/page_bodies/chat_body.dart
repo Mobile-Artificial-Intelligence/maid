@@ -7,7 +7,6 @@ import 'package:maid/pages/generic_page.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/static/memory_manager.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/types/generation_context.dart';
@@ -76,70 +75,60 @@ class _ChatBodyState extends State<ChatBody> {
   }
 
   void send() {
-    MemoryManager.saveAll().then((value) {
-      if (Platform.isAndroid || Platform.isIOS) {
-        FocusScope.of(context).unfocus();
-      }
+    if (Platform.isAndroid || Platform.isIOS) {
+      FocusScope.of(context).unfocus();
+    }
 
-      final session = context.read<Session>();
+    final session = context.read<Session>();
+    final genContext = GenerationContext(
+      model: context.read<Model>(),
+      character: context.read<Character>(),
+      session: context.read<Session>()
+    );
+    final aptType = GenerationManager.checkApiRequirements(genContext);
 
-      session.add(UniqueKey(),
-          message: _promptController.text.trim(), userGenerated: true);
-      session.add(UniqueKey());
+    session.add(
+      UniqueKey(), 
+      message: _promptController.text.trim(), 
+      userGenerated: true
+    );
+    session.add(UniqueKey());
 
-      if (GenerationManager.remote &&
-          context.read<Model>().parameters["remote_url"] != null &&
-          context
-              .read<Model>()
-              .parameters["remote_url"]
-              .toString()
-              .isNotEmpty &&
-          context.read<Model>().parameters["remote_model"] != null &&
-          context
-              .read<Model>()
-              .parameters["remote_model"]
-              .toString()
-              .isNotEmpty) {
-        GenerationManager.prompt(
-            _promptController.text.trim(),
-            GenerationContext(
-                model: context.read<Model>(),
-                character: context.read<Character>(),
-                session: context.read<Session>()),
-            context.read<Session>().stream);
-        setState(() {
-          GenerationManager.busy = true;
-          _promptController.clear();
-        });
-      } else if (!GenerationManager.remote &&
-          FileManager.checkFileExists(
-              Provider.of<Model>(context, listen: false).parameters["path"] ??
-                  "")) {
-        GenerationManager.prompt(
-            _promptController.text.trim(),
-            GenerationContext(
-                model: context.read<Model>(),
-                character: context.read<Character>(),
-                session: context.read<Session>()),
-            context.read<Session>().stream);
-        setState(() {
-          GenerationManager.busy = true;
-          _promptController.clear();
-        });
-      } else {
-        _missingModelDialog();
-        setState(() {
-          GenerationManager.busy = false;
-          _promptController.clear();
-        });
-      }
-    });
+    if (aptType != ApiType.local) {
+      GenerationManager.prompt(
+          _promptController.text.trim(),
+          genContext,
+          context.read<Session>().stream);
+      setState(() {
+        GenerationManager.busy = true;
+        _promptController.clear();
+      });
+    } 
+    else if (genContext.apiType == ApiType.local) {
+      GenerationManager.prompt(
+          _promptController.text.trim(),
+          genContext,
+          context.read<Session>().stream);
+      setState(() {
+        GenerationManager.busy = true;
+        _promptController.clear();
+      });
+    } 
+    else {
+      _missingModelDialog();
+      setState(() {
+        GenerationManager.busy = false;
+        _promptController.clear();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
+        final model = context.watch<Model>();
+        
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("last_session", json.encode(session.toMap()));
         });
@@ -193,7 +182,7 @@ class _ChatBodyState extends State<ChatBody> {
                       child: Row(
                         children: [
                           if (GenerationManager.busy &&
-                              !GenerationManager.remote)
+                              model.apiType != ApiType.local)
                             IconButton(
                                 onPressed: LocalGeneration.instance.stop,
                                 iconSize: 50,
@@ -209,11 +198,7 @@ class _ChatBodyState extends State<ChatBody> {
                               enableInteractiveSelection: true,
                               onSubmitted: (value) {
                                 if (!GenerationManager.busy) {
-                                  if (Provider.of<Model>(context, listen: false)
-                                          .parameters["path"]
-                                          .toString()
-                                          .isEmpty &&
-                                      !GenerationManager.remote) {
+                                  if (model.parameters["path"].isEmpty && model.apiType != ApiType.local) {
                                     _missingModelDialog();
                                   } else {
                                     send();
@@ -232,11 +217,7 @@ class _ChatBodyState extends State<ChatBody> {
                           IconButton(
                               onPressed: () {
                                 if (!GenerationManager.busy) {
-                                  if (Provider.of<Model>(context, listen: false)
-                                          .parameters["path"]
-                                          .toString()
-                                          .isEmpty &&
-                                      !GenerationManager.remote) {
+                                  if (model.parameters["path"].isEmpty && model.apiType != ApiType.local) {
                                     _missingModelDialog();
                                   } else {
                                     send();

@@ -6,10 +6,11 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/dialogs.dart';
+import 'package:maid/widgets/settings_widgets/api_dropdown.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
-import 'package:maid/widgets/settings_widgets/remote_dropdown.dart';
+import 'package:maid/widgets/settings_widgets/model_dropdown.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -144,6 +145,8 @@ class _ModelBodyState extends State<ModelBody> {
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 20.0),
+                  const ApiDropdown(),
+                  const SizedBox(height: 8.0),
                   MaidTextField(
                     headingText: 'Remote URL', 
                     labelText: 'Remote URL',
@@ -153,7 +156,7 @@ class _ModelBodyState extends State<ModelBody> {
                     } ,
                   ),
                   const SizedBox(height: 8.0),
-                  RemoteDropdown(url: model.parameters["remote_url"] ?? "http://0.0.0.0:11434"),
+                  const ModelDropdown(),
                   const SizedBox(height: 20.0),
                   Divider(
                     height: 20,
@@ -167,25 +170,26 @@ class _ModelBodyState extends State<ModelBody> {
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 20.0),
-                  if (model.local) ...[
-                    ListTile(
-                      title: Row(
-                        children: [
-                          const Expanded(
-                            child: Text("Model Path"),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              model.parameters["path"],
-                              textAlign: TextAlign.end,
+                  if (model.apiType == ApiType.local) 
+                    ...[
+                      ListTile(
+                        title: Row(
+                          children: [
+                            const Expanded(
+                              child: Text("Model Path"),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                model.parameters["path"],
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 15.0),
-                  ],
+                      const SizedBox(height: 15.0),
+                    ],
                   DoubleButtonRow(
                       leftText: "Load GGUF",
                       leftOnPressed: () {
@@ -194,14 +198,14 @@ class _ModelBodyState extends State<ModelBody> {
                           model.loadModelFile
                         ).then((value) {
                           if (model.parameters["path"] != null) {
-                            model.setLocal(true);
+                            model.setApiType(ApiType.local);
                           }
                         });
                       },
                       rightText: "Unload GGUF",
                       rightOnPressed: () {
                         model.setParameter("path", null);
-                        model.setLocal(false);
+                        model.setApiType(ApiType.none);
                       }),
                   const SizedBox(height: 20.0),
                   Divider(
@@ -233,35 +237,36 @@ class _ModelBodyState extends State<ModelBody> {
                     ),
                   ),
                   const SizedBox(height: 15.0),
-                  if (model.local) ...[
-                    SwitchListTile(
-                      title: const Text('instruct'),
-                      value: model.parameters["instruct"] ?? true,
-                      onChanged: (value) {
-                        setState(() {
-                          model.setParameter("instruct", value);
-                        });
-                      },
-                    ),
-                    SwitchListTile(
-                      title: const Text('interactive'),
-                      value: model.parameters["interactive"] ?? true,
-                      onChanged: (value) {
-                        setState(() {
-                          model.setParameter("interactive", value);
-                        });
-                      },
-                    ),
-                    SwitchListTile(
-                      title: const Text('memory_f16'),
-                      value: model.parameters["memory_f16"] ?? false,
-                      onChanged: (value) {
-                        setState(() {
-                          model.setParameter("memory_f16", value);
-                        });
-                      },
-                    )
-                  ],
+                  if (model.apiType == ApiType.local) 
+                    ...[
+                      SwitchListTile(
+                        title: const Text('instruct'),
+                        value: model.parameters["instruct"] ?? true,
+                        onChanged: (value) {
+                          setState(() {
+                            model.setParameter("instruct", value);
+                          });
+                        },
+                      ),
+                      SwitchListTile(
+                        title: const Text('interactive'),
+                        value: model.parameters["interactive"] ?? true,
+                        onChanged: (value) {
+                          setState(() {
+                            model.setParameter("interactive", value);
+                          });
+                        },
+                      ),
+                      SwitchListTile(
+                        title: const Text('memory_f16'),
+                        value: model.parameters["memory_f16"] ?? false,
+                        onChanged: (value) {
+                          setState(() {
+                            model.setParameter("memory_f16", value);
+                          });
+                        },
+                      )
+                    ],
                   SwitchListTile(
                     title: const Text('penalize_nl'),
                     value: model.parameters["penalize_nl"] ?? true,
@@ -311,7 +316,7 @@ class _ModelBodyState extends State<ModelBody> {
                       labelText: 'n_threads',
                       inputValue: model.parameters["n_threads"] ?? Platform.numberOfProcessors,
                       sliderMin: 1.0,
-                      sliderMax: !GenerationManager.remote
+                      sliderMax: model.apiType == ApiType.local
                           ? Platform.numberOfProcessors.toDouble()
                           : 128.0,
                       sliderDivisions: 127,

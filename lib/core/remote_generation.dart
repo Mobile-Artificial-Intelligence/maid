@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
+import 'package:maid/providers/model.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/types/generation_context.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -104,16 +104,22 @@ class RemoteGeneration {
 
     GenerationManager.busy = false;
     callback.call("");
-    MemoryManager.saveMisc();
   }
 
-  static Future<List<String>> getModels(String domain) async {
+  static Future<List<String>> getOptions(Model model) async {
+    if (model.parameters["api"] == "OpenAI") {
+      return [
+        "gpt-3.5-turbo",
+        "gpt-4-32k"
+      ];
+    }
+    
     bool permissionGranted = await _requestPermission();
     if (!permissionGranted) {
       return [];
     }
 
-    final url = Uri.parse("$domain/api/tags");
+    final url = Uri.parse("${model.parameters["remote_url"]}/api/tags");
     final headers = {"Accept": "application/json"};
 
     try {
@@ -123,14 +129,14 @@ class RemoteGeneration {
       var responseString = await response.stream.bytesToString();
       var data = json.decode(responseString);
 
-      List<String> models = [];
+      List<String> options = [];
       if (data['models'] != null) {
-        for (var model in data['models']) {
-          models.add(model['name']);
+        for (var option in data['models']) {
+          options.add(option['name']);
         }
       }
 
-      return models;
+      return options;
     } catch (e) {
       Logger.log('Error: $e');
       return [];

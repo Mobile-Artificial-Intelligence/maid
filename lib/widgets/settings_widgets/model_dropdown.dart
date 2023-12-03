@@ -3,29 +3,13 @@ import 'package:maid/core/remote_generation.dart';
 import 'package:maid/providers/model.dart';
 import 'package:provider/provider.dart';
 
-class RemoteDropdown extends StatefulWidget {
-  final String url;
+class ModelDropdown extends StatelessWidget {
+  const ModelDropdown({super.key});
 
-  const RemoteDropdown({super.key, required this.url});
-
-  @override
-  State<RemoteDropdown> createState() => _RemoteDropdownState();
-}
-
-class _RemoteDropdownState extends State<RemoteDropdown> {
-  late final ValueNotifier<String> _urlNotifier;
-
-  @override
-  void initState() {
-    super.initState();
-    _urlNotifier = ValueNotifier<String>(widget.url);
-  }
-  
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<String>(
-      valueListenable: _urlNotifier,
-      builder: (context, url, child) {
+    return Consumer<Model>(
+      builder: (context, model, child) {
         return ListTile(
         title: Row(
           children: [
@@ -33,7 +17,7 @@ class _RemoteDropdownState extends State<RemoteDropdown> {
               child: Text("Remote Model"),
             ),
             FutureBuilder<List<String>>(
-              future: RemoteGeneration.getModels(widget.url),
+              future: RemoteGeneration.getOptions(model),
               builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
                 if (snapshot.data == null) {
                   return const SizedBox(height: 8.0);
@@ -50,10 +34,10 @@ class _RemoteDropdownState extends State<RemoteDropdown> {
                   dropdownMenuEntries: dropdownEntries,
                   onSelected: (String? value) {
                     if (value != null) {
-                      context.read<Model>().setParameter("remote_model", value);
+                      model.setParameter("remote_model", value);
                     }
                   },
-                  initialSelection: context.watch<Model>().parameters["remote_model"] ?? "",
+                  initialSelection: model.parameters["remote_model"] ?? "",
                   width: 200,
                 );
               },
@@ -62,11 +46,5 @@ class _RemoteDropdownState extends State<RemoteDropdown> {
         )
       );
     });
-  }
-
-  @override
-  void dispose() {
-    _urlNotifier.dispose();
-    super.dispose();
   }
 }

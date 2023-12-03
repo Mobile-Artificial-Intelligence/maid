@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/widgets/home_app_bar.dart';
 import 'package:maid/widgets/page_bodies/about_body.dart';
 import 'package:maid/widgets/page_bodies/character_body.dart';
 import 'package:maid/widgets/page_bodies/chat_body.dart';
@@ -24,7 +23,6 @@ class DesktopHomePageState extends State<DesktopHomePage> {
       case 0:
         return const Expanded(
           child: Scaffold(
-            appBar: HomeAppBar(),
             body: ChatBody(),
           ),
         );
@@ -41,7 +39,6 @@ class DesktopHomePageState extends State<DesktopHomePage> {
       default: 
         return const Expanded(
           child: Scaffold(
-            appBar: HomeAppBar(),
             body: ChatBody(),
           ),
         );

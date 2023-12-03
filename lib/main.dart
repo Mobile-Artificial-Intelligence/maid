@@ -6,12 +6,10 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
-import 'package:maid/static/memory_manager.dart';
 import 'package:maid/pages/mobile_home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MemoryManager.init();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -70,13 +68,13 @@ class MaidAppState extends State<MaidApp> {
     }
 
     return Consumer<MainProvider>(
-      builder: (context, MainProvider, child) {
+      builder: (context, mainProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Maid',
           theme: Themes.lightTheme(),
           darkTheme: Themes.darkTheme(),
-          themeMode: MainProvider.themeMode,
+          themeMode: mainProvider.themeMode,
           home: homePage
         );
       },
