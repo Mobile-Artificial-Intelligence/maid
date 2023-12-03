@@ -129,6 +129,9 @@ class Themes {
         thumbColor: secondary,
         overlayColor: tertiary,
       ),
+      navigationRailTheme: const NavigationRailThemeData(
+        selectedIconTheme: IconThemeData(color: Colors.white)
+      ),
       colorScheme: ColorScheme.dark(
         background: background,
         primary: primary,

@@ -61,54 +61,48 @@ class DesktopHomePageState extends State<DesktopHomePage> {
               }
             });
           },
-          destinations: <NavigationRailDestination>[
-            NavigationRailDestination(
-              icon: const Icon(Icons.home),
+          destinations: const <NavigationRailDestination>[
+             NavigationRailDestination(
+              icon: Icon(Icons.home),
               selectedIcon: Icon(
                 Icons.home,
-                color: Theme.of(context).colorScheme.secondary,
               ),
-              label: const Text('Home'),
+              label: Text('Home'),
             ),
             NavigationRailDestination(
-              icon: const Icon(Icons.person),
+              icon: Icon(Icons.person),
               selectedIcon: Icon(
                 Icons.person,
-                color: Theme.of(context).colorScheme.secondary,
               ),
-              label: const Text('Character'),
+              label: Text('Character'),
             ),
             NavigationRailDestination(
-              icon: const Icon(Icons.chat_rounded),
+              icon: Icon(Icons.chat_rounded),
               selectedIcon: Icon(
                 Icons.chat_rounded,
-                color: Theme.of(context).colorScheme.secondary,
               ),
-              label: const Text('Sessions'),
+              label: Text('Sessions'),
             ),
             NavigationRailDestination(
-              icon: const Icon(Icons.account_tree_rounded),
+              icon: Icon(Icons.account_tree_rounded),
               selectedIcon: Icon(
                 Icons.account_tree_rounded,
-                color: Theme.of(context).colorScheme.secondary,
               ),
-              label: const Text('Model')
+              label: Text('Model')
             ),
             NavigationRailDestination(
-              icon: const Icon(Icons.settings),
+              icon: Icon(Icons.settings),
               selectedIcon: Icon(
                 Icons.settings,
-                color: Theme.of(context).colorScheme.secondary,
               ),
-              label: const Text('Settings'),
+              label: Text('Settings'),
             ),
             NavigationRailDestination(
-              icon: const Icon(Icons.info),
+              icon: Icon(Icons.info),
               selectedIcon: Icon(
                 Icons.info,
-                color: Theme.of(context).colorScheme.secondary,
               ),
-              label: const Text('About'),
+              label: Text('About'),
             ),
           ], 
           selectedIndex: _selectedIndex,
