@@ -64,6 +64,40 @@ class GenerationContext {
   int get nBatch => _nBatch;
   int get nThread => _nThread;
 
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    map["messages"] = _messages;
+    map["remote_url"] = _remoteUrl;
+    map["remote_model"] = _remoteModel;
+    map["path"] = _path;
+    map["pre_prompt"] = _prePrompt;
+    map["user_alias"] = _userAlias;
+    map["response_alias"] = _responseAlias;
+    map["n_keep"] = _nKeep;
+    map["seed"] = _seed;
+    map["n_predict"] = _nPredict;
+    map["top_k"] = _topK;
+    map["top_p"] = _topP;
+    map["tfs_z"] = _tfsZ;
+    map["typical_p"] = _typicalP;
+    map["penalty_last_n"] = _penaltyLastN;
+    map["temperature"] = _temperature;
+    map["penalty_repeat"] = _penaltyRepeat;
+    map["penalty_present"] = _penaltyPresent;
+    map["penalty_freq"] = _penaltyFreq;
+    map["mirostat"] = _mirostat;
+    map["mirostat_tau"] = _mirostatTau;
+    map["mirostat_eta"] = _mirostatEta;
+    map["penalize_nl"] = _penalizeNewline;
+    map["instruct"] = _instruct;
+    map["interactive"] = _interactive;
+    map["memory_f16"] = _memoryF16;
+    map["n_ctx"] = _nCtx;
+    map["n_batch"] = _nBatch;
+    map["n_threads"] = _nThread;
+    return map;    
+  }
+
   GenerationContext({
     required Model model,
     required Character character,
