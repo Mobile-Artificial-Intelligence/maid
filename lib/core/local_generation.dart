@@ -73,6 +73,8 @@ class LocalGeneration {
       return;
     }
 
+    Logger.log(context.toMap().toString());
+
     _hasStarted = true;
 
     final params = calloc<maid_params>();
