@@ -13,7 +13,10 @@ class RemoteGeneration {
 
   static Request ollamaRequest(String input, GenerationContext context) {
     final url = Uri.parse("${context.remoteUrl}/api/generate");
-    final headers = {"Content-Type": "application/json"};
+    final headers = {
+      "Content-Type": "application/json",
+      "User-Agent": "MAID"
+    };
     final body = json.encode({
       "model": context.remoteModel ?? "llama2:7b-chat",
       "prompt": input,
@@ -52,7 +55,8 @@ class RemoteGeneration {
     final url = Uri.parse("${context.remoteUrl}/v1/chat/completions");
     final headers = {
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${context.apiKey}"
+      "Authorization": "Bearer ${context.apiKey}",
+      "User-Agent": "MAID"
     };
     final body = json.encode({
       "model": context.remoteModel ?? "gpt-3.5-turbo",
