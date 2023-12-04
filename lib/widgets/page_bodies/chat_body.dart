@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/core/local_generation.dart';
 import 'package:maid/pages/generic_page.dart';
 import 'package:maid/providers/character.dart';
-import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/model.dart';
@@ -198,11 +197,7 @@ class _ChatBodyState extends State<ChatBody> {
                               enableInteractiveSelection: true,
                               onSubmitted: (value) {
                                 if (!GenerationManager.busy) {
-                                  if (model.parameters["path"].isEmpty && model.apiType != ApiType.local) {
-                                    _missingModelDialog();
-                                  } else {
-                                    send();
-                                  }
+                                  send();
                                 }
                               },
                               controller: _promptController,
@@ -217,11 +212,7 @@ class _ChatBodyState extends State<ChatBody> {
                           IconButton(
                               onPressed: () {
                                 if (!GenerationManager.busy) {
-                                  if (model.parameters["path"].isEmpty && model.apiType != ApiType.local) {
-                                    _missingModelDialog();
-                                  } else {
-                                    send();
-                                  }
+                                  send();
                                 }
                               },
                               iconSize: 50,
