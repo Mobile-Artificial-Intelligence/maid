@@ -111,7 +111,7 @@ class RemoteGeneration {
   }
 
   static Future<List<String>> getOptions(Model model) async {
-    if (model.parameters["api"] == "OpenAI") {
+    if (model.apiType == ApiType.openAI) {
       return [
         "gpt-3.5-turbo",
         "gpt-4-32k"

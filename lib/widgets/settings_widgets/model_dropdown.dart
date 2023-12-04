@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/core/remote_generation.dart';
 import 'package:maid/providers/model.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +16,7 @@ class ModelDropdown extends StatelessWidget {
               child: Text("Remote Model"),
             ),
             FutureBuilder<List<String>>(
-              future: RemoteGeneration.getOptions(model),
+              future: model.getOptions(),
               builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
                 if (snapshot.data == null) {
                   return const SizedBox(height: 8.0);

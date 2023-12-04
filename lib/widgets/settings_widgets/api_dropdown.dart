@@ -32,10 +32,10 @@ class ApiDropdown extends StatelessWidget {
               ],
               onSelected: (ApiType? value) {
                 if (value != null) {
-                  context.read<Model>().setParameter("api", value);
+                  model.setApiType(value);
                 }
               },
-              initialSelection: context.watch<Model>().parameters["api"],
+              initialSelection: model.apiType,
               width: 200,
             )
           ],

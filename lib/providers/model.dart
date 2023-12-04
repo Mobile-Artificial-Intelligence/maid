@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/core/remote_generation.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +48,9 @@ class Model extends ChangeNotifier {
   String get preset => _preset;
   Map<String, dynamic> get parameters => _parameters;
 
+  Future<List<String>> getOptions() {
+    return RemoteGeneration.getOptions(this);
+  }
 
   void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson.isEmpty) {
