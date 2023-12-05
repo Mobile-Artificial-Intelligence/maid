@@ -116,8 +116,13 @@ class RemoteGeneration {
 
       await for (var value in streamedResponse.stream
           .transform(utf8.decoder)
-          .transform(const LineSplitter())) {
+      ) {
         final data = json.decode(value);
+
+        if (data['error'] != null) {
+          throw Exception(data['error']);
+        }
+
         final responseText = data['choices']['delta']['content'] as String?;
         final finishReason = data['finish_reason'] as String?;
 
