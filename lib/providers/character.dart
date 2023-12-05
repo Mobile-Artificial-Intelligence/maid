@@ -50,8 +50,6 @@ class Character extends ChangeNotifier {
   void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson["profile"] != null) {
       profile = File(inputJson["profile"]);
-    } else {
-      init();
     }
     
     _name = inputJson["name"] ?? "Unknown";
