@@ -66,65 +66,72 @@ class LocalGeneration {
         .core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
   }
 
-  void prompt(String input, GenerationContext context,
-      void Function(String) callback) async {
+  void prompt(
+    String input, 
+    GenerationContext context,
+    void Function(String) callback
+  ) async {
     if (_hasStarted) {
       _send(input);
       return;
     }
 
-    Logger.log(context.toMap().toString());
+    try {
+      Logger.log(context.toMap().toString());
 
-    _hasStarted = true;
+      _hasStarted = true;
 
-    final params = calloc<maid_params>();
-    params.ref.path = context.path.toString().toNativeUtf8().cast<Char>();
-    params.ref.preprompt = context.prePrompt.toNativeUtf8().cast<Char>();
-    params.ref.input_prefix =
-        context.userAlias.trim().toNativeUtf8().cast<Char>();
-    params.ref.input_suffix =
-        context.responseAlias.trim().toNativeUtf8().cast<Char>();
-    params.ref.seed = context.seed;
-    params.ref.n_ctx = context.nCtx;
-    params.ref.n_threads = context.nThread;
-    params.ref.n_batch = context.nBatch;
-    params.ref.n_predict = context.nPredict;
-    params.ref.n_keep = context.nKeep;
-    params.ref.instruct = context.instruct;
-    params.ref.interactive = context.interactive;
-    params.ref.memory_f16 = context.memoryF16;
-    params.ref.penalize_nl = context.penalizeNewline;
-    params.ref.top_k = context.topK;
-    params.ref.top_p = context.topP;
-    params.ref.tfs_z = context.tfsZ;
-    params.ref.typical_p = context.typicalP;
-    params.ref.temp = context.temperature;
-    params.ref.penalty_last_n = context.penaltyLastN;
-    params.ref.penalty_repeat = context.penaltyRepeat;
-    params.ref.penalty_freq = context.penaltyFreq;
-    params.ref.penalty_present = context.penaltyPresent;
-    params.ref.mirostat = context.mirostat;
-    params.ref.mirostat_tau = context.mirostatTau;
-    params.ref.mirostat_eta = context.mirostatEta;
+      final params = calloc<maid_params>();
+      params.ref.path = context.path.toString().toNativeUtf8().cast<Char>();
+      params.ref.preprompt = context.prePrompt.toNativeUtf8().cast<Char>();
+      params.ref.input_prefix =
+          context.userAlias.trim().toNativeUtf8().cast<Char>();
+      params.ref.input_suffix =
+          context.responseAlias.trim().toNativeUtf8().cast<Char>();
+      params.ref.seed = context.seed;
+      params.ref.n_ctx = context.nCtx;
+      params.ref.n_threads = context.nThread;
+      params.ref.n_batch = context.nBatch;
+      params.ref.n_predict = context.nPredict;
+      params.ref.n_keep = context.nKeep;
+      params.ref.instruct = context.instruct;
+      params.ref.interactive = context.interactive;
+      params.ref.memory_f16 = context.memoryF16;
+      params.ref.penalize_nl = context.penalizeNewline;
+      params.ref.top_k = context.topK;
+      params.ref.top_p = context.topP;
+      params.ref.tfs_z = context.tfsZ;
+      params.ref.typical_p = context.typicalP;
+      params.ref.temp = context.temperature;
+      params.ref.penalty_last_n = context.penaltyLastN;
+      params.ref.penalty_repeat = context.penaltyRepeat;
+      params.ref.penalty_freq = context.penaltyFreq;
+      params.ref.penalty_present = context.penaltyPresent;
+      params.ref.mirostat = context.mirostat;
+      params.ref.mirostat_tau = context.mirostatTau;
+      params.ref.mirostat_eta = context.mirostatEta;
 
-    _nativeLibrary.core_init(params);
+      _nativeLibrary.core_init(params);
 
-    ReceivePort receivePort = ReceivePort();
-    _sendPort = receivePort.sendPort;
-    _send(input);
+      ReceivePort receivePort = ReceivePort();
+      _sendPort = receivePort.sendPort;
+      _send(input);
 
-    Completer completer = Completer();
-    receivePort.listen((data) {
-      if (data is String) {
-        callback.call(data);
-      } else if (data is SendPort) {
-        completer.complete();
-      } else if (data is int) {
-        GenerationManager.busy = false;
-        callback.call("");
-      }
-    });
-    await completer.future;
+      Completer completer = Completer();
+      receivePort.listen((data) {
+        if (data is String) {
+          callback.call(data);
+        } else if (data is SendPort) {
+          completer.complete();
+        } else if (data is int) {
+          GenerationManager.busy = false;
+          callback.call("");
+        }
+      });
+      await completer.future;
+    } catch (e) {
+      Logger.log(e.toString());
+    }
   }
 
   void _send(String input) async {
