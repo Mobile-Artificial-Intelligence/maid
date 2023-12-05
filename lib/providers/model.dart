@@ -4,15 +4,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/core/remote_generation.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Model extends ChangeNotifier {
+  ApiType _apiType = ApiType.local;
   String _preset = "Default";
   Map<String, dynamic> _parameters = {};
-
-  bool _local = false;
 
   void init() async {
     Logger.log("Model Initialised");
@@ -39,22 +39,25 @@ class Model extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setLocal(bool local) {
-    _local = local;
+  void setApiType(ApiType apiType) {
+    _apiType = apiType;
     notifyListeners();
   }
 
+  ApiType get apiType => _apiType;
   String get preset => _preset;
-  bool get local => _local;
   Map<String, dynamic> get parameters => _parameters;
 
+  Future<List<String>> getOptions() {
+    return RemoteGeneration.getOptions(this);
+  }
 
   void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
+      _apiType = ApiType.values[inputJson["api_type"] ?? ApiType.local.index];
       _preset = inputJson["preset"] ?? "Default";
-      _local = inputJson["local"] ?? false;
       _parameters = inputJson;
 
       if (_parameters["n_threads"] == null || 
@@ -72,8 +75,8 @@ class Model extends ChangeNotifier {
     Map<String, dynamic> jsonModel = {};
 
     jsonModel = _parameters;
+    jsonModel["api_type"] = _apiType.index;
     jsonModel["preset"] = _preset;
-    jsonModel["local"] = _local;
 
     return jsonModel;
   }
@@ -87,15 +90,15 @@ class Model extends ChangeNotifier {
       _parameters["n_threads"] = Platform.numberOfProcessors;
     }
 
-    _local = false;
+    _apiType = ApiType.local;
 
     notifyListeners();
   }
 
   Future<String> exportModelParameters(BuildContext context) async {
     try {
+      _parameters["api_type"] = _apiType.index;
       _parameters["preset"] = _preset;
-      _parameters["local"] = _local;
 
       String jsonString = json.encode(_parameters);
       
@@ -127,7 +130,7 @@ class Model extends ChangeNotifier {
         resetAll();
         return "Failed to decode parameters";
       } else {
-        _local = _parameters["local"] ?? false;
+        _apiType = ApiType.values[_parameters["api_type"] ?? ApiType.local.index];
         _preset = _parameters["preset"] ?? "Default";
       }
     } catch (e) {
@@ -155,4 +158,12 @@ class Model extends ChangeNotifier {
     notifyListeners();
     return "Model Successfully Loaded";
   }
+}
+
+enum ApiType {
+  none,
+  local,
+  openAI,
+  ollama,
+  custom
 }

@@ -224,25 +224,13 @@ class _CharacterBodyState extends State<CharacterBody> {
                   const SizedBox(height: 10.0),
                   ...List.generate(
                     character.examples.length,
-                    (index) => Column(
-                      children: [
-                        MaidTextField(
-                          headingText: 'Example prompt',
-                          labelText: 'Prompt',
-                          initialValue: character.examples[index]["prompt"],
-                          onChanged: (value) {
-                            character.updateExample(index, "prompt", value);
-                          },
-                        ),
-                        MaidTextField(
-                          headingText: 'Example response',
-                          labelText: 'Response',
-                          initialValue: character.examples[index]["response"],
-                          onChanged: (value) {
-                            character.updateExample(index, "response", value);
-                          },
-                        ),
-                      ],
+                    (index) => MaidTextField(
+                      headingText: '${character.examples[index]["role"]} content',
+                      labelText: character.examples[index]["role"],
+                      initialValue: character.examples[index]["content"],
+                      onChanged: (value) {
+                        character.updateExample(index, value);
+                      },
                     ),
                   ),
                 ],

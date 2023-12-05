@@ -6,6 +6,8 @@ import 'package:maid/static/logger.dart';
 class GenerationContext {
   late List<Map<String, dynamic>> _messages;
   late String? _remoteUrl;
+  late ApiType _apiType;
+  late String? _apiKey;
   late String? _remoteModel;
   late String? _path;
   late String _prePrompt;
@@ -36,6 +38,8 @@ class GenerationContext {
 
   List<Map<String, dynamic>> get messages => _messages;
   String? get remoteUrl => _remoteUrl;
+  ApiType get apiType => _apiType;
+  String? get apiKey => _apiKey;
   String? get remoteModel => _remoteModel;
   String? get path => _path;
   String get prePrompt => _prePrompt;
@@ -68,6 +72,8 @@ class GenerationContext {
     Map<String, dynamic> map = {};
     map["messages"] = _messages;
     map["remote_url"] = _remoteUrl;
+    map["api_type"] = _apiType.index;
+    map["api_key"] = _apiKey;
     map["remote_model"] = _remoteModel;
     map["path"] = _path;
     map["pre_prompt"] = _prePrompt;
@@ -107,11 +113,13 @@ class GenerationContext {
       Logger.log(model.toMap().toString());
       Logger.log(character.toMap().toString());
       Logger.log(session.toMap().toString());
-
+      
       _messages = character.examples;
       _messages.addAll(session.getMessages());
 
       _remoteUrl = model.parameters["remote_url"];
+      _apiType = model.apiType;
+      _apiKey = model.parameters["api_key"];
       _remoteModel = model.parameters["remote_model"];
       _path = model.parameters["path"];
       _prePrompt = character.prePrompt;

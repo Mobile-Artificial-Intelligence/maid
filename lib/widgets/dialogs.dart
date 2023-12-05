@@ -1,6 +1,5 @@
   
 import 'package:flutter/material.dart';
-import 'package:maid/static/memory_manager.dart';
 
 Future<void> storageOperationDialog(BuildContext context, Future<String> Function(BuildContext context) storageFunction) async {
   String ret = await storageFunction(context);
@@ -21,7 +20,6 @@ Future<void> storageOperationDialog(BuildContext context, Future<String> Functio
             FilledButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                MemoryManager.saveAll();
               },
               child: Text(
                 "Close",

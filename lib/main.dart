@@ -6,12 +6,10 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/pages/desktop_home.dart';
-import 'package:maid/static/memory_manager.dart';
 import 'package:maid/pages/mobile_home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MemoryManager.init();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -54,11 +52,15 @@ class MaidApp extends StatefulWidget {
 
 class MaidAppState extends State<MaidApp> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     context.read<Model>().init();
     context.read<Character>().init();
     context.read<Session>().init();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final aspectRatio = screenSize.width / screenSize.height;
 
@@ -70,13 +72,13 @@ class MaidAppState extends State<MaidApp> {
     }
 
     return Consumer<MainProvider>(
-      builder: (context, MainProvider, child) {
+      builder: (context, mainProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Maid',
           theme: Themes.lightTheme(),
           darkTheme: Themes.darkTheme(),
-          themeMode: MainProvider.themeMode,
+          themeMode: mainProvider.themeMode,
           home: homePage
         );
       },

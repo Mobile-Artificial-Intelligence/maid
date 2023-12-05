@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+import 'package:maid/providers/model.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/static/memory_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/types/generation_context.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -11,16 +11,16 @@ import 'package:permission_handler/permission_handler.dart';
 class RemoteGeneration {
   static List<int> _context = [];
 
-  static void prompt(String input, GenerationContext context,
-      void Function(String) callback) async {
-    _requestPermission().then((value) {
-      if (!value) {
-        return;
-      }
-    });
-
+  static void ollamaRequest(
+    String input, 
+    GenerationContext context, 
+    void Function(String) callback
+  ) async {
     final url = Uri.parse("${context.remoteUrl}/api/generate");
-    final headers = {"Content-Type": "application/json"};
+    final headers = {
+      "Content-Type": "application/json",
+      "User-Agent": "MAID"
+    };
     final body = json.encode({
       "model": context.remoteModel ?? "llama2:7b-chat",
       "prompt": input,
@@ -51,7 +51,7 @@ class RemoteGeneration {
     });
 
     try {
-      var request = http.Request("POST", url)
+      var request = Request("POST", url)
         ..headers.addAll(headers)
         ..body = body;
 
@@ -83,33 +83,118 @@ class RemoteGeneration {
 
     GenerationManager.busy = false;
     callback.call("");
-    MemoryManager.saveMisc();
   }
 
-  static Future<List<String>> getModels(String domain) async {
+  static void openAiRequest(
+    String input, 
+    GenerationContext context, 
+    void Function(String) callback
+  ) async {
+    var messages = context.messages;
+    messages.insert(0, {"role":"system","text":context.prePrompt});
+    messages.add({"role":"user","text":input});
+
+    final url = Uri.parse("${context.remoteUrl}/v1/chat/completions");
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${context.apiKey}",
+      "User-Agent": "MAID"
+    };
+    final body = json.encode({
+      "model": context.remoteModel ?? "gpt-3.5-turbo",
+      "messages": messages,
+      "temperature": context.temperature,
+      "stream": true
+    });
+
+    try {
+      final request = Request("POST", url)
+        ..headers.addAll(headers)
+        ..body = body;
+      
+      final streamedResponse = await request.send();
+
+      await for (var value in streamedResponse.stream
+          .transform(utf8.decoder)
+      ) {
+        final data = json.decode(value);
+
+        if (data['error'] != null) {
+          throw Exception(data['error']);
+        }
+
+        final responseText = data['choices']['delta']['content'] as String?;
+        final finishReason = data['finish_reason'] as String?;
+
+        if (responseText != null && responseText.isNotEmpty) {
+          callback.call(responseText);
+        }
+
+        if (finishReason != null) {
+          break;
+        }
+      }
+    } catch (e) {
+      Logger.log('Error: $e');
+    }
+
+    GenerationManager.busy = false;
+    callback.call("");
+  }
+
+  static void prompt(String input, 
+    GenerationContext context,
+    void Function(String) callback
+  ) async {
+    _requestPermission().then((value) {
+      if (!value) {
+        return;
+      }
+    });
+
+    switch (context.apiType) {
+      case ApiType.ollama:
+        ollamaRequest(input, context, callback);
+        break;
+      case ApiType.openAI:
+        openAiRequest(input, context, callback);
+        break;
+      default:
+        break;
+    }
+  }
+
+  static Future<List<String>> getOptions(Model model) async {
+    if (model.apiType == ApiType.openAI) {
+      return [
+        "gpt-3.5-turbo",
+        "gpt-4-32k"
+      ];
+    }
+    
     bool permissionGranted = await _requestPermission();
     if (!permissionGranted) {
       return [];
     }
 
-    final url = Uri.parse("$domain/api/tags");
+    final url = Uri.parse("${model.parameters["remote_url"]}/api/tags");
     final headers = {"Accept": "application/json"};
 
     try {
-      var request = http.Request("GET", url)..headers.addAll(headers);
+      var request = Request("GET", url)..headers.addAll(headers);
 
       var response = await request.send();
       var responseString = await response.stream.bytesToString();
       var data = json.decode(responseString);
 
-      List<String> models = [];
+      List<String> options = [];
       if (data['models'] != null) {
-        for (var model in data['models']) {
-          models.add(model['name']);
+        for (var option in data['models']) {
+          options.add(option['name']);
         }
       }
 
-      return models;
+      return options;
     } catch (e) {
       Logger.log('Error: $e');
       return [];

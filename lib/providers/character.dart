@@ -108,23 +108,29 @@ class Character extends ChangeNotifier {
 
   void newExample() {
     _examples.add({
-      "prompt": "",
-      "response": "",
+      "role": "user",
+      "content": "",
+    });
+    _examples.add({
+      "role": "assistant",
+      "content": "",
     });
     notifyListeners();
   }
 
-  void updateExample(int index, String role, String value) {
-    _examples[index][role] = value;
+  void updateExample(int index, String value) {
+    _examples[index]["content"] = value;
     notifyListeners();
   }
 
   void removeExample(int index) {
     _examples.removeAt(index);
+    _examples.removeAt(index - 1);
     notifyListeners();
   }
 
   void removeLastExample() {
+    _examples.removeLast();
     _examples.removeLast();
     notifyListeners();
   }
@@ -269,12 +275,14 @@ class Character extends ChangeNotifier {
     List<Map<String, dynamic>> history = _examples;
     history += session.getMessages();
     if (history.isNotEmpty) {
-      for (var i = 0; i < history.length; i++) {
-        var prompt = '${_userAlias.trim()} ${history[i]["prompt"].trim()}';
-        var response = '${_responseAlias.trim()} ${history[i]["response"].trim()}';
-        if (prompt.isNotEmpty && response.isNotEmpty) {
-          result += "\n$prompt\n$response";
+      for (var i = 0; i < history.length - 2; i++) {
+        String alias;
+        if (history[i]["role"] == "user") {
+          alias = _userAlias;
+        } else {
+          alias = _responseAlias;
         }
+        result += "\n$alias ${history[i]["content"].trim()}";
       }
     }
 
