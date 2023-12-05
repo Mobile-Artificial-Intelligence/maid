@@ -62,7 +62,7 @@ To use this app in remote mode, follow these steps:
 ## Testing
 Android version tested on a Oneplus 10 Pro 11gb phone.
 Also tested on Debian Linux, Windows 11.
-Tested with llama 2 7B-Chat and llama 7B.
+Tested with calypso 3b, orcamini 3b, llama 2 7B-Chat and llama 7B.
 
 ## Disclaimer
 Please note that the llama.cpp models are owned and officially distributed by Meta. This app only serves as an environment for the model's 
