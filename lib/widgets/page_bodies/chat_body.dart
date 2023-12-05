@@ -78,13 +78,14 @@ class _ChatBodyState extends State<ChatBody> {
       FocusScope.of(context).unfocus();
     }
 
+    final model = context.read<Model>();
+    final character = context.read<Character>();
     final session = context.read<Session>();
     final genContext = GenerationContext(
-      model: context.read<Model>(),
-      character: context.read<Character>(),
-      session: context.read<Session>()
+      model: model,
+      character: character,
+      session: session
     );
-    final aptType = GenerationManager.checkApiRequirements(genContext);
 
     session.add(
       UniqueKey(), 
@@ -93,33 +94,16 @@ class _ChatBodyState extends State<ChatBody> {
     );
     session.add(UniqueKey());
 
-    if (aptType != ApiType.local) {
-      GenerationManager.prompt(
-          _promptController.text.trim(),
-          genContext,
-          context.read<Session>().stream);
-      setState(() {
-        GenerationManager.busy = true;
-        _promptController.clear();
-      });
-    } 
-    else if (genContext.apiType == ApiType.local) {
-      GenerationManager.prompt(
-          _promptController.text.trim(),
-          genContext,
-          context.read<Session>().stream);
-      setState(() {
-        GenerationManager.busy = true;
-        _promptController.clear();
-      });
-    } 
-    else {
-      _missingModelDialog();
-      setState(() {
-        GenerationManager.busy = false;
-        _promptController.clear();
-      });
-    }
+    GenerationManager.prompt(
+      _promptController.text.trim(),
+      genContext,
+      session.stream
+    );
+
+    setState(() {
+      GenerationManager.busy = true;
+      _promptController.clear();
+    });
   }
 
   @override

@@ -113,7 +113,7 @@ class GenerationContext {
       Logger.log(model.toMap().toString());
       Logger.log(character.toMap().toString());
       Logger.log(session.toMap().toString());
-
+      
       _messages = character.examples;
       _messages.addAll(session.getMessages());
 

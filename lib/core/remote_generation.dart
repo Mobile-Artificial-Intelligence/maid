@@ -11,7 +11,11 @@ import 'package:permission_handler/permission_handler.dart';
 class RemoteGeneration {
   static List<int> _context = [];
 
-  static Request ollamaRequest(String input, GenerationContext context) {
+  static void ollamaRequest(
+    String input, 
+    GenerationContext context, 
+    void Function(String) callback
+  ) async {
     final url = Uri.parse("${context.remoteUrl}/api/generate");
     final headers = {
       "Content-Type": "application/json",
@@ -46,39 +50,10 @@ class RemoteGeneration {
       }
     });
 
-    return Request("POST", url)
-      ..headers.addAll(headers)
-      ..body = body;
-  }
-
-  static Request openAiRequest(String input, GenerationContext context) {
-    final url = Uri.parse("${context.remoteUrl}/v1/chat/completions");
-    final headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${context.apiKey}",
-      "User-Agent": "MAID"
-    };
-    final body = json.encode({
-      "model": context.remoteModel ?? "gpt-3.5-turbo",
-      "messages": context.messages,
-      "temperature": context.temperature,
-    });
-
-    return Request("POST", url)
-      ..headers.addAll(headers)
-      ..body = body;
-  }
-
-  static void prompt(String input, GenerationContext context,
-      void Function(String) callback) async {
-    _requestPermission().then((value) {
-      if (!value) {
-        return;
-      }
-    });
-
     try {
-      var request = ollamaRequest(input, context);
+      var request = Request("POST", url)
+        ..headers.addAll(headers)
+        ..body = body;
 
       final streamedResponse = await request.send();
 
@@ -108,6 +83,80 @@ class RemoteGeneration {
 
     GenerationManager.busy = false;
     callback.call("");
+  }
+
+  static void openAiRequest(
+    String input, 
+    GenerationContext context, 
+    void Function(String) callback
+  ) async {
+    var messages = context.messages;
+    messages.insert(0, {"role":"system","text":context.prePrompt});
+    messages.add({"role":"user","text":input});
+
+    final url = Uri.parse("${context.remoteUrl}/v1/chat/completions");
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${context.apiKey}",
+      "User-Agent": "MAID"
+    };
+    final body = json.encode({
+      "model": context.remoteModel ?? "gpt-3.5-turbo",
+      "messages": messages,
+      "temperature": context.temperature,
+      "stream": true
+    });
+
+    try {
+      final request = Request("POST", url)
+        ..headers.addAll(headers)
+        ..body = body;
+      
+      final streamedResponse = await request.send();
+
+      await for (var value in streamedResponse.stream
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())) {
+        final data = json.decode(value);
+        final responseText = data['choices']['delta']['content'] as String?;
+        final finishReason = data['finish_reason'] as String?;
+
+        if (responseText != null && responseText.isNotEmpty) {
+          callback.call(responseText);
+        }
+
+        if (finishReason != null) {
+          break;
+        }
+      }
+    } catch (e) {
+      Logger.log('Error: $e');
+    }
+
+    GenerationManager.busy = false;
+    callback.call("");
+  }
+
+  static void prompt(String input, 
+    GenerationContext context,
+    void Function(String) callback
+  ) async {
+    _requestPermission().then((value) {
+      if (!value) {
+        return;
+      }
+    });
+
+    switch (context.apiType) {
+      case ApiType.ollama:
+        ollamaRequest(input, context, callback);
+        break;
+      case ApiType.openAI:
+        openAiRequest(input, context, callback);
+        break;
+      default:
+        break;
+    }
   }
 
   static Future<List<String>> getOptions(Model model) async {

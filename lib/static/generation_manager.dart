@@ -12,9 +12,9 @@ class GenerationManager {
     void Function(String) callback
   ) {
     if (context.apiType == ApiType.local) {
-      RemoteGeneration.prompt(input, context, callback);
-    } else {
       LocalGeneration.instance.prompt(input, context, callback);
+    } else {
+      RemoteGeneration.prompt(input, context, callback);
     }
   }
 
