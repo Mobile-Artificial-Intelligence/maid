@@ -92,7 +92,8 @@ class _SessionsBodyState extends State<SessionsBody> {
                           if (GenerationManager.busy) return;
                           _sessions.remove(sessionKey);
                           if (sessionKey == session.rootMessage) {
-                            session.fromMap(_sessions.values.firstOrNull ?? {});
+                            session.fromMap(_sessions.values.firstOrNull ?? 
+                              {"message": "Session ${UniqueKey().toString()}"});
                           }
                         },
                         background: Container(
