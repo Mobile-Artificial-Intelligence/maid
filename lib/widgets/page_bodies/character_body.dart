@@ -20,6 +20,12 @@ class CharacterBody extends StatefulWidget {
 class _CharacterBodyState extends State<CharacterBody> {
   static Map<String, dynamic> _characters = {};
   late Character cachedCharacter;
+
+  late TextEditingController _nameController;
+  late TextEditingController _userAliasController;
+  late TextEditingController _responseAliasController;
+  late TextEditingController _prePromptController;
+  late List<TextEditingController> _exampleControllers;
   
   @override
   void initState() {
@@ -29,6 +35,17 @@ class _CharacterBodyState extends State<CharacterBody> {
       _characters = json.decode(prefs.getString("characters") ?? "{}");
       setState(() {});
     });
+
+    final character = context.read<Character>();
+    _nameController = TextEditingController(text: character.name);
+    _userAliasController = TextEditingController(text: character.userAlias);
+    _responseAliasController = TextEditingController(text: character.responseAlias);
+    _prePromptController = TextEditingController(text: character.prePrompt);
+
+    _exampleControllers = List.generate(
+      character.examples.length,
+      (index) => TextEditingController(text: character.examples[index]["content"]),
+    );
   }
 
   @override
@@ -160,8 +177,8 @@ class _CharacterBodyState extends State<CharacterBody> {
                             decoration: const InputDecoration(
                               labelText: "Name",
                             ),
-                            controller: TextEditingController(text: character.name),
-                            onSubmitted: (value) {
+                            controller: _nameController,
+                            onChanged: (value) {
                               if (_characters.keys.contains(value)) {
                                 character.fromMap(_characters[value] ?? {});
                                 Logger.log("Character Set: ${character.name}");
@@ -180,24 +197,24 @@ class _CharacterBodyState extends State<CharacterBody> {
                   MaidTextField(
                     headingText: 'User alias', 
                     labelText: 'Alias',
-                    initialValue: character.userAlias,
-                    onSubmitted: (value) {
+                    controller: _userAliasController,
+                    onChanged: (value) {
                       character.setUserAlias(value);
                     },
                   ),
                   MaidTextField(
                     headingText: 'Response alias',
                     labelText: 'Alias',
-                    initialValue: character.responseAlias,
-                    onSubmitted: (value) {
+                    controller: _responseAliasController,
+                    onChanged: (value) {
                       character.setResponseAlias(value);
                     },
                   ),
                   MaidTextField(
                     headingText: 'PrePrompt',
                     labelText: 'PrePrompt',
-                    initialValue: character.prePrompt,
-                    onSubmitted: (value) {
+                    controller: _prePromptController,
+                    onChanged: (value) {
                       character.setPrePrompt(value);
                     },
                     multiline: true,
@@ -210,15 +227,11 @@ class _CharacterBodyState extends State<CharacterBody> {
                   DoubleButtonRow(
                     leftText: "Add Example",
                     leftOnPressed: () {
-                      setState(() {
-                        character.newExample();
-                      });
+                      character.newExample();
                     },
                     rightText: "Remove Example",
                     rightOnPressed: () {
-                      setState(() {
-                        character.removeLastExample();
-                      });
+                      character.removeLastExample();
                     },
                   ),
                   const SizedBox(height: 10.0),
@@ -227,7 +240,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     (index) => MaidTextField(
                       headingText: '${character.examples[index]["role"]} content',
                       labelText: character.examples[index]["role"],
-                      initialValue: character.examples[index]["content"],
+                      controller: _exampleControllers[index],
                       onChanged: (value) {
                         character.updateExample(index, value);
                       },
