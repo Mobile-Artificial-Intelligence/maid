@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maid/pages/home_page.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
-import 'package:maid/pages/desktop_home.dart';
-import 'package:maid/pages/mobile_home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,16 +60,6 @@ class MaidAppState extends State<MaidApp> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final aspectRatio = screenSize.width / screenSize.height;
-
-    final Widget homePage;
-    if (aspectRatio > 0.9) {
-      homePage = const DesktopHomePage(title: 'Maid');
-    } else {
-      homePage = const MobileHomePage(title: 'Maid');
-    }
-
     return Consumer<MainProvider>(
       builder: (context, mainProvider, child) {
         return MaterialApp(
@@ -79,7 +68,7 @@ class MaidAppState extends State<MaidApp> {
           theme: Themes.lightTheme(),
           darkTheme: Themes.darkTheme(),
           themeMode: mainProvider.themeMode,
-          home: homePage
+          home: const HomePage(title: "Maid")
         );
       },
     );
