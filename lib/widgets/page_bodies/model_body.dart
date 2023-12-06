@@ -24,6 +24,7 @@ class ModelBody extends StatefulWidget {
 class _ModelBodyState extends State<ModelBody> {
   static Map<String, dynamic> _models = {};
   late Model cachedModel;
+  late TextEditingController _presetController;
 
   @override
   void initState() {
@@ -33,6 +34,9 @@ class _ModelBodyState extends State<ModelBody> {
       _models = json.decode(prefs.getString("models") ?? "{}");
       setState(() {});
     });
+
+    final model = context.read<Model>();
+    _presetController = TextEditingController(text: model.preset);
   }
 
   @override
@@ -119,8 +123,8 @@ class _ModelBodyState extends State<ModelBody> {
                   MaidTextField(
                     headingText: "Preset Name",
                     labelText: "Preset",
-                    initialValue: model.preset,
-                    onSubmitted: (value) {
+                    controller: _presetController,
+                    onChanged: (value) {
                       if (_models.keys.contains(value)) {
                         model.fromMap(_models[value] ?? {});
                         Logger.log("Model Set: ${model.preset}");

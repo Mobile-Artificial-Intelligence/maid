@@ -7,8 +7,25 @@ import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 import 'package:maid/widgets/settings_widgets/model_dropdown.dart';
 import 'package:provider/provider.dart';
 
-class OllamaParameters extends StatelessWidget {
+class OllamaParameters extends StatefulWidget {
   const OllamaParameters({super.key});
+  
+  @override
+  State<StatefulWidget> createState() => _OllamaParametersState();
+}
+
+class _OllamaParametersState extends State<OllamaParameters> {
+  late TextEditingController _apiTokenController;
+  late TextEditingController _remoteUrlController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final model = context.read<Model>();
+    _apiTokenController = TextEditingController(text: model.parameters["api_key"]);
+    _remoteUrlController = TextEditingController(text: model.parameters["remote_url"]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +36,8 @@ class OllamaParameters extends StatelessWidget {
             MaidTextField(
               headingText: 'API Token', 
               labelText: 'API Token',
-              initialValue: model.parameters["api_key"] ?? "",
-              onSubmitted: (value) {
+              controller: _apiTokenController,
+              onChanged: (value) {
                 model.setParameter("api_key", value);
               } ,
             ),
@@ -33,8 +50,8 @@ class OllamaParameters extends StatelessWidget {
             MaidTextField(
               headingText: 'Remote URL', 
               labelText: 'Remote URL',
-              initialValue: model.parameters["remote_url"] ?? "http://0.0.0.0:11434",
-              onSubmitted: (value) {
+              controller: _remoteUrlController,
+              onChanged: (value) {
                 model.setParameter("remote_url", value);
               } ,
             ),
