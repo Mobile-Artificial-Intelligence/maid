@@ -6,4 +6,8 @@ class Logger {
   static void log(String message) {
     _logString += "$message\n";
   }
+
+  static void clear() {
+    _logString = "";
+  }
 }
