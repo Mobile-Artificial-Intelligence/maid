@@ -181,7 +181,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     headingText: 'User alias', 
                     labelText: 'Alias',
                     initialValue: character.userAlias,
-                    onChanged: (value) {
+                    onSubmitted: (value) {
                       character.setUserAlias(value);
                     },
                   ),
@@ -189,7 +189,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     headingText: 'Response alias',
                     labelText: 'Alias',
                     initialValue: character.responseAlias,
-                    onChanged: (value) {
+                    onSubmitted: (value) {
                       character.setResponseAlias(value);
                     },
                   ),
@@ -197,7 +197,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     headingText: 'PrePrompt',
                     labelText: 'PrePrompt',
                     initialValue: character.prePrompt,
-                    onChanged: (value) {
+                    onSubmitted: (value) {
                       character.setPrePrompt(value);
                     },
                     multiline: true,
