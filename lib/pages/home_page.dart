@@ -9,23 +9,56 @@ import 'package:maid/widgets/page_bodies/settings_body.dart';
 
 import 'package:system_info2/system_info2.dart';
 
-class MobileHomePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final String title;
 
-  const MobileHomePage({super.key, required this.title});
+  const HomePage({super.key, required this.title});
 
   @override
-  MobileHomePageState createState() => MobileHomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class MobileHomePageState extends State<MobileHomePage> {
+class HomePageState extends State<HomePage> {
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
+  int _selectedIndex = 0;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      drawer: Drawer(
+  Widget _getSelectedPage() {
+    switch (_selectedIndex) {
+      case 0:
+        return const Expanded(
+          child: Scaffold(
+            body: ChatBody(),
+          ),
+        );
+      case 1:
+        return const Expanded(child: Scaffold(body: CharacterBody()));
+      case 2:
+        return const Expanded(child: Scaffold(body: SessionsBody()));
+      case 3:
+        return const Expanded(child: Scaffold(body: ModelBody()));
+      case 4:
+        return const Expanded(child: Scaffold(body: SettingsBody()));
+      case 5:
+        return const Expanded(child: Scaffold(body: AboutBody()));
+      default: 
+        return const Expanded(
+          child: Scaffold(
+            body: ChatBody(),
+          ),
+        );
+    }
+  }
+
+  AppBar? _buildAppBar(double aspectRatio) {
+    if (aspectRatio < 0.9) {
+      return AppBar();
+    }
+    return null;
+  }
+
+  Drawer? _buildDrawer(double aspectRatio) {
+    if (aspectRatio < 0.9) {
+      return Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -127,8 +160,85 @@ class MobileHomePageState extends State<MobileHomePage> {
             ),
           ],
         ),
-      ),
-      body: const ChatBody()
+      );
+    }
+    return null;
+  }
+
+  Widget _buildBody(double aspectRatio) {
+    if (aspectRatio < 0.9) {
+      return const ChatBody();
+    }
+    return Row(
+      children: [
+        NavigationRail(
+          onDestinationSelected: (int index) {
+            setState(() {
+              if (_selectedIndex != index) {
+                _selectedIndex = index;
+              }
+            });
+          },
+          destinations: const <NavigationRailDestination>[
+             NavigationRailDestination(
+              icon: Icon(Icons.home),
+              selectedIcon: Icon(
+                Icons.home,
+              ),
+              label: Text('Home'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.person),
+              selectedIcon: Icon(
+                Icons.person,
+              ),
+              label: Text('Character'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.chat_rounded),
+              selectedIcon: Icon(
+                Icons.chat_rounded,
+              ),
+              label: Text('Sessions'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.account_tree_rounded),
+              selectedIcon: Icon(
+                Icons.account_tree_rounded,
+              ),
+              label: Text('Model')
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.settings),
+              selectedIcon: Icon(
+                Icons.settings,
+              ),
+              label: Text('Settings'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.info),
+              selectedIcon: Icon(
+                Icons.info,
+              ),
+              label: Text('About'),
+            ),
+          ],
+          selectedIndex: _selectedIndex,
+        ),
+        _getSelectedPage(),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final aspectRatio = screenSize.width / screenSize.height;
+
+    return Scaffold(
+      appBar: _buildAppBar(aspectRatio),
+      drawer: _buildDrawer(aspectRatio),
+      body: _buildBody(aspectRatio),
     );
   }
 }
