@@ -9,24 +9,23 @@ import 'package:maid/types/generation_context.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RemoteGeneration {
-  static List<int> _context = [];
-
   static void ollamaRequest(
     String input, 
     GenerationContext context, 
     void Function(String) callback
   ) async {
-    final url = Uri.parse("${context.remoteUrl}/api/generate");
+    var messages = context.messages;
+    messages.insert(0, {"role":"system","text":context.prePrompt});
+    messages.add({"role":"user","text":input});
+    
+    final url = Uri.parse("${context.remoteUrl}/api/chat");
     final headers = {
       "Content-Type": "application/json",
       "User-Agent": "MAID"
     };
     final body = json.encode({
       "model": context.remoteModel ?? "llama2:7b-chat",
-      "prompt": input,
-      "context": _context, // TODO: DEPRECATED SOON
-      "system": context.prePrompt,
-      "messages": context.messages,
+      "messages": messages,
       "options": {
         "num_keep": context.nKeep,
         "seed": context.seed,
@@ -47,7 +46,8 @@ class RemoteGeneration {
         "num_ctx": context.nCtx,
         "num_batch": context.nBatch,
         "num_thread": context.nThread,
-      }
+      },
+      "stream": true
     });
 
     try {
@@ -61,13 +61,8 @@ class RemoteGeneration {
           .transform(utf8.decoder)
           .transform(const LineSplitter())) {
         final data = json.decode(value);
-        final responseText = data['response'] as String?;
-        final newContext = data['context'] as List<dynamic>?;
+        final responseText = data['message']['content'] as String?;
         final done = data['done'] as bool?;
-
-        if (newContext != null) {
-          _context = newContext.cast<int>();
-        }
 
         if (responseText != null && responseText.isNotEmpty) {
           callback.call(responseText);

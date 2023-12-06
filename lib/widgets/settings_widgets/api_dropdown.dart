@@ -31,10 +31,8 @@ class ApiDropdown extends StatelessWidget {
                 ),
               ],
               onSelected: (ApiType? value) {
-                print("ApiType: $value");
                 if (value != null) {
                   model.setApiType(value);
-                  print(model.apiType);
                 }
               },
               initialSelection: model.apiType,
