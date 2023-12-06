@@ -73,7 +73,7 @@ class Session extends ChangeNotifier {
   String get rootMessage => _root.message;
   Key get key => _root.key;
 
-  void add(Key key, {String message = "", bool userGenerated = false}) {
+  Future<void> add(Key key, {String message = "", bool userGenerated = false}) async {
     final node =
         ChatNode(key: key, message: message, userGenerated: userGenerated);
 
