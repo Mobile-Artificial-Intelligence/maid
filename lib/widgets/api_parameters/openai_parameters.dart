@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
