@@ -91,8 +91,9 @@ class _ChatBodyState extends State<ChatBody> {
       UniqueKey(), 
       message: _promptController.text.trim(), 
       userGenerated: true
-    );
-    session.add(UniqueKey());
+    ).then((value) {
+      session.add(UniqueKey());
+    });
 
     GenerationManager.prompt(
       _promptController.text.trim(),
