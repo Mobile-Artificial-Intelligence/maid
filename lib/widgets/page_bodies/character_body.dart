@@ -26,6 +26,20 @@ class _CharacterBodyState extends State<CharacterBody> {
   late TextEditingController _responseAliasController;
   late TextEditingController _prePromptController;
   late List<TextEditingController> _exampleControllers;
+
+  void updateControllers() {
+    final character = context.read<Character>();
+
+    _nameController = TextEditingController(text: character.name);
+    _userAliasController = TextEditingController(text: character.userAlias);
+    _responseAliasController = TextEditingController(text: character.responseAlias);
+    _prePromptController = TextEditingController(text: character.prePrompt);
+
+    _exampleControllers = List.generate(
+      character.examples.length,
+      (index) => TextEditingController(text: character.examples[index]["content"]),
+    );
+  }
   
   @override
   void initState() {
@@ -36,16 +50,7 @@ class _CharacterBodyState extends State<CharacterBody> {
       setState(() {});
     });
 
-    final character = context.read<Character>();
-    _nameController = TextEditingController(text: character.name);
-    _userAliasController = TextEditingController(text: character.userAlias);
-    _responseAliasController = TextEditingController(text: character.responseAlias);
-    _prePromptController = TextEditingController(text: character.prePrompt);
-
-    _exampleControllers = List.generate(
-      character.examples.length,
-      (index) => TextEditingController(text: character.examples[index]["content"]),
-    );
+    updateControllers();
   }
 
   @override
@@ -137,7 +142,9 @@ class _CharacterBodyState extends State<CharacterBody> {
                     leftText: "Load Image",
                     leftOnPressed: () async {
                       await storageOperationDialog(context, character.importImage);
-                      setState(() {});
+                      setState(() {
+                        updateControllers();
+                      });
                     },
                     rightText: "Save Image",
                     rightOnPressed: () async {
@@ -150,7 +157,9 @@ class _CharacterBodyState extends State<CharacterBody> {
                     leftText: "Load JSON",
                     leftOnPressed: () async {
                       await storageOperationDialog(context, character.importJSON);
-                      setState(() {});
+                      setState(() {
+                        updateControllers();
+                      });
                     },
                     rightText: "Save JSON",
                     rightOnPressed: () async {
