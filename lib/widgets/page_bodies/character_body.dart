@@ -26,6 +26,21 @@ class _CharacterBodyState extends State<CharacterBody> {
   late TextEditingController _responseAliasController;
   late TextEditingController _prePromptController;
   late List<TextEditingController> _exampleControllers;
+
+  void updateControllers() {
+    final character = context.read<Character>();
+
+    setState(() {
+      _nameController.text = character.name;
+      _userAliasController.text = character.userAlias;
+      _responseAliasController.text = character.responseAlias;
+      _prePromptController.text = character.prePrompt;
+
+      for (int i = 0; i < character.examples.length; i++) {
+        _exampleControllers[i].text = character.examples[i]["content"];
+      }
+    });
+  }
   
   @override
   void initState() {
@@ -130,6 +145,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     rightText: "Reset All", 
                     rightOnPressed: () {
                       character.resetAll();
+                      updateControllers();
                     }
                   ),
                   const SizedBox(height: 15.0),
@@ -137,7 +153,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     leftText: "Load Image",
                     leftOnPressed: () async {
                       await storageOperationDialog(context, character.importImage);
-                      setState(() {});
+                      updateControllers();
                     },
                     rightText: "Save Image",
                     rightOnPressed: () async {
@@ -150,7 +166,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     leftText: "Load JSON",
                     leftOnPressed: () async {
                       await storageOperationDialog(context, character.importJSON);
-                      setState(() {});
+                      updateControllers();
                     },
                     rightText: "Save JSON",
                     rightOnPressed: () async {
