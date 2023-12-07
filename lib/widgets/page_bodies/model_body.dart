@@ -148,6 +148,9 @@ class _ModelBodyState extends State<ModelBody> {
                     leftOnPressed: () async {
                       await storageOperationDialog(
                           context, model.importModelParameters);
+                      setState(() {
+                        _presetController.text = model.preset;
+                      });
                     },
                     rightText: "Save Parameters",
                     rightOnPressed: () async {
@@ -159,6 +162,9 @@ class _ModelBodyState extends State<ModelBody> {
                   FilledButton(
                     onPressed: () {
                       model.resetAll();
+                      setState(() {
+                        _presetController.text = model.preset;
+                      });
                     },
                     child: Text(
                       "Reset All",

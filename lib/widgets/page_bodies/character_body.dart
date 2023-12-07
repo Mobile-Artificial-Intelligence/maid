@@ -30,15 +30,16 @@ class _CharacterBodyState extends State<CharacterBody> {
   void updateControllers() {
     final character = context.read<Character>();
 
-    _nameController = TextEditingController(text: character.name);
-    _userAliasController = TextEditingController(text: character.userAlias);
-    _responseAliasController = TextEditingController(text: character.responseAlias);
-    _prePromptController = TextEditingController(text: character.prePrompt);
+    setState(() {
+      _nameController.text = character.name;
+      _userAliasController.text = character.userAlias;
+      _responseAliasController.text = character.responseAlias;
+      _prePromptController.text = character.prePrompt;
 
-    _exampleControllers = List.generate(
-      character.examples.length,
-      (index) => TextEditingController(text: character.examples[index]["content"]),
-    );
+      for (int i = 0; i < character.examples.length; i++) {
+        _exampleControllers[i].text = character.examples[i]["content"];
+      }
+    });
   }
   
   @override
@@ -50,7 +51,16 @@ class _CharacterBodyState extends State<CharacterBody> {
       setState(() {});
     });
 
-    updateControllers();
+    final character = context.read<Character>();
+    _nameController = TextEditingController(text: character.name);
+    _userAliasController = TextEditingController(text: character.userAlias);
+    _responseAliasController = TextEditingController(text: character.responseAlias);
+    _prePromptController = TextEditingController(text: character.prePrompt);
+
+    _exampleControllers = List.generate(
+      character.examples.length,
+      (index) => TextEditingController(text: character.examples[index]["content"]),
+    );
   }
 
   @override
@@ -135,6 +145,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     rightText: "Reset All", 
                     rightOnPressed: () {
                       character.resetAll();
+                      updateControllers();
                     }
                   ),
                   const SizedBox(height: 15.0),
@@ -142,9 +153,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     leftText: "Load Image",
                     leftOnPressed: () async {
                       await storageOperationDialog(context, character.importImage);
-                      setState(() {
-                        updateControllers();
-                      });
+                      updateControllers();
                     },
                     rightText: "Save Image",
                     rightOnPressed: () async {
@@ -157,9 +166,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                     leftText: "Load JSON",
                     leftOnPressed: () async {
                       await storageOperationDialog(context, character.importJSON);
-                      setState(() {
-                        updateControllers();
-                      });
+                      updateControllers();
                     },
                     rightText: "Save JSON",
                     rightOnPressed: () async {
