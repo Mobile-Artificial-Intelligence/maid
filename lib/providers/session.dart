@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Session extends ChangeNotifier {
   ChatNode _root = ChatNode(key: UniqueKey());
   ChatNode? tail;
+  String _messageBuffer = "";
 
   void init() async {
     Logger.log("Session Initialised");
@@ -107,12 +108,15 @@ class Session extends ChangeNotifier {
   }
 
   void stream(String message) async {
+    _messageBuffer += message;
     tail ??= _root.findTail();
     if (!GenerationManager.busy && !(tail!.userGenerated)) {
       finalise();
-    } else {
-      tail!.messageController.add(message);
+    } else if (!(tail!.messageController.isClosed)) {
+      tail!.messageController.add(_messageBuffer);
+      _messageBuffer = "";
     }
+    tail!.message += message;
   }
 
   void regenerate(Key key, BuildContext context) {
@@ -145,7 +149,10 @@ class Session extends ChangeNotifier {
 
   void finalise() {
     tail ??= _root.findTail();
-    tail!.finaliseController.add(0);
+
+    if (!(tail!.messageController.isClosed)) {
+      tail!.finaliseController.add(0);
+    }
 
     _save();
     notifyListeners();
