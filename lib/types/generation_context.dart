@@ -31,7 +31,7 @@ class GenerationContext {
   late int _penalizeNewline;
   late int _instruct;
   late int _interactive;
-  late int _memoryF16;
+  late int _chatml;
   late int _nCtx;
   late int _nBatch;
   late int _nThread;
@@ -63,7 +63,7 @@ class GenerationContext {
   int get penalizeNewline => _penalizeNewline;
   int get instruct => _instruct;
   int get interactive => _interactive;
-  int get memoryF16 => _memoryF16;
+  int get chatml => _chatml;
   int get nCtx => _nCtx;
   int get nBatch => _nBatch;
   int get nThread => _nThread;
@@ -97,7 +97,7 @@ class GenerationContext {
     map["penalize_nl"] = _penalizeNewline;
     map["instruct"] = _instruct;
     map["interactive"] = _interactive;
-    map["memory_f16"] = _memoryF16;
+    map["chatml"] = _chatml;
     map["n_ctx"] = _nCtx;
     map["n_batch"] = _nBatch;
     map["n_threads"] = _nThread;
@@ -143,7 +143,7 @@ class GenerationContext {
       _penalizeNewline = model.parameters["penalize_nl"] ? 1 : 0;
       _instruct = model.parameters["instruct"] ? 1 : 0;
       _interactive = model.parameters["interactive"] ? 1 : 0;
-      _memoryF16 = model.parameters["memory_f16"] ? 1 : 0;
+      _chatml = model.parameters["chatml"] ? 1 : 0;
       _nCtx = model.parameters["n_ctx"];
       _nBatch = model.parameters["n_batch"];
       _nThread = model.parameters["n_threads"];

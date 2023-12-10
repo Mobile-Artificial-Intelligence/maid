@@ -78,10 +78,10 @@ class LocalParameters extends StatelessWidget {
               },
             ),
             SwitchListTile(
-              title: const Text('memory_f16'),
-              value: model.parameters["memory_f16"] ?? false,
+              title: const Text('chatml'),
+              value: model.parameters["chatml"] ?? false,
               onChanged: (value) {
-                model.setParameter("memory_f16", value);
+                model.setParameter("chatml", value);
               },
             ),
             SwitchListTile(

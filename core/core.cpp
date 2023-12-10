@@ -48,7 +48,7 @@ int core_init(struct maid_params *mparams) {
     n_consumed   = 0;
 
     params.instruct                 = (*mparams).instruct          != 0;
-    params.memory_f16               = (*mparams).memory_f16        != 0;
+    params.chatml                   = (*mparams).chatml            != 0;
     params.interactive              = (*mparams).interactive       != 0;
 
     params.seed                     = (*mparams).seed              ? (*mparams).seed              : -1;
@@ -100,7 +100,7 @@ int core_init(struct maid_params *mparams) {
         ctx_guidance = llama_new_context_with_model(model, lparams);
     }
 
-    const bool add_bos = llama_vocab_type(model) == LLAMA_VOCAB_TYPE_SPM;
+    const bool add_bos = llama_should_add_bos_token(model);
 
     // tokenize the prompt
     embd_inp = ::llama_tokenize(model, params.prompt, add_bos, true);
@@ -146,14 +146,14 @@ int core_prompt(const char *input, maid_output_cb *maid_output) {
         const auto inp_text = ::llama_tokenize(model, buffer, false, false);
         const auto nl_token = llama_token_nl(model);
 
-        if (params.instruct) {
+        if (params.interactive) {
             embd_inp.push_back(nl_token);
             embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
         }
         
         embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
 
-        if (params.instruct) {
+        if (params.interactive) {
             embd_inp.push_back(nl_token);
             embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
         }
@@ -203,7 +203,7 @@ int core_prompt(const char *input, maid_output_cb *maid_output) {
                     embd_cache.push_back(*it);
                     it = embd_out.erase(it);
                     n_pfx++;
-
+        
                     if (n_pfx == inp_pfx.size()) {
                         // Prefix found, reset
                         embd_cache.clear();
@@ -231,7 +231,7 @@ int core_prompt(const char *input, maid_output_cb *maid_output) {
             }
         }
         
-        if (params.interactive) {
+        if (params.interactive && prior <= 0) {
             // Remove input_suffix from output
             std::vector<int>::iterator it = embd_out.begin();
             while (it != embd_out.end()) {
@@ -242,7 +242,7 @@ int core_prompt(const char *input, maid_output_cb *maid_output) {
 
                     if (n_sfx == inp_sfx.size()) {
                         // Suffix found, reset
-                        if (prior <= 0) suffix_found = true;
+                        suffix_found = true;
                         embd_cache.clear();
                         n_sfx = 0;
                         break;
