@@ -14,7 +14,7 @@ extern "C" {
 struct maid_params {
    unsigned char instruct;
    unsigned char interactive;
-   unsigned char memory_f16;
+   unsigned char chatml;
 
    char *path;
    char *preprompt;

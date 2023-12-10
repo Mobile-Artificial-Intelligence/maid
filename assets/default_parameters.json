@@ -1,5 +1,5 @@
 {
-    "memory_f16":false,
+    "chatml":false,
     "instruct":true,
     "interactive":true,
     "random_seed":true,

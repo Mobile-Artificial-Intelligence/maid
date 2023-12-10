@@ -75,7 +75,7 @@ final class maid_params extends ffi.Struct {
   external int interactive;
 
   @ffi.UnsignedChar()
-  external int memory_f16;
+  external int chatml;
 
   external ffi.Pointer<ffi.Char> path;
 

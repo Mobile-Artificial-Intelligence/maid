@@ -48,6 +48,7 @@ int core_init(struct maid_params *mparams) {
     n_consumed   = 0;
 
     params.instruct                 = (*mparams).instruct          != 0;
+    params.chatml                   = (*mparams).chatml            != 0;
     params.interactive              = (*mparams).interactive       != 0;
 
     params.seed                     = (*mparams).seed              ? (*mparams).seed              : -1;
@@ -99,7 +100,7 @@ int core_init(struct maid_params *mparams) {
         ctx_guidance = llama_new_context_with_model(model, lparams);
     }
 
-    const bool add_bos = llama_vocab_type(model) == LLAMA_VOCAB_TYPE_SPM;
+    const bool add_bos = llama_should_add_bos_token(model);
 
     // tokenize the prompt
     embd_inp = ::llama_tokenize(model, params.prompt, add_bos, true);

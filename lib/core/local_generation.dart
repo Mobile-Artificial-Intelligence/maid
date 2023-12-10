@@ -96,7 +96,7 @@ class LocalGeneration {
       params.ref.n_keep = context.nKeep;
       params.ref.instruct = context.instruct;
       params.ref.interactive = context.interactive;
-      params.ref.memory_f16 = context.memoryF16;
+      params.ref.chatml = context.chatml;
       params.ref.penalize_nl = context.penalizeNewline;
       params.ref.top_k = context.topK;
       params.ref.top_p = context.topP;
