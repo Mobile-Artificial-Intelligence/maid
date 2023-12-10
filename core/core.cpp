@@ -36,7 +36,6 @@ static std::vector<llama_token> embd_inp;
 static int n_remain;
 static int n_past;
 static int n_consumed;
-static signed int prior;
 
 static gpt_params params;
 static llama_context_params lparams;
@@ -118,8 +117,6 @@ int core_init(struct maid_params *mparams) {
     last_n_tokens = std::vector<llama_token>(lparams.n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
 
-    prior = embd_inp.size();
-
     return 0;
 }
 
@@ -161,6 +158,8 @@ int core_prompt(const char *input, maid_output_cb *maid_output) {
         n_remain -= inp_text.size();
     }
 
+    signed int prior = embd_inp.size();
+
     while (true) {
         if (stop_generation.load()) {
             stop_generation.store(false);  // reset for future use
@@ -195,69 +194,69 @@ int core_prompt(const char *input, maid_output_cb *maid_output) {
 
         auto embd_out = embd;
         
-        if (params.interactive) {
-            // Remove input_prefix from output
-            std::vector<int>::iterator it = embd_out.begin();
-            while (it != embd_out.end()) {
-                if (*it == inp_pfx[n_pfx]) {
-                    embd_cache.push_back(*it);
-                    it = embd_out.erase(it);
-                    n_pfx++;
-        
-                    if (n_pfx == inp_pfx.size()) {
-                        // Prefix found, reset
-                        embd_cache.clear();
-                        n_pfx = 0;
-                        break;
-                    }
-                } else if (n_pfx != 0) {
-                    // Started a sequence but it's broken now, reset
-                    embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
-                    embd_cache.clear();
-                    n_pfx = 0;
-                    ++it;
-                } else {
-                    ++it;
-                }
-            }
-        }
+        //if (params.interactive) {
+        //    // Remove input_prefix from output
+        //    std::vector<int>::iterator it = embd_out.begin();
+        //    while (it != embd_out.end()) {
+        //        if (*it == inp_pfx[n_pfx]) {
+        //            embd_cache.push_back(*it);
+        //            it = embd_out.erase(it);
+        //            n_pfx++;
+        //
+        //            if (n_pfx == inp_pfx.size()) {
+        //                // Prefix found, reset
+        //                embd_cache.clear();
+        //                n_pfx = 0;
+        //                break;
+        //            }
+        //        } else if (n_pfx != 0) {
+        //            // Started a sequence but it's broken now, reset
+        //            embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
+        //            embd_cache.clear();
+        //            n_pfx = 0;
+        //            ++it;
+        //        } else {
+        //            ++it;
+        //        }
+        //    }
+        //}
 
-        if (prior > 0) prior -= embd_out.size();
+        if (prior >= 0) prior -= embd_out.size();
 
-        if (suffix_found || !params.interactive) {
+        if (prior < 0 || !params.interactive) {
             // display text
             for (auto id : embd_out) {
                 maid_output(return_code::CONTINUE, llama_token_to_piece(ctx, id).c_str());
             }
         }
         
-        if (params.interactive && prior <= 0) {
-            // Remove input_suffix from output
-            std::vector<int>::iterator it = embd_out.begin();
-            while (it != embd_out.end()) {
-                if (*it == inp_sfx[n_sfx]) {
-                    embd_cache.push_back(*it);
-                    it = embd_out.erase(it);
-                    n_sfx++;
-
-                    if (n_sfx == inp_sfx.size()) {
-                        // Suffix found, reset
-                        suffix_found = true;
-                        embd_cache.clear();
-                        n_sfx = 0;
-                        break;
-                    }
-                } else if (n_sfx != 0) {
-                    // Started a sequence but it's broken now, reset
-                    embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
-                    embd_cache.clear();
-                    n_sfx = 0;
-                    ++it;
-                } else {
-                    ++it;
-                }
-            }
-        }
+        //if (params.interactive && prior <= 0) {
+        //    // Remove input_suffix from output
+        //    std::vector<int>::iterator it = embd_out.begin();
+        //    while (it != embd_out.end()) {
+        //        if (*it == inp_sfx[n_sfx]) {
+        //            embd_cache.push_back(*it);
+        //            it = embd_out.erase(it);
+        //            n_sfx++;
+        //
+        //            if (n_sfx == inp_sfx.size()) {
+        //                // Suffix found, reset
+        //                suffix_found = true;
+        //                embd_cache.clear();
+        //                n_sfx = 0;
+        //                break;
+        //            }
+        //        } else if (n_sfx != 0) {
+        //            // Started a sequence but it's broken now, reset
+        //            embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
+        //            embd_cache.clear();
+        //            n_sfx = 0;
+        //            ++it;
+        //        } else {
+        //            ++it;
+        //        }
+        //    }
+        //}
 
         embd_out.clear();
 
