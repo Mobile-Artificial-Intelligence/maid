@@ -48,7 +48,6 @@ int core_init(struct maid_params *mparams) {
     n_consumed   = 0;
 
     params.instruct                 = (*mparams).instruct          != 0;
-    params.memory_f16               = (*mparams).memory_f16        != 0;
     params.interactive              = (*mparams).interactive       != 0;
 
     params.seed                     = (*mparams).seed              ? (*mparams).seed              : -1;
