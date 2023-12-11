@@ -12,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
-  File profile = File("/assets/default_profile.png");
+  File _profile = File("/assets/default_profile.png");
   String _name = "Maid";
   String _prePrompt = "";
   String _userAlias = "";
@@ -22,18 +22,6 @@ class Character extends ChangeNotifier {
 
   void init() async {
     Logger.log("Character Initialised");
-
-    Directory docDir = await getApplicationDocumentsDirectory();
-    String filePath = '${docDir.path}/default_profile.png';
-
-    File newProfileFile = File(filePath);
-    if (!await newProfileFile.exists()) {
-      ByteData data = await rootBundle.load('assets/default_profile.png');
-      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-      await newProfileFile.writeAsBytes(bytes);
-    }
-
-    profile = newProfileFile;
 
     final prefs = await SharedPreferences.getInstance();
 
@@ -47,9 +35,21 @@ class Character extends ChangeNotifier {
     }
   }
 
-  void fromMap(Map<String, dynamic> inputJson) {
+  void fromMap(Map<String, dynamic> inputJson) async {
     if (inputJson["profile"] != null) {
-      profile = File(inputJson["profile"]);
+      _profile = File(inputJson["profile"]);
+    } else {
+      Directory docDir = await getApplicationDocumentsDirectory();
+      String filePath = '${docDir.path}/default_profile.png';
+
+      File newProfileFile = File(filePath);
+      if (!await newProfileFile.exists()) {
+        ByteData data = await rootBundle.load('assets/default_profile.png');
+        List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        await newProfileFile.writeAsBytes(bytes);
+      }
+
+      _profile = newProfileFile;
     }
     
     _name = inputJson["name"] ?? "Unknown";
@@ -133,6 +133,8 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
+  File get profile => _profile;
+
   String get name => _name;
 
   String get userAlias => _userAlias;
@@ -215,7 +217,7 @@ class Character extends ChangeNotifier {
 
   Future<String> exportImage(BuildContext context) async {
     try {
-      final image = decodeImage(profile.readAsBytesSync());
+      final image = decodeImage(_profile.readAsBytesSync());
 
       if (image == null) return "Error decoding image";
 
@@ -256,7 +258,17 @@ class Character extends ChangeNotifier {
         _examples = List<Map<String,dynamic>>.from(json.decode(image.textData!["examples"] ?? "[]"));        
       }
 
-      profile = file;
+      Directory docDir = await getApplicationDocumentsDirectory();
+      String filePath = '${docDir.path}/$_name.png';
+
+      File newProfileFile = File(filePath);
+      if (!await newProfileFile.exists()) {
+        ByteData data = await file.readAsBytes().then((bytes) => ByteData.view(bytes.buffer));
+        List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        await newProfileFile.writeAsBytes(bytes);
+      }
+
+      _profile = newProfileFile;
 
       notifyListeners();
       return "Character Successfully Loaded";

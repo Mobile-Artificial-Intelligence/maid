@@ -194,8 +194,10 @@ int core_prompt(const char *input, maid_output_cb *maid_output) {
         }
 
         auto embd_out = embd;
+
+        if (prior > 0) prior -= embd_out.size();
         
-        if (params.interactive) {
+        if (params.interactive && prior <= 0) {
             // Remove input_prefix from output
             std::vector<int>::iterator it = embd_out.begin();
             while (it != embd_out.end()) {
@@ -221,8 +223,6 @@ int core_prompt(const char *input, maid_output_cb *maid_output) {
                 }
             }
         }
-
-        if (prior > 0) prior -= embd_out.size();
 
         if (suffix_found || !params.interactive) {
             // display text
