@@ -166,7 +166,7 @@ class _ChatBodyState extends State<ChatBody> {
                       child: Row(
                         children: [
                           if (GenerationManager.busy &&
-                              model.apiType != ApiType.local)
+                              model.apiType != ApiType.ollama)
                             IconButton(
                                 onPressed: LocalGeneration.instance.stop,
                                 iconSize: 50,
