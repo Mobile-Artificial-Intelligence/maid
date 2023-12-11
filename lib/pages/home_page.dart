@@ -51,7 +51,9 @@ class HomePageState extends State<HomePage> {
 
   AppBar? _buildAppBar(double aspectRatio) {
     if (aspectRatio < 0.9) {
-      return AppBar();
+      return AppBar(
+        elevation: 0.0,
+      );
     }
     return null;
   }
