@@ -74,6 +74,7 @@ class Character extends ChangeNotifier {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> jsonCharacter = {};
 
+    jsonCharacter["profile"] = _profile.path;
     jsonCharacter["name"] = _name;
     
     jsonCharacter["pre_prompt"] = _prePrompt;
