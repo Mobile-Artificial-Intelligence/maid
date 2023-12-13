@@ -60,42 +60,49 @@ class LocalGeneration {
 
   static _promptIsolate(Map<String, dynamic> args) async {
     _sendPort = args['port'] as SendPort?;
-    String input = args['input'];
-    Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
+    Pointer<message> input = args['input'];
     LocalGeneration.instance._nativeLibrary
-        .core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
+        .core_prompt(input, Pointer.fromFunction(_maidOutputBridge));
   }
 
   void prompt(
-    String input, 
     GenerationContext context,
     void Function(String) callback
   ) async {
-    if (_hasStarted) {
-      _send(input);
+    if (context.messages.isEmpty) {
+      callback.call("");
       return;
     }
 
     try {
       Logger.log(context.toMap().toString());
 
-      _hasStarted = true;
+      final msg = calloc<message>();
+      var current = msg;
 
-      String preprompt = context.prePrompt;
-
-      if (context.messages.isNotEmpty) {
-        for (var i = 0; i < context.messages.length; i++) {
-          if (context.messages[i]["role"] == "user") {
-            preprompt += "\n${context.userAlias}: ${context.messages[i]["content"].trim()}";
-          } else {
-            preprompt += "\n${context.responseAlias}: ${context.messages[i]["content"].trim()}";
-          }
+      for (var i = 0; i < context.messages.length; i++) {
+        if (context.messages[i]["role"] == "user") {
+          current.ref.role = role_type.USER;
+        } else {
+          current.ref.role = role_type.ASSISTANT;
         }
+
+        current.ref.content = context.messages[i]["content"].toString().toNativeUtf8().cast<Char>();
+
+        current.ref.next = calloc<message>();
+        current = current.ref.next;
       }
+
+      if (_hasStarted) {
+        _send(msg);
+        return;
+      }
+
+      _hasStarted = true;
 
       final params = calloc<maid_params>();
       params.ref.path = context.path.toString().toNativeUtf8().cast<Char>();
-      params.ref.preprompt = preprompt.toNativeUtf8().cast<Char>();
+      params.ref.preprompt = context.prePrompt.toNativeUtf8().cast<Char>();
       params.ref.input_prefix =
           context.userAlias.trim().toNativeUtf8().cast<Char>();
       params.ref.input_suffix =
@@ -127,7 +134,7 @@ class LocalGeneration {
 
       ReceivePort receivePort = ReceivePort();
       _sendPort = receivePort.sendPort;
-      _send(input);
+      _send(msg);
 
       Completer completer = Completer();
       receivePort.listen((data) {
@@ -146,8 +153,7 @@ class LocalGeneration {
     }
   }
 
-  void _send(String input) async {
-    Logger.log("Input: $input");
+  void _send(Pointer<message> input) async {
     Isolate.spawn(_promptIsolate, {'input': input, 'port': _sendPort});
   }
 

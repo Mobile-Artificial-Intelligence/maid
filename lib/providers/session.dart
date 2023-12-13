@@ -249,10 +249,6 @@ class Session extends ChangeNotifier {
       messages.remove(messages.last);
     }
 
-    if (messages.isNotEmpty) {
-      messages.remove(messages.last); //remove last message
-    }
-
     return messages;
   }
 

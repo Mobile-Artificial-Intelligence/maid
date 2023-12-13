@@ -123,8 +123,8 @@ int core_init(struct maid_params *mparams) {
     return 0;
 }
 
-int core_prompt(const char *input, maid_output_cb *maid_output) {   
-    std::string buffer(input);
+int core_prompt(struct message *root, maid_output_cb *maid_output) {   
+    std::string buffer;
 
     bool is_interacting = false;
     bool suffix_found = false;
@@ -139,26 +139,43 @@ int core_prompt(const char *input, maid_output_cb *maid_output) {
 
     auto inp_pfx = ::llama_tokenize(ctx, params.input_prefix, false, true);
     auto inp_sfx = ::llama_tokenize(ctx, params.input_suffix, false, true);
+    const auto nl_token = llama_token_nl(model);
 
-    // Add tokens to embd only if the input buffer is non-empty
-    // Entering a empty line lets the user pass control back
-    if (buffer.length() > 1) {
-        const auto inp_text = ::llama_tokenize(model, buffer, false, false);
-        const auto nl_token = llama_token_nl(model);
+    struct message msg = *root;
+    while (msg.next != NULL) {
+        buffer = msg.content;
 
-        if (params.interactive) {
-            embd_inp.push_back(nl_token);
-            embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
+        if (buffer.length() > 1) {
+            const auto inp_text = ::llama_tokenize(model, buffer, false, false);
+
+            if (params.interactive) {
+                switch (msg.role) {
+                    case USER:
+                        embd_inp.push_back(nl_token);
+                        embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
+                        break;
+                    case ASSISTANT:
+                        embd_inp.push_back(nl_token);
+                        embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
+                        break;
+                    case SYSTEM:
+                        break;
+                }
+            }
+
+            embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
+
+            
         }
-        
-        embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
 
-        if (params.interactive) {
-            embd_inp.push_back(nl_token);
-            embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
-        }
+        msg = *msg.next;
+    }
 
-        n_remain -= inp_text.size();
+
+    // Inject one last input suffix if we're in interactive mode
+    if (params.interactive) {
+        embd_inp.push_back(nl_token);
+        embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
     }
 
     while (true) {

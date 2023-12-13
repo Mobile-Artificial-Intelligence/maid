@@ -34,21 +34,21 @@ class NativeLibrary {
       _core_initPtr.asFunction<int Function(ffi.Pointer<maid_params>)>();
 
   int core_prompt(
-    ffi.Pointer<ffi.Char> input,
+    ffi.Pointer<message> root,
     ffi.Pointer<maid_output_cb> maid_output,
   ) {
     return _core_prompt(
-      input,
+      root,
       maid_output,
     );
   }
 
   late final _core_promptPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Char>,
+          ffi.Int Function(ffi.Pointer<message>,
               ffi.Pointer<maid_output_cb>)>>('core_prompt');
   late final _core_prompt = _core_promptPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<maid_output_cb>)>();
+      int Function(ffi.Pointer<message>, ffi.Pointer<maid_output_cb>)>();
 
   void core_stop() {
     return _core_stop();
@@ -65,6 +65,17 @@ class NativeLibrary {
   late final _core_cleanupPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('core_cleanup');
   late final _core_cleanup = _core_cleanupPtr.asFunction<void Function()>();
+}
+
+abstract class role_type {
+  static const int USER = 0;
+  static const int ASSISTANT = 1;
+  static const int SYSTEM = 2;
+}
+
+abstract class return_code {
+  static const int STOP = 0;
+  static const int CONTINUE = 1;
 }
 
 final class maid_params extends ffi.Struct {
@@ -143,9 +154,13 @@ final class maid_params extends ffi.Struct {
   external int penalize_nl;
 }
 
-abstract class return_code {
-  static const int STOP = 0;
-  static const int CONTINUE = 1;
+final class message extends ffi.Struct {
+  @ffi.Int32()
+  external int role;
+
+  external ffi.Pointer<ffi.Char> content;
+
+  external ffi.Pointer<message> next;
 }
 
 typedef maid_output_cb = ffi.NativeFunction<

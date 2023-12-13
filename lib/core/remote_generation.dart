@@ -10,13 +10,11 @@ import 'package:permission_handler/permission_handler.dart';
 
 class RemoteGeneration {
   static void ollamaRequest(
-    String input, 
     GenerationContext context, 
     void Function(String) callback
   ) async {
     var messages = context.messages;
     messages.insert(0, {"role":"system","text":context.prePrompt});
-    messages.add({"role":"user","text":input});
     
     final url = Uri.parse("${context.remoteUrl}/api/chat");
     final headers = {
@@ -81,13 +79,11 @@ class RemoteGeneration {
   }
 
   static void openAiRequest(
-    String input, 
     GenerationContext context, 
     void Function(String) callback
   ) async {
     var messages = context.messages;
     messages.insert(0, {"role":"system","text":context.prePrompt});
-    messages.add({"role":"user","text":input});
 
     final url = Uri.parse("${context.remoteUrl}/v1/chat/completions");
     final headers = {
@@ -137,7 +133,7 @@ class RemoteGeneration {
     callback.call("");
   }
 
-  static void prompt(String input, 
+  static void prompt(
     GenerationContext context,
     void Function(String) callback
   ) async {
@@ -149,10 +145,10 @@ class RemoteGeneration {
 
     switch (context.apiType) {
       case ApiType.ollama:
-        ollamaRequest(input, context, callback);
+        ollamaRequest(context, callback);
         break;
       case ApiType.openAI:
-        openAiRequest(input, context, callback);
+        openAiRequest(context, callback);
         break;
       default:
         break;

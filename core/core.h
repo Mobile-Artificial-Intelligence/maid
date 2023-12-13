@@ -11,6 +11,17 @@ extern "C" {
    #define EXPORT __attribute__((visibility("default"))) __attribute__((used))
 #endif
 
+enum role_type {
+   USER,
+   ASSISTANT,
+   SYSTEM,
+};
+
+enum return_code {
+   STOP,
+   CONTINUE,
+};
+
 struct maid_params {
    unsigned char instruct;
    unsigned char interactive;
@@ -43,16 +54,17 @@ struct maid_params {
    unsigned char penalize_nl;             // consider newlines as a repeatable token
 };
 
-enum return_code {
-   STOP,
-   CONTINUE,
+struct message {
+   enum role_type role;
+   char *content;
+   struct message *next;
 };
 
 typedef void maid_output_cb(unsigned char code, const char *buffer);
 
 EXPORT int core_init(struct maid_params *mparams);
 
-EXPORT int core_prompt(const char *input, maid_output_cb *maid_output);
+EXPORT int core_prompt(struct message *root, maid_output_cb *maid_output);
 
 EXPORT void core_stop(void);
 
