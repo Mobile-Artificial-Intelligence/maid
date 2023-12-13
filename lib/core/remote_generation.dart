@@ -42,7 +42,7 @@ class RemoteGeneration {
         "mirostat": context.mirostat,
         "mirostat_tau": context.mirostatTau,
         "mirostat_eta": context.mirostatEta,
-        "penalize_newline": context.penalizeNewline,
+        "penalize_newline": context.penalizeNewline != 0 ? true : false,
         "num_ctx": context.nCtx,
         "num_batch": context.nBatch,
         "num_thread": context.nThread,
