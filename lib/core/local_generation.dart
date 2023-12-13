@@ -81,9 +81,21 @@ class LocalGeneration {
 
       _hasStarted = true;
 
+      String preprompt = context.prePrompt;
+
+      if (context.messages.isNotEmpty) {
+        for (var i = 0; i < context.messages.length; i++) {
+          if (context.messages[i]["role"] == "user") {
+            preprompt += "\n${context.userAlias}: ${context.messages[i]["content"].trim()}";
+          } else {
+            preprompt += "\n${context.responseAlias}: ${context.messages[i]["content"].trim()}";
+          }
+        }
+      }
+
       final params = calloc<maid_params>();
       params.ref.path = context.path.toString().toNativeUtf8().cast<Char>();
-      params.ref.preprompt = context.prePrompt.toNativeUtf8().cast<Char>();
+      params.ref.preprompt = preprompt.toNativeUtf8().cast<Char>();
       params.ref.input_prefix =
           context.userAlias.trim().toNativeUtf8().cast<Char>();
       params.ref.input_suffix =
