@@ -60,41 +60,42 @@ class LocalGeneration {
 
   static _promptIsolate(Map<String, dynamic> args) async {
     _sendPort = args['port'] as SendPort?;
-    Pointer<message> input = args['input'];
+    List<Map<String, dynamic>> messages = args['messages'];
+
+    final msg = calloc<message>();
+    var current = msg;
+
+    for (var i = 0; i < messages.length; i++) {
+      if (messages[i]["role"] == "user") {
+        current.ref.role = role_type.USER;
+      } else {
+        current.ref.role = role_type.ASSISTANT;
+      }
+
+      current.ref.content = messages[i]["content"].toString().toNativeUtf8().cast<Char>();
+
+      current.ref.next = calloc<message>();
+      current = current.ref.next;
+    }
+
     LocalGeneration.instance._nativeLibrary
-        .core_prompt(input, Pointer.fromFunction(_maidOutputBridge));
+        .core_prompt(msg, Pointer.fromFunction(_maidOutputBridge));
   }
 
   void prompt(
     GenerationContext context,
     void Function(String) callback
   ) async {
-    if (context.messages.isEmpty) {
-      callback.call("");
-      return;
-    }
-
     try {
       Logger.log(context.toMap().toString());
 
-      final msg = calloc<message>();
-      var current = msg;
-
-      for (var i = 0; i < context.messages.length; i++) {
-        if (context.messages[i]["role"] == "user") {
-          current.ref.role = role_type.USER;
-        } else {
-          current.ref.role = role_type.ASSISTANT;
-        }
-
-        current.ref.content = context.messages[i]["content"].toString().toNativeUtf8().cast<Char>();
-
-        current.ref.next = calloc<message>();
-        current = current.ref.next;
+      if (context.messages.isEmpty) {
+        callback.call("");
+        return;
       }
 
       if (_hasStarted) {
-        _send(msg);
+        _send(context.messages);
         return;
       }
 
@@ -134,7 +135,7 @@ class LocalGeneration {
 
       ReceivePort receivePort = ReceivePort();
       _sendPort = receivePort.sendPort;
-      _send(msg);
+      _send(context.messages);
 
       Completer completer = Completer();
       receivePort.listen((data) {
@@ -153,8 +154,8 @@ class LocalGeneration {
     }
   }
 
-  void _send(Pointer<message> input) async {
-    Isolate.spawn(_promptIsolate, {'input': input, 'port': _sendPort});
+  void _send(List<Map<String, dynamic>> messages) async {
+    Isolate.spawn(_promptIsolate, {'messages': messages, 'port': _sendPort});
   }
 
   void stop() {
