@@ -100,16 +100,6 @@ int core_init(struct maid_params *mparams) {
         ctx_guidance = llama_new_context_with_model(model, lparams);
     }
 
-    const bool add_bos = llama_should_add_bos_token(model);
-
-    // tokenize the prompt
-    embd_inp = ::llama_tokenize(model, params.prompt, add_bos, true);
-
-    if ((int) embd_inp.size() > lparams.n_ctx - 4) {
-        // truncate the prompt if it's too long
-        embd_inp = std::vector<llama_token>(embd_inp.begin(), embd_inp.begin() + lparams.n_ctx - 4);
-    }
-
     // number of tokens to keep when resetting context
     if (params.n_keep < 0 || params.n_keep > (int) embd_inp.size()) {
         params.n_keep = (int)embd_inp.size();
@@ -117,8 +107,6 @@ int core_init(struct maid_params *mparams) {
 
     last_n_tokens = std::vector<llama_token>(lparams.n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
-
-    prior = embd_inp.size();
 
     return 0;
 }
@@ -141,11 +129,17 @@ int core_prompt(struct message *root, maid_output_cb *maid_output) {
     auto inp_sfx = ::llama_tokenize(ctx, params.input_suffix, false, true);
     const auto nl_token = llama_token_nl(model);
 
+    // tokenize the prompt
+    embd_inp = ::llama_tokenize(model, params.prompt, llama_should_add_bos_token(model), true);
+    embd.clear();
+
     struct message msg = *root;
     while (msg.next != NULL) {
         buffer = msg.content;
 
         if (buffer.length() > 1) {
+            prior = embd_inp.size();
+
             const auto inp_text = ::llama_tokenize(model, buffer, false, false);
 
             if (params.interactive) {
@@ -164,18 +158,21 @@ int core_prompt(struct message *root, maid_output_cb *maid_output) {
             }
 
             embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
-
-            
         }
 
         msg = *msg.next;
     }
 
-
     // Inject one last input suffix if we're in interactive mode
     if (params.interactive) {
         embd_inp.push_back(nl_token);
         embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
+    }
+
+    if ((int) embd_inp.size() > lparams.n_ctx - 16) {
+        // truncate the prompt if it's too long
+        auto offset = embd_inp.size() - (lparams.n_ctx - 16);
+        embd_inp = std::vector<llama_token>(embd_inp.begin() + offset, embd_inp.end());
     }
 
     while (true) {
