@@ -1,4 +1,6 @@
 {
+    "chatml":false,
+    "instruct":false,
     "interactive":true,
     "random_seed":true,
     "path":"",

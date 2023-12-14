@@ -71,6 +71,20 @@ class LocalParameters extends StatelessWidget {
               },
             ),
             SwitchListTile(
+              title: const Text('instruct'),
+              value: model.parameters["instruct"] ?? true,
+              onChanged: (value) {
+                model.setParameter("instruct", value);
+              },
+            ),
+            SwitchListTile(
+              title: const Text('chatml'),
+              value: model.parameters["chatml"] ?? false,
+              onChanged: (value) {
+                model.setParameter("chatml", value);
+              },
+            ),
+            SwitchListTile(
               title: const Text('penalize_nl'),
               value: model.parameters["penalize_nl"] ?? true,
               onChanged: (value) {
