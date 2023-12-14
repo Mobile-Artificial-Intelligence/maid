@@ -64,24 +64,10 @@ class LocalParameters extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             SwitchListTile(
-              title: const Text('instruct'),
-              value: model.parameters["instruct"] ?? true,
-              onChanged: (value) {
-                model.setParameter("instruct", value);
-              },
-            ),
-            SwitchListTile(
               title: const Text('interactive'),
               value: model.parameters["interactive"] ?? true,
               onChanged: (value) {
                 model.setParameter("interactive", value);
-              },
-            ),
-            SwitchListTile(
-              title: const Text('chatml'),
-              value: model.parameters["chatml"] ?? false,
-              onChanged: (value) {
-                model.setParameter("chatml", value);
               },
             ),
             SwitchListTile(

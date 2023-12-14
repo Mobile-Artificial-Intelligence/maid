@@ -12,9 +12,7 @@ extern "C" {
 #endif
 
 struct maid_params {
-   unsigned char instruct;
    unsigned char interactive;
-   unsigned char chatml;
 
    char *path;
    char *preprompt;
