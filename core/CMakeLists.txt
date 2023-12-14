@@ -9,7 +9,7 @@ if(ANDROID)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID_ARM_NEON=TRUE -DANDROID_TOOLCHAIN=clang -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-23")
 endif()
 
-#set(LLAMA_STATIC ON CACHE BOOL "llama: enable static link libraries" FORCE)
+set(LLAMA_CLBLAST ON CACHE BOOL "llama: enable clblast" FORCE)
 set(LLAMA_NATIVE OFF CACHE BOOL "llama: disable -march=native flag" FORCE)
 
 add_subdirectory(./llama.cpp)
