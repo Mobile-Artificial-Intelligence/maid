@@ -36,11 +36,6 @@ jobs:
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake ninja-build pkg-config libgtk-3-dev clblast
-
       - name: Build APK
         run: |
           flutter pub get
@@ -68,7 +63,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build pkg-config libgtk-3-dev clblast
+          sudo apt-get install -y cmake ninja-build pkg-config libgtk-3-dev
 
       - name: Build Linux App
         run: |
