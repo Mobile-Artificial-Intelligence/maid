@@ -46,6 +46,14 @@ class LocalGeneration {
     _nativeLibrary = NativeLibrary(coreDynamic);
   }
 
+  static void _maidLoggerBridge(Pointer<Char> buffer) {
+    try {
+      Logger.log(buffer.cast<Utf8>().toDartString());
+    } catch (e) {
+      Logger.log(e.toString());
+    }
+  }
+
   static void _maidOutputBridge(int code, Pointer<Char> buffer) {
     try {
       if (code == return_code.CONTINUE) {
@@ -111,7 +119,7 @@ class LocalGeneration {
       params.ref.mirostat_tau = context.mirostatTau;
       params.ref.mirostat_eta = context.mirostatEta;
 
-      _nativeLibrary.core_init(params);
+      _nativeLibrary.core_init(params, Pointer.fromFunction(_maidLoggerBridge));
 
       ReceivePort receivePort = ReceivePort();
       _sendPort = receivePort.sendPort;
