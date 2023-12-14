@@ -1,5 +1,6 @@
 #include "core.h"
 #include "llama.h"
+#include "ggml.h"
 #include "common.h"
 
 #include <cassert>
@@ -41,8 +42,20 @@ static signed int prior;
 static gpt_params params;
 static llama_context_params lparams;
 
-int core_init(struct maid_params *mparams) {
+static maid_logger *maid_logger_callback;
+
+static void core_log_callback(ggml_log_level level, const char * text, void * user_data) {
+    (void) level;
+    (void) user_data;
+    maid_logger_callback(text);
+}
+
+int core_init(struct maid_params *mparams, maid_logger *log_output) {
     llama_backend_init(false);
+
+    maid_logger_callback = log_output;
+
+    llama_log_set(core_log_callback, NULL);
 
     n_past       = 0;
     n_consumed   = 0;
@@ -123,7 +136,7 @@ int core_init(struct maid_params *mparams) {
     return 0;
 }
 
-int core_prompt(const char *input, maid_output_cb *maid_output) {   
+int core_prompt(const char *input, maid_output_stream *maid_output) {   
     std::string buffer(input);
 
     bool is_interacting = false;

@@ -21,21 +21,24 @@ class NativeLibrary {
 
   int core_init(
     ffi.Pointer<maid_params> mparams,
+    ffi.Pointer<maid_logger> log_output,
   ) {
     return _core_init(
       mparams,
+      log_output,
     );
   }
 
-  late final _core_initPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<maid_params>)>>(
-          'core_init');
-  late final _core_init =
-      _core_initPtr.asFunction<int Function(ffi.Pointer<maid_params>)>();
+  late final _core_initPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<maid_params>,
+              ffi.Pointer<maid_logger>)>>('core_init');
+  late final _core_init = _core_initPtr.asFunction<
+      int Function(ffi.Pointer<maid_params>, ffi.Pointer<maid_logger>)>();
 
   int core_prompt(
     ffi.Pointer<ffi.Char> input,
-    ffi.Pointer<maid_output_cb> maid_output,
+    ffi.Pointer<maid_output_stream> maid_output,
   ) {
     return _core_prompt(
       input,
@@ -46,9 +49,9 @@ class NativeLibrary {
   late final _core_promptPtr = _lookup<
       ffi.NativeFunction<
           ffi.Int Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<maid_output_cb>)>>('core_prompt');
+              ffi.Pointer<maid_output_stream>)>>('core_prompt');
   late final _core_prompt = _core_promptPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<maid_output_cb>)>();
+      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<maid_output_stream>)>();
 
   void core_stop() {
     return _core_stop();
@@ -148,5 +151,7 @@ abstract class return_code {
   static const int CONTINUE = 1;
 }
 
-typedef maid_output_cb = ffi.NativeFunction<
+typedef maid_logger
+    = ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Char> buffer)>;
+typedef maid_output_stream = ffi.NativeFunction<
     ffi.Void Function(ffi.UnsignedChar code, ffi.Pointer<ffi.Char> buffer)>;
