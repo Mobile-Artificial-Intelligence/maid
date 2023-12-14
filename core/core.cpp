@@ -150,7 +150,9 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
     std::lock_guard<std::mutex> lock(continue_mutex);
     stop_generation.store(false);
 
-    auto inp_pfx = ::llama_tokenize(ctx, params.input_prefix, false, true);
+    const bool add_bos = llama_should_add_bos_token(model);
+
+    auto inp_pfx = ::llama_tokenize(ctx, params.input_prefix, add_bos, true);
     auto inp_sfx = ::llama_tokenize(ctx, params.input_suffix, false, true);
 
     // Add tokens to embd only if the input buffer is non-empty
@@ -159,12 +161,32 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         const auto inp_text = ::llama_tokenize(model, buffer, false, false);
         const auto nl_token = llama_token_nl(model);
 
+        if (params.instruct) {
+            auto instruct_pfx = ::llama_tokenize(ctx, "\n\n### Instruction:\n\n", add_bos, true);
+            embd_inp.insert(embd_inp.end(), instruct_pfx.begin(), instruct_pfx.end());
+        }
+
+        if (params.chatml) {
+            auto chatml_pfx = ::llama_tokenize(ctx, "\n<|im_start|>user\n", add_bos, true);
+            embd_inp.insert(embd_inp.end(), chatml_pfx.begin(), chatml_pfx.end());
+        }
+
         if (params.interactive) {
             embd_inp.push_back(nl_token);
             embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
         }
         
         embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
+
+        if (params.instruct) {
+            auto instruct_sfx = ::llama_tokenize(ctx, "\n\n### Response:\n\n",    false,   true);
+            embd_inp.insert(embd_inp.end(), instruct_sfx.begin(), instruct_sfx.end());
+        }
+
+        if (params.chatml) {
+            auto chatml_sfx = ::llama_tokenize(ctx, "<|im_end|>\n<|im_start|>assistant\n", false, true);
+            embd_inp.insert(embd_inp.end(), chatml_sfx.begin(), chatml_sfx.end());
+        }
 
         if (params.interactive) {
             embd_inp.push_back(nl_token);
