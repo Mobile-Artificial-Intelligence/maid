@@ -60,6 +60,8 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     n_past       = 0;
     n_consumed   = 0;
 
+    params.instruct                 = (*mparams).instruct          != 0;
+    params.chatml                   = (*mparams).chatml            != 0;
     params.interactive              = (*mparams).interactive       != 0;
 
     params.seed                     = (*mparams).seed              ? (*mparams).seed              : -1;
@@ -370,6 +372,8 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
 
                     is_interacting = true;
                     printf("\n");
+                } else if (params.instruct) {
+                    is_interacting = true;
                 }
             }
 
