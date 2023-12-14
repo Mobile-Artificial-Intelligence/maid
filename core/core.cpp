@@ -152,7 +152,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
 
     const bool add_bos = llama_should_add_bos_token(model);
 
-    auto inp_pfx = ::llama_tokenize(ctx, params.input_prefix, add_bos, true);
+    auto inp_pfx = ::llama_tokenize(ctx, params.input_prefix, false, true);
     auto inp_sfx = ::llama_tokenize(ctx, params.input_suffix, false, true);
 
     // Add tokens to embd only if the input buffer is non-empty
