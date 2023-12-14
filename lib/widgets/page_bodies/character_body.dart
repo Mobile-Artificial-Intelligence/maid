@@ -73,8 +73,6 @@ class _CharacterBodyState extends State<CharacterBody> {
       prefs.setString("last_character", json.encode(cachedCharacter.toMap()));
     });
 
-    GenerationManager.cleanup();
-
     super.dispose();
   }
   

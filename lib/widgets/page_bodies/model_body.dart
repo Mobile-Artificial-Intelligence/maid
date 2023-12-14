@@ -48,7 +48,6 @@ class _ModelBodyState extends State<ModelBody> {
       prefs.setString("models", json.encode(_models));
       prefs.setString("last_model", json.encode(cachedModel.toMap()));
     });
-    GenerationManager.cleanup();
 
     super.dispose();
   }
