@@ -15,8 +15,8 @@ class RemoteGeneration {
     void Function(String) callback
   ) async {
     var messages = context.messages;
-    messages.insert(0, {"role":"system","text":context.prePrompt});
-    messages.add({"role":"user","text":input});
+    messages.insert(0, {"role":"system","content":context.prePrompt});
+    messages.add({"role":"user","content":input});
     
     final url = Uri.parse("${context.remoteUrl}/api/chat");
     final headers = {
@@ -86,8 +86,8 @@ class RemoteGeneration {
     void Function(String) callback
   ) async {
     var messages = context.messages;
-    messages.insert(0, {"role":"system","text":context.prePrompt});
-    messages.add({"role":"user","text":input});
+    messages.insert(0, {"role":"system","content":context.prePrompt});
+    messages.add({"role":"user","content":input});
 
     final url = Uri.parse("${context.remoteUrl}/v1/chat/completions");
     final headers = {
