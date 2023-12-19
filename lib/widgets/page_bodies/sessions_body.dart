@@ -39,7 +39,6 @@ class _SessionsBodyState extends State<SessionsBody> {
 
       prefs.setString("sessions", json.encode(_sessions));
     });
-    GenerationManager.cleanup();
 
     super.dispose();
   }

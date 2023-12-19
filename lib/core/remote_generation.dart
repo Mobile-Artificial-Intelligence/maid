@@ -14,7 +14,8 @@ class RemoteGeneration {
     void Function(String) callback
   ) async {
     var messages = context.messages;
-    messages.insert(0, {"role":"system","text":context.prePrompt});
+    messages.insert(0, {"role":"system","content":context.prePrompt});
+    messages.add({"role":"user","content":input});
     
     final url = Uri.parse("${context.remoteUrl}/api/chat");
     final headers = {
@@ -83,7 +84,8 @@ class RemoteGeneration {
     void Function(String) callback
   ) async {
     var messages = context.messages;
-    messages.insert(0, {"role":"system","text":context.prePrompt});
+    messages.insert(0, {"role":"system","content":context.prePrompt});
+    messages.add({"role":"user","content":input});
 
     final url = Uri.parse("${context.remoteUrl}/v1/chat/completions");
     final headers = {
@@ -95,7 +97,6 @@ class RemoteGeneration {
       "model": context.remoteModel ?? "gpt-3.5-turbo",
       "messages": messages,
       "temperature": context.temperature,
-      "stream": true
     });
 
     try {
@@ -103,27 +104,18 @@ class RemoteGeneration {
         ..headers.addAll(headers)
         ..body = body;
       
-      final streamedResponse = await request.send();
+      final response = await request.send();
+      final responseString = await response.stream.bytesToString();
+      final data = json.decode(responseString);
 
-      await for (var value in streamedResponse.stream
-          .transform(utf8.decoder)
-      ) {
-        final data = json.decode(value);
+      if (data['error'] != null) {
+        throw Exception(data['error']);
+      }
 
-        if (data['error'] != null) {
-          throw Exception(data['error']);
-        }
+      final responseText = data['choices'][0]['message']['content'] as String?;
 
-        final responseText = data['choices']['delta']['content'] as String?;
-        final finishReason = data['finish_reason'] as String?;
-
-        if (responseText != null && responseText.isNotEmpty) {
-          callback.call(responseText);
-        }
-
-        if (finishReason != null) {
-          break;
-        }
+      if (responseText != null && responseText.isNotEmpty) {
+        callback.call(responseText);
       }
     } catch (e) {
       Logger.log('Error: $e');

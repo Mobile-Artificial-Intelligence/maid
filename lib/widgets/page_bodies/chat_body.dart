@@ -26,6 +26,13 @@ class _ChatBodyState extends State<ChatBody> {
   final ScrollController _consoleScrollController = ScrollController();
   List<ChatMessage> chatWidgets = [];
 
+  @override
+  void dispose() {
+    if (!GenerationManager.busy) GenerationManager.cleanup();
+
+    super.dispose();
+  }
+
   void _missingModelDialog() {
     // Use a local reference to context to avoid using it across an async gap.
     final localContext = context;

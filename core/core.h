@@ -60,11 +60,13 @@ struct message {
    struct message *next;
 };
 
-typedef void maid_output_cb(unsigned char code, const char *buffer);
+typedef void maid_logger(const char *buffer);
 
-EXPORT int core_init(struct maid_params *mparams);
+typedef void maid_output_stream(unsigned char code, const char *buffer);
 
-EXPORT int core_prompt(struct message *root, maid_output_cb *maid_output);
+EXPORT int core_init(struct maid_params *mparams, maid_logger *log_output);
+
+EXPORT int core_prompt(const char *input, maid_output_stream *maid_output);
 
 EXPORT void core_stop(void);
 

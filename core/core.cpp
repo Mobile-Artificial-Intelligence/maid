@@ -1,5 +1,6 @@
 #include "core.h"
 #include "llama.h"
+#include "ggml.h"
 #include "common.h"
 
 #include <cassert>
@@ -41,8 +42,20 @@ static signed int prior;
 static gpt_params params;
 static llama_context_params lparams;
 
-int core_init(struct maid_params *mparams) {
+static maid_logger *maid_logger_callback;
+
+static void core_log_callback(ggml_log_level level, const char * text, void * user_data) {
+    (void) level;
+    (void) user_data;
+    maid_logger_callback(text);
+}
+
+int core_init(struct maid_params *mparams, maid_logger *log_output) {
     llama_backend_init(false);
+
+    maid_logger_callback = log_output;
+
+    llama_log_set(core_log_callback, NULL);
 
     n_past       = 0;
     n_consumed   = 0;
@@ -111,8 +124,8 @@ int core_init(struct maid_params *mparams) {
     return 0;
 }
 
-int core_prompt(struct message *root, maid_output_cb *maid_output) {   
-    std::string buffer;
+int core_prompt(const char *input, maid_output_stream *maid_output) {   
+    std::string buffer(input);
 
     bool is_interacting = false;
     bool suffix_found = false;
@@ -125,6 +138,8 @@ int core_prompt(struct message *root, maid_output_cb *maid_output) {
     std::lock_guard<std::mutex> lock(continue_mutex);
     stop_generation.store(false);
 
+    const bool add_bos = llama_should_add_bos_token(model);
+
     auto inp_pfx = ::llama_tokenize(ctx, params.input_prefix, false, true);
     auto inp_sfx = ::llama_tokenize(ctx, params.input_suffix, false, true);
     const auto nl_token = llama_token_nl(model);
@@ -132,6 +147,7 @@ int core_prompt(struct message *root, maid_output_cb *maid_output) {
     // tokenize the prompt
     embd_inp = ::llama_tokenize(model, params.prompt, llama_should_add_bos_token(model), true);
     embd.clear();
+
 
     struct message msg = *root;
     while (msg.next != NULL) {
@@ -142,7 +158,17 @@ int core_prompt(struct message *root, maid_output_cb *maid_output) {
 
             const auto inp_text = ::llama_tokenize(model, buffer, false, false);
 
-            if (params.interactive) {
+        if (params.instruct) {
+            auto instruct_pfx = ::llama_tokenize(ctx, "\n\n### Instruction:\n\n", add_bos, true);
+            embd_inp.insert(embd_inp.end(), instruct_pfx.begin(), instruct_pfx.end());
+        }
+
+        if (params.chatml) {
+            auto chatml_pfx = ::llama_tokenize(ctx, "\n<|im_start|>user\n", add_bos, true);
+            embd_inp.insert(embd_inp.end(), chatml_pfx.begin(), chatml_pfx.end());
+        }
+
+        if (params.interactive) {
                 switch (msg.role) {
                     case USER:
                         embd_inp.push_back(nl_token);
@@ -156,8 +182,22 @@ int core_prompt(struct message *root, maid_output_cb *maid_output) {
                         break;
                 }
             }
+        
+        embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
 
-            embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
+        if (params.instruct) {
+            auto instruct_sfx = ::llama_tokenize(ctx, "\n\n### Response:\n\n",    false,   true);
+            embd_inp.insert(embd_inp.end(), instruct_sfx.begin(), instruct_sfx.end());
+        }
+
+        if (params.chatml) {
+            auto chatml_sfx = ::llama_tokenize(ctx, "<|im_end|>\n<|im_start|>assistant\n", false, true);
+            embd_inp.insert(embd_inp.end(), chatml_sfx.begin(), chatml_sfx.end());
+        }
+
+        if (params.interactive) {
+            embd_inp.push_back(nl_token);
+            embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
         }
 
         msg = *msg.next;
