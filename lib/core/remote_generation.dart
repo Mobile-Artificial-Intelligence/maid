@@ -5,47 +5,44 @@ import 'package:http/http.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/types/generation_context.dart';
+import 'package:maid/types/generation_options.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:langchain/langchain.dart';
+import 'package:langchain_openai/langchain_openai.dart';
+
 class RemoteGeneration {
-  static void ollamaRequest(
-    String input, 
-    GenerationContext context, 
-    void Function(String) callback
-  ) async {
-    var messages = context.messages;
-    messages.insert(0, {"role":"system","content":context.prePrompt});
-    messages.add({"role":"user","content":input});
-    
-    final url = Uri.parse("${context.remoteUrl}/api/chat");
-    final headers = {
-      "Content-Type": "application/json",
-      "User-Agent": "MAID"
-    };
+  static void ollamaRequest(String input, GenerationOptions options,
+      void Function(String) callback) async {
+    var messages = options.messages;
+    messages.insert(0, {"role": "system", "content": options.prePrompt});
+    messages.add({"role": "user", "content": input});
+
+    final url = Uri.parse("${options.remoteUrl}/api/chat");
+    final headers = {"Content-Type": "application/json", "User-Agent": "MAID"};
     final body = json.encode({
-      "model": context.remoteModel ?? "llama2:7b-chat",
+      "model": options.remoteModel ?? "llama2:7b-chat",
       "messages": messages,
       "options": {
-        "num_keep": context.nKeep,
-        "seed": context.seed,
-        "num_predict": context.nPredict,
-        "top_k": context.topK,
-        "top_p": context.topP,
-        "tfs_z": context.tfsZ,
-        "typical_p": context.typicalP,
-        "repeat_last_n": context.penaltyLastN,
-        "temperature": context.temperature,
-        "repeat_penalty": context.penaltyRepeat,
-        "presence_penalty": context.penaltyPresent,
-        "frequency_penalty": context.penaltyFreq,
-        "mirostat": context.mirostat,
-        "mirostat_tau": context.mirostatTau,
-        "mirostat_eta": context.mirostatEta,
-        "penalize_newline": context.penalizeNewline != 0 ? true : false,
-        "num_ctx": context.nCtx,
-        "num_batch": context.nBatch,
-        "num_thread": context.nThread,
+        "num_keep": options.nKeep,
+        "seed": options.seed,
+        "num_predict": options.nPredict,
+        "top_k": options.topK,
+        "top_p": options.topP,
+        "tfs_z": options.tfsZ,
+        "typical_p": options.typicalP,
+        "repeat_last_n": options.penaltyLastN,
+        "temperature": options.temperature,
+        "repeat_penalty": options.penaltyRepeat,
+        "presence_penalty": options.penaltyPresent,
+        "frequency_penalty": options.penaltyFreq,
+        "mirostat": options.mirostat,
+        "mirostat_tau": options.mirostatTau,
+        "mirostat_eta": options.mirostatEta,
+        "penalize_newline": options.penalizeNewline != 0 ? true : false,
+        "num_ctx": options.nCtx,
+        "num_batch": options.nBatch,
+        "num_thread": options.nThread,
       },
       "stream": true
     });
@@ -80,45 +77,45 @@ class RemoteGeneration {
     callback.call("");
   }
 
-  static void openAiRequest(
-    String input, 
-    GenerationContext context, 
-    void Function(String) callback
-  ) async {
-    var messages = context.messages;
-    messages.insert(0, {"role":"system","content":context.prePrompt});
-    messages.add({"role":"user","content":input});
+  static void openAiRequest(String input, GenerationOptions options,
+      void Function(String) callback) async {
+    var messages = options.messages;
+    messages.insert(0, {"role": "system", "content": options.prePrompt});
+    messages.add({"role": "user", "content": input});
 
-    final url = Uri.parse("${context.remoteUrl}/v1/chat/completions");
-    final headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer ${context.apiKey}",
-      "User-Agent": "MAID"
-    };
-    final body = json.encode({
-      "model": context.remoteModel ?? "gpt-3.5-turbo",
-      "messages": messages,
-      "temperature": context.temperature,
-    });
+    List<ChatMessage> chatMessages = [];
+
+    for (var message in messages) {
+      switch (message['role']) {
+        case "user":
+          chatMessages.add(ChatMessage.humanText(message['content']));
+          break;
+        case "assistant":
+          chatMessages.add(ChatMessage.ai(message['content']));
+          break;
+        case "system":
+          chatMessages.add(ChatMessage.system(message['content']));
+          break;
+        default:
+          break;
+      }
+    }
 
     try {
-      final request = Request("POST", url)
-        ..headers.addAll(headers)
-        ..body = body;
-      
-      final response = await request.send();
-      final responseString = await response.stream.bytesToString();
-      final data = json.decode(responseString);
+      final chat = ChatOpenAI(
+        apiKey: options.apiKey,
+        defaultOptions: ChatOpenAIOptions(
+          temperature: options.temperature,
+          frequencyPenalty: options.penaltyFreq,
+          presencePenalty: options.penaltyPresent,
+          maxTokens: options.nPredict,
+          topP: options.topP,
+        ),
+      );
 
-      if (data['error'] != null) {
-        throw Exception(data['error']);
-      }
+      final response = await chat(chatMessages);
 
-      final responseText = data['choices'][0]['message']['content'] as String?;
-
-      if (responseText != null && responseText.isNotEmpty) {
-        callback.call(responseText);
-      }
+      callback.call(response.content);
     } catch (e) {
       Logger.log('Error: $e');
     }
@@ -127,22 +124,20 @@ class RemoteGeneration {
     callback.call("");
   }
 
-  static void prompt(String input, 
-    GenerationContext context,
-    void Function(String) callback
-  ) async {
+  static void prompt(String input, GenerationOptions options,
+      void Function(String) callback) async {
     _requestPermission().then((value) {
       if (!value) {
         return;
       }
     });
 
-    switch (context.apiType) {
+    switch (options.apiType) {
       case ApiType.ollama:
-        ollamaRequest(input, context, callback);
+        ollamaRequest(input, options, callback);
         break;
       case ApiType.openAI:
-        openAiRequest(input, context, callback);
+        openAiRequest(input, options, callback);
         break;
       default:
         break;
@@ -151,12 +146,9 @@ class RemoteGeneration {
 
   static Future<List<String>> getOptions(Model model) async {
     if (model.apiType == ApiType.openAI) {
-      return [
-        "gpt-3.5-turbo",
-        "gpt-4-32k"
-      ];
+      return ["gpt-3.5-turbo", "gpt-4-32k"];
     }
-    
+
     bool permissionGranted = await _requestPermission();
     if (!permissionGranted) {
       return [];

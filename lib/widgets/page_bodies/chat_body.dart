@@ -8,7 +8,7 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/model.dart';
-import 'package:maid/types/generation_context.dart';
+import 'package:maid/types/generation_options.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
 import 'package:provider/provider.dart';
@@ -88,25 +88,18 @@ class _ChatBodyState extends State<ChatBody> {
     final model = context.read<Model>();
     final character = context.read<Character>();
     final session = context.read<Session>();
-    final genContext = GenerationContext(
-      model: model,
-      character: character,
-      session: session
-    );
+    final genContext =
+        GenerationOptions(model: model, character: character, session: session);
 
-    session.add(
-      UniqueKey(), 
-      message: _promptController.text.trim(), 
-      userGenerated: true
-    ).then((value) {
+    session
+        .add(UniqueKey(),
+            message: _promptController.text.trim(), userGenerated: true)
+        .then((value) {
       session.add(UniqueKey());
     });
 
     GenerationManager.prompt(
-      _promptController.text.trim(),
-      genContext,
-      session.stream
-    );
+        _promptController.text.trim(), genContext, session.stream);
 
     setState(() {
       GenerationManager.busy = true;
@@ -119,7 +112,7 @@ class _ChatBodyState extends State<ChatBody> {
     return Consumer<Session>(
       builder: (context, session, child) {
         final model = context.watch<Model>();
-        
+
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("last_session", json.encode(session.toMap()));
         });
