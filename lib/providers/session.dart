@@ -7,7 +7,7 @@ import 'package:maid/providers/model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/types/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/types/generation_context.dart';
+import 'package:maid/types/generation_options.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,7 +21,8 @@ class Session extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    Map<String, dynamic> lastSession = json.decode(prefs.getString("last_session") ?? "{}") ?? {};
+    Map<String, dynamic> lastSession =
+        json.decode(prefs.getString("last_session") ?? "{}") ?? {};
 
     if (lastSession.isNotEmpty) {
       fromMap(lastSession);
@@ -74,7 +75,8 @@ class Session extends ChangeNotifier {
   String get rootMessage => _root.message;
   Key get key => _root.key;
 
-  Future<void> add(Key key, {String message = "", bool userGenerated = false}) async {
+  Future<void> add(Key key,
+      {String message = "", bool userGenerated = false}) async {
     final node =
         ChatNode(key: key, message: message, userGenerated: userGenerated);
 
@@ -128,7 +130,7 @@ class Session extends ChangeNotifier {
       GenerationManager.busy = true;
       GenerationManager.prompt(
           parent.message,
-          GenerationContext(
+          GenerationOptions(
               model: context.read<Model>(),
               character: context.read<Character>(),
               session: context.read<Session>()),
@@ -238,10 +240,7 @@ class Session extends ChangeNotifier {
       } else {
         role = "assistant";
       }
-      messages.add({
-        "role": role,
-        "content": current.message
-      });
+      messages.add({"role": role, "content": current.message});
     }
 
     //remove last message if it is empty

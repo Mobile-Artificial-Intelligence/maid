@@ -7,7 +7,7 @@ import 'package:ffi/ffi.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/core/bindings.dart';
-import 'package:maid/types/generation_context.dart';
+import 'package:maid/types/generation_options.dart';
 
 class LocalGeneration {
   static SendPort? _sendPort;
@@ -41,7 +41,8 @@ class LocalGeneration {
     DynamicLibrary coreDynamic = DynamicLibrary.process();
 
     if (Platform.isWindows) coreDynamic = DynamicLibrary.open('core.dll');
-    if (Platform.isLinux || Platform.isAndroid) coreDynamic = DynamicLibrary.open('libcore.so');
+    if (Platform.isLinux || Platform.isAndroid)
+      coreDynamic = DynamicLibrary.open('libcore.so');
 
     _nativeLibrary = NativeLibrary(coreDynamic);
   }
@@ -74,11 +75,8 @@ class LocalGeneration {
         .core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
   }
 
-  void prompt(
-    String input, 
-    GenerationContext context,
-    void Function(String) callback
-  ) async {
+  void prompt(String input, GenerationOptions context,
+      void Function(String) callback) async {
     if (_hasStarted) {
       _send(input);
       return;

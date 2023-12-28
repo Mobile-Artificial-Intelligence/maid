@@ -3,7 +3,7 @@ import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 
-class GenerationContext {
+class GenerationOptions {
   late List<Map<String, dynamic>> _messages;
   late String? _remoteUrl;
   late ApiType _apiType;
@@ -101,10 +101,10 @@ class GenerationContext {
     map["n_ctx"] = _nCtx;
     map["n_batch"] = _nBatch;
     map["n_threads"] = _nThread;
-    return map;    
+    return map;
   }
 
-  GenerationContext({
+  GenerationOptions({
     required Model model,
     required Character character,
     required Session session,
@@ -113,7 +113,7 @@ class GenerationContext {
       Logger.log(model.toMap().toString());
       Logger.log(character.toMap().toString());
       Logger.log(session.toMap().toString());
-      
+
       _messages = character.examples;
       _messages.addAll(session.getMessages());
 
