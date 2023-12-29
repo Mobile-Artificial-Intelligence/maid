@@ -10,65 +10,39 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:langchain/langchain.dart';
 import 'package:langchain_openai/langchain_openai.dart';
+import 'package:langchain_ollama/langchain_ollama.dart';
+import 'package:langchain_mistralai/langchain_mistralai.dart';
 
 class RemoteGeneration {
-  static void ollamaRequest(String input, GenerationOptions options,
-      void Function(String) callback) async {
-    var messages = options.messages;
-    messages.insert(0, {"role": "system", "content": options.prePrompt});
-    messages.add({"role": "user", "content": input});
-
-    final url = Uri.parse("${options.remoteUrl}/api/chat");
-    final headers = {"Content-Type": "application/json", "User-Agent": "MAID"};
-    final body = json.encode({
-      "model": options.remoteModel ?? "llama2:7b-chat",
-      "messages": messages,
-      "options": {
-        "num_keep": options.nKeep,
-        "seed": options.seed,
-        "num_predict": options.nPredict,
-        "top_k": options.topK,
-        "top_p": options.topP,
-        "tfs_z": options.tfsZ,
-        "typical_p": options.typicalP,
-        "repeat_last_n": options.penaltyLastN,
-        "temperature": options.temperature,
-        "repeat_penalty": options.penaltyRepeat,
-        "presence_penalty": options.penaltyPresent,
-        "frequency_penalty": options.penaltyFreq,
-        "mirostat": options.mirostat,
-        "mirostat_tau": options.mirostatTau,
-        "mirostat_eta": options.mirostatEta,
-        "penalize_newline": options.penalizeNewline != 0 ? true : false,
-        "num_ctx": options.nCtx,
-        "num_batch": options.nBatch,
-        "num_thread": options.nThread,
-      },
-      "stream": true
-    });
-
+  static void ollamaRequest(List<ChatMessage> chatMessages,
+      GenerationOptions options, void Function(String) callback) async {
     try {
-      var request = Request("POST", url)
-        ..headers.addAll(headers)
-        ..body = body;
+      final chat = ChatOllama(
+        baseUrl: '${options.remoteUrl}/api',
+        defaultOptions: ChatOllamaOptions(
+          model: options.remoteModel ?? 'llama2',
+          numKeep: options.nKeep,
+          seed: options.seed,
+          numPredict: options.nPredict,
+          topK: options.topK,
+          topP: options.topP,
+          typicalP: options.typicalP,
+          temperature: options.temperature,
+          repeatPenalty: options.penaltyRepeat,
+          frequencyPenalty: options.penaltyFreq,
+          presencePenalty: options.penaltyPresent,
+          mirostat: options.mirostat,
+          mirostatTau: options.mirostatTau,
+          mirostatEta: options.mirostatEta,
+          numCtx: options.nCtx,
+          numBatch: options.nBatch,
+          numThread: options.nThread,
+        ),
+      );
 
-      final streamedResponse = await request.send();
+      final response = await chat(chatMessages);
 
-      await for (var value in streamedResponse.stream
-          .transform(utf8.decoder)
-          .transform(const LineSplitter())) {
-        final data = json.decode(value);
-        final responseText = data['message']['content'] as String?;
-        final done = data['done'] as bool?;
-
-        if (responseText != null && responseText.isNotEmpty) {
-          callback.call(responseText);
-        }
-
-        if (done ?? false) {
-          break;
-        }
-      }
+      callback.call(response.content);
     } catch (e) {
       Logger.log('Error: $e');
     }
@@ -77,39 +51,42 @@ class RemoteGeneration {
     callback.call("");
   }
 
-  static void openAiRequest(String input, GenerationOptions options,
-      void Function(String) callback) async {
-    var messages = options.messages;
-    messages.insert(0, {"role": "system", "content": options.prePrompt});
-    messages.add({"role": "user", "content": input});
-
-    List<ChatMessage> chatMessages = [];
-
-    for (var message in messages) {
-      switch (message['role']) {
-        case "user":
-          chatMessages.add(ChatMessage.humanText(message['content']));
-          break;
-        case "assistant":
-          chatMessages.add(ChatMessage.ai(message['content']));
-          break;
-        case "system":
-          chatMessages.add(ChatMessage.system(message['content']));
-          break;
-        default:
-          break;
-      }
-    }
-
+  static void openAiRequest(List<ChatMessage> chatMessages,
+      GenerationOptions options, void Function(String) callback) async {
     try {
       final chat = ChatOpenAI(
+        baseUrl: options.remoteUrl,
         apiKey: options.apiKey,
         defaultOptions: ChatOpenAIOptions(
+          model: options.remoteModel ?? 'gpt-3.5-turbo',
           temperature: options.temperature,
           frequencyPenalty: options.penaltyFreq,
           presencePenalty: options.penaltyPresent,
           maxTokens: options.nPredict,
           topP: options.topP,
+        ),
+      );
+
+      final response = await chat(chatMessages);
+
+      callback.call(response.content);
+    } catch (e) {
+      Logger.log('Error: $e');
+    }
+
+    GenerationManager.busy = false;
+    callback.call("");
+  }
+
+  static void mistralRequest(List<ChatMessage> chatMessages,
+      GenerationOptions options, void Function(String) callback) async {
+    try {
+      final chat = ChatMistralAI(
+        baseUrl: '${options.remoteUrl}/v1',
+        defaultOptions: ChatMistralAIOptions(
+          model: options.remoteModel ?? 'mistral-small',
+          topP: options.topP,
+          temperature: options.temperature,
         ),
       );
 
@@ -132,12 +109,34 @@ class RemoteGeneration {
       }
     });
 
+    List<ChatMessage> chatMessages = [];
+
+    chatMessages.add(ChatMessage.system(options.prePrompt));
+
+    for (var message in options.messages) {
+      switch (message['role']) {
+        case "user":
+          chatMessages.add(ChatMessage.humanText(message['content']));
+          break;
+        case "assistant":
+          chatMessages.add(ChatMessage.ai(message['content']));
+          break;
+        case "system":
+          chatMessages.add(ChatMessage.system(message['content']));
+          break;
+        default:
+          break;
+      }
+    }
+
+    chatMessages.add(ChatMessage.humanText(input));
+
     switch (options.apiType) {
       case ApiType.ollama:
-        ollamaRequest(input, options, callback);
+        ollamaRequest(chatMessages, options, callback);
         break;
       case ApiType.openAI:
-        openAiRequest(input, options, callback);
+        openAiRequest(chatMessages, options, callback);
         break;
       default:
         break;
