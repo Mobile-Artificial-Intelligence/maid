@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:maid/core/local_generation.dart';
 import 'package:maid/pages/generic_page.dart';
 import 'package:maid/providers/character.dart';
@@ -175,23 +176,43 @@ class _ChatBodyState extends State<ChatBody> {
                                   color: Colors.red,
                                 )),
                           Expanded(
-                            child: TextField(
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              maxLines: 9,
-                              enableInteractiveSelection: true,
-                              onSubmitted: (value) {
-                                if (!GenerationManager.busy) {
-                                  send();
+                            child: RawKeyboardListener(
+                              focusNode: FocusNode(),
+                              onKey: (event) {
+                                if (event
+                                    .isKeyPressed(LogicalKeyboardKey.enter)) {
+                                  if (event.isControlPressed) {
+                                    // Insert line break when Ctrl+Enter is pressed
+                                    int currentPos =
+                                        _promptController.selection.baseOffset;
+                                    String text = _promptController.text;
+                                    String newText =
+                                        "${text.substring(0, currentPos)}\n${text.substring(currentPos)}";
+                                    _promptController.text = newText;
+                                    // Position the cursor after the new line character
+                                    _promptController.selection =
+                                        TextSelection.fromPosition(TextPosition(
+                                            offset: currentPos + 1));
+                                  } else if (!GenerationManager.busy) {
+                                    // Submit the form when Enter is pressed without Ctrl
+                                    send();
+                                  }
                                 }
                               },
-                              controller: _promptController,
-                              cursorColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              decoration: InputDecoration(
+                              child: TextField(
+                                keyboardType: TextInputType.multiline,
+                                minLines: 1,
+                                maxLines: 9,
+                                enableInteractiveSelection: true,
+                                controller: _promptController,
+                                cursorColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                decoration: InputDecoration(
                                   labelText: 'Prompt',
                                   hintStyle:
-                                      Theme.of(context).textTheme.labelSmall),
+                                      Theme.of(context).textTheme.labelSmall,
+                                ),
+                              ),
                             ),
                           ),
                           IconButton(
