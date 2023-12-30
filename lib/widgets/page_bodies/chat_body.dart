@@ -200,7 +200,8 @@ class _ChatBodyState extends State<ChatBody> {
                                 }
                               },
                               child: TextField(
-                                keyboardType: TextInputType.multiline,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.none,
                                 minLines: 1,
                                 maxLines: 9,
                                 enableInteractiveSelection: true,
