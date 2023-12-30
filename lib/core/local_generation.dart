@@ -1,14 +1,8 @@
-import 'dart:io';
-import 'dart:ffi';
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:ffi/ffi.dart';
 import 'package:maid/models/isolate_message.dart';
 import 'package:maid/models/library_link.dart';
-import 'package:maid/static/generation_manager.dart';
-import 'package:maid/static/logger.dart';
-import 'package:maid/core/bindings.dart';
 import 'package:maid/models/generation_options.dart';
 
 class LocalGeneration {
@@ -32,6 +26,7 @@ class LocalGeneration {
             break;
           case IsolateCode.dispose:
             link.dispose();
+            completer.complete();
             break;
         }
       }

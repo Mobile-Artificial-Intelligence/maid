@@ -8,10 +8,10 @@ import 'package:maid/models/generation_options.dart';
 import 'package:maid/static/logger.dart';
 
 class LibraryLink {
-  late StreamController<String> stream;
+  static StreamController<String>? stream;
   late NativeLibrary _nativeLibrary;
 
-  void _maidLoggerBridge(Pointer<Char> buffer) {
+  static void _maidLoggerBridge(Pointer<Char> buffer) {
     try {
       Logger.log(buffer.cast<Utf8>().toDartString());
     } catch (e) {
@@ -19,12 +19,12 @@ class LibraryLink {
     }
   }
 
-  void _maidOutputBridge(int code, Pointer<Char> buffer) {
+  static void _maidOutputBridge(int code, Pointer<Char> buffer) {
     try {
       if (code == return_code.CONTINUE) {
-        stream.add(buffer.cast<Utf8>().toDartString());
+        stream!.add(buffer.cast<Utf8>().toDartString());
       } else if (code == return_code.STOP) {
-        stream.close();
+        stream!.close();
       }
     } catch (e) {
       Logger.log(e.toString());
@@ -32,8 +32,6 @@ class LibraryLink {
   }
 
   LibraryLink(GenerationOptions options) {
-    if (stream.isClosed) stream = StreamController<String>.broadcast();
-
     DynamicLibrary coreDynamic = DynamicLibrary.process();
 
     if (Platform.isWindows) coreDynamic = DynamicLibrary.open('core.dll');

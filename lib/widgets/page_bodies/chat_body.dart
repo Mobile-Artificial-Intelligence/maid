@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/core/local_generation.dart';
 import 'package:maid/pages/generic_page.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/generation_manager.dart';
