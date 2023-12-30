@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -15,7 +16,7 @@ import 'package:langchain_mistralai/langchain_mistralai.dart';
 
 class RemoteGeneration {
   static void ollamaRequest(List<ChatMessage> chatMessages,
-      GenerationOptions options, void Function(String) callback) async {
+      GenerationOptions options, StreamController<String> stream) async {
     try {
       final chat = ChatOllama(
         baseUrl: '${options.remoteUrl}/api',
@@ -42,17 +43,16 @@ class RemoteGeneration {
 
       final response = await chat(chatMessages);
 
-      callback.call(response.content);
+      stream.add(response.content);
     } catch (e) {
       Logger.log('Error: $e');
     }
 
     GenerationManager.busy = false;
-    callback.call("");
   }
 
   static void openAiRequest(List<ChatMessage> chatMessages,
-      GenerationOptions options, void Function(String) callback) async {
+      GenerationOptions options, StreamController<String> stream) async {
     try {
       final chat = ChatOpenAI(
         baseUrl: options.remoteUrl,
@@ -69,17 +69,16 @@ class RemoteGeneration {
 
       final response = await chat(chatMessages);
 
-      callback.call(response.content);
+      stream.add(response.content);
     } catch (e) {
       Logger.log('Error: $e');
     }
 
     GenerationManager.busy = false;
-    callback.call("");
   }
 
   static void mistralRequest(List<ChatMessage> chatMessages,
-      GenerationOptions options, void Function(String) callback) async {
+      GenerationOptions options, StreamController<String> stream) async {
     try {
       final chat = ChatMistralAI(
         baseUrl: '${options.remoteUrl}/v1',
@@ -92,17 +91,16 @@ class RemoteGeneration {
 
       final response = await chat(chatMessages);
 
-      callback.call(response.content);
+      stream.add(response.content);
     } catch (e) {
       Logger.log('Error: $e');
     }
 
     GenerationManager.busy = false;
-    callback.call("");
   }
 
   static void prompt(String input, GenerationOptions options,
-      void Function(String) callback) async {
+      StreamController<String> stream) async {
     _requestPermission().then((value) {
       if (!value) {
         return;
@@ -133,10 +131,10 @@ class RemoteGeneration {
 
     switch (options.apiType) {
       case ApiType.ollama:
-        ollamaRequest(chatMessages, options, callback);
+        ollamaRequest(chatMessages, options, stream);
         break;
       case ApiType.openAI:
-        openAiRequest(chatMessages, options, callback);
+        openAiRequest(chatMessages, options, stream);
         break;
       default:
         break;

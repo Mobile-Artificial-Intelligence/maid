@@ -63,7 +63,7 @@ class Session extends ChangeNotifier {
     return _root.toMap();
   }
 
-  String get(Key key) {
+  String getMessage(Key key) {
     return _root.find(key)?.message ?? "";
   }
 
@@ -134,7 +134,7 @@ class Session extends ChangeNotifier {
               model: context.read<Model>(),
               character: context.read<Character>(),
               session: context.read<Session>()),
-          context.read<Session>().stream);
+          context.read<Session>().getMessageStream(key));
     }
   }
 

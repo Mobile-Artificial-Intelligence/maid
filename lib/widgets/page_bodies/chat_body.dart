@@ -92,15 +92,17 @@ class _ChatBodyState extends State<ChatBody> {
     final genContext =
         GenerationOptions(model: model, character: character, session: session);
 
+    final key = UniqueKey();
+
     session
         .add(UniqueKey(),
             message: _promptController.text.trim(), userGenerated: true)
         .then((value) {
-      session.add(UniqueKey());
+      session.add(key);
     });
 
-    GenerationManager.prompt(
-        _promptController.text.trim(), genContext, session.stream);
+    GenerationManager.prompt(_promptController.text.trim(), genContext,
+        session.getMessageStream(key));
 
     setState(() {
       GenerationManager.busy = true;
