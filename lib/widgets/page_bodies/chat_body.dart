@@ -9,7 +9,7 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/model.dart';
-import 'package:maid/types/generation_options.dart';
+import 'package:maid/models/generation_options.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
 import 'package:provider/provider.dart';
@@ -168,10 +168,10 @@ class _ChatBodyState extends State<ChatBody> {
                         children: [
                           if (GenerationManager.busy &&
                               model.apiType != ApiType.ollama)
-                            IconButton(
-                                onPressed: LocalGeneration.instance.stop,
+                            const IconButton(
+                                onPressed: GenerationManager.stop,
                                 iconSize: 50,
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.stop_circle_sharp,
                                   color: Colors.red,
                                 )),

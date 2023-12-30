@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/types/chat_node.dart';
+import 'package:maid/models/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/types/generation_options.dart';
+import 'package:maid/models/generation_options.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

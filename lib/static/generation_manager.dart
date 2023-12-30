@@ -1,7 +1,7 @@
 import 'package:maid/core/remote_generation.dart';
 import 'package:maid/core/local_generation.dart';
 import 'package:maid/providers/model.dart';
-import 'package:maid/types/generation_options.dart';
+import 'package:maid/models/generation_options.dart';
 
 class GenerationManager {
   static bool busy = false;
