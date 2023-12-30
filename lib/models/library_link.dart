@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
 
@@ -7,9 +8,10 @@ import 'package:maid/models/generation_options.dart';
 import 'package:maid/static/logger.dart';
 
 class LibraryLink {
+  late StreamController<String> stream;
   late NativeLibrary _nativeLibrary;
 
-  static void _maidLoggerBridge(Pointer<Char> buffer) {
+  void _maidLoggerBridge(Pointer<Char> buffer) {
     try {
       Logger.log(buffer.cast<Utf8>().toDartString());
     } catch (e) {
@@ -17,7 +19,21 @@ class LibraryLink {
     }
   }
 
+  void _maidOutputBridge(int code, Pointer<Char> buffer) {
+    try {
+      if (code == return_code.CONTINUE) {
+        stream.add(buffer.cast<Utf8>().toDartString());
+      } else if (code == return_code.STOP) {
+        stream.close();
+      }
+    } catch (e) {
+      Logger.log(e.toString());
+    }
+  }
+
   LibraryLink(GenerationOptions options) {
+    if (stream.isClosed) stream = StreamController<String>.broadcast();
+
     DynamicLibrary coreDynamic = DynamicLibrary.process();
 
     if (Platform.isWindows) coreDynamic = DynamicLibrary.open('core.dll');
@@ -59,8 +75,10 @@ class LibraryLink {
     _nativeLibrary.core_init(params, Pointer.fromFunction(_maidLoggerBridge));
   }
 
-  void prompt(Pointer<Char> input, Pointer<maid_output_stream> maidOutput) {
-    _nativeLibrary.core_prompt(input, maidOutput);
+  void prompt(StreamController<String> messageStream, String input) {
+    stream = messageStream;
+    Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
+    _nativeLibrary.core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
   }
 
   void stop() {

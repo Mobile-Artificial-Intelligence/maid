@@ -13,7 +13,6 @@ import 'package:maid/models/generation_options.dart';
 
 class LocalGeneration {
   static SendPort? _sendPort;
-  static ReceivePort? _receivePort;
 
   static void _maidOutputBridge(int code, Pointer<Char> buffer) {
     try {
@@ -28,19 +27,35 @@ class LocalGeneration {
   }
 
   static void _libraryIsolate(ReceivePort port) async {
-    _receivePort = port;
+    late LibraryLink link;
 
-    LibraryLink link;
+    Completer completer = Completer();
+    port.listen((data) {
+      if (data is IsolateMessage) {
+        switch (data.code) {
+          case IsolateCode.start:
+            link = LibraryLink(data.options!);
+            break;
+          case IsolateCode.stop:
+            link.stop();
+            break;
+          case IsolateCode.prompt:
+            link.prompt(data.stream!, data.input!);
+            break;
+          case IsolateCode.dispose:
+            link.dispose();
+            break;
+        }
+      }
+    });
+    await completer.future;
   }
 
   static void prompt(String input, GenerationOptions options,
-      void Function(String) callback) async {
+      StreamController<String> stream) async {
     if (_sendPort != null) {
-      _sendPort!.send(IsolateMessage(
-        IsolateCode.prompt,
-        input: input,
-        callback: callback,
-      ));
+      _sendPort!.send(
+          IsolateMessage(IsolateCode.prompt, input: input, stream: stream));
     }
 
     final receivePort = ReceivePort();
@@ -52,10 +67,7 @@ class LocalGeneration {
       options: options,
     ));
 
-    _sendPort!.send(IsolateMessage(
-      IsolateCode.prompt,
-      input: input,
-      callback: callback,
-    ));
+    _sendPort!
+        .send(IsolateMessage(IsolateCode.prompt, input: input, stream: stream));
   }
 }

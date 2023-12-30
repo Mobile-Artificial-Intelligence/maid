@@ -9,18 +9,18 @@ class GenerationManager {
   static void prompt(
       String input, GenerationOptions context, void Function(String) callback) {
     if (context.apiType == ApiType.local) {
-      LocalGeneration.instance.prompt(input, context, callback);
+      LocalGeneration.prompt(input, context, callback);
     } else {
       RemoteGeneration.prompt(input, context, callback);
     }
   }
 
   static void stop() {
-    LocalGeneration.instance.stop();
+    LocalGeneration.stop();
   }
 
   static void cleanup() {
-    LocalGeneration.instance.cleanup();
+    LocalGeneration.cleanup();
   }
 
   static ApiType checkApiRequirements(GenerationOptions context) {
