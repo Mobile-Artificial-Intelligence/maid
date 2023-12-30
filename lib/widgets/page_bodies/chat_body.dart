@@ -6,7 +6,7 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
-import 'package:maid/widgets/chat_widgets/prompt_field.dart';
+import 'package:maid/widgets/chat_widgets/chat_field.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -130,7 +130,7 @@ class _ChatBodyState extends State<ChatBody> {
                         },
                       ),
                     ),
-                    const PromptField(),
+                    const ChatField(),
                   ],
                 ),
               ],

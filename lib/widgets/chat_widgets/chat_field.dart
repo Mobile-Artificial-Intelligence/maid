@@ -9,14 +9,14 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:provider/provider.dart';
 
-class PromptField extends StatefulWidget {
-  const PromptField({super.key});
+class ChatField extends StatefulWidget {
+  const ChatField({super.key});
 
   @override
-  State<PromptField> createState() => _PromptFieldState();
+  State<ChatField> createState() => _ChatFieldState();
 }
 
-class _PromptFieldState extends State<PromptField> {
+class _ChatFieldState extends State<ChatField> {
   final TextEditingController _promptController = TextEditingController();
 
   void send() {
