@@ -22,10 +22,11 @@ class _ChatBodyState extends State<ChatBody> {
   final ScrollController _consoleScrollController = ScrollController();
   List<ChatMessage> chatWidgets = [];
 
+  bool _busy = false;
+
   @override
   void dispose() {
-    if (!GenerationManager.busy) GenerationManager.cleanup();
-
+    if (!_busy) GenerationManager.cleanup();
     super.dispose();
   }
 
@@ -80,6 +81,8 @@ class _ChatBodyState extends State<ChatBody> {
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
+        _busy = session.isBusy;
+
         final model = context.watch<Model>();
 
         SharedPreferences.getInstance().then((prefs) {

@@ -33,7 +33,7 @@ class ChatControlsState extends State<ChatControls> {
               IconButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
-                  if (GenerationManager.busy) return;
+                  if (session.isBusy) return;
                   session.branch(widget.key!, widget.userGenerated);
                 },
                 icon: const Icon(Icons.edit),
@@ -60,7 +60,7 @@ class ChatControlsState extends State<ChatControls> {
                 width: 150,
                 height: 30,
                 decoration: BoxDecoration(
-                  color: GenerationManager.busy 
+                  color: session.isBusy 
                        ? Theme.of(context).colorScheme.primary 
                        : Theme.of(context).colorScheme.tertiary,
                   borderRadius: BorderRadius.circular(20),
@@ -72,7 +72,7 @@ class ChatControlsState extends State<ChatControls> {
                     IconButton(
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
-                        if (GenerationManager.busy) return;
+                        if (session.isBusy) return;
                         session.last(widget.key!);
                       },
                       icon: Icon(
@@ -84,7 +84,7 @@ class ChatControlsState extends State<ChatControls> {
                     IconButton(
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
-                        if (GenerationManager.busy) return;
+                        if (session.isBusy) return;
                         session.next(widget.key!);
                       },
                       icon: Icon(
@@ -98,7 +98,7 @@ class ChatControlsState extends State<ChatControls> {
               IconButton(
                 padding: const EdgeInsets.all(0),
                 onPressed: () {
-                  if (GenerationManager.busy) return;
+                  if (session.isBusy) return;
                   session.regenerate(
                     widget.key!,
                     context

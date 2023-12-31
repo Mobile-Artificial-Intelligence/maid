@@ -54,7 +54,7 @@ class _SessionsBodyState extends State<SessionsBody> {
             const SizedBox(height: 20.0),
             FilledButton(
               onPressed: () {
-                if (GenerationManager.busy) return;
+                if (session.isBusy) return;
                 final newSession = Session();
                 setState(() {
                   _sessions[newSession.rootMessage] = newSession.toMap();
@@ -88,7 +88,7 @@ class _SessionsBodyState extends State<SessionsBody> {
                           DismissDirection.startToEnd: 0.25,
                         },
                         onDismissed: (direction) {
-                          if (GenerationManager.busy) return;
+                          if (session.isBusy) return;
                           _sessions.remove(sessionKey);
                           if (sessionKey == session.rootMessage) {
                             session.fromMap(_sessions.values.firstOrNull ?? 
@@ -119,12 +119,12 @@ class _SessionsBodyState extends State<SessionsBody> {
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                             onTap: () {
-                              if (GenerationManager.busy) return;
+                              if (session.isBusy) return;
                               session.fromMap(_sessions[sessionKey]);
                               setState(() {});
                             },
                             onLongPress: () {
-                              if (GenerationManager.busy) return;
+                              if (session.isBusy) return;
                               showDialog(
                                 context: context,
                                 builder: (context) {

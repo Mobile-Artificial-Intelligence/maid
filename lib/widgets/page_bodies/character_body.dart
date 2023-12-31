@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/character.dart';
@@ -263,7 +264,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                 ],
               ),
             ),
-            if (GenerationManager.busy)
+            if (context.watch<Session>().isBusy)
               Positioned.fill(
                 child: Container(
                   color: Colors.black.withOpacity(0.4),

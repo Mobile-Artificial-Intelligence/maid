@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:maid/models/isolate_message.dart';
 import 'package:maid/models/library_link.dart';
 import 'package:maid/models/generation_options.dart';
+import 'package:maid/static/generation_manager.dart';
 
 class LocalGeneration {
   static SendPort? _sendPort;
@@ -38,12 +39,12 @@ class LocalGeneration {
   }
 
   static Future<void> prompt(String input, GenerationOptions options,
-      void Function(String) callback) async {
+      void Function(String?) callback) async {
     Completer? completer;
 
     if (_sendPort != null) {
       _sendPort!.send(
-        IsolateMessage(IsolateCode.prompt, input: input, callback: callback));
+        IsolateMessage(IsolateCode.prompt, input: input));
     }
     
     final receivePort = ReceivePort();
@@ -61,12 +62,17 @@ class LocalGeneration {
           ));
 
           _sendPort!.send(
-            IsolateMessage(IsolateCode.prompt, input: input, callback: callback));
+            IsolateMessage(IsolateCode.prompt, input: input)
+          );
         }
       } else if (message is String) {
         callback.call(message);
-      } else if (message is int) {
-        completer!.complete();
+      } else if (message is IsolateCode) {
+        if (message == IsolateCode.dispose) {
+          completer!.complete();
+        } else if (message == IsolateCode.stop) {
+          callback.call(null);
+        }
       }
     });
 

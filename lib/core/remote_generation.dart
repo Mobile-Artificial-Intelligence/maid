@@ -15,7 +15,7 @@ import 'package:langchain_mistralai/langchain_mistralai.dart';
 
 class RemoteGeneration {
   static void ollamaRequest(List<ChatMessage> chatMessages,
-      GenerationOptions options, void Function(String) callback) async {
+      GenerationOptions options, void Function(String?) callback) async {
     try {
       final chat = ChatOllama(
         baseUrl: '${options.remoteUrl}/api',
@@ -47,12 +47,11 @@ class RemoteGeneration {
       Logger.log('Error: $e');
     }
 
-    GenerationManager.busy = false;
-    callback.call("");
+    callback.call(null);
   }
 
   static void openAiRequest(List<ChatMessage> chatMessages,
-      GenerationOptions options, void Function(String) callback) async {
+      GenerationOptions options, void Function(String?) callback) async {
     try {
       final chat = ChatOpenAI(
         baseUrl: options.remoteUrl,
@@ -74,12 +73,11 @@ class RemoteGeneration {
       Logger.log('Error: $e');
     }
 
-    GenerationManager.busy = false;
-    callback.call("");
+    callback.call(null);
   }
 
   static void mistralRequest(List<ChatMessage> chatMessages,
-      GenerationOptions options, void Function(String) callback) async {
+      GenerationOptions options, void Function(String?) callback) async {
     try {
       final chat = ChatMistralAI(
         baseUrl: '${options.remoteUrl}/v1',
@@ -97,12 +95,11 @@ class RemoteGeneration {
       Logger.log('Error: $e');
     }
 
-    GenerationManager.busy = false;
-    callback.call("");
+    callback.call(null);
   }
 
   static void prompt(String input, GenerationOptions options,
-      void Function(String) callback) async {
+      void Function(String?) callback) async {
     _requestPermission().then((value) {
       if (!value) {
         return;

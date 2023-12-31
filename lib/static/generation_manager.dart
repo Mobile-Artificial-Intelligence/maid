@@ -6,10 +6,8 @@ import 'package:maid/providers/model.dart';
 import 'package:maid/models/generation_options.dart';
 
 class GenerationManager {
-  static bool busy = false;
-
   static void prompt(String input, GenerationOptions context,
-      void Function(String) callback) {
+      void Function(String?) callback) {
     if (context.apiType == ApiType.local) {
       LocalGeneration.prompt(input, context, callback);
     } else {
