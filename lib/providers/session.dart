@@ -114,9 +114,7 @@ class Session extends ChangeNotifier {
 
   void stream(String? message) async {
     if (message == null) {
-      _busy = false;
-      notifyListeners();
-      return;
+      finalise();
     } else {
       _busy = true;
       notifyListeners();
@@ -124,9 +122,7 @@ class Session extends ChangeNotifier {
       _messageBuffer += message;
       tail ??= _root.findTail();
 
-      if (!_busy && !(tail!.userGenerated)) {
-        finalise();
-      } else if (!(tail!.messageController.isClosed)) {
+      if (!(tail!.messageController.isClosed)) {
         tail!.messageController.add(_messageBuffer);
         _messageBuffer = "";
       }
@@ -163,6 +159,8 @@ class Session extends ChangeNotifier {
   }
 
   void finalise() {
+    _busy = false;
+
     tail ??= _root.findTail();
 
     if (!(tail!.finaliseController.isClosed)) {

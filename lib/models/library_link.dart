@@ -5,6 +5,7 @@ import 'dart:isolate';
 import 'package:ffi/ffi.dart';
 import 'package:maid/core/bindings.dart';
 import 'package:maid/models/generation_options.dart';
+import 'package:maid/models/isolate_message.dart';
 import 'package:maid/static/logger.dart';
 
 class LibraryLink {
@@ -24,7 +25,7 @@ class LibraryLink {
       if (code == return_code.CONTINUE) {
         _sendPort?.send(buffer.cast<Utf8>().toDartString());
       } else if (code == return_code.STOP) {
-        _sendPort?.send(code);
+        _sendPort?.send(IsolateCode.stop);
       }
     } catch (e) {
       Logger.log(e.toString());
@@ -81,9 +82,11 @@ class LibraryLink {
 
   void stop() {
     _nativeLibrary.core_stop();
+    _sendPort?.send(IsolateCode.stop);
   }
 
   void dispose() {
     _nativeLibrary.core_cleanup();
+    _sendPort!.send(IsolateCode.dispose);
   }
 }

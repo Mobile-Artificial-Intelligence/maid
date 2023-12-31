@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:provider/provider.dart';
 
 class ChatControls extends StatefulWidget {
