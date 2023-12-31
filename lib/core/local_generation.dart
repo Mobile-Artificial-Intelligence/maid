@@ -41,32 +41,36 @@ class LocalGeneration {
       void Function(String) callback) async {
     Completer? completer;
 
-    if (_sendPort == null) {
-      final receivePort = ReceivePort();
-      await Isolate.spawn(_libraryIsolate, receivePort.sendPort);
-      _sendPort = await receivePort.first as SendPort;
-
-      _sendPort!.send(IsolateMessage(
-        IsolateCode.start,
-        options: options,
-      ));
-
-      completer = Completer();
-      receivePort.listen((message) { 
-        if (message is String) {
-          callback.call(message);
-        } else if (message is int) {
-          completer!.complete();
-        }
-      });
-    }
-
-    _sendPort!.send(
+    if (_sendPort != null) {
+      _sendPort!.send(
         IsolateMessage(IsolateCode.prompt, input: input, callback: callback));
-    
-    if (completer != null) {
-      await completer.future;
     }
+    
+    final receivePort = ReceivePort();
+    await Isolate.spawn(_libraryIsolate, receivePort.sendPort);
+
+    completer = Completer();
+    receivePort.listen((message) {
+      if (_sendPort == null) {
+        if (message is SendPort) {
+          _sendPort = message;
+
+          _sendPort!.send(IsolateMessage(
+            IsolateCode.start,
+            options: options,
+          ));
+
+          _sendPort!.send(
+            IsolateMessage(IsolateCode.prompt, input: input, callback: callback));
+        }
+      } else if (message is String) {
+        callback.call(message);
+      } else if (message is int) {
+        completer!.complete();
+      }
+    });
+
+    await completer.future;
   }
 
   static void stop() {
