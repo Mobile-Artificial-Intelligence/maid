@@ -134,7 +134,7 @@ class Session extends ChangeNotifier {
               model: context.read<Model>(),
               character: context.read<Character>(),
               session: context.read<Session>()),
-          context.read<Session>().getMessageStream(key));
+          context.read<Session>().stream);
     }
   }
 

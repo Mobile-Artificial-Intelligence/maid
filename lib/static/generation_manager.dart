@@ -9,11 +9,11 @@ class GenerationManager {
   static bool busy = false;
 
   static void prompt(String input, GenerationOptions context,
-      StreamController<String> stream) {
+      void Function(String) callback) {
     if (context.apiType == ApiType.local) {
-      LocalGeneration.prompt(input, context, stream);
+      LocalGeneration.prompt(input, context, callback);
     } else {
-      RemoteGeneration.prompt(input, context, stream);
+      RemoteGeneration.prompt(input, context, callback);
     }
   }
 

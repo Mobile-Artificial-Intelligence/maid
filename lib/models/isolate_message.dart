@@ -8,7 +8,7 @@ class IsolateMessage {
   final IsolateCode code;
   final String? input;
   final GenerationOptions? options;
-  final StreamController<String>? stream;
+  final void Function(String)? callback;
 
-  IsolateMessage(this.code, {this.input, this.options, this.stream});
+  IsolateMessage(this.code, {this.input, this.options, this.callback});
 }

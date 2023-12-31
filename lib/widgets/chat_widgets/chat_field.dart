@@ -40,7 +40,7 @@ class _ChatFieldState extends State<ChatField> {
     });
 
     GenerationManager.prompt(_promptController.text.trim(), genContext,
-        session.getMessageStream(key));
+        session.stream);
 
     setState(() {
       GenerationManager.busy = true;

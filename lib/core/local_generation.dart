@@ -25,7 +25,7 @@ class LocalGeneration {
             link.stop();
             break;
           case IsolateCode.prompt:
-            link.prompt(data.stream!, data.input!);
+            link.prompt(_sendPort!, data.input!);
             break;
           case IsolateCode.dispose:
             link.dispose();
@@ -38,7 +38,9 @@ class LocalGeneration {
   }
 
   static Future<void> prompt(String input, GenerationOptions options,
-      StreamController<String> stream) async {
+      void Function(String) callback) async {
+    Completer? completer;
+
     if (_sendPort == null) {
       final receivePort = ReceivePort();
       await Isolate.spawn(_libraryIsolate, receivePort.sendPort);
@@ -48,10 +50,23 @@ class LocalGeneration {
         IsolateCode.start,
         options: options,
       ));
+
+      completer = Completer();
+      receivePort.listen((message) { 
+        if (message is String) {
+          callback.call(message);
+        } else if (message is int) {
+          completer!.complete();
+        }
+      });
     }
 
     _sendPort!.send(
-        IsolateMessage(IsolateCode.prompt, input: input, stream: stream));
+        IsolateMessage(IsolateCode.prompt, input: input, callback: callback));
+    
+    if (completer != null) {
+      await completer.future;
+    }
   }
 
   static void stop() {
