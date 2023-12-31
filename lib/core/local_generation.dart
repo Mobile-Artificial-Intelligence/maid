@@ -8,11 +8,14 @@ import 'package:maid/models/generation_options.dart';
 class LocalGeneration {
   static SendPort? _sendPort;
 
-  static void _libraryIsolate(ReceivePort port) async {
-    late LibraryLink link;
+  static void _libraryIsolate(SendPort initialSendPort) async {
+    _sendPort = initialSendPort;
+    final receivePort = ReceivePort();
+    _sendPort!.send(receivePort.sendPort);
 
+    late LibraryLink link;
     Completer completer = Completer();
-    port.listen((data) {
+    receivePort.listen((data) {
       if (data is IsolateMessage) {
         switch (data.code) {
           case IsolateCode.start:
@@ -34,12 +37,12 @@ class LocalGeneration {
     await completer.future;
   }
 
-  static void prompt(String input, GenerationOptions options,
+  static Future<void> prompt(String input, GenerationOptions options,
       StreamController<String> stream) async {
     if (_sendPort == null) {
       final receivePort = ReceivePort();
-      _sendPort = receivePort.sendPort;
-      Isolate.spawn(_libraryIsolate, receivePort);
+      await Isolate.spawn(_libraryIsolate, receivePort.sendPort);
+      _sendPort = await receivePort.first as SendPort;
 
       _sendPort!.send(IsolateMessage(
         IsolateCode.start,
@@ -47,19 +50,15 @@ class LocalGeneration {
       ));
     }
 
-    _sendPort!
-        .send(IsolateMessage(IsolateCode.prompt, input: input, stream: stream));
+    _sendPort!.send(
+        IsolateMessage(IsolateCode.prompt, input: input, stream: stream));
   }
 
   static void stop() {
-    if (_sendPort != null) {
-      _sendPort!.send(IsolateMessage(IsolateCode.stop));
-    }
+    _sendPort?.send(IsolateMessage(IsolateCode.stop));
   }
 
   static void dispose() {
-    if (_sendPort != null) {
-      _sendPort!.send(IsolateMessage(IsolateCode.dispose));
-    }
+    _sendPort?.send(IsolateMessage(IsolateCode.dispose));
   }
 }
