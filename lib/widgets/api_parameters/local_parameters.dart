@@ -45,16 +45,11 @@ class LocalParameters extends StatelessWidget {
                 storageOperationDialog(
                   context, 
                   model.loadModelFile
-                ).then((value) {
-                  if (model.parameters["path"] != null) {
-                    model.setApiType(ApiType.local);
-                  }
-                });
+                );
               },
               rightText: "Unload GGUF",
               rightOnPressed: () {
                 model.setParameter("path", null);
-                model.setApiType(ApiType.none);
               }
             ),
             Divider(
