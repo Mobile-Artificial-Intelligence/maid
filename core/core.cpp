@@ -119,7 +119,7 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     embd_inp = ::llama_tokenize(model, params.prompt, add_bos, true);
 
     if ((int) embd_inp.size() > lparams.n_ctx - 4) {
-        //Truncate the prompt if it's too long removing the tokens from the start of the vector to make the vector size <= n_ctx - 4
+        //Truncate the prompt if it's too long
         embd_inp.erase(embd_inp.begin(), embd_inp.begin() + (embd_inp.size() - (lparams.n_ctx - 4)));
     }
 

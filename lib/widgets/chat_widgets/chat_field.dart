@@ -69,7 +69,7 @@ class _ChatFieldState extends State<ChatField> {
                   focusNode: FocusNode(),
                   onKey: (event) {
                     if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-                      if (event.isControlPressed) {
+                      if (event.isControlPressed && (!Platform.isAndroid && !Platform.isIOS)) {
                         // Insert line break when Ctrl+Enter is pressed
                         int currentPos = _promptController.selection.baseOffset;
                         String text = _promptController.text;
