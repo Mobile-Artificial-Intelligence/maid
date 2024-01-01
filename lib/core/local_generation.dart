@@ -6,6 +6,7 @@ import 'package:maid/models/library_link.dart';
 import 'package:maid/models/generation_options.dart';
 
 class LocalGeneration {
+  static Completer? _mainCompleter;
   static SendPort? _sendPort;
 
   static void _libraryIsolate(SendPort initialSendPort) async {
@@ -39,7 +40,9 @@ class LocalGeneration {
 
   static Future<void> prompt(String input, GenerationOptions options,
       void Function(String?) callback) async {
-    Completer? completer;
+    if (_mainCompleter != null) {
+      await _mainCompleter!.future;
+    }
 
     if (_sendPort != null) {
       _sendPort!.send(
@@ -49,7 +52,7 @@ class LocalGeneration {
     final receivePort = ReceivePort();
     await Isolate.spawn(_libraryIsolate, receivePort.sendPort);
 
-    completer = Completer();
+    Completer completer = Completer();
     receivePort.listen((message) {
       if (_sendPort == null) {
         if (message is SendPort) {
@@ -69,9 +72,17 @@ class LocalGeneration {
       } else if (message is IsolateCode) {
         if (message == IsolateCode.dispose) {
           _sendPort = null;
-          completer!.complete();
+          completer.complete();
+          if (_mainCompleter != null) {
+            _mainCompleter!.complete();
+            _mainCompleter = null;
+          }
         } else if (message == IsolateCode.stop) {
           callback.call(null);
+          if (_mainCompleter != null) {
+            _mainCompleter!.complete();
+            _mainCompleter = null;
+          }
         }
       }
     });
@@ -80,10 +91,16 @@ class LocalGeneration {
   }
 
   static void stop() {
-    _sendPort?.send(IsolateMessage(IsolateCode.stop));
+    if (_sendPort != null) {
+      _sendPort!.send(IsolateMessage(IsolateCode.stop));
+      _mainCompleter = Completer();
+    }
   }
 
   static void dispose() {
-    _sendPort?.send(IsolateMessage(IsolateCode.dispose));
+    if (_sendPort != null) {
+      _sendPort!.send(IsolateMessage(IsolateCode.dispose));
+      _mainCompleter = Completer();
+    }
   }
 }
