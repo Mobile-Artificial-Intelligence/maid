@@ -1,159 +1,108 @@
-import 'dart:io';
-import 'dart:ffi';
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:ffi/ffi.dart';
-import 'package:maid/static/generation_manager.dart';
+import 'package:maid/models/isolate_message.dart';
+import 'package:maid/models/library_link.dart';
+import 'package:maid/models/generation_options.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/core/bindings.dart';
-import 'package:maid/types/generation_options.dart';
 
 class LocalGeneration {
+  static Completer? _mainCompleter;
   static SendPort? _sendPort;
-  late NativeLibrary _nativeLibrary;
 
-  // Make the default constructor private
-  LocalGeneration._();
+  static void _libraryIsolate(SendPort initialSendPort) async {
+    _sendPort = initialSendPort;
+    final receivePort = ReceivePort();
+    _sendPort!.send(receivePort.sendPort);
 
-  // Private reference to the global instance
-  static final LocalGeneration _instance = LocalGeneration._();
-
-  // Public accessor to the global instance
-  static LocalGeneration get instance {
-    _instance._initialize();
-    return _instance;
-  }
-
-  // Flag to check if the instance has been initialized
-  bool _isInitialized = false;
-  bool _hasStarted = false;
-
-  // Initialization logic
-  void _initialize() {
-    if (!_isInitialized) {
-      _loadNativeLibrary();
-      _isInitialized = true;
-    }
-  }
-
-  void _loadNativeLibrary() {
-    DynamicLibrary coreDynamic = DynamicLibrary.process();
-
-    if (Platform.isWindows) coreDynamic = DynamicLibrary.open('core.dll');
-    if (Platform.isLinux || Platform.isAndroid)
-      coreDynamic = DynamicLibrary.open('libcore.so');
-
-    _nativeLibrary = NativeLibrary(coreDynamic);
-  }
-
-  static void _maidLoggerBridge(Pointer<Char> buffer) {
-    try {
-      Logger.log(buffer.cast<Utf8>().toDartString());
-    } catch (e) {
-      Logger.log(e.toString());
-    }
-  }
-
-  static void _maidOutputBridge(int code, Pointer<Char> buffer) {
-    try {
-      if (code == return_code.CONTINUE) {
-        _sendPort?.send(buffer.cast<Utf8>().toDartString());
-      } else if (code == return_code.STOP) {
-        _sendPort?.send(code);
-      }
-    } catch (e) {
-      Logger.log(e.toString());
-    }
-  }
-
-  static _promptIsolate(Map<String, dynamic> args) async {
-    _sendPort = args['port'] as SendPort?;
-    String input = args['input'];
-    Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
-    LocalGeneration.instance._nativeLibrary
-        .core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
-  }
-
-  void prompt(String input, GenerationOptions context,
-      void Function(String) callback) async {
-    if (_hasStarted) {
-      _send(input);
-      return;
-    }
-
-    try {
-      Logger.log(context.toMap().toString());
-
-      _hasStarted = true;
-
-      final params = calloc<maid_params>();
-      params.ref.path = context.path.toString().toNativeUtf8().cast<Char>();
-      params.ref.preprompt = context.prePrompt.toNativeUtf8().cast<Char>();
-      params.ref.input_prefix =
-          context.userAlias.trim().toNativeUtf8().cast<Char>();
-      params.ref.input_suffix =
-          context.responseAlias.trim().toNativeUtf8().cast<Char>();
-      params.ref.seed = context.seed;
-      params.ref.n_ctx = context.nCtx;
-      params.ref.n_threads = context.nThread;
-      params.ref.n_batch = context.nBatch;
-      params.ref.n_predict = context.nPredict;
-      params.ref.n_keep = context.nKeep;
-      params.ref.instruct = context.instruct;
-      params.ref.interactive = context.interactive;
-      params.ref.chatml = context.chatml;
-      params.ref.penalize_nl = context.penalizeNewline;
-      params.ref.top_k = context.topK;
-      params.ref.top_p = context.topP;
-      params.ref.tfs_z = context.tfsZ;
-      params.ref.typical_p = context.typicalP;
-      params.ref.temp = context.temperature;
-      params.ref.penalty_last_n = context.penaltyLastN;
-      params.ref.penalty_repeat = context.penaltyRepeat;
-      params.ref.penalty_freq = context.penaltyFreq;
-      params.ref.penalty_present = context.penaltyPresent;
-      params.ref.mirostat = context.mirostat;
-      params.ref.mirostat_tau = context.mirostatTau;
-      params.ref.mirostat_eta = context.mirostatEta;
-
-      _nativeLibrary.core_init(params, Pointer.fromFunction(_maidLoggerBridge));
-
-      ReceivePort receivePort = ReceivePort();
-      _sendPort = receivePort.sendPort;
-      _send(input);
-
-      Completer completer = Completer();
-      receivePort.listen((data) {
-        if (data is String) {
-          callback.call(data);
-        } else if (data is SendPort) {
-          completer.complete();
-        } else if (data is int) {
-          GenerationManager.busy = false;
-          callback.call("");
+    late LibraryLink link;
+    Completer completer = Completer();
+    receivePort.listen((data) {
+      if (data is IsolateMessage) {
+        switch (data.code) {
+          case IsolateCode.start:
+            link = LibraryLink(data.options!);
+            break;
+          case IsolateCode.stop:
+            Logger.log('Stopping');
+            link.stop();
+            break;
+          case IsolateCode.prompt:
+            link.prompt(_sendPort!, data.input!);
+            break;
+          case IsolateCode.dispose:
+            link.dispose();
+            completer.complete();
+            break;
         }
-      });
-      await completer.future;
-    } catch (e) {
-      Logger.log(e.toString());
+      }
+    });
+    await completer.future;
+  }
+
+  static Future<void> prompt(String input, GenerationOptions options,
+      void Function(String?) callback) async {
+    if (_mainCompleter != null) {
+      await _mainCompleter!.future;
+    }
+
+    if (_sendPort != null) {
+      _sendPort!.send(
+        IsolateMessage(IsolateCode.prompt, input: input));
+    }
+    
+    final receivePort = ReceivePort();
+    await Isolate.spawn(_libraryIsolate, receivePort.sendPort);
+
+    Completer completer = Completer();
+    receivePort.listen((message) {
+      if (_sendPort == null) {
+        if (message is SendPort) {
+          _sendPort = message;
+
+          _sendPort!.send(IsolateMessage(
+            IsolateCode.start,
+            options: options,
+          ));
+
+          _sendPort!.send(
+            IsolateMessage(IsolateCode.prompt, input: input)
+          );
+        }
+      } else if (message is String) {
+        callback.call(message);
+      } else if (message is IsolateCode) {
+        if (message == IsolateCode.dispose) {
+          _sendPort = null;
+          completer.complete();
+          if (_mainCompleter != null) {
+            _mainCompleter!.complete();
+            _mainCompleter = null;
+          }
+        } else if (message == IsolateCode.stop) {
+          callback.call(null);
+          if (_mainCompleter != null) {
+            _mainCompleter!.complete();
+            _mainCompleter = null;
+          }
+        }
+      }
+    });
+
+    await completer.future;
+  }
+
+  static void stop() {
+    if (_sendPort != null) {
+      _sendPort!.send(IsolateMessage(IsolateCode.stop));
+      _mainCompleter = Completer();
     }
   }
 
-  void _send(String input) async {
-    Logger.log("Input: $input");
-    Isolate.spawn(_promptIsolate, {'input': input, 'port': _sendPort});
-  }
-
-  void stop() {
-    _nativeLibrary.core_stop();
-  }
-
-  void cleanup() {
-    if (_hasStarted) {
-      _nativeLibrary.core_cleanup();
-      _sendPort?.send(_sendPort);
+  static void dispose() {
+    if (_sendPort != null) {
+      _sendPort!.send(IsolateMessage(IsolateCode.dispose));
+      _mainCompleter = Completer();
     }
-    _hasStarted = false;
   }
 }

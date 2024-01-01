@@ -10,15 +10,16 @@ class ChatMessage extends StatefulWidget {
   final bool userGenerated;
 
   const ChatMessage({
-    required super.key, 
-    this.userGenerated = false, 
+    required super.key,
+    this.userGenerated = false,
   });
 
   @override
   ChatMessageState createState() => ChatMessageState();
 }
 
-class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
+class ChatMessageState extends State<ChatMessage>
+    with SingleTickerProviderStateMixin {
   final List<Widget> _messageWidgets = [];
   late Session session;
   String _message = "";
@@ -29,8 +30,8 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     super.initState();
     session = context.read<Session>();
 
-    if (session.get(widget.key!).isNotEmpty) {
-      _parseMessage(session.get(widget.key!));
+    if (session.getMessage(widget.key!).isNotEmpty) {
+      _parseMessage(session.getMessage(widget.key!));
       _finalised = true;
     } else {
       session.getMessageStream(widget.key!).stream.listen((textChunk) {
@@ -45,7 +46,8 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
         setState(() {
           _message = _message.trim();
           _parseMessage(_message);
-          session.add(widget.key!, message: _message, userGenerated: widget.userGenerated);
+          session.add(widget.key!,
+              message: _message, userGenerated: widget.userGenerated);
           _finalised = true;
         });
       });
@@ -69,22 +71,19 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (_finalised)
-          ChatControls(
-            key: widget.key, 
-            userGenerated: widget.userGenerated
-          ),
-        Align(
-          alignment: widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
+    return Column(children: [
+      if (_finalised)
+        ChatControls(key: widget.key, userGenerated: widget.userGenerated),
+      Align(
+        alignment:
+            widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
             margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: widget.userGenerated
-                ? Theme.of(context).colorScheme.secondary
-                : Theme.of(context).colorScheme.primary,
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -95,11 +94,9 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
                 else
                   ..._messageWidgets,
               ],
-            )
-          ),
-        )
-      ]
-    );
+            )),
+      )
+    ]);
   }
 
   @override

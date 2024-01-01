@@ -1,16 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:maid/core/local_generation.dart';
 import 'package:maid/pages/generic_page.dart';
-import 'package:maid/providers/character.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/providers/model.dart';
-import 'package:maid/types/generation_options.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
+import 'package:maid/widgets/chat_widgets/chat_field.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,14 +18,14 @@ class ChatBody extends StatefulWidget {
 }
 
 class _ChatBodyState extends State<ChatBody> {
-  final TextEditingController _promptController = TextEditingController();
   final ScrollController _consoleScrollController = ScrollController();
   List<ChatMessage> chatWidgets = [];
 
+  bool _busy = false;
+
   @override
   void dispose() {
-    if (!GenerationManager.busy) GenerationManager.cleanup();
-
+    if (!_busy) GenerationManager.cleanup();
     super.dispose();
   }
 
@@ -81,38 +76,11 @@ class _ChatBodyState extends State<ChatBody> {
     }
   }
 
-  void send() {
-    if (Platform.isAndroid || Platform.isIOS) {
-      FocusScope.of(context).unfocus();
-    }
-
-    final model = context.read<Model>();
-    final character = context.read<Character>();
-    final session = context.read<Session>();
-    final genContext =
-        GenerationOptions(model: model, character: character, session: session);
-
-    session
-        .add(UniqueKey(),
-            message: _promptController.text.trim(), userGenerated: true)
-        .then((value) {
-      session.add(UniqueKey());
-    });
-
-    GenerationManager.prompt(
-        _promptController.text.trim(), genContext, session.stream);
-
-    setState(() {
-      GenerationManager.busy = true;
-      _promptController.clear();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
-        final model = context.watch<Model>();
+        _busy = session.isBusy;
 
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("last_session", json.encode(session.toMap()));
@@ -162,76 +130,7 @@ class _ChatBodyState extends State<ChatBody> {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          if (GenerationManager.busy &&
-                              model.apiType != ApiType.ollama)
-                            IconButton(
-                                onPressed: LocalGeneration.instance.stop,
-                                iconSize: 50,
-                                icon: const Icon(
-                                  Icons.stop_circle_sharp,
-                                  color: Colors.red,
-                                )),
-                          Expanded(
-                            child: RawKeyboardListener(
-                              focusNode: FocusNode(),
-                              onKey: (event) {
-                                if (event
-                                    .isKeyPressed(LogicalKeyboardKey.enter)) {
-                                  if (event.isControlPressed) {
-                                    // Insert line break when Ctrl+Enter is pressed
-                                    int currentPos =
-                                        _promptController.selection.baseOffset;
-                                    String text = _promptController.text;
-                                    String newText =
-                                        "${text.substring(0, currentPos)}\n${text.substring(currentPos)}";
-                                    _promptController.text = newText;
-                                    // Position the cursor after the new line character
-                                    _promptController.selection =
-                                        TextSelection.fromPosition(TextPosition(
-                                            offset: currentPos + 1));
-                                  } else if (!GenerationManager.busy) {
-                                    // Submit the form when Enter is pressed without Ctrl
-                                    send();
-                                  }
-                                }
-                              },
-                              child: TextField(
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.none,
-                                minLines: 1,
-                                maxLines: 9,
-                                enableInteractiveSelection: true,
-                                controller: _promptController,
-                                cursorColor:
-                                    Theme.of(context).colorScheme.secondary,
-                                decoration: InputDecoration(
-                                  labelText: 'Prompt',
-                                  hintStyle:
-                                      Theme.of(context).textTheme.labelSmall,
-                                ),
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                if (!GenerationManager.busy) {
-                                  send();
-                                }
-                              },
-                              iconSize: 50,
-                              icon: Icon(
-                                Icons.arrow_circle_right,
-                                color: GenerationManager.busy
-                                    ? Theme.of(context).colorScheme.onPrimary
-                                    : Theme.of(context).colorScheme.secondary,
-                              )),
-                        ],
-                      ),
-                    ),
+                    const ChatField(),
                   ],
                 ),
               ],

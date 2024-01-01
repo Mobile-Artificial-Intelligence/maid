@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/types/chat_node.dart';
+import 'package:maid/models/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/types/generation_options.dart';
+import 'package:maid/models/generation_options.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
+  bool _busy = false;
   ChatNode _root = ChatNode(key: UniqueKey());
   ChatNode? tail;
   String _messageBuffer = "";
+
+  bool get isBusy => _busy;
 
   void init() async {
     Logger.log("Session Initialised");
@@ -63,7 +66,7 @@ class Session extends ChangeNotifier {
     return _root.toMap();
   }
 
-  String get(Key key) {
+  String getMessage(Key key) {
     return _root.find(key)?.message ?? "";
   }
 
@@ -109,16 +112,23 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  void stream(String message) async {
-    _messageBuffer += message;
-    tail ??= _root.findTail();
-    if (!GenerationManager.busy && !(tail!.userGenerated)) {
+  void stream(String? message) async {
+    if (message == null) {
       finalise();
-    } else if (!(tail!.messageController.isClosed)) {
-      tail!.messageController.add(_messageBuffer);
-      _messageBuffer = "";
+    } else {
+      _busy = true;
+      notifyListeners();
+
+      _messageBuffer += message;
+      tail ??= _root.findTail();
+
+      if (!(tail!.messageController.isClosed)) {
+        tail!.messageController.add(_messageBuffer);
+        _messageBuffer = "";
+      }
+
+      tail!.message += message;
     }
-    tail!.message += message;
   }
 
   void regenerate(Key key, BuildContext context) {
@@ -127,7 +137,6 @@ class Session extends ChangeNotifier {
       return;
     } else {
       branch(key, false);
-      GenerationManager.busy = true;
       GenerationManager.prompt(
           parent.message,
           GenerationOptions(
@@ -150,9 +159,11 @@ class Session extends ChangeNotifier {
   }
 
   void finalise() {
+    _busy = false;
+
     tail ??= _root.findTail();
 
-    if (!(tail!.messageController.isClosed)) {
+    if (!(tail!.finaliseController.isClosed)) {
       tail!.finaliseController.add(0);
     }
 
