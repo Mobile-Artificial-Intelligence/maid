@@ -41,9 +41,15 @@ class LibraryLink {
     }
     _nativeLibrary = NativeLibrary(coreDynamic);
 
+    String prePrompt = options.prePrompt;
+
+    for (var message in options.messages) {
+      prePrompt += "\n${message['role']} ${message['content']}";
+    }
+
     final params = calloc<maid_params>();
     params.ref.path = options.path.toString().toNativeUtf8().cast<Char>();
-    params.ref.preprompt = options.prePrompt.toNativeUtf8().cast<Char>();
+    params.ref.preprompt = prePrompt.toNativeUtf8().cast<Char>();
     params.ref.input_prefix =
         options.userAlias.trim().toNativeUtf8().cast<Char>();
     params.ref.input_suffix =

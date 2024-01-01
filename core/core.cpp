@@ -119,8 +119,8 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     embd_inp = ::llama_tokenize(model, params.prompt, add_bos, true);
 
     if ((int) embd_inp.size() > lparams.n_ctx - 4) {
-        fprintf(stderr, "%s: error: prompt is too long (%d tokens, max %d)\n", __func__, (int) embd_inp.size(), lparams.n_ctx - 4);
-        return 1;
+        //Truncate the prompt if it's too long removing the tokens from the start of the vector to make the vector size <= n_ctx - 4
+        embd_inp.erase(embd_inp.begin(), embd_inp.begin() + (embd_inp.size() - (lparams.n_ctx - 4)));
     }
 
     // number of tokens to keep when resetting context
