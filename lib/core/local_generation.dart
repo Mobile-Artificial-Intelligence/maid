@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:maid/models/isolate_message.dart';
 import 'package:maid/models/library_link.dart';
 import 'package:maid/models/generation_options.dart';
+import 'package:maid/static/logger.dart';
 
 class LocalGeneration {
   static Completer? _mainCompleter;
@@ -23,6 +24,7 @@ class LocalGeneration {
             link = LibraryLink(data.options!);
             break;
           case IsolateCode.stop:
+            Logger.log('Stopping');
             link.stop();
             break;
           case IsolateCode.prompt:

@@ -10,7 +10,7 @@ import 'package:maid/static/logger.dart';
 
 class LibraryLink {
   static SendPort? _sendPort;
-  late NativeLibrary _nativeLibrary;
+  static NativeLibrary? _nativeLibrary;
 
   static void _maidLoggerBridge(Pointer<Char> buffer) {
     try {
@@ -32,14 +32,19 @@ class LibraryLink {
     }
   }
 
-  LibraryLink(GenerationOptions options) {
+  static NativeLibrary loadNativeLibrary() {
     DynamicLibrary coreDynamic = DynamicLibrary.process();
 
     if (Platform.isWindows) coreDynamic = DynamicLibrary.open('core.dll');
     if (Platform.isLinux || Platform.isAndroid) {
       coreDynamic = DynamicLibrary.open('libcore.so');
     }
-    _nativeLibrary = NativeLibrary(coreDynamic);
+
+    return NativeLibrary(coreDynamic);
+  }
+
+  LibraryLink(GenerationOptions options) {
+    _nativeLibrary = loadNativeLibrary();
 
     String prePrompt = options.prePrompt;
 
@@ -77,22 +82,31 @@ class LibraryLink {
     params.ref.mirostat_tau = options.mirostatTau;
     params.ref.mirostat_eta = options.mirostatEta;
 
-    _nativeLibrary.core_init(params, Pointer.fromFunction(_maidLoggerBridge));
+    _nativeLibrary!.core_init(params, Pointer.fromFunction(_maidLoggerBridge));
+  }
+
+  static _promptIsolate(Map<String, dynamic> args) async {
+    _sendPort = args['port'] as SendPort?;
+    String input = args['input'];
+    Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
+
+    _nativeLibrary = loadNativeLibrary();
+
+    _nativeLibrary!.core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
   }
 
   void prompt(SendPort sendPort, String input) async {
     _sendPort = sendPort;
-    Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
-    _nativeLibrary.core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
+    Isolate.spawn(_promptIsolate, {'input': input, 'port': sendPort});
   }
 
   void stop() {
-    _nativeLibrary.core_stop();
-    _sendPort?.send(IsolateCode.stop);
+    _nativeLibrary!.core_stop();
+    _sendPort!.send(IsolateCode.stop);
   }
 
   void dispose() {
-    _nativeLibrary.core_cleanup();
+    _nativeLibrary!.core_cleanup();
     _sendPort!.send(IsolateCode.dispose);
   }
 }
