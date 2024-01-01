@@ -4,7 +4,6 @@ import 'dart:isolate';
 import 'package:maid/models/isolate_message.dart';
 import 'package:maid/models/library_link.dart';
 import 'package:maid/models/generation_options.dart';
-import 'package:maid/static/generation_manager.dart';
 
 class LocalGeneration {
   static SendPort? _sendPort;
@@ -69,6 +68,7 @@ class LocalGeneration {
         callback.call(message);
       } else if (message is IsolateCode) {
         if (message == IsolateCode.dispose) {
+          _sendPort = null;
           completer!.complete();
         } else if (message == IsolateCode.stop) {
           callback.call(null);

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';

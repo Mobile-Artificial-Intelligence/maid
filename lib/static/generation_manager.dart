@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:maid/core/remote_generation.dart';
 import 'package:maid/core/local_generation.dart';
 import 'package:maid/providers/model.dart';

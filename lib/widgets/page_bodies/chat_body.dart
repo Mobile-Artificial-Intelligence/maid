@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/pages/generic_page.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/chat_widgets/chat_field.dart';
 import 'package:maid/widgets/page_bodies/model_body.dart';
@@ -82,8 +81,6 @@ class _ChatBodyState extends State<ChatBody> {
     return Consumer<Session>(
       builder: (context, session, child) {
         _busy = session.isBusy;
-
-        final model = context.watch<Model>();
 
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("last_session", json.encode(session.toMap()));

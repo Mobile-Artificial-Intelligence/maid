@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:maid/models/generation_options.dart';
 
 enum IsolateCode { start, stop, prompt, dispose }

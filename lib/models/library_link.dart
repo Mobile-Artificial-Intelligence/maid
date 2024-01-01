@@ -74,7 +74,7 @@ class LibraryLink {
     _nativeLibrary.core_init(params, Pointer.fromFunction(_maidLoggerBridge));
   }
 
-  void prompt(SendPort sendPort, String input) {
+  void prompt(SendPort sendPort, String input) async {
     _sendPort = sendPort;
     Pointer<Char> text = input.trim().toNativeUtf8().cast<Char>();
     _nativeLibrary.core_prompt(text, Pointer.fromFunction(_maidOutputBridge));
