@@ -18,6 +18,7 @@ class Character extends ChangeNotifier {
   String _userAlias = "";
   String _responseAlias = "";
 
+  bool _useExamples = true;
   List<Map<String,dynamic>> _examples = [];
 
   void init() async {
@@ -105,6 +106,11 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setUseExamples(bool useExamples) {
+    _useExamples = useExamples;
+    notifyListeners();
+  }
+
   void newExample() {
     _examples.add({
       "role": "user",
@@ -143,6 +149,8 @@ class Character extends ChangeNotifier {
   String get responseAlias => _responseAlias;
 
   String get prePrompt => _prePrompt;
+
+  bool get useExamples => _useExamples;
 
   List<Map<String,dynamic>> get examples => _examples;
 
