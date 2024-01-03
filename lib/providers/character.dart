@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/providers/session.dart';
 import 'package:image/image.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,6 +62,7 @@ class Character extends ChangeNotifier {
     _userAlias = inputJson["user_alias"] ?? "";
     _responseAlias = inputJson["response_alias"] ?? "";
 
+    _useExamples = inputJson["use_examples"] ?? true;
     if (inputJson["examples"] != null) {
       final length = inputJson["examples"].length ?? 0;
       _examples = List<Map<String,dynamic>>.generate(length, (i) => inputJson["examples"][i]);
@@ -81,6 +81,7 @@ class Character extends ChangeNotifier {
     jsonCharacter["pre_prompt"] = _prePrompt;
     jsonCharacter["user_alias"] = _userAlias;
     jsonCharacter["response_alias"] = _responseAlias;
+    jsonCharacter["use_examples"] = _useExamples;
     jsonCharacter["examples"] = _examples;
 
     return jsonCharacter;
@@ -160,14 +161,7 @@ class Character extends ChangeNotifier {
 
     Map<String, dynamic> jsonCharacter = json.decode(jsonString);
 
-    _prePrompt = jsonCharacter["pre_prompt"] ?? "";
-    _userAlias = jsonCharacter["user_alias"] ?? "";
-    _responseAlias = jsonCharacter["response_alias"] ?? "";
-
-    if (jsonCharacter["examples"] != null) {
-      final length = jsonCharacter["examples"].length ?? 0;
-      _examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
-    }
+    fromMap(jsonCharacter);
 
     notifyListeners();
   }
@@ -206,14 +200,7 @@ class Character extends ChangeNotifier {
         return "Failed to decode character";
       }
 
-      _name = jsonCharacter["name"] ?? "";
-
-      _prePrompt = jsonCharacter["pre_prompt"] ?? "";
-      _userAlias = jsonCharacter["user_alias"] ?? "";
-      _responseAlias = jsonCharacter["response_alias"] ?? "";
-
-      final length = jsonCharacter["examples"].length ?? 0;
-      _examples = List<Map<String,dynamic>>.generate(length, (i) => jsonCharacter["examples"][i]);
+      fromMap(jsonCharacter);
 
       notifyListeners();
       return "Character Successfully Loaded";
@@ -286,25 +273,5 @@ class Character extends ChangeNotifier {
       Logger.log("Error: $e");
       return "Error: $e";
     }
-  }
-  
-  String getPrePrompt(Session session) {
-    String result = _prePrompt.isNotEmpty ? _prePrompt.trim() : "";
-
-    List<Map<String, dynamic>> history = _examples;
-    history += session.getMessages();
-    if (history.isNotEmpty) {
-      for (var i = 0; i < history.length - 2; i++) {
-        String alias;
-        if (history[i]["role"] == "user") {
-          alias = _userAlias;
-        } else {
-          alias = _responseAlias;
-        }
-        result += "\n$alias ${history[i]["content"].trim()}";
-      }
-    }
-
-    return result;
   }
 }
