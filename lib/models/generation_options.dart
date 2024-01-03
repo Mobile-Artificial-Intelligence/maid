@@ -115,8 +115,10 @@ class GenerationOptions {
       Logger.log(session.toMap().toString());
 
       _messages = [];
-      _messages.addAll(character.examples);
-      _messages.addAll(session.getMessages());
+      if (character.useExamples) {
+        _messages.addAll(character.examples);
+        _messages.addAll(session.getMessages());
+      }
 
       _remoteUrl = model.parameters["remote_url"];
       _apiType = model.apiType;

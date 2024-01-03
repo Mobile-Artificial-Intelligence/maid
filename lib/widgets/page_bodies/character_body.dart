@@ -239,28 +239,38 @@ class _CharacterBodyState extends State<CharacterBody> {
                     endIndent: 10,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  DoubleButtonRow(
-                    leftText: "Add Example",
-                    leftOnPressed: () {
-                      character.newExample();
-                    },
-                    rightText: "Remove Example",
-                    rightOnPressed: () {
-                      character.removeLastExample();
+                  SwitchListTile(
+                    title: const Text('Use Examples'),
+                    value: character.useExamples,
+                    onChanged: (value) {
+                      character.setUseExamples(value);
                     },
                   ),
-                  const SizedBox(height: 10.0),
-                  ...List.generate(
-                    character.examples.length,
-                    (index) => MaidTextField(
-                      headingText: '${character.examples[index]["role"]} content',
-                      labelText: character.examples[index]["role"],
-                      controller: _exampleControllers[index],
-                      onChanged: (value) {
-                        character.updateExample(index, value);
+                  if (character.useExamples)
+                  ...[
+                    DoubleButtonRow(
+                      leftText: "Add Example",
+                      leftOnPressed: () {
+                        character.newExample();
+                      },
+                      rightText: "Remove Example",
+                      rightOnPressed: () {
+                        character.removeLastExample();
                       },
                     ),
-                  ),
+                    const SizedBox(height: 10.0),
+                    ...List.generate(
+                      character.examples.length,
+                      (index) => MaidTextField(
+                        headingText: '${character.examples[index]["role"]} content',
+                        labelText: character.examples[index]["role"],
+                        controller: _exampleControllers[index],
+                        onChanged: (value) {
+                          character.updateExample(index, value);
+                        },
+                      ),
+                    ),
+                  ]
                 ],
               ),
             ),
