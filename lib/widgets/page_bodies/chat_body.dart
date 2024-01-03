@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/pages/generic_page.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/chat_widgets/chat_field.dart';
-import 'package:maid/widgets/page_bodies/model_body.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,53 +25,6 @@ class _ChatBodyState extends State<ChatBody> {
   void dispose() {
     if (!_busy) GenerationManager.cleanup();
     super.dispose();
-  }
-
-  void _missingModelDialog() {
-    // Use a local reference to context to avoid using it across an async gap.
-    final localContext = context;
-    // Ensure that the context is still valid before attempting to show the dialog.
-    if (localContext.mounted) {
-      showDialog(
-        context: localContext,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text(
-              "Model Missing\nPlease assign a model in model settings.",
-              textAlign: TextAlign.center,
-            ),
-            alignment: Alignment.center,
-            actionsAlignment: MainAxisAlignment.center,
-            backgroundColor: Theme.of(context).colorScheme.background,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            actions: [
-              FilledButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const GenericPage(
-                              title: "Model", body: ModelBody())));
-                },
-                child: Text("Open Model Settings",
-                    style: Theme.of(context).textTheme.labelLarge),
-              ),
-              FilledButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("Close",
-                    style: Theme.of(context).textTheme.labelLarge),
-              ),
-            ],
-          );
-        },
-      );
-      setState(() {});
-    }
   }
 
   @override
