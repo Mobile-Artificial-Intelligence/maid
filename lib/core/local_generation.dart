@@ -40,17 +40,11 @@ class LocalGeneration {
     await completer.future;
   }
 
-  static Future<void> prompt(String input, GenerationOptions options,
-      void Function(String?) callback) async {
-    if (_mainCompleter != null) {
-      await _mainCompleter!.future;
-    }
-
-    if (_sendPort != null) {
-      _sendPort!.send(
-        IsolateMessage(IsolateCode.prompt, input: input));
-    }
-    
+  static void _launch(
+    String input, 
+    GenerationOptions options,
+    void Function(String?) callback
+  ) async {
     final receivePort = ReceivePort();
     await Isolate.spawn(_libraryIsolate, receivePort.sendPort);
 
@@ -90,6 +84,23 @@ class LocalGeneration {
     });
 
     await completer.future;
+  }
+
+  static Future<void> prompt(
+    String input,
+    GenerationOptions options,
+    void Function(String?) callback
+  ) async {
+    if (_mainCompleter != null) {
+      await _mainCompleter!.future;
+    }
+
+    if (_sendPort != null) {
+      _sendPort!.send(
+        IsolateMessage(IsolateCode.prompt, input: input));
+    } else {
+      _launch(input, options, callback);
+    }
   }
 
   static void stop() {
