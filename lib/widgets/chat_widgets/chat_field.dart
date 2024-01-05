@@ -51,6 +51,8 @@ class _ChatFieldState extends State<ChatField> {
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
+        bool isMobile = Platform.isAndroid || Platform.isIOS;
+
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -68,8 +70,8 @@ class _ChatFieldState extends State<ChatField> {
                 child: RawKeyboardListener(
                   focusNode: FocusNode(),
                   onKey: (event) {
-                    if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-                      if (event.isControlPressed && (!Platform.isAndroid && !Platform.isIOS)) {
+                    if (event.isKeyPressed(LogicalKeyboardKey.enter) && !isMobile) {
+                      if (event.isControlPressed) {
                         // Insert line break when Ctrl+Enter is pressed
                         int currentPos = _promptController.selection.baseOffset;
                         String text = _promptController.text;
@@ -86,8 +88,8 @@ class _ChatFieldState extends State<ChatField> {
                     }
                   },
                   child: TextField(
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.none,
+                    keyboardType: !isMobile ? TextInputType.text : TextInputType.multiline,
+                    textInputAction: !isMobile ? TextInputAction.none : TextInputAction.newline,
                     minLines: 1,
                     maxLines: 9,
                     enableInteractiveSelection: true,
