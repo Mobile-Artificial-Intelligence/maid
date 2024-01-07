@@ -165,5 +165,6 @@ enum ApiType {
   local,
   openAI,
   ollama,
+  mistralAI,
   custom
 }
