@@ -29,6 +29,10 @@ class ApiDropdown extends StatelessWidget {
                   value: ApiType.openAI,
                   label: "OpenAI",
                 ),
+                DropdownMenuEntry<ApiType>(
+                  value: ApiType.mistralAI,
+                  label: "MistralAI",
+                ),
               ],
               onSelected: (ApiType? value) {
                 if (value != null) {

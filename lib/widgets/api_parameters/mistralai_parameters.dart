@@ -5,14 +5,14 @@ import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 import 'package:maid/widgets/settings_widgets/model_dropdown.dart';
 import 'package:provider/provider.dart';
 
-class OpenAiParameters extends StatefulWidget {
-  const OpenAiParameters({super.key});
+class MistralAiParameters extends StatefulWidget {
+  const MistralAiParameters({super.key});
   
   @override
-  State<StatefulWidget> createState() => _OpenAiParametersState();
+  State<StatefulWidget> createState() => _MistralAiParametersState();
 }
 
-class _OpenAiParametersState extends State<OpenAiParameters> {
+class _MistralAiParametersState extends State<MistralAiParameters> {
   late TextEditingController _apiTokenController;
   late TextEditingController _remoteUrlController;
 
@@ -63,46 +63,6 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
               color: Theme.of(context).colorScheme.primary,
             ),
             MaidSlider(
-              labelText: 'temperature',
-              inputValue: model.parameters["temperature"] ?? 0.8,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("temperature", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'penalty_freq',
-              inputValue: model.parameters["penalty_freq"] ?? 0.0,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("penalty_freq", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'penalty_present',
-              inputValue: model.parameters["penalty_present"] ?? 0.0,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("penalty_present", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'n_predict',
-              inputValue: model.parameters["n_predict"] ?? 512,
-              sliderMin: 1.0,
-              sliderMax: 1024.0,
-              sliderDivisions: 1023,
-              onValueChanged: (value) {
-                model.setParameter("n_predict", value.round());
-              }
-            ),
-            MaidSlider(
               labelText: 'top_p',
               inputValue: model.parameters["top_p"] ?? 0.95,
               sliderMin: 0.0,
@@ -110,6 +70,16 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
               sliderDivisions: 100,
               onValueChanged: (value) {
                 model.setParameter("top_p", value);
+              }
+            ),
+            MaidSlider(
+              labelText: 'temperature',
+              inputValue: model.parameters["temperature"] ?? 0.8,
+              sliderMin: 0.0,
+              sliderMax: 1.0,
+              sliderDivisions: 100,
+              onValueChanged: (value) {
+                model.setParameter("temperature", value);
               }
             ),
           ]

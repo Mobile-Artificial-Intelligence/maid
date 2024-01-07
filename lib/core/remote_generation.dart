@@ -84,6 +84,7 @@ class RemoteGeneration {
     try {
       final chat = ChatMistralAI(
         baseUrl: '${options.remoteUrl}/v1',
+        apiKey: options.apiKey,
         defaultOptions: ChatMistralAIOptions(
           model: options.remoteModel ?? 'mistral-small',
           topP: options.topP,
@@ -146,37 +147,42 @@ class RemoteGeneration {
   }
 
   static Future<List<String>> getOptions(Model model) async {
-    if (model.apiType == ApiType.openAI) {
-      return ["gpt-3.5-turbo", "gpt-4-32k"];
-    }
-
-    bool permissionGranted = await _requestPermission();
-    if (!permissionGranted) {
-      return [];
-    }
-
-    final url = Uri.parse("${model.parameters["remote_url"]}/api/tags");
-    final headers = {"Accept": "application/json"};
-
-    try {
-      var request = Request("GET", url)..headers.addAll(headers);
-
-      var response = await request.send();
-      var responseString = await response.stream.bytesToString();
-      var data = json.decode(responseString);
-
-      List<String> options = [];
-      if (data['models'] != null) {
-        for (var option in data['models']) {
-          options.add(option['name']);
+    switch (model.apiType) {
+      case ApiType.ollama:
+        bool permissionGranted = await _requestPermission();
+        if (!permissionGranted) {
+          return [];
         }
-      }
-
-      return options;
-    } catch (e) {
-      Logger.log('Error: $e');
-      return [];
-    }
+    
+        final url = Uri.parse("${model.parameters["remote_url"]}/api/tags");
+        final headers = {"Accept": "application/json"};
+    
+        try {
+          var request = Request("GET", url)..headers.addAll(headers);
+    
+          var response = await request.send();
+          var responseString = await response.stream.bytesToString();
+          var data = json.decode(responseString);
+    
+          List<String> options = [];
+          if (data['models'] != null) {
+            for (var option in data['models']) {
+              options.add(option['name']);
+            }
+          }
+    
+          return options;
+        } catch (e) {
+          Logger.log('Error: $e');
+          return [];
+        }
+      case ApiType.openAI:
+        return ["gpt-3.5-turbo", "gpt-4-32k"];
+      case ApiType.mistralAI:
+        return ["mistral-small", "mistral-medium", "mistral-large"];
+      default:
+        return [];
+    }    
   }
 
   static Future<bool> _requestPermission() async {

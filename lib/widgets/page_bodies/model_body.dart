@@ -6,6 +6,7 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/api_parameters/local_parameters.dart';
+import 'package:maid/widgets/api_parameters/mistralai_parameters.dart';
 import 'package:maid/widgets/api_parameters/ollama_parameters.dart';
 import 'package:maid/widgets/api_parameters/openai_parameters.dart';
 import 'package:maid/widgets/dialogs.dart';
@@ -183,7 +184,9 @@ class _ModelBodyState extends State<ModelBody> {
                   else if (model.apiType == ApiType.ollama)
                     const OllamaParameters()
                   else if (model.apiType == ApiType.openAI)
-                    const OpenAiParameters(),
+                    const OpenAiParameters()
+                  else if (model.apiType == ApiType.mistralAI)
+                    const MistralAiParameters(),
                 ],
               ),
             ),
