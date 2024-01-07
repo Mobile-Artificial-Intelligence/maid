@@ -18,11 +18,10 @@ class AboutBody extends StatelessWidget {
             height: 150,
           ),
           const SizedBox(height: 30.0),
-          Center(
-            child: Text(
-              'Maid',
-              style: Theme.of(context).textTheme.titleLarge,
-            )
+          Text(
+            'Maid',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 20.0),
           Linkify(
@@ -35,7 +34,56 @@ class AboutBody extends StatelessWidget {
             'not included with this app and must be downloaded separately. Model files can be downloaded online '
             'at https://huggingface.co',
             style: Theme.of(context).textTheme.bodyMedium
-          )
+          ),
+          const SizedBox(height: 20.0),
+          Text(
+            'Contributors',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 20.0),
+          Text(
+            'Lead Maintainer',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          Text(
+            'Dane Madsen',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 20.0),
+          Text(
+            'Maid Contributors',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          Text(
+            'sfiannaca',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          Text(
+            'gardner',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 20.0),
+          Text(
+            'Sherpa Contributors',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          Text(
+            'ThibautLEAUX',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          Text(
+            'Natakout',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ]
       ),
     );
