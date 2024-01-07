@@ -39,9 +39,11 @@ class RemoteGeneration {
         ),
       );
 
-      final response = await chat(chatMessages);
+      final stream = chat.stream(PromptValue.chat(chatMessages));
 
-      callback.call(response.content);
+      await for (final ChatResult response in stream) {
+        callback.call(response.firstOutputAsString);
+      }
     } catch (e) {
       Logger.log('Error: $e');
     }
@@ -65,9 +67,11 @@ class RemoteGeneration {
         ),
       );
 
-      final response = await chat(chatMessages);
+      final stream = chat.stream(PromptValue.chat(chatMessages));
 
-      callback.call(response.content);
+      await for (final ChatResult response in stream) {
+        callback.call(response.firstOutputAsString);
+      }
     } catch (e) {
       Logger.log('Error: $e');
     }
@@ -87,9 +91,11 @@ class RemoteGeneration {
         ),
       );
 
-      final response = await chat(chatMessages);
+      final stream = chat.stream(PromptValue.chat(chatMessages));
 
-      callback.call(response.content);
+      await for (final ChatResult response in stream) {
+        callback.call(response.firstOutputAsString);
+      }
     } catch (e) {
       Logger.log('Error: $e');
     }
