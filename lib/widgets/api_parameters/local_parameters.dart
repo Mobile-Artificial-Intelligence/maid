@@ -49,7 +49,7 @@ class LocalParameters extends StatelessWidget {
               },
               rightText: "Unload GGUF",
               rightOnPressed: () {
-                model.setParameter("path", null);
+                model.setParameter("path", "");
               }
             ),
             Divider(
