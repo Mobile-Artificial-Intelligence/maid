@@ -44,7 +44,7 @@ class Themes {
         ),
         titleMedium: TextStyle(
           color: onPrimary,
-          fontSize: 25.0,
+          fontSize: 15.0,
         ),
         titleSmall: TextStyle(
           color: onPrimary,
