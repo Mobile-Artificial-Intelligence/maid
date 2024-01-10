@@ -113,14 +113,18 @@ class Character extends ChangeNotifier {
   }
 
   void newExample() {
-    _examples.add({
-      "role": "user",
-      "content": "",
-    });
-    _examples.add({
-      "role": "assistant",
-      "content": "",
-    });
+    _examples.addAll(
+      [
+        {
+          "role": "user",
+          "content": "",
+        }, 
+        {
+          "role": "assistant",
+          "content": "",
+        }
+      ]
+    );
     notifyListeners();
   }
 
@@ -130,14 +134,12 @@ class Character extends ChangeNotifier {
   }
 
   void removeExample(int index) {
-    _examples.removeAt(index);
-    _examples.removeAt(index - 1);
+    _examples.removeRange(index - 2, index);
     notifyListeners();
   }
 
   void removeLastExample() {
-    _examples.removeLast();
-    _examples.removeLast();
+    _examples.removeRange(_examples.length - 2, _examples.length);
     notifyListeners();
   }
 
