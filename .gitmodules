@@ -1,4 +1,3 @@
 [submodule "src/llama.cpp"]
 	path = src/llama.cpp
-	url = https://github.com/MaidFoundation/llama.cpp.git
-	branch = master
+	url = https://github.com/Mobile-Artificial-Intelligence/llama.cpp.git
