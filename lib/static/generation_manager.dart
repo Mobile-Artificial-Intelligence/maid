@@ -1,5 +1,5 @@
-import 'package:maid/core/remote_generation.dart';
-import 'package:maid/core/local_generation.dart';
+import 'package:maid/static/remote_generation.dart';
+import 'package:maid/static/local_generation.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/models/generation_options.dart';
 

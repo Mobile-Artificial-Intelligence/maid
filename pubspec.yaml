@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2.2.1+8
+version: 1.1.7
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -68,10 +68,10 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 ffigen:
-  output: lib/core/bindings.dart
+  output: lib/bindings.dart
   headers:
     entry-points:
-      - "core/core.h"
+      - "src/core.h"
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -115,7 +115,7 @@ msix_config:
   display_name: Maid
   publisher_display_name: Dane Madsen
   identity_name: com.danemadsen.maid
-  msix_version: 2.2.1.0
+  msix_version: 1.1.7
   logo_path: assets/maid.png
 flutter_icons:
   android: "launcher_icon"
