@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
-import 'package:maid/core/bindings.dart';
+import 'package:maid/bindings.dart';
 import 'package:maid/models/generation_options.dart';
 import 'package:maid/models/isolate_message.dart';
 import 'package:maid/static/logger.dart';

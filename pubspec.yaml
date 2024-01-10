@@ -68,10 +68,10 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 ffigen:
-  output: lib/core/bindings.dart
+  output: lib/bindings.dart
   headers:
     entry-points:
-      - "core/core.h"
+      - "src/core.h"
 # The following section is specific to Flutter packages.
 flutter:
 

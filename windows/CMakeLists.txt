@@ -104,5 +104,5 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
 set(CMAKE_INSTALL_BINDIR ${BUILD_BUNDLE_DIR})
 
 # Build the core library.
-add_subdirectory(../core core)
-install(FILES ${PROJECT_BINARY_DIR}/core/Release/core.dll DESTINATION ${BUILD_BUNDLE_DIR})
+add_subdirectory(../src src)
+install(FILES ${PROJECT_BINARY_DIR}/src/Release/core.dll DESTINATION ${BUILD_BUNDLE_DIR})
