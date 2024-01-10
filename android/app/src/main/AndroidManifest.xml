@@ -13,6 +13,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:requestLegacyExternalStorage="true"
+        android:allowBackup="false"
         >
     
         <activity
