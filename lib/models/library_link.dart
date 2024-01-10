@@ -71,6 +71,7 @@ class LibraryLink {
     params.ref.penalize_nl = options.penalizeNewline;
     params.ref.top_k = options.topK;
     params.ref.top_p = options.topP;
+    params.ref.min_p = options.minP;
     params.ref.tfs_z = options.tfsZ;
     params.ref.typical_p = options.typicalP;
     params.ref.temp = options.temperature;

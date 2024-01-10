@@ -113,6 +113,9 @@ final class maid_params extends ffi.Struct {
   external double top_p;
 
   @ffi.Float()
+  external double min_p;
+
+  @ffi.Float()
   external double tfs_z;
 
   @ffi.Float()

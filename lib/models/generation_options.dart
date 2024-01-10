@@ -84,6 +84,7 @@ class GenerationOptions {
     map["n_predict"] = _nPredict;
     map["top_k"] = _topK;
     map["top_p"] = _topP;
+    map["min_p"] = _minP;
     map["tfs_z"] = _tfsZ;
     map["typical_p"] = _typicalP;
     map["penalty_last_n"] = _penaltyLastN;
