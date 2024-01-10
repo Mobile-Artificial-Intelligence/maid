@@ -251,10 +251,20 @@ class _CharacterBodyState extends State<CharacterBody> {
                     DoubleButtonRow(
                       leftText: "Add Example",
                       leftOnPressed: () {
+                        _exampleControllers.addAll(
+                          [
+                            TextEditingController(), 
+                            TextEditingController()
+                          ]
+                        );
                         character.newExample();
                       },
                       rightText: "Remove Example",
                       rightOnPressed: () {
+                        _exampleControllers.removeRange(
+                          _exampleControllers.length - 2, 
+                          _exampleControllers.length
+                        );
                         character.removeLastExample();
                       },
                     ),
