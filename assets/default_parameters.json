@@ -14,6 +14,7 @@
     "n_probs":0,
     "top_k":40,
     "top_p":0.95,
+    "min_p":0.1,
     "tfs_z":1.0,
     "typical_p":1.0,
     "temperature":0.8,

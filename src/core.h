@@ -30,6 +30,7 @@ struct maid_params {
 
    int top_k;                             // <= 0 to use vocab size
    float top_p;                           // 1.0 = disabled
+   float min_p;                           // 1.0 = disabled
    float tfs_z;                           // 1.0 = disabled
    float typical_p;                       // 1.0 = disabled
    float temp;                            // 1.0 = disabled

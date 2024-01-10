@@ -196,6 +196,16 @@ class LocalParameters extends StatelessWidget {
               }
             ),
             MaidSlider(
+              labelText: 'min_p',
+              inputValue: model.parameters["min_p"] ?? 0.1,
+              sliderMin: 0.0,
+              sliderMax: 1.0,
+              sliderDivisions: 100,
+              onValueChanged: (value) {
+                model.setParameter("min_p", value);
+              }
+            ),
+            MaidSlider(
               labelText: 'tfs_z',
               inputValue: model.parameters["tfs_z"] ?? 1.0,
               sliderMin: 0.0,
