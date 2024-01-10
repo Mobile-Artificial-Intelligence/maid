@@ -73,7 +73,7 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
 
     params.sparams.top_k            = (*mparams).top_k             ? (*mparams).top_k             : 40;
     params.sparams.top_p            = (*mparams).top_p             ? (*mparams).top_p             : 0.95f;
-    params.sparams.top_p            = (*mparams).top_p             ? (*mparams).top_p             : 0.1f;
+    params.sparams.min_p            = (*mparams).min_p             ? (*mparams).min_p             : 0.1f;
     params.sparams.tfs_z            = (*mparams).tfs_z             ? (*mparams).tfs_z             : 1.00f;
     params.sparams.typical_p        = (*mparams).typical_p         ? (*mparams).typical_p         : 1.00f;
     params.sparams.temp             = (*mparams).temp              ? (*mparams).temp              : 0.80f;
