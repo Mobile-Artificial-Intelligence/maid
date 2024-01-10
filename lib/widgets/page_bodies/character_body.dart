@@ -161,6 +161,7 @@ class _CharacterBodyState extends State<CharacterBody> {
                                   FilledButton(
                                     onPressed: () {
                                       final newCharacter = Character();
+                                      newCharacter.resetAll();
                                       _characters[newCharacter.name] = newCharacter.toMap();
                                       character.notify();
                                     },

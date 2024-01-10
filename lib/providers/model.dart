@@ -14,6 +14,15 @@ class Model extends ChangeNotifier {
   String _preset = "Default";
   Map<String, dynamic> _parameters = {};
 
+  Model() {
+    final key = UniqueKey().toString();
+    _preset = "New Preset $key";
+  }
+
+  void notify() {
+    notifyListeners();
+  }
+
   void init() async {
     Logger.log("Model Initialised");
 
@@ -81,18 +90,14 @@ class Model extends ChangeNotifier {
     return jsonModel;
   }
 
-  void resetAll() async {
-    String jsonString = await rootBundle.loadString('assets/default_parameters.json');
+  void resetAll() {
+    rootBundle.loadString('assets/default_parameters.json').then((jsonString) {
+      Map<String, dynamic> jsonModel = json.decode(jsonString);
 
-    _parameters = json.decode(jsonString);
+      fromMap(jsonModel);
 
-    if (_parameters["n_threads"] > Platform.numberOfProcessors) {
-      _parameters["n_threads"] = Platform.numberOfProcessors;
-    }
-
-    _apiType = ApiType.local;
-
-    notifyListeners();
+      notifyListeners();
+    });
   }
 
   Future<String> exportModelParameters(BuildContext context) async {

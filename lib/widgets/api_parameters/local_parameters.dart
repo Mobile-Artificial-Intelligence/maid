@@ -31,7 +31,7 @@ class LocalParameters extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: Text(
-                      model.parameters["path"],
+                      model.parameters["path"] ?? "None",
                       textAlign: TextAlign.end,
                     ),
                   ),
