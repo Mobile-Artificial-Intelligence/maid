@@ -18,6 +18,7 @@ class GenerationOptions {
   late int _nPredict;
   late int _topK;
   late double _topP;
+  late double _minP;
   late double _tfsZ;
   late double _typicalP;
   late int _penaltyLastN;
@@ -50,6 +51,7 @@ class GenerationOptions {
   int get nPredict => _nPredict;
   int get topK => _topK;
   double get topP => _topP;
+  double get minP => _minP;
   double get tfsZ => _tfsZ;
   double get typicalP => _typicalP;
   int get penaltyLastN => _penaltyLastN;
@@ -134,6 +136,7 @@ class GenerationOptions {
       _nPredict = model.parameters["n_predict"];
       _topK = model.parameters["top_k"];
       _topP = model.parameters["top_p"];
+      _minP = model.parameters["min_p"];
       _tfsZ = model.parameters["tfs_z"];
       _typicalP = model.parameters["typical_p"];
       _penaltyLastN = model.parameters["penalty_last_n"];
