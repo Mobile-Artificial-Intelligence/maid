@@ -20,6 +20,16 @@ class Character extends ChangeNotifier {
   bool _useExamples = true;
   List<Map<String,dynamic>> _examples = [];
 
+  Character() {
+    final key = UniqueKey().toString();
+    _name = "New Character $key";
+    resetAll();
+  }
+
+  void notify() {
+    notifyListeners();
+  }
+
   void init() async {
     Logger.log("Character Initialised");
 

@@ -27,21 +27,6 @@ class _CharacterBodyState extends State<CharacterBody> {
   late TextEditingController _responseAliasController;
   late TextEditingController _prePromptController;
   late List<TextEditingController> _exampleControllers;
-
-  void updateControllers() {
-    final character = context.read<Character>();
-
-    setState(() {
-      _nameController.text = character.name;
-      _userAliasController.text = character.userAlias;
-      _responseAliasController.text = character.responseAlias;
-      _prePromptController.text = character.prePrompt;
-
-      for (int i = 0; i < character.examples.length; i++) {
-        _exampleControllers[i].text = character.examples[i]["content"];
-      }
-    });
-  }
   
   @override
   void initState() {
@@ -51,17 +36,6 @@ class _CharacterBodyState extends State<CharacterBody> {
       _characters = json.decode(prefs.getString("characters") ?? "{}");
       setState(() {});
     });
-
-    final character = context.read<Character>();
-    _nameController = TextEditingController(text: character.name);
-    _userAliasController = TextEditingController(text: character.userAlias);
-    _responseAliasController = TextEditingController(text: character.responseAlias);
-    _prePromptController = TextEditingController(text: character.prePrompt);
-
-    _exampleControllers = List.generate(
-      character.examples.length,
-      (index) => TextEditingController(text: character.examples[index]["content"]),
-    );
   }
 
   @override
@@ -82,6 +56,16 @@ class _CharacterBodyState extends State<CharacterBody> {
     return Consumer<Character>(
       builder: (context, character, child) {       
         cachedCharacter = character;
+
+        _nameController = TextEditingController(text: character.name);
+        _userAliasController = TextEditingController(text: character.userAlias);
+        _responseAliasController = TextEditingController(text: character.responseAlias);
+        _prePromptController = TextEditingController(text: character.prePrompt);
+
+        _exampleControllers = List.generate(
+          character.examples.length,
+          (index) => TextEditingController(text: character.examples[index]["content"]),
+        );
         
         return Stack(
           children: [
@@ -104,47 +88,97 @@ class _CharacterBodyState extends State<CharacterBody> {
                   DoubleButtonRow(
                     leftText: "Switch Character", 
                     leftOnPressed: () {
-                      switcherDialog(
-                        context, 
-                        () {
-                          return _characters.keys.toList();
-                        }, 
-                        (String characterName) {
-                          character.fromMap(_characters[characterName] ?? {});
-                          Logger.log("Character Set: ${character.name}");
-                        },
-                        (String characterName) {
-                          _characters.remove(characterName);
-                          String? key = _characters.keys.lastOrNull;
+                      showDialog(
+                        context: context, 
+                        builder: (BuildContext context) {
+                          return Consumer<Character>(
+                            builder: (context, character, child) {
+                              return AlertDialog(
+                                title: const Text(
+                                  "Switch Character",
+                                  textAlign: TextAlign.center,
+                                ),
+                                content: SizedBox(
+                                  height: 200,
+                                  width: 200,
+                                  child: ListView.builder(
+                                    itemCount: _characters.keys.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final item = _characters.keys.elementAt(index);
 
-                          if (key == null) {
-                            character.resetAll();
-                          } else {
-                            character.fromMap(_characters[key]!);
-                          }
-                        },
-                        (String characterName) {
-                          return character.name == characterName;
-                        },
-                        () => setState(() {}),
-                        () async {
-                          final prefs = await SharedPreferences.getInstance();
-                          _characters[character.name] = character.toMap();
-                          Logger.log("Character Saved: ${character.name}");
-
-                          prefs.setString("characters", json.encode(_characters));
-                          prefs.setString("last_character", character.name);
-                          GenerationManager.cleanup();
-
-                          character.resetAll();
-                          character.setName("New Character");
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Dismissible(
+                                          key: ValueKey(item),
+                                          background: Container(color: Colors.red),
+                                          onDismissed: (direction) {
+                                            setState(() {
+                                              _characters.remove(item);
+                                              if (character.name == item) {
+                                                character.fromMap(_characters.values.lastOrNull ?? {});
+                                              }
+                                            });
+                                            Logger.log("Character Removed: $item");
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: character.name == item ? 
+                                                     Theme.of(context).colorScheme.tertiary : 
+                                                     Theme.of(context).colorScheme.primary,
+                                              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                                            ),
+                                            child: ListTile(
+                                              title: Text(
+                                                item,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              onTap: () {
+                                                character.fromMap(_characters[item]);
+                                                Logger.log("Character Set: ${character.name}");
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                actions: [
+                                  FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      "Close",
+                                      style: Theme.of(context).textTheme.labelLarge,
+                                    ),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {
+                                      final newCharacter = Character();
+                                      _characters[newCharacter.name] = newCharacter.toMap();
+                                      character.notify();
+                                    },
+                                    child: Text(
+                                      "New Preset",
+                                      style: Theme.of(context).textTheme.labelLarge,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       );
                     }, 
                     rightText: "Reset All", 
                     rightOnPressed: () {
                       character.resetAll();
-                      updateControllers();
                     }
                   ),
                   const SizedBox(height: 15.0),
@@ -152,7 +186,6 @@ class _CharacterBodyState extends State<CharacterBody> {
                     leftText: "Load Image",
                     leftOnPressed: () async {
                       await storageOperationDialog(context, character.importImage);
-                      updateControllers();
                     },
                     rightText: "Save Image",
                     rightOnPressed: () async {
@@ -165,7 +198,6 @@ class _CharacterBodyState extends State<CharacterBody> {
                     leftText: "Load JSON",
                     leftOnPressed: () async {
                       await storageOperationDialog(context, character.importJSON);
-                      updateControllers();
                     },
                     rightText: "Save JSON",
                     rightOnPressed: () async {
