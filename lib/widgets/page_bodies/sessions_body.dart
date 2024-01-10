@@ -120,7 +120,6 @@ class _SessionsBodyState extends State<SessionsBody> {
                             onTap: () {
                               if (session.isBusy) return;
                               session.fromMap(_sessions[sessionKey]);
-                              setState(() {});
                             },
                             onLongPress: () {
                               if (session.isBusy) return;

@@ -20,6 +20,15 @@ class Character extends ChangeNotifier {
   bool _useExamples = true;
   List<Map<String,dynamic>> _examples = [];
 
+  Character() {
+    final key = UniqueKey().toString();
+    _name = "New Character $key";
+  }
+
+  void notify() {
+    notifyListeners();
+  }
+
   void init() async {
     Logger.log("Character Initialised");
 
@@ -157,15 +166,15 @@ class Character extends ChangeNotifier {
 
   List<Map<String,dynamic>> get examples => _examples;
 
-  void resetAll() async {
+  void resetAll() {
     // Reset all the internal state to the defaults
-    String jsonString = await rootBundle.loadString('assets/default_character.json');
+    rootBundle.loadString('assets/default_character.json').then((jsonString) {
+      Map<String, dynamic> jsonCharacter = json.decode(jsonString);
 
-    Map<String, dynamic> jsonCharacter = json.decode(jsonString);
+      fromMap(jsonCharacter);
 
-    fromMap(jsonCharacter);
-
-    notifyListeners();
+      notifyListeners();
+    });
   }
 
   Future<String> exportJSON(BuildContext context) async {

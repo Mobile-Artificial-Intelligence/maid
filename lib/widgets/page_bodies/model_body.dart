@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/api_parameters/local_parameters.dart';
@@ -74,44 +73,92 @@ class _ModelBodyState extends State<ModelBody> {
                   const SizedBox(height: 20.0),
                   FilledButton(
                     onPressed: () {
-                      switcherDialog(
-                        context,
-                        () {
-                          return _models.keys.toList();
-                        },
-                        (String modelName) {
-                          
-                          model.fromMap(_models[modelName] ?? {});
-                          Logger.log("Model Set: ${model.preset}");
-                          
-                        },
-                        (String modelName) {
-                          _models.remove(modelName);
-                          String? key = _models.keys.lastOrNull;
+                      showDialog(
+                        context: context, 
+                        builder: (BuildContext context) {
+                          return Consumer<Model>(
+                            builder: (context, model, child) {
+                              return AlertDialog(
+                                title: const Text(
+                                  "Switch Model",
+                                  textAlign: TextAlign.center,
+                                ),
+                                content: SizedBox(
+                                  height: 200,
+                                  width: 200,
+                                  child: ListView.builder(
+                                    itemCount: _models.keys.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final item = _models.keys.elementAt(index);
 
-                          if (key == null) {
-                            model.resetAll();
-                          } else {
-                            model.fromMap(_models[key]!);
-                          }
-                          
-                        },
-                        (String modelName) {
-                          return model.preset == modelName;
-                        },
-                        () => setState(() {}), 
-                        () async {
-                          final prefs = await SharedPreferences.getInstance();
-                          _models[model.preset] = model.toMap();
-                          Logger.log("Model Saved: ${model.preset}");
-                          
-                          prefs.setString("models", json.encode(_models));
-                          prefs.setString("last_model", model.preset);
-
-                          GenerationManager.cleanup();
-
-                          model.resetAll();
-                          model.setPreset("New Preset");
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Dismissible(
+                                          key: ValueKey(item),
+                                          background: Container(color: Colors.red),
+                                          onDismissed: (direction) {
+                                            setState(() {
+                                              _models.remove(item);
+                                              if (model.preset == item) {
+                                                model.fromMap(_models.values.lastOrNull ?? {});
+                                              }
+                                            });
+                                            Logger.log("model Removed: $item");
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: model.preset == item ? 
+                                                     Theme.of(context).colorScheme.tertiary : 
+                                                     Theme.of(context).colorScheme.primary,
+                                              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                                            ),
+                                            child: ListTile(
+                                              title: Text(
+                                                item,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              onTap: () {
+                                                model.fromMap(_models[item]);
+                                                Logger.log("Model Set: ${model.preset}");
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                actions: [
+                                  FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(
+                                      "Close",
+                                      style: Theme.of(context).textTheme.labelLarge,
+                                    ),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {
+                                      final newmodel = Model();
+                                      newmodel.resetAll();
+                                      _models[newmodel.preset] = newmodel.toMap();
+                                      model.notify();
+                                    },
+                                    child: Text(
+                                      "New Preset",
+                                      style: Theme.of(context).textTheme.labelLarge,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       );
                     },
