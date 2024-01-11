@@ -6,7 +6,7 @@ import 'package:maid/models/generation_options.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:langchain/langchain.dart';
 import 'package:langchain_openai/langchain_openai.dart';
 import 'package:langchain_ollama/langchain_ollama.dart';
@@ -187,8 +187,13 @@ class RemoteGeneration {
 
   static Future<bool> _requestPermission() async {
     if ((Platform.isAndroid || Platform.isIOS)) {
+      // If nearby devices is granted or android version is below 12.0
       if (await Permission.nearbyWifiDevices.request().isGranted) {
         Logger.log("Nearby Devices - Permission granted");
+        return true;
+      } else if (Platform.isAndroid && 
+        await DeviceInfoPlugin().androidInfo.then((value) => value.version.sdkInt) < 31) {
+        Logger.log("Nearby Devices - Android version is below 12.0");
         return true;
       } else {
         Logger.log("Nearby Devices - Permission denied");
