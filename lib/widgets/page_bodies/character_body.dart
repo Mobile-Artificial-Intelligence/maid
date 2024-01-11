@@ -35,6 +35,17 @@ class _CharacterBodyState extends State<CharacterBody> {
       _characters = json.decode(prefs.getString("characters") ?? "{}");
       setState(() {});
     });
+
+    final character = context.read<Character>();
+    _nameController = TextEditingController(text: character.name);
+    _userAliasController = TextEditingController(text: character.userAlias);
+    _responseAliasController = TextEditingController(text: character.responseAlias);
+    _prePromptController = TextEditingController(text: character.prePrompt);
+
+    _exampleControllers = List.generate(
+      character.examples.length,
+      (index) => TextEditingController(text: character.examples[index]["content"]),
+    );
   }
 
   @override
@@ -55,16 +66,6 @@ class _CharacterBodyState extends State<CharacterBody> {
     return Consumer<Character>(
       builder: (context, character, child) {       
         cachedCharacter = character;
-
-        _nameController = TextEditingController(text: character.name);
-        _userAliasController = TextEditingController(text: character.userAlias);
-        _responseAliasController = TextEditingController(text: character.responseAlias);
-        _prePromptController = TextEditingController(text: character.prePrompt);
-
-        _exampleControllers = List.generate(
-          character.examples.length,
-          (index) => TextEditingController(text: character.examples[index]["content"]),
-        );
         
         return Stack(
           children: [
