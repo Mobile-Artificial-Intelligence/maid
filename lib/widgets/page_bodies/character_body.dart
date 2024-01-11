@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/widgets/dialogs.dart';
@@ -160,9 +159,9 @@ class _CharacterBodyState extends State<CharacterBody> {
                                   ),
                                   FilledButton(
                                     onPressed: () {
-                                      final newCharacter = Character();
-                                      newCharacter.resetAll();
-                                      _characters[newCharacter.name] = newCharacter.toMap();
+                                      _characters[character.name] = character.toMap();
+                                      character.newCharacter();
+                                      _characters[character.name] = character.toMap();
                                       character.notify();
                                     },
                                     child: Text(
