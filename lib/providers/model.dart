@@ -14,9 +14,10 @@ class Model extends ChangeNotifier {
   String _preset = "Default";
   Map<String, dynamic> _parameters = {};
 
-  Model() {
+  void newPreset() {
     final key = UniqueKey().toString();
     _preset = "New Preset $key";
+    resetAll();
   }
 
   void notify() {

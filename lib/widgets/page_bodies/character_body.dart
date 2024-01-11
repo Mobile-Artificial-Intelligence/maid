@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/widgets/dialogs.dart';
@@ -36,6 +35,17 @@ class _CharacterBodyState extends State<CharacterBody> {
       _characters = json.decode(prefs.getString("characters") ?? "{}");
       setState(() {});
     });
+
+    final character = context.read<Character>();
+    _nameController = TextEditingController(text: character.name);
+    _userAliasController = TextEditingController(text: character.userAlias);
+    _responseAliasController = TextEditingController(text: character.responseAlias);
+    _prePromptController = TextEditingController(text: character.prePrompt);
+
+    _exampleControllers = List.generate(
+      character.examples.length,
+      (index) => TextEditingController(text: character.examples[index]["content"]),
+    );
   }
 
   @override
@@ -56,16 +66,6 @@ class _CharacterBodyState extends State<CharacterBody> {
     return Consumer<Character>(
       builder: (context, character, child) {       
         cachedCharacter = character;
-
-        _nameController = TextEditingController(text: character.name);
-        _userAliasController = TextEditingController(text: character.userAlias);
-        _responseAliasController = TextEditingController(text: character.responseAlias);
-        _prePromptController = TextEditingController(text: character.prePrompt);
-
-        _exampleControllers = List.generate(
-          character.examples.length,
-          (index) => TextEditingController(text: character.examples[index]["content"]),
-        );
         
         return Stack(
           children: [
@@ -160,9 +160,9 @@ class _CharacterBodyState extends State<CharacterBody> {
                                   ),
                                   FilledButton(
                                     onPressed: () {
-                                      final newCharacter = Character();
-                                      newCharacter.resetAll();
-                                      _characters[newCharacter.name] = newCharacter.toMap();
+                                      _characters[character.name] = character.toMap();
+                                      character.newCharacter();
+                                      _characters[character.name] = character.toMap();
                                       character.notify();
                                     },
                                     child: Text(

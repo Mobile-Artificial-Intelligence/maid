@@ -20,9 +20,10 @@ class Character extends ChangeNotifier {
   bool _useExamples = true;
   List<Map<String,dynamic>> _examples = [];
 
-  Character() {
+  void newCharacter() {
     final key = UniqueKey().toString();
     _name = "New Character $key";
+    resetAll();
   }
 
   void notify() {

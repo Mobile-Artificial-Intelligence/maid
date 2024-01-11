@@ -145,9 +145,9 @@ class _ModelBodyState extends State<ModelBody> {
                                   ),
                                   FilledButton(
                                     onPressed: () {
-                                      final newmodel = Model();
-                                      newmodel.resetAll();
-                                      _models[newmodel.preset] = newmodel.toMap();
+                                      _models[model.preset] = model.toMap();
+                                      model.newPreset();
+                                      _models[model.preset] = model.toMap();
                                       model.notify();
                                     },
                                     child: Text(
