@@ -168,7 +168,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         }
 
         if (params.chatml) {
-            auto chatml_pfx = ::llama_tokenize(ctx, "\n<|im_start|>user\n", add_bos, true);
+            auto chatml_pfx = ::llama_tokenize(ctx, "\n<|im_start|>\n", add_bos, true);
             embd_inp.insert(embd_inp.end(), chatml_pfx.begin(), chatml_pfx.end());
         }
 
@@ -185,7 +185,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         }
 
         if (params.chatml) {
-            auto chatml_sfx = ::llama_tokenize(ctx, "<|im_end|>\n<|im_start|>assistant\n", false, true);
+            auto chatml_sfx = ::llama_tokenize(ctx, "<|im_end|>\n<|im_start|>\n", false, true);
             embd_inp.insert(embd_inp.end(), chatml_sfx.begin(), chatml_sfx.end());
         }
 
