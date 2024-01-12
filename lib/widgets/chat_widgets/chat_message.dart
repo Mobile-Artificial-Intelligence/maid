@@ -187,7 +187,25 @@ class ChatMessageState extends State<ChatMessage>
       Align(
         alignment:
             widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
-        child: Container(
+        child: _editing ? 
+          Padding(padding: const EdgeInsets.all(10),
+            child: TextField(
+              controller: _messageController,
+              autofocus: true,
+              cursorColor: Theme.of(context).colorScheme.tertiary,
+              decoration: InputDecoration(
+                hintText: "Edit Message",
+                fillColor: Theme.of(context).colorScheme.secondary,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide.none,
+                )
+              ),
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+            ),
+          ) :
+          Container(
           margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -201,18 +219,6 @@ class ChatMessageState extends State<ChatMessage>
             children: [
               if (!_finalised && _messageWidgets.isEmpty)
                 const TypingIndicator()
-              else if (_editing)
-                TextField(
-                  controller: _messageController,
-                  autofocus: true,
-                  cursorColor: Theme.of(context).colorScheme.secondary,
-                  decoration: InputDecoration(
-                    hintText: "Edit Message",
-                    fillColor: Theme.of(context).colorScheme.tertiary
-                  ),
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                )
               else
                 ..._messageWidgets,
             ],
