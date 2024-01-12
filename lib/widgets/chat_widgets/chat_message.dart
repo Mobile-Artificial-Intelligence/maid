@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
+import 'package:maid/static/generation_manager.dart';
 
 import 'package:maid/widgets/chat_widgets/code_box.dart';
 import 'package:maid/widgets/chat_widgets/typing_indicator.dart';
@@ -172,17 +173,32 @@ class ChatMessageState extends State<ChatMessage>
                       ),
                   ]
                 else
-                  IconButton(
-                    padding: const EdgeInsets.all(0),
-                    onPressed: () {
-                      setState(() {
-                        _messageController.text = _message;
-                        _editing = false;
-                        _finalised = true;
-                      });
-                    }, 
-                    icon: const Icon(Icons.done)
-                  ),
+                  ...[
+                    IconButton(
+                      padding: const EdgeInsets.all(0),
+                      onPressed: () {
+                        final inputMessage = _messageController.text;
+                        setState(() {
+                          _messageController.text = _message;
+                          _editing = false;
+                          _finalised = true;
+                        });
+                        session.edit(widget.key!, context, inputMessage);
+                      }, 
+                      icon: const Icon(Icons.done)
+                    ),
+                    IconButton(
+                      padding: const EdgeInsets.all(0),
+                      onPressed: () {
+                        setState(() {
+                          _messageController.text = _message;
+                          _editing = false;
+                          _finalised = true;
+                        });
+                      }, 
+                      icon: const Icon(Icons.close)
+                    ),
+                  ]
               ],
             );
           },
