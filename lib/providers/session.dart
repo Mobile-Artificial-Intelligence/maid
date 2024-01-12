@@ -136,26 +136,32 @@ class Session extends ChangeNotifier {
     if (parent == null) {
       return;
     } else {
-      branch(key, false);
+      parent.currentChild = null;
+      tail = _root.findTail();
+      add(UniqueKey(), userGenerated: false);
+      GenerationManager.cleanup();
+      notifyListeners();
       GenerationManager.prompt(
-          parent.message,
-          GenerationOptions(
-              model: context.read<Model>(),
-              character: context.read<Character>(),
-              session: context.read<Session>()),
-          context.read<Session>().stream);
+        parent.message,
+        context
+      );
     }
   }
 
-  void branch(Key key, bool userGenerated) {
+  void edit(Key key, BuildContext context, String message) {
     var parent = _root.getParent(key);
     if (parent != null) {
       parent.currentChild = null;
       tail = _root.findTail();
     }
-    add(UniqueKey(), userGenerated: userGenerated);
+    add(UniqueKey(), userGenerated: true, message: message);
+    add(UniqueKey(), userGenerated: false);
     GenerationManager.cleanup();
     notifyListeners();
+    GenerationManager.prompt(
+      message,
+      context
+    );
   }
 
   void finalise() {
