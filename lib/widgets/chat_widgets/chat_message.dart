@@ -22,7 +22,8 @@ class ChatMessageState extends State<ChatMessage>
     with SingleTickerProviderStateMixin {
   final List<Widget> _messageWidgets = [];
   late Session session;
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+  String _message = "";
   bool _finalised = false;
   bool _editing = false;
 
@@ -32,24 +33,24 @@ class ChatMessageState extends State<ChatMessage>
     session = context.read<Session>();
 
     if (session.getMessage(widget.key!).isNotEmpty) {
-      _messageController.text = session.getMessage(widget.key!);
-      _parseMessage(_messageController.text);
+      _message = session.getMessage(widget.key!);
+      _parseMessage(_message);
       _finalised = true;
     } else {
       session.getMessageStream(widget.key!).stream.listen((textChunk) {
         setState(() {
-          _messageController.text += textChunk;
+          _message += textChunk;
           _messageWidgets.clear();
-          _parseMessage(_messageController.text);
+          _parseMessage(_message);
         });
       });
 
       session.getFinaliseStream(widget.key!).stream.listen((_) {
         setState(() {
-          _messageController.text = _messageController.text.trim();
-          _parseMessage(_messageController.text);
+          _message = _message.trim();
+          _parseMessage(_message);
           session.add(widget.key!,
-              message: _messageController.text, userGenerated: widget.userGenerated);
+              message: _message, userGenerated: widget.userGenerated);
           _finalised = true;
         });
       });
@@ -93,6 +94,7 @@ class ChatMessageState extends State<ChatMessage>
                         onPressed: () {
                           if (session.isBusy) return;
                           setState(() {
+                            _messageController.text = _message;
                             _editing = true;
                             _finalised = false;
                           });
@@ -174,6 +176,7 @@ class ChatMessageState extends State<ChatMessage>
                     padding: const EdgeInsets.all(0),
                     onPressed: () {
                       setState(() {
+                        _messageController.text = _message;
                         _editing = false;
                         _finalised = true;
                       });
@@ -192,7 +195,7 @@ class ChatMessageState extends State<ChatMessage>
             child: TextField(
               controller: _messageController,
               autofocus: true,
-              cursorColor: Theme.of(context).colorScheme.tertiary,
+              cursorColor: Theme.of(context).colorScheme.onPrimary,
               decoration: InputDecoration(
                 hintText: "Edit Message",
                 fillColor: Theme.of(context).colorScheme.secondary,

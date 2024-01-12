@@ -24,12 +24,7 @@ class _ChatFieldState extends State<ChatField> {
       FocusScope.of(context).unfocus();
     }
 
-    final model = context.read<Model>();
-    final character = context.read<Character>();
     final session = context.read<Session>();
-    final genContext =
-        GenerationOptions(model: model, character: character, session: session);
-
     final key = UniqueKey();
 
     session
@@ -39,8 +34,7 @@ class _ChatFieldState extends State<ChatField> {
       session.add(key);
     });
 
-    GenerationManager.prompt(_promptController.text.trim(), genContext,
-        session.stream);
+    GenerationManager.prompt(_promptController.text.trim(), context);
 
     setState(() {
       _promptController.clear();

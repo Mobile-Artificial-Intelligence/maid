@@ -138,12 +138,9 @@ class Session extends ChangeNotifier {
     } else {
       branch(key, false);
       GenerationManager.prompt(
-          parent.message,
-          GenerationOptions(
-              model: context.read<Model>(),
-              character: context.read<Character>(),
-              session: context.read<Session>()),
-          context.read<Session>().stream);
+        parent.message,
+        context
+      );
     }
   }
 
