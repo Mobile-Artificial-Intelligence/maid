@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 
 import 'package:maid/widgets/chat_widgets/code_box.dart';
 import 'package:maid/widgets/chat_widgets/typing_indicator.dart';
-import 'package:maid/widgets/chat_widgets/chat_controls.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessage extends StatefulWidget {
@@ -73,7 +73,98 @@ class ChatMessageState extends State<ChatMessage>
   Widget build(BuildContext context) {
     return Column(children: [
       if (_finalised)
-        ChatControls(key: widget.key, userGenerated: widget.userGenerated),
+        Consumer<Session>(
+          builder: (context, session, child) {
+            int currentIndex = session.index(widget.key!);
+            int siblingCount = session.siblingCount(widget.key!);
+
+            return Row(
+              mainAxisAlignment: widget.userGenerated
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
+              children: [
+                if (widget.userGenerated)
+                  IconButton(
+                    padding: const EdgeInsets.all(0),
+                    onPressed: () {
+                      if (session.isBusy) return;
+                      session.branch(widget.key!, widget.userGenerated);
+                    },
+                    icon: const Icon(Icons.edit),
+                  )
+                else
+                  ...[
+                    const SizedBox(width: 10.0),
+                    CircleAvatar(
+                      backgroundImage: const AssetImage("assets/default_profile.png"),
+                      foregroundImage: Image.file(context.read<Character>().profile).image,
+                      radius: 16,
+                    ),
+                    const SizedBox(width: 10.0),
+                    Text(
+                      context.read<Character>().name,
+                      style: Theme.of(context).textTheme.labelLarge,
+                    )
+                  ],
+                if (siblingCount > 1)
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(0),
+                    width: 150,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: session.isBusy 
+                           ? Theme.of(context).colorScheme.primary 
+                           : Theme.of(context).colorScheme.tertiary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        IconButton(
+                          padding: const EdgeInsets.all(0),
+                          onPressed: () {
+                            if (session.isBusy) return;
+                            session.last(widget.key!);
+                          },
+                          icon: Icon(
+                            Icons.arrow_left, 
+                            color: Theme.of(context).colorScheme.onPrimary
+                          )
+                        ),
+                        Text('$currentIndex/${siblingCount-1}', style: Theme.of(context).textTheme.labelLarge),
+                        IconButton(
+                          padding: const EdgeInsets.all(0),
+                          onPressed: () {
+                            if (session.isBusy) return;
+                            session.next(widget.key!);
+                          },
+                          icon: Icon(
+                            Icons.arrow_right,
+                            color: Theme.of(context).colorScheme.onPrimary),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (!widget.userGenerated)
+                  IconButton(
+                    padding: const EdgeInsets.all(0),
+                    onPressed: () {
+                      if (session.isBusy) return;
+                      session.regenerate(
+                        widget.key!,
+                        context
+                      );
+                      setState(() {});
+                    },
+                    icon: const Icon(Icons.refresh),
+                  ),
+              ],
+            );
+          },
+        ),
       Align(
         alignment:
             widget.userGenerated ? Alignment.centerRight : Alignment.centerLeft,
