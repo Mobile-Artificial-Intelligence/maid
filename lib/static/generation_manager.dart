@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 
 class GenerationManager {
   static void prompt(String input, BuildContext context) {
+    context.read<Session>().busy = true;
+
     GenerationOptions options = GenerationOptions(
               model: context.read<Model>(),
               character: context.read<Character>(),

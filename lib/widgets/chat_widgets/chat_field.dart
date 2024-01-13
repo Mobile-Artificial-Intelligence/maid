@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/models/generation_options.dart';
-import 'package:maid/providers/character.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/generation_manager.dart';
