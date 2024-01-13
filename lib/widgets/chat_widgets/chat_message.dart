@@ -82,6 +82,8 @@ class ChatMessageState extends State<ChatMessage>
             int currentIndex = session.index(widget.key!);
             int siblingCount = session.siblingCount(widget.key!);
 
+            bool busy = session.isBusy;
+
             return Row(
               mainAxisAlignment: widget.userGenerated
                 ? MainAxisAlignment.end
@@ -93,7 +95,7 @@ class ChatMessageState extends State<ChatMessage>
                       IconButton(
                         padding: const EdgeInsets.all(0),
                         onPressed: () {
-                          if (session.isBusy) return;
+                          if (busy) return;
                           setState(() {
                             _messageController.text = _message;
                             _editing = true;
@@ -124,7 +126,7 @@ class ChatMessageState extends State<ChatMessage>
                         width: 150,
                         height: 30,
                         decoration: BoxDecoration(
-                          color: session.isBusy 
+                          color: busy 
                                ? Theme.of(context).colorScheme.primary 
                                : Theme.of(context).colorScheme.tertiary,
                           borderRadius: BorderRadius.circular(20),
@@ -136,7 +138,7 @@ class ChatMessageState extends State<ChatMessage>
                             IconButton(
                               padding: const EdgeInsets.all(0),
                               onPressed: () {
-                                if (session.isBusy) return;
+                                if (busy) return;
                                 session.last(widget.key!);
                               },
                               icon: Icon(
@@ -148,7 +150,7 @@ class ChatMessageState extends State<ChatMessage>
                             IconButton(
                               padding: const EdgeInsets.all(0),
                               onPressed: () {
-                                if (session.isBusy) return;
+                                if (busy) return;
                                 session.next(widget.key!);
                               },
                               icon: Icon(
@@ -162,7 +164,7 @@ class ChatMessageState extends State<ChatMessage>
                       IconButton(
                         padding: const EdgeInsets.all(0),
                         onPressed: () {
-                          if (session.isBusy) return;
+                          if (busy) return;
                           session.regenerate(
                             widget.key!,
                             context
@@ -177,6 +179,7 @@ class ChatMessageState extends State<ChatMessage>
                     IconButton(
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
+                        if (busy) return;
                         final inputMessage = _messageController.text;
                         setState(() {
                           _messageController.text = _message;

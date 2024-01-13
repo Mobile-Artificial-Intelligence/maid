@@ -2,13 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/models/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/models/generation_options.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
@@ -18,6 +14,11 @@ class Session extends ChangeNotifier {
   String _messageBuffer = "";
 
   bool get isBusy => _busy;
+
+  set busy(bool value) {
+    _busy = value;
+    notifyListeners();
+  }
 
   void init() async {
     Logger.log("Session Initialised");
@@ -116,9 +117,6 @@ class Session extends ChangeNotifier {
     if (message == null) {
       finalise();
     } else {
-      _busy = true;
-      notifyListeners();
-
       _messageBuffer += message;
       tail ??= _root.findTail();
 
