@@ -64,7 +64,7 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     n_past       = 0;
     n_consumed   = 0;
 
-    std::string prePrompt = (*mparams).preprompt;
+    std::string preprompt = (*mparams).preprompt;
 
     params.instruct                 = (*mparams).format == 2;
     params.chatml                   = (*mparams).format == 1;
@@ -94,20 +94,9 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
 
     params.model                    = (*mparams).path;
 
-    if (params.interactive) {
-        std::string system_prompt = (*mparams).prompt;
-
-        if (params.chatml) {
-            params.input_prefix = "\n<|im_start|>user\n";
-            params.input_suffix = "<|im_end|>\n<|im_start|>assistant\n";
-            params.prompt = "\n<|im_start|>system\n" + system_prompt + "\n<|im_end|>";
-        }
-        else {
-            params.input_prefix = "\n\n### Instruction:\n\n";
-            params.input_suffix = "\n\n### Response:\n\n";
-            params.prompt = "\n\n### System:\n\n" + system_prompt;
-        }
-    }
+    params.input_prefix            = (*mparams).input_prefix      ? (*mparams).input_prefix      : "";
+    params.input_suffix            = (*mparams).input_suffix      ? (*mparams).input_suffix      : "";
+    params.prompt                  = (*mparams).prompt            ? (*mparams).prompt            : "";
 
     params.antiprompt.push_back(params.input_prefix);
 
@@ -139,9 +128,9 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
         sys = ::llama_tokenize(model, params.prompt, false, false);
     }
 
-    if (prePrompt.length() > 0) {
+    if (preprompt.length() > 0) {
         // tokenize the pre-prompt
-        embd_inp = ::llama_tokenize(model, prePrompt, add_bos, true);
+        embd_inp = ::llama_tokenize(model, preprompt, add_bos, true);
     }
 
     if ((int) embd_inp.size() > lparams.n_ctx - 4) {

@@ -80,6 +80,10 @@ final class maid_params extends ffi.Struct {
 
   external ffi.Pointer<ffi.Char> prompt;
 
+  external ffi.Pointer<ffi.Char> input_prefix;
+
+  external ffi.Pointer<ffi.Char> input_suffix;
+
   @ffi.UnsignedInt()
   external int seed;
 
