@@ -7,7 +7,6 @@ import 'package:maid/bindings.dart';
 import 'package:maid/models/generation_options.dart';
 import 'package:maid/models/isolate_message.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/providers/model.dart';
 
 class LibraryLink {
   static SendPort? _sendPort;

@@ -28,11 +28,7 @@ class FormatDropdown extends StatelessWidget {
                 DropdownMenuEntry<PromptFormat>(
                   value: PromptFormat.alpaca,
                   label: "Alpaca",
-                ),
-                DropdownMenuEntry<PromptFormat>(
-                  value: PromptFormat.custom,
-                  label: "Custom",
-                ),
+                )
               ],
               onSelected: (PromptFormat? value) {
                 if (value != null) {

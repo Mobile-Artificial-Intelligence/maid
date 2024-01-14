@@ -189,6 +189,5 @@ enum ApiType {
 enum PromptFormat {
   raw,
   chatml,
-  alpaca,
-  custom
+  alpaca
 }
