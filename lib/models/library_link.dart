@@ -7,6 +7,7 @@ import 'package:maid/bindings.dart';
 import 'package:maid/models/generation_options.dart';
 import 'package:maid/models/isolate_message.dart';
 import 'package:maid/static/logger.dart';
+import 'package:maid/providers/model.dart';
 
 class LibraryLink {
   static SendPort? _sendPort;
@@ -55,16 +56,14 @@ class LibraryLink {
     final params = calloc<maid_params>();
     params.ref.path = options.path.toString().toNativeUtf8().cast<Char>();
     params.ref.preprompt = prePrompt.toNativeUtf8().cast<Char>();
-    params.ref.system_prompt = options.systemPrompt.trim().toNativeUtf8().cast<Char>();
+    params.ref.prompt = options.systemPrompt.trim().toNativeUtf8().cast<Char>();
+    params.ref.format = options.promptFormat.index;
     params.ref.seed = options.seed;
     params.ref.n_ctx = options.nCtx;
     params.ref.n_threads = options.nThread;
     params.ref.n_batch = options.nBatch;
     params.ref.n_predict = options.nPredict;
     params.ref.n_keep = options.nKeep;
-    params.ref.instruct = options.instruct;
-    params.ref.interactive = options.interactive;
-    params.ref.chatml = options.chatml;
     params.ref.penalize_nl = options.penalizeNewline;
     params.ref.top_k = options.topK;
     params.ref.top_p = options.topP;

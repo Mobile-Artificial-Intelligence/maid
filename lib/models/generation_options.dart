@@ -6,6 +6,7 @@ import 'package:maid/static/logger.dart';
 class GenerationOptions {
   late List<Map<String, dynamic>> _messages;
   late String? _remoteUrl;
+  late PromptFormat _promptFormat;
   late ApiType _apiType;
   late String? _apiKey;
   late String? _remoteModel;
@@ -29,15 +30,13 @@ class GenerationOptions {
   late double _mirostatTau;
   late double _mirostatEta;
   late int _penalizeNewline;
-  late int _instruct;
-  late int _interactive;
-  late int _chatml;
   late int _nCtx;
   late int _nBatch;
   late int _nThread;
 
   List<Map<String, dynamic>> get messages => _messages;
   String? get remoteUrl => _remoteUrl;
+  PromptFormat get promptFormat => _promptFormat;
   ApiType get apiType => _apiType;
   String? get apiKey => _apiKey;
   String? get remoteModel => _remoteModel;
@@ -61,9 +60,6 @@ class GenerationOptions {
   double get mirostatTau => _mirostatTau;
   double get mirostatEta => _mirostatEta;
   int get penalizeNewline => _penalizeNewline;
-  int get instruct => _instruct;
-  int get interactive => _interactive;
-  int get chatml => _chatml;
   int get nCtx => _nCtx;
   int get nBatch => _nBatch;
   int get nThread => _nThread;
@@ -72,6 +68,7 @@ class GenerationOptions {
     Map<String, dynamic> map = {};
     map["messages"] = _messages;
     map["remote_url"] = _remoteUrl;
+    map["prompt_format"] = _promptFormat.index;
     map["api_type"] = _apiType.index;
     map["api_key"] = _apiKey;
     map["remote_model"] = _remoteModel;
@@ -95,9 +92,6 @@ class GenerationOptions {
     map["mirostat_tau"] = _mirostatTau;
     map["mirostat_eta"] = _mirostatEta;
     map["penalize_nl"] = _penalizeNewline;
-    map["instruct"] = _instruct;
-    map["interactive"] = _interactive;
-    map["chatml"] = _chatml;
     map["n_ctx"] = _nCtx;
     map["n_batch"] = _nBatch;
     map["n_threads"] = _nThread;
@@ -121,6 +115,7 @@ class GenerationOptions {
       }
 
       _remoteUrl = model.parameters["remote_url"];
+      _promptFormat = model.format;
       _apiType = model.apiType;
       _apiKey = model.parameters["api_key"];
       _remoteModel = model.parameters["remote_model"];
@@ -144,9 +139,6 @@ class GenerationOptions {
       _mirostatTau = model.parameters["mirostat_tau"];
       _mirostatEta = model.parameters["mirostat_eta"];
       _penalizeNewline = model.parameters["penalize_nl"] ? 1 : 0;
-      _instruct = model.parameters["instruct"] ? 1 : 0;
-      _interactive = model.parameters["interactive"] ? 1 : 0;
-      _chatml = model.parameters["chatml"] ? 1 : 0;
       _nCtx = model.parameters["n_ctx"];
       _nBatch = model.parameters["n_batch"];
       _nThread = model.parameters["n_threads"];

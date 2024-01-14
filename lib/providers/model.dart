@@ -10,6 +10,7 @@ import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Model extends ChangeNotifier {
+  PromptFormat _format = PromptFormat.alpaca;
   ApiType _apiType = ApiType.local;
   String _preset = "Default";
   Map<String, dynamic> _parameters = {};
@@ -49,11 +50,17 @@ class Model extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setPromptFormat(PromptFormat promptFormat) {
+    _format = promptFormat;
+    notifyListeners();
+  }
+
   void setApiType(ApiType apiType) {
     _apiType = apiType;
     notifyListeners();
   }
 
+  PromptFormat get format => _format;
   ApiType get apiType => _apiType;
   String get preset => _preset;
   Map<String, dynamic> get parameters => _parameters;
@@ -66,6 +73,7 @@ class Model extends ChangeNotifier {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
+      _format = PromptFormat.values[inputJson["prompt_format"] ?? PromptFormat.alpaca.index];
       _apiType = ApiType.values[inputJson["api_type"] ?? ApiType.local.index];
       _preset = inputJson["preset"] ?? "Default";
       _parameters = inputJson;
@@ -85,6 +93,7 @@ class Model extends ChangeNotifier {
     Map<String, dynamic> jsonModel = {};
 
     jsonModel = _parameters;
+    jsonModel["prompt_format"] = _format.index;
     jsonModel["api_type"] = _apiType.index;
     jsonModel["preset"] = _preset;
 
@@ -103,6 +112,7 @@ class Model extends ChangeNotifier {
 
   Future<String> exportModelParameters(BuildContext context) async {
     try {
+      _parameters["prompt_format"] = _format.index;
       _parameters["api_type"] = _apiType.index;
       _parameters["preset"] = _preset;
 
@@ -136,6 +146,7 @@ class Model extends ChangeNotifier {
         resetAll();
         return "Failed to decode parameters";
       } else {
+        _format = PromptFormat.values[_parameters["prompt_format"] ?? PromptFormat.alpaca.index];
         _apiType = ApiType.values[_parameters["api_type"] ?? ApiType.local.index];
         _preset = _parameters["preset"] ?? "Default";
       }
@@ -172,5 +183,12 @@ enum ApiType {
   openAI,
   ollama,
   mistralAI,
+  custom
+}
+
+enum PromptFormat {
+  raw,
+  chatml,
+  alpaca,
   custom
 }

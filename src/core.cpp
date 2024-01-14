@@ -66,9 +66,9 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
 
     std::string prePrompt = (*mparams).preprompt;
 
-    params.instruct                 = (*mparams).instruct          != 0;
-    params.chatml                   = (*mparams).chatml            != 0;
-    params.interactive              = (*mparams).interactive       != 0;
+    params.instruct                 = (*mparams).format == 2;
+    params.chatml                   = (*mparams).format == 1;
+    params.interactive              = (*mparams).format > 0;
 
     params.seed                     = (*mparams).seed              ? (*mparams).seed              : -1;
     params.n_ctx                    = (*mparams).n_ctx             ? (*mparams).n_ctx             : 512;
@@ -95,7 +95,7 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     params.model                    = (*mparams).path;
 
     if (params.interactive) {
-        std::string system_prompt = (*mparams).system_prompt;
+        std::string system_prompt = (*mparams).prompt;
 
         if (params.chatml) {
             params.input_prefix = "\n<|im_start|>user\n";
@@ -103,7 +103,6 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
             params.prompt = "\n<|im_start|>system\n" + system_prompt + "\n<|im_end|>";
         }
         else {
-
             params.input_prefix = "\n\n### Instruction:\n\n";
             params.input_suffix = "\n\n### Response:\n\n";
             params.prompt = "\n\n### System:\n\n" + system_prompt;
@@ -186,17 +185,14 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
         const auto inp_text = ::llama_tokenize(model, buffer, false, false);
-        const auto nl_token = llama_token_nl(model);
 
         if (params.interactive) {
-            embd_inp.push_back(nl_token);
             embd_inp.insert(embd_inp.end(), pfx.begin(), pfx.end());
         }
         
         embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
 
         if (params.interactive) {
-            embd_inp.push_back(nl_token);
             embd_inp.insert(embd_inp.end(), sfx.begin(), sfx.end());
         }
 

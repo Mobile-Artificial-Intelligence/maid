@@ -1,7 +1,5 @@
 {
-    "chatml":false,
-    "instruct":false,
-    "interactive":true,
+    "format":"alpaca",
     "random_seed":true,
     "path":"",
     "seed":-1,
