@@ -50,7 +50,17 @@ class LibraryLink {
     String prePrompt = options.prePrompt;
 
     for (var message in options.messages) {
-      prePrompt += "\n${message['role']} ${message['content']}";
+      switch (options.promptFormat) {
+        case PromptFormat.raw:
+          prePrompt += "\n${message['content']}";
+          break;
+        case PromptFormat.chatml:
+          prePrompt += "\n<|im_start|>${message['role']}\n${message['content']}\n<|im_end|>";
+          break;
+        case PromptFormat.alpaca:
+          prePrompt += "\n\n### ${message['role'] == "user" ? "Instruction" : "Response"}:\n\n${message['content']}";
+          break;
+      }
     }
 
     final params = calloc<maid_params>();
