@@ -173,7 +173,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        const auto inp_text = ::llama_tokenize(model, buffer, false, false);
+        const auto inp_text = ::llama_tokenize(model, buffer, false, true);
 
         if (params.interactive) {
             embd_inp.insert(embd_inp.end(), pfx.begin(), pfx.end());
