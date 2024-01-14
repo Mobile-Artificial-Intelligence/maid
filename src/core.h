@@ -12,13 +12,11 @@ extern "C" {
 #endif
 
 struct maid_params {
-   unsigned char instruct;
-   unsigned char interactive;
-   unsigned char chatml;
+   unsigned char format;                  // Prompt format (eg. chatML, Alpaca, raw)
 
    char *path;
    char *preprompt;
-   char *system_prompt;
+   char *prompt;                          // System prompt
 
    unsigned int seed;                     // RNG seed
    int n_ctx;                             // context size

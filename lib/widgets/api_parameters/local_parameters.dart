@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
+import 'package:maid/widgets/settings_widgets/format_dropdown.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
 import 'package:provider/provider.dart';
 
@@ -58,27 +59,7 @@ class LocalParameters extends StatelessWidget {
               endIndent: 10,
               color: Theme.of(context).colorScheme.primary,
             ),
-            SwitchListTile(
-              title: const Text('interactive'),
-              value: model.parameters["interactive"] ?? true,
-              onChanged: (value) {
-                model.setParameter("interactive", value);
-              },
-            ),
-            SwitchListTile(
-              title: const Text('instruct'),
-              value: model.parameters["instruct"] ?? true,
-              onChanged: (value) {
-                model.setParameter("instruct", value);
-              },
-            ),
-            SwitchListTile(
-              title: const Text('chatml'),
-              value: model.parameters["chatml"] ?? false,
-              onChanged: (value) {
-                model.setParameter("chatml", value);
-              },
-            ),
+            const FormatDropdown(),
             SwitchListTile(
               title: const Text('penalize_nl'),
               value: model.parameters["penalize_nl"] ?? true,
