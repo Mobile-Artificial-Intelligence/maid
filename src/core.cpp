@@ -34,6 +34,10 @@ static std::vector<llama_token> last_n_tokens;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
+static std::vector<llama_token> sys;
+static std::vector<llama_token> pfx;
+static std::vector<llama_token> sfx;
+
 static int n_remain;
 static int n_past;
 static int n_consumed;
@@ -59,6 +63,8 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
 
     n_past       = 0;
     n_consumed   = 0;
+
+    std::string prePrompt = (*mparams).preprompt;
 
     params.instruct                 = (*mparams).instruct          != 0;
     params.chatml                   = (*mparams).chatml            != 0;
@@ -87,12 +93,24 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     params.sparams.penalize_nl      = (*mparams).penalize_nl       != 0;
 
     params.model                    = (*mparams).path;
-    params.prompt                   = (*mparams).preprompt;
-    params.input_prefix             = (*mparams).input_prefix;
-    params.input_suffix             = (*mparams).input_suffix;
 
-    params.antiprompt.push_back((*mparams).input_prefix);
-    params.antiprompt.push_back("\n\n\n\n");
+    if (params.interactive) {
+        std::string system_prompt = (*mparams).system_prompt;
+
+        if (params.chatml) {
+            params.input_prefix = "\n<|im_start|>user\n";
+            params.input_suffix = "<|im_end|>\n<|im_start|>assistant\n";
+            params.prompt = "\n<|im_start|>system\n" + system_prompt + "\n<|im_end|>";
+        }
+        else {
+
+            params.input_prefix = "\n\n### Instruction:\n\n";
+            params.input_suffix = "\n\n### Response:\n\n";
+            params.prompt = "\n\n### System:\n\n" + system_prompt;
+        }
+    }
+
+    params.antiprompt.push_back(params.input_prefix);
 
     n_remain = params.n_predict;
 
@@ -116,8 +134,16 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
 
     const bool add_bos = llama_should_add_bos_token(model);
 
-    // tokenize the prompt
-    embd_inp = ::llama_tokenize(model, params.prompt, add_bos, true);
+    if (params.interactive) {
+        pfx = ::llama_tokenize(ctx, params.input_prefix, add_bos, true);
+        sfx = ::llama_tokenize(ctx, params.input_suffix, false, true);
+        sys = ::llama_tokenize(model, params.prompt, false, false);
+    }
+
+    if (prePrompt.length() > 0) {
+        // tokenize the pre-prompt
+        embd_inp = ::llama_tokenize(model, prePrompt, add_bos, true);
+    }
 
     if ((int) embd_inp.size() > lparams.n_ctx - 4) {
         //Truncate the prompt if it's too long
@@ -151,10 +177,10 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
     std::lock_guard<std::mutex> lock(continue_mutex);
     stop_generation.store(false);
 
-    const bool add_bos = llama_should_add_bos_token(model);
-
-    auto inp_pfx = ::llama_tokenize(ctx, params.input_prefix, false, true);
-    auto inp_sfx = ::llama_tokenize(ctx, params.input_suffix, false, true);
+    if (params.prompt.length() > 0) {
+        // Add system prompt to embd
+        embd.insert(embd.end(), sys.begin(), sys.end());
+    }
 
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
@@ -162,36 +188,16 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         const auto inp_text = ::llama_tokenize(model, buffer, false, false);
         const auto nl_token = llama_token_nl(model);
 
-        if (params.instruct) {
-            auto instruct_pfx = ::llama_tokenize(ctx, "\n\n### Instruction:\n\n", add_bos, true);
-            embd_inp.insert(embd_inp.end(), instruct_pfx.begin(), instruct_pfx.end());
-        }
-
-        if (params.chatml) {
-            auto chatml_pfx = ::llama_tokenize(ctx, "\n<|im_start|>\n", add_bos, true);
-            embd_inp.insert(embd_inp.end(), chatml_pfx.begin(), chatml_pfx.end());
-        }
-
         if (params.interactive) {
             embd_inp.push_back(nl_token);
-            embd_inp.insert(embd_inp.end(), inp_pfx.begin(), inp_pfx.end());
+            embd_inp.insert(embd_inp.end(), pfx.begin(), pfx.end());
         }
         
         embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
 
-        if (params.instruct) {
-            auto instruct_sfx = ::llama_tokenize(ctx, "\n\n### Response:\n\n",    false,   true);
-            embd_inp.insert(embd_inp.end(), instruct_sfx.begin(), instruct_sfx.end());
-        }
-
-        if (params.chatml) {
-            auto chatml_sfx = ::llama_tokenize(ctx, "<|im_end|>\n<|im_start|>\n", false, true);
-            embd_inp.insert(embd_inp.end(), chatml_sfx.begin(), chatml_sfx.end());
-        }
-
         if (params.interactive) {
             embd_inp.push_back(nl_token);
-            embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
+            embd_inp.insert(embd_inp.end(), sfx.begin(), sfx.end());
         }
 
         n_remain -= inp_text.size();
@@ -237,12 +243,12 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
             // Remove input_prefix from output
             std::vector<int>::iterator it = embd_out.begin();
             while (it != embd_out.end()) {
-                if (*it == inp_pfx[n_pfx]) {
+                if (*it == pfx[n_pfx]) {
                     embd_cache.push_back(*it);
                     it = embd_out.erase(it);
                     n_pfx++;
         
-                    if (n_pfx == inp_pfx.size()) {
+                    if (n_pfx == pfx.size()) {
                         // Prefix found, reset
                         embd_cache.clear();
                         n_pfx = 0;
@@ -271,12 +277,12 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
             // Remove input_suffix from output
             std::vector<int>::iterator it = embd_out.begin();
             while (it != embd_out.end()) {
-                if (*it == inp_sfx[n_sfx]) {
+                if (*it == sfx[n_sfx]) {
                     embd_cache.push_back(*it);
                     it = embd_out.erase(it);
                     n_sfx++;
 
-                    if (n_sfx == inp_sfx.size()) {
+                    if (n_sfx == sfx.size()) {
                         // Suffix found, reset
                         suffix_found = true;
                         embd_cache.clear();
@@ -325,7 +331,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
                 LOG("context full, swapping: n_past = %d, n_left = %d, lparams.n_ctx = %d, n_keep = %d, n_discard = %d\n",
                     n_past, n_left, lparams.n_ctx, params.n_keep, n_discard);
 
-                llama_kv_cache_seq_rm   (ctx, 0, params.n_keep + 1            , params.n_keep + n_discard + 1);
+                llama_kv_cache_seq_rm   (ctx, 0, params.n_keep + 1 , params.n_keep + n_discard + 1);
                 llama_kv_cache_seq_shift(ctx, 0, params.n_keep + 1 + n_discard, n_past, -n_discard);
 
                 n_past -= n_discard;

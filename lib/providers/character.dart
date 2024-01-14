@@ -14,8 +14,7 @@ class Character extends ChangeNotifier {
   File _profile = File("/assets/default_profile.png");
   String _name = "Maid";
   String _prePrompt = "";
-  String _userAlias = "";
-  String _responseAlias = "";
+  String _systemPrompt = "";
 
   bool _useExamples = true;
   List<Map<String,dynamic>> _examples = [];
@@ -69,8 +68,7 @@ class Character extends ChangeNotifier {
     }
 
     _prePrompt = inputJson["pre_prompt"] ?? "";
-    _userAlias = inputJson["user_alias"] ?? "";
-    _responseAlias = inputJson["response_alias"] ?? "";
+    _systemPrompt = inputJson["system_prompt"] ?? "";
 
     _useExamples = inputJson["use_examples"] ?? true;
     if (inputJson["examples"] != null) {
@@ -89,8 +87,7 @@ class Character extends ChangeNotifier {
     jsonCharacter["name"] = _name;
     
     jsonCharacter["pre_prompt"] = _prePrompt;
-    jsonCharacter["user_alias"] = _userAlias;
-    jsonCharacter["response_alias"] = _responseAlias;
+    jsonCharacter["system_prompt"] = _systemPrompt;
     jsonCharacter["use_examples"] = _useExamples;
     jsonCharacter["examples"] = _examples;
 
@@ -102,18 +99,13 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setUserAlias(String newAlias) {
-    _userAlias = newAlias;
-    notifyListeners();
-  }
-
-  void setResponseAlias(String newAlias) {
-    _responseAlias = newAlias;
-    notifyListeners();
-  }
-
   void setPrePrompt(String newPrePrompt) {
     _prePrompt = newPrePrompt;
+    notifyListeners();
+  }
+
+  void setSystemPrompt(String newSystemPrompt) {
+    _systemPrompt = newSystemPrompt;
     notifyListeners();
   }
 
@@ -157,11 +149,9 @@ class Character extends ChangeNotifier {
 
   String get name => _name;
 
-  String get userAlias => _userAlias;
-
-  String get responseAlias => _responseAlias;
-
   String get prePrompt => _prePrompt;
+
+  String get systemPrompt => _systemPrompt;
 
   bool get useExamples => _useExamples;
 
@@ -232,8 +222,7 @@ class Character extends ChangeNotifier {
       image.textData = {
         "name": _name,
         "pre_prompt": _prePrompt,
-        "user_alias": _userAlias,
-        "response_alias": _responseAlias,
+        "system_prompt": _systemPrompt,
         "examples": json.encode(_examples),
       };
 
@@ -261,8 +250,7 @@ class Character extends ChangeNotifier {
       if (image != null && image.textData != null) {
         _name = image.textData!["name"] ?? "";
         _prePrompt = image.textData!["pre_prompt"] ?? "";
-        _userAlias = image.textData!["user_alias"] ?? "";
-        _responseAlias = image.textData!["response_alias"] ?? "";
+        _systemPrompt = image.textData!["system_prompt"] ?? "";
         _examples = List<Map<String,dynamic>>.from(json.decode(image.textData!["examples"] ?? "[]"));        
       }
 
