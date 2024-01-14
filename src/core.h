@@ -17,14 +17,14 @@ struct maid_params {
    char *path;
    char *preprompt;
    char *prompt;                          // System prompt
-
+   char *input_prefix;                    // Prefix for each input line
+   char *input_suffix;                    // Suffix for each input line
    unsigned int seed;                     // RNG seed
    int n_ctx;                             // context size
    int n_batch;                           // batch size for prompt processing (must be >=32 to use BLAS)
    int n_threads;                         // number of threads to use for processing
    int n_predict;                         // new tokens to predict
    int n_keep;                            // number of tokens to keep from initial prompt
-
    int top_k;                             // <= 0 to use vocab size
    float top_p;                           // 1.0 = disabled
    float min_p;                           // 1.0 = disabled

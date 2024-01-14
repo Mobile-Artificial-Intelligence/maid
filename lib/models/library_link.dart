@@ -6,6 +6,7 @@ import 'package:ffi/ffi.dart';
 import 'package:maid/bindings.dart';
 import 'package:maid/models/generation_options.dart';
 import 'package:maid/models/isolate_message.dart';
+import 'package:maid/providers/model.dart';
 import 'package:maid/static/logger.dart';
 
 class LibraryLink {
@@ -49,13 +50,40 @@ class LibraryLink {
     String prePrompt = options.prePrompt;
 
     for (var message in options.messages) {
-      prePrompt += "\n${message['role']} ${message['content']}";
+      switch (options.promptFormat) {
+        case PromptFormat.raw:
+          prePrompt += "\n${message['content']}";
+          break;
+        case PromptFormat.chatml:
+          prePrompt += "\n<|im_start|>${message['role']}\n${message['content']}\n<|im_end|>";
+          break;
+        case PromptFormat.alpaca:
+          prePrompt += "\n\n### ${message['role'] == "user" ? "Instruction" : "Response"}:\n\n${message['content']}";
+          break;
+      }
     }
 
     final params = calloc<maid_params>();
-    params.ref.path = options.path.toString().toNativeUtf8().cast<Char>();
+    
+    String systemMessage = options.systemPrompt;
+
+    switch (options.promptFormat) {
+      case PromptFormat.raw:
+        break;
+      case PromptFormat.chatml:
+        params.ref.input_prefix = "\n<|im_start|>user\n".toNativeUtf8().cast<Char>();
+        params.ref.input_suffix = "<|im_end|>\n<|im_start|>assistant\n".toNativeUtf8().cast<Char>();
+        params.ref.prompt = "\n<|im_start|>system\n$systemMessage\n<|im_end|>".toNativeUtf8().cast<Char>();
+        break;
+      case PromptFormat.alpaca:
+        params.ref.input_prefix = "\n\n### Instruction:\n\n".toNativeUtf8().cast<Char>();
+        params.ref.input_suffix = "\n\n### Response:\n\n".toNativeUtf8().cast<Char>();
+        params.ref.prompt = "\n\n### System:\n\n$systemMessage".toNativeUtf8().cast<Char>();
+        break;
+    }
+
+    params.ref.path = options.path!.toNativeUtf8().cast<Char>();
     params.ref.preprompt = prePrompt.toNativeUtf8().cast<Char>();
-    params.ref.prompt = options.systemPrompt.trim().toNativeUtf8().cast<Char>();
     params.ref.format = options.promptFormat.index;
     params.ref.seed = options.seed;
     params.ref.n_ctx = options.nCtx;
