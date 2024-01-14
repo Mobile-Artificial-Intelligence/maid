@@ -22,9 +22,8 @@ class _CharacterBodyState extends State<CharacterBody> {
   late Character cachedCharacter;
 
   late TextEditingController _nameController;
-  late TextEditingController _userAliasController;
-  late TextEditingController _responseAliasController;
   late TextEditingController _prePromptController;
+  late TextEditingController _systemPromptController;
   late List<TextEditingController> _exampleControllers;
   
   @override
@@ -38,9 +37,8 @@ class _CharacterBodyState extends State<CharacterBody> {
 
     final character = context.read<Character>();
     _nameController = TextEditingController(text: character.name);
-    _userAliasController = TextEditingController(text: character.userAlias);
-    _responseAliasController = TextEditingController(text: character.responseAlias);
     _prePromptController = TextEditingController(text: character.prePrompt);
+    _systemPromptController = TextEditingController(text: character.systemPrompt);
 
     _exampleControllers = List.generate(
       character.examples.length,
@@ -243,27 +241,20 @@ class _CharacterBodyState extends State<CharacterBody> {
                     ),
                   ),
                   MaidTextField(
-                    headingText: 'User alias', 
-                    labelText: 'Alias',
-                    controller: _userAliasController,
-                    onChanged: (value) {
-                      character.setUserAlias(value);
-                    },
-                  ),
-                  MaidTextField(
-                    headingText: 'Response alias',
-                    labelText: 'Alias',
-                    controller: _responseAliasController,
-                    onChanged: (value) {
-                      character.setResponseAlias(value);
-                    },
-                  ),
-                  MaidTextField(
                     headingText: 'PrePrompt',
                     labelText: 'PrePrompt',
                     controller: _prePromptController,
                     onChanged: (value) {
                       character.setPrePrompt(value);
+                    },
+                    multiline: true,
+                  ),
+                  MaidTextField(
+                    headingText: 'System Prompt',
+                    labelText: 'System Prompt',
+                    controller: _systemPromptController,
+                    onChanged: (value) {
+                      character.setSystemPrompt(value);
                     },
                     multiline: true,
                   ),

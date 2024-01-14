@@ -55,10 +55,7 @@ class LibraryLink {
     final params = calloc<maid_params>();
     params.ref.path = options.path.toString().toNativeUtf8().cast<Char>();
     params.ref.preprompt = prePrompt.toNativeUtf8().cast<Char>();
-    params.ref.input_prefix =
-        options.userAlias.trim().toNativeUtf8().cast<Char>();
-    params.ref.input_suffix =
-        options.responseAlias.trim().toNativeUtf8().cast<Char>();
+    params.ref.system_prompt = options.systemPrompt.trim().toNativeUtf8().cast<Char>();
     params.ref.seed = options.seed;
     params.ref.n_ctx = options.nCtx;
     params.ref.n_threads = options.nThread;

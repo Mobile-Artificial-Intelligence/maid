@@ -27,9 +27,9 @@ class ChatNode {
   ChatNode.fromMap(Map<String, dynamic> map)
       : key = ValueKey(map['key']?? UniqueKey().toString()),
         message = map['message'] ?? "",
-        userGenerated = map['userGenerated'] ?? false,
-        currentChild = map['currentChild'] != null
-            ? ValueKey(map['currentChild'])
+        userGenerated = map['user_generated'] ?? false,
+        currentChild = map['current_child'] != null
+            ? ValueKey(map['current_child'])
             : null,
         children = (map['children'] ?? [])
           .map((childMap) => ChatNode.fromMap(childMap))
@@ -40,8 +40,8 @@ class ChatNode {
     return {
       'key': key.toString(),
       'message': message,
-      'currentChild': currentChild?.toString(),
-      'userGenerated': userGenerated,
+      'current_child': currentChild?.toString(),
+      'user_generated': userGenerated,
       'children': children.map((child) => child.toMap()).toList(),
     };
   }

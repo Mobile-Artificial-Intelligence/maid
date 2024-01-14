@@ -18,8 +18,7 @@ struct maid_params {
 
    char *path;
    char *preprompt;
-   char *input_prefix;                    // string to prefix user inputs with
-   char *input_suffix;                    // string to suffix user inputs with
+   char *system_prompt;
 
    unsigned int seed;                     // RNG seed
    int n_ctx;                             // context size

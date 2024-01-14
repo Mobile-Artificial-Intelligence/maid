@@ -11,8 +11,7 @@ class GenerationOptions {
   late String? _remoteModel;
   late String? _path;
   late String _prePrompt;
-  late String _userAlias;
-  late String _responseAlias;
+  late String _systemPrompt;
   late int _nKeep;
   late int _seed;
   late int _nPredict;
@@ -44,8 +43,7 @@ class GenerationOptions {
   String? get remoteModel => _remoteModel;
   String? get path => _path;
   String get prePrompt => _prePrompt;
-  String get userAlias => _userAlias;
-  String get responseAlias => _responseAlias;
+  String get systemPrompt => _systemPrompt;
   int get nKeep => _nKeep;
   int get seed => _seed;
   int get nPredict => _nPredict;
@@ -79,8 +77,7 @@ class GenerationOptions {
     map["remote_model"] = _remoteModel;
     map["path"] = _path;
     map["pre_prompt"] = _prePrompt;
-    map["user_alias"] = _userAlias;
-    map["response_alias"] = _responseAlias;
+    map["system_prompt"] = _systemPrompt;
     map["n_keep"] = _nKeep;
     map["seed"] = _seed;
     map["n_predict"] = _nPredict;
@@ -129,8 +126,7 @@ class GenerationOptions {
       _remoteModel = model.parameters["remote_model"];
       _path = model.parameters["path"];
       _prePrompt = character.prePrompt;
-      _userAlias = character.userAlias;
-      _responseAlias = character.responseAlias;
+      _systemPrompt = character.systemPrompt;
       _nKeep = model.parameters["n_keep"];
       _seed = model.parameters["random_seed"] ? -1 : model.parameters["seed"];
       _nPredict = model.parameters["n_predict"];
