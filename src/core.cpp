@@ -133,11 +133,6 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
         embd_inp = ::llama_tokenize(model, preprompt, add_bos, true);
     }
 
-    if ((int) embd_inp.size() > lparams.n_ctx - 4) {
-        //Truncate the prompt if it's too long
-        embd_inp.erase(embd_inp.begin(), embd_inp.begin() + (embd_inp.size() - (lparams.n_ctx - 4)));
-    }
-
     // number of tokens to keep when resetting context
     if (params.n_keep < 0 || params.n_keep > (int) embd_inp.size()) {
         params.n_keep = (int)embd_inp.size();
@@ -145,8 +140,6 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
 
     last_n_tokens = std::vector<llama_token>(lparams.n_ctx);
     std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
-
-    prior = embd_inp.size();
 
     return 0;
 }
@@ -178,6 +171,8 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         if (params.interactive) {
             embd_inp.insert(embd_inp.end(), pfx.begin(), pfx.end());
         }
+
+        prior = embd_inp.size();
         
         embd_inp.insert(embd_inp.end(), inp_text.begin(), inp_text.end());
 
@@ -186,6 +181,11 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         }
 
         n_remain -= inp_text.size();
+    }
+
+    if ((int) embd_inp.size() > lparams.n_ctx - 4) {
+        //Truncate the prompt if it's too long
+        embd_inp.erase(embd_inp.begin(), embd_inp.begin() + (embd_inp.size() - (lparams.n_ctx - 4)));
     }
 
     while (true) {
