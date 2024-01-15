@@ -49,6 +49,8 @@ class LibraryLink {
 
     String prePrompt = options.prePrompt;
 
+    options.messages.removeLast();
+
     for (var message in options.messages) {
       switch (options.promptFormat) {
         case PromptFormat.raw:
