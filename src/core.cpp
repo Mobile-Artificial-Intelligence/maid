@@ -167,7 +167,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
 
     if (params.prompt.length() > 0) {
         // Add system prompt to embd
-        embd.insert(embd.end(), sys.begin(), sys.end());
+        embd_inp.insert(embd_inp.end(), sys.begin(), sys.end());
     }
 
     // Add tokens to embd only if the input buffer is non-empty
