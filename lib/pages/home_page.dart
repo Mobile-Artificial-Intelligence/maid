@@ -20,42 +20,78 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
-  int _selectedIndex = 0;
 
-  Widget _getSelectedPage() {
-    switch (_selectedIndex) {
-      case 0:
-        return const Expanded(
-          child: Scaffold(
-            body: ChatBody(),
-          ),
-        );
-      case 1:
-        return const Expanded(child: Scaffold(body: CharacterBody()));
-      case 2:
-        return const Expanded(child: Scaffold(body: SessionsBody()));
-      case 3:
-        return const Expanded(child: Scaffold(body: ModelBody()));
-      case 4:
-        return const Expanded(child: Scaffold(body: SettingsBody()));
-      case 5:
-        return const Expanded(child: Scaffold(body: AboutBody()));
-      default: 
-        return const Expanded(
-          child: Scaffold(
-            body: ChatBody(),
-          ),
-        );
-    }
-  }
-
-  AppBar? _buildAppBar(double aspectRatio) {
+  AppBar _buildAppBar(double aspectRatio) {
     if (aspectRatio < 0.9) {
-      return AppBar(
-        elevation: 0.0,
-      );
+        return AppBar(
+            elevation: 0.0,
+        );
     }
-    return null;
+    return AppBar(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+        elevation: 0.0,
+        titleSpacing: 0, // Remove the default spacing
+        title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Distribute the space evenly
+            children: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.person),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GenericPage(title: "Character", body: CharacterBody())
+                      )
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.chat_rounded),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GenericPage(title: "Sessions", body: SessionsBody())
+                      )
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.account_tree_rounded),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GenericPage(title: "Model", body: ModelBody())
+                      )
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GenericPage(title: "Settings", body: SettingsBody())
+                      )
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.info),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GenericPage(title: "About", body: AboutBody())
+                      )
+                    );
+                  },
+                ),
+            ],
+        ),
+    );
   }
 
   Drawer? _buildDrawer(double aspectRatio) {
@@ -167,71 +203,6 @@ class HomePageState extends State<HomePage> {
     return null;
   }
 
-  Widget _buildBody(double aspectRatio) {
-    if (aspectRatio < 0.9) {
-      return const ChatBody();
-    }
-    return Row(
-      children: [
-        NavigationRail(
-          onDestinationSelected: (int index) {
-            setState(() {
-              if (_selectedIndex != index) {
-                _selectedIndex = index;
-              }
-            });
-          },
-          destinations: const <NavigationRailDestination>[
-             NavigationRailDestination(
-              icon: Icon(Icons.home),
-              selectedIcon: Icon(
-                Icons.home,
-              ),
-              label: Text('Home'),
-            ),
-            NavigationRailDestination(
-              icon: Icon(Icons.person),
-              selectedIcon: Icon(
-                Icons.person,
-              ),
-              label: Text('Character'),
-            ),
-            NavigationRailDestination(
-              icon: Icon(Icons.chat_rounded),
-              selectedIcon: Icon(
-                Icons.chat_rounded,
-              ),
-              label: Text('Sessions'),
-            ),
-            NavigationRailDestination(
-              icon: Icon(Icons.account_tree_rounded),
-              selectedIcon: Icon(
-                Icons.account_tree_rounded,
-              ),
-              label: Text('Model')
-            ),
-            NavigationRailDestination(
-              icon: Icon(Icons.settings),
-              selectedIcon: Icon(
-                Icons.settings,
-              ),
-              label: Text('Settings'),
-            ),
-            NavigationRailDestination(
-              icon: Icon(Icons.info),
-              selectedIcon: Icon(
-                Icons.info,
-              ),
-              label: Text('About'),
-            ),
-          ],
-          selectedIndex: _selectedIndex,
-        ),
-        _getSelectedPage(),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -240,7 +211,7 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: _buildAppBar(aspectRatio),
       drawer: _buildDrawer(aspectRatio),
-      body: _buildBody(aspectRatio),
+      body: const ChatBody(),
     );
   }
 }
