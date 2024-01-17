@@ -36,7 +36,6 @@ static std::vector<llama_token> embd_inp;
 static int n_remain;
 static int n_past;
 static int n_consumed;
-static signed int prior;
 
 static gpt_params params;
 static llama_context_params lparams;
@@ -127,8 +126,6 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     if (params.n_keep < 0 || params.n_keep > (int) embd_inp.size()) {
         params.n_keep = (int)embd_inp.size();
     }
-
-    prior = embd_inp.size();
 
     return 0;
 }
@@ -225,10 +222,8 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         }
 
         auto embd_out = embd;
-
-        if (prior > 0) prior -= embd_out.size();
         
-        if (params.interactive && prior <= 0) {
+        if (params.interactive && (int) embd_inp.size() <= n_consumed) {
             // Remove input_prefix from output
             std::vector<int>::iterator it = embd_out.begin();
             while (it != embd_out.end()) {
@@ -262,7 +257,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
             }
         }
         
-        if (params.interactive && prior <= 0) {
+        if (params.interactive && (int) embd_inp.size() <= n_consumed) {
             // Remove input_suffix from output
             std::vector<int>::iterator it = embd_out.begin();
             while (it != embd_out.end()) {
