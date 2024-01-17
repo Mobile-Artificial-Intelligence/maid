@@ -72,13 +72,7 @@ class NativeLibrary {
 
 final class maid_params extends ffi.Struct {
   @ffi.UnsignedChar()
-  external int instruct;
-
-  @ffi.UnsignedChar()
-  external int interactive;
-
-  @ffi.UnsignedChar()
-  external int chatml;
+  external int format;
 
   external ffi.Pointer<ffi.Char> path;
 

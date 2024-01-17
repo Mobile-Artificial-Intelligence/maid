@@ -58,9 +58,9 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     n_past       = 0;
     n_consumed   = 0;
 
-    params.instruct                 = (*mparams).instruct          != 0;
-    params.chatml                   = (*mparams).chatml            != 0;
-    params.interactive              = (*mparams).interactive       != 0;
+    params.instruct                 = (*mparams).format == 1;
+    params.chatml                   = (*mparams).format == 2;
+    params.interactive              = (*mparams).format != 0;
 
     params.seed                     = (*mparams).seed              ? (*mparams).seed              : -1;
     params.n_ctx                    = (*mparams).n_ctx             ? (*mparams).n_ctx             : 512;
@@ -88,9 +88,6 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     params.prompt                   = (*mparams).preprompt;
     params.input_prefix             = (*mparams).input_prefix;
     params.input_suffix             = (*mparams).input_suffix;
-
-    params.antiprompt.push_back((*mparams).input_prefix);
-    params.antiprompt.push_back("\n\n\n\n");
 
     n_remain = params.n_predict;
 
@@ -151,7 +148,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
     // Add tokens to embd only if the input buffer is non-empty
     // Entering a empty line lets the user pass control back
     if (buffer.length() > 1) {
-        const auto inp_text = ::llama_tokenize(model, buffer, false, false);
+                const auto inp_text = ::llama_tokenize(model, buffer, false, false);
         const auto nl_token = llama_token_nl(model);
 
         if (params.instruct) {
@@ -221,24 +218,24 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         auto embd_out = embd;
         
         if (params.interactive && (int) embd_inp.size() <= n_consumed) {
-            // Remove input_prefix from output
-            std::vector<int>::iterator it = embd_out.begin();
-            while (it != embd_out.end()) {
-                if (*it == inp_pfx[n_pfx]) {
-                    embd_cache.push_back(*it);
-                    it = embd_out.erase(it);
-                    n_pfx++;
+        // Remove input_prefix from output
+        std::vector<int>::iterator it = embd_out.begin();
+        while (it != embd_out.end()) {
+        if (*it == inp_pfx[n_pfx]) {
+        embd_cache.push_back(*it);
+        it = embd_out.erase(it);
+        n_pfx++;
         
                     if (n_pfx == inp_pfx.size()) {
-                        // Prefix found, reset
-                        embd_cache.clear();
-                        n_pfx = 0;
-                        break;
-                    }
+        // Prefix found, reset
+        embd_cache.clear();
+        n_pfx = 0;
+        break;
+        }
                 } else if (n_pfx != 0) {
-                    // Started a sequence but it's broken now, reset
-                    embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
-                    embd_cache.clear();
+        // Started a sequence but it's broken now, reset
+        embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
+        embd_cache.clear();
                     n_pfx = 0;
                     ++it;
                 } else {
@@ -256,25 +253,25 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         }
         
         if (params.interactive && (int) embd_inp.size() <= n_consumed) {
-            // Remove input_suffix from output
-            std::vector<int>::iterator it = embd_out.begin();
-            while (it != embd_out.end()) {
-                if (*it == inp_sfx[n_sfx]) {
-                    embd_cache.push_back(*it);
-                    it = embd_out.erase(it);
-                    n_sfx++;
-
+        // Remove input_suffix from output
+        std::vector<int>::iterator it = embd_out.begin();
+        while (it != embd_out.end()) {
+        if (*it == inp_sfx[n_sfx]) {
+        embd_cache.push_back(*it);
+        it = embd_out.erase(it);
+        n_sfx++;
+        
                     if (n_sfx == inp_sfx.size()) {
-                        // Suffix found, reset
-                        suffix_found = true;
-                        embd_cache.clear();
-                        n_sfx = 0;
-                        break;
-                    }
+        // Suffix found, reset
+        suffix_found = true;
+        embd_cache.clear();
+        n_sfx = 0;
+        break;
+        }
                 } else if (n_sfx != 0) {
-                    // Started a sequence but it's broken now, reset
-                    embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
-                    embd_cache.clear();
+        // Started a sequence but it's broken now, reset
+        embd_out.insert(embd_out.end(), embd_cache.begin(), embd_cache.end());
+        embd_cache.clear();
                     n_sfx = 0;
                     ++it;
                 } else {

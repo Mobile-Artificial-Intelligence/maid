@@ -69,7 +69,7 @@ class Character extends ChangeNotifier {
     }
 
     _prePrompt = inputJson["pre_prompt"] ?? "";
-    _userAlias = inputJson["user_alias"] ?? "";
+_userAlias = inputJson["user_alias"] ?? "";
     _responseAlias = inputJson["response_alias"] ?? "";
 
     _useExamples = inputJson["use_examples"] ?? true;
@@ -89,7 +89,7 @@ class Character extends ChangeNotifier {
     jsonCharacter["name"] = _name;
     
     jsonCharacter["pre_prompt"] = _prePrompt;
-    jsonCharacter["user_alias"] = _userAlias;
+jsonCharacter["user_alias"] = _userAlias;
     jsonCharacter["response_alias"] = _responseAlias;
     jsonCharacter["use_examples"] = _useExamples;
     jsonCharacter["examples"] = _examples;
@@ -232,7 +232,7 @@ class Character extends ChangeNotifier {
       image.textData = {
         "name": _name,
         "pre_prompt": _prePrompt,
-        "user_alias": _userAlias,
+"user_alias": _userAlias,
         "response_alias": _responseAlias,
         "examples": json.encode(_examples),
       };
