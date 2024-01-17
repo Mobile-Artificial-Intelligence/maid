@@ -185,9 +185,9 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
             embd_inp.push_back(nl_token);
             embd_inp.insert(embd_inp.end(), inp_sfx.begin(), inp_sfx.end());
         }
-
-        n_remain -= inp_text.size();
     }
+
+    n_remain = params.n_predict;
 
     while (true) {
         if (stop_generation.load()) {
@@ -202,9 +202,6 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
             llama_sampling_accept(ctx_sampling, ctx, id, true);
 
             embd.push_back(id);
-
-            // decrement remaining sampling budget
-            --n_remain;
         } else {
             // some user input remains from prompt or interaction, forward it to processing
             while ((int) embd_inp.size() > n_consumed) {
@@ -254,6 +251,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
             // display text
             for (auto id : embd_out) {
                 maid_output(return_code::CONTINUE, llama_token_to_piece(ctx, id).c_str());
+                n_remain--;
             }
         }
         
@@ -315,15 +313,15 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
 
         embd.clear();
 
-        // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
-        // We skip this logic when n_predict == -1 (infinite) or -2 (stop at context size).
-        if (params.interactive && n_remain <= 0 && params.n_predict >= 0) {
-            n_remain = params.n_predict;
+        
+        if (n_remain <= 0 && params.n_predict >= 0) {
+            maid_output(return_code::STOP, "");
+            return 0;
         }
     }
 
     maid_output(return_code::STOP, "");
-    return 0;
+    return 1;
 }
 
 void core_stop(void) {
