@@ -136,7 +136,6 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
 int core_prompt(const char *input, maid_output_stream *maid_output) {   
     std::string buffer(input);
 
-    bool is_interacting = false;
     bool suffix_found = false;
 
     int n_pfx = 0;
@@ -200,7 +199,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
             return 0;  // or any other cleanup you want to do
         }
 
-        if ((int) embd_inp.size() <= n_consumed && !is_interacting) {
+        if ((int) embd_inp.size() <= n_consumed) {
             const llama_token id = llama_sampling_sample(ctx_sampling, ctx, NULL);
 
             llama_sampling_accept(ctx_sampling, ctx, id, true);
@@ -325,7 +324,6 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         // We skip this logic when n_predict == -1 (infinite) or -2 (stop at context size).
         if (params.interactive && n_remain <= 0 && params.n_predict >= 0) {
             n_remain = params.n_predict;
-            is_interacting = true;
         }
     }
 
