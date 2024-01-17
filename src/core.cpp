@@ -295,38 +295,9 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
 
         // predict
         if (!embd.empty()) {
-            // Note: lparams.n_ctx - 4 here is to match the logic for commandline prompt handling via
-            // --prompt or --file which uses the same value.
-            int max_embd_size = lparams.n_ctx - 4;
-
-            // Ensure the input doesn't exceed the context size by truncating embd if necessary.
-            if ((int) embd.size() > max_embd_size) {
-                const int skipped_tokens = (int) embd.size() - max_embd_size;
-                embd.resize(max_embd_size);
-            }
-
-            // infinite text generation via context swapping
-            // if we run out of context:
-            // - take the n_keep first tokens from the original prompt (via n_past)
-            // - take half of the last (n_ctx - n_keep) tokens and recompute the logits in batches
-            if (n_past + (int) embd.size() > lparams.n_ctx) {
-                if (params.n_predict == -2) {
-                    LOG_TEE("\n\n%s: context full and n_predict == -%d => stopping\n", __func__, params.n_predict);
-                    break;
-                }
-
-                const int n_left    = n_past - params.n_keep - 1;
-                const int n_discard = n_left/2;
-
-                LOG("context full, swapping: n_past = %d, n_left = %d, lparams.n_ctx = %d, n_keep = %d, n_discard = %d\n",
-                    n_past, n_left, lparams.n_ctx, params.n_keep, n_discard);
-
-                llama_kv_cache_seq_rm   (ctx, 0, params.n_keep + 1            , params.n_keep + n_discard + 1);
-                llama_kv_cache_seq_shift(ctx, 0, params.n_keep + 1 + n_discard, n_past, -n_discard);
-
-                n_past -= n_discard;
-
-                LOG("embd: %s\n", LOG_TOKENS_TOSTR_PRETTY(ctx, embd).c_str());
+            if ((int) embd.size() > lparams.n_ctx - 4) {
+                //Truncate the prompt if it's too long
+                embd.erase(embd_inp.begin(), embd.begin() + (embd.size() - (lparams.n_ctx - 4)));
             }
 
             for (int i = 0; i < (int) embd.size(); i += params.n_batch) {
@@ -349,65 +320,6 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         }
 
         embd.clear();
-
-        // if not currently processing queued inputs;
-        if ((int) embd_inp.size() <= n_consumed) {
-            // check for reverse prompt
-            if (!params.antiprompt.empty()) {
-                const int n_prev = 32;
-                const std::string last_output = llama_sampling_prev_str(ctx_sampling, ctx, n_prev);
-
-                // Check if each of the reverse prompts appears at the end of the output.
-                // If we're not running interactively, the reverse prompt might be tokenized with some following characters
-                // so we'll compensate for that by widening the search window a bit.
-                for (std::string & antiprompt : params.antiprompt) {
-                    size_t extra_padding = params.interactive ? 0 : 2;
-                    size_t search_start_pos = last_output.length() > static_cast<size_t>(antiprompt.length() + extra_padding)
-                        ? last_output.length() - static_cast<size_t>(antiprompt.length() + extra_padding)
-                        : 0;
-
-                    if (last_output.find(antiprompt, search_start_pos) != std::string::npos) {
-                        if (params.interactive) {
-                            is_interacting = true;
-                        }
-                        maid_output(return_code::STOP, "");
-                        return 0;
-                    }
-                }
-            }
-
-             // deal with end of text token in interactive mode
-            if (llama_sampling_last(ctx_sampling) == llama_token_eos(model)) {
-                LOG("found EOS token\n");
-
-                if (params.interactive) {
-                    if (!params.antiprompt.empty()) {
-                        // tokenize and inject first reverse prompt
-                        const auto first_antiprompt = ::llama_tokenize(ctx, params.antiprompt.front(), false, true);
-                        embd_inp.insert(embd_inp.end(), first_antiprompt.begin(), first_antiprompt.end());
-                        maid_output(return_code::STOP, "");
-                        return 0;
-                    }
-
-                    is_interacting = true;
-                    printf("\n");
-                } else if (params.instruct) {
-                    is_interacting = true;
-                }
-            }
-
-            if (n_past > 0 && is_interacting) {
-                maid_output(return_code::STOP, "");
-                return 0;
-            }
-
-            if (n_past > 0) {
-                if (is_interacting) {
-                    llama_sampling_reset(ctx_sampling);
-                }
-                is_interacting = false;
-            }
-        }
 
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
         // We skip this logic when n_predict == -1 (infinite) or -2 (stop at context size).
