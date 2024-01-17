@@ -30,7 +30,6 @@ static llama_context * ctx;
 static llama_context * ctx_guidance;
 static llama_sampling_context * ctx_sampling;
 
-static std::vector<llama_token> last_n_tokens;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
@@ -128,9 +127,6 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
     if (params.n_keep < 0 || params.n_keep > (int) embd_inp.size()) {
         params.n_keep = (int)embd_inp.size();
     }
-
-    last_n_tokens = std::vector<llama_token>(lparams.n_ctx);
-    std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
 
     prior = embd_inp.size();
 
