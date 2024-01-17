@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/settings_widgets/maid_slider.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
-import 'package:maid/widgets/settings_widgets/model_dropdown.dart';
+import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 import 'package:provider/provider.dart';
 
 class OllamaParameters extends StatefulWidget {

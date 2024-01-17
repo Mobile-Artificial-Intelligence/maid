@@ -12,13 +12,11 @@ extern "C" {
 #endif
 
 struct maid_params {
-   unsigned char instruct;
-   unsigned char interactive;
-   unsigned char chatml;
+   unsigned char format;                  // 0 = raw, 1 = alpaca, 2 = chatml
 
    char *path;
    char *preprompt;
-   char *input_prefix;                    // string to prefix user inputs with
+char *input_prefix;                    // string to prefix user inputs with
    char *input_suffix;                    // string to suffix user inputs with
 
    unsigned int seed;                     // RNG seed

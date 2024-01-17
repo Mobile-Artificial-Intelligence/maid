@@ -65,10 +65,7 @@ class LibraryLink {
     params.ref.n_batch = options.nBatch;
     params.ref.n_predict = options.nPredict;
     params.ref.n_keep = options.nKeep;
-    params.ref.instruct = options.instruct;
-    params.ref.interactive = options.interactive;
-    params.ref.chatml = options.chatml;
-    params.ref.penalize_nl = options.penalizeNewline;
+    params.ref.format = options.promptFormat.index;
     params.ref.top_k = options.topK;
     params.ref.top_p = options.topP;
     params.ref.min_p = options.minP;

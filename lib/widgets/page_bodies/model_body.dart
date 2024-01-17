@@ -9,7 +9,7 @@ import 'package:maid/widgets/api_parameters/mistralai_parameters.dart';
 import 'package:maid/widgets/api_parameters/ollama_parameters.dart';
 import 'package:maid/widgets/api_parameters/openai_parameters.dart';
 import 'package:maid/widgets/dialogs.dart';
-import 'package:maid/widgets/settings_widgets/api_dropdown.dart';
+import 'package:maid/widgets/dropdowns/api_dropdown.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
 import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
 import 'package:provider/provider.dart';

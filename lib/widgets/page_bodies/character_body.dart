@@ -22,7 +22,7 @@ class _CharacterBodyState extends State<CharacterBody> {
   late Character cachedCharacter;
 
   late TextEditingController _nameController;
-  late TextEditingController _userAliasController;
+late TextEditingController _userAliasController;
   late TextEditingController _responseAliasController;
   late TextEditingController _prePromptController;
   late List<TextEditingController> _exampleControllers;
