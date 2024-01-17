@@ -30,14 +30,12 @@ static llama_context * ctx;
 static llama_context * ctx_guidance;
 static llama_sampling_context * ctx_sampling;
 
-static std::vector<llama_token> last_n_tokens;
 static std::vector<llama_token> embd;
 static std::vector<llama_token> embd_inp;
 
 static int n_remain;
 static int n_past;
 static int n_consumed;
-static signed int prior;
 
 static gpt_params params;
 static llama_context_params lparams;
@@ -129,18 +127,12 @@ int core_init(struct maid_params *mparams, maid_logger *log_output) {
         params.n_keep = (int)embd_inp.size();
     }
 
-    last_n_tokens = std::vector<llama_token>(lparams.n_ctx);
-    std::fill(last_n_tokens.begin(), last_n_tokens.end(), 0);
-
-    prior = embd_inp.size();
-
     return 0;
 }
 
 int core_prompt(const char *input, maid_output_stream *maid_output) {   
     std::string buffer(input);
 
-    bool is_interacting = false;
     bool suffix_found = false;
 
     int n_pfx = 0;
@@ -204,7 +196,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
             return 0;  // or any other cleanup you want to do
         }
 
-        if ((int) embd_inp.size() <= n_consumed && !is_interacting) {
+        if ((int) embd_inp.size() <= n_consumed) {
             const llama_token id = llama_sampling_sample(ctx_sampling, ctx, NULL);
 
             llama_sampling_accept(ctx_sampling, ctx, id, true);
@@ -230,10 +222,8 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
         }
 
         auto embd_out = embd;
-
-        if (prior > 0) prior -= embd_out.size();
         
-        if (params.interactive && prior <= 0) {
+        if (params.interactive && (int) embd_inp.size() <= n_consumed) {
             // Remove input_prefix from output
             std::vector<int>::iterator it = embd_out.begin();
             while (it != embd_out.end()) {
@@ -267,7 +257,7 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
             }
         }
         
-        if (params.interactive && prior <= 0) {
+        if (params.interactive && (int) embd_inp.size() <= n_consumed) {
             // Remove input_suffix from output
             std::vector<int>::iterator it = embd_out.begin();
             while (it != embd_out.end()) {
@@ -299,38 +289,9 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
 
         // predict
         if (!embd.empty()) {
-            // Note: lparams.n_ctx - 4 here is to match the logic for commandline prompt handling via
-            // --prompt or --file which uses the same value.
-            int max_embd_size = lparams.n_ctx - 4;
-
-            // Ensure the input doesn't exceed the context size by truncating embd if necessary.
-            if ((int) embd.size() > max_embd_size) {
-                const int skipped_tokens = (int) embd.size() - max_embd_size;
-                embd.resize(max_embd_size);
-            }
-
-            // infinite text generation via context swapping
-            // if we run out of context:
-            // - take the n_keep first tokens from the original prompt (via n_past)
-            // - take half of the last (n_ctx - n_keep) tokens and recompute the logits in batches
-            if (n_past + (int) embd.size() > lparams.n_ctx) {
-                if (params.n_predict == -2) {
-                    LOG_TEE("\n\n%s: context full and n_predict == -%d => stopping\n", __func__, params.n_predict);
-                    break;
-                }
-
-                const int n_left    = n_past - params.n_keep - 1;
-                const int n_discard = n_left/2;
-
-                LOG("context full, swapping: n_past = %d, n_left = %d, lparams.n_ctx = %d, n_keep = %d, n_discard = %d\n",
-                    n_past, n_left, lparams.n_ctx, params.n_keep, n_discard);
-
-                llama_kv_cache_seq_rm   (ctx, 0, params.n_keep + 1            , params.n_keep + n_discard + 1);
-                llama_kv_cache_seq_shift(ctx, 0, params.n_keep + 1 + n_discard, n_past, -n_discard);
-
-                n_past -= n_discard;
-
-                LOG("embd: %s\n", LOG_TOKENS_TOSTR_PRETTY(ctx, embd).c_str());
+            if ((int) embd.size() > lparams.n_ctx - 4) {
+                //Truncate the prompt if it's too long
+                embd.erase(embd_inp.begin(), embd.begin() + (embd.size() - (lparams.n_ctx - 4)));
             }
 
             for (int i = 0; i < (int) embd.size(); i += params.n_batch) {
@@ -354,70 +315,10 @@ int core_prompt(const char *input, maid_output_stream *maid_output) {
 
         embd.clear();
 
-        // if not currently processing queued inputs;
-        if ((int) embd_inp.size() <= n_consumed) {
-            // check for reverse prompt
-            if (!params.antiprompt.empty()) {
-                const int n_prev = 32;
-                const std::string last_output = llama_sampling_prev_str(ctx_sampling, ctx, n_prev);
-
-                // Check if each of the reverse prompts appears at the end of the output.
-                // If we're not running interactively, the reverse prompt might be tokenized with some following characters
-                // so we'll compensate for that by widening the search window a bit.
-                for (std::string & antiprompt : params.antiprompt) {
-                    size_t extra_padding = params.interactive ? 0 : 2;
-                    size_t search_start_pos = last_output.length() > static_cast<size_t>(antiprompt.length() + extra_padding)
-                        ? last_output.length() - static_cast<size_t>(antiprompt.length() + extra_padding)
-                        : 0;
-
-                    if (last_output.find(antiprompt, search_start_pos) != std::string::npos) {
-                        if (params.interactive) {
-                            is_interacting = true;
-                        }
-                        maid_output(return_code::STOP, "");
-                        return 0;
-                    }
-                }
-            }
-
-             // deal with end of text token in interactive mode
-            if (llama_sampling_last(ctx_sampling) == llama_token_eos(model)) {
-                LOG("found EOS token\n");
-
-                if (params.interactive) {
-                    if (!params.antiprompt.empty()) {
-                        // tokenize and inject first reverse prompt
-                        const auto first_antiprompt = ::llama_tokenize(ctx, params.antiprompt.front(), false, true);
-                        embd_inp.insert(embd_inp.end(), first_antiprompt.begin(), first_antiprompt.end());
-                        maid_output(return_code::STOP, "");
-                        return 0;
-                    }
-
-                    is_interacting = true;
-                    printf("\n");
-                } else if (params.instruct) {
-                    is_interacting = true;
-                }
-            }
-
-            if (n_past > 0 && is_interacting) {
-                maid_output(return_code::STOP, "");
-                return 0;
-            }
-
-            if (n_past > 0) {
-                if (is_interacting) {
-                    llama_sampling_reset(ctx_sampling);
-                }
-                is_interacting = false;
-            }
-        }
-
         // In interactive mode, respect the maximum number of tokens and drop back to user input when reached.
         // We skip this logic when n_predict == -1 (infinite) or -2 (stop at context size).
         if (params.interactive && n_remain <= 0 && params.n_predict >= 0) {
             n_remain = params.n_predict;
-            is_interacting = true;
         }
     }
 
