@@ -11,8 +11,10 @@ class LocalGeneration {
     void Function(String?) callback
   ) async {
     if (llamaProcessor == null) {
-      ContextParams contextParams = ContextParams();
       ModelParams modelParams = ModelParams();
+      ContextParams contextParams = ContextParams();
+      contextParams.batch = 512;
+      contextParams.context = 512;
       
       llamaProcessor = LlamaProcessor(
         options.path!, 
