@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maid/pages/home_page.dart';
@@ -6,6 +8,7 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
+import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +19,13 @@ void main() {
       statusBarBrightness: Brightness.dark
     ),
   );
+
+  if (Platform.isWindows) {
+    Llama.libraryPath = 'llama.dll';
+  } else if (Platform.isLinux || Platform.isAndroid) {
+    Llama.libraryPath = 'libllama.so';
+  }
+
   runApp(
     MultiProvider(
       providers: [
