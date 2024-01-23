@@ -8,6 +8,8 @@ import 'package:maid/models/generation_options.dart';
 import 'package:provider/provider.dart';
 
 class GenerationManager {
+  static BuildContext? staticContext;
+
   static void prompt(String input, BuildContext context) {
     context.read<Session>().busy = true;
 
