@@ -456,6 +456,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  llama_cpp_dart:
+    dependency: "direct main"
+    description:
+      path: "packages/llama_cpp_dart"
+      relative: true
+    source: path
+    version: "0.0.5"
   logging:
     dependency: transitive
     description:

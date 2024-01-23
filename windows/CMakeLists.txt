@@ -105,4 +105,3 @@ set(CMAKE_INSTALL_BINDIR ${BUILD_BUNDLE_DIR})
 
 # Build the core library.
 add_subdirectory(../src src)
-install(FILES ${PROJECT_BINARY_DIR}/src/Release/core.dll DESTINATION ${BUILD_BUNDLE_DIR})

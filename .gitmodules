@@ -1,3 +1,6 @@
 [submodule "src/llama.cpp"]
 	path = src/llama.cpp
 	url = https://github.com/Mobile-Artificial-Intelligence/llama.cpp.git
+[submodule "packages/llama_cpp_dart"]
+	path = packages/llama_cpp_dart
+	url = https://github.com/danemadsen/llama_cpp_dart.git
