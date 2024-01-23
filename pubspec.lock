@@ -459,10 +459,9 @@ packages:
   llama_cpp_dart:
     dependency: "direct main"
     description:
-      name: llama_cpp_dart
-      sha256: c1fbdf22157c99daa69a3dffc8ffd751eb4f4c7b359a750b1b29188a0f58cebd
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/llama_cpp_dart"
+      relative: true
+    source: path
     version: "0.0.5"
   logging:
     dependency: transitive
