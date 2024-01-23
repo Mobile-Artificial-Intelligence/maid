@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 import 'package:maid/models/generation_options.dart';
 import 'package:maid/static/logger.dart';
 
 class LocalGeneration {
   static LlamaProcessor? llamaProcessor;
+  static Completer completer = Completer();
 
   static void prompt(
     String input,
@@ -28,10 +31,14 @@ class LocalGeneration {
     });
 
     llamaProcessor?.prompt(input);
+
+    await completer.future;
+    callback.call(null);
   }
 
   static void stop() {
     llamaProcessor?.stop();
+    completer.complete();
   }
 
   static void dispose() {
