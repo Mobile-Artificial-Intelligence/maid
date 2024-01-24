@@ -8,6 +8,7 @@ import 'package:maid/static/remote_generation.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 
 class Model extends ChangeNotifier {
   PromptFormat _format = PromptFormat.alpaca;
@@ -184,10 +185,4 @@ enum ApiType {
   ollama,
   mistralAI,
   custom
-}
-
-enum PromptFormat {
-  raw,
-  chatml,
-  alpaca
 }

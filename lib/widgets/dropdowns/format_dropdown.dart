@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
+import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 import 'package:provider/provider.dart';
 
 class FormatDropdown extends StatelessWidget {
