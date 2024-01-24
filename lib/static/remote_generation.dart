@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
-import 'package:maid/models/generation_options.dart';
+import 'package:maid/classes/generation_options.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:permission_handler/permission_handler.dart';

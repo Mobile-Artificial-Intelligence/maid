@@ -4,7 +4,7 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/static/remote_generation.dart';
 import 'package:maid/static/local_generation.dart';
 import 'package:maid/providers/model.dart';
-import 'package:maid/models/generation_options.dart';
+import 'package:maid/classes/generation_options.dart';
 import 'package:provider/provider.dart';
 
 class GenerationManager {
