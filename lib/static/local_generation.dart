@@ -15,6 +15,7 @@ class LocalGeneration {
   ) async {
     if (llamaProcessor == null) {
       ModelParams modelParams = ModelParams();
+      modelParams.format = options.promptFormat;
       ContextParams contextParams = ContextParams();
       contextParams.batch = 512;
       contextParams.context = 512;
