@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 import 'package:maid/models/generation_options.dart';
 import 'package:maid/static/logger.dart';
@@ -7,6 +6,7 @@ import 'package:maid/static/logger.dart';
 class LocalGeneration {
   static LlamaProcessor? llamaProcessor;
   static Completer completer = Completer();
+  static Timer? _timer;
 
   static void prompt(
     String input,
@@ -19,7 +19,7 @@ class LocalGeneration {
       ContextParams contextParams = ContextParams();
       contextParams.batch = 512;
       contextParams.context = 512;
-      
+
       llamaProcessor = LlamaProcessor(
         options.path!, 
         modelParams, 
@@ -28,22 +28,32 @@ class LocalGeneration {
     }
 
     llamaProcessor!.stream.listen((data) {
+      _resetTimer();
       callback.call(data);
     });
 
     llamaProcessor?.prompt(input);
-
     await completer.future;
     callback.call(null);
+    Logger.log('Local generation completed');
+  }
+
+  static void _resetTimer() {
+    _timer?.cancel();
+    _timer = Timer(const Duration(seconds: 2), stop);
   }
 
   static void stop() {
+    _timer?.cancel();
     llamaProcessor?.stop();
     completer.complete();
+    Logger.log('Local generation stopped');
   }
 
   static void dispose() {
+    _timer?.cancel();
     llamaProcessor?.unloadModel();
     llamaProcessor = null;
+    Logger.log('Local generation disposed');
   }
 }
