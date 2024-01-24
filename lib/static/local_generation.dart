@@ -7,6 +7,7 @@ class LocalGeneration {
   static LlamaProcessor? llamaProcessor;
   static Completer completer = Completer();
   static Timer? _timer;
+  static DateTime? _startTime;
 
   static void prompt(
     String input,
@@ -40,7 +41,14 @@ class LocalGeneration {
 
   static void _resetTimer() {
     _timer?.cancel();
-    _timer = Timer(const Duration(seconds: 2), stop);
+    if (_startTime != null) {
+      final elapsed = DateTime.now().difference(_startTime!);
+      _startTime = DateTime.now();
+      _timer = Timer(elapsed * 3, stop);
+    } else {
+      _startTime = DateTime.now();
+      _timer = Timer(const Duration(seconds: 5), stop);
+    }
   }
 
   static void stop() {
