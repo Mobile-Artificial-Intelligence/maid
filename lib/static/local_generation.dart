@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
-import 'package:maid/models/generation_options.dart';
+import 'package:maid/classes/generation_options.dart';
 import 'package:maid/static/logger.dart';
 
 class LocalGeneration {

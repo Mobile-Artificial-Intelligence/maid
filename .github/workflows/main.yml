@@ -104,4 +104,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: maid-windows
-          path: build/windows/bundle
+          path: build/windows/x64/bundle

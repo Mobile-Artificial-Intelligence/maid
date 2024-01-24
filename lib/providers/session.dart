@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/models/chat_node.dart';
+import 'package:maid/classes/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
