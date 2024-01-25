@@ -7,7 +7,7 @@ import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 class GenerationOptions {
   late List<Map<String, dynamic>> _messages;
   late String? _remoteUrl;
-  late PromptFormat _promptFormat;
+  late PromptFormatType _promptFormat;
   late ApiType _apiType;
   late String? _apiKey;
   late String? _remoteModel;
@@ -38,7 +38,7 @@ class GenerationOptions {
 
   List<Map<String, dynamic>> get messages => _messages;
   String? get remoteUrl => _remoteUrl;
-  PromptFormat get promptFormat => _promptFormat;
+  PromptFormatType get promptFormat => _promptFormat;
   ApiType get apiType => _apiType;
   String? get apiKey => _apiKey;
   String? get remoteModel => _remoteModel;
