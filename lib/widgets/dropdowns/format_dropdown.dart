@@ -8,40 +8,38 @@ class FormatDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(
-      builder: (context, model, child) {
-        return ListTile(
-        title: Row(
-          children: [
-            const Expanded(
-              child: Text("Prompt Format"),
-            ),
-            DropdownMenu<PromptFormat>(
-              dropdownMenuEntries: const [
-                DropdownMenuEntry<PromptFormat>(
-                  value: PromptFormat.raw,
-                  label: "Raw",
-                ),
-                DropdownMenuEntry<PromptFormat>(
-                  value: PromptFormat.chatml,
-                  label: "ChatML",
-                ),
-                DropdownMenuEntry<PromptFormat>(
-                  value: PromptFormat.alpaca,
-                  label: "Alpaca",
-                )
-              ],
-              onSelected: (PromptFormat? value) {
-                if (value != null) {
-                  model.setPromptFormat(value);
-                }
-              },
-              initialSelection: model.format,
-              width: 200,
-            )
-          ],
-        )
-      );
+    return Consumer<Model>(builder: (context, model, child) {
+      return ListTile(
+          title: Row(
+        children: [
+          const Expanded(
+            child: Text("Prompt Format"),
+          ),
+          DropdownMenu<PromptFormatType>(
+            dropdownMenuEntries: const [
+              DropdownMenuEntry<PromptFormatType>(
+                value: PromptFormatType.raw,
+                label: "Raw",
+              ),
+              DropdownMenuEntry<PromptFormatType>(
+                value: PromptFormatType.chatml,
+                label: "ChatML",
+              ),
+              DropdownMenuEntry<PromptFormatType>(
+                value: PromptFormatType.alpaca,
+                label: "Alpaca",
+              )
+            ],
+            onSelected: (PromptFormatType? value) {
+              if (value != null) {
+                model.setPromptFormat(value);
+              }
+            },
+            initialSelection: model.format,
+            width: 200,
+          )
+        ],
+      ));
     });
   }
 }

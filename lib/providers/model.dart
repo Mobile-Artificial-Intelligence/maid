@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 
 class Model extends ChangeNotifier {
-  PromptFormat _format = PromptFormat.alpaca;
+  PromptFormatType _format = PromptFormatType.alpaca;
   ApiType _apiType = ApiType.local;
   String _preset = "Default";
   Map<String, dynamic> _parameters = {};
@@ -31,7 +31,8 @@ class Model extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    Map<String, dynamic> lastModel= json.decode(prefs.getString("last_model") ?? "{}");
+    Map<String, dynamic> lastModel =
+        json.decode(prefs.getString("last_model") ?? "{}");
 
     if (lastModel.isNotEmpty) {
       fromMap(lastModel);
@@ -51,7 +52,7 @@ class Model extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPromptFormat(PromptFormat promptFormat) {
+  void setPromptFormat(PromptFormatType promptFormat) {
     _format = promptFormat;
     notifyListeners();
   }
@@ -61,7 +62,7 @@ class Model extends ChangeNotifier {
     notifyListeners();
   }
 
-  PromptFormat get format => _format;
+  PromptFormatType get format => _format;
   ApiType get apiType => _apiType;
   String get preset => _preset;
   Map<String, dynamic> get parameters => _parameters;
@@ -74,17 +75,17 @@ class Model extends ChangeNotifier {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
-      _format = PromptFormat.values[inputJson["prompt_format"] ?? PromptFormat.alpaca.index];
+      _format = PromptFormatType
+          .values[inputJson["prompt_format"] ?? PromptFormatType.alpaca.index];
       _apiType = ApiType.values[inputJson["api_type"] ?? ApiType.local.index];
       _preset = inputJson["preset"] ?? "Default";
       _parameters = inputJson;
 
-      if (_parameters["n_threads"] == null || 
-          _parameters["n_threads"] > Platform.numberOfProcessors
-      ) {
+      if (_parameters["n_threads"] == null ||
+          _parameters["n_threads"] > Platform.numberOfProcessors) {
         _parameters["n_threads"] = Platform.numberOfProcessors;
       }
-      
+
       Logger.log("Model created with name: ${inputJson["name"]}");
       notifyListeners();
     }
@@ -118,7 +119,7 @@ class Model extends ChangeNotifier {
       _parameters["preset"] = _preset;
 
       String jsonString = json.encode(_parameters);
-      
+
       File? file = await FileManager.save(context, "$_preset.json");
 
       if (file == null) return "Error saving file";
@@ -133,7 +134,8 @@ class Model extends ChangeNotifier {
 
   Future<String> importModelParameters(BuildContext context) async {
     try {
-      File? file = await FileManager.load(context, "Load Model JSON", [".json"]);
+      File? file =
+          await FileManager.load(context, "Load Model JSON", [".json"]);
 
       if (file == null) return "Error loading file";
 
@@ -147,8 +149,10 @@ class Model extends ChangeNotifier {
         resetAll();
         return "Failed to decode parameters";
       } else {
-        _format = PromptFormat.values[_parameters["prompt_format"] ?? PromptFormat.alpaca.index];
-        _apiType = ApiType.values[_parameters["api_type"] ?? ApiType.local.index];
+        _format = PromptFormatType.values[
+            _parameters["prompt_format"] ?? PromptFormatType.alpaca.index];
+        _apiType =
+            ApiType.values[_parameters["api_type"] ?? ApiType.local.index];
         _preset = _parameters["preset"] ?? "Default";
       }
     } catch (e) {
@@ -162,10 +166,11 @@ class Model extends ChangeNotifier {
 
   Future<String> loadModelFile(BuildContext context) async {
     try {
-      File? file = await FileManager.load(context, "Load Model File", [".gguf"]);
+      File? file =
+          await FileManager.load(context, "Load Model File", [".gguf"]);
 
       if (file == null) return "Error loading file";
-      
+
       Logger.log("Loading model from $file");
 
       _parameters["path"] = file.path;
@@ -178,11 +183,4 @@ class Model extends ChangeNotifier {
   }
 }
 
-enum ApiType {
-  none,
-  local,
-  openAI,
-  ollama,
-  mistralAI,
-  custom
-}
+enum ApiType { none, local, openAI, ollama, mistralAI, custom }
