@@ -46,23 +46,23 @@ class HomePageState extends State<HomePage> {
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.chat_rounded),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const GenericPage(title: "Sessions", body: SessionsBody())
-                      )
-                    );
-                  },
-                ),
-                IconButton(
                   icon: const Icon(Icons.account_tree_rounded),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const GenericPage(title: "Model", body: ModelBody())
+                      )
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.chat_rounded),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GenericPage(title: "Sessions", body: SessionsBody())
                       )
                     );
                   },
@@ -133,23 +133,6 @@ class HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.chat_rounded,
-                  color: Theme.of(context).colorScheme.onPrimary),
-              title: Text(
-                'Sessions',
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const GenericPage(title: "Sessions", body: SessionsBody())
-                  )
-                );
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.account_tree_rounded,
                   color: Theme.of(context).colorScheme.onPrimary),
               title: Text(
@@ -162,6 +145,23 @@ class HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const GenericPage(title: "Model", body: ModelBody())
+                  )
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.chat_rounded,
+                  color: Theme.of(context).colorScheme.onPrimary),
+              title: Text(
+                'Sessions',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GenericPage(title: "Sessions", body: SessionsBody())
                   )
                 );
               },
