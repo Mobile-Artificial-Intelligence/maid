@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
@@ -128,7 +130,7 @@ class GenerationOptions {
       _userAlias = character.userAlias;
       _responseAlias = character.responseAlias;
       _nKeep = model.parameters["n_keep"];
-      _seed = model.parameters["random_seed"] ? -1 : model.parameters["seed"];
+      _seed = model.parameters["random_seed"] ? Random().nextInt(1000000) : model.parameters["seed"];
       _nPredict = model.parameters["n_predict"];
       _topK = model.parameters["top_k"];
       _topP = model.parameters["top_p"];

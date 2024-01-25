@@ -18,8 +18,11 @@ class LocalGeneration {
       ModelParams modelParams = ModelParams();
       modelParams.format = options.promptFormat;
       ContextParams contextParams = ContextParams();
-      contextParams.batch = 512;
-      contextParams.context = 512;
+      contextParams.batch = options.nBatch;
+      contextParams.context = options.nCtx;
+      contextParams.seed = options.seed;
+      contextParams.threads = options.nThread;
+      contextParams.threadsBatch = options.nThread;
 
       llamaProcessor = LlamaProcessor(
         options.path!, 
