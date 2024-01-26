@@ -27,31 +27,11 @@ Windows, Linux, Android.
 [Releases page.](https://github.com/Mobile-Artificial-Intelligence/maid/releases)
 MacOS and IOS Releases not available at this time.
 
-## Usage
-
-### Local
-To use this app in local mode, follow these steps:
-
-1. Download the GGUF model from your chosen source.
-2. Launch maid.
-3. Navigate to the model settings by opening the sidebar and pressing the model button.
-4. Click load model and select and your model file.
-5. (Optionally) Set the preprompt and alias in the character settings.
-6. Navigate back to the Home Page
-7. Enter a prompt
-
-### Remote
-To use this app in remote mode, follow these steps:
-
-1. From your computer pull your chosen model using ollama.
-2. Setup Ollama for hosting on your local network as shown [here](https://github.com/jmorganca/ollama/blob/main/docs/faq.md).
-3. Launch maid.
-4. Toggle the remote switch in the navigation drawer.
-5. Enter the IP address and port of your computer running ollama.
-6. Set the model name to the name of the model you pulled in the model settings.
-7. (Optionally) Set the preprompt and alias in the character settings.
-8. Navigate back to the Home Page.
-9. Enter a prompt.
+## Supported API's
+- Llama.cpp (Local)
+- Ollama
+- OpenAI
+- MistralAI
 
 ## Help Wanted
 - Write code comments
