@@ -20,6 +20,16 @@ Maid is a cross-platform Flutter app for interfacing with GGUF / llama.cpp model
       <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo6.jpg?raw=true" width="200"></td>
     </tr>
   </table>
+  <table>
+    <tr>
+      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo8.jpg?raw=true" width="300"></td>
+      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo9.jpg?raw=true" width="300"></td>
+    </tr>
+    <tr>
+      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo10.jpg?raw=true" width="300"></td>
+      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo11.jpg?raw=true" width="300"></td>
+    </tr>
+  </table>
 </div>
 
 ## Works on multiple devices :
