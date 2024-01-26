@@ -45,6 +45,7 @@ class LocalGeneration {
     llamaProcessor?.prompt(input);
     await _completer?.future;
     callback.call(null);
+    dispose();
     Logger.log('Local generation completed');
   }
 
