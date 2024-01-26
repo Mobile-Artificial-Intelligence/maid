@@ -1,13 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/generic_page.dart';
 import 'package:maid/pages/model_page.dart';
 import 'package:maid/widgets/page_bodies/about_body.dart';
-import 'package:maid/widgets/page_bodies/chat_body.dart';
 import 'package:maid/widgets/page_bodies/sessions_body.dart';
 import 'package:maid/widgets/page_bodies/settings_body.dart';
-
 import 'package:system_info2/system_info2.dart';
+import 'package:maid/static/generation_manager.dart';
+import 'package:maid/providers/session.dart';
+import 'package:maid/widgets/chat_widgets/chat_message.dart';
+import 'package:maid/widgets/chat_widgets/chat_field.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -20,6 +26,9 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
+  final ScrollController _consoleScrollController = ScrollController();
+  List<ChatMessage> chatWidgets = [];
+  bool _busy = false;
 
   AppBar _buildAppBar(double aspectRatio) {
     if (aspectRatio < 0.9) {
@@ -206,6 +215,12 @@ class HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    if (!_busy) GenerationManager.cleanup();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final aspectRatio = screenSize.width / screenSize.height;
@@ -213,7 +228,67 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: _buildAppBar(aspectRatio),
       drawer: _buildDrawer(aspectRatio),
-      body: const ChatBody(),
+      body: Consumer<Session>(
+        builder: (context, session, child) {
+          _busy = session.isBusy;
+
+          SharedPreferences.getInstance().then((prefs) {
+            prefs.setString("last_session", json.encode(session.toMap()));
+          });
+
+          Map<Key, bool> history = session.history();
+          chatWidgets.clear();
+          for (var key in history.keys) {
+            chatWidgets.add(ChatMessage(
+              key: key,
+              userGenerated: history[key] ?? false,
+            ));
+          }
+
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            _consoleScrollController.animateTo(
+              _consoleScrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 50),
+              curve: Curves.easeOut,
+            );
+          });
+
+          return Builder(
+            builder: (BuildContext context) => GestureDetector(
+              onHorizontalDragEnd: (details) {
+                // Check if the drag is towards right with a certain velocity
+                if (details.primaryVelocity! > 100) {
+                  // Open the drawer
+                  Scaffold.of(context).openDrawer();
+                }
+              },
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          controller: _consoleScrollController,
+                          itemCount: chatWidgets.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return chatWidgets[index];
+                          },
+                        ),
+                      ),
+                      const ChatField(),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
