@@ -109,7 +109,6 @@ class Session extends ChangeNotifier {
       parent.children.removeWhere((element) => element.key == key);
       tail = _root.findTail();
     }
-    GenerationManager.cleanup();
     notifyListeners();
   }
 
@@ -137,7 +136,6 @@ class Session extends ChangeNotifier {
       parent.currentChild = null;
       tail = _root.findTail();
       add(UniqueKey(), userGenerated: false);
-      GenerationManager.cleanup();
       notifyListeners();
       GenerationManager.prompt(
         parent.message,
@@ -154,7 +152,6 @@ class Session extends ChangeNotifier {
     }
     add(UniqueKey(), userGenerated: true, message: message);
     add(UniqueKey(), userGenerated: false);
-    GenerationManager.cleanup();
     notifyListeners();
     GenerationManager.prompt(
       message,
@@ -190,7 +187,6 @@ class Session extends ChangeNotifier {
       }
     }
 
-    GenerationManager.cleanup();
     notifyListeners();
   }
 
@@ -209,7 +205,6 @@ class Session extends ChangeNotifier {
       }
     }
 
-    GenerationManager.cleanup();
     notifyListeners();
   }
 

@@ -64,7 +64,7 @@ class _SessionsPageState extends State<SessionsPage> {
       body: Consumer<Session>(
         builder: (context, session, child) {
           cachedSession = session;
-          
+
           return Column(
             children: [
               const SizedBox(height: 20.0),
@@ -93,7 +93,7 @@ class _SessionsPageState extends State<SessionsPage> {
                   itemBuilder: (context, index) {
                     String sessionKey = _sessions.keys.elementAt(index);
                     Session sessionData = Session.fromMap(_sessions[sessionKey]);
-  
+
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ClipRect(
@@ -137,7 +137,6 @@ class _SessionsPageState extends State<SessionsPage> {
                               onTap: () {
                                 if (session.isBusy) return;
                                 session.fromMap(_sessions[sessionKey]);
-                                GenerationManager.cleanup();
                               },
                               onLongPress: () {
                                 if (session.isBusy) return;

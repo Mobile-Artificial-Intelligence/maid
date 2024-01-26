@@ -214,12 +214,6 @@ class HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose() {
-    if (!_busy) GenerationManager.cleanup();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final aspectRatio = screenSize.width / screenSize.height;

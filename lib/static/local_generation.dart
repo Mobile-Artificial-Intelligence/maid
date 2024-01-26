@@ -18,22 +18,20 @@ class LocalGeneration {
     _startTime = null;
     _completer = Completer();
 
-    if (llamaProcessor == null) {
-      ModelParams modelParams = ModelParams();
-      modelParams.format = options.promptFormat;
-      ContextParams contextParams = ContextParams();
-      contextParams.batch = options.nBatch;
-      contextParams.context = options.nCtx;
-      contextParams.seed = options.seed;
-      contextParams.threads = options.nThread;
-      contextParams.threadsBatch = options.nThread;
-
-      llamaProcessor = LlamaProcessor(
-        options.path!, 
-        modelParams, 
-        contextParams
-      );
-    }
+    ModelParams modelParams = ModelParams();
+    modelParams.format = options.promptFormat;
+    ContextParams contextParams = ContextParams();
+    contextParams.batch = options.nBatch;
+    contextParams.context = options.nCtx;
+    contextParams.seed = options.seed;
+    contextParams.threads = options.nThread;
+    contextParams.threadsBatch = options.nThread;
+    
+    llamaProcessor = LlamaProcessor(
+      options.path!, 
+      modelParams, 
+      contextParams
+    );
 
     llamaProcessor!.messages = options.messages;
 
@@ -45,7 +43,8 @@ class LocalGeneration {
     llamaProcessor?.prompt(input);
     await _completer?.future;
     callback.call(null);
-    dispose();
+    llamaProcessor?.unloadModel();
+    llamaProcessor = null;
     Logger.log('Local generation completed');
   }
 
@@ -66,12 +65,5 @@ class LocalGeneration {
     llamaProcessor?.stop();
     _completer?.complete();
     Logger.log('Local generation stopped');
-  }
-
-  static void dispose() {
-    _timer?.cancel();
-    llamaProcessor?.unloadModel();
-    llamaProcessor = null;
-    Logger.log('Local generation disposed');
   }
 }

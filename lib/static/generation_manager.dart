@@ -27,10 +27,6 @@ class GenerationManager {
     LocalGeneration.stop();
   }
 
-  static void cleanup() {
-    LocalGeneration.dispose();
-  }
-
   static ApiType checkApiRequirements(GenerationOptions context) {
     return context.apiType;
   }
