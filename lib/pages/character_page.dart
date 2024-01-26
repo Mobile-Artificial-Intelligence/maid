@@ -22,9 +22,10 @@ class _CharacterPageState extends State<CharacterPage> {
   late Character cachedCharacter;
 
   late TextEditingController _nameController;
-  late TextEditingController _userAliasController;
-  late TextEditingController _responseAliasController;
-  late TextEditingController _prePromptController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _personalityController;
+  late TextEditingController _scenarioController;
+  late TextEditingController _systemController;
   late List<TextEditingController> _exampleControllers;
   
   @override
@@ -38,9 +39,10 @@ class _CharacterPageState extends State<CharacterPage> {
 
     final character = context.read<Character>();
     _nameController = TextEditingController(text: character.name);
-    _userAliasController = TextEditingController(text: character.userAlias);
-    _responseAliasController = TextEditingController(text: character.responseAlias);
-    _prePromptController = TextEditingController(text: character.prePrompt);
+    _descriptionController = TextEditingController(text: character.description);
+    _personalityController = TextEditingController(text: character.personality);
+    _scenarioController = TextEditingController(text: character.scenario);
+    _systemController = TextEditingController(text: character.system);
 
     _exampleControllers = List.generate(
       character.examples.length,
@@ -246,27 +248,38 @@ class _CharacterPageState extends State<CharacterPage> {
                       ),
                     ),
                     MaidTextField(
-                      headingText: 'User alias', 
-                      labelText: 'Alias',
-                      controller: _userAliasController,
+                      headingText: 'Description',
+                      labelText: 'Description',
+                      controller: _descriptionController,
                       onChanged: (value) {
-                        character.setUserAlias(value);
+                        character.setDescription(value);
                       },
+                      multiline: true,
                     ),
                     MaidTextField(
-                      headingText: 'Response alias',
-                      labelText: 'Alias',
-                      controller: _responseAliasController,
+                      headingText: 'Personality',
+                      labelText: 'Personality',
+                      controller: _personalityController,
                       onChanged: (value) {
-                        character.setResponseAlias(value);
+                        character.setPersonality(value);
                       },
+                      multiline: true,
                     ),
                     MaidTextField(
-                      headingText: 'PrePrompt',
-                      labelText: 'PrePrompt',
-                      controller: _prePromptController,
+                      headingText: 'Scenario',
+                      labelText: 'Scenario',
+                      controller: _scenarioController,
                       onChanged: (value) {
-                        character.setPrePrompt(value);
+                        character.setScenario(value);
+                      },
+                      multiline: true,
+                    ),
+                    MaidTextField(
+                      headingText: 'System Prompt',
+                      labelText: 'System Prompt',
+                      controller: _systemController,
+                      onChanged: (value) {
+                        character.setSystem(value);
                       },
                       multiline: true,
                     ),

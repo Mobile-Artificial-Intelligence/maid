@@ -114,7 +114,14 @@ class RemoteGeneration {
 
     List<ChatMessage> chatMessages = [];
 
-    chatMessages.add(ChatMessage.system(options.prePrompt));
+    final prePrompt = '''
+      ${options.description}\n\n
+      ${options.personality}\n\n
+      ${options.scenario}\n\n
+      ${options.system}\n\n
+    ''';
+
+    chatMessages.add(ChatMessage.system(prePrompt));
 
     for (var message in options.messages) {
       switch (message['role']) {
@@ -124,12 +131,14 @@ class RemoteGeneration {
         case "assistant":
           chatMessages.add(ChatMessage.ai(message['content']));
           break;
-        case "system":
+        case "system": // Under normal circumstances, this should never be called
           chatMessages.add(ChatMessage.system(message['content']));
           break;
         default:
           break;
       }
+
+      chatMessages.add(ChatMessage.system(options.system));
     }
 
     chatMessages.add(ChatMessage.humanText(input));

@@ -33,6 +33,39 @@ class LocalGeneration {
       contextParams
     );
 
+    List<Map<String, dynamic>> messages = [
+      {
+        'role': 'system',
+        'content': '''
+          ${options.description}\n\n
+          ${options.personality}\n\n
+          ${options.scenario}\n\n
+          ${options.system}\n\n
+        '''
+      }
+    ];
+
+    for (var message in options.messages) {
+      switch (message['role']) {
+        case "user":
+          messages.add(message);
+          break;
+        case "assistant":
+          messages.add(message);
+          break;
+        case "system": // Under normal circumstances, this should never be called
+          messages.add(message);
+          break;
+        default:
+          break;
+      }
+
+      messages.add({
+        'role': 'system',
+        'content': options.system
+      });
+    }
+
     llamaProcessor!.messages = options.messages;
 
     llamaProcessor!.stream.listen((data) {
