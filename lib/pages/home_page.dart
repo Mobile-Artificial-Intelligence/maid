@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/generic_page.dart';
+import 'package:maid/pages/model_page.dart';
 import 'package:maid/widgets/page_bodies/about_body.dart';
 import 'package:maid/widgets/page_bodies/chat_body.dart';
-import 'package:maid/widgets/page_bodies/model_body.dart';
 import 'package:maid/widgets/page_bodies/sessions_body.dart';
 import 'package:maid/widgets/page_bodies/settings_body.dart';
 
@@ -51,7 +51,7 @@ class HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const GenericPage(title: "Model", body: ModelBody())
+                        builder: (context) => const ModelPage()
                       )
                     );
                   },
@@ -146,7 +146,7 @@ class HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const GenericPage(title: "Model", body: ModelBody())
+                    builder: (context) => const ModelPage()
                   )
                 );
               },
