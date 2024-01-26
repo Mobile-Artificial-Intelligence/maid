@@ -22,12 +22,12 @@ Maid is a cross-platform Flutter app for interfacing with GGUF / llama.cpp model
   </table>
   <table>
     <tr>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo8.png?raw=true" width="300"></td>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo9.png?raw=true" width="300"></td>
+      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo8.png?raw=true" width="600"></td>
+      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo9.png?raw=true" width="600"></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo10.png?raw=true" width="300"></td>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo11.png?raw=true" width="300"></td>
+      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo10.png?raw=true" width="600"></td>
+      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo11.png?raw=true" width="600"></td>
     </tr>
   </table>
 </div>
