@@ -13,9 +13,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Character extends ChangeNotifier {
   File _profile = File("/assets/default_profile.png");
   String _name = "Maid";
-  String _prePrompt = "";
-  String _userAlias = "";
-  String _responseAlias = "";
+  String _description = "";
+  String _personality = "";
+  String _scenario = "";
+  String _system = "";
 
   bool _useExamples = true;
   List<Map<String,dynamic>> _examples = [];
@@ -68,9 +69,10 @@ class Character extends ChangeNotifier {
       resetAll();
     }
 
-    _prePrompt = inputJson["pre_prompt"] ?? "";
-_userAlias = inputJson["user_alias"] ?? "";
-    _responseAlias = inputJson["response_alias"] ?? "";
+    _description = inputJson["description"] ?? "";
+    _personality = inputJson["personality"] ?? "";
+    _scenario = inputJson["scenario"] ?? "";
+    _system = inputJson["system_prompt"] ?? "";
 
     _useExamples = inputJson["use_examples"] ?? true;
     if (inputJson["examples"] != null) {
@@ -86,11 +88,13 @@ _userAlias = inputJson["user_alias"] ?? "";
     Map<String, dynamic> jsonCharacter = {};
 
     jsonCharacter["profile"] = _profile.path;
+
     jsonCharacter["name"] = _name;
-    
-    jsonCharacter["pre_prompt"] = _prePrompt;
-jsonCharacter["user_alias"] = _userAlias;
-    jsonCharacter["response_alias"] = _responseAlias;
+    jsonCharacter["description"] = _description;
+    jsonCharacter["personality"] = _personality;
+    jsonCharacter["scenario"] = _scenario;
+    jsonCharacter["system_prompt"] = _system;
+
     jsonCharacter["use_examples"] = _useExamples;
     jsonCharacter["examples"] = _examples;
 
@@ -102,18 +106,23 @@ jsonCharacter["user_alias"] = _userAlias;
     notifyListeners();
   }
 
-  void setUserAlias(String newAlias) {
-    _userAlias = newAlias;
+  void setDescription(String newDescription) {
+    _description = newDescription;
     notifyListeners();
   }
 
-  void setResponseAlias(String newAlias) {
-    _responseAlias = newAlias;
+  void setPersonality(String newPersonality) {
+    _personality = newPersonality;
     notifyListeners();
   }
 
-  void setPrePrompt(String newPrePrompt) {
-    _prePrompt = newPrePrompt;
+  void setScenario(String newScenario) {
+    _scenario = newScenario;
+    notifyListeners();
+  }
+
+  void setSystem(String newSystem) {
+    _system = newSystem;
     notifyListeners();
   }
 
@@ -157,11 +166,13 @@ jsonCharacter["user_alias"] = _userAlias;
 
   String get name => _name;
 
-  String get userAlias => _userAlias;
+  String get description => _description;
 
-  String get responseAlias => _responseAlias;
+  String get personality => _personality;
 
-  String get prePrompt => _prePrompt;
+  String get scenario => _scenario;
+
+  String get system => _system;
 
   bool get useExamples => _useExamples;
 
@@ -231,9 +242,10 @@ jsonCharacter["user_alias"] = _userAlias;
 
       image.textData = {
         "name": _name,
-        "pre_prompt": _prePrompt,
-"user_alias": _userAlias,
-        "response_alias": _responseAlias,
+        "description": _description,
+        "personality": _personality,
+        "scenario": _scenario,
+        "system_prompt": _system,
         "examples": json.encode(_examples),
       };
 
@@ -260,9 +272,10 @@ jsonCharacter["user_alias"] = _userAlias;
 
       if (image != null && image.textData != null) {
         _name = image.textData!["name"] ?? "";
-        _prePrompt = image.textData!["pre_prompt"] ?? "";
-        _userAlias = image.textData!["user_alias"] ?? "";
-        _responseAlias = image.textData!["response_alias"] ?? "";
+        _description = image.textData!["description"] ?? "";
+        _personality = image.textData!["personality"] ?? "";
+        _scenario = image.textData!["scenario"] ?? "";
+        _system = image.textData!["system_prompt"] ?? "";
         _examples = List<Map<String,dynamic>>.from(json.decode(image.textData!["examples"] ?? "[]"));        
       }
 
