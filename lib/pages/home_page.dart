@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/generic_page.dart';
 import 'package:maid/pages/model_page.dart';
+import 'package:maid/pages/sessions_page.dart';
 import 'package:maid/widgets/page_bodies/about_body.dart';
-import 'package:maid/widgets/page_bodies/sessions_body.dart';
 import 'package:maid/widgets/page_bodies/settings_body.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:maid/static/generation_manager.dart';
@@ -71,7 +71,7 @@ class HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const GenericPage(title: "Sessions", body: SessionsBody())
+                        builder: (context) => const SessionsPage()
                       )
                     );
                   },
@@ -172,7 +172,7 @@ class HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const GenericPage(title: "Sessions", body: SessionsBody())
+                    builder: (context) => const SessionsPage()
                   )
                 );
               },
