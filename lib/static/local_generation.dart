@@ -5,7 +5,7 @@ import 'package:maid/static/logger.dart';
 
 class LocalGeneration {
   static LlamaProcessor? llamaProcessor;
-  static Completer _completer = Completer();
+  static Completer? _completer;
   static Timer? _timer;
   static DateTime? _startTime;
 
@@ -35,14 +35,17 @@ class LocalGeneration {
       );
     }
 
+    llamaProcessor!.messages = options.messages;
+
     llamaProcessor!.stream.listen((data) {
       _resetTimer();
       callback.call(data);
     });
 
     llamaProcessor?.prompt(input);
-    await _completer.future;
+    await _completer?.future;
     callback.call(null);
+    dispose();
     Logger.log('Local generation completed');
   }
 
@@ -51,7 +54,7 @@ class LocalGeneration {
     if (_startTime != null) {
       final elapsed = DateTime.now().difference(_startTime!);
       _startTime = DateTime.now();
-      _timer = Timer(elapsed * 3, stop);
+      _timer = Timer(elapsed * 10, stop);
     } else {
       _startTime = DateTime.now();
       _timer = Timer(const Duration(seconds: 5), stop);
@@ -61,7 +64,7 @@ class LocalGeneration {
   static void stop() {
     _timer?.cancel();
     llamaProcessor?.stop();
-    _completer.complete();
+    _completer?.complete();
     Logger.log('Local generation stopped');
   }
 

@@ -61,13 +61,6 @@ class LocalParameters extends StatelessWidget {
             ),
             const FormatDropdown(),
             SwitchListTile(
-              title: const Text('penalize_nl'),
-              value: model.parameters["penalize_nl"] ?? true,
-              onChanged: (value) {
-                model.setParameter("penalize_nl", value);
-              },
-            ),
-            SwitchListTile(
               title: const Text('random_seed'),
               value: model.parameters["random_seed"] ?? true,
               onChanged: (value) {
@@ -128,162 +121,12 @@ class LocalParameters extends StatelessWidget {
             ),
             MaidSlider(
               labelText: 'n_batch',
-              inputValue: model.parameters["n_batch"] ?? 8,
+              inputValue: model.parameters["n_batch"] ?? 512,
               sliderMin: 1.0,
               sliderMax: 4096.0,
               sliderDivisions: 4095,
               onValueChanged: (value) {
                 model.setParameter("n_batch", value.round());
-              }
-            ),
-            MaidSlider(
-              labelText: 'n_predict',
-              inputValue: model.parameters["n_predict"] ?? 512,
-              sliderMin: 1.0,
-              sliderMax: 1024.0,
-              sliderDivisions: 1023,
-              onValueChanged: (value) {
-                model.setParameter("n_predict", value.round());
-              }
-            ),
-            MaidSlider(
-              labelText: 'n_keep',
-              inputValue: model.parameters["n_keep"] ?? 48,
-              sliderMin: 1.0,
-              sliderMax: 1024.0,
-              sliderDivisions: 1023,
-              onValueChanged: (value) {
-                model.setParameter("n_keep", value.round());
-              }
-            ),
-            MaidSlider(
-              labelText: 'top_k',
-              inputValue: model.parameters["top_k"] ?? 40,
-              sliderMin: 1.0,
-              sliderMax: 128.0,
-              sliderDivisions: 127,
-              onValueChanged: (value) {
-                model.setParameter("top_k", value.round());
-              }
-            ),
-            MaidSlider(
-              labelText: 'top_p',
-              inputValue: model.parameters["top_p"] ?? 0.95,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("top_p", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'min_p',
-              inputValue: model.parameters["min_p"] ?? 0.1,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("min_p", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'tfs_z',
-              inputValue: model.parameters["tfs_z"] ?? 1.0,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("tfs_z", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'typical_p',
-              inputValue: model.parameters["typical_p"] ?? 1.0,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("typical_p", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'temperature',
-              inputValue: model.parameters["temperature"] ?? 0.8,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("temperature", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'penalty_last_n',
-              inputValue: model.parameters["penalty_last_n"] ?? 64,
-              sliderMin: 0.0,
-              sliderMax: 128.0,
-              sliderDivisions: 127,
-              onValueChanged: (value) {
-                model.setParameter("penalty_last_n", value.round());
-              }
-            ),
-            MaidSlider(
-              labelText: 'penalty_repeat',
-              inputValue: model.parameters["penalty_repeat"] ?? 1.1,
-              sliderMin: 0.0,
-              sliderMax: 2.0,
-              sliderDivisions: 200,
-              onValueChanged: (value) {
-                model.setParameter("penalty_repeat", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'penalty_freq',
-              inputValue: model.parameters["penalty_freq"] ?? 0.0,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("penalty_freq", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'penalty_present',
-              inputValue: model.parameters["penalty_present"] ?? 0.0,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("penalty_present", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'mirostat',
-              inputValue: model.parameters["mirostat"] ?? 0.0,
-              sliderMin: 0.0,
-              sliderMax: 128.0,
-              sliderDivisions: 127,
-              onValueChanged: (value) {
-                model.setParameter("mirostat", value.round());
-              }
-            ),
-            MaidSlider(
-              labelText: 'mirostat_tau',
-              inputValue: model.parameters["mirostat_tau"] ?? 5.0,
-              sliderMin: 0.0,
-              sliderMax: 10.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("mirostat_tau", value);
-              }
-            ),
-            MaidSlider(
-              labelText: 'mirostat_eta',
-              inputValue: model.parameters["mirostat_eta"] ?? 0.1,
-              sliderMin: 0.0,
-              sliderMax: 1.0,
-              sliderDivisions: 100,
-              onValueChanged: (value) {
-                model.setParameter("mirostat_eta", value);
               }
             ),
           ]
