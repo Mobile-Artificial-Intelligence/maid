@@ -49,6 +49,10 @@ MacOS and IOS Releases not available at this time.
 - Testing and Building on MacOS and IOS
 - Spreading the word
 
+## Special Thanks and Related Projects
+[davidmigloz/langchain_dart](https://github.com/davidmigloz/langchain_dart)
+[netdur/llama_cpp_dart](https://github.com/netdur/llama_cpp_dart)
+
 ## Testing
 Android version tested on a Oneplus 10 Pro 11gb phone.
 Also tested on Debian Linux, Windows 11.
