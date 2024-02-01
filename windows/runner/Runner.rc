@@ -93,7 +93,7 @@ BEGIN
             VALUE "FileDescription", "maid" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "maid" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.danemadsen. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 com.danemadsen. All rights reserved." "\0"
             VALUE "OriginalFilename", "maid.exe" "\0"
             VALUE "ProductName", "maid" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

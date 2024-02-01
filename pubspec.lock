@@ -462,7 +462,7 @@ packages:
       path: "packages/llama_cpp_dart"
       relative: true
     source: path
-    version: "0.0.5"
+    version: "0.0.6"
   logging:
     dependency: transitive
     description:
