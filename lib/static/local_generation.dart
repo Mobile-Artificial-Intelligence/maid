@@ -26,11 +26,13 @@ class LocalGeneration {
     contextParams.seed = options.seed;
     contextParams.threads = options.nThread;
     contextParams.threadsBatch = options.nThread;
+    SamplingParams samplingParams = SamplingParams();
     
     llamaProcessor = LlamaProcessor(
       options.path!, 
       modelParams, 
-      contextParams
+      contextParams,
+      samplingParams
     );
 
     List<Map<String, dynamic>> messages = [
