@@ -99,9 +99,3 @@ install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
 install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   CONFIGURATIONS Profile;Release
   COMPONENT Runtime)
-
-# Override the default install location for the core library.
-set(CMAKE_INSTALL_BINDIR ${BUILD_BUNDLE_DIR})
-
-# Build the core library.
-add_subdirectory(../src src)
