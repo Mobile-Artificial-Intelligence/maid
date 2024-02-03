@@ -14,14 +14,13 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.dark
-    ),
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.dark),
   );
 
   if (Platform.isWindows) {
-    Llama.libraryPath = 'llama.dll';
+    Llama.libraryPath = 'bin/llama.dll';
   } else if (Platform.isLinux || Platform.isAndroid) {
     Llama.libraryPath = 'libllama.so';
   }
@@ -47,7 +46,8 @@ class MainProvider extends ChangeNotifier {
   bool get isDarkMode => _themeMode == ThemeMode.dark;
 
   void toggleTheme() {
-    _themeMode = _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    _themeMode =
+        _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
     notifyListeners();
   }
 }
@@ -73,13 +73,12 @@ class MaidAppState extends State<MaidApp> {
     return Consumer<MainProvider>(
       builder: (context, mainProvider, child) {
         return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Maid',
-          theme: Themes.lightTheme(),
-          darkTheme: Themes.darkTheme(),
-          themeMode: mainProvider.themeMode,
-          home: const HomePage(title: "Maid")
-        );
+            debugShowCheckedModeBanner: false,
+            title: 'Maid',
+            theme: Themes.lightTheme(),
+            darkTheme: Themes.darkTheme(),
+            themeMode: mainProvider.themeMode,
+            home: const HomePage(title: "Maid"));
       },
     );
   }
