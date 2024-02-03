@@ -36,6 +36,13 @@ jobs:
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
 
+      - name: Install CMake 3.10.2
+        run: |
+          wget https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.sh
+          chmod +x cmake-3.10.2-Linux-x86_64.sh
+          sudo ./cmake-3.10.2-Linux-x86_64.sh --prefix=/usr/local --skip-license
+          rm cmake-3.10.2-Linux-x86_64.sh
+
       - name: Build APK
         run: |
           flutter pub get
