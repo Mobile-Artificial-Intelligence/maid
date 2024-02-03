@@ -87,12 +87,6 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-
-    externalNativeBuild {
-        cmake {
-            path "../../src/CMakeLists.txt"
-        }
-    }
 }
 
 flutter {
