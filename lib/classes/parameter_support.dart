@@ -135,3 +135,91 @@ abstract class ParameterSupport {
   bool get hasMaxTokens => _maxTokens;
   bool get hasLogitsBias => _logitsBias;
 }
+
+class LocalSupport extends ParameterSupport {
+  LocalSupport() : super(
+    temperture: true,
+    topK: true,
+    topP: true,
+    tfsZ: true,
+    typicalP: true,
+    repeatLastN: true,
+    repeatPenalty: true,
+    presencePenalty: true,
+    frequencyPenalty: true,
+    mirostat: true,
+    mirostatTau: true,
+    mirostatEta: true,
+    penalizeNewline: true,
+    nCtx: true,
+    nBatch: true,
+    mainGpu: true,
+    logitsAll: true,
+    vocabOnly: true,
+    useMmap: true,
+    useMlock: true,
+    embeddingOnly: true,
+    ropeFrequencyBase: true,
+    ropeFrequencyScale: true,
+    nThreads: true,
+    logitsBias: true
+  );
+}
+
+class OllamaSupport extends ParameterSupport {
+  OllamaSupport() : super(
+    temperture: true,
+    responseFormat: true,
+    nKeep: true,
+    nPredict: true,
+    topK: true,
+    topP: true,
+    tfsZ: true,
+    typicalP: true,
+    repeatLastN: true,
+    repeatPenalty: true,
+    presencePenalty: true,
+    frequencyPenalty: true,
+    stop: true,
+    mirostat: true,
+    mirostatTau: true,
+    mirostatEta: true,
+    penalizeNewline: true,
+    nCtx: true,
+    nBatch: true,
+    nGqa: true,
+    nGpu: true,
+    mainGpu: true,
+    lowVram: true,
+    logitsAll: true,
+    vocabOnly: true,
+    useMmap: true,
+    useMlock: true,
+    embeddingOnly: true,
+    ropeFrequencyBase: true,
+    ropeFrequencyScale: true,
+    nThreads: true,
+    maxTokens: true
+  );
+}
+
+class OpenAiSupport extends ParameterSupport {
+  OpenAiSupport() : super(
+    temperture: true,
+    responseFormat: true,
+    topP: true,
+    presencePenalty: true,
+    frequencyPenalty: true,
+    stop: true,
+    maxTokens: true,
+    logitsBias: true
+  );
+}
+
+class MistralAiSupport extends ParameterSupport {
+  MistralAiSupport() : super(
+    temperture: true,
+    topP: true,
+    maxTokens: true
+  );
+}
