@@ -10,6 +10,7 @@ class GenerationOptions {
   late List<Map<String, dynamic>> _messages;
   late String? _remoteUrl;
   late PromptFormatType _promptFormat;
+  late ApiType _apiType;
   late String? _apiKey;
   late String? _remoteModel;
   late String? _path;
@@ -41,6 +42,7 @@ class GenerationOptions {
   List<Map<String, dynamic>> get messages => _messages;
   String? get remoteUrl => _remoteUrl;
   PromptFormatType get promptFormat => _promptFormat;
+  ApiType get apiType => _apiType;
   String? get apiKey => _apiKey;
   String? get remoteModel => _remoteModel;
   String? get path => _path;
@@ -74,6 +76,7 @@ class GenerationOptions {
     map["messages"] = _messages;
     map["remote_url"] = _remoteUrl;
     map["prompt_format"] = _promptFormat.index;
+    map["api_type"] = _apiType.index;
     map["api_key"] = _apiKey;
     map["remote_model"] = _remoteModel;
     map["path"] = _path;
@@ -122,6 +125,7 @@ class GenerationOptions {
 
       _remoteUrl = model.parameters["remote_url"];
       _promptFormat = model.format;
+      _apiType = model.apiType;
       _apiKey = model.parameters["api_key"];
       _remoteModel = model.parameters["remote_model"];
       _path = model.parameters["path"];
