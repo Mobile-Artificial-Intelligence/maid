@@ -132,3 +132,4 @@ app.*.symbols
 !.vscode/settings.json
 
 .vscode/
+docs/.~lock.API-Compatability.ods#
