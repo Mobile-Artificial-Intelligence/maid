@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
-import 'package:maid/widgets/settings_widgets/maid_slider.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
+import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
+import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +31,7 @@ class _MistralAiParametersState extends State<MistralAiParameters> {
       builder: (context, model, child) {
         return Column(
           children: [
-            MaidTextField(
+            TextFieldListTile(
               headingText: 'API Token', 
               labelText: 'API Token',
               controller: _apiTokenController,
@@ -45,7 +45,7 @@ class _MistralAiParametersState extends State<MistralAiParameters> {
               endIndent: 10,
               color: Theme.of(context).colorScheme.primary,
             ),
-            MaidTextField(
+            TextFieldListTile(
               headingText: 'Remote URL', 
               labelText: 'Remote URL',
               controller: _remoteUrlController,
@@ -62,7 +62,7 @@ class _MistralAiParametersState extends State<MistralAiParameters> {
               endIndent: 10,
               color: Theme.of(context).colorScheme.primary,
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'top_p',
               inputValue: model.parameters["top_p"] ?? 0.95,
               sliderMin: 0.0,
@@ -72,7 +72,7 @@ class _MistralAiParametersState extends State<MistralAiParameters> {
                 model.setParameter("top_p", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'temperature',
               inputValue: model.parameters["temperature"] ?? 0.8,
               sliderMin: 0.0,

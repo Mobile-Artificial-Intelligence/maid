@@ -6,7 +6,7 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
+import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -247,7 +247,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         ],
                       ),
                     ),
-                    MaidTextField(
+                    TextFieldListTile(
                       headingText: 'Description',
                       labelText: 'Description',
                       controller: _descriptionController,
@@ -256,7 +256,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       },
                       multiline: true,
                     ),
-                    MaidTextField(
+                    TextFieldListTile(
                       headingText: 'Personality',
                       labelText: 'Personality',
                       controller: _personalityController,
@@ -265,7 +265,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       },
                       multiline: true,
                     ),
-                    MaidTextField(
+                    TextFieldListTile(
                       headingText: 'Scenario',
                       labelText: 'Scenario',
                       controller: _scenarioController,
@@ -274,7 +274,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       },
                       multiline: true,
                     ),
-                    MaidTextField(
+                    TextFieldListTile(
                       headingText: 'System Prompt',
                       labelText: 'System Prompt',
                       controller: _systemController,
@@ -320,7 +320,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       const SizedBox(height: 10.0),
                       ...List.generate(
                         character.examples.length,
-                        (index) => MaidTextField(
+                        (index) => TextFieldListTile(
                           headingText: '${character.examples[index]["role"]} content',
                           labelText: character.examples[index]["role"],
                           controller: _exampleControllers[index],

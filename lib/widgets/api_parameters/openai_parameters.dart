@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
-import 'package:maid/widgets/settings_widgets/maid_slider.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
+import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
+import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +31,7 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
       builder: (context, model, child) {
         return Column(
           children: [
-            MaidTextField(
+            TextFieldListTile(
               headingText: 'API Token', 
               labelText: 'API Token',
               controller: _apiTokenController,
@@ -45,7 +45,7 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
               endIndent: 10,
               color: Theme.of(context).colorScheme.primary,
             ),
-            MaidTextField(
+            TextFieldListTile(
               headingText: 'Remote URL', 
               labelText: 'Remote URL',
               controller: _remoteUrlController,
@@ -62,7 +62,7 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
               endIndent: 10,
               color: Theme.of(context).colorScheme.primary,
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'temperature',
               inputValue: model.parameters["temperature"] ?? 0.8,
               sliderMin: 0.0,
@@ -72,7 +72,7 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
                 model.setParameter("temperature", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'penalty_freq',
               inputValue: model.parameters["penalty_freq"] ?? 0.0,
               sliderMin: 0.0,
@@ -82,7 +82,7 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
                 model.setParameter("penalty_freq", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'penalty_present',
               inputValue: model.parameters["penalty_present"] ?? 0.0,
               sliderMin: 0.0,
@@ -92,7 +92,7 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
                 model.setParameter("penalty_present", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'n_predict',
               inputValue: model.parameters["n_predict"] ?? 512,
               sliderMin: 1.0,
@@ -102,7 +102,7 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
                 model.setParameter("n_predict", value.round());
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'top_p',
               inputValue: model.parameters["top_p"] ?? 0.95,
               sliderMin: 0.0,

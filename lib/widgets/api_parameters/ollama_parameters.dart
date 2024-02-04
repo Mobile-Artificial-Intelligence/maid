@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
-import 'package:maid/widgets/settings_widgets/maid_slider.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
+import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
+import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +33,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
       builder: (context, model, child) {
         return Column(
           children: [
-            MaidTextField(
+            TextFieldListTile(
               headingText: 'API Token', 
               labelText: 'API Token',
               controller: _apiTokenController,
@@ -47,7 +47,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
               endIndent: 10,
               color: Theme.of(context).colorScheme.primary,
             ),
-            MaidTextField(
+            TextFieldListTile(
               headingText: 'Remote URL', 
               labelText: 'Remote URL',
               controller: _remoteUrlController,
@@ -105,7 +105,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                   ],
                 ),
               ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'n_threads',
               inputValue: model.parameters["n_threads"] ?? Platform.numberOfProcessors,
               sliderMin: 1.0,
@@ -120,7 +120,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 }
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'n_ctx',
               inputValue: model.parameters["n_ctx"] ?? 512,
               sliderMin: 1.0,
@@ -130,7 +130,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("n_ctx", value.round());
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'n_batch',
               inputValue: model.parameters["n_batch"] ?? 8,
               sliderMin: 1.0,
@@ -140,7 +140,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("n_batch", value.round());
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'n_predict',
               inputValue: model.parameters["n_predict"] ?? 512,
               sliderMin: 1.0,
@@ -150,7 +150,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("n_predict", value.round());
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'n_keep',
               inputValue: model.parameters["n_keep"] ?? 48,
               sliderMin: 1.0,
@@ -160,7 +160,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("n_keep", value.round());
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'top_k',
               inputValue: model.parameters["top_k"] ?? 40,
               sliderMin: 1.0,
@@ -170,7 +170,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("top_k", value.round());
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'top_p',
               inputValue: model.parameters["top_p"] ?? 0.95,
               sliderMin: 0.0,
@@ -180,7 +180,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("top_p", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'tfs_z',
               inputValue: model.parameters["tfs_z"] ?? 1.0,
               sliderMin: 0.0,
@@ -190,7 +190,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("tfs_z", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'typical_p',
               inputValue: model.parameters["typical_p"] ?? 1.0,
               sliderMin: 0.0,
@@ -200,7 +200,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("typical_p", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'temperature',
               inputValue: model.parameters["temperature"] ?? 0.8,
               sliderMin: 0.0,
@@ -210,7 +210,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("temperature", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'penalty_last_n',
               inputValue: model.parameters["penalty_last_n"] ?? 64,
               sliderMin: 0.0,
@@ -220,7 +220,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("penalty_last_n", value.round());
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'penalty_repeat',
               inputValue: model.parameters["penalty_repeat"] ?? 1.1,
               sliderMin: 0.0,
@@ -230,7 +230,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("penalty_repeat", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'penalty_freq',
               inputValue: model.parameters["penalty_freq"] ?? 0.0,
               sliderMin: 0.0,
@@ -240,7 +240,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("penalty_freq", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'penalty_present',
               inputValue: model.parameters["penalty_present"] ?? 0.0,
               sliderMin: 0.0,
@@ -250,7 +250,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("penalty_present", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'mirostat',
               inputValue: model.parameters["mirostat"] ?? 0.0,
               sliderMin: 0.0,
@@ -260,7 +260,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("mirostat", value.round());
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'mirostat_tau',
               inputValue: model.parameters["mirostat_tau"] ?? 5.0,
               sliderMin: 0.0,
@@ -270,7 +270,7 @@ class _OllamaParametersState extends State<OllamaParameters> {
                 model.setParameter("mirostat_tau", value);
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'mirostat_eta',
               inputValue: model.parameters["mirostat_eta"] ?? 0.1,
               sliderMin: 0.0,

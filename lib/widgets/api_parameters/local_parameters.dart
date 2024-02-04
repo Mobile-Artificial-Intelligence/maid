@@ -5,7 +5,7 @@ import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
 import 'package:maid/widgets/dropdowns/format_dropdown.dart';
-import 'package:maid/widgets/settings_widgets/maid_slider.dart';
+import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class LocalParameters extends StatelessWidget {
@@ -94,7 +94,7 @@ class LocalParameters extends StatelessWidget {
                   ],
                 ),
               ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'n_threads',
               inputValue: model.parameters["n_threads"] ?? Platform.numberOfProcessors,
               sliderMin: 1.0,
@@ -109,7 +109,7 @@ class LocalParameters extends StatelessWidget {
                 }
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'n_ctx',
               inputValue: model.parameters["n_ctx"] ?? 512,
               sliderMin: 1.0,
@@ -119,7 +119,7 @@ class LocalParameters extends StatelessWidget {
                 model.setParameter("n_ctx", value.round());
               }
             ),
-            MaidSlider(
+            SliderListTile(
               labelText: 'n_batch',
               inputValue: model.parameters["n_batch"] ?? 512,
               sliderMin: 1.0,

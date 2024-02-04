@@ -11,7 +11,7 @@ import 'package:maid/widgets/api_parameters/openai_parameters.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/dropdowns/api_dropdown.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/maid_text_field.dart';
+import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -184,7 +184,7 @@ class _ModelPageState extends State<ModelPage> {
                       ),
                     ),
                     const SizedBox(height: 15.0),
-                    MaidTextField(
+                    TextFieldListTile(
                       headingText: "Preset Name",
                       labelText: "Preset",
                       controller: _presetController,

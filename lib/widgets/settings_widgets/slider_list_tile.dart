@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MaidSlider extends StatelessWidget {
+class SliderListTile extends StatelessWidget {
   final String labelText;
   final num inputValue;
   final double sliderMin;
@@ -8,7 +8,7 @@ class MaidSlider extends StatelessWidget {
   final int sliderDivisions;
   final Function(double) onValueChanged;
 
-  const MaidSlider({
+  const SliderListTile({
     super.key,
     required this.labelText,
     required this.inputValue,
