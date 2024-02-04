@@ -20,7 +20,7 @@ void main() {
   );
 
   if (Platform.isWindows) {
-    Llama.libraryPath = 'bin/llama.dll';
+    Llama.libraryPath = 'llama.dll';
   } else if (Platform.isLinux || Platform.isAndroid) {
     Llama.libraryPath = 'libllama.so';
   }
