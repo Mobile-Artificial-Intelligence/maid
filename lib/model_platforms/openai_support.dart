@@ -1,7 +1,7 @@
-import 'package:maid/classes/model_platform.dart';
+import 'package:maid/classes/parameter_support.dart';
 
-class OpenaiPlatform extends ModelPlatform {
-  OpenaiPlatform() : super(
+class OpenAiSupport extends ParameterSupport {
+  OpenAiSupport() : super(
     temperture: true,
     responseFormat: true,
     topP: true,

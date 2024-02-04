@@ -1,4 +1,4 @@
-abstract class ModelPlatform {
+abstract class ParameterSupport {
   final bool _temperture;
   final bool _responseFormat;
   final bool _nKeep;
@@ -33,7 +33,7 @@ abstract class ModelPlatform {
   final bool _maxTokens;
   final bool _logitsBias;
 
-  ModelPlatform({
+  ParameterSupport({
     bool? temperture,
     bool? responseFormat,
     bool? nKeep,

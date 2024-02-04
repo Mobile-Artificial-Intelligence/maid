@@ -1,11 +1,8 @@
-import 'package:maid/classes/model_platform.dart';
+import 'package:maid/classes/parameter_support.dart';
 
-class OllamaPlatform extends ModelPlatform {
-  OllamaPlatform() : super(
+class LocalSupport extends ParameterSupport {
+  LocalSupport() : super(
     temperture: true,
-    responseFormat: true,
-    nKeep: true,
-    nPredict: true,
     topK: true,
     topP: true,
     tfsZ: true,
@@ -14,17 +11,13 @@ class OllamaPlatform extends ModelPlatform {
     repeatPenalty: true,
     presencePenalty: true,
     frequencyPenalty: true,
-    stop: true,
     mirostat: true,
     mirostatTau: true,
     mirostatEta: true,
     penalizeNewline: true,
     nCtx: true,
     nBatch: true,
-    nGqa: true,
-    nGpu: true,
     mainGpu: true,
-    lowVram: true,
     logitsAll: true,
     vocabOnly: true,
     useMmap: true,
@@ -33,6 +26,6 @@ class OllamaPlatform extends ModelPlatform {
     ropeFrequencyBase: true,
     ropeFrequencyScale: true,
     nThreads: true,
-    maxTokens: true
+    logitsBias: true
   );
 }
