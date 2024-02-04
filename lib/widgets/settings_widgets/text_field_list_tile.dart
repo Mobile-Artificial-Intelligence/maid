@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MaidTextField extends StatelessWidget{
+class TextFieldListTile extends StatelessWidget{
   final String headingText;
   final String labelText;
   final String? initialValue;
@@ -9,7 +9,7 @@ class MaidTextField extends StatelessWidget{
   final void Function(String)? onSubmitted;
   final void Function(String)? onChanged;
 
-  const MaidTextField({super.key, 
+  const TextFieldListTile({super.key, 
     required this.headingText,
     required this.labelText,
     this.initialValue,
