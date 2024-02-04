@@ -1,8 +1,11 @@
 import 'package:maid/classes/model_platform.dart';
 
-class LocalPlatform extends ModelPlatform {
-  LocalPlatform() : super(
+class OllamaPlatform extends ModelPlatform {
+  OllamaPlatform() : super(
     temperture: true,
+    responseFormat: true,
+    nKeep: true,
+    nPredict: true,
     topK: true,
     topP: true,
     tfsZ: true,
@@ -11,13 +14,17 @@ class LocalPlatform extends ModelPlatform {
     repeatPenalty: true,
     presencePenalty: true,
     frequencyPenalty: true,
+    stop: true,
     mirostat: true,
     mirostatTau: true,
     mirostatEta: true,
     penalizeNewline: true,
     nCtx: true,
     nBatch: true,
+    nGqa: true,
+    nGpu: true,
     mainGpu: true,
+    lowVram: true,
     logitsAll: true,
     vocabOnly: true,
     useMmap: true,
@@ -26,6 +33,6 @@ class LocalPlatform extends ModelPlatform {
     ropeFrequencyBase: true,
     ropeFrequencyScale: true,
     nThreads: true,
-    logitsBias: true
+    maxTokens: true
   );
 }

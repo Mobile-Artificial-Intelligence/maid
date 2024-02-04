@@ -1,4 +1,5 @@
 abstract class ModelPlatform {
+  final bool _temperture;
   final bool _responseFormat;
   final bool _nKeep;
   final bool _nPredict;
@@ -33,6 +34,7 @@ abstract class ModelPlatform {
   final bool _logitsBias;
 
   ModelPlatform({
+    bool? temperture,
     bool? responseFormat,
     bool? nKeep,
     bool? nPredict,
@@ -65,7 +67,8 @@ abstract class ModelPlatform {
     bool? ropeFrequencyScale,
     bool? maxTokens,
     bool? logitsBias,
-  }) : _responseFormat = responseFormat ?? false,
+  }) : _temperture = temperture ?? false,
+       _responseFormat = responseFormat ?? false,
        _nKeep = nKeep ?? false,
        _nPredict = nPredict ?? false,
        _topK = topK ?? false,
@@ -98,6 +101,7 @@ abstract class ModelPlatform {
        _maxTokens = maxTokens ?? false,
        _logitsBias = logitsBias ?? false;
 
+  bool get hasTemperture => _temperture;
   bool get hasResponseFormat => _responseFormat;
   bool get hasNKeep => _nKeep;
   bool get hasNPredict => _nPredict;
