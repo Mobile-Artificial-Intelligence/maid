@@ -10,19 +10,15 @@ class ApiTokenParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _apiTokenController.text = context.read<Model>().parameters["api_key"] ?? "";
+    _apiTokenController.text =
+        context.read<Model>().parameters["api_key"] ?? "";
 
-    return Consumer<Model>(
-      builder: (context, model, child) {
-        return TextFieldListTile(
-          headingText: 'API Token', 
-          labelText: 'API Token',
-          controller: _apiTokenController,
-          onChanged: (value) {
-            model.setParameter("api_key", value);
-          } ,
-        );
-      }
-    );
+    return TextFieldListTile(
+        headingText: 'API Token',
+        labelText: 'API Token',
+        controller: _apiTokenController,
+        onChanged: (value) {
+          context.read<Model>().setParameter("api_key", value);
+        });
   }
 }
