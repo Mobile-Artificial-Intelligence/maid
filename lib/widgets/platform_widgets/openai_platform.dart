@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
-import 'package:maid/widgets/parameter_widgets/api_token_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
 import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
 import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
@@ -29,21 +29,14 @@ class _OpenAiPlatformState extends State<OpenAiPlatform> {
   Widget build(BuildContext context) {
     return Consumer<Model>(builder: (context, model, child) {
       return Column(children: [
-        ApiTokenParameter(),
+        StringParameter(title: "API Token", parameter: "api_key"),
         Divider(
           height: 20,
           indent: 10,
           endIndent: 10,
           color: Theme.of(context).colorScheme.primary,
         ),
-        TextFieldListTile(
-          headingText: 'Remote URL',
-          labelText: 'Remote URL',
-          controller: _remoteUrlController,
-          onChanged: (value) {
-            model.setParameter("remote_url", value);
-          },
-        ),
+        StringParameter(title: "Remote URL", parameter: "remote_url"),
         const SizedBox(height: 8.0),
         const ModelDropdown(),
         const SizedBox(height: 20.0),
