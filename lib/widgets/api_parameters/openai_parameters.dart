@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
+import 'package:maid/widgets/parameter_widgets/api_token_parameter.dart';
 import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
 import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
@@ -13,7 +14,6 @@ class OpenAiParameters extends StatefulWidget {
 }
 
 class _OpenAiParametersState extends State<OpenAiParameters> {
-  late TextEditingController _apiTokenController;
   late TextEditingController _remoteUrlController;
 
   @override
@@ -21,7 +21,6 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
     super.initState();
 
     final model = context.read<Model>();
-    _apiTokenController = TextEditingController(text: model.parameters["api_key"]);
     _remoteUrlController = TextEditingController(text: model.parameters["remote_url"]);
   }
 
@@ -31,14 +30,7 @@ class _OpenAiParametersState extends State<OpenAiParameters> {
       builder: (context, model, child) {
         return Column(
           children: [
-            TextFieldListTile(
-              headingText: 'API Token', 
-              labelText: 'API Token',
-              controller: _apiTokenController,
-              onChanged: (value) {
-                model.setParameter("api_key", value);
-              } ,
-            ),
+            ApiTokenParameter(),
             Divider(
               height: 20,
               indent: 10,
