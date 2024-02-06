@@ -5,7 +5,6 @@ import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
 import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
-import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -17,17 +16,6 @@ class OllamaPlatform extends StatefulWidget {
 }
 
 class _OllamaPlatformState extends State<OllamaPlatform> {
-  late TextEditingController _remoteUrlController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final model = context.read<Model>();
-    _remoteUrlController =
-        TextEditingController(text: model.parameters["remote_url"]);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<Model>(builder: (context, model, child) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
+import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
 import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
-import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -14,17 +14,6 @@ class OpenAiPlatform extends StatefulWidget {
 }
 
 class _OpenAiPlatformState extends State<OpenAiPlatform> {
-  late TextEditingController _remoteUrlController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final model = context.read<Model>();
-    _remoteUrlController =
-        TextEditingController(text: model.parameters["remote_url"]);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<Model>(builder: (context, model, child) {
@@ -40,12 +29,7 @@ class _OpenAiPlatformState extends State<OpenAiPlatform> {
         const SizedBox(height: 8.0),
         const ModelDropdown(),
         const SizedBox(height: 20.0),
-        Divider(
-          height: 20,
-          indent: 10,
-          endIndent: 10,
-          color: Theme.of(context).colorScheme.primary,
-        ),
+        const SeedParameter(),
         SliderListTile(
             labelText: 'temperature',
             inputValue: model.parameters["temperature"] ?? 0.8,
