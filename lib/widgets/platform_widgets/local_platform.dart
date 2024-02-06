@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/dialogs.dart';
+import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/settings_widgets/double_button_row.dart';
 import 'package:maid/widgets/dropdowns/format_dropdown.dart';
 import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
@@ -54,40 +55,7 @@ class LocalPlatform extends StatelessWidget {
           color: Theme.of(context).colorScheme.primary,
         ),
         const FormatDropdown(),
-        SwitchListTile(
-          title: const Text('random_seed'),
-          value: model.parameters["random_seed"] ?? true,
-          onChanged: (value) {
-            model.setParameter("random_seed", value);
-          },
-        ),
-        Divider(
-          height: 20,
-          indent: 10,
-          endIndent: 10,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        if (!(model.parameters["random_seed"] ?? true))
-          ListTile(
-            title: Row(
-              children: [
-                const Expanded(
-                  child: Text('seed'),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'seed',
-                    ),
-                    onSubmitted: (value) {
-                      model.setParameter("seed", int.parse(value));
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
+        const SeedParameter(),
         SliderListTile(
             labelText: 'n_threads',
             inputValue:
