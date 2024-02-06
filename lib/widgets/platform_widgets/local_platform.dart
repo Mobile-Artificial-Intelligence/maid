@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/dialogs.dart';
+import 'package:maid/widgets/parameter_widgets/n_ctx_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_threads_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/double_button_row.dart';
@@ -58,15 +59,7 @@ class LocalPlatform extends StatelessWidget {
         const FormatDropdown(),
         const SeedParameter(),
         const NThreadsParameter(),
-        SliderListTile(
-            labelText: 'n_ctx',
-            inputValue: model.parameters["n_ctx"] ?? 512,
-            sliderMin: 1.0,
-            sliderMax: 4096.0,
-            sliderDivisions: 4095,
-            onValueChanged: (value) {
-              model.setParameter("n_ctx", value.round());
-            }),
+        const NCtxParameter(),
         SliderListTile(
             labelText: 'n_batch',
             inputValue: model.parameters["n_batch"] ?? 512,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/parameter_widgets/boolean_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/n_ctx_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_threads_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
@@ -40,15 +41,7 @@ class _OllamaPlatformState extends State<OllamaPlatform> {
       const BooleanParameter(title: "penalize_nl", parameter: "penalize_nl"),
       const SeedParameter(),
       const NThreadsParameter(),
-      SliderListTile(
-          labelText: 'n_ctx',
-          inputValue: model.parameters["n_ctx"] ?? 512,
-          sliderMin: 1.0,
-          sliderMax: 4096.0,
-          sliderDivisions: 4095,
-          onValueChanged: (value) {
-            model.setParameter("n_ctx", value.round());
-          }),
+      const NCtxParameter(),
       SliderListTile(
           labelText: 'n_batch',
           inputValue: model.parameters["n_batch"] ?? 8,
