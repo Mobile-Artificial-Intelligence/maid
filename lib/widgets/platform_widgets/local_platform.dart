@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/dialogs.dart';
+import 'package:maid/widgets/parameter_widgets/n_threads_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/double_button_row.dart';
 import 'package:maid/widgets/dropdowns/format_dropdown.dart';
@@ -56,21 +57,7 @@ class LocalPlatform extends StatelessWidget {
         ),
         const FormatDropdown(),
         const SeedParameter(),
-        SliderListTile(
-            labelText: 'n_threads',
-            inputValue:
-                model.parameters["n_threads"] ?? Platform.numberOfProcessors,
-            sliderMin: 1.0,
-            sliderMax: model.apiType == ApiType.local
-                ? Platform.numberOfProcessors.toDouble()
-                : 128.0,
-            sliderDivisions: 127,
-            onValueChanged: (value) {
-              model.setParameter("n_threads", value.round());
-              if (model.parameters["n_threads"] > Platform.numberOfProcessors) {
-                model.setParameter("n_threads", Platform.numberOfProcessors);
-              }
-            }),
+        const NThreadsParameter(),
         SliderListTile(
             labelText: 'n_ctx',
             inputValue: model.parameters["n_ctx"] ?? 512,

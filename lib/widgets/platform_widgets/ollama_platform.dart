@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/parameter_widgets/boolean_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/n_threads_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
 import 'package:maid/widgets/slider_list_tile.dart';
@@ -36,24 +37,9 @@ class _OllamaPlatformState extends State<OllamaPlatform> {
         endIndent: 10,
         color: Theme.of(context).colorScheme.primary,
       ),
-      const BooleanParameter(
-          title: "Penalize Newline", parameter: "penalize_nl"),
+      const BooleanParameter(title: "penalize_nl", parameter: "penalize_nl"),
       const SeedParameter(),
-      SliderListTile(
-          labelText: 'n_threads',
-          inputValue:
-              model.parameters["n_threads"] ?? Platform.numberOfProcessors,
-          sliderMin: 1.0,
-          sliderMax: model.apiType == ApiType.local
-              ? Platform.numberOfProcessors.toDouble()
-              : 128.0,
-          sliderDivisions: 127,
-          onValueChanged: (value) {
-            model.setParameter("n_threads", value.round());
-            if (model.parameters["n_threads"] > Platform.numberOfProcessors) {
-              model.setParameter("n_threads", Platform.numberOfProcessors);
-            }
-          }),
+      const NThreadsParameter(),
       SliderListTile(
           labelText: 'n_ctx',
           inputValue: model.parameters["n_ctx"] ?? 512,
