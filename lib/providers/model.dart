@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/classes/parameter_support.dart';
 import 'package:maid/static/remote_generation.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
@@ -13,7 +12,6 @@ import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 
 class Model extends ChangeNotifier {
   PromptFormatType _format = PromptFormatType.alpaca;
-  ParameterSupport _parameterSupport = LocalSupport();
   ApiType _apiType = ApiType.local;
   String _preset = "Default";
   Map<String, dynamic> _parameters = {};
@@ -59,18 +57,12 @@ class Model extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setParameterSupport(ParameterSupport parameterSupport) {
-    _parameterSupport = parameterSupport;
-    notifyListeners();
-  }
-
   void setApiType(ApiType apiType) {
     _apiType = apiType;
     notifyListeners();
   }
 
   PromptFormatType get format => _format;
-  ParameterSupport get parameterSupport => _parameterSupport;
   ApiType get apiType => _apiType;
   String get preset => _preset;
   Map<String, dynamic> get parameters => _parameters;
