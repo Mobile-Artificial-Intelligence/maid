@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
-import 'package:maid/widgets/settings_widgets/double_button_row.dart';
+import 'package:maid/widgets/double_button_row.dart';
 import 'package:maid/widgets/dropdowns/format_dropdown.dart';
-import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
+import 'package:maid/widgets/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class LocalPlatform extends StatelessWidget {

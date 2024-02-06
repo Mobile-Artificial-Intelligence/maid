@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
-import 'package:maid/widgets/settings_widgets/slider_list_tile.dart';
+import 'package:maid/widgets/slider_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 import 'package:provider/provider.dart';
 

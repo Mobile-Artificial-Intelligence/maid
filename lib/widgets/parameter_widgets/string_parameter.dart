@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
-import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
+import 'package:maid/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class StringParameter extends StatelessWidget {

@@ -10,8 +10,8 @@ import 'package:maid/widgets/platform_widgets/ollama_platform.dart';
 import 'package:maid/widgets/platform_widgets/openai_platform.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/dropdowns/api_dropdown.dart';
-import 'package:maid/widgets/settings_widgets/double_button_row.dart';
-import 'package:maid/widgets/settings_widgets/text_field_list_tile.dart';
+import 'package:maid/widgets/double_button_row.dart';
+import 'package:maid/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
