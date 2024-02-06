@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/widgets/slider_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 import 'package:provider/provider.dart';
@@ -30,15 +31,7 @@ class _MistralAiPlatformState extends State<MistralAiPlatform> {
         const ModelDropdown(),
         const SizedBox(height: 20.0),
         const SeedParameter(),
-        SliderListTile(
-            labelText: 'top_p',
-            inputValue: model.parameters["top_p"] ?? 0.95,
-            sliderMin: 0.0,
-            sliderMax: 1.0,
-            sliderDivisions: 100,
-            onValueChanged: (value) {
-              model.setParameter("top_p", value);
-            }),
+        const TopPParameter(),
         SliderListTile(
             labelText: 'temperature',
             inputValue: model.parameters["temperature"] ?? 0.8,

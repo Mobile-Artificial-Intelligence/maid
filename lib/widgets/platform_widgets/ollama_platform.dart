@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:maid/widgets/parameter_widgets/boolean_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_batch_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_ctx_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/n_keep_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_threads_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/top_k_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/widgets/slider_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 
@@ -41,42 +45,10 @@ class _OllamaPlatformState extends State<OllamaPlatform> {
       const NThreadsParameter(),
       const NCtxParameter(),
       const NBatchParameter(),
-      SliderListTile(
-          labelText: 'n_predict',
-          inputValue: model.parameters["n_predict"] ?? 512,
-          sliderMin: 1.0,
-          sliderMax: 1024.0,
-          sliderDivisions: 1023,
-          onValueChanged: (value) {
-            model.setParameter("n_predict", value.round());
-          }),
-      SliderListTile(
-          labelText: 'n_keep',
-          inputValue: model.parameters["n_keep"] ?? 48,
-          sliderMin: 1.0,
-          sliderMax: 1024.0,
-          sliderDivisions: 1023,
-          onValueChanged: (value) {
-            model.setParameter("n_keep", value.round());
-          }),
-      SliderListTile(
-          labelText: 'top_k',
-          inputValue: model.parameters["top_k"] ?? 40,
-          sliderMin: 1.0,
-          sliderMax: 128.0,
-          sliderDivisions: 127,
-          onValueChanged: (value) {
-            model.setParameter("top_k", value.round());
-          }),
-      SliderListTile(
-          labelText: 'top_p',
-          inputValue: model.parameters["top_p"] ?? 0.95,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("top_p", value);
-          }),
+      const NPredictParameter(),
+      const NKeepParameter(),
+      const TopKParameter(),
+      const TopPParameter(),
       SliderListTile(
           labelText: 'tfs_z',
           inputValue: model.parameters["tfs_z"] ?? 1.0,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/model.dart';
+import 'package:maid/widgets/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/widgets/slider_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 import 'package:provider/provider.dart';
@@ -57,24 +59,8 @@ class _OpenAiPlatformState extends State<OpenAiPlatform> {
             onValueChanged: (value) {
               model.setParameter("penalty_present", value);
             }),
-        SliderListTile(
-            labelText: 'n_predict',
-            inputValue: model.parameters["n_predict"] ?? 512,
-            sliderMin: 1.0,
-            sliderMax: 1024.0,
-            sliderDivisions: 1023,
-            onValueChanged: (value) {
-              model.setParameter("n_predict", value.round());
-            }),
-        SliderListTile(
-            labelText: 'top_p',
-            inputValue: model.parameters["top_p"] ?? 0.95,
-            sliderMin: 0.0,
-            sliderMax: 1.0,
-            sliderDivisions: 100,
-            onValueChanged: (value) {
-              model.setParameter("top_p", value);
-            }),
+        const NPredictParameter(),
+        const TopPParameter()
       ]);
     });
   }
