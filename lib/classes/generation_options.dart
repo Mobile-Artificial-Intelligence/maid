@@ -34,7 +34,7 @@ class GenerationOptions {
   late int _mirostat;
   late double _mirostatTau;
   late double _mirostatEta;
-  late int _penalizeNewline;
+  late bool _penalizeNewline;
   late int _nCtx;
   late int _nBatch;
   late int _nThread;
@@ -66,7 +66,7 @@ class GenerationOptions {
   int get mirostat => _mirostat;
   double get mirostatTau => _mirostatTau;
   double get mirostatEta => _mirostatEta;
-  int get penalizeNewline => _penalizeNewline;
+  bool get penalizeNewline => _penalizeNewline;
   int get nCtx => _nCtx;
   int get nBatch => _nBatch;
   int get nThread => _nThread;
@@ -149,7 +149,7 @@ class GenerationOptions {
       _mirostat = model.parameters["mirostat"];
       _mirostatTau = model.parameters["mirostat_tau"];
       _mirostatEta = model.parameters["mirostat_eta"];
-      _penalizeNewline = model.parameters["penalize_nl"] ? 1 : 0;
+      _penalizeNewline = model.parameters["penalize_nl"];
       _nCtx = model.parameters["n_ctx"];
       _nBatch = model.parameters["n_batch"];
       _nThread = model.parameters["n_threads"];
