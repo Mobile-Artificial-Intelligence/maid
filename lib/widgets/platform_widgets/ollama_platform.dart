@@ -7,19 +7,17 @@ import 'package:maid/widgets/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_threads_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/temperature_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/tfs_z_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/top_k_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/top_p_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/typical_p_parameter.dart';
 import 'package:maid/widgets/slider_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 
-class OllamaPlatform extends StatefulWidget {
+class OllamaPlatform extends StatelessWidget {
   const OllamaPlatform({super.key});
 
-  @override
-  State<StatefulWidget> createState() => _OllamaPlatformState();
-}
-
-class _OllamaPlatformState extends State<OllamaPlatform> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -49,33 +47,9 @@ class _OllamaPlatformState extends State<OllamaPlatform> {
       const NKeepParameter(),
       const TopKParameter(),
       const TopPParameter(),
-      SliderListTile(
-          labelText: 'tfs_z',
-          inputValue: model.parameters["tfs_z"] ?? 1.0,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("tfs_z", value);
-          }),
-      SliderListTile(
-          labelText: 'typical_p',
-          inputValue: model.parameters["typical_p"] ?? 1.0,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("typical_p", value);
-          }),
-      SliderListTile(
-          labelText: 'temperature',
-          inputValue: model.parameters["temperature"] ?? 0.8,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("temperature", value);
-          }),
+      const TfsZParameter(),
+      const TypicalPParameter(),
+      const TemperatureParameter(),
       SliderListTile(
           labelText: 'penalty_last_n',
           inputValue: model.parameters["penalty_last_n"] ?? 64,
