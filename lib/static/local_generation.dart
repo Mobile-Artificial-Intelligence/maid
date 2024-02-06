@@ -27,6 +27,19 @@ class LocalGeneration {
     contextParams.threads = options.nThread;
     contextParams.threadsBatch = options.nThread;
     SamplingParams samplingParams = SamplingParams();
+    samplingParams.temp = options.temperature;
+    samplingParams.topK = options.topK;
+    samplingParams.topP = options.topP;
+    samplingParams.tfsZ = options.tfsZ;
+    samplingParams.typicalP = options.typicalP;
+    samplingParams.penaltyLastN = options.penaltyLastN;
+    samplingParams.penaltyRepeat = options.penaltyRepeat;
+    samplingParams.penaltyFreq = options.penaltyFreq;
+    samplingParams.penaltyPresent = options.penaltyPresent;
+    samplingParams.mirostat = options.mirostat;
+    samplingParams.mirostatTau = options.mirostatTau;
+    samplingParams.mirostatEta = options.mirostatEta;
+    samplingParams.penalizeNl = options.penalizeNewline;
     
     llamaProcessor = LlamaProcessor(
       options.path!, 
