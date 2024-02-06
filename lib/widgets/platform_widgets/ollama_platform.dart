@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:maid/widgets/parameter_widgets/boolean_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/mirostat_eta_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/mirostat_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/mirostat_tau_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_batch_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_ctx_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_keep_parameter.dart';
@@ -16,7 +19,6 @@ import 'package:maid/widgets/parameter_widgets/tfs_z_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/top_k_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/typical_p_parameter.dart';
-import 'package:maid/widgets/slider_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
 
 class OllamaPlatform extends StatelessWidget {
@@ -58,33 +60,9 @@ class OllamaPlatform extends StatelessWidget {
       const PenaltyRepeatParameter(),
       const PenaltyFrequencyParameter(),
       const PenaltyPresentParameter(),
-      SliderListTile(
-          labelText: 'mirostat',
-          inputValue: model.parameters["mirostat"] ?? 0.0,
-          sliderMin: 0.0,
-          sliderMax: 128.0,
-          sliderDivisions: 127,
-          onValueChanged: (value) {
-            model.setParameter("mirostat", value.round());
-          }),
-      SliderListTile(
-          labelText: 'mirostat_tau',
-          inputValue: model.parameters["mirostat_tau"] ?? 5.0,
-          sliderMin: 0.0,
-          sliderMax: 10.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("mirostat_tau", value);
-          }),
-      SliderListTile(
-          labelText: 'mirostat_eta',
-          inputValue: model.parameters["mirostat_eta"] ?? 0.1,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("mirostat_eta", value);
-          }),
+      const MirostatParameter(),
+      const MirostatTauParameter(),
+      const MirostatEtaParameter()
     ]);
   }
 }

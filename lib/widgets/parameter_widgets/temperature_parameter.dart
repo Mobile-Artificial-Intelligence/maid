@@ -16,7 +16,7 @@ class TemperatureParameter extends StatelessWidget {
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            model.setParameter("temperature", value.round());
+            model.setParameter("temperature", value);
           });
     });
   }

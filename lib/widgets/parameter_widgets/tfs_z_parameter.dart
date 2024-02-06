@@ -16,7 +16,7 @@ class TfsZParameter extends StatelessWidget {
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            model.setParameter("tfs_z", value.round());
+            model.setParameter("tfs_z", value);
           });
     });
   }

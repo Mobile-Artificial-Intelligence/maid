@@ -16,7 +16,7 @@ class TypicalPParameter extends StatelessWidget {
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            model.setParameter("typical_p", value.round());
+            model.setParameter("typical_p", value);
           });
     });
   }
