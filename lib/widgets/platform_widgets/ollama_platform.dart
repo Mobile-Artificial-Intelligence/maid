@@ -5,6 +5,10 @@ import 'package:maid/widgets/parameter_widgets/n_ctx_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_keep_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/n_threads_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/penalty_frequency_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/penalty_last_n_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/penalty_present_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/penalty_repeat_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/temperature_parameter.dart';
@@ -50,42 +54,10 @@ class OllamaPlatform extends StatelessWidget {
       const TfsZParameter(),
       const TypicalPParameter(),
       const TemperatureParameter(),
-      SliderListTile(
-          labelText: 'penalty_last_n',
-          inputValue: model.parameters["penalty_last_n"] ?? 64,
-          sliderMin: 0.0,
-          sliderMax: 128.0,
-          sliderDivisions: 127,
-          onValueChanged: (value) {
-            model.setParameter("penalty_last_n", value.round());
-          }),
-      SliderListTile(
-          labelText: 'penalty_repeat',
-          inputValue: model.parameters["penalty_repeat"] ?? 1.1,
-          sliderMin: 0.0,
-          sliderMax: 2.0,
-          sliderDivisions: 200,
-          onValueChanged: (value) {
-            model.setParameter("penalty_repeat", value);
-          }),
-      SliderListTile(
-          labelText: 'penalty_freq',
-          inputValue: model.parameters["penalty_freq"] ?? 0.0,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("penalty_freq", value);
-          }),
-      SliderListTile(
-          labelText: 'penalty_present',
-          inputValue: model.parameters["penalty_present"] ?? 0.0,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("penalty_present", value);
-          }),
+      const PenaltyLastNParameter(),
+      const PenaltyRepeatParameter(),
+      const PenaltyFrequencyParameter(),
+      const PenaltyPresentParameter(),
       SliderListTile(
           labelText: 'mirostat',
           inputValue: model.parameters["mirostat"] ?? 0.0,

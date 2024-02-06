@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/model.dart';
 import 'package:maid/widgets/parameter_widgets/n_predict_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/penalty_frequency_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/penalty_present_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/top_p_parameter.dart';
-import 'package:maid/widgets/slider_list_tile.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
-import 'package:provider/provider.dart';
 
 class OpenAiPlatform extends StatelessWidget {
   const OpenAiPlatform({super.key});
@@ -28,24 +27,8 @@ class OpenAiPlatform extends StatelessWidget {
       const SizedBox(height: 20.0),
       const SeedParameter(),
       const TemperatureParameter(),
-      SliderListTile(
-          labelText: 'penalty_freq',
-          inputValue: model.parameters["penalty_freq"] ?? 0.0,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("penalty_freq", value);
-          }),
-      SliderListTile(
-          labelText: 'penalty_present',
-          inputValue: model.parameters["penalty_present"] ?? 0.0,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            model.setParameter("penalty_present", value);
-          }),
+      const PenaltyFrequencyParameter(),
+      const PenaltyPresentParameter(),
       const NPredictParameter(),
       const TopPParameter()
     ]);
