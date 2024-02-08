@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,34 @@ class ChatField extends StatefulWidget {
 
 class _ChatFieldState extends State<ChatField> {
   final TextEditingController _promptController = TextEditingController();
+  StreamSubscription? _intentDataStreamSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    // For sharing or opening text coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription =
+        ReceiveSharingIntent.getMediaStream().listen((value) {
+      setState(() {
+        _promptController.text = value.first.path;
+      });
+    }, onError: (err) {
+      print("Error: $err");
+    });
+
+    // For sharing or opening text coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialMedia().then((value) {
+      setState(() {
+        _promptController.text = value.first.path;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _intentDataStreamSubscription?.cancel();
+    super.dispose();
+  }
 
   void send() {
     if (Platform.isAndroid || Platform.isIOS) {
