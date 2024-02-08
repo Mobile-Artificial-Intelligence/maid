@@ -11,13 +11,13 @@ class FileManager {
   static Future<bool> _checkPermissions() async {
     if (Platform.isAndroid || Platform.isIOS) {
       bool isAndroid11OrAbove = false;
-  
+
       if (Platform.isAndroid) {
         DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
         int sdkVersion = androidInfo.version.sdkInt;
         isAndroid11OrAbove = sdkVersion >= 30;
-  
+
         if (isAndroid11OrAbove) {
           // Request for Manage External Storage
           if (!(await Permission.manageExternalStorage.request().isGranted)) {
@@ -37,27 +37,38 @@ class FileManager {
     Logger.log("Storage - Permission granted");
     return true;
   }
-  
-  static Future<File?> load(BuildContext context, String dialogTitle, List<String> allowedExtensions) async {
+
+  static Future<File?> load(BuildContext context, String dialogTitle,
+      List<String> allowedExtensions) async {
     final bool permissionGranted = await _checkPermissions();
     if (!permissionGranted) {
       return null;
     }
 
     String? result;
-    
+
     Directory initialDirectory;
     if (Platform.isAndroid) {
       initialDirectory = Directory("storage/emulated/0");
 
       if (!context.mounted) return null;
-  
+
       result = await FilesystemPicker.open(
         allowedExtensions: allowedExtensions,
         context: context,
         rootDirectory: initialDirectory,
         fileTileSelectMode: FileTileSelectMode.wholeTile,
-        fsType: FilesystemType.file
+        fsType: FilesystemType.file,
+        shortcuts: [
+          FilesystemPickerShortcut(
+            name: 'Home',
+            path: Directory("storage/emulated/0"),
+          ),
+          FilesystemPickerShortcut(
+            name: 'SD Card',
+            path: Directory("storage/emulated/1"),
+          ),
+        ],
       );
     } else {
       FilePickerResult? pick = await FilePicker.platform.pickFiles(
@@ -85,19 +96,29 @@ class FileManager {
     }
 
     String? result;
-    
+
     Directory initialDirectory;
     if (Platform.isAndroid) {
       initialDirectory = Directory("storage/emulated/0");
 
       if (!context.mounted) return null;
-  
+
       result = await FilesystemPicker.open(
         title: 'Save to folder',
         context: context,
         rootDirectory: initialDirectory,
         fsType: FilesystemType.folder,
         pickText: 'Save file to this folder',
+        shortcuts: [
+          FilesystemPickerShortcut(
+            name: 'Home',
+            path: Directory("storage/emulated/0"),
+          ),
+          FilesystemPickerShortcut(
+            name: 'SD Card',
+            path: Directory("storage/emulated/1"),
+          ),
+        ],
       );
 
       if (result != null) {
@@ -119,20 +140,21 @@ class FileManager {
     return File(result);
   }
 
-  static Future<File?> loadImage(BuildContext context, String dialogTitle) async {
+  static Future<File?> loadImage(
+      BuildContext context, String dialogTitle) async {
     final bool permissionGranted = await _checkPermissions();
     if (!permissionGranted) {
       return null;
     }
 
     String? result;
-    
+
     FilePickerResult? pick = await FilePicker.platform.pickFiles(
       dialogTitle: dialogTitle,
       type: FileType.image,
       allowMultiple: false,
     );
-    
+
     if (pick != null) {
       result = pick.files.single.path;
     }
