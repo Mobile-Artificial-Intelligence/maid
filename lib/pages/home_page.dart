@@ -7,7 +7,6 @@ import 'package:maid/pages/model_page.dart';
 import 'package:maid/pages/sessions_page.dart';
 import 'package:maid/pages/settings_page.dart';
 import 'package:system_info2/system_info2.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/chat_widgets/chat_field.dart';
@@ -27,7 +26,6 @@ class HomePageState extends State<HomePage> {
   static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
   final ScrollController _consoleScrollController = ScrollController();
   List<ChatMessage> chatWidgets = [];
-  bool _busy = false;
 
   AppBar _buildAppBar(double aspectRatio) {
     if (aspectRatio < 0.9) {
@@ -223,8 +221,6 @@ class HomePageState extends State<HomePage> {
       drawer: _buildDrawer(aspectRatio),
       body: Consumer<Session>(
         builder: (context, session, child) {
-          _busy = session.isBusy;
-
           SharedPreferences.getInstance().then((prefs) {
             prefs.setString("last_session", json.encode(session.toMap()));
           });

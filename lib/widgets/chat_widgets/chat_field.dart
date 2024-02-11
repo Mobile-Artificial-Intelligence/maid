@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/generation_manager.dart';
+import 'package:maid/static/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
@@ -30,7 +31,7 @@ class _ChatFieldState extends State<ChatField> {
         _promptController.text = value.first.path;
       });
     }, onError: (err) {
-      print("Error: $err");
+      Logger.log("Error: $err");
     });
 
     // For sharing or opening text coming from outside the app while the app is closed
