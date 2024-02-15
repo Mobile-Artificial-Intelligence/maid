@@ -4,7 +4,7 @@ import 'package:maid/classes/generation_options.dart';
 import 'package:maid/static/logger.dart';
 
 class LocalGeneration {
-  static LlamaProcessor? llamaProcessor;
+  static LlamaProcessor? _llamaProcessor;
   static Completer? _completer;
   static Timer? _timer;
   static DateTime? _startTime;
@@ -41,7 +41,7 @@ class LocalGeneration {
     samplingParams.mirostatEta = options.mirostatEta;
     samplingParams.penalizeNl = options.penalizeNewline;
     
-    llamaProcessor = LlamaProcessor(
+    _llamaProcessor = LlamaProcessor(
       options.path!, 
       modelParams, 
       contextParams,
@@ -81,18 +81,18 @@ class LocalGeneration {
       });
     }
 
-    llamaProcessor!.messages = options.messages;
+    _llamaProcessor!.messages = options.messages;
 
-    llamaProcessor!.stream.listen((data) {
+    _llamaProcessor!.stream.listen((data) {
       _resetTimer();
       callback.call(data);
     });
 
-    llamaProcessor?.prompt(input);
+    _llamaProcessor?.prompt(input);
     await _completer?.future;
     callback.call(null);
-    llamaProcessor?.unloadModel();
-    llamaProcessor = null;
+    _llamaProcessor?.unloadModel();
+    _llamaProcessor = null;
     Logger.log('Local generation completed');
   }
 
@@ -110,7 +110,7 @@ class LocalGeneration {
 
   static void stop() {
     _timer?.cancel();
-    llamaProcessor?.stop();
+    _llamaProcessor?.stop();
     _completer?.complete();
     Logger.log('Local generation stopped');
   }
