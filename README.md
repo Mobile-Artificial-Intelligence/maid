@@ -38,10 +38,6 @@ Windows, Linux, Android.
 MacOS and IOS Releases not available at this time.
 
 ## Supported API's
-- Llama.cpp (Local)
-- Ollama
-- OpenAI
-- MistralAI
 
 <div align="center">
   <table cellspacing="0" border="0">
