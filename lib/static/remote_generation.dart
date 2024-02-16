@@ -150,6 +150,9 @@ class RemoteGeneration {
       case ApiType.openAI:
         openAiRequest(chatMessages, options, callback);
         break;
+      case ApiType.mistralAI:
+        mistralRequest(chatMessages, options, callback);
+        break;
       default:
         break;
     }
@@ -162,24 +165,24 @@ class RemoteGeneration {
         if (!permissionGranted) {
           return [];
         }
-    
+
         final url = Uri.parse("${model.parameters["remote_url"]}/api/tags");
         final headers = {"Accept": "application/json"};
-    
+
         try {
           var request = Request("GET", url)..headers.addAll(headers);
-    
+
           var response = await request.send();
           var responseString = await response.stream.bytesToString();
           var data = json.decode(responseString);
-    
+
           List<String> options = [];
           if (data['models'] != null) {
             for (var option in data['models']) {
               options.add(option['name']);
             }
           }
-    
+
           return options;
         } catch (e) {
           Logger.log('Error: $e');
@@ -191,7 +194,7 @@ class RemoteGeneration {
         return ["mistral-small", "mistral-medium", "mistral-large"];
       default:
         return [];
-    }    
+    }
   }
 
   static Future<bool> _requestPermission() async {
@@ -200,8 +203,11 @@ class RemoteGeneration {
       if (await Permission.nearbyWifiDevices.request().isGranted) {
         Logger.log("Nearby Devices - Permission granted");
         return true;
-      } else if (Platform.isAndroid && 
-        await DeviceInfoPlugin().androidInfo.then((value) => value.version.sdkInt) < 31) {
+      } else if (Platform.isAndroid &&
+          await DeviceInfoPlugin()
+                  .androidInfo
+                  .then((value) => value.version.sdkInt) <
+              31) {
         Logger.log("Nearby Devices - Android version is below 12.0");
         return true;
       } else {
