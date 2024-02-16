@@ -25,6 +25,7 @@ class _CharacterPageState extends State<CharacterPage> {
   late TextEditingController _descriptionController;
   late TextEditingController _personalityController;
   late TextEditingController _scenarioController;
+  late TextEditingController _greetingController;
   late TextEditingController _systemController;
   late List<TextEditingController> _exampleControllers;
 
@@ -42,6 +43,7 @@ class _CharacterPageState extends State<CharacterPage> {
     _descriptionController = TextEditingController(text: character.description);
     _personalityController = TextEditingController(text: character.personality);
     _scenarioController = TextEditingController(text: character.scenario);
+    _greetingController = TextEditingController(text: character.greeting);
     _systemController = TextEditingController(text: character.system);
 
     _exampleControllers = List.generate(
@@ -307,6 +309,15 @@ class _CharacterPageState extends State<CharacterPage> {
                         controller: _scenarioController,
                         onChanged: (value) {
                           character.setScenario(value);
+                        },
+                        multiline: true,
+                      ),
+                      TextFieldListTile(
+                        headingText: 'Greeting',
+                        labelText: 'Greeting',
+                        controller: _greetingController,
+                        onChanged: (value) {
+                          character.setGreeting(value);
                         },
                         multiline: true,
                       ),

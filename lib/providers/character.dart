@@ -16,6 +16,7 @@ class Character extends ChangeNotifier {
   String _description = "";
   String _personality = "";
   String _scenario = "";
+  String _greeting = "";
   String _system = "";
 
   bool _useExamples = true;
@@ -72,6 +73,7 @@ class Character extends ChangeNotifier {
     _description = inputJson["description"] ?? "";
     _personality = inputJson["personality"] ?? "";
     _scenario = inputJson["scenario"] ?? "";
+    _greeting = inputJson["first_mes"] ?? "";
     _system = inputJson["system_prompt"] ?? "";
 
     _useExamples = inputJson["use_examples"] ?? true;
@@ -93,6 +95,7 @@ class Character extends ChangeNotifier {
     jsonCharacter["description"] = _description;
     jsonCharacter["personality"] = _personality;
     jsonCharacter["scenario"] = _scenario;
+    jsonCharacter["first_mes"] = _greeting;
     jsonCharacter["system_prompt"] = _system;
 
     jsonCharacter["use_examples"] = _useExamples;
@@ -118,6 +121,11 @@ class Character extends ChangeNotifier {
 
   void setScenario(String newScenario) {
     _scenario = newScenario;
+    notifyListeners();
+  }
+
+  void setGreeting(String newGreeting) {
+    _greeting = newGreeting;
     notifyListeners();
   }
 
@@ -171,6 +179,8 @@ class Character extends ChangeNotifier {
   String get personality => _personality;
 
   String get scenario => _scenario;
+
+  String get greeting => _greeting;
 
   String get system => _system;
 
@@ -245,6 +255,7 @@ class Character extends ChangeNotifier {
         "description": _description,
         "personality": _personality,
         "scenario": _scenario,
+        "first_mes": _greeting,
         "system_prompt": _system,
         "examples": json.encode(_examples),
       };
@@ -275,6 +286,7 @@ class Character extends ChangeNotifier {
         _description = image.textData!["description"] ?? "";
         _personality = image.textData!["personality"] ?? "";
         _scenario = image.textData!["scenario"] ?? "";
+        _greeting = image.textData!["first_mes"] ?? "";
         _system = image.textData!["system_prompt"] ?? "";
         _examples = List<Map<String,dynamic>>.from(json.decode(image.textData!["examples"] ?? "[]"));        
       }
