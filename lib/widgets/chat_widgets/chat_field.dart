@@ -34,12 +34,14 @@ class _ChatFieldState extends State<ChatField> {
       Logger.log("Error: $err");
     });
 
-    // For sharing or opening text coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialMedia().then((value) {
-      setState(() {
-        _promptController.text = value.first.path;
+    if (Platform.isAndroid || Platform.isIOS) {
+      // For sharing or opening text coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialMedia().then((value) {
+        setState(() {
+          _promptController.text = value.first.path;
+        });
       });
-    });
+    }
   }
 
   @override
