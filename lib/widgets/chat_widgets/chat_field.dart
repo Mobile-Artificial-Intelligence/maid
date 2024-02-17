@@ -24,17 +24,17 @@ class _ChatFieldState extends State<ChatField> {
   @override
   void initState() {
     super.initState();
-    // For sharing or opening text coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription =
-        ReceiveSharingIntent.getMediaStream().listen((value) {
-      setState(() {
-        _promptController.text = value.first.path;
-      });
-    }, onError: (err) {
-      Logger.log("Error: $err");
-    });
-
     if (Platform.isAndroid || Platform.isIOS) {
+      // For sharing or opening text coming from outside the app while the app is in the memory
+      _intentDataStreamSubscription =
+          ReceiveSharingIntent.getMediaStream().listen((value) {
+        setState(() {
+          _promptController.text = value.first.path;
+        });
+      }, onError: (err) {
+        Logger.log("Error: $err");
+      });
+
       // For sharing or opening text coming from outside the app while the app is closed
       ReceiveSharingIntent.getInitialMedia().then((value) {
         setState(() {

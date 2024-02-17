@@ -16,9 +16,11 @@ class Character extends ChangeNotifier {
   String _description = "";
   String _personality = "";
   String _scenario = "";
+
+  bool _useGreeting = false;
   String _greeting = "";
   String _system = "";
-
+  
   bool _useExamples = true;
   List<Map<String,dynamic>> _examples = [];
 
@@ -73,6 +75,7 @@ class Character extends ChangeNotifier {
     _description = inputJson["description"] ?? "";
     _personality = inputJson["personality"] ?? "";
     _scenario = inputJson["scenario"] ?? "";
+    _useGreeting = inputJson["use_first_mes"] ?? false;
     _greeting = inputJson["first_mes"] ?? "";
     _system = inputJson["system_prompt"] ?? "";
 
@@ -95,6 +98,7 @@ class Character extends ChangeNotifier {
     jsonCharacter["description"] = _description;
     jsonCharacter["personality"] = _personality;
     jsonCharacter["scenario"] = _scenario;
+    jsonCharacter["use_first_mes"] = _useGreeting;
     jsonCharacter["first_mes"] = _greeting;
     jsonCharacter["system_prompt"] = _system;
 
@@ -121,6 +125,11 @@ class Character extends ChangeNotifier {
 
   void setScenario(String newScenario) {
     _scenario = newScenario;
+    notifyListeners();
+  }
+
+  void setUseGreeting(bool useGreeting) {
+    _useGreeting = useGreeting;
     notifyListeners();
   }
 
@@ -179,6 +188,8 @@ class Character extends ChangeNotifier {
   String get personality => _personality;
 
   String get scenario => _scenario;
+
+  bool get useGreeting => _useGreeting;
 
   String get greeting => _greeting;
 

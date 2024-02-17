@@ -80,7 +80,7 @@ class Session extends ChangeNotifier {
   Key get key => _root.key;
 
   Future<void> add(Key key,
-      {String message = "", bool userGenerated = false}) async {
+      {String message = "", bool userGenerated = false, bool notify = true}) async {
     final node =
         ChatNode(key: key, message: message, userGenerated: userGenerated);
 
@@ -90,17 +90,14 @@ class Session extends ChangeNotifier {
     } else {
       tail ??= _root.findTail();
 
-      if (tail!.userGenerated == userGenerated) {
-        stream(message);
-        finalise();
-      } else {
-        tail!.children.add(node);
-        tail!.currentChild = key;
-        tail = tail!.findTail();
-      }
+      tail!.children.add(node);
+      tail!.currentChild = key;
+      tail = tail!.findTail();
     }
 
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   void remove(Key key) {

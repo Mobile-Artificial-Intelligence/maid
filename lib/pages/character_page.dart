@@ -19,7 +19,6 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterPageState extends State<CharacterPage> {
   static Map<String, dynamic> _characters = {};
-  late Character cachedCharacter;
 
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
@@ -73,8 +72,6 @@ class _CharacterPageState extends State<CharacterPage> {
         ),
         body: Consumer<Character>(
           builder: (context, character, child) {
-            cachedCharacter = character;
-
             return Stack(
               children: [
                 SingleChildScrollView(
@@ -312,15 +309,24 @@ class _CharacterPageState extends State<CharacterPage> {
                         },
                         multiline: true,
                       ),
-                      TextFieldListTile(
-                        headingText: 'Greeting',
-                        labelText: 'Greeting',
-                        controller: _greetingController,
+                      SwitchListTile(
+                        title: const Text('Use Greeting'),
+                        value: character.useGreeting,
                         onChanged: (value) {
-                          character.setGreeting(value);
+                          character.setUseGreeting(value);
                         },
-                        multiline: true,
                       ),
+                      if (character.useGreeting) ...[
+                        TextFieldListTile(
+                          headingText: 'Greeting',
+                          labelText: 'Greeting',
+                          controller: _greetingController,
+                          onChanged: (value) {
+                            character.setGreeting(value);
+                          },
+                          multiline: true,
+                        ),
+                      ],
                       TextFieldListTile(
                         headingText: 'System Prompt',
                         labelText: 'System Prompt',
