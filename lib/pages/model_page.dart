@@ -24,7 +24,6 @@ class ModelPage extends StatefulWidget {
 
 class _ModelPageState extends State<ModelPage> {
   late Map<String, dynamic> _models;
-  late Model cachedModel;
   late TextEditingController _presetController;
 
   @override
@@ -45,9 +44,6 @@ class _ModelPageState extends State<ModelPage> {
   @override
   void dispose() {
     SharedPreferences.getInstance().then((prefs) {
-      _models[cachedModel.preset] = cachedModel.toMap();
-      Logger.log("Model Saved: ${cachedModel.parameters["path"]}");
-
       prefs.setString("models", json.encode(_models));
     });
 
@@ -73,11 +69,11 @@ class _ModelPageState extends State<ModelPage> {
           title: const Text("Model"),
         ),
         body: Consumer<Model>(builder: (context, model, child) {
-          cachedModel = model;
+          _models[model.preset] = model.toMap();
 
-          if (_models.isEmpty) {
-            _models[model.preset] = model.toMap();
-          }
+          SharedPreferences.getInstance().then((prefs) {
+            prefs.setString("last_model", json.encode(model.toMap()));
+          });
 
           return Stack(
             children: [

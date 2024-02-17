@@ -19,7 +19,6 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterPageState extends State<CharacterPage> {
   late Map<String, dynamic> _characters;
-  late Character cachedCharacter;
 
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
@@ -59,8 +58,6 @@ class _CharacterPageState extends State<CharacterPage> {
   @override
   void dispose() {
     SharedPreferences.getInstance().then((prefs) {
-      _characters[cachedCharacter.name] = cachedCharacter.toMap();
-      Logger.log("Character Saved: ${cachedCharacter.name}");
       prefs.setString("characters", json.encode(_characters));
     });
 
@@ -87,7 +84,11 @@ class _CharacterPageState extends State<CharacterPage> {
         ),
         body: Consumer<Character>(
           builder: (context, character, child) {
-            cachedCharacter = character;
+            _characters[character.name] = character.toMap();
+
+            SharedPreferences.getInstance().then((prefs) {
+              prefs.setString("last_character", json.encode(character.toMap()));
+            });
 
             return Stack(
               children: [

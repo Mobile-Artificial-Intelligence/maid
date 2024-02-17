@@ -15,7 +15,6 @@ class SessionsPage extends StatefulWidget {
 
 class _SessionsPageState extends State<SessionsPage> {
   late Map<String, dynamic> _sessions;
-  late Session cachedSession;
 
   @override
   void initState() {
@@ -36,12 +35,6 @@ class _SessionsPageState extends State<SessionsPage> {
   @override
   void dispose() {
     SharedPreferences.getInstance().then((prefs) {
-      String key = cachedSession.rootMessage;
-      if (key.isEmpty) key = "Session";
-
-      _sessions[key] = cachedSession.toMap();
-      Logger.log("Session Saved: $key");
-
       prefs.setString("sessions", json.encode(_sessions));
     });
 
@@ -68,7 +61,14 @@ class _SessionsPageState extends State<SessionsPage> {
       ),
       body: Consumer<Session>(
         builder: (context, session, child) {
-          cachedSession = session;
+          String key = session.rootMessage;
+          if (key.isEmpty) key = "Session";
+
+          _sessions[key] = session.toMap();
+
+          SharedPreferences.getInstance().then((prefs) {
+            prefs.setString("last_session", json.encode(session.toMap()));
+          });
 
           return Column(
             children: [

@@ -51,7 +51,6 @@ class MainProvider extends ChangeNotifier {
 
   void init() {
     _initialised = true;
-    notifyListeners();
   }
 
   void reset() {
@@ -85,12 +84,6 @@ class MaidAppState extends State<MaidApp> {
           character.init();
           session.init();
         }
-
-        SharedPreferences.getInstance().then((prefs) {
-          prefs.setString("last_session", json.encode(session.toMap()));
-          prefs.setString("last_character", json.encode(character.toMap()));
-          prefs.setString("last_model", json.encode(model.toMap()));
-        });
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,
