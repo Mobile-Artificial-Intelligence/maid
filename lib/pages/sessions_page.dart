@@ -14,7 +14,7 @@ class SessionsPage extends StatefulWidget {
 }
 
 class _SessionsPageState extends State<SessionsPage> {
-  static Map<String, dynamic> _sessions = {};
+  final Map<String, dynamic> _sessions = {};
   late Session cachedSession;
 
   @override

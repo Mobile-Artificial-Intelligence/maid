@@ -23,7 +23,7 @@ class ModelPage extends StatefulWidget {
 }
 
 class _ModelPageState extends State<ModelPage> {
-  static Map<String, dynamic> _models = {};
+  final Map<String, dynamic> _models = {};
   late Model cachedModel;
   late TextEditingController _presetController;
 

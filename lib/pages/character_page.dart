@@ -18,7 +18,7 @@ class CharacterPage extends StatefulWidget {
 }
 
 class _CharacterPageState extends State<CharacterPage> {
-  static Map<String, dynamic> _characters = {};
+  final Map<String, dynamic> _characters = {};
   late Character cachedCharacter;
 
   late TextEditingController _nameController;
