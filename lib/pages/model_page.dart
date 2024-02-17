@@ -32,11 +32,13 @@ class _ModelPageState extends State<ModelPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
-      _models = json.decode(prefs.getString("models") ?? "{}");
+      final loadedModels = json.decode(prefs.getString("models") ?? "{}");
+      _models.addAll(loadedModels);
       setState(() {});
     });
 
     final model = context.read<Model>();
+    _models[model.preset] = model.toMap();
     _presetController = TextEditingController(text: model.preset);
   }
 
@@ -72,6 +74,10 @@ class _ModelPageState extends State<ModelPage> {
         ),
         body: Consumer<Model>(builder: (context, model, child) {
           cachedModel = model;
+
+          if (_models.isEmpty) {
+            _models[model.preset] = model.toMap();
+          }
 
           return Stack(
             children: [

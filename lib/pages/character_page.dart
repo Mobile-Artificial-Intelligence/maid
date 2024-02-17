@@ -34,11 +34,14 @@ class _CharacterPageState extends State<CharacterPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
-      _characters = json.decode(prefs.getString("characters") ?? "{}");
+      final loadedCharacters = json.decode(prefs.getString("characters") ?? "{}");
+      _characters.addAll(loadedCharacters);
       setState(() {});
     });
 
     final character = context.read<Character>();
+    _characters[character.name] = character.toMap();
+
     _nameController = TextEditingController(text: character.name);
     _descriptionController = TextEditingController(text: character.description);
     _personalityController = TextEditingController(text: character.personality);
