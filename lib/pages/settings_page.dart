@@ -34,43 +34,45 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         title: const Text("Settings"),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SwitchListTile(
-              title: const Text('Theme (Light/Dark)'),
-              value: Provider.of<MainProvider>(context, listen: false).isDarkMode,
-              onChanged: (value) {
-                Provider.of<MainProvider>(context, listen: false).toggleTheme();
-              },
+      body: Consumer<MainProvider>(
+        builder: (context, mainProvider, child) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                SwitchListTile(
+                  title: const Text('Theme (Light/Dark)'),
+                  value: mainProvider.isDarkMode,
+                  onChanged: (value) {
+                    mainProvider.toggleTheme();
+                  },
+                ),
+                FilledButton(
+                  onPressed: () {
+                    SharedPreferences.getInstance().then((prefs) {
+                      prefs.clear();
+                      mainProvider.reset();
+                      setState(() {
+                        Logger.clear();
+                      });
+                    });
+                  },
+                  child: Text("Clear Cache",
+                      style: Theme.of(context).textTheme.labelLarge),
+                ),
+                Divider(
+                  height: 20,
+                  indent: 10,
+                  endIndent: 10,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: CodeBox(code: Logger.getLog)),
+              ],
             ),
-            FilledButton(
-              onPressed: () {
-                SharedPreferences.getInstance().then((prefs) {
-                  prefs.clear();
-                  context.read<Model>().init();
-                  context.read<Character>().init();
-                  context.read<Session>().init();
-                  setState(() {
-                    Logger.clear();
-                  });
-                });
-              },
-              child: Text("Clear Cache",
-                  style: Theme.of(context).textTheme.labelLarge),
-            ),
-            Divider(
-              height: 20,
-              indent: 10,
-              endIndent: 10,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            Padding(
-                padding: const EdgeInsets.all(10),
-                child: CodeBox(code: Logger.getLog)),
-          ],
-        ),
-      )
+          );
+        },
+      ),
     );
   }
 }

@@ -18,7 +18,7 @@ class CharacterPage extends StatefulWidget {
 }
 
 class _CharacterPageState extends State<CharacterPage> {
-  static Map<String, dynamic> _characters = {};
+  late Map<String, dynamic> _characters;
   late Character cachedCharacter;
 
   late TextEditingController _nameController;
@@ -40,7 +40,7 @@ class _CharacterPageState extends State<CharacterPage> {
     });
 
     final character = context.read<Character>();
-    _characters[character.name] = character.toMap();
+    _characters = {character.name: character.toMap()};
 
     _nameController = TextEditingController(text: character.name);
     _descriptionController = TextEditingController(text: character.description);

@@ -14,7 +14,7 @@ class SessionsPage extends StatefulWidget {
 }
 
 class _SessionsPageState extends State<SessionsPage> {
-  static Map<String, dynamic> _sessions = {};
+  late Map<String, dynamic> _sessions;
   late Session cachedSession;
 
   @override
@@ -30,7 +30,7 @@ class _SessionsPageState extends State<SessionsPage> {
     final session = context.read<Session>();
     String key = session.rootMessage;
     if (key.isEmpty) key = "Session";
-    _sessions[key] = session.toMap();
+    _sessions = {key: session.toMap()};
   }
 
   @override
