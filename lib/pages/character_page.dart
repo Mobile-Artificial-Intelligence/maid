@@ -19,6 +19,7 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterPageState extends State<CharacterPage> {
   static Map<String, dynamic> _characters = {};
+  late Character cachedCharacter;
 
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
@@ -53,6 +54,17 @@ class _CharacterPageState extends State<CharacterPage> {
   }
 
   @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      _characters[cachedCharacter.name] = cachedCharacter.toMap();
+      Logger.log("Character Saved: ${cachedCharacter.name}");
+      prefs.setString("characters", json.encode(_characters));
+    });
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -72,6 +84,8 @@ class _CharacterPageState extends State<CharacterPage> {
         ),
         body: Consumer<Character>(
           builder: (context, character, child) {
+            cachedCharacter = character;
+
             return Stack(
               children: [
                 SingleChildScrollView(

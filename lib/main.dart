@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,6 +80,11 @@ class MaidAppState extends State<MaidApp> {
           character.init();
           session.init();
         }
+
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString("last_session", json.encode(session.toMap()));
+          prefs.setString("last_character", json.encode(character.toMap()));
+        });
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,

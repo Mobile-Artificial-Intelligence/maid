@@ -47,7 +47,6 @@ class _ModelPageState extends State<ModelPage> {
       Logger.log("Model Saved: ${cachedModel.parameters["path"]}");
 
       prefs.setString("models", json.encode(_models));
-      prefs.setString("last_model", json.encode(cachedModel.toMap()));
     });
 
     super.dispose();

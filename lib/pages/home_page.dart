@@ -222,10 +222,6 @@ class HomePageState extends State<HomePage> {
       drawer: _buildDrawer(aspectRatio),
       body: Consumer2<Session, Character>(
         builder: (context, session, character, child) {
-          SharedPreferences.getInstance().then((prefs) {
-            prefs.setString("last_session", json.encode(session.toMap()));
-          });
-
           Map<Key, bool> history = session.history();
 
           if (history.isEmpty && character.useGreeting) {
