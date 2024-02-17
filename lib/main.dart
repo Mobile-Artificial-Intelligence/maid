@@ -53,6 +53,11 @@ class MainProvider extends ChangeNotifier {
     _initialised = true;
     notifyListeners();
   }
+
+  void reset() {
+    _initialised = false;
+    notifyListeners();
+  }
 }
 
 class MaidApp extends StatefulWidget {
@@ -84,6 +89,7 @@ class MaidAppState extends State<MaidApp> {
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("last_session", json.encode(session.toMap()));
           prefs.setString("last_character", json.encode(character.toMap()));
+          prefs.setString("last_model", json.encode(model.toMap()));
         });
 
         return MaterialApp(

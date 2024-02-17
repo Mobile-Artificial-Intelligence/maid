@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:maid/pages/about_page.dart';
 import 'package:maid/pages/character_page.dart';
@@ -12,7 +10,6 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/widgets/chat_widgets/chat_field.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final String title;

@@ -23,7 +23,7 @@ class ModelPage extends StatefulWidget {
 }
 
 class _ModelPageState extends State<ModelPage> {
-  final Map<String, dynamic> _models = {};
+  late Map<String, dynamic> _models;
   late Model cachedModel;
   late TextEditingController _presetController;
 
@@ -38,7 +38,7 @@ class _ModelPageState extends State<ModelPage> {
     });
 
     final model = context.read<Model>();
-    _models[model.preset] = model.toMap();
+    _models = {model.preset: model.toMap()};
     _presetController = TextEditingController(text: model.preset);
   }
 
