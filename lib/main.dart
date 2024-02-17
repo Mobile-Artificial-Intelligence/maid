@@ -1,7 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:maid/pages/home_page.dart';
 import 'package:maid/providers/model.dart';
 import 'package:maid/providers/session.dart';
@@ -9,15 +9,10 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.dark),
-  );
 
   if (Platform.isWindows) {
     Llama.libraryPath = 'bin/llama.dll';
@@ -40,14 +35,22 @@ void main() {
 
 class MainProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.dark;
+  bool _initialised = false;
 
   ThemeMode get themeMode => _themeMode;
 
   bool get isDarkMode => _themeMode == ThemeMode.dark;
 
+  bool get initialised => _initialised;
+
   void toggleTheme() {
     _themeMode =
         _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    notifyListeners();
+  }
+
+  void init() {
+    _initialised = true;
     notifyListeners();
   }
 }
@@ -61,24 +64,36 @@ class MaidApp extends StatefulWidget {
 
 class MaidAppState extends State<MaidApp> {
   @override
-  void initState() {
-    super.initState();
-    context.read<Model>().init();
-    context.read<Character>().init();
-    context.read<Session>().init();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Consumer<MainProvider>(
-      builder: (context, mainProvider, child) {
+    return Consumer4<MainProvider, Model, Character, Session>(
+      builder: (
+        context, 
+        mainProvider, 
+        model, 
+        character, 
+        session, 
+        child
+      ) {
+        if (!mainProvider.initialised) {
+          mainProvider.init();
+          model.init();
+          character.init();
+          session.init();
+        }
+
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString("last_session", json.encode(session.toMap()));
+          prefs.setString("last_character", json.encode(character.toMap()));
+        });
+
         return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Maid',
-            theme: Themes.lightTheme(),
-            darkTheme: Themes.darkTheme(),
-            themeMode: mainProvider.themeMode,
-            home: const HomePage(title: "Maid"));
+          debugShowCheckedModeBanner: false,
+          title: 'Maid',
+          theme: Themes.lightTheme(),
+          darkTheme: Themes.darkTheme(),
+          themeMode: mainProvider.themeMode,
+          home: const HomePage(title: "Maid")
+        );
       },
     );
   }

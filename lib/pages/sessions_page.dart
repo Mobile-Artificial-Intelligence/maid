@@ -22,9 +22,15 @@ class _SessionsPageState extends State<SessionsPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
-      _sessions = json.decode(prefs.getString("sessions") ?? "{}");
+      final loadedSessions = json.decode(prefs.getString("sessions") ?? "{}");
+      _sessions.addAll(loadedSessions);
       setState(() {});
     });
+
+    final session = context.read<Session>();
+    String key = session.rootMessage;
+    if (key.isEmpty) key = "Session";
+    _sessions[key] = session.toMap();
   }
 
   @override

@@ -25,6 +25,7 @@ class _CharacterPageState extends State<CharacterPage> {
   late TextEditingController _descriptionController;
   late TextEditingController _personalityController;
   late TextEditingController _scenarioController;
+  late TextEditingController _greetingController;
   late TextEditingController _systemController;
   late List<TextEditingController> _exampleControllers;
 
@@ -33,15 +34,19 @@ class _CharacterPageState extends State<CharacterPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
-      _characters = json.decode(prefs.getString("characters") ?? "{}");
+      final loadedCharacters = json.decode(prefs.getString("characters") ?? "{}");
+      _characters.addAll(loadedCharacters);
       setState(() {});
     });
 
     final character = context.read<Character>();
+    _characters[character.name] = character.toMap();
+
     _nameController = TextEditingController(text: character.name);
     _descriptionController = TextEditingController(text: character.description);
     _personalityController = TextEditingController(text: character.personality);
     _scenarioController = TextEditingController(text: character.scenario);
+    _greetingController = TextEditingController(text: character.greeting);
     _systemController = TextEditingController(text: character.system);
 
     _exampleControllers = List.generate(
@@ -49,6 +54,17 @@ class _CharacterPageState extends State<CharacterPage> {
       (index) =>
           TextEditingController(text: character.examples[index]["content"]),
     );
+  }
+
+  @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      _characters[cachedCharacter.name] = cachedCharacter.toMap();
+      Logger.log("Character Saved: ${cachedCharacter.name}");
+      prefs.setString("characters", json.encode(_characters));
+    });
+
+    super.dispose();
   }
 
   @override
@@ -310,6 +326,24 @@ class _CharacterPageState extends State<CharacterPage> {
                         },
                         multiline: true,
                       ),
+                      SwitchListTile(
+                        title: const Text('Use Greeting'),
+                        value: character.useGreeting,
+                        onChanged: (value) {
+                          character.setUseGreeting(value);
+                        },
+                      ),
+                      if (character.useGreeting) ...[
+                        TextFieldListTile(
+                          headingText: 'Greeting',
+                          labelText: 'Greeting',
+                          controller: _greetingController,
+                          onChanged: (value) {
+                            character.setGreeting(value);
+                          },
+                          multiline: true,
+                        ),
+                      ],
                       TextFieldListTile(
                         headingText: 'System Prompt',
                         labelText: 'System Prompt',

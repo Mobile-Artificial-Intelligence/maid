@@ -6,6 +6,7 @@ import 'package:maid/pages/character_page.dart';
 import 'package:maid/pages/model_page.dart';
 import 'package:maid/pages/sessions_page.dart';
 import 'package:maid/pages/settings_page.dart';
+import 'package:maid/providers/character.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/widgets/chat_widgets/chat_message.dart';
@@ -219,13 +220,16 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: _buildAppBar(aspectRatio),
       drawer: _buildDrawer(aspectRatio),
-      body: Consumer<Session>(
-        builder: (context, session, child) {
-          SharedPreferences.getInstance().then((prefs) {
-            prefs.setString("last_session", json.encode(session.toMap()));
-          });
-
+      body: Consumer2<Session, Character>(
+        builder: (context, session, character, child) {
           Map<Key, bool> history = session.history();
+
+          if (history.isEmpty && character.useGreeting) {
+            final newKey = UniqueKey();
+            session.add(newKey, message: character.greeting, userGenerated: false, notify: false);
+            history = {newKey: false};
+          }
+
           chatWidgets.clear();
           for (var key in history.keys) {
             chatWidgets.add(ChatMessage(
