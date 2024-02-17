@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/model.dart';
-import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/main.dart';
 import 'package:maid/widgets/chat_widgets/code_box.dart';

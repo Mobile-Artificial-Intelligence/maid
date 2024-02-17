@@ -13,8 +13,8 @@ class NBatchParameter extends StatelessWidget {
           labelText: 'n_batch',
           inputValue: model.parameters["n_batch"] ?? 8,
           sliderMin: 1.0,
-          sliderMax: 4096.0,
-          sliderDivisions: 4095,
+          sliderMax: 512.0,
+          sliderDivisions: 511,
           onValueChanged: (value) {
             model.setParameter("n_batch", value.round());
           });
