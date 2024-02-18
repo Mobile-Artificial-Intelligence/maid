@@ -11,10 +11,10 @@ class NBatchParameter extends StatelessWidget {
     return Consumer<Model>(builder: (context, model, child) {
       return SliderListTile(
           labelText: 'n_batch',
-          inputValue: model.parameters["n_batch"] ?? 8,
+          inputValue: model.parameters["n_batch"] ?? 512,
           sliderMin: 1.0,
-          sliderMax: 512.0,
-          sliderDivisions: 511,
+          sliderMax: 4096.0,
+          sliderDivisions: 4095,
           onValueChanged: (value) {
             model.setParameter("n_batch", value.round());
           });
