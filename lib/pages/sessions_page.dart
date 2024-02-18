@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/session.dart';
+import 'package:maid/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,6 +17,8 @@ class SessionsPage extends StatefulWidget {
 class _SessionsPageState extends State<SessionsPage> {
   late Map<String, dynamic> _sessions;
 
+  late TextEditingController _userNameController;
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +30,7 @@ class _SessionsPageState extends State<SessionsPage> {
     });
 
     final session = context.read<Session>();
+    _userNameController = TextEditingController(text: session.userName);
     String key = session.rootMessage;
     if (key.isEmpty) key = "Session";
     _sessions = {key: session.toMap()};
@@ -72,6 +76,15 @@ class _SessionsPageState extends State<SessionsPage> {
 
           return Column(
             children: [
+              const SizedBox(height: 20.0),
+              TextFieldListTile(
+                headingText: 'User Name',
+                labelText: 'User Name',
+                controller: _userNameController,
+                onChanged: (value) {
+                  session.userName = value;
+                }
+              ),
               const SizedBox(height: 20.0),
               FilledButton(
                 onPressed: () {
