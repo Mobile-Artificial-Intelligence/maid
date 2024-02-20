@@ -9,6 +9,7 @@ class ToggleableTextFieldListTile extends StatefulWidget {
   final void Function(String)? onSubmitted;
   final void Function(String)? onChanged;
   final void Function(bool)? onSwitchChanged; // Callback for switch change
+  final bool initialSwitchState; // Expose the initial state of the switch
 
   const ToggleableTextFieldListTile({super.key,
     required this.headingText,
@@ -19,6 +20,7 @@ class ToggleableTextFieldListTile extends StatefulWidget {
     this.onSubmitted,
     this.onChanged,
     this.onSwitchChanged,
+    this.initialSwitchState = true, // Default to true if not provided
   });
 
   @override
@@ -27,12 +29,13 @@ class ToggleableTextFieldListTile extends StatefulWidget {
 
 class _ToggleableTextFieldListTileState extends State<ToggleableTextFieldListTile> {
   late TextEditingController _controller;
-  bool _isTextFieldEnabled = true; // Initial state of the text field
+  late bool _isTextFieldEnabled; // Changed to late initialization
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
+    _isTextFieldEnabled = widget.initialSwitchState; // Initialize with the provided initial state
   }
 
   @override
@@ -63,10 +66,10 @@ class _ToggleableTextFieldListTileState extends State<ToggleableTextFieldListTil
             value: _isTextFieldEnabled,
             onChanged: (value) {
               setState(() {
-                _isTextFieldEnabled = value; // Update the state to enable/disable the TextField
+                _isTextFieldEnabled = value;
               });
               if (widget.onSwitchChanged != null) {
-                widget.onSwitchChanged!(value); // Call the callback function if provided
+                widget.onSwitchChanged!(value);
               }
             },
           ),
