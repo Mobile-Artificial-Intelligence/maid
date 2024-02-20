@@ -37,7 +37,19 @@ class _CharacterPageState extends State<CharacterPage> {
       _characters.addAll(loadedCharacters);
       setState(() {});
     });
+  }
 
+  @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("characters", json.encode(_characters));
+    });
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final character = context.read<Character>();
     _characters = {character.name: character.toMap()};
 
@@ -53,19 +65,7 @@ class _CharacterPageState extends State<CharacterPage> {
       (index) =>
           TextEditingController(text: character.examples[index]["content"]),
     );
-  }
 
-  @override
-  void dispose() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("characters", json.encode(_characters));
-    });
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
@@ -239,6 +239,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         leftOnPressed: () async {
                           await storageOperationDialog(
                               context, character.importImage);
+                          setState(() {});
                         },
                         rightText: "Save Image",
                         rightOnPressed: () async {
@@ -253,6 +254,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         leftOnPressed: () async {
                           await storageOperationDialog(
                               context, character.importJSON);
+                          setState(() {});
                         },
                         rightText: "Save JSON",
                         rightOnPressed: () async {
@@ -369,34 +371,34 @@ class _CharacterPageState extends State<CharacterPage> {
                       if (character.useExamples) ...[
                         DoubleButtonRow(
                           leftText: "Add Example",
+                          // Adding a new example
                           leftOnPressed: () {
-                            _exampleControllers.addAll([
-                              TextEditingController(),
-                              TextEditingController()
-                            ]);
+                            _exampleControllers.add(TextEditingController()); // For the user part
+                            _exampleControllers.add(TextEditingController()); // For the assistant part
                             character.newExample();
                           },
                           rightText: "Remove Example",
+                          // Removing the last example
                           rightOnPressed: () {
-                            _exampleControllers.removeRange(
-                                _exampleControllers.length - 2,
-                                _exampleControllers.length);
-                            character.removeLastExample();
+                            if (_exampleControllers.length >= 2) {
+                              _exampleControllers.removeLast(); // Remove assistant part controller
+                              _exampleControllers.removeLast(); // Remove user part controller
+                              character.removeLastExample();
+                            }
                           },
                         ),
                         const SizedBox(height: 10.0),
-                        ...List.generate(
-                          character.examples.length,
-                          (index) => TextFieldListTile(
-                            headingText:
-                                '${character.examples[index]["role"]} content',
-                            labelText: character.examples[index]["role"],
-                            controller: _exampleControllers[index],
-                            onChanged: (value) {
-                              character.updateExample(index, value);
-                            },
-                          ),
-                        ),
+                        if (character.examples.isNotEmpty) ...[
+                          for (int i = 0; i < character.examples.length; i++)
+                            TextFieldListTile(
+                              headingText:'${character.examples[i]["role"]} content',
+                              labelText: character.examples[i]["role"],
+                              controller: _exampleControllers[i],
+                              onChanged: (value) {
+                                character.updateExample(i, value);
+                              },
+                            ),
+                        ],
                       ]
                     ],
                   ),
