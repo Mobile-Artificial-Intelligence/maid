@@ -7,6 +7,7 @@ import 'package:maid/static/logger.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/double_button_row.dart';
 import 'package:maid/widgets/text_field_list_tile.dart';
+import 'package:maid/widgets/toggleable_text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -329,24 +330,18 @@ class _CharacterPageState extends State<CharacterPage> {
                         },
                         multiline: true,
                       ),
-                      SwitchListTile(
-                        title: const Text('Use Greeting'),
-                        value: character.useGreeting,
+                      ToggleableTextFieldListTile(
+                        headingText: 'Greeting',
+                        labelText: 'Greeting',
+                        controller: _greetingController,
                         onChanged: (value) {
+                          character.setGreeting(value);
+                        },
+                        multiline: true,
+                        onSwitchChanged: (value) {
                           character.setUseGreeting(value);
                         },
                       ),
-                      if (character.useGreeting) ...[
-                        TextFieldListTile(
-                          headingText: 'Greeting',
-                          labelText: 'Greeting',
-                          controller: _greetingController,
-                          onChanged: (value) {
-                            character.setGreeting(value);
-                          },
-                          multiline: true,
-                        ),
-                      ],
                       TextFieldListTile(
                         headingText: 'System Prompt',
                         labelText: 'System Prompt',
