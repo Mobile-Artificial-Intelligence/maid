@@ -47,16 +47,12 @@ class FileManager {
 
     String? result;
 
-    Directory initialDirectory;
     if (Platform.isAndroid) {
-      initialDirectory = Directory("storage/emulated/0");
-
       if (!context.mounted) return null;
 
       result = await FilesystemPicker.open(
         allowedExtensions: allowedExtensions,
         context: context,
-        rootDirectory: initialDirectory,
         fileTileSelectMode: FileTileSelectMode.wholeTile,
         fsType: FilesystemType.file,
         shortcuts: [
@@ -97,16 +93,12 @@ class FileManager {
 
     String? result;
 
-    Directory initialDirectory;
     if (Platform.isAndroid) {
-      initialDirectory = Directory("storage/emulated/0");
-
       if (!context.mounted) return null;
 
       result = await FilesystemPicker.open(
         title: 'Save to folder',
         context: context,
-        rootDirectory: initialDirectory,
         fsType: FilesystemType.folder,
         pickText: 'Save file to this folder',
         shortcuts: [
