@@ -80,10 +80,7 @@ class Character extends ChangeNotifier {
     _system = inputJson["system_prompt"] ?? "";
 
     _useExamples = inputJson["use_examples"] ?? true;
-    if (inputJson["examples"] != null) {
-      final length = inputJson["examples"].length ?? 0;
-      _examples = List<Map<String,dynamic>>.generate(length, (i) => inputJson["examples"][i]);
-    }
+    _examples = examplesFromString(inputJson["mes_example"] ?? "");
 
     Logger.log("Character created with name: ${inputJson["name"]}");
     notifyListeners();
@@ -103,7 +100,7 @@ class Character extends ChangeNotifier {
     jsonCharacter["system_prompt"] = _system;
 
     jsonCharacter["use_examples"] = _useExamples;
-    jsonCharacter["examples"] = _examples;
+    jsonCharacter["mes_example"] = examplesToString();
 
     return jsonCharacter;
   }
@@ -268,7 +265,7 @@ class Character extends ChangeNotifier {
         "scenario": _scenario,
         "first_mes": _greeting,
         "system_prompt": _system,
-        "examples": json.encode(_examples),
+        "mes_example": examplesToString(),
       };
 
       File? file = await FileManager.save(context, "$_name.png");
@@ -299,7 +296,7 @@ class Character extends ChangeNotifier {
         _scenario = image.textData!["scenario"] ?? "";
         _greeting = image.textData!["first_mes"] ?? "";
         _system = image.textData!["system_prompt"] ?? "";
-        _examples = List<Map<String,dynamic>>.from(json.decode(image.textData!["examples"] ?? "[]"));        
+        _examples = examplesFromString(image.textData!["mes_example"] ?? "");   
       }
 
       Directory docDir = await getApplicationDocumentsDirectory();
@@ -321,5 +318,48 @@ class Character extends ChangeNotifier {
       Logger.log("Error: $e");
       return "Error: $e";
     }
+  }
+
+  List<Map<String,dynamic>> examplesFromString(String examplesString) {
+    // Split the input string into blocks, each starting with <START>
+    final blocks = examplesString.split(RegExp(r'<START>', caseSensitive: false)).where((block) => block.trim().isNotEmpty);
+
+    List<Map<String, dynamic>> examples = [];
+
+    for (var block in blocks) {
+      // Split each block into lines
+      final lines = block.trim().split('\n').where((line) => line.trim().isNotEmpty);
+
+      for (var line in lines) {
+        final roleAndContent = RegExp(r'\{\{(\w+)\}\}:\s*(.*)');
+        final match = roleAndContent.firstMatch(line.trim());
+
+        if (match != null) {
+          final role = match.group(1)!.toLowerCase() == 'user' ? 'user' : 'assistant';
+          final content = match.group(2)!.trim();
+
+          examples.add({
+            "role": role,
+            "content": content,
+          });
+        }
+      }
+    }
+
+    return examples;
+  }
+
+  String examplesToString() {
+    StringBuffer buffer = StringBuffer();
+
+    for (var i = 0; i < _examples.length; i += 2) {
+      buffer.writeln('<START>');
+      buffer.writeln('{{user}}: ${_examples[i]["content"]}');
+      if (i + 1 < _examples.length) {
+        buffer.writeln('{{char}}:${_examples[i + 1]["content"]}');
+      }
+    }
+
+    return buffer.toString();
   }
 }
