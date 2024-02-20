@@ -341,6 +341,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         onSwitchChanged: (value) {
                           character.setUseGreeting(value);
                         },
+                        initialSwitchState: character.useGreeting,
                       ),
                       TextFieldListTile(
                         headingText: 'System Prompt',
