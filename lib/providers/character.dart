@@ -242,8 +242,6 @@ class Character extends ChangeNotifier {
       }
 
       fromMap(jsonCharacter);
-
-      notifyListeners();
       return "Character Successfully Loaded";
     } catch (e) {
       resetAll();
