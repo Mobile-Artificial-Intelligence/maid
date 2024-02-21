@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:maid/pages/about_page.dart';
 import 'package:maid/pages/character_page.dart';
@@ -223,7 +225,8 @@ class HomePageState extends State<HomePage> {
 
           if (history.isEmpty && character.useGreeting) {
             final newKey = UniqueKey();
-            session.add(newKey, message: character.greeting, userGenerated: false, notify: false);
+            final index = Random().nextInt(character.greetings.length);
+            session.add(newKey, message: character.greetings[index], userGenerated: false, notify: false);
             history = {newKey: false};
           }
 

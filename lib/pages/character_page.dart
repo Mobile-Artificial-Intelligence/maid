@@ -25,8 +25,8 @@ class _CharacterPageState extends State<CharacterPage> {
   late TextEditingController _descriptionController;
   late TextEditingController _personalityController;
   late TextEditingController _scenarioController;
-  late TextEditingController _greetingController;
   late TextEditingController _systemController;
+  late List<TextEditingController> _greetingControllers;
   late List<TextEditingController> _exampleControllers;
 
   @override
@@ -58,8 +58,12 @@ class _CharacterPageState extends State<CharacterPage> {
     _descriptionController = TextEditingController(text: character.description);
     _personalityController = TextEditingController(text: character.personality);
     _scenarioController = TextEditingController(text: character.scenario);
-    _greetingController = TextEditingController(text: character.greeting);
     _systemController = TextEditingController(text: character.system);
+
+    _greetingControllers = List.generate(
+      character.greetings.length,
+      (index) => TextEditingController(text: character.greetings[index]),
+    );
 
     _exampleControllers = List.generate(
       character.examples.length,
@@ -330,19 +334,6 @@ class _CharacterPageState extends State<CharacterPage> {
                         },
                         multiline: true,
                       ),
-                      ToggleableTextFieldListTile(
-                        headingText: 'Greeting',
-                        labelText: 'Greeting',
-                        controller: _greetingController,
-                        onChanged: (value) {
-                          character.setGreeting(value);
-                        },
-                        multiline: true,
-                        onSwitchChanged: (value) {
-                          character.setUseGreeting(value);
-                        },
-                        initialSwitchState: character.useGreeting,
-                      ),
                       TextFieldListTile(
                         headingText: 'System Prompt',
                         labelText: 'System Prompt',
@@ -352,6 +343,42 @@ class _CharacterPageState extends State<CharacterPage> {
                         },
                         multiline: true,
                       ),
+                      Divider(
+                        indent: 10,
+                        endIndent: 10,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      SwitchListTile(
+                        title: const Text('Use Greeting'),
+                        value: character.useGreeting,
+                        onChanged: (value) {
+                          character.setUseGreeting(value);
+                        },
+                      ),
+                      if (character.useGreeting) ...[
+                        DoubleButtonRow(
+                          leftText: "Add Greeting",
+                          leftOnPressed: () {
+                            character.newGreeting();
+                          },
+                          rightText: "Remove Greeting",
+                          rightOnPressed: () {
+                            character.removeLastGreeting();
+                          },
+                        ),
+                        const SizedBox(height: 10.0),
+                        if (character.greetings.isNotEmpty) ...[
+                          for (int i = 0; i < character.greetings.length; i++)
+                            TextFieldListTile(
+                              headingText: 'Greeting $i',
+                              labelText: 'Greeting $i',
+                              controller: _greetingControllers[i],
+                              onChanged: (value) {
+                                character.updateGreeting(i, value);
+                              },
+                            ),
+                        ],
+                      ],
                       Divider(
                         indent: 10,
                         endIndent: 10,
