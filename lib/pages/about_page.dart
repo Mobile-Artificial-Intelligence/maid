@@ -8,25 +8,24 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+        appBar: AppBar(
+          elevation: 0.0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+            ),
+          ),
+          title: const Text("About"),
         ),
-        title: const Text("About"),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 0.0),
-        child: Column(
-          children: [
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 0.0),
+          child: Column(children: [
             const SizedBox(height: 20.0),
             Image.asset(
               "assets/maid.png",
@@ -41,16 +40,15 @@ class AboutPage extends StatelessWidget {
             ),
             const SizedBox(height: 20.0),
             Linkify(
-              onOpen: _onOpen,
-              text: 'Maid is a cross-platform open source app for interacting with GGUF Large Language Models. '
-              'This app is distributed under the MIT License. The source code of this project can be found '
-              'on github ( https://github.com/MaidFoundation/Maid ). This app was originally forked off sherpa which '
-              'can also be found on github ( https://github.com/Bip-Rep/sherpa ). Maid is not affiliated with Meta, '
-              'OpenAI or any other company that provides a model which can be used with this app. Model files are '
-              'not included with this app and must be downloaded separately. Model files can be downloaded online '
-              'at https://huggingface.co',
-              style: Theme.of(context).textTheme.bodyMedium
-            ),
+                onOpen: _onOpen,
+                text:
+                    'Maid is a cross-platform open source app for interacting with GGUF Large Language Models. '
+                    'This app is distributed under the MIT License. The source code of this project can be found '
+                    'on github ( https://github.com/MaidFoundation/Maid ). Maid is not affiliated with Meta, '
+                    'OpenAI or any other company that provides a model which can be used with this app. Model files are '
+                    'not included with this app and must be downloaded separately. Model files can be downloaded online '
+                    'at https://huggingface.co',
+                style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 20.0),
             Text(
               'Contributors',
@@ -84,26 +82,8 @@ class AboutPage extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 20.0),
-            Text(
-              'Sherpa Contributors',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            Text(
-              'ThibautLEAUX',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            Text(
-              'Natakout',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ]
-        ),
-      )
-    );
+          ]),
+        ));
   }
 
   Future<void> _onOpen(LinkableElement link) async {

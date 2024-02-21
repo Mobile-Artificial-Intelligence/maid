@@ -20,9 +20,9 @@ class Character extends ChangeNotifier {
   bool _useGreeting = false;
   String _greeting = "";
   String _system = "";
-  
+
   bool _useExamples = true;
-  List<Map<String,dynamic>> _examples = [];
+  List<Map<String, dynamic>> _examples = [];
 
   void newCharacter() {
     final key = UniqueKey().toString();
@@ -39,7 +39,8 @@ class Character extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    Map<String, dynamic> lastCharacter = json.decode(prefs.getString("last_character") ?? "{}");
+    Map<String, dynamic> lastCharacter =
+        json.decode(prefs.getString("last_character") ?? "{}");
 
     if (lastCharacter.isNotEmpty) {
       Logger.log(lastCharacter.toString());
@@ -59,13 +60,14 @@ class Character extends ChangeNotifier {
       File newProfileFile = File(filePath);
       if (!await newProfileFile.exists()) {
         ByteData data = await rootBundle.load('assets/default_profile.png');
-        List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        List<int> bytes =
+            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         await newProfileFile.writeAsBytes(bytes);
       }
 
       _profile = newProfileFile;
     }
-    
+
     _name = inputJson["name"] ?? "Unknown";
 
     if (inputJson.isEmpty) {
@@ -75,12 +77,18 @@ class Character extends ChangeNotifier {
     _description = inputJson["description"] ?? "";
     _personality = inputJson["personality"] ?? "";
     _scenario = inputJson["scenario"] ?? "";
-    _useGreeting = inputJson["use_first_mes"] ?? false;
-    _greeting = inputJson["first_mes"] ?? "";
+    _useGreeting = inputJson["use_greeting"] ?? false;
+    _greeting = inputJson["greeting"] ?? inputJson["first_mes"] ?? "";
     _system = inputJson["system_prompt"] ?? "";
 
     _useExamples = inputJson["use_examples"] ?? true;
-    _examples = examplesFromString(inputJson["mes_example"] ?? "");
+    if (inputJson["examples"] != null) {
+      final length = inputJson["examples"].length ?? 0;
+      _examples = List<Map<String, dynamic>>.generate(
+          length, (i) => inputJson["examples"][i]);
+    } else if (inputJson["mes_example"] != null) {
+      _examples = examplesFromString(inputJson["mes_example"] ?? "");
+    }
 
     Logger.log("Character created with name: ${inputJson["name"]}");
     notifyListeners();
@@ -95,11 +103,13 @@ class Character extends ChangeNotifier {
     jsonCharacter["description"] = _description;
     jsonCharacter["personality"] = _personality;
     jsonCharacter["scenario"] = _scenario;
-    jsonCharacter["use_first_mes"] = _useGreeting;
+    jsonCharacter["use_greeting"] = _useGreeting;
+    jsonCharacter["greeting"] = _greeting;
     jsonCharacter["first_mes"] = _greeting;
     jsonCharacter["system_prompt"] = _system;
 
     jsonCharacter["use_examples"] = _useExamples;
+    jsonCharacter["examples"] = _examples;
     jsonCharacter["mes_example"] = examplesToString();
 
     return jsonCharacter;
@@ -146,18 +156,16 @@ class Character extends ChangeNotifier {
   }
 
   void newExample() {
-    _examples.addAll(
-      [
-        {
-          "role": "user",
-          "content": "",
-        }, 
-        {
-          "role": "assistant",
-          "content": "",
-        }
-      ]
-    );
+    _examples.addAll([
+      {
+        "role": "user",
+        "content": "",
+      },
+      {
+        "role": "assistant",
+        "content": "",
+      }
+    ]);
     notifyListeners();
   }
 
@@ -194,7 +202,7 @@ class Character extends ChangeNotifier {
 
   bool get useExamples => _useExamples;
 
-  List<Map<String,dynamic>> get examples => _examples;
+  List<Map<String, dynamic>> get examples => _examples;
 
   void resetAll() {
     // Reset all the internal state to the defaults
@@ -211,7 +219,7 @@ class Character extends ChangeNotifier {
     try {
       // Convert the map to a JSON string
       String jsonString = json.encode(toMap());
-    
+
       File? file = await FileManager.save(context, "$_name.json");
 
       if (file == null) return "Error saving file";
@@ -227,13 +235,14 @@ class Character extends ChangeNotifier {
 
   Future<String> importJSON(BuildContext context) async {
     try {
-      File? file = await FileManager.load(context, "Load Character JSON", [".json"]);
+      File? file =
+          await FileManager.load(context, "Load Character JSON", [".json"]);
 
       if (file == null) return "Error loading file";
 
       String jsonString = await file.readAsString();
       if (jsonString.isEmpty) return "Failed to load character";
-      
+
       Map<String, dynamic> jsonCharacter = json.decode(jsonString);
 
       if (jsonCharacter.isEmpty) {
@@ -261,13 +270,15 @@ class Character extends ChangeNotifier {
         "description": _description,
         "personality": _personality,
         "scenario": _scenario,
+        "greeting": _greeting,
         "first_mes": _greeting,
         "system_prompt": _system,
+        "examples": json.encode(_examples),
         "mes_example": examplesToString(),
       };
 
       File? file = await FileManager.save(context, "$_name.png");
-      
+
       if (file == null) return "Error saving file";
 
       await file.writeAsBytes(encodePng(image));
@@ -280,7 +291,7 @@ class Character extends ChangeNotifier {
   }
 
   Future<String> importImage(BuildContext context) async {
-    try{
+    try {
       File? file = await FileManager.loadImage(context, "Load Character Image");
 
       if (file == null) return "Error loading file";
@@ -292,9 +303,16 @@ class Character extends ChangeNotifier {
         _description = image.textData!["description"] ?? "";
         _personality = image.textData!["personality"] ?? "";
         _scenario = image.textData!["scenario"] ?? "";
-        _greeting = image.textData!["first_mes"] ?? "";
+        _greeting =
+            image.textData!["greeting"] ?? image.textData!["first_mes"] ?? "";
         _system = image.textData!["system_prompt"] ?? "";
-        _examples = examplesFromString(image.textData!["mes_example"] ?? "");   
+
+        if (image.textData!["examples"] != null) {
+          _examples = List<Map<String, dynamic>>.from(
+              json.decode(image.textData!["examples"] ?? "[]"));
+        } else if (image.textData!["mes_example"] != null) {
+          _examples = examplesFromString(image.textData!["mes_example"] ?? "");
+        }
       }
 
       Directory docDir = await getApplicationDocumentsDirectory();
@@ -302,8 +320,11 @@ class Character extends ChangeNotifier {
 
       File newProfileFile = File(filePath);
       if (!await newProfileFile.exists()) {
-        ByteData data = await file.readAsBytes().then((bytes) => ByteData.view(bytes.buffer));
-        List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        ByteData data = await file
+            .readAsBytes()
+            .then((bytes) => ByteData.view(bytes.buffer));
+        List<int> bytes =
+            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         await newProfileFile.writeAsBytes(bytes);
       }
 
@@ -318,22 +339,26 @@ class Character extends ChangeNotifier {
     }
   }
 
-  List<Map<String,dynamic>> examplesFromString(String examplesString) {
+  List<Map<String, dynamic>> examplesFromString(String examplesString) {
     // Split the input string into blocks, each starting with <START>
-    final blocks = examplesString.split(RegExp(r'<START>', caseSensitive: false)).where((block) => block.trim().isNotEmpty);
+    final blocks = examplesString
+        .split(RegExp(r'<START>', caseSensitive: false))
+        .where((block) => block.trim().isNotEmpty);
 
     List<Map<String, dynamic>> examples = [];
 
     for (var block in blocks) {
       // Split each block into lines
-      final lines = block.trim().split('\n').where((line) => line.trim().isNotEmpty);
+      final lines =
+          block.trim().split('\n').where((line) => line.trim().isNotEmpty);
 
       for (var line in lines) {
         final roleAndContent = RegExp(r'\{\{(\w+)\}\}:\s*(.*)');
         final match = roleAndContent.firstMatch(line.trim());
 
         if (match != null) {
-          final role = match.group(1)!.toLowerCase() == 'user' ? 'user' : 'assistant';
+          final role =
+              match.group(1)!.toLowerCase() == 'user' ? 'user' : 'assistant';
           final content = match.group(2)!.trim();
 
           examples.add({
