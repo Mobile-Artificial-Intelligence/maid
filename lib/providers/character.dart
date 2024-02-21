@@ -18,7 +18,7 @@ class Character extends ChangeNotifier {
   String _scenario = "";
 
   bool _useGreeting = false;
-  String _greeting = "";
+  List<String> _greetings = [];
   String _system = "";
 
   bool _useExamples = true;
@@ -77,8 +77,22 @@ class Character extends ChangeNotifier {
     _description = inputJson["description"] ?? "";
     _personality = inputJson["personality"] ?? "";
     _scenario = inputJson["scenario"] ?? "";
+
     _useGreeting = inputJson["use_greeting"] ?? false;
-    _greeting = inputJson["greeting"] ?? inputJson["first_mes"] ?? "";
+
+    if (inputJson["greetings"] != null) {
+      _greetings = List<String>.from(inputJson["greetings"]);
+    } else {
+      if (inputJson["first_mes"] != null) {
+        _greetings = [inputJson["first_mes"]];
+      }
+
+      if (inputJson["alternate_greetings"] != null) {
+        _greetings.addAll(inputJson["alternate_greetings"]);
+      }
+    }
+
+
     _system = inputJson["system_prompt"] ?? "";
 
     _useExamples = inputJson["use_examples"] ?? true;
@@ -104,8 +118,9 @@ class Character extends ChangeNotifier {
     jsonCharacter["personality"] = _personality;
     jsonCharacter["scenario"] = _scenario;
     jsonCharacter["use_greeting"] = _useGreeting;
-    jsonCharacter["greeting"] = _greeting;
-    jsonCharacter["first_mes"] = _greeting;
+    jsonCharacter["greetings"] = _greetings;
+    jsonCharacter["first_mes"] = _greetings.firstOrNull ?? "";
+    jsonCharacter["alternate_greetings"] = _greetings.sublist(1);
     jsonCharacter["system_prompt"] = _system;
 
     jsonCharacter["use_examples"] = _useExamples;
@@ -140,8 +155,23 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setGreeting(String newGreeting) {
-    _greeting = newGreeting;
+  void newGreeting() {
+    _greetings.add("");
+    notifyListeners();
+  }
+
+  void updateGreeting(int index, String newGreeting) {
+    _greetings[index] = newGreeting;
+    notifyListeners();
+  }
+
+  void removeGreeting(int index) {
+    _greetings.removeAt(index);
+    notifyListeners();
+  }
+
+  void removeLastGreeting() {
+    _greetings.removeLast();
     notifyListeners();
   }
 
@@ -196,7 +226,7 @@ class Character extends ChangeNotifier {
 
   bool get useGreeting => _useGreeting;
 
-  String get greeting => _greeting;
+  List<String> get greetings => _greetings;
 
   String get system => _system;
 
@@ -270,8 +300,9 @@ class Character extends ChangeNotifier {
         "description": _description,
         "personality": _personality,
         "scenario": _scenario,
-        "greeting": _greeting,
-        "first_mes": _greeting,
+        "greetings": json.encode(_greetings),
+        "first_mes": _greetings.firstOrNull ?? "",
+        "alternate_greetings": json.encode(_greetings.sublist(1)),
         "system_prompt": _system,
         "examples": json.encode(_examples),
         "mes_example": examplesToString(),
@@ -303,8 +334,19 @@ class Character extends ChangeNotifier {
         _description = image.textData!["description"] ?? "";
         _personality = image.textData!["personality"] ?? "";
         _scenario = image.textData!["scenario"] ?? "";
-        _greeting =
-            image.textData!["greeting"] ?? image.textData!["first_mes"] ?? "";
+        
+        if (image.textData!["greetings"] != null) {
+          _greetings = List<String>.from(json.decode(image.textData!["greetings"] ?? "[]"));
+        } else {
+          if (image.textData!["first_mes"] != null) {
+            _greetings = [image.textData!["first_mes"] ?? ""];
+          }
+          
+          if (image.textData!["alternate_greetings"] != null) {
+            _greetings.addAll(List<String>.from(json.decode(image.textData!["alternate_greetings"] ?? "[]")));
+          }
+        }
+
         _system = image.textData!["system_prompt"] ?? "";
 
         if (image.textData!["examples"] != null) {
