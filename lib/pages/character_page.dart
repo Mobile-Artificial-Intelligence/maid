@@ -7,7 +7,6 @@ import 'package:maid/static/logger.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/double_button_row.dart';
 import 'package:maid/widgets/text_field_list_tile.dart';
-import 'package:maid/widgets/toggleable_text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,7 +33,8 @@ class _CharacterPageState extends State<CharacterPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
-      final loadedCharacters = json.decode(prefs.getString("characters") ?? "{}");
+      final loadedCharacters =
+          json.decode(prefs.getString("characters") ?? "{}");
       _characters.addAll(loadedCharacters);
       setState(() {});
     });
@@ -298,7 +298,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                     String oldName = character.name;
                                     Logger.log(
                                         "Updating character $oldName ====> $value");
-                                    character.setName(value);
+                                    character.name = value;
                                     _characters.remove(oldName);
                                   }
                                 },
@@ -312,7 +312,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         labelText: 'Description',
                         controller: _descriptionController,
                         onChanged: (value) {
-                          character.setDescription(value);
+                          character.description = value;
                         },
                         multiline: true,
                       ),
@@ -321,7 +321,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         labelText: 'Personality',
                         controller: _personalityController,
                         onChanged: (value) {
-                          character.setPersonality(value);
+                          character.personality = value;
                         },
                         multiline: true,
                       ),
@@ -330,7 +330,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         labelText: 'Scenario',
                         controller: _scenarioController,
                         onChanged: (value) {
-                          character.setScenario(value);
+                          character.scenario = value;
                         },
                         multiline: true,
                       ),
@@ -339,7 +339,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         labelText: 'System Prompt',
                         controller: _systemController,
                         onChanged: (value) {
-                          character.setSystem(value);
+                          character.system = value;
                         },
                         multiline: true,
                       ),
@@ -352,7 +352,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         title: const Text('Use Greeting'),
                         value: character.useGreeting,
                         onChanged: (value) {
-                          character.setUseGreeting(value);
+                          character.useGreeting = value;
                         },
                       ),
                       if (character.useGreeting) ...[
@@ -388,7 +388,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         title: const Text('Use Examples'),
                         value: character.useExamples,
                         onChanged: (value) {
-                          character.setUseExamples(value);
+                          character.useExamples = value;
                         },
                       ),
                       if (character.useExamples) ...[
@@ -396,16 +396,20 @@ class _CharacterPageState extends State<CharacterPage> {
                           leftText: "Add Example",
                           // Adding a new example
                           leftOnPressed: () {
-                            _exampleControllers.add(TextEditingController()); // For the user part
-                            _exampleControllers.add(TextEditingController()); // For the assistant part
+                            _exampleControllers.add(
+                                TextEditingController()); // For the user part
+                            _exampleControllers.add(
+                                TextEditingController()); // For the assistant part
                             character.newExample();
                           },
                           rightText: "Remove Example",
                           // Removing the last example
                           rightOnPressed: () {
                             if (_exampleControllers.length >= 2) {
-                              _exampleControllers.removeLast(); // Remove assistant part controller
-                              _exampleControllers.removeLast(); // Remove user part controller
+                              _exampleControllers
+                                  .removeLast(); // Remove assistant part controller
+                              _exampleControllers
+                                  .removeLast(); // Remove user part controller
                               character.removeLastExample();
                             }
                           },
@@ -414,7 +418,8 @@ class _CharacterPageState extends State<CharacterPage> {
                         if (character.examples.isNotEmpty) ...[
                           for (int i = 0; i < character.examples.length; i++)
                             TextFieldListTile(
-                              headingText:'${character.examples[i]["role"]} content',
+                              headingText:
+                                  '${character.examples[i]["role"]} content',
                               labelText: character.examples[i]["role"],
                               controller: _exampleControllers[i],
                               onChanged: (value) {

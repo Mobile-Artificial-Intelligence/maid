@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -12,14 +12,14 @@ class StringParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _controller.text = context.read<Model>().parameters[parameter] ?? "";
+    _controller.text = context.read<AiPlatform>().parameters[parameter] ?? "";
 
     return TextFieldListTile(
         headingText: title,
         labelText: title,
         controller: _controller,
         onChanged: (value) {
-          context.read<Model>().setParameter(parameter, value);
+          context.read<AiPlatform>().setParameter(parameter, value);
         });
   }
 }

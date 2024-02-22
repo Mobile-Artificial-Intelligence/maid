@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:maid/providers/character.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
@@ -107,19 +107,20 @@ class GenerationOptions {
     return map;
   }
 
-  String replaceCaseInsensitive(String original, String from, String replaceWith) {
+  String replaceCaseInsensitive(
+      String original, String from, String replaceWith) {
     // This creates a regular expression that ignores case (case-insensitive)
     RegExp exp = RegExp(RegExp.escape(from), caseSensitive: false);
     return original.replaceAll(exp, replaceWith);
   }
 
   GenerationOptions({
-    required Model model,
+    required AiPlatform ai,
     required Character character,
     required Session session,
   }) {
     try {
-      Logger.log(model.toMap().toString());
+      Logger.log(ai.toMap().toString());
       Logger.log(character.toMap().toString());
       Logger.log(session.toMap().toString());
 
@@ -129,53 +130,66 @@ class GenerationOptions {
         _messages.addAll(session.getMessages());
       }
 
-      _remoteUrl = model.parameters["remote_url"];
-      _promptFormat = model.format;
-      _apiType = model.apiType;
-      _apiKey = model.parameters["api_key"];
-      _remoteModel = model.parameters["remote_model"];
-      _path = model.parameters["path"];
+      _remoteUrl = ai.parameters["remote_url"];
+      _promptFormat = ai.format;
+      _apiType = ai.apiType;
+      _apiKey = ai.parameters["api_key"];
+      _remoteModel = ai.parameters["remote_model"];
+      _path = ai.parameters["path"];
 
-      _description = replaceCaseInsensitive(character.description, "{{char}}", character.name);
-      _description = replaceCaseInsensitive(_description, "<BOT>", character.name);
-      _description = replaceCaseInsensitive(_description, "{{user}}", session.userName);
-      _description = replaceCaseInsensitive(_description, "<USER>", session.userName);
+      _description = replaceCaseInsensitive(
+          character.description, "{{char}}", character.name);
+      _description =
+          replaceCaseInsensitive(_description, "<BOT>", character.name);
+      _description =
+          replaceCaseInsensitive(_description, "{{user}}", session.userName);
+      _description =
+          replaceCaseInsensitive(_description, "<USER>", session.userName);
 
-      _personality = replaceCaseInsensitive(character.personality, "{{char}}", character.name);
-      _personality = replaceCaseInsensitive(_personality, "<BOT>", character.name);
-      _personality = replaceCaseInsensitive(_personality, "{{user}}", session.userName);
-      _personality = replaceCaseInsensitive(_personality, "<USER>", session.userName);
+      _personality = replaceCaseInsensitive(
+          character.personality, "{{char}}", character.name);
+      _personality =
+          replaceCaseInsensitive(_personality, "<BOT>", character.name);
+      _personality =
+          replaceCaseInsensitive(_personality, "{{user}}", session.userName);
+      _personality =
+          replaceCaseInsensitive(_personality, "<USER>", session.userName);
 
-      _scenario = replaceCaseInsensitive(character.scenario, "{{char}}", character.name);
+      _scenario = replaceCaseInsensitive(
+          character.scenario, "{{char}}", character.name);
       _scenario = replaceCaseInsensitive(_scenario, "<BOT>", character.name);
-      _scenario = replaceCaseInsensitive(_scenario, "{{user}}", session.userName);
+      _scenario =
+          replaceCaseInsensitive(_scenario, "{{user}}", session.userName);
       _scenario = replaceCaseInsensitive(_scenario, "<USER>", session.userName);
 
-      _system = replaceCaseInsensitive(character.system, "{{char}}", character.name);
+      _system =
+          replaceCaseInsensitive(character.system, "{{char}}", character.name);
       _system = replaceCaseInsensitive(_system, "<BOT>", character.name);
       _system = replaceCaseInsensitive(_system, "{{user}}", session.userName);
       _system = replaceCaseInsensitive(_system, "<USER>", session.userName);
 
-      _nKeep = model.parameters["n_keep"];
-      _seed = model.parameters["random_seed"] ? Random().nextInt(1000000) : model.parameters["seed"];
-      _nPredict = model.parameters["n_predict"];
-      _topK = model.parameters["top_k"];
-      _topP = model.parameters["top_p"];
-      _minP = model.parameters["min_p"];
-      _tfsZ = model.parameters["tfs_z"];
-      _typicalP = model.parameters["typical_p"];
-      _penaltyLastN = model.parameters["penalty_last_n"];
-      _temperature = model.parameters["temperature"];
-      _penaltyRepeat = model.parameters["penalty_repeat"];
-      _penaltyPresent = model.parameters["penalty_present"];
-      _penaltyFreq = model.parameters["penalty_freq"];
-      _mirostat = model.parameters["mirostat"];
-      _mirostatTau = model.parameters["mirostat_tau"];
-      _mirostatEta = model.parameters["mirostat_eta"];
-      _penalizeNewline = model.parameters["penalize_nl"];
-      _nCtx = model.parameters["n_ctx"];
-      _nBatch = model.parameters["n_batch"];
-      _nThread = model.parameters["n_threads"];
+      _nKeep = ai.parameters["n_keep"];
+      _seed = ai.parameters["random_seed"]
+          ? Random().nextInt(1000000)
+          : ai.parameters["seed"];
+      _nPredict = ai.parameters["n_predict"];
+      _topK = ai.parameters["top_k"];
+      _topP = ai.parameters["top_p"];
+      _minP = ai.parameters["min_p"];
+      _tfsZ = ai.parameters["tfs_z"];
+      _typicalP = ai.parameters["typical_p"];
+      _penaltyLastN = ai.parameters["penalty_last_n"];
+      _temperature = ai.parameters["temperature"];
+      _penaltyRepeat = ai.parameters["penalty_repeat"];
+      _penaltyPresent = ai.parameters["penalty_present"];
+      _penaltyFreq = ai.parameters["penalty_freq"];
+      _mirostat = ai.parameters["mirostat"];
+      _mirostatTau = ai.parameters["mirostat_tau"];
+      _mirostatEta = ai.parameters["mirostat_eta"];
+      _penalizeNewline = ai.parameters["penalize_nl"];
+      _nCtx = ai.parameters["n_ctx"];
+      _nBatch = ai.parameters["n_batch"];
+      _nThread = ai.parameters["n_threads"];
     } catch (e) {
       Logger.log(e.toString());
     }

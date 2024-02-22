@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/widgets/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -8,15 +8,15 @@ class NBatchParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'n_batch',
-          inputValue: model.parameters["n_batch"] ?? 512,
+          inputValue: ai.parameters["n_batch"] ?? 512,
           sliderMin: 1.0,
           sliderMax: 4096.0,
           sliderDivisions: 4095,
           onValueChanged: (value) {
-            model.setParameter("n_batch", value.round());
+            ai.setParameter("n_batch", value.round());
           });
     });
   }

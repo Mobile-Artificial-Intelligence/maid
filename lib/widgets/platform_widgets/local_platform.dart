@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/widgets/dialogs.dart';
 import 'package:maid/widgets/parameter_widgets/boolean_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_eta_parameter.dart';
@@ -43,7 +43,7 @@ class LocalPlatform extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Text(
-                context.watch<Model>().parameters["path"] ?? "None",
+                context.watch<AiPlatform>().parameters["path"] ?? "None",
                 textAlign: TextAlign.end,
               ),
             ),
@@ -55,11 +55,11 @@ class LocalPlatform extends StatelessWidget {
           leftText: "Load GGUF",
           leftOnPressed: () {
             storageOperationDialog(
-                context, context.read<Model>().loadModelFile);
+                context, context.read<AiPlatform>().loadModelFile);
           },
           rightText: "Unload GGUF",
           rightOnPressed: () {
-            context.read<Model>().setParameter("path", "");
+            context.read<AiPlatform>().setParameter("path", "");
           }),
       Divider(
         height: 20,

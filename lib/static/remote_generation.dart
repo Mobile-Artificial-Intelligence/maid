@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:maid/classes/generation_options.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/static/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -158,15 +158,15 @@ class RemoteGeneration {
     }
   }
 
-  static Future<List<String>> getOptions(Model model) async {
-    switch (model.apiType) {
+  static Future<List<String>> getOptions(AiPlatform ai) async {
+    switch (ai.apiType) {
       case ApiType.ollama:
         bool permissionGranted = await _requestPermission();
         if (!permissionGranted) {
           return [];
         }
 
-        final url = Uri.parse("${model.parameters["remote_url"]}/api/tags");
+        final url = Uri.parse("${ai.parameters["remote_url"]}/api/tags");
         final headers = {"Accept": "application/json"};
 
         try {

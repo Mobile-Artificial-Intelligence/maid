@@ -10,10 +10,11 @@ import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 
-class Model extends ChangeNotifier {
+class AiPlatform extends ChangeNotifier {
   PromptFormatType _format = PromptFormatType.alpaca;
   ApiType _apiType = ApiType.local;
   String _preset = "Default";
+  String _model = "";
   Map<String, dynamic> _parameters = {};
 
   void newPreset() {
@@ -42,8 +43,13 @@ class Model extends ChangeNotifier {
     }
   }
 
-  void setPreset(String preset) {
+  set preset(String preset) {
     _preset = preset;
+    notifyListeners();
+  }
+
+  set model(String model) {
+    _model = model;
     notifyListeners();
   }
 
@@ -52,12 +58,12 @@ class Model extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPromptFormat(PromptFormatType promptFormat) {
+  set promptFormat(PromptFormatType promptFormat) {
     _format = promptFormat;
     notifyListeners();
   }
 
-  void setApiType(ApiType apiType) {
+  set apiType(ApiType apiType) {
     _apiType = apiType;
     notifyListeners();
   }
@@ -65,6 +71,7 @@ class Model extends ChangeNotifier {
   PromptFormatType get format => _format;
   ApiType get apiType => _apiType;
   String get preset => _preset;
+  String get model => _model;
   Map<String, dynamic> get parameters => _parameters;
 
   Future<List<String>> getOptions() {

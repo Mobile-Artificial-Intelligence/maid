@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 import 'package:provider/provider.dart';
 
@@ -8,7 +8,7 @@ class FormatDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return ListTile(
           title: Row(
         children: [
@@ -32,10 +32,10 @@ class FormatDropdown extends StatelessWidget {
             ],
             onSelected: (PromptFormatType? value) {
               if (value != null) {
-                model.setPromptFormat(value);
+                ai.promptFormat = value;
               }
             },
-            initialSelection: model.format,
+            initialSelection: ai.format,
             width: 200,
           )
         ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:provider/provider.dart';
 
 class BooleanParameter extends StatelessWidget {
@@ -11,12 +11,12 @@ class BooleanParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SwitchListTile(
         title: Text(title),
-        value: model.parameters[parameter] ?? false,
+        value: ai.parameters[parameter] ?? false,
         onChanged: (value) {
-          model.setParameter(parameter, value);
+          ai.setParameter(parameter, value);
         },
       );
     });
