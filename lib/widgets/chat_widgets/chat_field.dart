@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';

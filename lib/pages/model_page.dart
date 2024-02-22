@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/widgets/platform_widgets/local_platform.dart';
 import 'package:maid/widgets/platform_widgets/mistralai_platform.dart';
 import 'package:maid/widgets/platform_widgets/ollama_platform.dart';

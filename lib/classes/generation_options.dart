@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:maid/providers/character.dart';
-import 'package:maid/providers/model.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
