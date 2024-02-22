@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:maid/widgets/parameter_widgets/boolean_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_eta_parameter.dart';
@@ -20,6 +22,7 @@ import 'package:maid/widgets/parameter_widgets/top_k_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/typical_p_parameter.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
+import 'package:maid/widgets/parameter_widgets/url_parameter.dart';
 
 class OllamaPlatform extends StatelessWidget {
   const OllamaPlatform({super.key});
@@ -34,7 +37,7 @@ class OllamaPlatform extends StatelessWidget {
         endIndent: 10,
         color: Theme.of(context).colorScheme.primary,
       ),
-      StringParameter(title: "Remote URL", parameter: "remote_url"),
+      const UrlParameter(),
       const SizedBox(height: 8.0),
       const ModelDropdown(),
       const SizedBox(height: 20.0),

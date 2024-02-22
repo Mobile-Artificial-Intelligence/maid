@@ -127,7 +127,7 @@ class GenerationOptions {
         _messages.addAll(session.getMessages());
       }
 
-      _remoteUrl = ai.parameters["remote_url"];
+      _remoteUrl = ai.url;
       _promptFormat = ai.format;
       _apiType = ai.apiType;
       _apiKey = ai.parameters["api_key"];

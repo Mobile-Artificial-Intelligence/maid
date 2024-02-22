@@ -166,7 +166,7 @@ class RemoteGeneration {
           return [];
         }
 
-        final url = Uri.parse("${ai.parameters["remote_url"]}/api/tags");
+        final url = Uri.parse("${ai.url}/api/tags");
         final headers = {"Accept": "application/json"};
 
         try {
