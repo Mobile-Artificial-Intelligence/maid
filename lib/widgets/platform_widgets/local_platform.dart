@@ -43,7 +43,7 @@ class LocalPlatform extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Text(
-                context.watch<AiPlatform>().parameters["path"] ?? "None",
+                context.watch<AiPlatform>().model,
                 textAlign: TextAlign.end,
               ),
             ),
@@ -59,7 +59,7 @@ class LocalPlatform extends StatelessWidget {
           },
           rightText: "Unload GGUF",
           rightOnPressed: () {
-            context.read<AiPlatform>().setParameter("path", "");
+            context.read<AiPlatform>().model = "";
           }),
       Divider(
         height: 20,

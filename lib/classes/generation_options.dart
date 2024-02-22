@@ -12,8 +12,7 @@ class GenerationOptions {
   late PromptFormatType _promptFormat;
   late ApiType _apiType;
   late String? _apiKey;
-  late String? _remoteModel;
-  late String? _path;
+  late String _model;
   late String _description;
   late String _personality;
   late String _scenario;
@@ -44,8 +43,7 @@ class GenerationOptions {
   PromptFormatType get promptFormat => _promptFormat;
   ApiType get apiType => _apiType;
   String? get apiKey => _apiKey;
-  String? get remoteModel => _remoteModel;
-  String? get path => _path;
+  String get model => _model;
   String get description => _description;
   String get personality => _personality;
   String get scenario => _scenario;
@@ -78,8 +76,7 @@ class GenerationOptions {
     map["prompt_format"] = _promptFormat.index;
     map["api_type"] = _apiType.index;
     map["api_key"] = _apiKey;
-    map["remote_model"] = _remoteModel;
-    map["path"] = _path;
+    map["model"] = _model;
     map["description"] = _description;
     map["personality"] = _personality;
     map["scenario"] = _scenario;
@@ -134,8 +131,7 @@ class GenerationOptions {
       _promptFormat = ai.format;
       _apiType = ai.apiType;
       _apiKey = ai.parameters["api_key"];
-      _remoteModel = ai.parameters["remote_model"];
-      _path = ai.parameters["path"];
+      _model = ai.model;
 
       _description = replaceCaseInsensitive(
           character.description, "{{char}}", character.name);

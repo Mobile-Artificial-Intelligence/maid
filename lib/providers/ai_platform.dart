@@ -180,7 +180,7 @@ class AiPlatform extends ChangeNotifier {
 
       Logger.log("Loading model from $file");
 
-      _parameters["path"] = file.path;
+      _model = file.path;
     } catch (e) {
       return "Error: $e";
     }
