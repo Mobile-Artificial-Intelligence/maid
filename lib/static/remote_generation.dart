@@ -144,13 +144,13 @@ class RemoteGeneration {
     chatMessages.add(ChatMessage.humanText(input));
 
     switch (options.apiType) {
-      case ApiType.ollama:
+      case AiPlatformType.ollama:
         ollamaRequest(chatMessages, options, callback);
         break;
-      case ApiType.openAI:
+      case AiPlatformType.openAI:
         openAiRequest(chatMessages, options, callback);
         break;
-      case ApiType.mistralAI:
+      case AiPlatformType.mistralAI:
         mistralRequest(chatMessages, options, callback);
         break;
       default:
@@ -160,13 +160,13 @@ class RemoteGeneration {
 
   static Future<List<String>> getOptions(AiPlatform ai) async {
     switch (ai.apiType) {
-      case ApiType.ollama:
+      case AiPlatformType.ollama:
         bool permissionGranted = await _requestPermission();
         if (!permissionGranted) {
           return [];
         }
 
-        final url = Uri.parse("${ai.parameters["remote_url"]}/api/tags");
+        final url = Uri.parse("${ai.url}/api/tags");
         final headers = {"Accept": "application/json"};
 
         try {
@@ -188,9 +188,9 @@ class RemoteGeneration {
           Logger.log('Error: $e');
           return [];
         }
-      case ApiType.openAI:
+      case AiPlatformType.openAI:
         return ["gpt-3.5-turbo", "gpt-4-32k"];
-      case ApiType.mistralAI:
+      case AiPlatformType.mistralAI:
         return ["mistral-small", "mistral-medium", "mistral-large"];
       default:
         return [];

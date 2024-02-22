@@ -82,7 +82,7 @@ class _ChatFieldState extends State<ChatField> {
         child: Row(
           children: [
             if (session.isBusy &&
-                context.read<AiPlatform>().apiType != ApiType.ollama)
+                context.read<AiPlatform>().apiType != AiPlatformType.ollama)
               const IconButton(
                   onPressed: GenerationManager.stop,
                   iconSize: 50,

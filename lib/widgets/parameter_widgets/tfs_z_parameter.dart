@@ -11,12 +11,12 @@ class TfsZParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'tfs_z',
-          inputValue: ai.parameters["tfs_z"] ?? 1.0,
+          inputValue: ai.tfsZ,
           sliderMin: 0.0,
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            ai.setParameter("tfs_z", value);
+            ai.tfsZ = value;
           });
     });
   }

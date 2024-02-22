@@ -16,7 +16,7 @@ class GenerationManager {
         character: context.read<Character>(),
         session: context.read<Session>());
 
-    if (options.apiType == ApiType.local) {
+    if (options.apiType == AiPlatformType.local) {
       LocalGeneration.prompt(input, options, context.read<Session>().stream);
     } else {
       RemoteGeneration.prompt(input, options, context.read<Session>().stream);
@@ -27,7 +27,7 @@ class GenerationManager {
     LocalGeneration.stop();
   }
 
-  static ApiType checkApiRequirements(GenerationOptions context) {
+  static AiPlatformType checkApiRequirements(GenerationOptions context) {
     return context.apiType;
   }
 }

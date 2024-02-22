@@ -10,7 +10,7 @@ class GenerationOptions {
   late List<Map<String, dynamic>> _messages;
   late String? _remoteUrl;
   late PromptFormatType _promptFormat;
-  late ApiType _apiType;
+  late AiPlatformType _apiType;
   late String? _apiKey;
   late String _model;
   late String _description;
@@ -41,7 +41,7 @@ class GenerationOptions {
   List<Map<String, dynamic>> get messages => _messages;
   String? get remoteUrl => _remoteUrl;
   PromptFormatType get promptFormat => _promptFormat;
-  ApiType get apiType => _apiType;
+  AiPlatformType get apiType => _apiType;
   String? get apiKey => _apiKey;
   String get model => _model;
   String get description => _description;
@@ -127,10 +127,10 @@ class GenerationOptions {
         _messages.addAll(session.getMessages());
       }
 
-      _remoteUrl = ai.parameters["remote_url"];
+      _remoteUrl = ai.url;
       _promptFormat = ai.format;
       _apiType = ai.apiType;
-      _apiKey = ai.parameters["api_key"];
+      _apiKey = ai.apiKey;
       _model = ai.model;
 
       _description = replaceCaseInsensitive(
@@ -164,28 +164,26 @@ class GenerationOptions {
       _system = replaceCaseInsensitive(_system, "{{user}}", session.userName);
       _system = replaceCaseInsensitive(_system, "<USER>", session.userName);
 
-      _nKeep = ai.parameters["n_keep"];
-      _seed = ai.parameters["random_seed"]
-          ? Random().nextInt(1000000)
-          : ai.parameters["seed"];
-      _nPredict = ai.parameters["n_predict"];
-      _topK = ai.parameters["top_k"];
-      _topP = ai.parameters["top_p"];
-      _minP = ai.parameters["min_p"];
-      _tfsZ = ai.parameters["tfs_z"];
-      _typicalP = ai.parameters["typical_p"];
-      _penaltyLastN = ai.parameters["penalty_last_n"];
-      _temperature = ai.parameters["temperature"];
-      _penaltyRepeat = ai.parameters["penalty_repeat"];
-      _penaltyPresent = ai.parameters["penalty_present"];
-      _penaltyFreq = ai.parameters["penalty_freq"];
-      _mirostat = ai.parameters["mirostat"];
-      _mirostatTau = ai.parameters["mirostat_tau"];
-      _mirostatEta = ai.parameters["mirostat_eta"];
-      _penalizeNewline = ai.parameters["penalize_nl"];
-      _nCtx = ai.parameters["n_ctx"];
-      _nBatch = ai.parameters["n_batch"];
-      _nThread = ai.parameters["n_threads"];
+      _nKeep = ai.nKeep;
+      _seed = ai.randomSeed ? Random().nextInt(1000000) : ai.seed;
+      _nPredict = ai.nPredict;
+      _topK = ai.topK;
+      _topP = ai.topP;
+      _minP = ai.minP;
+      _tfsZ = ai.tfsZ;
+      _typicalP = ai.typicalP;
+      _penaltyLastN = ai.penaltyLastN;
+      _temperature = ai.temperature;
+      _penaltyRepeat = ai.penaltyRepeat;
+      _penaltyPresent = ai.penaltyPresent;
+      _penaltyFreq = ai.penaltyFreq;
+      _mirostat = ai.mirostat;
+      _mirostatTau = ai.mirostatTau;
+      _mirostatEta = ai.mirostatEta;
+      _penalizeNewline = ai.penalizeNewline;
+      _nCtx = ai.nCtx;
+      _nBatch = ai.nBatch;
+      _nThread = ai.nThread;
     } catch (e) {
       Logger.log(e.toString());
     }

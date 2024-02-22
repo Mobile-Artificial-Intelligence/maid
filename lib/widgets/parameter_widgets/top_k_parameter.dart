@@ -11,12 +11,12 @@ class TopKParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'top_k',
-          inputValue: ai.parameters["top_k"] ?? 40,
+          inputValue: ai.topK,
           sliderMin: 1.0,
           sliderMax: 128.0,
           sliderDivisions: 127,
           onValueChanged: (value) {
-            ai.setParameter("top_k", value.round());
+            ai.topK = value.round();
           });
     });
   }

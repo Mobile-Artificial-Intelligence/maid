@@ -11,12 +11,12 @@ class MirostatTauParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'mirostat_tau',
-          inputValue: ai.parameters["mirostat_tau"] ?? 5.0,
+          inputValue: ai.mirostatTau,
           sliderMin: 0.0,
           sliderMax: 10.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            ai.setParameter("mirostat_tau", value);
+            ai.mirostatTau = value;
           });
     });
   }

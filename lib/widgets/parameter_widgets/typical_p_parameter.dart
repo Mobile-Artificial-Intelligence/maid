@@ -11,12 +11,12 @@ class TypicalPParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'typical_p',
-          inputValue: ai.parameters["typical_p"] ?? 1.0,
+          inputValue: ai.typicalP,
           sliderMin: 0.0,
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            ai.setParameter("typical_p", value);
+            ai.typicalP = value;
           });
     });
   }

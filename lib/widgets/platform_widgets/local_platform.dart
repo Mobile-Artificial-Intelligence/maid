@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/widgets/dialogs.dart';
-import 'package:maid/widgets/parameter_widgets/boolean_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/penalize_nl_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_eta_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_tau_parameter.dart';
@@ -68,7 +68,7 @@ class LocalPlatform extends StatelessWidget {
         color: Theme.of(context).colorScheme.primary,
       ),
       const FormatDropdown(),
-      const BooleanParameter(title: "penalize_nl", parameter: "penalize_nl"),
+      const PenalizeNlParameter(),
       const SeedParameter(),
       const TemperatureParameter(),
       const TopKParameter(),

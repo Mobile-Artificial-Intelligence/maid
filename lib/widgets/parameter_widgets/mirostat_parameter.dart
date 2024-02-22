@@ -11,12 +11,12 @@ class MirostatParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'mirostat',
-          inputValue: ai.parameters["mirostat"] ?? 0.0,
+          inputValue: ai.mirostat,
           sliderMin: 0.0,
           sliderMax: 128.0,
           sliderDivisions: 127,
           onValueChanged: (value) {
-            ai.setParameter("mirostat", value.round());
+            ai.mirostat = value.round();
           });
     });
   }

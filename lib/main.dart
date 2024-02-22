@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

@@ -13,16 +13,17 @@ class NThreadsParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'n_threads',
-          inputValue: ai.parameters["n_threads"] ?? Platform.numberOfProcessors,
+          inputValue: ai.nThread,
           sliderMin: 1.0,
-          sliderMax: ai.apiType == ApiType.local
+          sliderMax: ai.apiType == AiPlatformType.local
               ? Platform.numberOfProcessors.toDouble()
               : 128.0,
           sliderDivisions: 127,
           onValueChanged: (value) {
-            ai.setParameter("n_threads", value.round());
-            if (ai.parameters["n_threads"] > Platform.numberOfProcessors) {
-              ai.setParameter("n_threads", Platform.numberOfProcessors);
+            if (value.round() > Platform.numberOfProcessors) {
+              ai.nThread = Platform.numberOfProcessors;
+            } else {
+              ai.nThread = value.round();
             }
           });
     });

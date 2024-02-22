@@ -11,12 +11,12 @@ class PenaltyPresentParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'penalty_present',
-          inputValue: ai.parameters["penalty_present"] ?? 0.0,
+          inputValue: ai.penaltyPresent,
           sliderMin: 0.0,
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            ai.setParameter("penalty_present", value);
+            ai.penaltyPresent = value;
           });
     });
   }
