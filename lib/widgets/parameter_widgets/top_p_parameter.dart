@@ -8,7 +8,7 @@ class TopPParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, model, child) {
       return SliderListTile(
           labelText: 'top_p',
           inputValue: model.parameters["top_p"] ?? 0.95,

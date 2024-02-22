@@ -12,10 +12,10 @@ class GenerationManager {
     context.read<Session>().busy = true;
 
     GenerationOptions options = GenerationOptions(
-              model: context.read<Model>(),
-              character: context.read<Character>(),
-              session: context.read<Session>());
-    
+        model: context.read<AiPlatform>(),
+        character: context.read<Character>(),
+        session: context.read<Session>());
+
     if (options.apiType == ApiType.local) {
       LocalGeneration.prompt(input, options, context.read<Session>().stream);
     } else {

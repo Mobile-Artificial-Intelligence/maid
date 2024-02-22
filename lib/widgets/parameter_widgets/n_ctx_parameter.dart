@@ -8,7 +8,7 @@ class NCtxParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, model, child) {
       return SliderListTile(
           labelText: 'n_ctx',
           inputValue: model.parameters["n_ctx"] ?? 512,

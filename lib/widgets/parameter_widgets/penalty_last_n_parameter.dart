@@ -8,7 +8,7 @@ class PenaltyLastNParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, model, child) {
       return SliderListTile(
           labelText: 'penalty_last_n',
           inputValue: model.parameters["penalty_last_n"] ?? 64,

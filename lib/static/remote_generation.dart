@@ -158,7 +158,7 @@ class RemoteGeneration {
     }
   }
 
-  static Future<List<String>> getOptions(Model model) async {
+  static Future<List<String>> getOptions(AiPlatform model) async {
     switch (model.apiType) {
       case ApiType.ollama:
         bool permissionGranted = await _requestPermission();

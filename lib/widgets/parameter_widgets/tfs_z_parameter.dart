@@ -8,7 +8,7 @@ class TfsZParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, model, child) {
       return SliderListTile(
           labelText: 'tfs_z',
           inputValue: model.parameters["tfs_z"] ?? 1.0,

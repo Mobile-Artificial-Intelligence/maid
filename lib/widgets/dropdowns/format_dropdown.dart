@@ -8,7 +8,7 @@ class FormatDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, model, child) {
       return ListTile(
           title: Row(
         children: [

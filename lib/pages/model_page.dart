@@ -36,7 +36,7 @@ class _ModelPageState extends State<ModelPage> {
       setState(() {});
     });
 
-    final model = context.read<Model>();
+    final model = context.read<AiPlatform>();
     _models = {model.preset: model.toMap()};
     _presetController = TextEditingController(text: model.preset);
   }
@@ -68,7 +68,7 @@ class _ModelPageState extends State<ModelPage> {
           ),
           title: const Text("Model"),
         ),
-        body: Consumer<Model>(builder: (context, model, child) {
+        body: Consumer<AiPlatform>(builder: (context, model, child) {
           _models[model.preset] = model.toMap();
 
           SharedPreferences.getInstance().then((prefs) {
@@ -92,7 +92,7 @@ class _ModelPageState extends State<ModelPage> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return Consumer<Model>(
+                              return Consumer<AiPlatform>(
                                 builder: (context, model, child) {
                                   return AlertDialog(
                                     title: const Text(

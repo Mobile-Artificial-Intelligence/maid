@@ -8,9 +8,9 @@ class SeedParameter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController(
-        text: context.read<Model>().parameters["seed"]?.toString() ?? "");
+        text: context.read<AiPlatform>().parameters["seed"]?.toString() ?? "");
 
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, model, child) {
       return Column(
         children: [
           SwitchListTile(

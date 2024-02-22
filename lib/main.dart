@@ -24,7 +24,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => MainProvider()),
-        ChangeNotifierProvider(create: (context) => Model()),
+        ChangeNotifierProvider(create: (context) => AiPlatform()),
         ChangeNotifierProvider(create: (context) => Character()),
         ChangeNotifierProvider(create: (context) => Session()),
       ],
@@ -69,15 +69,8 @@ class MaidApp extends StatefulWidget {
 class MaidAppState extends State<MaidApp> {
   @override
   Widget build(BuildContext context) {
-    return Consumer4<MainProvider, Model, Character, Session>(
-      builder: (
-        context, 
-        mainProvider, 
-        model, 
-        character, 
-        session, 
-        child
-      ) {
+    return Consumer4<MainProvider, AiPlatform, Character, Session>(
+      builder: (context, mainProvider, model, character, session, child) {
         if (!mainProvider.initialised) {
           mainProvider.init();
           model.init();
@@ -86,13 +79,12 @@ class MaidAppState extends State<MaidApp> {
         }
 
         return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Maid',
-          theme: Themes.lightTheme(),
-          darkTheme: Themes.darkTheme(),
-          themeMode: mainProvider.themeMode,
-          home: const HomePage(title: "Maid")
-        );
+            debugShowCheckedModeBanner: false,
+            title: 'Maid',
+            theme: Themes.lightTheme(),
+            darkTheme: Themes.darkTheme(),
+            themeMode: mainProvider.themeMode,
+            home: const HomePage(title: "Maid"));
       },
     );
   }

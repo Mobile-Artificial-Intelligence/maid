@@ -8,7 +8,7 @@ class PenaltyFrequencyParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Model>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, model, child) {
       return SliderListTile(
           labelText: 'penalty_freq',
           inputValue: model.parameters["penalty_freq"] ?? 0.0,

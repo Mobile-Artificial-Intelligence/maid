@@ -107,14 +107,15 @@ class GenerationOptions {
     return map;
   }
 
-  String replaceCaseInsensitive(String original, String from, String replaceWith) {
+  String replaceCaseInsensitive(
+      String original, String from, String replaceWith) {
     // This creates a regular expression that ignores case (case-insensitive)
     RegExp exp = RegExp(RegExp.escape(from), caseSensitive: false);
     return original.replaceAll(exp, replaceWith);
   }
 
   GenerationOptions({
-    required Model model,
+    required AiPlatform model,
     required Character character,
     required Session session,
   }) {
@@ -136,28 +137,41 @@ class GenerationOptions {
       _remoteModel = model.parameters["remote_model"];
       _path = model.parameters["path"];
 
-      _description = replaceCaseInsensitive(character.description, "{{char}}", character.name);
-      _description = replaceCaseInsensitive(_description, "<BOT>", character.name);
-      _description = replaceCaseInsensitive(_description, "{{user}}", session.userName);
-      _description = replaceCaseInsensitive(_description, "<USER>", session.userName);
+      _description = replaceCaseInsensitive(
+          character.description, "{{char}}", character.name);
+      _description =
+          replaceCaseInsensitive(_description, "<BOT>", character.name);
+      _description =
+          replaceCaseInsensitive(_description, "{{user}}", session.userName);
+      _description =
+          replaceCaseInsensitive(_description, "<USER>", session.userName);
 
-      _personality = replaceCaseInsensitive(character.personality, "{{char}}", character.name);
-      _personality = replaceCaseInsensitive(_personality, "<BOT>", character.name);
-      _personality = replaceCaseInsensitive(_personality, "{{user}}", session.userName);
-      _personality = replaceCaseInsensitive(_personality, "<USER>", session.userName);
+      _personality = replaceCaseInsensitive(
+          character.personality, "{{char}}", character.name);
+      _personality =
+          replaceCaseInsensitive(_personality, "<BOT>", character.name);
+      _personality =
+          replaceCaseInsensitive(_personality, "{{user}}", session.userName);
+      _personality =
+          replaceCaseInsensitive(_personality, "<USER>", session.userName);
 
-      _scenario = replaceCaseInsensitive(character.scenario, "{{char}}", character.name);
+      _scenario = replaceCaseInsensitive(
+          character.scenario, "{{char}}", character.name);
       _scenario = replaceCaseInsensitive(_scenario, "<BOT>", character.name);
-      _scenario = replaceCaseInsensitive(_scenario, "{{user}}", session.userName);
+      _scenario =
+          replaceCaseInsensitive(_scenario, "{{user}}", session.userName);
       _scenario = replaceCaseInsensitive(_scenario, "<USER>", session.userName);
 
-      _system = replaceCaseInsensitive(character.system, "{{char}}", character.name);
+      _system =
+          replaceCaseInsensitive(character.system, "{{char}}", character.name);
       _system = replaceCaseInsensitive(_system, "<BOT>", character.name);
       _system = replaceCaseInsensitive(_system, "{{user}}", session.userName);
       _system = replaceCaseInsensitive(_system, "<USER>", session.userName);
 
       _nKeep = model.parameters["n_keep"];
-      _seed = model.parameters["random_seed"] ? Random().nextInt(1000000) : model.parameters["seed"];
+      _seed = model.parameters["random_seed"]
+          ? Random().nextInt(1000000)
+          : model.parameters["seed"];
       _nPredict = model.parameters["n_predict"];
       _topK = model.parameters["top_k"];
       _topP = model.parameters["top_p"];
