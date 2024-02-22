@@ -8,15 +8,15 @@ class NKeepParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'n_keep',
-          inputValue: model.parameters["n_keep"] ?? 48,
+          inputValue: ai.parameters["n_keep"] ?? 48,
           sliderMin: 1.0,
           sliderMax: 1024.0,
           sliderDivisions: 1023,
           onValueChanged: (value) {
-            model.setParameter("n_keep", value.round());
+            ai.setParameter("n_keep", value.round());
           });
     });
   }

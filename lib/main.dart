@@ -70,10 +70,10 @@ class MaidAppState extends State<MaidApp> {
   @override
   Widget build(BuildContext context) {
     return Consumer4<MainProvider, AiPlatform, Character, Session>(
-      builder: (context, mainProvider, model, character, session, child) {
+      builder: (context, mainProvider, ai, character, session, child) {
         if (!mainProvider.initialised) {
           mainProvider.init();
-          model.init();
+          ai.init();
           character.init();
           session.init();
         }

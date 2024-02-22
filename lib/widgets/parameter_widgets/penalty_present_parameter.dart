@@ -8,15 +8,15 @@ class PenaltyPresentParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'penalty_present',
-          inputValue: model.parameters["penalty_present"] ?? 0.0,
+          inputValue: ai.parameters["penalty_present"] ?? 0.0,
           sliderMin: 0.0,
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            model.setParameter("penalty_present", value);
+            ai.setParameter("penalty_present", value);
           });
     });
   }

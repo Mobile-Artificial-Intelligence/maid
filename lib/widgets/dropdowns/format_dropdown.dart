@@ -8,7 +8,7 @@ class FormatDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return ListTile(
           title: Row(
         children: [
@@ -32,10 +32,10 @@ class FormatDropdown extends StatelessWidget {
             ],
             onSelected: (PromptFormatType? value) {
               if (value != null) {
-                model.promptFormat = value;
+                ai.promptFormat = value;
               }
             },
-            initialSelection: model.format,
+            initialSelection: ai.format,
             width: 200,
           )
         ],

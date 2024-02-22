@@ -10,20 +10,19 @@ class NThreadsParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'n_threads',
-          inputValue:
-              model.parameters["n_threads"] ?? Platform.numberOfProcessors,
+          inputValue: ai.parameters["n_threads"] ?? Platform.numberOfProcessors,
           sliderMin: 1.0,
-          sliderMax: model.apiType == ApiType.local
+          sliderMax: ai.apiType == ApiType.local
               ? Platform.numberOfProcessors.toDouble()
               : 128.0,
           sliderDivisions: 127,
           onValueChanged: (value) {
-            model.setParameter("n_threads", value.round());
-            if (model.parameters["n_threads"] > Platform.numberOfProcessors) {
-              model.setParameter("n_threads", Platform.numberOfProcessors);
+            ai.setParameter("n_threads", value.round());
+            if (ai.parameters["n_threads"] > Platform.numberOfProcessors) {
+              ai.setParameter("n_threads", Platform.numberOfProcessors);
             }
           });
     });

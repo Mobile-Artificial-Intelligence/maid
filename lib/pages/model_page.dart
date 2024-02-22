@@ -23,7 +23,7 @@ class ModelPage extends StatefulWidget {
 }
 
 class _ModelPageState extends State<ModelPage> {
-  late Map<String, dynamic> _models;
+  late Map<String, dynamic> _platforms;
   late TextEditingController _presetController;
 
   @override
@@ -32,19 +32,19 @@ class _ModelPageState extends State<ModelPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
       final loadedModels = json.decode(prefs.getString("models") ?? "{}");
-      _models.addAll(loadedModels);
+      _platforms.addAll(loadedModels);
       setState(() {});
     });
 
-    final model = context.read<AiPlatform>();
-    _models = {model.preset: model.toMap()};
-    _presetController = TextEditingController(text: model.preset);
+    final ai = context.read<AiPlatform>();
+    _platforms = {ai.preset: ai.toMap()};
+    _presetController = TextEditingController(text: ai.preset);
   }
 
   @override
   void dispose() {
     SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("models", json.encode(_models));
+      prefs.setString("models", json.encode(_platforms));
     });
 
     super.dispose();
@@ -68,11 +68,11 @@ class _ModelPageState extends State<ModelPage> {
           ),
           title: const Text("Model"),
         ),
-        body: Consumer<AiPlatform>(builder: (context, model, child) {
-          _models[model.preset] = model.toMap();
+        body: Consumer<AiPlatform>(builder: (context, ai, child) {
+          _platforms[ai.preset] = ai.toMap();
 
           SharedPreferences.getInstance().then((prefs) {
-            prefs.setString("last_model", json.encode(model.toMap()));
+            prefs.setString("last_model", json.encode(ai.toMap()));
           });
 
           return Stack(
@@ -82,7 +82,7 @@ class _ModelPageState extends State<ModelPage> {
                   children: [
                     const SizedBox(height: 10.0),
                     Text(
-                      model.preset,
+                      ai.preset,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
@@ -93,7 +93,7 @@ class _ModelPageState extends State<ModelPage> {
                             context: context,
                             builder: (BuildContext context) {
                               return Consumer<AiPlatform>(
-                                builder: (context, model, child) {
+                                builder: (context, ai, child) {
                                   return AlertDialog(
                                     title: const Text(
                                       "Switch Model",
@@ -103,11 +103,11 @@ class _ModelPageState extends State<ModelPage> {
                                       height: 200,
                                       width: 200,
                                       child: ListView.builder(
-                                        itemCount: _models.keys.length,
+                                        itemCount: _platforms.keys.length,
                                         itemBuilder:
                                             (BuildContext context, int index) {
                                           final item =
-                                              _models.keys.elementAt(index);
+                                              _platforms.keys.elementAt(index);
 
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -117,9 +117,9 @@ class _ModelPageState extends State<ModelPage> {
                                                   Container(color: Colors.red),
                                               onDismissed: (direction) {
                                                 setState(() {
-                                                  _models.remove(item);
-                                                  if (model.preset == item) {
-                                                    model.fromMap(_models.values
+                                                  _platforms.remove(item);
+                                                  if (ai.preset == item) {
+                                                    ai.fromMap(_platforms.values
                                                             .lastOrNull ??
                                                         {});
                                                   }
@@ -130,7 +130,7 @@ class _ModelPageState extends State<ModelPage> {
                                               },
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                  color: model.preset == item
+                                                  color: ai.preset == item
                                                       ? Theme.of(context)
                                                           .colorScheme
                                                           .tertiary
@@ -148,10 +148,10 @@ class _ModelPageState extends State<ModelPage> {
                                                     textAlign: TextAlign.center,
                                                   ),
                                                   onTap: () {
-                                                    model
-                                                        .fromMap(_models[item]);
+                                                    ai.fromMap(
+                                                        _platforms[item]);
                                                     Logger.log(
-                                                        "Model Set: ${model.preset}");
+                                                        "Model Set: ${ai.preset}");
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
@@ -179,10 +179,10 @@ class _ModelPageState extends State<ModelPage> {
                                       ),
                                       FilledButton(
                                         onPressed: () {
-                                          _models[model.preset] = model.toMap();
-                                          model.newPreset();
-                                          _models[model.preset] = model.toMap();
-                                          model.notify();
+                                          _platforms[ai.preset] = ai.toMap();
+                                          ai.newPreset();
+                                          _platforms[ai.preset] = ai.toMap();
+                                          ai.notify();
                                         },
                                         child: Text(
                                           "New Preset",
@@ -208,14 +208,14 @@ class _ModelPageState extends State<ModelPage> {
                       labelText: "Preset",
                       controller: _presetController,
                       onChanged: (value) {
-                        if (_models.keys.contains(value)) {
-                          model.fromMap(_models[value] ?? {});
-                          Logger.log("Model Set: ${model.preset}");
+                        if (_platforms.keys.contains(value)) {
+                          ai.fromMap(_platforms[value] ?? {});
+                          Logger.log("Model Set: ${ai.preset}");
                         } else if (value.isNotEmpty) {
-                          String oldName = model.preset;
+                          String oldName = ai.preset;
                           Logger.log("Updating model $oldName ====> $value");
-                          model.preset = value;
-                          _models.remove(oldName);
+                          ai.preset = value;
+                          _platforms.remove(oldName);
                         }
                       },
                     ),
@@ -230,23 +230,23 @@ class _ModelPageState extends State<ModelPage> {
                       leftText: "Load Parameters",
                       leftOnPressed: () async {
                         await storageOperationDialog(
-                            context, model.importModelParameters);
+                            context, ai.importModelParameters);
                         setState(() {
-                          _presetController.text = model.preset;
+                          _presetController.text = ai.preset;
                         });
                       },
                       rightText: "Save Parameters",
                       rightOnPressed: () async {
                         await storageOperationDialog(
-                            context, model.exportModelParameters);
+                            context, ai.exportModelParameters);
                       },
                     ),
                     const SizedBox(height: 15.0),
                     FilledButton(
                       onPressed: () {
-                        model.resetAll();
+                        ai.resetAll();
                         setState(() {
-                          _presetController.text = model.preset;
+                          _presetController.text = ai.preset;
                         });
                       },
                       child: Text(
@@ -261,13 +261,13 @@ class _ModelPageState extends State<ModelPage> {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     const ApiDropdown(),
-                    if (model.apiType == ApiType.local)
+                    if (ai.apiType == ApiType.local)
                       const LocalPlatform()
-                    else if (model.apiType == ApiType.ollama)
+                    else if (ai.apiType == ApiType.ollama)
                       const OllamaPlatform()
-                    else if (model.apiType == ApiType.openAI)
+                    else if (ai.apiType == ApiType.openAI)
                       const OpenAiPlatform()
-                    else if (model.apiType == ApiType.mistralAI)
+                    else if (ai.apiType == ApiType.mistralAI)
                       const MistralAiPlatform(),
                   ],
                 ),

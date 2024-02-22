@@ -158,15 +158,15 @@ class RemoteGeneration {
     }
   }
 
-  static Future<List<String>> getOptions(AiPlatform model) async {
-    switch (model.apiType) {
+  static Future<List<String>> getOptions(AiPlatform ai) async {
+    switch (ai.apiType) {
       case ApiType.ollama:
         bool permissionGranted = await _requestPermission();
         if (!permissionGranted) {
           return [];
         }
 
-        final url = Uri.parse("${model.parameters["remote_url"]}/api/tags");
+        final url = Uri.parse("${ai.parameters["remote_url"]}/api/tags");
         final headers = {"Accept": "application/json"};
 
         try {

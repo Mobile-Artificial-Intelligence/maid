@@ -7,7 +7,7 @@ class ModelDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return ListTile(
           title: Row(
         children: [
@@ -15,7 +15,7 @@ class ModelDropdown extends StatelessWidget {
             child: Text("Remote Model"),
           ),
           FutureBuilder<List<String>>(
-            future: model.getOptions(),
+            future: ai.getOptions(),
             builder:
                 (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
               if (snapshot.data == null) {
@@ -33,10 +33,10 @@ class ModelDropdown extends StatelessWidget {
                 dropdownMenuEntries: dropdownEntries,
                 onSelected: (String? value) {
                   if (value != null) {
-                    model.model = value;
+                    ai.model = value;
                   }
                 },
-                initialSelection: model.model,
+                initialSelection: ai.model,
                 width: 200,
               );
             },

@@ -8,15 +8,15 @@ class NPredictParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'n_predict',
-          inputValue: model.parameters["n_predict"] ?? 512,
+          inputValue: ai.parameters["n_predict"] ?? 512,
           sliderMin: 1.0,
           sliderMax: 1024.0,
           sliderDivisions: 1023,
           onValueChanged: (value) {
-            model.setParameter("n_predict", value.round());
+            ai.setParameter("n_predict", value.round());
           });
     });
   }

@@ -8,15 +8,15 @@ class PenaltyRepeatParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'penalty_repeat',
-          inputValue: model.parameters["penalty_repeat"] ?? 1.1,
+          inputValue: ai.parameters["penalty_repeat"] ?? 1.1,
           sliderMin: 0.0,
           sliderMax: 2.0,
           sliderDivisions: 200,
           onValueChanged: (value) {
-            model.setParameter("penalty_repeat", value);
+            ai.setParameter("penalty_repeat", value);
           });
     });
   }

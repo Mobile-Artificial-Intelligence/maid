@@ -8,15 +8,15 @@ class TopKParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'top_k',
-          inputValue: model.parameters["top_k"] ?? 40,
+          inputValue: ai.parameters["top_k"] ?? 40,
           sliderMin: 1.0,
           sliderMax: 128.0,
           sliderDivisions: 127,
           onValueChanged: (value) {
-            model.setParameter("top_k", value.round());
+            ai.setParameter("top_k", value.round());
           });
     });
   }

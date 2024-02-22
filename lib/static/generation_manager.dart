@@ -12,7 +12,7 @@ class GenerationManager {
     context.read<Session>().busy = true;
 
     GenerationOptions options = GenerationOptions(
-        model: context.read<AiPlatform>(),
+        ai: context.read<AiPlatform>(),
         character: context.read<Character>(),
         session: context.read<Session>());
 

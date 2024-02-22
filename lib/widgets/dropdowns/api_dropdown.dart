@@ -7,7 +7,7 @@ class ApiDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return ListTile(
           title: Row(
         children: [
@@ -35,10 +35,10 @@ class ApiDropdown extends StatelessWidget {
             ],
             onSelected: (ApiType? value) {
               if (value != null) {
-                model.apiType = value;
+                ai.apiType = value;
               }
             },
-            initialSelection: model.apiType,
+            initialSelection: ai.apiType,
             width: 200,
           )
         ],

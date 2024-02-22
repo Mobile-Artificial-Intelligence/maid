@@ -11,12 +11,12 @@ class BooleanParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, model, child) {
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SwitchListTile(
         title: Text(title),
-        value: model.parameters[parameter] ?? false,
+        value: ai.parameters[parameter] ?? false,
         onChanged: (value) {
-          model.setParameter(parameter, value);
+          ai.setParameter(parameter, value);
         },
       );
     });
