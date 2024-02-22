@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:maid/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/boolean_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_eta_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_parameter.dart';
@@ -15,7 +16,6 @@ import 'package:maid/widgets/parameter_widgets/penalty_last_n_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/penalty_present_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/penalty_repeat_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
-import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/tfs_z_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/top_k_parameter.dart';
@@ -30,7 +30,7 @@ class OllamaPlatform extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      StringParameter(title: "API Token", parameter: "api_key"),
+      const ApiKeyParameter(),
       Divider(
         height: 20,
         indent: 10,

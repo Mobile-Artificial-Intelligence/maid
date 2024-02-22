@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/seed_parameter.dart';
-import 'package:maid/widgets/parameter_widgets/string_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/widgets/dropdowns/model_dropdown.dart';
@@ -12,7 +12,7 @@ class MistralAiPlatform extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      StringParameter(title: "API Token", parameter: "api_key"),
+      const ApiKeyParameter(),
       Divider(
         height: 20,
         indent: 10,

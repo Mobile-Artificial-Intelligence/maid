@@ -130,7 +130,7 @@ class GenerationOptions {
       _remoteUrl = ai.url;
       _promptFormat = ai.format;
       _apiType = ai.apiType;
-      _apiKey = ai.parameters["api_key"];
+      _apiKey = ai.apiKey;
       _model = ai.model;
 
       _description = replaceCaseInsensitive(

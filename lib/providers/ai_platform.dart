@@ -14,6 +14,7 @@ class AiPlatform extends ChangeNotifier {
   PromptFormatType _format = PromptFormatType.alpaca;
   AiPlatformType _apiType = AiPlatformType.local;
   String _preset = "Default";
+  String _apiKey = "";
   String _url = "";
   String _model = "";
   Map<String, dynamic> _parameters = {};
@@ -49,6 +50,11 @@ class AiPlatform extends ChangeNotifier {
     notifyListeners();
   }
 
+  set apiKey(String apiKey) {
+    _apiKey = apiKey;
+    notifyListeners();
+  }
+
   set url(String url) {
     _url = url;
     notifyListeners();
@@ -77,6 +83,7 @@ class AiPlatform extends ChangeNotifier {
   PromptFormatType get format => _format;
   AiPlatformType get apiType => _apiType;
   String get preset => _preset;
+  String get apiKey => _apiKey;
   String get url => _url;
   String get model => _model;
   Map<String, dynamic> get parameters => _parameters;
