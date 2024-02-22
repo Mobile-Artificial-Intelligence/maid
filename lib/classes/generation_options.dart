@@ -5,6 +5,7 @@ import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
+import 'package:maid/static/user.dart';
 
 class GenerationOptions {
   late List<Map<String, dynamic>> _messages;
@@ -138,31 +139,28 @@ class GenerationOptions {
       _description =
           replaceCaseInsensitive(_description, "<BOT>", character.name);
       _description =
-          replaceCaseInsensitive(_description, "{{user}}", session.userName);
-      _description =
-          replaceCaseInsensitive(_description, "<USER>", session.userName);
+          replaceCaseInsensitive(_description, "{{user}}", User.name);
+      _description = replaceCaseInsensitive(_description, "<USER>", User.name);
 
       _personality = replaceCaseInsensitive(
           character.personality, "{{char}}", character.name);
       _personality =
           replaceCaseInsensitive(_personality, "<BOT>", character.name);
       _personality =
-          replaceCaseInsensitive(_personality, "{{user}}", session.userName);
-      _personality =
-          replaceCaseInsensitive(_personality, "<USER>", session.userName);
+          replaceCaseInsensitive(_personality, "{{user}}", User.name);
+      _personality = replaceCaseInsensitive(_personality, "<USER>", User.name);
 
       _scenario = replaceCaseInsensitive(
           character.scenario, "{{char}}", character.name);
       _scenario = replaceCaseInsensitive(_scenario, "<BOT>", character.name);
-      _scenario =
-          replaceCaseInsensitive(_scenario, "{{user}}", session.userName);
-      _scenario = replaceCaseInsensitive(_scenario, "<USER>", session.userName);
+      _scenario = replaceCaseInsensitive(_scenario, "{{user}}", User.name);
+      _scenario = replaceCaseInsensitive(_scenario, "<USER>", User.name);
 
       _system =
           replaceCaseInsensitive(character.system, "{{char}}", character.name);
       _system = replaceCaseInsensitive(_system, "<BOT>", character.name);
-      _system = replaceCaseInsensitive(_system, "{{user}}", session.userName);
-      _system = replaceCaseInsensitive(_system, "<USER>", session.userName);
+      _system = replaceCaseInsensitive(_system, "{{user}}", User.name);
+      _system = replaceCaseInsensitive(_system, "<USER>", User.name);
 
       _nKeep = ai.nKeep;
       _seed = ai.randomSeed ? Random().nextInt(1000000) : ai.seed;

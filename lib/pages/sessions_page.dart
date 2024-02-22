@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/session.dart';
+import 'package:maid/static/user.dart';
 import 'package:maid/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +31,7 @@ class _SessionsPageState extends State<SessionsPage> {
     });
 
     final session = context.read<Session>();
-    _userNameController = TextEditingController(text: session.userName);
+    _userNameController = TextEditingController(text: User.name);
     String key = session.rootMessage;
     if (key.isEmpty) key = "Session";
     _sessions = {key: session.toMap()};
@@ -44,47 +45,45 @@ class _SessionsPageState extends State<SessionsPage> {
 
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+        appBar: AppBar(
+          elevation: 0.0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+            ),
+          ),
+          title: const Text("Sessions"),
         ),
-        title: const Text("Sessions"),
-      ),
-      body: Consumer<Session>(
-        builder: (context, session, child) {
-          String key = session.rootMessage;
-          if (key.isEmpty) key = "Session";
+        body: Consumer<Session>(
+          builder: (context, session, child) {
+            String key = session.rootMessage;
+            if (key.isEmpty) key = "Session";
 
-          _sessions[key] = session.toMap();
+            _sessions[key] = session.toMap();
 
-          SharedPreferences.getInstance().then((prefs) {
-            prefs.setString("last_session", json.encode(session.toMap()));
-          });
+            SharedPreferences.getInstance().then((prefs) {
+              prefs.setString("last_session", json.encode(session.toMap()));
+            });
 
-          return Column(
-            children: [
+            return Column(children: [
               const SizedBox(height: 20.0),
               TextFieldListTile(
-                headingText: 'User Name',
-                labelText: 'User Name',
-                controller: _userNameController,
-                onChanged: (value) {
-                  session.userName = value;
-                }
-              ),
+                  headingText: 'User Name',
+                  labelText: 'User Name',
+                  controller: _userNameController,
+                  onChanged: (value) {
+                    User.name = value;
+                  }),
               const SizedBox(height: 20.0),
               FilledButton(
                 onPressed: () {
@@ -93,7 +92,7 @@ class _SessionsPageState extends State<SessionsPage> {
                   setState(() {
                     _sessions[newSession.rootMessage] = newSession.toMap();
                   });
-                }, 
+                },
                 child: Text(
                   "New Session",
                   style: Theme.of(context).textTheme.labelLarge,
@@ -110,7 +109,8 @@ class _SessionsPageState extends State<SessionsPage> {
                   itemCount: _sessions.length,
                   itemBuilder: (context, index) {
                     String sessionKey = _sessions.keys.elementAt(index);
-                    Session sessionData = Session.fromMap(_sessions[sessionKey]);
+                    Session sessionData =
+                        Session.fromMap(_sessions[sessionKey]);
 
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -125,26 +125,28 @@ class _SessionsPageState extends State<SessionsPage> {
                             if (session.isBusy) return;
                             _sessions.remove(sessionKey);
                             if (sessionKey == session.rootMessage) {
-                              session.fromMap(_sessions.values.firstOrNull ?? 
-                                {"message": "Session ${UniqueKey().toString()}"});
+                              session.fromMap(_sessions.values.firstOrNull ??
+                                  {
+                                    "message":
+                                        "Session ${UniqueKey().toString()}"
+                                  });
                             }
                           },
                           background: Container(
-                            color: Colors.red,
-                            child: const Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 8.0),
-                                child: Icon(Icons.delete, color: Colors.white)
-                              )
-                            )
-                          ),
+                              color: Colors.red,
+                              child: const Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
+                                      child: Icon(Icons.delete,
+                                          color: Colors.white)))),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: sessionKey == session.rootMessage ? 
-                                     Theme.of(context).colorScheme.tertiary : 
-                                     Theme.of(context).colorScheme.primary,
-                              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                              color: sessionKey == session.rootMessage
+                                  ? Theme.of(context).colorScheme.tertiary
+                                  : Theme.of(context).colorScheme.primary,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15.0)),
                             ),
                             child: ListTile(
                               title: Text(
@@ -161,7 +163,9 @@ class _SessionsPageState extends State<SessionsPage> {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    final TextEditingController controller = TextEditingController(text: sessionData.rootMessage);
+                                    final TextEditingController controller =
+                                        TextEditingController(
+                                            text: sessionData.rootMessage);
                                     return AlertDialog(
                                       title: const Text(
                                         "Rename Session",
@@ -180,21 +184,28 @@ class _SessionsPageState extends State<SessionsPage> {
                                           },
                                           child: Text(
                                             "Cancel",
-                                            style: Theme.of(context).textTheme.labelLarge,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge,
                                           ),
                                         ),
                                         FilledButton(
                                           onPressed: () {
-                                            String oldName = session.rootMessage;
-                                            Logger.log("Updating session $oldName ====> ${controller.text}");
-                                            session.setRootMessage(controller.text);
+                                            String oldName =
+                                                session.rootMessage;
+                                            Logger.log(
+                                                "Updating session $oldName ====> ${controller.text}");
+                                            session.setRootMessage(
+                                                controller.text);
                                             _sessions.remove(oldName);
                                             Navigator.of(context).pop();
                                             setState(() {});
                                           },
                                           child: Text(
                                             "Rename",
-                                            style: Theme.of(context).textTheme.labelLarge,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge,
                                           ),
                                         ),
                                       ],
@@ -210,10 +221,8 @@ class _SessionsPageState extends State<SessionsPage> {
                   },
                 ),
               )
-            ]
-          );
-        },
-      )
-    );
+            ]);
+          },
+        ));
   }
 }

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
+import 'package:maid/static/user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -427,5 +428,21 @@ class Character extends ChangeNotifier {
     }
 
     return buffer.toString();
+  }
+
+  String _formatPlaceholders(String input) {
+    input = _replaceCaseInsensitive(input, "{{char}}", _name);
+    input = _replaceCaseInsensitive(input, "<BOT>", _name);
+    input = _replaceCaseInsensitive(input, "{{user}}", User.name);
+    input = _replaceCaseInsensitive(input, "<USER>", User.name);
+
+    return input;
+  }
+
+  String _replaceCaseInsensitive(
+      String original, String from, String replaceWith) {
+    // This creates a regular expression that ignores case (case-insensitive)
+    RegExp exp = RegExp(RegExp.escape(from), caseSensitive: false);
+    return original.replaceAll(exp, replaceWith);
   }
 }
