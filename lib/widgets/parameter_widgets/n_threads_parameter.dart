@@ -15,7 +15,7 @@ class NThreadsParameter extends StatelessWidget {
           labelText: 'n_threads',
           inputValue: ai.parameters["n_threads"] ?? Platform.numberOfProcessors,
           sliderMin: 1.0,
-          sliderMax: ai.apiType == ApiType.local
+          sliderMax: ai.apiType == AiPlatformType.local
               ? Platform.numberOfProcessors.toDouble()
               : 128.0,
           sliderDivisions: 127,

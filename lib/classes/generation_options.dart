@@ -10,7 +10,7 @@ class GenerationOptions {
   late List<Map<String, dynamic>> _messages;
   late String? _remoteUrl;
   late PromptFormatType _promptFormat;
-  late ApiType _apiType;
+  late AiPlatformType _apiType;
   late String? _apiKey;
   late String _model;
   late String _description;
@@ -41,7 +41,7 @@ class GenerationOptions {
   List<Map<String, dynamic>> get messages => _messages;
   String? get remoteUrl => _remoteUrl;
   PromptFormatType get promptFormat => _promptFormat;
-  ApiType get apiType => _apiType;
+  AiPlatformType get apiType => _apiType;
   String? get apiKey => _apiKey;
   String get model => _model;
   String get description => _description;

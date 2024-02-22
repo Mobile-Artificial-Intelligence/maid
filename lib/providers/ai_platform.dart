@@ -12,8 +12,9 @@ import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 
 class AiPlatform extends ChangeNotifier {
   PromptFormatType _format = PromptFormatType.alpaca;
-  ApiType _apiType = ApiType.local;
+  AiPlatformType _apiType = AiPlatformType.local;
   String _preset = "Default";
+  String _url = "";
   String _model = "";
   Map<String, dynamic> _parameters = {};
 
@@ -48,6 +49,11 @@ class AiPlatform extends ChangeNotifier {
     notifyListeners();
   }
 
+  set url(String url) {
+    _url = url;
+    notifyListeners();
+  }
+
   set model(String model) {
     _model = model;
     notifyListeners();
@@ -63,14 +69,15 @@ class AiPlatform extends ChangeNotifier {
     notifyListeners();
   }
 
-  set apiType(ApiType apiType) {
+  set apiType(AiPlatformType apiType) {
     _apiType = apiType;
     notifyListeners();
   }
 
   PromptFormatType get format => _format;
-  ApiType get apiType => _apiType;
+  AiPlatformType get apiType => _apiType;
   String get preset => _preset;
+  String get url => _url;
   String get model => _model;
   Map<String, dynamic> get parameters => _parameters;
 
@@ -84,7 +91,8 @@ class AiPlatform extends ChangeNotifier {
     } else {
       _format = PromptFormatType
           .values[inputJson["prompt_format"] ?? PromptFormatType.alpaca.index];
-      _apiType = ApiType.values[inputJson["api_type"] ?? ApiType.local.index];
+      _apiType = AiPlatformType
+          .values[inputJson["api_type"] ?? AiPlatformType.local.index];
       _preset = inputJson["preset"] ?? "Default";
       _parameters = inputJson;
 
@@ -158,8 +166,8 @@ class AiPlatform extends ChangeNotifier {
       } else {
         _format = PromptFormatType.values[
             _parameters["prompt_format"] ?? PromptFormatType.alpaca.index];
-        _apiType =
-            ApiType.values[_parameters["api_type"] ?? ApiType.local.index];
+        _apiType = AiPlatformType
+            .values[_parameters["api_type"] ?? AiPlatformType.local.index];
         _preset = _parameters["preset"] ?? "Default";
       }
     } catch (e) {
@@ -190,4 +198,4 @@ class AiPlatform extends ChangeNotifier {
   }
 }
 
-enum ApiType { none, local, openAI, ollama, mistralAI, custom }
+enum AiPlatformType { none, local, openAI, ollama, mistralAI, custom }

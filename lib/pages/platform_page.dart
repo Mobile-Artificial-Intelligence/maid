@@ -261,13 +261,13 @@ class _PlatformPageState extends State<PlatformPage> {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     const ApiDropdown(),
-                    if (ai.apiType == ApiType.local)
+                    if (ai.apiType == AiPlatformType.local)
                       const LocalPlatform()
-                    else if (ai.apiType == ApiType.ollama)
+                    else if (ai.apiType == AiPlatformType.ollama)
                       const OllamaPlatform()
-                    else if (ai.apiType == ApiType.openAI)
+                    else if (ai.apiType == AiPlatformType.openAI)
                       const OpenAiPlatform()
-                    else if (ai.apiType == ApiType.mistralAI)
+                    else if (ai.apiType == AiPlatformType.mistralAI)
                       const MistralAiPlatform(),
                   ],
                 ),

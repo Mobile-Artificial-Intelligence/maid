@@ -14,26 +14,26 @@ class ApiDropdown extends StatelessWidget {
           const Expanded(
             child: Text("API Type"),
           ),
-          DropdownMenu<ApiType>(
+          DropdownMenu<AiPlatformType>(
             dropdownMenuEntries: const [
-              DropdownMenuEntry<ApiType>(
-                value: ApiType.local,
+              DropdownMenuEntry<AiPlatformType>(
+                value: AiPlatformType.local,
                 label: "Local",
               ),
-              DropdownMenuEntry<ApiType>(
-                value: ApiType.ollama,
+              DropdownMenuEntry<AiPlatformType>(
+                value: AiPlatformType.ollama,
                 label: "Ollama",
               ),
-              DropdownMenuEntry<ApiType>(
-                value: ApiType.openAI,
+              DropdownMenuEntry<AiPlatformType>(
+                value: AiPlatformType.openAI,
                 label: "OpenAI",
               ),
-              DropdownMenuEntry<ApiType>(
-                value: ApiType.mistralAI,
+              DropdownMenuEntry<AiPlatformType>(
+                value: AiPlatformType.mistralAI,
                 label: "MistralAI",
               ),
             ],
-            onSelected: (ApiType? value) {
+            onSelected: (AiPlatformType? value) {
               if (value != null) {
                 ai.apiType = value;
               }
