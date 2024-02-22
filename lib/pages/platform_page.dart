@@ -15,14 +15,14 @@ import 'package:maid/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ModelPage extends StatefulWidget {
-  const ModelPage({super.key});
+class PlatformPage extends StatefulWidget {
+  const PlatformPage({super.key});
 
   @override
-  State<ModelPage> createState() => _ModelPageState();
+  State<PlatformPage> createState() => _PlatformPageState();
 }
 
-class _ModelPageState extends State<ModelPage> {
+class _PlatformPageState extends State<PlatformPage> {
   late Map<String, dynamic> _platforms;
   late TextEditingController _presetController;
 

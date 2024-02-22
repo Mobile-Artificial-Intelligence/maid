@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:maid/pages/about_page.dart';
 import 'package:maid/pages/character_page.dart';
-import 'package:maid/pages/model_page.dart';
+import 'package:maid/pages/platform_page.dart';
 import 'package:maid/pages/sessions_page.dart';
 import 'package:maid/pages/settings_page.dart';
 import 'package:maid/providers/character.dart';
@@ -29,74 +29,63 @@ class HomePageState extends State<HomePage> {
 
   AppBar _buildAppBar(double aspectRatio) {
     if (aspectRatio < 0.9) {
-        return AppBar(
-            elevation: 0.0,
-        );
+      return AppBar(
+        elevation: 0.0,
+      );
     }
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.primary,
-        elevation: 0.0,
-        titleSpacing: 0, // Remove the default spacing
-        title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Distribute the space evenly
-            children: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.person),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CharacterPage()
-                      )
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.account_tree_rounded),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ModelPage()
-                      )
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.chat_rounded),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SessionsPage()
-                      )
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SettingsPage()
-                      )
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.info),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AboutPage()
-                      )
-                    );
-                  },
-                ),
-            ],
-        ),
+      elevation: 0.0,
+      titleSpacing: 0, // Remove the default spacing
+      title: Row(
+        mainAxisAlignment:
+            MainAxisAlignment.spaceEvenly, // Distribute the space evenly
+        children: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CharacterPage()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_tree_rounded),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PlatformPage()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.chat_rounded),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SessionsPage()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SettingsPage()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.info),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AboutPage()));
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -127,17 +116,14 @@ class HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.person,
                   color: Theme.of(context).colorScheme.onPrimary),
-              title: Text(
-                'Character',
-                style: Theme.of(context).textTheme.labelLarge),
+              title: Text('Character',
+                  style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CharacterPage()
-                  )
-                );
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CharacterPage()));
               },
             ),
             ListTile(
@@ -150,11 +136,9 @@ class HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ModelPage()
-                  )
-                );
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PlatformPage()));
               },
             ),
             ListTile(
@@ -167,11 +151,9 @@ class HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SessionsPage()
-                  )
-                );
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SessionsPage()));
               },
             ),
             ListTile(
@@ -182,11 +164,9 @@ class HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SettingsPage()
-                  )
-                );
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsPage()));
               },
             ),
             ListTile(
@@ -196,12 +176,8 @@ class HomePageState extends State<HomePage> {
                   Text('About', style: Theme.of(context).textTheme.labelLarge),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AboutPage()
-                  )
-                );
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AboutPage()));
               },
             ),
           ],
@@ -226,7 +202,10 @@ class HomePageState extends State<HomePage> {
           if (history.isEmpty && character.useGreeting) {
             final newKey = UniqueKey();
             final index = Random().nextInt(character.greetings.length);
-            session.add(newKey, message: character.greetings[index], userGenerated: false, notify: false);
+            session.add(newKey,
+                message: character.greetings[index],
+                userGenerated: false,
+                notify: false);
             history = {newKey: false};
           }
 
