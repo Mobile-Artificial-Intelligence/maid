@@ -430,7 +430,7 @@ class Character extends ChangeNotifier {
     return buffer.toString();
   }
 
-  String _formatPlaceholders(String input) {
+  String formatPlaceholders(String input) {
     input = _replaceCaseInsensitive(input, "{{char}}", _name);
     input = _replaceCaseInsensitive(input, "<BOT>", _name);
     input = _replaceCaseInsensitive(input, "{{user}}", User.name);
