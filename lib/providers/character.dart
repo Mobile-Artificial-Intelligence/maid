@@ -92,7 +92,6 @@ class Character extends ChangeNotifier {
       }
     }
 
-
     _system = inputJson["system_prompt"] ?? "";
 
     _useExamples = inputJson["use_examples"] ?? true;
@@ -130,27 +129,32 @@ class Character extends ChangeNotifier {
     return jsonCharacter;
   }
 
-  void setName(String newName) {
+  set name(String newName) {
     _name = newName;
     notifyListeners();
   }
 
-  void setDescription(String newDescription) {
+  set description(String newDescription) {
     _description = newDescription;
     notifyListeners();
   }
 
-  void setPersonality(String newPersonality) {
+  set personality(String newPersonality) {
     _personality = newPersonality;
     notifyListeners();
   }
 
-  void setScenario(String newScenario) {
+  set scenario(String newScenario) {
     _scenario = newScenario;
     notifyListeners();
   }
 
-  void setUseGreeting(bool useGreeting) {
+  set system(String newSystem) {
+    _system = newSystem;
+    notifyListeners();
+  }
+
+  set useGreeting(bool useGreeting) {
     _useGreeting = useGreeting;
     notifyListeners();
   }
@@ -175,12 +179,7 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSystem(String newSystem) {
-    _system = newSystem;
-    notifyListeners();
-  }
-
-  void setUseExamples(bool useExamples) {
+  set useExamples(bool useExamples) {
     _useExamples = useExamples;
     notifyListeners();
   }
@@ -334,16 +333,18 @@ class Character extends ChangeNotifier {
         _description = image.textData!["description"] ?? "";
         _personality = image.textData!["personality"] ?? "";
         _scenario = image.textData!["scenario"] ?? "";
-        
+
         if (image.textData!["greetings"] != null) {
-          _greetings = List<String>.from(json.decode(image.textData!["greetings"] ?? "[]"));
+          _greetings = List<String>.from(
+              json.decode(image.textData!["greetings"] ?? "[]"));
         } else {
           if (image.textData!["first_mes"] != null) {
             _greetings = [image.textData!["first_mes"] ?? ""];
           }
-          
+
           if (image.textData!["alternate_greetings"] != null) {
-            _greetings.addAll(List<String>.from(json.decode(image.textData!["alternate_greetings"] ?? "[]")));
+            _greetings.addAll(List<String>.from(
+                json.decode(image.textData!["alternate_greetings"] ?? "[]")));
           }
         }
 
