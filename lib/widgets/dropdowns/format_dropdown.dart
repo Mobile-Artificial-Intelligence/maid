@@ -35,7 +35,7 @@ class FormatDropdown extends StatelessWidget {
                 ai.promptFormat = value;
               }
             },
-            initialSelection: ai.format,
+            initialSelection: ai.promptFormat,
             width: 200,
           )
         ],

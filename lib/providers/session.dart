@@ -8,24 +8,16 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
-  String _userName = "user";
   bool _busy = false;
   ChatNode _root = ChatNode(key: UniqueKey());
   ChatNode? tail;
   String _messageBuffer = "";
-
-  String get userName => _userName;
 
   bool get isBusy => _busy;
 
   String get rootMessage => _root.message;
 
   Key get key => _root.key;
-
-  set userName(String value) {
-    _userName = value;
-    notifyListeners();
-  }
 
   set busy(bool value) {
     _busy = value;
@@ -89,7 +81,9 @@ class Session extends ChangeNotifier {
   }
 
   Future<void> add(Key key,
-      {String message = "", bool userGenerated = false, bool notify = true}) async {
+      {String message = "",
+      bool userGenerated = false,
+      bool notify = true}) async {
     final node =
         ChatNode(key: key, message: message, userGenerated: userGenerated);
 
@@ -143,10 +137,7 @@ class Session extends ChangeNotifier {
       tail = _root.findTail();
       add(UniqueKey(), userGenerated: false);
       notifyListeners();
-      GenerationManager.prompt(
-        parent.message,
-        context
-      );
+      GenerationManager.prompt(parent.message, context);
     }
   }
 
@@ -159,10 +150,7 @@ class Session extends ChangeNotifier {
     add(UniqueKey(), userGenerated: true, message: message);
     add(UniqueKey(), userGenerated: false);
     notifyListeners();
-    GenerationManager.prompt(
-      message,
-      context
-    );
+    GenerationManager.prompt(message, context);
   }
 
   void finalise() {

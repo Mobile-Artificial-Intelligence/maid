@@ -203,7 +203,7 @@ class HomePageState extends State<HomePage> {
             final newKey = UniqueKey();
             final index = Random().nextInt(character.greetings.length);
             session.add(newKey,
-                message: character.greetings[index],
+                message: character.formatPlaceholders(character.greetings[index]),
                 userGenerated: false,
                 notify: false);
             history = {newKey: false};
