@@ -32,7 +32,7 @@ class FormatDropdown extends StatelessWidget {
             ],
             onSelected: (PromptFormatType? value) {
               if (value != null) {
-                model.setPromptFormat(value);
+                model.promptFormat = value;
               }
             },
             initialSelection: model.format,

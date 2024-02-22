@@ -214,7 +214,7 @@ class _ModelPageState extends State<ModelPage> {
                         } else if (value.isNotEmpty) {
                           String oldName = model.preset;
                           Logger.log("Updating model $oldName ====> $value");
-                          model.setPreset(value);
+                          model.preset = value;
                           _models.remove(oldName);
                         }
                       },

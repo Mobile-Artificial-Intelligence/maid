@@ -42,7 +42,7 @@ class Model extends ChangeNotifier {
     }
   }
 
-  void setPreset(String preset) {
+  set preset(String preset) {
     _preset = preset;
     notifyListeners();
   }
@@ -52,12 +52,12 @@ class Model extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPromptFormat(PromptFormatType promptFormat) {
+  set promptFormat(PromptFormatType promptFormat) {
     _format = promptFormat;
     notifyListeners();
   }
 
-  void setApiType(ApiType apiType) {
+  set apiType(ApiType apiType) {
     _apiType = apiType;
     notifyListeners();
   }
