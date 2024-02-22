@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
-import 'package:maid/classes/generation_options.dart';
+import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
+import 'package:provider/provider.dart';
 
 class LocalGeneration {
   static LlamaProcessor? _llamaProcessor;
@@ -9,69 +14,65 @@ class LocalGeneration {
   static Timer? _timer;
   static DateTime? _startTime;
 
-  static void prompt(String input, GenerationOptions options,
+  static void prompt(String input, BuildContext context,
       void Function(String?) callback) async {
     _timer = null;
     _startTime = null;
     _completer = Completer();
 
+    final ai = context.read<AiPlatform>();
+    final character = context.read<Character>();
+    final session = context.read<Session>();
+
     ModelParams modelParams = ModelParams();
-    modelParams.format = options.promptFormat;
+    modelParams.format = ai.promptFormat;
     ContextParams contextParams = ContextParams();
-    contextParams.batch = options.nBatch;
-    contextParams.context = options.nCtx;
-    contextParams.seed = options.seed;
-    contextParams.threads = options.nThread;
-    contextParams.threadsBatch = options.nThread;
+    contextParams.batch = ai.nBatch;
+    contextParams.context = ai.nCtx;
+    contextParams.seed = ai.randomSeed ? Random().nextInt(1000000) : ai.seed;
+    contextParams.threads = ai.nThread;
+    contextParams.threadsBatch = ai.nThread;
     SamplingParams samplingParams = SamplingParams();
-    samplingParams.temp = options.temperature;
-    samplingParams.topK = options.topK;
-    samplingParams.topP = options.topP;
-    samplingParams.tfsZ = options.tfsZ;
-    samplingParams.typicalP = options.typicalP;
-    samplingParams.penaltyLastN = options.penaltyLastN;
-    samplingParams.penaltyRepeat = options.penaltyRepeat;
-    samplingParams.penaltyFreq = options.penaltyFreq;
-    samplingParams.penaltyPresent = options.penaltyPresent;
-    samplingParams.mirostat = options.mirostat;
-    samplingParams.mirostatTau = options.mirostatTau;
-    samplingParams.mirostatEta = options.mirostatEta;
-    samplingParams.penalizeNl = options.penalizeNewline;
+    samplingParams.temp = ai.temperature;
+    samplingParams.topK = ai.topK;
+    samplingParams.topP = ai.topP;
+    samplingParams.tfsZ = ai.tfsZ;
+    samplingParams.typicalP = ai.typicalP;
+    samplingParams.penaltyLastN = ai.penaltyLastN;
+    samplingParams.penaltyRepeat = ai.penaltyRepeat;
+    samplingParams.penaltyFreq = ai.penaltyFreq;
+    samplingParams.penaltyPresent = ai.penaltyPresent;
+    samplingParams.mirostat = ai.mirostat;
+    samplingParams.mirostatTau = ai.mirostatTau;
+    samplingParams.mirostatEta = ai.mirostatEta;
+    samplingParams.penalizeNl = ai.penalizeNewline;
 
     _llamaProcessor = LlamaProcessor(
-        options.model, modelParams, contextParams, samplingParams);
+      ai.model, 
+      modelParams, 
+      contextParams, 
+      samplingParams
+    );
 
     List<Map<String, dynamic>> messages = [
       {
         'role': 'system',
         'content': '''
-          ${options.description}\n\n
-          ${options.personality}\n\n
-          ${options.scenario}\n\n
-          ${options.system}\n\n
+          ${character.formatPlaceholders(character.description)}\n\n
+          ${character.formatPlaceholders(character.personality)}\n\n
+          ${character.formatPlaceholders(character.scenario)}\n\n
+          ${character.formatPlaceholders(character.system)}\n\n
         '''
       }
     ];
 
-    for (var message in options.messages) {
-      switch (message['role']) {
-        case "user":
-          messages.add(message);
-          break;
-        case "assistant":
-          messages.add(message);
-          break;
-        case "system": // Under normal circumstances, this should never be called
-          messages.add(message);
-          break;
-        default:
-          break;
-      }
-
-      messages.add({'role': 'system', 'content': options.system});
+    if (character.useExamples) {
+      messages.addAll(character.examples);
     }
 
-    _llamaProcessor!.messages = options.messages;
+    messages.addAll(session.getMessages());
+
+    _llamaProcessor!.messages = messages;
 
     _llamaProcessor!.stream.listen((data) {
       _resetTimer();

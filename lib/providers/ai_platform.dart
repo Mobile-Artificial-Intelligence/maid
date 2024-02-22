@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 
 class AiPlatform extends ChangeNotifier {
-  PromptFormatType _format = PromptFormatType.alpaca;
+  PromptFormatType _promptFormat = PromptFormatType.alpaca;
   AiPlatformType _apiType = AiPlatformType.local;
   String _preset = "Default";
   String _apiKey = "";
@@ -68,7 +68,7 @@ class AiPlatform extends ChangeNotifier {
   }
 
   set promptFormat(PromptFormatType promptFormat) {
-    _format = promptFormat;
+    _promptFormat = promptFormat;
     notifyListeners();
   }
 
@@ -202,7 +202,7 @@ class AiPlatform extends ChangeNotifier {
     notifyListeners();
   }
 
-  PromptFormatType get format => _format;
+  PromptFormatType get promptFormat => _promptFormat;
   AiPlatformType get apiType => _apiType;
   String get preset => _preset;
   String get apiKey => _apiKey;
@@ -238,8 +238,8 @@ class AiPlatform extends ChangeNotifier {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
-      _format = PromptFormatType
-          .values[inputJson["prompt_format"] ?? PromptFormatType.alpaca.index];
+      _promptFormat = PromptFormatType
+          .values[inputJson["prompt_promptFormat"] ?? PromptFormatType.alpaca.index];
       _apiType = AiPlatformType
           .values[inputJson["api_type"] ?? AiPlatformType.local.index];
       _preset = inputJson["preset"] ?? "Default";
@@ -279,7 +279,7 @@ class AiPlatform extends ChangeNotifier {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> outputJson = {};
 
-    outputJson["prompt_format"] = _format.index;
+    outputJson["prompt_promptFormat"] = _promptFormat.index;
     outputJson["api_type"] = _apiType.index;
     outputJson["preset"] = _preset;
     outputJson["api_key"] = _apiKey;
