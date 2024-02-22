@@ -11,12 +11,12 @@ class NCtxParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'n_ctx',
-          inputValue: ai.parameters["n_ctx"] ?? 512,
+          inputValue: ai.nCtx,
           sliderMin: 1.0,
           sliderMax: 4096.0,
           sliderDivisions: 4095,
           onValueChanged: (value) {
-            ai.setParameter("n_ctx", value.round());
+            ai.nCtx = value.round();
           });
     });
   }

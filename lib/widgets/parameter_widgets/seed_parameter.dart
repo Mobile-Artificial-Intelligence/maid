@@ -7,17 +7,17 @@ class SeedParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController(
-        text: context.read<AiPlatform>().parameters["seed"]?.toString() ?? "");
+    TextEditingController controller =
+        TextEditingController(text: context.read<AiPlatform>().seed.toString());
 
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return Column(
         children: [
           SwitchListTile(
             title: const Text('random_seed'),
-            value: ai.parameters["random_seed"] ?? true,
+            value: ai.randomSeed,
             onChanged: (value) {
-              ai.setParameter("random_seed", value);
+              ai.randomSeed = value;
             },
           ),
           Divider(
@@ -26,7 +26,7 @@ class SeedParameter extends StatelessWidget {
             endIndent: 10,
             color: Theme.of(context).colorScheme.primary,
           ),
-          if (!(ai.parameters["random_seed"] ?? true))
+          if (!ai.randomSeed)
             ListTile(
               title: Row(
                 children: [
@@ -41,7 +41,7 @@ class SeedParameter extends StatelessWidget {
                         labelText: 'seed',
                       ),
                       onChanged: (value) {
-                        ai.setParameter("seed", int.parse(value));
+                        ai.seed = int.parse(value);
                       },
                     ),
                   ),

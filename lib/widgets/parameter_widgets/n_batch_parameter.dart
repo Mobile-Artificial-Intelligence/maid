@@ -11,12 +11,12 @@ class NBatchParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'n_batch',
-          inputValue: ai.parameters["n_batch"] ?? 512,
+          inputValue: ai.nBatch,
           sliderMin: 1.0,
           sliderMax: 4096.0,
           sliderDivisions: 4095,
           onValueChanged: (value) {
-            ai.setParameter("n_batch", value.round());
+            ai.nBatch = value.round();
           });
     });
   }

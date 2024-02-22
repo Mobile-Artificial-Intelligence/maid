@@ -1,8 +1,6 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:maid/widgets/parameter_widgets/api_key_parameter.dart';
-import 'package:maid/widgets/parameter_widgets/boolean_parameter.dart';
+import 'package:maid/widgets/parameter_widgets/penalize_nl_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_eta_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_parameter.dart';
 import 'package:maid/widgets/parameter_widgets/mirostat_tau_parameter.dart';
@@ -47,7 +45,7 @@ class OllamaPlatform extends StatelessWidget {
         endIndent: 10,
         color: Theme.of(context).colorScheme.primary,
       ),
-      const BooleanParameter(title: "penalize_nl", parameter: "penalize_nl"),
+      const PenalizeNlParameter(),
       const SeedParameter(),
       const NThreadsParameter(),
       const NCtxParameter(),

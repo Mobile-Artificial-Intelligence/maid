@@ -11,12 +11,12 @@ class NPredictParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'n_predict',
-          inputValue: ai.parameters["n_predict"] ?? 512,
+          inputValue: ai.nPredict,
           sliderMin: 1.0,
           sliderMax: 1024.0,
           sliderDivisions: 1023,
           onValueChanged: (value) {
-            ai.setParameter("n_predict", value.round());
+            ai.nPredict = value.round();
           });
     });
   }

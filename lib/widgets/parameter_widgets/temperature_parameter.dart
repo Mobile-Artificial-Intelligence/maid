@@ -11,12 +11,12 @@ class TemperatureParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'temperature',
-          inputValue: ai.parameters["temperature"] ?? 0.8,
+          inputValue: ai.temperature,
           sliderMin: 0.0,
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            ai.setParameter("temperature", value);
+            ai.temperature = value;
           });
     });
   }

@@ -17,7 +17,29 @@ class AiPlatform extends ChangeNotifier {
   String _apiKey = "";
   String _url = "";
   String _model = "";
-  Map<String, dynamic> _parameters = {};
+
+  bool _randomSeed = true;
+
+  int _nKeep = 48;
+  int _seed = 0;
+  int _nPredict = 512;
+  int _topK = 40;
+  double _topP = 0.95;
+  double _minP = 0.1;
+  double _tfsZ = 1.0;
+  double _typicalP = 1.0;
+  int _penaltyLastN = 64;
+  double _temperature = 0.8;
+  double _penaltyRepeat = 1.1;
+  double _penaltyPresent = 0.0;
+  double _penaltyFreq = 0.0;
+  int _mirostat = 0;
+  double _mirostatTau = 5.0;
+  double _mirostatEta = 0.1;
+  bool _penalizeNewline = true;
+  int _nCtx = 512;
+  int _nBatch = 512;
+  int _nThread = 8;
 
   void newPreset() {
     final key = UniqueKey().toString();
@@ -45,6 +67,16 @@ class AiPlatform extends ChangeNotifier {
     }
   }
 
+  set promptFormat(PromptFormatType promptFormat) {
+    _format = promptFormat;
+    notifyListeners();
+  }
+
+  set apiType(AiPlatformType apiType) {
+    _apiType = apiType;
+    notifyListeners();
+  }
+
   set preset(String preset) {
     _preset = preset;
     notifyListeners();
@@ -65,18 +97,108 @@ class AiPlatform extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setParameter(String key, dynamic value) {
-    _parameters[key] = value;
+  set randomSeed(bool randomSeed) {
+    _randomSeed = randomSeed;
     notifyListeners();
   }
 
-  set promptFormat(PromptFormatType promptFormat) {
-    _format = promptFormat;
+  set nKeep(int nKeep) {
+    _nKeep = nKeep;
     notifyListeners();
   }
 
-  set apiType(AiPlatformType apiType) {
-    _apiType = apiType;
+  set seed(int seed) {
+    _seed = seed;
+    notifyListeners();
+  }
+
+  set nPredict(int nPredict) {
+    _nPredict = nPredict;
+    notifyListeners();
+  }
+
+  set topK(int topK) {
+    _topK = topK;
+    notifyListeners();
+  }
+
+  set topP(double topP) {
+    _topP = topP;
+    notifyListeners();
+  }
+
+  set minP(double minP) {
+    _minP = minP;
+    notifyListeners();
+  }
+
+  set tfsZ(double tfsZ) {
+    _tfsZ = tfsZ;
+    notifyListeners();
+  }
+
+  set typicalP(double typicalP) {
+    _typicalP = typicalP;
+    notifyListeners();
+  }
+
+  set penaltyLastN(int penaltyLastN) {
+    _penaltyLastN = penaltyLastN;
+    notifyListeners();
+  }
+
+  set temperature(double temperature) {
+    _temperature = temperature;
+    notifyListeners();
+  }
+
+  set penaltyRepeat(double penaltyRepeat) {
+    _penaltyRepeat = penaltyRepeat;
+    notifyListeners();
+  }
+
+  set penaltyPresent(double penaltyPresent) {
+    _penaltyPresent = penaltyPresent;
+    notifyListeners();
+  }
+
+  set penaltyFreq(double penaltyFreq) {
+    _penaltyFreq = penaltyFreq;
+    notifyListeners();
+  }
+
+  set mirostat(int mirostat) {
+    _mirostat = mirostat;
+    notifyListeners();
+  }
+
+  set mirostatTau(double mirostatTau) {
+    _mirostatTau = mirostatTau;
+    notifyListeners();
+  }
+
+  set mirostatEta(double mirostatEta) {
+    _mirostatEta = mirostatEta;
+    notifyListeners();
+  }
+
+  set penalizeNewline(bool penalizeNewline) {
+    _penalizeNewline = penalizeNewline;
+    notifyListeners();
+  }
+
+  set nCtx(int nCtx) {
+    _nCtx = nCtx;
+    notifyListeners();
+  }
+
+  set nBatch(int nBatch) {
+    _nBatch = nBatch;
+    notifyListeners();
+  }
+
+  set nThread(int nThread) {
+    _nThread = nThread;
     notifyListeners();
   }
 
@@ -86,7 +208,27 @@ class AiPlatform extends ChangeNotifier {
   String get apiKey => _apiKey;
   String get url => _url;
   String get model => _model;
-  Map<String, dynamic> get parameters => _parameters;
+  bool get randomSeed => _randomSeed;
+  int get nKeep => _nKeep;
+  int get seed => _seed;
+  int get nPredict => _nPredict;
+  int get topK => _topK;
+  double get topP => _topP;
+  double get minP => _minP;
+  double get tfsZ => _tfsZ;
+  double get typicalP => _typicalP;
+  int get penaltyLastN => _penaltyLastN;
+  double get temperature => _temperature;
+  double get penaltyRepeat => _penaltyRepeat;
+  double get penaltyPresent => _penaltyPresent;
+  double get penaltyFreq => _penaltyFreq;
+  int get mirostat => _mirostat;
+  double get mirostatTau => _mirostatTau;
+  double get mirostatEta => _mirostatEta;
+  bool get penalizeNewline => _penalizeNewline;
+  int get nCtx => _nCtx;
+  int get nBatch => _nBatch;
+  int get nThread => _nThread;
 
   Future<List<String>> getOptions() {
     return RemoteGeneration.getOptions(this);
@@ -101,11 +243,32 @@ class AiPlatform extends ChangeNotifier {
       _apiType = AiPlatformType
           .values[inputJson["api_type"] ?? AiPlatformType.local.index];
       _preset = inputJson["preset"] ?? "Default";
-      _parameters = inputJson;
+      _apiKey = inputJson["api_key"] ?? "";
+      _url = inputJson["remote_url"] ?? "";
+      _model = inputJson["model"] ?? "";
+      _nKeep = inputJson["n_keep"] ?? 48;
+      _seed = inputJson["seed"] ?? 0;
+      _nPredict = inputJson["n_predict"] ?? 512;
+      _topK = inputJson["top_k"] ?? 40;
+      _topP = inputJson["top_p"] ?? 0.95;
+      _minP = inputJson["min_p"] ?? 0.1;
+      _tfsZ = inputJson["tfs_z"] ?? 1.0;
+      _typicalP = inputJson["typical_p"] ?? 1.0;
+      _penaltyLastN = inputJson["penalty_last_n"] ?? 64;
+      _temperature = inputJson["temperature"] ?? 0.8;
+      _penaltyRepeat = inputJson["penalty_repeat"] ?? 1.1;
+      _penaltyPresent = inputJson["penalty_present"] ?? 0.0;
+      _penaltyFreq = inputJson["penalty_freq"] ?? 0.0;
+      _mirostat = inputJson["mirostat"] ?? 0;
+      _mirostatTau = inputJson["mirostat_tau"] ?? 5.0;
+      _mirostatEta = inputJson["mirostat_eta"] ?? 0.1;
+      _penalizeNewline = inputJson["penalize_nl"] ?? true;
+      _nCtx = inputJson["n_ctx"] ?? 512;
+      _nBatch = inputJson["n_batch"] ?? 512;
+      _nThread = inputJson["n_thread"] ?? 8;
 
-      if (_parameters["n_threads"] == null ||
-          _parameters["n_threads"] > Platform.numberOfProcessors) {
-        _parameters["n_threads"] = Platform.numberOfProcessors;
+      if (nThread > Platform.numberOfProcessors) {
+        nThread = Platform.numberOfProcessors;
       }
 
       Logger.log("Model created with name: ${inputJson["name"]}");
@@ -114,21 +277,43 @@ class AiPlatform extends ChangeNotifier {
   }
 
   Map<String, dynamic> toMap() {
-    Map<String, dynamic> jsonModel = {};
+    Map<String, dynamic> outputJson = {};
 
-    jsonModel = _parameters;
-    jsonModel["prompt_format"] = _format.index;
-    jsonModel["api_type"] = _apiType.index;
-    jsonModel["preset"] = _preset;
+    outputJson["prompt_format"] = _format.index;
+    outputJson["api_type"] = _apiType.index;
+    outputJson["preset"] = _preset;
+    outputJson["api_key"] = _apiKey;
+    outputJson["remote_url"] = _url;
+    outputJson["model"] = _model;
+    outputJson["n_keep"] = _nKeep;
+    outputJson["seed"] = _seed;
+    outputJson["n_predict"] = _nPredict;
+    outputJson["top_k"] = _topK;
+    outputJson["top_p"] = _topP;
+    outputJson["min_p"] = _minP;
+    outputJson["tfs_z"] = _tfsZ;
+    outputJson["typical_p"] = _typicalP;
+    outputJson["penalty_last_n"] = _penaltyLastN;
+    outputJson["temperature"] = _temperature;
+    outputJson["penalty_repeat"] = _penaltyRepeat;
+    outputJson["penalty_present"] = _penaltyPresent;
+    outputJson["penalty_freq"] = _penaltyFreq;
+    outputJson["mirostat"] = _mirostat;
+    outputJson["mirostat_tau"] = _mirostatTau;
+    outputJson["mirostat_eta"] = _mirostatEta;
+    outputJson["penalize_nl"] = _penalizeNewline;
+    outputJson["n_ctx"] = _nCtx;
+    outputJson["n_batch"] = _nBatch;
+    outputJson["n_thread"] = _nThread;
 
-    return jsonModel;
+    return outputJson;
   }
 
   void resetAll() {
     rootBundle.loadString('assets/default_parameters.json').then((jsonString) {
-      Map<String, dynamic> jsonModel = json.decode(jsonString);
+      Map<String, dynamic> assetJson = json.decode(jsonString);
 
-      fromMap(jsonModel);
+      fromMap(assetJson);
 
       notifyListeners();
     });
@@ -136,11 +321,7 @@ class AiPlatform extends ChangeNotifier {
 
   Future<String> exportModelParameters(BuildContext context) async {
     try {
-      _parameters["prompt_format"] = _format.index;
-      _parameters["api_type"] = _apiType.index;
-      _parameters["preset"] = _preset;
-
-      String jsonString = json.encode(_parameters);
+      String jsonString = json.encode(toMap());
 
       File? file = await FileManager.save(context, "$_preset.json");
 
@@ -166,17 +347,9 @@ class AiPlatform extends ChangeNotifier {
       String jsonString = await file.readAsString();
       if (jsonString.isEmpty) return "Failed to load parameters";
 
-      _parameters = json.decode(jsonString);
-      if (_parameters.isEmpty) {
-        resetAll();
-        return "Failed to decode parameters";
-      } else {
-        _format = PromptFormatType.values[
-            _parameters["prompt_format"] ?? PromptFormatType.alpaca.index];
-        _apiType = AiPlatformType
-            .values[_parameters["api_type"] ?? AiPlatformType.local.index];
-        _preset = _parameters["preset"] ?? "Default";
-      }
+      Map<String, dynamic> inputJson = json.decode(jsonString);
+
+      fromMap(inputJson);
     } catch (e) {
       resetAll();
       return "Error: $e";

@@ -11,12 +11,12 @@ class TopPParameter extends StatelessWidget {
     return Consumer<AiPlatform>(builder: (context, ai, child) {
       return SliderListTile(
           labelText: 'top_p',
-          inputValue: ai.parameters["top_p"] ?? 0.95,
+          inputValue: ai.topP,
           sliderMin: 0.0,
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            ai.setParameter("top_p", value);
+            ai.topP = value;
           });
     });
   }
