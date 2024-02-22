@@ -19,7 +19,7 @@ class RemoteGeneration {
       final chat = ChatOllama(
         baseUrl: '${options.remoteUrl}/api',
         defaultOptions: ChatOllamaOptions(
-          model: options.remoteModel ?? 'llama2',
+          model: options.model,
           numKeep: options.nKeep,
           seed: options.seed,
           numPredict: options.nPredict,
@@ -58,7 +58,7 @@ class RemoteGeneration {
         baseUrl: options.remoteUrl,
         apiKey: options.apiKey,
         defaultOptions: ChatOpenAIOptions(
-          model: options.remoteModel ?? 'gpt-3.5-turbo',
+          model: options.model,
           temperature: options.temperature,
           frequencyPenalty: options.penaltyFreq,
           presencePenalty: options.penaltyPresent,
@@ -86,7 +86,7 @@ class RemoteGeneration {
         baseUrl: '${options.remoteUrl}/v1',
         apiKey: options.apiKey,
         defaultOptions: ChatMistralAIOptions(
-          model: options.remoteModel ?? 'mistral-small',
+          model: options.model,
           topP: options.topP,
           temperature: options.temperature,
         ),

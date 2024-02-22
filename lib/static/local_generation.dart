@@ -9,11 +9,8 @@ class LocalGeneration {
   static Timer? _timer;
   static DateTime? _startTime;
 
-  static void prompt(
-    String input,
-    GenerationOptions options,
-    void Function(String?) callback
-  ) async {
+  static void prompt(String input, GenerationOptions options,
+      void Function(String?) callback) async {
     _timer = null;
     _startTime = null;
     _completer = Completer();
@@ -40,13 +37,9 @@ class LocalGeneration {
     samplingParams.mirostatTau = options.mirostatTau;
     samplingParams.mirostatEta = options.mirostatEta;
     samplingParams.penalizeNl = options.penalizeNewline;
-    
+
     _llamaProcessor = LlamaProcessor(
-      options.path!, 
-      modelParams, 
-      contextParams,
-      samplingParams
-    );
+        options.model, modelParams, contextParams, samplingParams);
 
     List<Map<String, dynamic>> messages = [
       {
@@ -75,10 +68,7 @@ class LocalGeneration {
           break;
       }
 
-      messages.add({
-        'role': 'system',
-        'content': options.system
-      });
+      messages.add({'role': 'system', 'content': options.system});
     }
 
     _llamaProcessor!.messages = options.messages;
