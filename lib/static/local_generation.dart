@@ -51,7 +51,9 @@ class LocalGeneration {
         path: ai.model,
         modelParams: modelParams,
         contextParams: contextParams,
-        samplingParams: samplingParams);
+        samplingParams: samplingParams,
+        onDone: stop
+      );
 
     List<Map<String, dynamic>> messages = [
       {
