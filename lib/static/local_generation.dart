@@ -48,11 +48,10 @@ class LocalGeneration {
     samplingParams.penalizeNl = ai.penalizeNewline;
 
     _llamaProcessor = LlamaProcessor(
-      ai.model, 
-      modelParams, 
-      contextParams, 
-      samplingParams
-    );
+        path: ai.model,
+        modelParams: modelParams,
+        contextParams: contextParams,
+        samplingParams: samplingParams);
 
     List<Map<String, dynamic>> messages = [
       {
