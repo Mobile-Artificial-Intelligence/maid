@@ -6,17 +6,6 @@ import 'package:maid/static/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Networking {
-  static Future<String> getLocalIP() async {
-    bool permissionGranted = await getNearbyDevicesPermission();
-    if (!permissionGranted) {
-      return "";
-    }
-
-    final info = NetworkInfo();
-    var hostAddress = await info.getWifiIP();
-    return hostAddress ?? "";
-  }
-
   static Future<bool> getNearbyDevicesPermission() async {
     if (!Platform.isAndroid && !Platform.isIOS) {
       return true;

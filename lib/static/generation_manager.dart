@@ -14,6 +14,8 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/static/networking.dart';
+import 'package:lan_scanner/lan_scanner.dart';
+import 'package:network_info_plus/network_info_plus.dart';
 import 'package:provider/provider.dart';
 
 class GenerationManager {
@@ -336,26 +338,47 @@ class GenerationManager {
   }
 
   static Future<String> getOllamaUrl() async {
-    final localIP = await Networking.getLocalIP();
+    bool permissionGranted = await Networking.getNearbyDevicesPermission();
+    if (!permissionGranted) {
+      return '';
+    }
+
+    final localIP = await NetworkInfo().getWifiIP();
 
     // Get the first 3 octets of the local IP
-    final baseIP = localIP.split('.').sublist(0, 3).join('.');
-    
-    for (int i = 1; i <= 254; i++) {
-      final ip = '$baseIP.$i';
-      final url = Uri.parse('http://$ip:11434/api/tags');
-      final headers = {"Accept": "application/json"};
+    final baseIP = ipToCSubnet(localIP ?? '');
 
-      try {
-        var request = Request("GET", url)..headers.addAll(headers);
+    // Scan the local network for hosts
+    final hosts = await LanScanner(debugLogging: true).quickIcmpScanAsync(baseIP);
 
-        var response = await request.send();
-        if (response.statusCode == 200) {
-          return 'http://$ip:11434';
-        }
-      } catch (e) {
-        Logger.log('Error: $e');
+    // Create a list to hold all the futures
+    var futures = <Future<String>>[];
+
+    for (var host in hosts) {
+      futures.add(checkIp(host.internetAddress.address));
+    }
+
+    // Wait for all futures to complete
+    final results = await Future.wait(futures);
+
+    // Filter out all empty results and return the first valid URL, if any
+    final validUrls = results.where((result) => result.isNotEmpty);
+    return validUrls.isNotEmpty ? validUrls.first : '';
+  }
+
+  static Future<String> checkIp(String ip) async {
+    final url = Uri.parse('http://$ip:11434/api/tags');
+    final headers = {"Accept": "application/json"};
+
+    try {
+      var request = Request("GET", url)..headers.addAll(headers);
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        Logger.log('Found Ollama at $ip');
+        return 'http://$ip:11434';
       }
+    } catch (e) {
+      // Ignore
     }
 
     return '';

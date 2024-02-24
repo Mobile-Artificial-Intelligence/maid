@@ -35,7 +35,7 @@ class ApiDropdown extends StatelessWidget {
             ],
             onSelected: (AiPlatformType? value) {
               if (value != null) {
-                ai.apiType = value;
+                ai.setApiType(value);
               }
             },
             initialSelection: ai.apiType,

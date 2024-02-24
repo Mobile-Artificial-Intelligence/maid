@@ -145,6 +145,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dart_ping:
+    dependency: transitive
+    description:
+      name: dart_ping
+      sha256: "2f5418d0a5c64e53486caaac78677b25725b1e13c33c5be834ce874ea18bd24f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.0.1"
   dbus:
     dependency: transitive
     description:
@@ -408,6 +416,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.3"
+  lan_scanner:
+    dependency: "direct main"
+    description:
+      name: lan_scanner
+      sha256: a36865c20469f99d26078b488d4ce2787fef8cf59c4c5c5f2f72a148c6721418
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0+1"
   langchain:
     dependency: "direct main"
     description:

@@ -67,22 +67,10 @@ class AiPlatform extends ChangeNotifier {
     }
   }
 
-  void updateOllamaUrl() async {
-    _url = await GenerationManager.getOllamaUrl();
-    notifyListeners();
-  }
-
-  set promptFormat(PromptFormatType promptFormat) {
-    _promptFormat = promptFormat;
-    notifyListeners();
-  }
-
-  set apiType(AiPlatformType apiType) {
-    _apiType = apiType;
-    
+  void setApiType(AiPlatformType apiType) async {
     switch (apiType) {
       case AiPlatformType.ollama:
-        updateOllamaUrl();
+        _url = await GenerationManager.getOllamaUrl();
       case AiPlatformType.openAI:
         _url =  "https://api.openai.com/v1/";
       case AiPlatformType.mistralAI:
@@ -91,6 +79,13 @@ class AiPlatform extends ChangeNotifier {
         _url =  "";
     }
 
+    _apiType = apiType;
+    
+    notifyListeners();
+  }
+
+  set promptFormat(PromptFormatType promptFormat) {
+    _promptFormat = promptFormat;
     notifyListeners();
   }
 
