@@ -228,23 +228,32 @@ class RemoteGeneration {
   }
 
   static Future<bool> _requestPermission() async {
-    if ((Platform.isAndroid || Platform.isIOS)) {
-      // If nearby devices is granted or android version is below 12.0
-      if (await Permission.nearbyWifiDevices.request().isGranted) {
-        Logger.log("Nearby Devices - Permission granted");
-        return true;
-      } else if (Platform.isAndroid &&
-          await DeviceInfoPlugin()
-                  .androidInfo
-                  .then((value) => value.version.sdkInt) <
-              31) {
-        Logger.log("Nearby Devices - Android version is below 12.0");
-        return true;
-      } else {
-        Logger.log("Nearby Devices - Permission denied");
-        return false;
-      }
+    if (!Platform.isAndroid && !Platform.isIOS) {
+      return true;
     }
-    return true;
+    
+    // Get sdk version
+    final sdk = await DeviceInfoPlugin().androidInfo.then((value) => value.version.sdkInt);
+    var permissions = <Permission>[]; // List of permissions to request
+
+    if (sdk <= 32) {
+      // ACCESS_FINE_LOCATION is required
+      permissions.add(Permission.location);
+    } else {
+      // NEARBY_WIFI_DEVICES is required
+      permissions.add(Permission.nearbyWifiDevices);
+    }
+
+    // Request permissions and check if all are granted
+    Map<Permission, PermissionStatus> statuses = await permissions.request();
+    bool allPermissionsGranted = statuses.values.every((status) => status.isGranted);
+
+    if (allPermissionsGranted) {
+      Logger.log("All necessary permissions granted");
+      return true;
+    } else {
+      Logger.log("Not all permissions granted");
+      return false;
+    }
   }
 }
