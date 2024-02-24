@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maid/static/remote_generation.dart';
+import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,13 +67,25 @@ class AiPlatform extends ChangeNotifier {
     }
   }
 
-  set promptFormat(PromptFormatType promptFormat) {
-    _promptFormat = promptFormat;
+  void setApiType(AiPlatformType apiType) async {
+    switch (apiType) {
+      case AiPlatformType.ollama:
+        _url = await GenerationManager.getOllamaUrl();
+      case AiPlatformType.openAI:
+        _url =  "https://api.openai.com/v1/";
+      case AiPlatformType.mistralAI:
+        _url =  "https://api.mistral.ai/v1/";
+      default:
+        _url =  "";
+    }
+
+    _apiType = apiType;
+    
     notifyListeners();
   }
 
-  set apiType(AiPlatformType apiType) {
-    _apiType = apiType;
+  set promptFormat(PromptFormatType promptFormat) {
+    _promptFormat = promptFormat;
     notifyListeners();
   }
 
@@ -231,7 +243,7 @@ class AiPlatform extends ChangeNotifier {
   int get nThread => _nThread;
 
   Future<List<String>> getOptions() {
-    return RemoteGeneration.getOptions(this);
+    return GenerationManager.getOptions(this);
   }
 
   void fromMap(Map<String, dynamic> inputJson) {
