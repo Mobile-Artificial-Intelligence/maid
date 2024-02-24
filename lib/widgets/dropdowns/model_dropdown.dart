@@ -2,8 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:provider/provider.dart';
 
-class ModelDropdown extends StatelessWidget {
+class ModelDropdown extends StatefulWidget {
   const ModelDropdown({super.key});
+
+  @override
+  State<ModelDropdown> createState() => _ModelDropdownState();
+}
+
+class _ModelDropdownState extends State<ModelDropdown> {
+  Future<List<String>>? optionsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    optionsFuture = getOptions();
+  }
+
+  Future<List<String>> getOptions() {
+    // Obtain your AiPlatform provider instance
+    var ai = Provider.of<AiPlatform>(context, listen: false);
+    return ai.getOptions();
+  }
+
+  void refreshOptions() {
+    setState(() {
+      optionsFuture = getOptions();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +39,20 @@ class ModelDropdown extends StatelessWidget {
           const Expanded(
             child: Text("Remote Model"),
           ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: refreshOptions,
+          ),
+          const SizedBox(width: 8.0),
           FutureBuilder<List<String>>(
-            future: ai.getOptions(),
+            future: optionsFuture,
             builder:
                 (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-              if (snapshot.data == null) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (snapshot.data == null) {
                 return const SizedBox(height: 8.0);
               }
 
