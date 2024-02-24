@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:langchain/langchain.dart';
@@ -15,7 +13,7 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/ai_platform.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:maid/static/networking.dart';
 import 'package:provider/provider.dart';
 
 class GenerationManager {
@@ -113,15 +111,14 @@ class GenerationManager {
     BuildContext context,
     void Function(String?) callback
   ) async {
-    _requestPermission().then((value) {
-      if (!value) {
-        return;
-      }
-    });
-
     final ai = context.read<AiPlatform>();
     final character = context.read<Character>();
     final session = context.read<Session>();
+
+    bool permissionGranted = await Networking.getNearbyDevicesPermission();
+    if (!permissionGranted) {
+      return;
+    }
 
     List<ChatMessage> chatMessages = [];
 
@@ -302,7 +299,7 @@ class GenerationManager {
   static Future<List<String>> getOptions(AiPlatform ai) async {
     switch (ai.apiType) {
       case AiPlatformType.ollama:
-        bool permissionGranted = await _requestPermission();
+        bool permissionGranted = await Networking.getNearbyDevicesPermission();
         if (!permissionGranted) {
           return [];
         }
@@ -338,33 +335,29 @@ class GenerationManager {
     }
   }
 
-  static Future<bool> _requestPermission() async {
-    if (!Platform.isAndroid && !Platform.isIOS) {
-      return true;
-    }
+  static Future<String> getOllamaUrl() async {
+    final localIP = await Networking.getLocalIP();
+
+    // Get the first 3 octets of the local IP
+    final baseIP = localIP.split('.').sublist(0, 3).join('.');
     
-    // Get sdk version
-    final sdk = await DeviceInfoPlugin().androidInfo.then((value) => value.version.sdkInt);
-    var permissions = <Permission>[]; // List of permissions to request
+    for (int i = 1; i <= 254; i++) {
+      final ip = '$baseIP.$i';
+      final url = Uri.parse('http://$ip:11434/api/tags');
+      final headers = {"Accept": "application/json"};
 
-    if (sdk <= 32) {
-      // ACCESS_FINE_LOCATION is required
-      permissions.add(Permission.location);
-    } else {
-      // NEARBY_WIFI_DEVICES is required
-      permissions.add(Permission.nearbyWifiDevices);
+      try {
+        var request = Request("GET", url)..headers.addAll(headers);
+
+        var response = await request.send();
+        if (response.statusCode == 200) {
+          return 'http://$ip:11434';
+        }
+      } catch (e) {
+        Logger.log('Error: $e');
+      }
     }
 
-    // Request permissions and check if all are granted
-    Map<Permission, PermissionStatus> statuses = await permissions.request();
-    bool allPermissionsGranted = statuses.values.every((status) => status.isGranted);
-
-    if (allPermissionsGranted) {
-      Logger.log("All necessary permissions granted");
-      return true;
-    } else {
-      Logger.log("Not all permissions granted");
-      return false;
-    }
+    return '';
   }
 }

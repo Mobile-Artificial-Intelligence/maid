@@ -67,6 +67,11 @@ class AiPlatform extends ChangeNotifier {
     }
   }
 
+  void updateOllamaUrl() async {
+    _url = await GenerationManager.getOllamaUrl();
+    notifyListeners();
+  }
+
   set promptFormat(PromptFormatType promptFormat) {
     _promptFormat = promptFormat;
     notifyListeners();
@@ -77,7 +82,7 @@ class AiPlatform extends ChangeNotifier {
     
     switch (apiType) {
       case AiPlatformType.ollama:
-        _url = "http://0.0.0.0:11434";
+        updateOllamaUrl();
       case AiPlatformType.openAI:
         _url =  "https://api.openai.com/v1/";
       case AiPlatformType.mistralAI:
