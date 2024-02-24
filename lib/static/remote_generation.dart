@@ -249,10 +249,10 @@ class RemoteGeneration {
     bool allPermissionsGranted = statuses.values.every((status) => status.isGranted);
 
     if (allPermissionsGranted) {
-      Logger.log("All necessary permissions granted");
+      Logger.log("Nearby Devices - Permission granted");
       return true;
     } else {
-      Logger.log("Not all permissions granted");
+      Logger.log("Nearby Devices - Permission denied");
       return false;
     }
   }
