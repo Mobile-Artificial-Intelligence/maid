@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/remote_generation.dart';
 import 'package:maid/static/local_generation.dart';
