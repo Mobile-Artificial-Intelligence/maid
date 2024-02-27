@@ -519,6 +519,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  maid_ui:
+    dependency: "direct main"
+    description:
+      path: "packages/maid_ui"
+      relative: true
+    source: path
+    version: "0.0.1"
   matcher:
     dependency: transitive
     description:
@@ -1101,5 +1108,5 @@ packages:
     source: hosted
     version: "2.1.1"
 sdks:
-  dart: ">=3.3.0-279.1.beta <4.0.0"
+  dart: ">=3.3.0 <4.0.0"
   flutter: ">=3.13.0"

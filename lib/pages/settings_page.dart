@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/main.dart';
 import 'package:maid/static/user.dart';
-import 'package:maid/widgets/chat_widgets/code_box.dart';
+import 'package:maid_ui/maid_ui.dart';
 import 'package:maid/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

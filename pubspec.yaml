@@ -56,6 +56,8 @@ dependencies:
   receive_sharing_intent: ^1.6.7
   network_info_plus: ^4.1.0+1
   lan_scanner: ^4.0.0+1
+  maid_ui:
+    path: packages/maid_ui
 
 dev_dependencies:
   msix: ^3.9.1
