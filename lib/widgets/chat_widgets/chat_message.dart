@@ -67,7 +67,11 @@ class ChatMessageState extends State<ChatMessage>
       if (i % 2 == 0) {
         _messageWidgets.add(SelectableText(part));
       } else {
-        _messageWidgets.add(CodeBox(code: part));
+        _messageWidgets.addAll([
+          const SizedBox(height: 10),
+          CodeBox(code: part),
+          const SizedBox(height: 10)
+        ]);
       }
     }
   }
@@ -76,7 +80,6 @@ class ChatMessageState extends State<ChatMessage>
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -229,6 +232,7 @@ class ChatMessageState extends State<ChatMessage>
             keyboardType: TextInputType.multiline,
           ) :
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!_finalised && _messageWidgets.isEmpty)
                 const TypingIndicator()
