@@ -130,7 +130,8 @@ class _ChatFieldState extends State<ChatField> {
                 ),
               ),
             ),
-            IconButton(
+            if (Platform.isAndroid || Platform.isIOS)
+              IconButton(
                 onPressed: () {
                   if (!session.isBusy) {
                     send();
@@ -142,7 +143,8 @@ class _ChatFieldState extends State<ChatField> {
                   color: session.isBusy
                       ? Theme.of(context).colorScheme.onPrimary
                       : Theme.of(context).colorScheme.secondary,
-                )),
+                )
+              ),
           ],
         ),
       );
