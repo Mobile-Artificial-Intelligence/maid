@@ -23,13 +23,12 @@ class CodeBox extends StatelessWidget {
               ),
               child: IconButton(
                 icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.secondary),
-                onPressed: () async {
-                  final ctx = context;
-                  Clipboard.setData(ClipboardData(text: code)).then((_) {
-                    ScaffoldMessenger.of(ctx).showSnackBar(
-                      const SnackBar(content: Text("Code copied to clipboard!")),
-                    );
-                  });
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: code));
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Code copied to clipboard!")),
+                  );
                 },
                 tooltip: 'Copy Code',
               ),
