@@ -107,141 +107,113 @@ class ChatMessageState extends State<ChatMessage>
               ),
             ),
           ),
-          //if (_finalised)
-          //  ...[
-          //    if (widget.userGenerated)
-          //      IconButton(
-          //        padding: const EdgeInsets.all(0),
-          //        onPressed: () {
-          //          if (busy) return;
-          //          setState(() {
-          //            _messageController.text = _message;
-          //            _editing = true;
-          //            _finalised = false;
-          //          });
-          //        },
-          //        icon: const Icon(Icons.edit),
-          //      )
-          //    else
-          //      ...[
-          //        
-          //      ],
-          //    if (siblingCount > 1)
-          //      Container(
-          //        alignment: Alignment.center,
-          //        margin: const EdgeInsets.all(10),
-          //        padding: const EdgeInsets.all(0),
-          //        width: 150,
-          //        height: 30,
-          //        decoration: BoxDecoration(
-          //          color: busy 
-          //               ? Theme.of(context).colorScheme.primary 
-          //               : Theme.of(context).colorScheme.tertiary,
-          //          borderRadius: BorderRadius.circular(20),
-          //        ),
-          //        child: Row(
-          //          mainAxisSize: MainAxisSize.max,
-          //          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //          children: <Widget>[
-          //            IconButton(
-          //              padding: const EdgeInsets.all(0),
-          //              onPressed: () {
-          //                if (busy) return;
-          //                session.last(widget.key!);
-          //              },
-          //              icon: Icon(
-          //                Icons.arrow_left, 
-          //                color: Theme.of(context).colorScheme.onPrimary
-          //              )
-          //            ),
-          //            Text('$currentIndex/${siblingCount-1}', style: Theme.of(context).textTheme.labelLarge),
-          //            IconButton(
-          //              padding: const EdgeInsets.all(0),
-          //              onPressed: () {
-          //                if (busy) return;
-          //                session.next(widget.key!);
-          //              },
-          //              icon: Icon(
-          //                Icons.arrow_right,
-          //                color: Theme.of(context).colorScheme.onPrimary),
-          //            ),
-          //          ],
-          //        ),
-          //      ),
-          //    if (!widget.userGenerated)
-          //      IconButton(
-          //        padding: const EdgeInsets.all(0),
-          //        onPressed: () {
-          //          if (busy) return;
-          //          session.regenerate(
-          //            widget.key!,
-          //            context
-          //          );
-          //          setState(() {});
-          //        },
-          //        icon: const Icon(Icons.refresh),
-          //      ),
-          //  ]
-          //else
-          //  ...[
-          //    IconButton(
-          //      padding: const EdgeInsets.all(0),
-          //      onPressed: () {
-          //        if (busy) return;
-          //        final inputMessage = _messageController.text;
-          //        setState(() {
-          //          _messageController.text = _message;
-          //          _editing = false;
-          //          _finalised = true;
-          //        });
-          //        session.edit(widget.key!, context, inputMessage);
-          //      }, 
-          //      icon: const Icon(Icons.done)
-          //    ),
-          //    IconButton(
-          //      padding: const EdgeInsets.all(0),
-          //      onPressed: () {
-          //        setState(() {
-          //          _messageController.text = _message;
-          //          _editing = false;
-          //          _finalised = true;
-          //        });
-          //      }, 
-          //      icon: const Icon(Icons.close)
-          //    ),
-          //  ]
         ],
       ),
       Padding(
         // left padding 30 right 10
         padding: const EdgeInsets.fromLTRB(60, 0, 20, 20),
-        child: _editing ? 
-          TextField(
-            controller: _messageController,
-            autofocus: true,
-            cursorColor: Theme.of(context).colorScheme.onPrimary,
-            decoration: InputDecoration(
-              hintText: "Edit Message",
-              fillColor: Theme.of(context).colorScheme.secondary,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide.none,
-              )
-            ),
-            maxLines: null,
-            keyboardType: TextInputType.multiline,
-          ) :
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (!_finalised && _messageWidgets.isEmpty)
-                const TypingIndicator()
-              else
-                ..._messageWidgets,
-            ],
-          )
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _editing ? _editingColumn() : _standardColumn(),
+        )
       )
     ]);
+  }
+
+  Widget _messageOptions() {
+    return Row(
+      children: widget.userGenerated
+          ? _userOptions()
+          : _assistantOptions(),
+    );
+  }
+
+  List<Widget> _userOptions() {
+    return [
+      IconButton(
+        onPressed: () {
+          if (session.isBusy) return;
+          setState(() {
+            _messageController.text = _message;
+            _editing = true;
+            _finalised = false;
+          });
+        },
+        icon: const Icon(Icons.edit),
+      ),
+    ];
+  }
+
+  List<Widget> _assistantOptions() {
+    return [
+      IconButton(
+        onPressed: () {
+          if (session.isBusy) return;
+          session.regenerate(widget.key!, context);
+          setState(() {});
+        },
+        icon: const Icon(Icons.refresh),
+      ),
+    ];
+  }
+
+  List<Widget> _editingColumn() {
+    final busy = context.watch<Session>().isBusy;
+
+    return [
+      TextField(
+        controller: _messageController,
+        autofocus: true,
+        cursorColor: Theme.of(context).colorScheme.secondary,
+        decoration: InputDecoration(
+          hintText: "Edit Message",
+          fillColor: Theme.of(context).colorScheme.background,
+          contentPadding: EdgeInsets.zero,
+        ),
+        maxLines: null,
+        keyboardType: TextInputType.multiline,
+      ),
+      Row(
+        children: [
+          IconButton(
+            padding: const EdgeInsets.all(0),
+            onPressed: () {
+              if (busy) return;
+              final inputMessage = _messageController.text;
+              setState(() {
+                _messageController.text = _message;
+                _editing = false;
+                _finalised = true;
+              });
+              session.edit(widget.key!, context, inputMessage);
+            }, 
+            icon: const Icon(Icons.done)
+          ),
+          IconButton(
+            padding: const EdgeInsets.all(0),
+            onPressed: () {
+              setState(() {
+                _messageController.text = _message;
+                _editing = false;
+                _finalised = true;
+              });
+            }, 
+            icon: const Icon(Icons.close)
+          )
+        ]
+      )
+    ];
+  }
+
+  List<Widget> _standardColumn() {
+    return [
+      if (!_finalised && _messageWidgets.isEmpty)
+        const TypingIndicator()
+      else
+        ..._messageWidgets,
+      if (_finalised)
+        _messageOptions()
+    ];
   }
 
   @override
