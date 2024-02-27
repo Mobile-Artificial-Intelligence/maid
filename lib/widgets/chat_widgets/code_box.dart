@@ -8,44 +8,44 @@ class CodeBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: IconButton(
-                icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.secondary),
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: code));
-                  
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Code copied to clipboard!")),
-                  );
-                },
-                tooltip: 'Copy Code',
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            height: 25,
+            child: IconButton(
+              iconSize: 10,
+              icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.secondary),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: code));
+                
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Code copied to clipboard!")),
+                );
+              },
+              tooltip: 'Copy Code',
+            ),
+          ),
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(10.0),
+            scrollDirection: Axis.horizontal,  // Allow horizontal scrolling
+            child: SelectableText(
+              code,
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'monospace'
               ),
             ),
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(10.0),
-              scrollDirection: Axis.horizontal,  // Allow horizontal scrolling
-              child: SelectableText(
-                code,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'monospace'
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
