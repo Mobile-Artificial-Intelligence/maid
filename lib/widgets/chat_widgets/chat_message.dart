@@ -93,7 +93,7 @@ class ChatMessageState extends State<ChatMessage>
           const SizedBox(width: 10.0),
           ShaderMask(
             shaderCallback: (bounds) => const LinearGradient(
-              colors: [Color.fromARGB(255, 255, 172, 200), Color.fromARGB(255, 240, 150, 255), Color.fromARGB(255, 150, 240, 255)],
+              colors: [Color.fromARGB(255, 255, 172, 200), Color.fromARGB(255, 255, 150, 250), Color.fromARGB(255, 150, 240, 255)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ).createShader(bounds),
@@ -106,6 +106,57 @@ class ChatMessageState extends State<ChatMessage>
                 fontSize: 18,
               ),
             ),
+          ),
+          const Expanded(child: SizedBox()), // Spacer
+          //Add message options here
+          Consumer<Session>(
+            builder: (context, session, child) {
+              int currentIndex = session.index(widget.key!);
+              int siblingCount = session.siblingCount(widget.key!);
+              bool busy = session.isBusy;
+
+              return Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(0),
+                width: 150,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: busy 
+                       ? Theme.of(context).colorScheme.primary 
+                       : Theme.of(context).colorScheme.tertiary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    IconButton(
+                      padding: const EdgeInsets.all(0),
+                      onPressed: () {
+                        if (busy) return;
+                        session.last(widget.key!);
+                      },
+                      icon: Icon(
+                        Icons.arrow_left, 
+                        color: Theme.of(context).colorScheme.onPrimary
+                      )
+                    ),
+                    Text('$currentIndex/${siblingCount-1}', style: Theme.of(context).textTheme.labelLarge),
+                    IconButton(
+                      padding: const EdgeInsets.all(0),
+                      onPressed: () {
+                        if (busy) return;
+                        session.next(widget.key!);
+                      },
+                      icon: Icon(
+                        Icons.arrow_right,
+                        color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),
