@@ -8,11 +8,8 @@ class CodeBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(5),
-      ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -48,17 +45,20 @@ class CodeBox extends StatelessWidget {
               ],
             ),
           ),
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(10.0),
-            scrollDirection: Axis.horizontal,  // Allow horizontal scrolling
-            child: SelectableText(
-              code,
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: 'monospace',
+          Container(
+            color: Colors.black,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(10.0),
+              scrollDirection: Axis.horizontal,  // Allow horizontal scrolling
+              child: SelectableText(
+                code,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'monospace',
+                ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
