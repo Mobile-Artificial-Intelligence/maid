@@ -21,8 +21,6 @@ import 'package:provider/provider.dart';
 class GenerationManager {
   static LlamaProcessor? _llamaProcessor;
   static Completer? _completer;
-  static Timer? _timer;
-  static DateTime? _startTime;
 
   static void prompt(String input, BuildContext context) {
     context.read<Session>().busy = true;
@@ -36,8 +34,6 @@ class GenerationManager {
 
   static void localPrompt(String input, BuildContext context,
       void Function(String?) callback) async {
-    _timer = null;
-    _startTime = null;
     _completer = Completer();
 
     final ai = context.read<AiPlatform>();
@@ -72,8 +68,7 @@ class GenerationManager {
         modelParams: modelParams,
         contextParams: contextParams,
         samplingParams: samplingParams,
-        onDone: stop
-      );
+        onDone: stop);
 
     List<Map<String, dynamic>> messages = [
       {
@@ -96,7 +91,6 @@ class GenerationManager {
     _llamaProcessor!.messages = messages;
 
     _llamaProcessor!.stream.listen((data) {
-      _resetTimer();
       callback.call(data);
     });
 
@@ -108,11 +102,8 @@ class GenerationManager {
     Logger.log('Local generation completed');
   }
 
-  static void remotePrompt(
-    String input, 
-    BuildContext context,
-    void Function(String?) callback
-  ) async {
+  static void remotePrompt(String input, BuildContext context,
+      void Function(String?) callback) async {
     final ai = context.read<AiPlatform>();
     final character = context.read<Character>();
     final session = context.read<Session>();
@@ -159,7 +150,8 @@ class GenerationManager {
           break;
       }
 
-      chatMessages.add(ChatMessage.system(character.formatPlaceholders(character.system)));
+      chatMessages.add(
+          ChatMessage.system(character.formatPlaceholders(character.system)));
     }
 
     chatMessages.add(ChatMessage.humanText(input));
@@ -179,11 +171,8 @@ class GenerationManager {
     }
   }
 
-  static void ollamaRequest(
-    List<ChatMessage> chatMessages,
-    AiPlatform ai, 
-    void Function(String?) callback
-  ) async {
+  static void ollamaRequest(List<ChatMessage> chatMessages, AiPlatform ai,
+      void Function(String?) callback) async {
     try {
       final chat = ChatOllama(
         baseUrl: '${ai.url}/api',
@@ -220,11 +209,8 @@ class GenerationManager {
     callback.call(null);
   }
 
-  static void openAiRequest(
-    List<ChatMessage> chatMessages,
-    AiPlatform ai, 
-    void Function(String?) callback
-  ) async {
+  static void openAiRequest(List<ChatMessage> chatMessages, AiPlatform ai,
+      void Function(String?) callback) async {
     try {
       final chat = ChatOpenAI(
         baseUrl: ai.url,
@@ -251,11 +237,8 @@ class GenerationManager {
     callback.call(null);
   }
 
-  static void mistralRequest(
-    List<ChatMessage> chatMessages,
-    AiPlatform ai, 
-    void Function(String?) callback
-  ) async {
+  static void mistralRequest(List<ChatMessage> chatMessages, AiPlatform ai,
+      void Function(String?) callback) async {
     try {
       final chat = ChatMistralAI(
         baseUrl: '${ai.url}/v1',
@@ -279,20 +262,7 @@ class GenerationManager {
     callback.call(null);
   }
 
-  static void _resetTimer() {
-    _timer?.cancel();
-    if (_startTime != null) {
-      final elapsed = DateTime.now().difference(_startTime!);
-      _startTime = DateTime.now();
-      _timer = Timer(elapsed * 10, stop);
-    } else {
-      _startTime = DateTime.now();
-      _timer = Timer(const Duration(seconds: 5), stop);
-    }
-  }
-
   static void stop() {
-    _timer?.cancel();
     _llamaProcessor?.stop();
     _completer?.complete();
     Logger.log('Local generation stopped');
@@ -349,7 +319,8 @@ class GenerationManager {
     final baseIP = ipToCSubnet(localIP ?? '');
 
     // Scan the local network for hosts
-    final hosts = await LanScanner(debugLogging: true).quickIcmpScanAsync(baseIP);
+    final hosts =
+        await LanScanner(debugLogging: true).quickIcmpScanAsync(baseIP);
 
     // Create a list to hold all the futures
     var futures = <Future<String>>[];

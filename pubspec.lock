@@ -205,10 +205,10 @@ packages:
     dependency: "direct main"
     description:
       name: ffi
-      sha256: "7bf0adc28a23d395f19f3f1eb21dd7cfd1dd9f8e1c50051c069122e6853bc878"
+      sha256: "493f37e7df1804778ff3a53bd691d8692ddf69702cf4c1c1096a2e41b4779e21"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.2"
   ffigen:
     dependency: "direct dev"
     description:
@@ -510,7 +510,7 @@ packages:
       path: "packages/llama_cpp_dart"
       relative: true
     source: path
-    version: "0.0.6"
+    version: "0.0.7"
   logging:
     dependency: transitive
     description:
@@ -519,6 +519,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  maid_ui:
+    dependency: "direct main"
+    description:
+      path: "packages/maid_ui"
+      relative: true
+    source: path
+    version: "0.0.1"
   matcher:
     dependency: transitive
     description:
@@ -1101,5 +1108,5 @@ packages:
     source: hosted
     version: "2.1.1"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.3.0 <4.0.0"
   flutter: ">=3.13.0"
