@@ -78,103 +78,89 @@ class ChatMessageState extends State<ChatMessage>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(width: 10.0),
           CircleAvatar(
             backgroundImage: const AssetImage("assets/default_profile.png"),
-            foregroundImage: Image.file(context.read<Character>().profile).image,
+            foregroundImage:
+                Image.file(context.read<Character>().profile).image,
             radius: 16,
           ),
           const SizedBox(width: 10.0),
           ShaderMask(
             shaderCallback: (bounds) => const LinearGradient(
-              colors: [Color.fromARGB(255, 255, 172, 200), Color.fromARGB(255, 255, 150, 250), Color.fromARGB(255, 150, 240, 255)],
+              colors: [
+                Color.fromARGB(255, 255, 172, 200),
+                Color.fromARGB(255, 255, 150, 250),
+                Color.fromARGB(255, 150, 240, 255)
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ).createShader(bounds),
-            blendMode: BlendMode.srcIn, // This blend mode applies the shader to the text color.
+            blendMode: BlendMode
+                .srcIn, // This blend mode applies the shader to the text color.
             child: Text(
               widget.userGenerated ? User.name : context.read<Character>().name,
               style: const TextStyle(
                 // The color must be white (or any color) to ensure the gradient is visible.
-                color: Colors.white, // This color is needed, but it will be overridden by the shader.
+                color: Colors
+                    .white, // This color is needed, but it will be overridden by the shader.
                 fontSize: 20,
               ),
             ),
           ),
           const Expanded(child: SizedBox()), // Spacer
-          if (_finalised)
-            ..._messageOptions(),
+          if (_finalised) ..._messageOptions(),
           Consumer<Session>(
             builder: (context, session, child) {
               int currentIndex = session.index(widget.key!);
               int siblingCount = session.siblingCount(widget.key!);
               bool busy = session.isBusy;
 
-              return Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(right: 20),
-                width: 110,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: busy 
-                       ? Theme.of(context).colorScheme.primary 
-                       : Theme.of(context).colorScheme.tertiary,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    IconButton(
+              return Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  IconButton(
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
                         if (busy) return;
                         session.last(widget.key!);
                       },
-                      icon: Icon(
-                        Icons.arrow_left, 
-                        color: Theme.of(context).colorScheme.onPrimary
-                      )
-                    ),
-                    Text('${currentIndex+1}/$siblingCount', style: Theme.of(context).textTheme.labelLarge),
-                    IconButton(
-                      padding: const EdgeInsets.all(0),
-                      onPressed: () {
-                        if (busy) return;
-                        session.next(widget.key!);
-                      },
-                      icon: Icon(
-                        Icons.arrow_right,
+                      icon: Icon(Icons.arrow_left,
+                          color: Theme.of(context).colorScheme.onPrimary)),
+                  Text('${currentIndex + 1}/$siblingCount',
+                      style: Theme.of(context).textTheme.labelLarge),
+                  IconButton(
+                    padding: const EdgeInsets.all(0),
+                    onPressed: () {
+                      if (busy) return;
+                      session.next(widget.key!);
+                    },
+                    icon: Icon(Icons.arrow_right,
                         color: Theme.of(context).colorScheme.onPrimary),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               );
             },
           ),
         ],
       ),
       Padding(
-        // left padding 30 right 10
-        padding: const EdgeInsets.fromLTRB(60, 0, 20, 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: _editing ? _editingColumn() : _standardColumn(),
-        )
-      )
+          // left padding 30 right 10
+          padding: const EdgeInsets.fromLTRB(60, 0, 20, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: _editing ? _editingColumn() : _standardColumn(),
+          ))
     ]);
   }
 
   List<Widget> _messageOptions() {
-    return widget.userGenerated
-          ? _userOptions()
-          : _assistantOptions();
+    return widget.userGenerated ? _userOptions() : _assistantOptions();
   }
 
   List<Widget> _userOptions() {
@@ -223,9 +209,8 @@ class ChatMessageState extends State<ChatMessage>
         maxLines: null,
         keyboardType: TextInputType.multiline,
       ),
-      Row(
-        children: [
-          IconButton(
+      Row(children: [
+        IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
               if (busy) return;
@@ -236,10 +221,9 @@ class ChatMessageState extends State<ChatMessage>
                 _finalised = true;
               });
               session.edit(widget.key!, context, inputMessage);
-            }, 
-            icon: const Icon(Icons.done)
-          ),
-          IconButton(
+            },
+            icon: const Icon(Icons.done)),
+        IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
               setState(() {
@@ -247,11 +231,9 @@ class ChatMessageState extends State<ChatMessage>
                 _editing = false;
                 _finalised = true;
               });
-            }, 
-            icon: const Icon(Icons.close)
-          )
-        ]
-      )
+            },
+            icon: const Icon(Icons.close))
+      ])
     ];
   }
 
