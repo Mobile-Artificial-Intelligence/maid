@@ -245,6 +245,9 @@ class HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                         child: ListView.builder(
+                          padding: const EdgeInsets.only(
+                            top: 10
+                          ),
                           controller: _consoleScrollController,
                           itemCount: chatWidgets.length,
                           itemBuilder: (BuildContext context, int index) {

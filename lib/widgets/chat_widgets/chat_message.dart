@@ -76,136 +76,139 @@ class ChatMessageState extends State<ChatMessage>
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-      if (_finalised || _editing)
-        Consumer<Session>(
-          builder: (context, session, child) {
-            int currentIndex = session.index(widget.key!);
-            int siblingCount = session.siblingCount(widget.key!);
-
-            bool busy = session.isBusy;
-
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(width: 10.0),
-                CircleAvatar(
-                  backgroundImage: const AssetImage("assets/default_profile.png"),
-                  foregroundImage: Image.file(context.read<Character>().profile).image,
-                  radius: 16,
-                ),
-                const SizedBox(width: 10.0),
-                Text(
-                  widget.userGenerated ? User.name : context.read<Character>().name,
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-                //if (_finalised)
-                //  ...[
-                //    if (widget.userGenerated)
-                //      IconButton(
-                //        padding: const EdgeInsets.all(0),
-                //        onPressed: () {
-                //          if (busy) return;
-                //          setState(() {
-                //            _messageController.text = _message;
-                //            _editing = true;
-                //            _finalised = false;
-                //          });
-                //        },
-                //        icon: const Icon(Icons.edit),
-                //      )
-                //    else
-                //      ...[
-                //        
-                //      ],
-                //    if (siblingCount > 1)
-                //      Container(
-                //        alignment: Alignment.center,
-                //        margin: const EdgeInsets.all(10),
-                //        padding: const EdgeInsets.all(0),
-                //        width: 150,
-                //        height: 30,
-                //        decoration: BoxDecoration(
-                //          color: busy 
-                //               ? Theme.of(context).colorScheme.primary 
-                //               : Theme.of(context).colorScheme.tertiary,
-                //          borderRadius: BorderRadius.circular(20),
-                //        ),
-                //        child: Row(
-                //          mainAxisSize: MainAxisSize.max,
-                //          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //          children: <Widget>[
-                //            IconButton(
-                //              padding: const EdgeInsets.all(0),
-                //              onPressed: () {
-                //                if (busy) return;
-                //                session.last(widget.key!);
-                //              },
-                //              icon: Icon(
-                //                Icons.arrow_left, 
-                //                color: Theme.of(context).colorScheme.onPrimary
-                //              )
-                //            ),
-                //            Text('$currentIndex/${siblingCount-1}', style: Theme.of(context).textTheme.labelLarge),
-                //            IconButton(
-                //              padding: const EdgeInsets.all(0),
-                //              onPressed: () {
-                //                if (busy) return;
-                //                session.next(widget.key!);
-                //              },
-                //              icon: Icon(
-                //                Icons.arrow_right,
-                //                color: Theme.of(context).colorScheme.onPrimary),
-                //            ),
-                //          ],
-                //        ),
-                //      ),
-                //    if (!widget.userGenerated)
-                //      IconButton(
-                //        padding: const EdgeInsets.all(0),
-                //        onPressed: () {
-                //          if (busy) return;
-                //          session.regenerate(
-                //            widget.key!,
-                //            context
-                //          );
-                //          setState(() {});
-                //        },
-                //        icon: const Icon(Icons.refresh),
-                //      ),
-                //  ]
-                //else
-                //  ...[
-                //    IconButton(
-                //      padding: const EdgeInsets.all(0),
-                //      onPressed: () {
-                //        if (busy) return;
-                //        final inputMessage = _messageController.text;
-                //        setState(() {
-                //          _messageController.text = _message;
-                //          _editing = false;
-                //          _finalised = true;
-                //        });
-                //        session.edit(widget.key!, context, inputMessage);
-                //      }, 
-                //      icon: const Icon(Icons.done)
-                //    ),
-                //    IconButton(
-                //      padding: const EdgeInsets.all(0),
-                //      onPressed: () {
-                //        setState(() {
-                //          _messageController.text = _message;
-                //          _editing = false;
-                //          _finalised = true;
-                //        });
-                //      }, 
-                //      icon: const Icon(Icons.close)
-                //    ),
-                //  ]
-              ],
-            );
-          },
-        ),        
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(width: 10.0),
+          CircleAvatar(
+            backgroundImage: const AssetImage("assets/default_profile.png"),
+            foregroundImage: Image.file(context.read<Character>().profile).image,
+            radius: 16,
+          ),
+          const SizedBox(width: 10.0),
+          ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [Color.fromARGB(255, 245, 110, 155), Color.fromARGB(255, 235, 122, 255), Color.fromARGB(255, 66, 233, 255)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ).createShader(bounds),
+            blendMode: BlendMode.srcIn, // This blend mode applies the shader to the text color.
+            child: Text(
+              widget.userGenerated ? User.name : context.read<Character>().name,
+              style: const TextStyle(
+                // The color must be white (or any color) to ensure the gradient is visible.
+                color: Colors.white, // This color is needed, but it will be overridden by the shader.
+                fontSize: 18,
+              ),
+            ),
+          ),
+          //if (_finalised)
+          //  ...[
+          //    if (widget.userGenerated)
+          //      IconButton(
+          //        padding: const EdgeInsets.all(0),
+          //        onPressed: () {
+          //          if (busy) return;
+          //          setState(() {
+          //            _messageController.text = _message;
+          //            _editing = true;
+          //            _finalised = false;
+          //          });
+          //        },
+          //        icon: const Icon(Icons.edit),
+          //      )
+          //    else
+          //      ...[
+          //        
+          //      ],
+          //    if (siblingCount > 1)
+          //      Container(
+          //        alignment: Alignment.center,
+          //        margin: const EdgeInsets.all(10),
+          //        padding: const EdgeInsets.all(0),
+          //        width: 150,
+          //        height: 30,
+          //        decoration: BoxDecoration(
+          //          color: busy 
+          //               ? Theme.of(context).colorScheme.primary 
+          //               : Theme.of(context).colorScheme.tertiary,
+          //          borderRadius: BorderRadius.circular(20),
+          //        ),
+          //        child: Row(
+          //          mainAxisSize: MainAxisSize.max,
+          //          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //          children: <Widget>[
+          //            IconButton(
+          //              padding: const EdgeInsets.all(0),
+          //              onPressed: () {
+          //                if (busy) return;
+          //                session.last(widget.key!);
+          //              },
+          //              icon: Icon(
+          //                Icons.arrow_left, 
+          //                color: Theme.of(context).colorScheme.onPrimary
+          //              )
+          //            ),
+          //            Text('$currentIndex/${siblingCount-1}', style: Theme.of(context).textTheme.labelLarge),
+          //            IconButton(
+          //              padding: const EdgeInsets.all(0),
+          //              onPressed: () {
+          //                if (busy) return;
+          //                session.next(widget.key!);
+          //              },
+          //              icon: Icon(
+          //                Icons.arrow_right,
+          //                color: Theme.of(context).colorScheme.onPrimary),
+          //            ),
+          //          ],
+          //        ),
+          //      ),
+          //    if (!widget.userGenerated)
+          //      IconButton(
+          //        padding: const EdgeInsets.all(0),
+          //        onPressed: () {
+          //          if (busy) return;
+          //          session.regenerate(
+          //            widget.key!,
+          //            context
+          //          );
+          //          setState(() {});
+          //        },
+          //        icon: const Icon(Icons.refresh),
+          //      ),
+          //  ]
+          //else
+          //  ...[
+          //    IconButton(
+          //      padding: const EdgeInsets.all(0),
+          //      onPressed: () {
+          //        if (busy) return;
+          //        final inputMessage = _messageController.text;
+          //        setState(() {
+          //          _messageController.text = _message;
+          //          _editing = false;
+          //          _finalised = true;
+          //        });
+          //        session.edit(widget.key!, context, inputMessage);
+          //      }, 
+          //      icon: const Icon(Icons.done)
+          //    ),
+          //    IconButton(
+          //      padding: const EdgeInsets.all(0),
+          //      onPressed: () {
+          //        setState(() {
+          //          _messageController.text = _message;
+          //          _editing = false;
+          //          _finalised = true;
+          //        });
+          //      }, 
+          //      icon: const Icon(Icons.close)
+          //    ),
+          //  ]
+        ],
+      ),
       Padding(
         // left padding 30 right 10
         padding: const EdgeInsets.fromLTRB(60, 0, 10, 20),
