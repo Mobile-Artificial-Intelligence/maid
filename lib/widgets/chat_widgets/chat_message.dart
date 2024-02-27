@@ -90,7 +90,7 @@ class ChatMessageState extends State<ChatMessage>
           const SizedBox(width: 10.0),
           ShaderMask(
             shaderCallback: (bounds) => const LinearGradient(
-              colors: [Color.fromARGB(255, 245, 110, 155), Color.fromARGB(255, 235, 122, 255), Color.fromARGB(255, 66, 233, 255)],
+              colors: [Color.fromARGB(255, 255, 172, 200), Color.fromARGB(255, 240, 150, 255), Color.fromARGB(255, 150, 240, 255)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ).createShader(bounds),
@@ -211,7 +211,7 @@ class ChatMessageState extends State<ChatMessage>
       ),
       Padding(
         // left padding 30 right 10
-        padding: const EdgeInsets.fromLTRB(60, 0, 10, 20),
+        padding: const EdgeInsets.fromLTRB(60, 0, 20, 20),
         child: _editing ? 
           TextField(
             controller: _messageController,
