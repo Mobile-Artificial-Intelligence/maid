@@ -17,27 +17,33 @@ class CodeBox extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primary,
             ),
             height: 25,
             child: Row( // Wrap IconButton in a Row
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded( // Use Expanded to fill the row
-                  child: IconButton(
-                    iconSize: 15,
-                    icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.secondary),
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: code));
-                      
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Code copied to clipboard!")),
-                      );
-                    },
-                    tooltip: 'Copy Code',
-                    padding: EdgeInsets.zero, // Optional: reduces the padding if needed
-                    constraints: BoxConstraints(), // Optional: removes minimum constraints
+                const Text(
+                  'Code',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
                   ),
+                ),
+                IconButton(
+                  iconSize: 15,
+                  icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.secondary),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: code));
+                    
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Code copied to clipboard!")),
+                    );
+                  },
+                  tooltip: 'Copy Code',
+                  padding: EdgeInsets.zero, // Optional: reduces the padding if needed
                 ),
               ],
             ),
