@@ -165,6 +165,7 @@ class ChatMessageState extends State<ChatMessage>
         controller: _messageController,
         autofocus: true,
         cursorColor: Theme.of(context).colorScheme.secondary,
+        style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
           hintText: "Edit Message",
           fillColor: Theme.of(context).colorScheme.background,
