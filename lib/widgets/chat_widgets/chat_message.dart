@@ -103,12 +103,13 @@ class ChatMessageState extends State<ChatMessage>
               style: const TextStyle(
                 // The color must be white (or any color) to ensure the gradient is visible.
                 color: Colors.white, // This color is needed, but it will be overridden by the shader.
-                fontSize: 18,
+                fontSize: 20,
               ),
             ),
           ),
           const Expanded(child: SizedBox()), // Spacer
-          //Add message options here
+          if (_finalised)
+            ..._messageOptions(),
           Consumer<Session>(
             builder: (context, session, child) {
               int currentIndex = session.index(widget.key!);
@@ -117,10 +118,9 @@ class ChatMessageState extends State<ChatMessage>
 
               return Container(
                 alignment: Alignment.center,
-                margin: const EdgeInsets.all(10),
-                padding: const EdgeInsets.all(0),
-                width: 150,
-                height: 30,
+                margin: const EdgeInsets.only(right: 20),
+                width: 110,
+                height: 25,
                 decoration: BoxDecoration(
                   color: busy 
                        ? Theme.of(context).colorScheme.primary 
@@ -142,7 +142,7 @@ class ChatMessageState extends State<ChatMessage>
                         color: Theme.of(context).colorScheme.onPrimary
                       )
                     ),
-                    Text('$currentIndex/${siblingCount-1}', style: Theme.of(context).textTheme.labelLarge),
+                    Text('${currentIndex+1}/$siblingCount', style: Theme.of(context).textTheme.labelLarge),
                     IconButton(
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
@@ -171,12 +171,10 @@ class ChatMessageState extends State<ChatMessage>
     ]);
   }
 
-  Widget _messageOptions() {
-    return Row(
-      children: widget.userGenerated
+  List<Widget> _messageOptions() {
+    return widget.userGenerated
           ? _userOptions()
-          : _assistantOptions(),
-    );
+          : _assistantOptions();
   }
 
   List<Widget> _userOptions() {
@@ -262,9 +260,7 @@ class ChatMessageState extends State<ChatMessage>
       if (!_finalised && _messageWidgets.isEmpty)
         const TypingIndicator()
       else
-        ..._messageWidgets,
-      if (_finalised)
-        _messageOptions()
+        ..._messageWidgets
     ];
   }
 
