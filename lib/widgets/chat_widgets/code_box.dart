@@ -21,17 +21,25 @@ class CodeBox extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             height: 25,
-            child: IconButton(
-              iconSize: 10,
-              icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.secondary),
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: code));
-                
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Code copied to clipboard!")),
-                );
-              },
-              tooltip: 'Copy Code',
+            child: Row( // Wrap IconButton in a Row
+              children: [
+                Expanded( // Use Expanded to fill the row
+                  child: IconButton(
+                    iconSize: 15,
+                    icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.secondary),
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: code));
+                      
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Code copied to clipboard!")),
+                      );
+                    },
+                    tooltip: 'Copy Code',
+                    padding: EdgeInsets.zero, // Optional: reduces the padding if needed
+                    constraints: BoxConstraints(), // Optional: removes minimum constraints
+                  ),
+                ),
+              ],
             ),
           ),
           SingleChildScrollView(
@@ -41,7 +49,7 @@ class CodeBox extends StatelessWidget {
               code,
               style: const TextStyle(
                 color: Colors.white,
-                fontFamily: 'monospace'
+                fontFamily: 'monospace',
               ),
             ),
           ),
