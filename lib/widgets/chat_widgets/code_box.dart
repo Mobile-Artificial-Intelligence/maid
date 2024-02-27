@@ -19,7 +19,7 @@ class CodeBox extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             height: 25,
-            child: Row( // Wrap IconButton in a Row
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
@@ -29,18 +29,27 @@ class CodeBox extends StatelessWidget {
                     fontSize: 12,
                   ),
                 ),
-                IconButton(
-                  iconSize: 15,
-                  icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.secondary),
+                TextButton.icon(
+                  // Use TextButton.icon to integrate text and icon in the same button
+                  icon: Icon(Icons.content_paste_rounded, color: Theme.of(context).colorScheme.onPrimary, size: 15),
+                  label: Text(
+                    'Copy Code',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontSize: 12,
+                    ),
+                  ),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: code));
-                    
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Code copied to clipboard!")),
                     );
                   },
-                  tooltip: 'Copy Code',
-                  padding: EdgeInsets.zero, // Optional: reduces the padding if needed
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero, // Adjust padding as needed
+                    minimumSize: const Size(10, 10), // Adjust size as needed
+                  ),
                 ),
               ],
             ),
