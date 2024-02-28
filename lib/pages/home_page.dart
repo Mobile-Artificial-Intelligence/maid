@@ -203,7 +203,8 @@ class HomePageState extends State<HomePage> {
             final newKey = UniqueKey();
             final index = Random().nextInt(character.greetings.length);
             session.add(newKey,
-                message: character.formatPlaceholders(character.greetings[index]),
+                message:
+                    character.formatPlaceholders(character.greetings[index]),
                 userGenerated: false,
                 notify: false);
             history = {newKey: false};
@@ -245,9 +246,6 @@ class HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                         child: ListView.builder(
-                          padding: const EdgeInsets.only(
-                            top: 10
-                          ),
                           controller: _consoleScrollController,
                           itemCount: chatWidgets.length,
                           itemBuilder: (BuildContext context, int index) {
