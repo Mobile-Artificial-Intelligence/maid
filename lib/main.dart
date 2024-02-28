@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/pages/home_page.dart';
+import 'package:maid/ui/mobile/pages/home_page.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/character.dart';
