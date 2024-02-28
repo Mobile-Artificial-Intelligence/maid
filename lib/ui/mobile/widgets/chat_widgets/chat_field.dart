@@ -130,21 +130,20 @@ class _ChatFieldState extends State<ChatField> {
                 ),
               ),
             ),
-            if (Platform.isAndroid || Platform.isIOS)
-              IconButton(
-                onPressed: () {
-                  if (!session.isBusy) {
-                    send();
-                  }
-                },
-                iconSize: 50,
-                icon: Icon(
-                  Icons.arrow_circle_right,
-                  color: session.isBusy
-                      ? Theme.of(context).colorScheme.onPrimary
-                      : Theme.of(context).colorScheme.secondary,
-                )
-              ),
+            IconButton(
+              onPressed: () {
+                if (!session.isBusy) {
+                  send();
+                }
+              },
+              iconSize: 50,
+              icon: Icon(
+                Icons.arrow_circle_right,
+                color: session.isBusy
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.secondary,
+              )
+            ),
           ],
         ),
       );
