@@ -19,6 +19,7 @@ class AiPlatform extends ChangeNotifier {
   String _model = "";
 
   bool _randomSeed = true;
+  bool _useDefault = true;
 
   int _nKeep = 48;
   int _seed = 0;
@@ -72,15 +73,15 @@ class AiPlatform extends ChangeNotifier {
       case AiPlatformType.ollama:
         _url = await GenerationManager.getOllamaUrl();
       case AiPlatformType.openAI:
-        _url =  "https://api.openai.com/v1/";
+        _url = "https://api.openai.com/v1/";
       case AiPlatformType.mistralAI:
-        _url =  "https://api.mistral.ai/v1/";
+        _url = "https://api.mistral.ai/v1/";
       default:
-        _url =  "";
+        _url = "";
     }
 
     _apiType = apiType;
-    
+
     notifyListeners();
   }
 
@@ -111,6 +112,11 @@ class AiPlatform extends ChangeNotifier {
 
   set randomSeed(bool randomSeed) {
     _randomSeed = randomSeed;
+    notifyListeners();
+  }
+
+  set useDefault(bool useDefault) {
+    _useDefault = useDefault;
     notifyListeners();
   }
 
@@ -221,6 +227,7 @@ class AiPlatform extends ChangeNotifier {
   String get url => _url;
   String get model => _model;
   bool get randomSeed => _randomSeed;
+  bool get useDefault => _useDefault;
   int get nKeep => _nKeep;
   int get seed => _seed;
   int get nPredict => _nPredict;
@@ -250,8 +257,8 @@ class AiPlatform extends ChangeNotifier {
     if (inputJson.isEmpty) {
       resetAll();
     } else {
-      _promptFormat = PromptFormatType
-          .values[inputJson["prompt_promptFormat"] ?? PromptFormatType.alpaca.index];
+      _promptFormat = PromptFormatType.values[
+          inputJson["prompt_promptFormat"] ?? PromptFormatType.alpaca.index];
       _apiType = AiPlatformType
           .values[inputJson["api_type"] ?? AiPlatformType.local.index];
       _preset = inputJson["preset"] ?? "Default";

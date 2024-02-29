@@ -21,6 +21,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/typical_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/dropdowns/model_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/url_parameter.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/use_default.dart';
 
 class OllamaPlatform extends StatelessWidget {
   const OllamaPlatform({super.key});
@@ -45,6 +46,7 @@ class OllamaPlatform extends StatelessWidget {
         endIndent: 10,
         color: Theme.of(context).colorScheme.primary,
       ),
+      const UseDefaultParameter(),
       const PenalizeNlParameter(),
       const SeedParameter(),
       const NThreadsParameter(),

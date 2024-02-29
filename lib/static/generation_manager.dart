@@ -176,28 +176,38 @@ class GenerationManager {
   static void ollamaRequest(List<ChatMessage> chatMessages, AiPlatform ai,
       void Function(String?) callback) async {
     try {
-      final chat = ChatOllama(
-        baseUrl: '${ai.url}/api',
-        defaultOptions: ChatOllamaOptions(
-          model: ai.model,
-          numKeep: ai.nKeep,
-          seed: ai.seed,
-          numPredict: ai.nPredict,
-          topK: ai.topK,
-          topP: ai.topP,
-          typicalP: ai.typicalP,
-          temperature: ai.temperature,
-          repeatPenalty: ai.penaltyRepeat,
-          frequencyPenalty: ai.penaltyFreq,
-          presencePenalty: ai.penaltyPresent,
-          mirostat: ai.mirostat,
-          mirostatTau: ai.mirostatTau,
-          mirostatEta: ai.mirostatEta,
-          numCtx: ai.nCtx,
-          numBatch: ai.nBatch,
-          numThread: ai.nThread,
-        ),
-      );
+      ChatOllama chat;
+      if (ai.useDefault) {
+        chat = ChatOllama(
+          baseUrl: '${ai.url}/api',
+          defaultOptions: ChatOllamaOptions(
+            model: ai.model,
+          ),
+        );
+      } else {
+        chat = ChatOllama(
+          baseUrl: '${ai.url}/api',
+          defaultOptions: ChatOllamaOptions(
+            model: ai.model,
+            numKeep: ai.nKeep,
+            seed: ai.seed,
+            numPredict: ai.nPredict,
+            topK: ai.topK,
+            topP: ai.topP,
+            typicalP: ai.typicalP,
+            temperature: ai.temperature,
+            repeatPenalty: ai.penaltyRepeat,
+            frequencyPenalty: ai.penaltyFreq,
+            presencePenalty: ai.penaltyPresent,
+            mirostat: ai.mirostat,
+            mirostatTau: ai.mirostatTau,
+            mirostatEta: ai.mirostatEta,
+            numCtx: ai.nCtx,
+            numBatch: ai.nBatch,
+            numThread: ai.nThread,
+          ),
+        );
+      }
 
       final stream = chat.stream(PromptValue.chat(chatMessages));
 
@@ -361,9 +371,11 @@ class GenerationManager {
     if (!Platform.isAndroid && !Platform.isIOS) {
       return true;
     }
-    
+
     // Get sdk version
-    final sdk = await DeviceInfoPlugin().androidInfo.then((value) => value.version.sdkInt);
+    final sdk = await DeviceInfoPlugin()
+        .androidInfo
+        .then((value) => value.version.sdkInt);
     var permissions = <Permission>[]; // List of permissions to request
 
     if (sdk <= 32) {
@@ -376,7 +388,8 @@ class GenerationManager {
 
     // Request permissions and check if all are granted
     Map<Permission, PermissionStatus> statuses = await permissions.request();
-    bool allPermissionsGranted = statuses.values.every((status) => status.isGranted);
+    bool allPermissionsGranted =
+        statuses.values.every((status) => status.isGranted);
 
     if (allPermissionsGranted) {
       Logger.log("Nearby Devices - permission granted");
