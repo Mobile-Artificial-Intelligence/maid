@@ -39,6 +39,8 @@ class OllamaPlatform extends StatelessWidget {
       const UrlParameter(),
       const SizedBox(height: 8.0),
       const ModelDropdown(),
+      const SizedBox(height: 8.0),
+      const UseDefaultParameter(),
       const SizedBox(height: 20.0),
       Divider(
         height: 20,
@@ -46,7 +48,6 @@ class OllamaPlatform extends StatelessWidget {
         endIndent: 10,
         color: Theme.of(context).colorScheme.primary,
       ),
-      const UseDefaultParameter(),
       const PenalizeNlParameter(),
       const SeedParameter(),
       const NThreadsParameter(),
