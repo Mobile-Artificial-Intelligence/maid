@@ -1,6 +1,6 @@
 <div align="center">
   <picture>
-    <img alt="logo" height="200px" src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/logo.png?raw=true">
+    <img alt="logo" height="200px" src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/assets/maid.png?raw=true">
   </picture>
 </div>
 
