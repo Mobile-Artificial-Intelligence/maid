@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalize_nl_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/mirostat_eta_parameter.dart';
@@ -22,50 +23,56 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/typical_p_parameter.dar
 import 'package:maid/ui/mobile/widgets/dropdowns/model_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/url_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/use_default.dart';
+import 'package:provider/provider.dart';
 
 class OllamaPlatform extends StatelessWidget {
   const OllamaPlatform({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      const ApiKeyParameter(),
-      Divider(
-        height: 20,
-        indent: 10,
-        endIndent: 10,
-        color: Theme.of(context).colorScheme.primary,
-      ),
-      const UrlParameter(),
-      const SizedBox(height: 8.0),
-      const ModelDropdown(),
-      const SizedBox(height: 20.0),
-      Divider(
-        height: 20,
-        indent: 10,
-        endIndent: 10,
-        color: Theme.of(context).colorScheme.primary,
-      ),
-      const UseDefaultParameter(),
-      const PenalizeNlParameter(),
-      const SeedParameter(),
-      const NThreadsParameter(),
-      const NCtxParameter(),
-      const NBatchParameter(),
-      const NPredictParameter(),
-      const NKeepParameter(),
-      const TopKParameter(),
-      const TopPParameter(),
-      const TfsZParameter(),
-      const TypicalPParameter(),
-      const TemperatureParameter(),
-      const PenaltyLastNParameter(),
-      const PenaltyRepeatParameter(),
-      const PenaltyFrequencyParameter(),
-      const PenaltyPresentParameter(),
-      const MirostatParameter(),
-      const MirostatTauParameter(),
-      const MirostatEtaParameter()
-    ]);
+    return Consumer<AiPlatform>(builder: (context, ai, child) {
+      return Column(children: [
+        const ApiKeyParameter(),
+        Divider(
+          height: 20,
+          indent: 10,
+          endIndent: 10,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        const UrlParameter(),
+        const SizedBox(height: 8.0),
+        const ModelDropdown(),
+        const SizedBox(height: 8.0),
+        const UseDefaultParameter(),
+        if (ai.useDefault) ...[
+          const SizedBox(height: 20.0),
+          Divider(
+            height: 20,
+            indent: 10,
+            endIndent: 10,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const PenalizeNlParameter(),
+          const SeedParameter(),
+          const NThreadsParameter(),
+          const NCtxParameter(),
+          const NBatchParameter(),
+          const NPredictParameter(),
+          const NKeepParameter(),
+          const TopKParameter(),
+          const TopPParameter(),
+          const TfsZParameter(),
+          const TypicalPParameter(),
+          const TemperatureParameter(),
+          const PenaltyLastNParameter(),
+          const PenaltyRepeatParameter(),
+          const PenaltyFrequencyParameter(),
+          const PenaltyPresentParameter(),
+          const MirostatParameter(),
+          const MirostatTauParameter(),
+          const MirostatEtaParameter()
+        ]
+      ]);
+    });
   }
 }
