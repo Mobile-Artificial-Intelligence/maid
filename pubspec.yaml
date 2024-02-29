@@ -124,7 +124,7 @@ msix_config:
   identity_name: com.danemadsen.maid
   msix_version: 1.2.1
   logo_path: assets/maid.png
-flutter_icons:
+flutter_launcher_icons:
   android: "launcher_icon"
   image_path: "assets/maid.png"
   windows:
