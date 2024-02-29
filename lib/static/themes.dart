@@ -3,37 +3,37 @@ import 'package:flutter/material.dart';
 class Themes {
   static ThemeData lightTheme() {
     return genericTheme(
-      Colors.white,
-      Colors.grey.shade700,
-      Colors.grey.shade300,
-      Colors.black,
-      Colors.blue,
-      Colors.blue.shade900,
-      const Color.fromARGB(255, 100, 20, 20),
+      background: Colors.white,
+      onBackground: Colors.grey.shade700,
+      primary: Colors.grey.shade300,
+      onPrimary: Colors.black,
+      secondary: Colors.blue,
+      tertiary: Colors.blue.shade900,
+      inversePrimary: const Color.fromARGB(255, 100, 20, 20),
     );
   }
 
   static ThemeData darkTheme() {
     return genericTheme(
-      Colors.grey.shade900,
-      Colors.black,
-      Colors.grey.shade800,
-      Colors.white,
-      Colors.blue,
-      Colors.blue.shade900,
-      const Color.fromARGB(255, 100, 20, 20),
+      background: Colors.grey.shade900,
+      onBackground: Colors.black,
+      primary: Colors.grey.shade800,
+      onPrimary: Colors.white,
+      secondary: Colors.blue,
+      tertiary: Colors.blue.shade900,
+      inversePrimary: const Color.fromARGB(255, 100, 20, 20),
     );
   }
 
-  static ThemeData genericTheme(
-    Color background,
-    Color onBackground,
-    Color primary,
-    Color onPrimary,
-    Color secondary,
-    Color tertiary,
-    Color inversePrimary,
-  ) {
+  static ThemeData genericTheme({
+    required Color background,
+    required Color onBackground,
+    required Color primary,
+    required Color onPrimary,
+    required Color secondary,
+    required Color tertiary,
+    required Color inversePrimary,
+  }) {
     return ThemeData(
       iconTheme: IconThemeData(color: onPrimary),
       textTheme: TextTheme(
@@ -73,7 +73,8 @@ class Themes {
       drawerTheme: DrawerThemeData(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20)),
           ),
           backgroundColor: background),
       dropdownMenuTheme: DropdownMenuThemeData(
@@ -89,7 +90,9 @@ class Themes {
             borderSide: BorderSide.none,
           ),
           labelStyle: const TextStyle(
-              fontWeight: FontWeight.normal, color: Colors.grey, fontSize: 15.0),
+              fontWeight: FontWeight.normal,
+              color: Colors.grey,
+              fontSize: 15.0),
           hintStyle: TextStyle(
               fontWeight: FontWeight.normal, color: onPrimary, fontSize: 15.0),
           fillColor: primary,
@@ -133,12 +136,9 @@ class Themes {
         overlayColor: tertiary,
       ),
       navigationRailTheme: NavigationRailThemeData(
-        backgroundColor: onBackground,
-        indicatorColor: background,
-        selectedIconTheme: IconThemeData(
-          color: secondary
-        )
-      ),
+          backgroundColor: onBackground,
+          indicatorColor: background,
+          selectedIconTheme: IconThemeData(color: secondary)),
       colorScheme: ColorScheme.dark(
         background: background,
         onBackground: onBackground,
