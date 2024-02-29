@@ -12,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
-  File _profile = File("/assets/default_profile.png");
+  File _profile = File("/assets/maid.png");
   String _name = "Maid";
   String _description = "";
   String _personality = "";
@@ -56,11 +56,11 @@ class Character extends ChangeNotifier {
       _profile = File(inputJson["profile"]);
     } else {
       Directory docDir = await getApplicationDocumentsDirectory();
-      String filePath = '${docDir.path}/default_profile.png';
+      String filePath = '${docDir.path}/maid.png';
 
       File newProfileFile = File(filePath);
       if (!await newProfileFile.exists()) {
-        ByteData data = await rootBundle.load('assets/default_profile.png');
+        ByteData data = await rootBundle.load('assets/maid.png');
         List<int> bytes =
             data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         await newProfileFile.writeAsBytes(bytes);

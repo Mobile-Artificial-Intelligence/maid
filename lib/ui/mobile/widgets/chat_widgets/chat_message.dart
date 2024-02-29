@@ -84,7 +84,7 @@ class ChatMessageState extends State<ChatMessage>
         children: [
           const SizedBox(width: 10.0),
           CircleAvatar(
-            backgroundImage: const AssetImage("assets/default_profile.png"),
+            backgroundImage: const AssetImage("assets/maid.png"),
             foregroundImage:
                 Image.file(context.read<Character>().profile).image,
             radius: 16,
