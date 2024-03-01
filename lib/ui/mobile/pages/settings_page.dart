@@ -16,6 +16,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
