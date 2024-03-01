@@ -92,7 +92,7 @@ class ChatMessageState extends State<ChatMessage>
               CircleAvatar(
                 backgroundImage: widget.userGenerated
                     ? const AssetImage("assets/chadUser.png")
-                    : const AssetImage("assets/maid.png"),
+                    : const AssetImage("assets/defaultCharacter.png"),
                 foregroundImage: Image.file(
                         widget.userGenerated ? user.profile : character.profile)
                     .image,

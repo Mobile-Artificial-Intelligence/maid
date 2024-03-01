@@ -15,7 +15,13 @@ class Session extends ChangeNotifier {
 
   bool get isBusy => _busy;
 
-  String get rootMessage => _root.message;
+  String get rootMessage {
+    final message = getFirstUserMessage();
+    if (message != null) {
+      _root.message = message;
+    }
+    return _root.message;
+  }
 
   Key get key => _root.key;
 
@@ -56,7 +62,7 @@ class Session extends ChangeNotifier {
   void newSession() {
     final key = UniqueKey();
     _root = ChatNode(key: key);
-    _root.message = "Session ${key.toString()}";
+    _root.message = "New Chat";
     tail = null;
     notifyListeners();
   }
@@ -73,6 +79,17 @@ class Session extends ChangeNotifier {
 
   String getMessage(Key key) {
     return _root.find(key)?.message ?? "";
+  }
+
+  String? getFirstUserMessage() {
+    var current = _root;
+    while (current.currentChild != null) {
+      current = current.find(current.currentChild!)!;
+      if (current.userGenerated) {
+        return current.message;
+      }
+    }
+    return null;
   }
 
   void setRootMessage(String message) {

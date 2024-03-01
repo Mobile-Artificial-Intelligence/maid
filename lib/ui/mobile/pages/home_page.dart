@@ -56,14 +56,6 @@ class HomePageState extends State<HomePage> {
           ));
         }
 
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          _consoleScrollController.animateTo(
-            _consoleScrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 50),
-            curve: Curves.easeOut,
-          );
-        });
-
         return Builder(
           builder: (BuildContext context) => GestureDetector(
             onHorizontalDragEnd: (details) {

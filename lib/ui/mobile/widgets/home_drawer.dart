@@ -19,28 +19,29 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  late Map<String, dynamic> _sessions;
+  final Map<Key, dynamic> sessions = {};
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
-      final loadedSessions = json.decode(prefs.getString("sessions") ?? "{}");
-      _sessions.addAll(loadedSessions);
+      Map<String, dynamic> loadedSessions = json.decode(prefs.getString("sessions") ?? "{}");
+      Map<Key, dynamic> keyedSessions = loadedSessions.map((key, value) {
+        final stringKey = key.replaceAll('<\'[', '').replaceAll(']\'>', '');
+        return MapEntry(ValueKey(stringKey), value);
+      });
+      sessions.addAll(keyedSessions);
+      print("Loaded sessions: $sessions");
       setState(() {});
     });
-
-    final session = context.read<Session>();
-    String key = session.rootMessage;
-    if (key.isEmpty) key = "Session";
-    _sessions = {key: session.toMap()};
   }
 
   @override
   void dispose() {
     SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("sessions", json.encode(_sessions));
+      Map<String, dynamic> encodableSessions = sessions.map((key, value) => MapEntry(key.toString(), value));
+      prefs.setString("sessions", json.encode(encodableSessions));
     });
 
     super.dispose();
@@ -50,10 +51,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
-        String key = session.rootMessage;
-        if (key.isEmpty) key = "Session";
-
-        _sessions[key] = session.toMap();
+        sessions[session.key] = session.toMap();
 
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("last_session", json.encode(session.toMap()));
@@ -68,7 +66,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   if (session.isBusy) return;
                   final newSession = Session();
                   setState(() {
-                    _sessions[newSession.rootMessage] = newSession.toMap();
+                    sessions[newSession.key] = newSession.toMap();
                   });
                 },
                 child: Text(
@@ -76,7 +74,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   style: Theme.of(context).textTheme.labelLarge,
                 ),
               ),
-              const SizedBox(height: 20.0),
               Divider(
                 indent: 10,
                 endIndent: 10,
@@ -84,7 +81,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: _sessions.length,
+                  itemCount: sessions.length,
                   itemBuilder: _itemBuilder
                 ),
               ),
@@ -157,117 +154,76 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   Widget? _itemBuilder(BuildContext context, int index) {
-    String sessionKey = _sessions.keys.elementAt(index);
+    Key sessionKey = sessions.keys.elementAt(index);
     Session sessionData =
-        Session.fromMap(_sessions[sessionKey]);
+        Session.fromMap(sessions[sessionKey]);
 
     return Consumer<Session>(
       builder: (context, session, child) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ClipRect(
-            child: Dismissible(
-              key: sessionData.key,
-              dismissThresholds: const {
-                DismissDirection.endToStart: 0.25,
-                DismissDirection.startToEnd: 0.25,
-              },
-              onDismissed: (direction) {
-                if (session.isBusy) return;
-                _sessions.remove(sessionKey);
-                if (sessionKey == session.rootMessage) {
-                  session.fromMap(_sessions.values.firstOrNull ??
-                      {
-                        "message":
-                            "Session ${UniqueKey().toString()}"
-                      });
-                }
-              },
-              background: Container(
-                  color: Colors.red,
-                  child: const Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                          padding: EdgeInsets.only(right: 8.0),
-                          child: Icon(Icons.delete,
-                              color: Colors.white)))),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: sessionKey == session.rootMessage
-                      ? Theme.of(context).colorScheme.tertiary
-                      : Theme.of(context).colorScheme.primary,
-                  borderRadius:
-                      const BorderRadius.all(Radius.circular(15.0)),
-                ),
-                child: ListTile(
-                  title: Text(
-                    sessionData.rootMessage,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  onTap: () {
-                    if (session.isBusy) return;
-                    session.fromMap(_sessions[sessionKey]);
-                  },
-                  onLongPress: () {
-                    if (session.isBusy) return;
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        final TextEditingController controller =
-                            TextEditingController(
-                                text: sessionData.rootMessage);
-                        return AlertDialog(
-                          title: const Text(
-                            "Rename Session",
-                            textAlign: TextAlign.center,
-                          ),
-                          content: TextField(
-                            controller: controller,
-                            decoration: const InputDecoration(
-                              hintText: "Enter new name",
-                            ),
-                          ),
-                          actions: [
-                            FilledButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                "Cancel",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge,
-                              ),
-                            ),
-                            FilledButton(
-                              onPressed: () {
-                                String oldName =
-                                    session.rootMessage;
-                                Logger.log(
-                                    "Updating session $oldName ====> ${controller.text}");
-                                session.setRootMessage(
-                                    controller.text);
-                                _sessions.remove(oldName);
-                                Navigator.of(context).pop();
-                                setState(() {});
-                              },
-                              child: Text(
-                                "Rename",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
+        return ListTile(
+          title: Text(
+            sessionData.rootMessage,
+            style: Theme.of(context).textTheme.labelLarge,
           ),
+          onTap: () {
+            if (session.isBusy) return;
+            session.fromMap(sessions[sessionKey]);
+          },
+          onLongPress: () {
+            if (session.isBusy) return;
+            showDialog(
+              context: context,
+              builder: (context) {
+                final TextEditingController controller =
+                    TextEditingController(
+                        text: sessionData.rootMessage);
+                return AlertDialog(
+                  title: const Text(
+                    "Rename Session",
+                    textAlign: TextAlign.center,
+                  ),
+                  content: TextField(
+                    controller: controller,
+                    decoration: const InputDecoration(
+                      hintText: "Enter new name",
+                    ),
+                  ),
+                  actions: [
+                    FilledButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Cancel",
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge,
+                      ),
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        String oldName =
+                            session.rootMessage;
+                        Logger.log(
+                            "Updating session $oldName ====> ${controller.text}");
+                        session.setRootMessage(
+                            controller.text);
+                        sessions.remove(oldName);
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      },
+                      child: Text(
+                        "Rename",
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
         );
       },
     );
