@@ -102,8 +102,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     children: [
                       const SizedBox(height: 10.0),
                       CircleAvatar(
-                        backgroundImage:
-                            const AssetImage("assets/maid.png"),
+                        backgroundImage: const AssetImage("assets/maid.png"),
                         foregroundImage: Image.file(character.profile).image,
                         radius: 75,
                       ),
@@ -236,7 +235,7 @@ class _CharacterPageState extends State<CharacterPage> {
                           },
                           rightText: "Reset All",
                           rightOnPressed: () {
-                            character.resetAll();
+                            character.reset();
                           }),
                       const SizedBox(height: 15.0),
                       DoubleButtonRow(

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:maid/providers/user.dart';
 import 'package:maid/ui/mobile/pages/home_page.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/providers/session.dart';
@@ -23,6 +24,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => MainProvider()),
         ChangeNotifierProvider(create: (context) => AiPlatform()),
+        ChangeNotifierProvider(create: (context) => User()),
         ChangeNotifierProvider(create: (context) => Character()),
         ChangeNotifierProvider(create: (context) => Session()),
       ],
@@ -67,11 +69,12 @@ class MaidApp extends StatefulWidget {
 class MaidAppState extends State<MaidApp> {
   @override
   Widget build(BuildContext context) {
-    return Consumer4<MainProvider, AiPlatform, Character, Session>(
-      builder: (context, mainProvider, ai, character, session, child) {
+    return Consumer5<MainProvider, AiPlatform, User, Character, Session>(
+      builder: (context, mainProvider, ai, user, character, session, child) {
         if (!mainProvider.initialised) {
           mainProvider.init();
           ai.init();
+          user.init();
           character.init();
           session.init();
         }

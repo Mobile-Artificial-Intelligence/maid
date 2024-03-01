@@ -45,7 +45,7 @@ class AiPlatform extends ChangeNotifier {
   void newPreset() {
     final key = UniqueKey().toString();
     _preset = "New Preset $key";
-    resetAll();
+    reset();
   }
 
   void notify() {
@@ -64,7 +64,7 @@ class AiPlatform extends ChangeNotifier {
       fromMap(lastModel);
       Logger.log(lastModel.toString());
     } else {
-      resetAll();
+      reset();
     }
   }
 
@@ -255,7 +255,7 @@ class AiPlatform extends ChangeNotifier {
 
   void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson.isEmpty) {
-      resetAll();
+      reset();
     } else {
       _promptFormat = PromptFormatType.values[
           inputJson["prompt_promptFormat"] ?? PromptFormatType.alpaca.index];
@@ -328,7 +328,7 @@ class AiPlatform extends ChangeNotifier {
     return outputJson;
   }
 
-  void resetAll() {
+  void reset() {
     rootBundle.loadString('assets/default_parameters.json').then((jsonString) {
       Map<String, dynamic> assetJson = json.decode(jsonString);
 
@@ -370,7 +370,7 @@ class AiPlatform extends ChangeNotifier {
 
       fromMap(inputJson);
     } catch (e) {
-      resetAll();
+      reset();
       return "Error: $e";
     }
 

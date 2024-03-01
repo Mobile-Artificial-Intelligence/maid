@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/main.dart';
-import 'package:maid/static/user.dart';
 import 'package:maid_ui/maid_ui.dart';
 import 'package:maid/ui/mobile/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
@@ -15,12 +15,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  late TextEditingController _userNameController;
-
   @override
   Widget build(BuildContext context) {
-    _userNameController = TextEditingController(text: User.name);
-    
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -42,14 +38,6 @@ class _SettingsPageState extends State<SettingsPage> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                TextFieldListTile(
-                headingText: 'User Name',
-                labelText: 'User Name',
-                controller: _userNameController,
-                onChanged: (value) {
-                  User.name = value;
-                }),
-                const SizedBox(height: 20.0),
                 SwitchListTile(
                   title: const Text('Theme (Light/Dark)'),
                   value: mainProvider.isDarkMode,

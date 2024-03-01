@@ -1,12 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:maid/providers/user.dart';
+import 'package:maid/static/generation_manager.dart';
 import 'package:maid/ui/mobile/pages/about_page.dart';
 import 'package:maid/ui/mobile/pages/character_page.dart';
 import 'package:maid/ui/mobile/pages/platform_page.dart';
 import 'package:maid/ui/mobile/pages/sessions_page.dart';
 import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:maid/providers/character.dart';
+import 'package:maid/ui/mobile/pages/user_page.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_message.dart';
@@ -30,12 +33,11 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-      ),
-      drawer: _buildDrawer(),
-      body: _buildBody()
-    );
+        appBar: AppBar(
+          elevation: 0.0,
+        ),
+        drawer: _buildDrawer(),
+        body: _buildBody());
   }
 
   Drawer _buildDrawer() {
@@ -60,6 +62,16 @@ class HomePageState extends State<HomePage> {
             indent: 10,
             endIndent: 10,
             color: Theme.of(context).colorScheme.onPrimary,
+          ),
+          ListTile(
+            leading: Icon(Icons.account_circle,
+                color: Theme.of(context).colorScheme.onPrimary),
+            title: Text('User', style: Theme.of(context).textTheme.labelLarge),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const UserPage()));
+            },
           ),
           ListTile(
             leading: Icon(Icons.person,
@@ -107,8 +119,8 @@ class HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.settings,
                 color: Theme.of(context).colorScheme.onPrimary),
-            title: Text('Settings',
-                style: Theme.of(context).textTheme.labelLarge),
+            title:
+                Text('Settings', style: Theme.of(context).textTheme.labelLarge),
             onTap: () {
               Navigator.pop(context); // Close the drawer
               Navigator.push(
@@ -120,8 +132,7 @@ class HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.info,
                 color: Theme.of(context).colorScheme.onPrimary),
-            title:
-                Text('About', style: Theme.of(context).textTheme.labelLarge),
+            title: Text('About', style: Theme.of(context).textTheme.labelLarge),
             onTap: () {
               Navigator.pop(context); // Close the drawer
               Navigator.push(context,
@@ -134,15 +145,15 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody() {
-    return Consumer2<Session, Character>(
-      builder: (context, session, character, child) {
+    return Consumer3<Session, User, Character>(
+      builder: (context, session, user, character, child) {
         Map<Key, bool> history = session.history();
         if (history.isEmpty && character.useGreeting) {
           final newKey = UniqueKey();
           final index = Random().nextInt(character.greetings.length);
           session.add(newKey,
-              message:
-                  character.formatPlaceholders(character.greetings[index]),
+              message: GenerationManager.formatPlaceholders(
+                  character.greetings[index], user.name, character.name),
               userGenerated: false,
               notify: false);
           history = {newKey: false};

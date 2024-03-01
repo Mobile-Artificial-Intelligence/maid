@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
-import 'package:maid/static/user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +27,7 @@ class Character extends ChangeNotifier {
   void newCharacter() {
     final key = UniqueKey().toString();
     _name = "New Character $key";
-    resetAll();
+    reset();
   }
 
   void notify() {
@@ -47,7 +46,7 @@ class Character extends ChangeNotifier {
       Logger.log(lastCharacter.toString());
       fromMap(lastCharacter);
     } else {
-      resetAll();
+      reset();
     }
   }
 
@@ -72,7 +71,7 @@ class Character extends ChangeNotifier {
     _name = inputJson["name"] ?? "Unknown";
 
     if (inputJson.isEmpty) {
-      resetAll();
+      reset();
     }
 
     _description = inputJson["description"] ?? "";
@@ -234,7 +233,7 @@ class Character extends ChangeNotifier {
 
   List<Map<String, dynamic>> get examples => _examples;
 
-  void resetAll() {
+  void reset() {
     // Reset all the internal state to the defaults
     rootBundle.loadString('assets/default_character.json').then((jsonString) {
       Map<String, dynamic> jsonCharacter = json.decode(jsonString);
@@ -276,14 +275,14 @@ class Character extends ChangeNotifier {
       Map<String, dynamic> jsonCharacter = json.decode(jsonString);
 
       if (jsonCharacter.isEmpty) {
-        resetAll();
+        reset();
         return "Failed to decode character";
       }
 
       fromMap(jsonCharacter);
       return "Character Successfully Loaded";
     } catch (e) {
-      resetAll();
+      reset();
       Logger.log("Error: $e");
       return "Error: $e";
     }
@@ -377,7 +376,7 @@ class Character extends ChangeNotifier {
       notifyListeners();
       return "Character Successfully Loaded";
     } catch (e) {
-      resetAll();
+      reset();
       Logger.log("Error: $e");
       return "Error: $e";
     }
@@ -428,21 +427,5 @@ class Character extends ChangeNotifier {
     }
 
     return buffer.toString();
-  }
-
-  String formatPlaceholders(String input) {
-    input = _replaceCaseInsensitive(input, "{{char}}", _name);
-    input = _replaceCaseInsensitive(input, "<BOT>", _name);
-    input = _replaceCaseInsensitive(input, "{{user}}", User.name);
-    input = _replaceCaseInsensitive(input, "<USER>", User.name);
-
-    return input;
-  }
-
-  String _replaceCaseInsensitive(
-      String original, String from, String replaceWith) {
-    // This creates a regular expression that ignores case (case-insensitive)
-    RegExp exp = RegExp(RegExp.escape(from), caseSensitive: false);
-    return original.replaceAll(exp, replaceWith);
   }
 }
