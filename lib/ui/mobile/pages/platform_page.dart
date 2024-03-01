@@ -244,7 +244,7 @@ class _PlatformPageState extends State<PlatformPage> {
                     const SizedBox(height: 15.0),
                     FilledButton(
                       onPressed: () {
-                        ai.resetAll();
+                        ai.reset();
                         setState(() {
                           _presetController.text = ai.preset;
                         });
