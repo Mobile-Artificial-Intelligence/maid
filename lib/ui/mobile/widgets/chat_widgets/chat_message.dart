@@ -78,51 +78,52 @@ class ChatMessageState extends State<ChatMessage>
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const SizedBox(width: 10.0),
-          CircleAvatar(
-            backgroundImage: const AssetImage("assets/maid.png"),
-            foregroundImage:
-                Image.file(context.read<Character>().profile).image,
-            radius: 16,
-          ),
-          const SizedBox(width: 10.0),
-          ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [
-                Color.fromARGB(255, 255, 172, 200),
-                Color.fromARGB(255, 255, 150, 250),
-                Color.fromARGB(255, 150, 240, 255)
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ).createShader(bounds),
-            blendMode: BlendMode
-                .srcIn, // This blend mode applies the shader to the text color.
-            child: Text(
-              widget.userGenerated
-                  ? context.read<User>().name
-                  : context.read<Character>().name,
-              style: const TextStyle(
-                // The color must be white (or any color) to ensure the gradient is visible.
-                color: Colors
-                    .white, // This color is needed, but it will be overridden by the shader.
-                fontSize: 20,
-              ),
-            ),
-          ),
-          const Expanded(child: SizedBox()), // Spacer
-          if (_finalised) ..._messageOptions(),
-          Consumer<Session>(
-            builder: (context, session, child) {
-              int currentIndex = session.index(widget.key!);
-              int siblingCount = session.siblingCount(widget.key!);
-              bool busy = session.isBusy;
+    return Consumer3<Session, User, Character>(
+      builder: (context, session, user, character, child) {
+        int currentIndex = session.index(widget.key!);
+        int siblingCount = session.siblingCount(widget.key!);
+        bool busy = session.isBusy;
 
-              return Row(
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 10.0),
+              CircleAvatar(
+                backgroundImage: widget.userGenerated
+                    ? const AssetImage("assets/chadUser.png")
+                    : const AssetImage("assets/maid.png"),
+                foregroundImage: Image.file(
+                        widget.userGenerated ? user.profile : character.profile)
+                    .image,
+                radius: 16,
+              ),
+              const SizedBox(width: 10.0),
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 255, 172, 200),
+                    Color.fromARGB(255, 255, 150, 250),
+                    Color.fromARGB(255, 150, 240, 255)
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ).createShader(bounds),
+                blendMode: BlendMode
+                    .srcIn, // This blend mode applies the shader to the text color.
+                child: Text(
+                  widget.userGenerated ? user.name : character.name,
+                  style: const TextStyle(
+                    // The color must be white (or any color) to ensure the gradient is visible.
+                    color: Colors
+                        .white, // This color is needed, but it will be overridden by the shader.
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()), // Spacer
+              if (_finalised) ..._messageOptions(),
+              Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -146,19 +147,19 @@ class ChatMessageState extends State<ChatMessage>
                         color: Theme.of(context).colorScheme.onPrimary),
                   ),
                 ],
-              );
-            },
+              )
+            ],
           ),
-        ],
-      ),
-      Padding(
-          // left padding 30 right 10
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _editing ? _editingColumn() : _standardColumn(),
-          ))
-    ]);
+          Padding(
+              // left padding 30 right 10
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _editing ? _editingColumn() : _standardColumn(),
+              ))
+        ]);
+      },
+    );
   }
 
   List<Widget> _messageOptions() {
