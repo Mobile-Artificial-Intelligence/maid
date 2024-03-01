@@ -6,6 +6,7 @@ import 'package:maid_ui/maid_ui.dart';
 import 'package:maid/ui/mobile/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:system_info2/system_info2.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -67,6 +68,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 Padding(
                     padding: const EdgeInsets.all(10),
                     child: CodeBox(code: Logger.getLog)),
+                Text(
+                  ram == -1 ? 'RAM: Unknown' : 'RAM: $ram GB',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color:
+                        Color.lerp(Colors.red, Colors.green, ram.clamp(0, 8) / 8) ??
+                            Colors.red,
+                    fontSize: 15,
+                  ),
+                ),
               ],
             ),
           );
