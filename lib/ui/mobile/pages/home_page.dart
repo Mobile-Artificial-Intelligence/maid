@@ -26,7 +26,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  static int ram = SysInfo.getTotalPhysicalMemory() ~/ (1024 * 1024 * 1024);
   final ScrollController _consoleScrollController = ScrollController();
   List<ChatMessage> chatWidgets = [];
 
@@ -42,27 +41,8 @@ class HomePageState extends State<HomePage> {
 
   Drawer _buildDrawer() {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          const SizedBox(
-            height: 50,
-          ),
-          Text(
-            ram == -1 ? 'RAM: Unknown' : 'RAM: $ram GB',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color:
-                  Color.lerp(Colors.red, Colors.green, ram.clamp(0, 8) / 8) ??
-                      Colors.red,
-              fontSize: 15,
-            ),
-          ),
-          Divider(
-            indent: 10,
-            endIndent: 10,
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
           ListTile(
             leading: Icon(Icons.account_circle,
                 color: Theme.of(context).colorScheme.onPrimary),
@@ -139,8 +119,8 @@ class HomePageState extends State<HomePage> {
                   MaterialPageRoute(builder: (context) => const AboutPage()));
             },
           ),
-        ],
-      ),
+        ]
+      )
     );
   }
 
