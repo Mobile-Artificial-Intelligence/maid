@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/static/user.dart';
+import 'package:maid/providers/user.dart';
 
 import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
@@ -103,7 +103,9 @@ class ChatMessageState extends State<ChatMessage>
             blendMode: BlendMode
                 .srcIn, // This blend mode applies the shader to the text color.
             child: Text(
-              widget.userGenerated ? User.name : context.read<Character>().name,
+              widget.userGenerated
+                  ? context.read<User>().name
+                  : context.read<Character>().name,
               style: const TextStyle(
                 // The color must be white (or any color) to ensure the gradient is visible.
                 color: Colors

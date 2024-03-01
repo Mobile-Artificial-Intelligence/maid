@@ -13,6 +13,7 @@ import 'package:langchain_openai/langchain_openai.dart';
 import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
+import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:lan_scanner/lan_scanner.dart';
@@ -39,6 +40,7 @@ class GenerationManager {
     _completer = Completer();
 
     final ai = context.read<AiPlatform>();
+    final user = context.read<User>();
     final character = context.read<Character>();
     final session = context.read<Session>();
 
@@ -76,10 +78,10 @@ class GenerationManager {
       {
         'role': 'system',
         'content': '''
-          ${character.formatPlaceholders(character.description)}\n\n
-          ${character.formatPlaceholders(character.personality)}\n\n
-          ${character.formatPlaceholders(character.scenario)}\n\n
-          ${character.formatPlaceholders(character.system)}\n\n
+          ${formatPlaceholders(character.description, user.name, character.name)}\n\n
+          ${formatPlaceholders(character.personality, user.name, character.name)}\n\n
+          ${formatPlaceholders(character.scenario, user.name, character.name)}\n\n
+          ${formatPlaceholders(character.system, user.name, character.name)}\n\n
         '''
       }
     ];
@@ -107,6 +109,7 @@ class GenerationManager {
   static void remotePrompt(String input, BuildContext context,
       void Function(String?) callback) async {
     final ai = context.read<AiPlatform>();
+    final user = context.read<User>();
     final character = context.read<Character>();
     final session = context.read<Session>();
 
@@ -118,10 +121,10 @@ class GenerationManager {
     List<ChatMessage> chatMessages = [];
 
     final prePrompt = '''
-      ${character.formatPlaceholders(character.description)}\n\n
-      ${character.formatPlaceholders(character.personality)}\n\n
-      ${character.formatPlaceholders(character.scenario)}\n\n
-      ${character.formatPlaceholders(character.system)}\n\n
+      ${formatPlaceholders(character.description, user.name, character.name)}\n\n
+      ${formatPlaceholders(character.personality, user.name, character.name)}\n\n
+      ${formatPlaceholders(character.scenario, user.name, character.name)}\n\n
+      ${formatPlaceholders(character.system, user.name, character.name)}\n\n
     ''';
 
     List<Map<String, dynamic>> messages = [
@@ -152,8 +155,8 @@ class GenerationManager {
           break;
       }
 
-      chatMessages.add(
-          ChatMessage.system(character.formatPlaceholders(character.system)));
+      chatMessages.add(ChatMessage.system(
+          formatPlaceholders(character.system, user.name, character.name)));
     }
 
     chatMessages.add(ChatMessage.humanText(input));
@@ -398,5 +401,22 @@ class GenerationManager {
       Logger.log("Nearby Devices - permission denied");
       return false;
     }
+  }
+
+  static String formatPlaceholders(
+      String input, String userName, String characterName) {
+    input = _replaceCaseInsensitive(input, "{{char}}", characterName);
+    input = _replaceCaseInsensitive(input, "<BOT>", characterName);
+    input = _replaceCaseInsensitive(input, "{{user}}", userName);
+    input = _replaceCaseInsensitive(input, "<USER>", userName);
+
+    return input;
+  }
+
+  static String _replaceCaseInsensitive(
+      String original, String from, String replaceWith) {
+    // This creates a regular expression that ignores case (case-insensitive)
+    RegExp exp = RegExp(RegExp.escape(from), caseSensitive: false);
+    return original.replaceAll(exp, replaceWith);
   }
 }
