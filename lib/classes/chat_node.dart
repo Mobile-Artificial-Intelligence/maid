@@ -25,11 +25,11 @@ class ChatNode {
   }) : children = children ?? [];
 
   ChatNode.fromMap(Map<String, dynamic> map)
-      : key = ValueKey(map['key']?? UniqueKey().toString()),
+      : key = ValueKey(map['key'] as String? ?? UniqueKey().toString()),
         message = map['message'] ?? "",
         userGenerated = map['userGenerated'] ?? false,
         currentChild = map['currentChild'] != null
-            ? ValueKey(map['currentChild'])
+            ? ValueKey(map['currentChild'] as String)
             : null,
         children = (map['children'] ?? [])
           .map((childMap) => ChatNode.fromMap(childMap))

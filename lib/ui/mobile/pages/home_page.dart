@@ -3,17 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/generation_manager.dart';
-import 'package:maid/ui/mobile/pages/about_page.dart';
-import 'package:maid/ui/mobile/pages/character_page.dart';
-import 'package:maid/ui/mobile/pages/platform_page.dart';
-import 'package:maid/ui/mobile/pages/sessions_page.dart';
-import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:maid/providers/character.dart';
-import 'package:maid/ui/mobile/pages/user_page.dart';
-import 'package:system_info2/system_info2.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_field.dart';
+import 'package:maid/ui/mobile/widgets/home_drawer.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,93 +29,8 @@ class HomePageState extends State<HomePage> {
         appBar: AppBar(
           elevation: 0.0,
         ),
-        drawer: _buildDrawer(),
+        drawer: const HomeDrawer(),
         body: _buildBody());
-  }
-
-  Drawer _buildDrawer() {
-    return Drawer(
-      child: Column(
-        children: [
-          ListTile(
-            leading: Icon(Icons.account_circle,
-                color: Theme.of(context).colorScheme.onPrimary),
-            title: Text('User', style: Theme.of(context).textTheme.labelLarge),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const UserPage()));
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.person,
-                color: Theme.of(context).colorScheme.onPrimary),
-            title: Text('Character',
-                style: Theme.of(context).textTheme.labelLarge),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CharacterPage()));
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.account_tree_rounded,
-                color: Theme.of(context).colorScheme.onPrimary),
-            title: Text(
-              'Model',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PlatformPage()));
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.chat_rounded,
-                color: Theme.of(context).colorScheme.onPrimary),
-            title: Text(
-              'Sessions',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SessionsPage()));
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings,
-                color: Theme.of(context).colorScheme.onPrimary),
-            title:
-                Text('Settings', style: Theme.of(context).textTheme.labelLarge),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsPage()));
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.info,
-                color: Theme.of(context).colorScheme.onPrimary),
-            title: Text('About', style: Theme.of(context).textTheme.labelLarge),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const AboutPage()));
-            },
-          ),
-        ]
-      )
-    );
   }
 
   Widget _buildBody() {
@@ -146,14 +55,6 @@ class HomePageState extends State<HomePage> {
             userGenerated: history[key] ?? false,
           ));
         }
-
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          _consoleScrollController.animateTo(
-            _consoleScrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 50),
-            curve: Curves.easeOut,
-          );
-        });
 
         return Builder(
           builder: (BuildContext context) => GestureDetector(
