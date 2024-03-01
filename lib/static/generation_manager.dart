@@ -17,6 +17,7 @@ import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:lan_scanner/lan_scanner.dart';
+import 'package:maid/static/utilities.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -78,10 +79,10 @@ class GenerationManager {
       {
         'role': 'system',
         'content': '''
-          ${formatPlaceholders(character.description, user.name, character.name)}\n\n
-          ${formatPlaceholders(character.personality, user.name, character.name)}\n\n
-          ${formatPlaceholders(character.scenario, user.name, character.name)}\n\n
-          ${formatPlaceholders(character.system, user.name, character.name)}\n\n
+          ${Utilities.formatPlaceholders(character.description, user.name, character.name)}\n\n
+          ${Utilities.formatPlaceholders(character.personality, user.name, character.name)}\n\n
+          ${Utilities.formatPlaceholders(character.scenario, user.name, character.name)}\n\n
+          ${Utilities.formatPlaceholders(character.system, user.name, character.name)}\n\n
         '''
       }
     ];
@@ -121,10 +122,10 @@ class GenerationManager {
     List<ChatMessage> chatMessages = [];
 
     final prePrompt = '''
-      ${formatPlaceholders(character.description, user.name, character.name)}\n\n
-      ${formatPlaceholders(character.personality, user.name, character.name)}\n\n
-      ${formatPlaceholders(character.scenario, user.name, character.name)}\n\n
-      ${formatPlaceholders(character.system, user.name, character.name)}\n\n
+      ${Utilities.formatPlaceholders(character.description, user.name, character.name)}\n\n
+      ${Utilities.formatPlaceholders(character.personality, user.name, character.name)}\n\n
+      ${Utilities.formatPlaceholders(character.scenario, user.name, character.name)}\n\n
+      ${Utilities.formatPlaceholders(character.system, user.name, character.name)}\n\n
     ''';
 
     List<Map<String, dynamic>> messages = [
@@ -156,7 +157,7 @@ class GenerationManager {
       }
 
       chatMessages.add(ChatMessage.system(
-          formatPlaceholders(character.system, user.name, character.name)));
+          Utilities.formatPlaceholders(character.system, user.name, character.name)));
     }
 
     chatMessages.add(ChatMessage.humanText(input));
@@ -401,22 +402,5 @@ class GenerationManager {
       Logger.log("Nearby Devices - permission denied");
       return false;
     }
-  }
-
-  static String formatPlaceholders(
-      String input, String userName, String characterName) {
-    input = _replaceCaseInsensitive(input, "{{char}}", characterName);
-    input = _replaceCaseInsensitive(input, "<BOT>", characterName);
-    input = _replaceCaseInsensitive(input, "{{user}}", userName);
-    input = _replaceCaseInsensitive(input, "<USER>", userName);
-
-    return input;
-  }
-
-  static String _replaceCaseInsensitive(
-      String original, String from, String replaceWith) {
-    // This creates a regular expression that ignores case (case-insensitive)
-    RegExp exp = RegExp(RegExp.escape(from), caseSensitive: false);
-    return original.replaceAll(exp, replaceWith);
   }
 }

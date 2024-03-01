@@ -121,8 +121,6 @@ class FileManager {
         dialogTitle: "Save Model File",
         type: FileType.any,
       );
-
-      result.toString();
     }
 
     if (result == null) {

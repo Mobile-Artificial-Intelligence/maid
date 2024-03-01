@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:maid/static/utilities.dart';
 
 class ChatNode {
   final StreamController<String> messageController =
@@ -25,7 +26,7 @@ class ChatNode {
   }) : children = children ?? [];
 
   ChatNode.fromMap(Map<String, dynamic> map)
-      : key = ValueKey(map['key'] as String? ?? UniqueKey().toString()),
+      : key = ValueKey(map['key'] as String? ?? Utilities.keyToString(UniqueKey())),
         message = map['message'] ?? "",
         userGenerated = map['userGenerated'] ?? false,
         currentChild = map['currentChild'] != null
@@ -38,9 +39,11 @@ class ChatNode {
 
   Map<String, dynamic> toMap() {
     return {
-      'key': key.toString(),
+      'key': Utilities.keyToString(key),
       'message': message,
-      'currentChild': currentChild?.toString(),
+      'currentChild': currentChild != null
+          ? Utilities.keyToString(currentChild!)
+          : null,
       'userGenerated': userGenerated,
       'children': children.map((child) => child.toMap()).toList(),
     };

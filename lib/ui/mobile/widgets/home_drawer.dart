@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/providers/session.dart';
+import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/pages/about_page.dart';
 import 'package:maid/ui/mobile/pages/character_page.dart';
 import 'package:maid/ui/mobile/pages/platform_page.dart';
@@ -27,12 +28,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
       Map<String, dynamic> loadedSessions = json.decode(prefs.getString("sessions") ?? "{}");
-      Map<Key, dynamic> keyedSessions = loadedSessions.map((key, value) {
-        final stringKey = key.replaceAll('<\'[', '').replaceAll(']\'>', '');
-        return MapEntry(ValueKey(stringKey), value);
-      });
+      Map<Key, dynamic> keyedSessions = loadedSessions.map((key, value) => MapEntry(ValueKey(key), value));
       sessions.addAll(keyedSessions);
-      print("Loaded sessions: $sessions");
       setState(() {});
     });
   }
@@ -40,7 +37,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   @override
   void dispose() {
     SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> encodableSessions = sessions.map((key, value) => MapEntry(key.toString(), value));
+      Map<String, dynamic> encodableSessions = sessions.map((key, value) => MapEntry(Utilities.keyToString(key), value));
       prefs.setString("sessions", json.encode(encodableSessions));
     });
 
@@ -70,7 +67,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   });
                 },
                 child: Text(
-                  "New Session",
+                  "New Chat",
                   style: Theme.of(context).textTheme.labelLarge,
                 ),
               ),
