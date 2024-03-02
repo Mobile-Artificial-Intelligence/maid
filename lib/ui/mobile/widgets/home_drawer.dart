@@ -28,7 +28,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final prefs = await SharedPreferences.getInstance();
       Map<String, dynamic> loadedSessions = json.decode(prefs.getString("sessions") ?? "{}");
-      Map<Key, dynamic> keyedSessions = loadedSessions.map((key, value) => MapEntry(ValueKey(key), value));
+      Map<Key, dynamic> keyedSessions = loadedSessions.map((key, value) {
+        final valueKey = Utilities.stringToKey(key);
+        return MapEntry(valueKey, value);
+      });
       sessions.addAll(keyedSessions);
       setState(() {});
     });
@@ -37,7 +40,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
   @override
   void dispose() {
     SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> encodableSessions = sessions.map((key, value) => MapEntry(Utilities.keyToString(key), value));
+      Map<String, dynamic> encodableSessions = sessions.map((key, value) {
+        final stringKey = Utilities.keyToString(key);
+        return MapEntry(stringKey, value);
+      });
       prefs.setString("sessions", json.encode(encodableSessions));
     });
 

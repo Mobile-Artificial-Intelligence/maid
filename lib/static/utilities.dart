@@ -2,7 +2,22 @@ import 'package:flutter/material.dart';
 
 class Utilities {
   static String keyToString(Key key) {
-    return key.toString().replaceAll('<\'[', '').replaceAll(']\'>', '');
+    String keyString = key.toString();
+    return _cleanKeyString(keyString);
+  }
+
+  static Key stringToKey(String string) {
+    return ValueKey(_cleanKeyString(string));
+  }
+
+  static String _cleanKeyString(String keyString) {
+    keyString = keyString.replaceAll('\'', '');
+    keyString = keyString.replaceAll('<', '');
+    keyString = keyString.replaceAll('>', '');
+    keyString = keyString.replaceAll('[', '');
+    keyString = keyString.replaceAll(']', '');
+
+    return keyString;
   }
 
   static String formatPlaceholders(
