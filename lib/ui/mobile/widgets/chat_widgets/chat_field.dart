@@ -55,13 +55,12 @@ class _ChatFieldState extends State<ChatField> {
     }
 
     final session = context.read<Session>();
-    final key = UniqueKey();
 
     session
-        .add(UniqueKey(),
+        .add(ValueKey(DateTime.now().millisecondsSinceEpoch),
             message: _promptController.text.trim(), userGenerated: true)
         .then((value) {
-      session.add(key);
+      session.add(ValueKey(DateTime.now().millisecondsSinceEpoch));
     });
 
     GenerationManager.prompt(_promptController.text.trim(), context);

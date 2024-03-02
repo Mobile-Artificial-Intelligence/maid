@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/user.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
+import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_field.dart';
 import 'package:maid/ui/mobile/widgets/home_drawer.dart';
@@ -38,10 +38,10 @@ class HomePageState extends State<HomePage> {
       builder: (context, session, user, character, child) {
         Map<Key, bool> history = session.history();
         if (history.isEmpty && character.useGreeting) {
-          final newKey = UniqueKey();
+          final newKey = ValueKey(DateTime.now().millisecondsSinceEpoch);
           final index = Random().nextInt(character.greetings.length);
           session.add(newKey,
-              message: GenerationManager.formatPlaceholders(
+              message: Utilities.formatPlaceholders(
                   character.greetings[index], user.name, character.name),
               userGenerated: false,
               notify: false);

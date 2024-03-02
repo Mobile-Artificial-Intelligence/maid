@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
   bool _busy = false;
-  ChatNode _root = ChatNode(key: UniqueKey());
+  ChatNode _root = ChatNode(key: ValueKey(DateTime.now().millisecondsSinceEpoch));
   ChatNode? tail;
   String _messageBuffer = "";
 
@@ -60,7 +60,7 @@ class Session extends ChangeNotifier {
   }
 
   void newSession() {
-    final key = UniqueKey();
+    final key = ValueKey(DateTime.now().millisecondsSinceEpoch);
     _root = ChatNode(key: key);
     _root.message = "New Chat";
     tail = null;
@@ -152,7 +152,7 @@ class Session extends ChangeNotifier {
     } else {
       parent.currentChild = null;
       tail = _root.findTail();
-      add(UniqueKey(), userGenerated: false);
+      add(ValueKey(DateTime.now().millisecondsSinceEpoch), userGenerated: false);
       notifyListeners();
       GenerationManager.prompt(parent.message, context);
     }
@@ -164,8 +164,8 @@ class Session extends ChangeNotifier {
       parent.currentChild = null;
       tail = _root.findTail();
     }
-    add(UniqueKey(), userGenerated: true, message: message);
-    add(UniqueKey(), userGenerated: false);
+    add(ValueKey(DateTime.now().millisecondsSinceEpoch), userGenerated: true, message: message);
+    add(ValueKey(DateTime.now().millisecondsSinceEpoch), userGenerated: false);
     notifyListeners();
     GenerationManager.prompt(message, context);
   }
