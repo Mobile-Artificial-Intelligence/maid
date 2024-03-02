@@ -68,10 +68,26 @@ class AiPlatform extends ChangeNotifier {
     }
   }
 
-  void setApiType(AiPlatformType apiType) async {
-    switch (apiType) {
+  Future<String> resetUrl() async {
+    switch (_apiType) {
       case AiPlatformType.ollama:
         _url = await GenerationManager.getOllamaUrl();
+      case AiPlatformType.openAI:
+        _url = "https://api.openai.com/v1/";
+      case AiPlatformType.mistralAI:
+        _url = "https://api.mistral.ai/v1/";
+      default:
+        _url = "";
+    }
+
+    notifyListeners();
+    return _url;
+  }
+
+  set apiType(AiPlatformType apiType) {
+    switch (apiType) {
+      case AiPlatformType.ollama:
+        _url = "";
       case AiPlatformType.openAI:
         _url = "https://api.openai.com/v1/";
       case AiPlatformType.mistralAI:

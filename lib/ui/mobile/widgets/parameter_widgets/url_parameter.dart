@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/ai_platform.dart';
-import 'package:maid/ui/mobile/widgets/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class UrlParameter extends StatelessWidget {
@@ -11,12 +10,36 @@ class UrlParameter extends StatelessWidget {
     final TextEditingController controller = TextEditingController();
     controller.text = context.read<AiPlatform>().url;
 
-    return TextFieldListTile(
-        headingText: "URL",
-        labelText: "URL",
-        controller: controller,
-        onChanged: (value) {
-          context.read<AiPlatform>().url = value;
-        });
+
+    return ListTile(
+      title: Row(
+        children: [
+          const Expanded(
+            child: Text("URL"),
+          ),
+          IconButton(
+            onPressed: () async {
+              controller.text = await context.read<AiPlatform>().resetUrl();
+            }, 
+            icon: const Icon(Icons.refresh),
+          ),
+          Expanded(
+            flex: 2,
+            child: TextField(
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+              cursorColor: Theme.of(context).colorScheme.secondary,
+              controller: controller,
+              decoration: const InputDecoration(
+                labelText: "URL",
+              ),
+              onChanged: (value) {
+                context.read<AiPlatform>().url = value;
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
