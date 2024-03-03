@@ -70,6 +70,8 @@ class GenerationManager {
     gptParams.nKeep = ai.nKeep;
     gptParams.sparams = samplingParams;
     gptParams.model = ai.model;
+    gptParams.instruct = ai.promptFormat == PromptFormat.alpaca;
+    gptParams.chatml = ai.promptFormat == PromptFormat.chatml;
 
     List<Map<String, dynamic>> messages = [
       {
