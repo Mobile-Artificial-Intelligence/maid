@@ -504,13 +504,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
-  llama_cpp_dart:
-    dependency: "direct main"
-    description:
-      path: "packages/llama_cpp_dart"
-      relative: true
-    source: path
-    version: "0.0.7"
   logging:
     dependency: transitive
     description:
@@ -519,6 +512,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  maid_llm:
+    dependency: "direct main"
+    description:
+      path: "packages/maid_llm"
+      relative: true
+    source: path
+    version: "0.0.1"
   maid_ui:
     dependency: "direct main"
     description:

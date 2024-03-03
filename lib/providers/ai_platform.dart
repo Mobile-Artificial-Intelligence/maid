@@ -8,10 +8,10 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:llama_cpp_dart/llama_cpp_dart.dart';
+import 'package:maid_llm/maid_llm.dart';
 
 class AiPlatform extends ChangeNotifier {
-  PromptFormatType _promptFormat = PromptFormatType.alpaca;
+  PromptFormat _promptFormat = PromptFormat.alpaca;
   AiPlatformType _apiType = AiPlatformType.local;
   String _preset = "Default";
   String _apiKey = "";
@@ -101,7 +101,7 @@ class AiPlatform extends ChangeNotifier {
     notifyListeners();
   }
 
-  set promptFormat(PromptFormatType promptFormat) {
+  set promptFormat(PromptFormat promptFormat) {
     _promptFormat = promptFormat;
     notifyListeners();
   }
@@ -236,7 +236,7 @@ class AiPlatform extends ChangeNotifier {
     notifyListeners();
   }
 
-  PromptFormatType get promptFormat => _promptFormat;
+  PromptFormat get promptFormat => _promptFormat;
   AiPlatformType get apiType => _apiType;
   String get preset => _preset;
   String get apiKey => _apiKey;
@@ -273,8 +273,8 @@ class AiPlatform extends ChangeNotifier {
     if (inputJson.isEmpty) {
       reset();
     } else {
-      _promptFormat = PromptFormatType.values[
-          inputJson["prompt_promptFormat"] ?? PromptFormatType.alpaca.index];
+      _promptFormat = PromptFormat.values[
+          inputJson["prompt_promptFormat"] ?? PromptFormat.alpaca.index];
       _apiType = AiPlatformType
           .values[inputJson["api_type"] ?? AiPlatformType.local.index];
       _preset = inputJson["preset"] ?? "Default";
