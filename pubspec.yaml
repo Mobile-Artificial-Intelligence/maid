@@ -46,8 +46,6 @@ dependencies:
   http: ^1.1.0
   device_info_plus: ^9.1.1
   provider: ^6.1.1
-  llama_cpp_dart:
-    path: packages/llama_cpp_dart
   langchain: ^0.3.1
   langchain_openai: ^0.3.1
   langchain_google: ^0.2.2
@@ -58,6 +56,8 @@ dependencies:
   lan_scanner: ^4.0.0+1
   maid_ui:
     path: packages/maid_ui
+  maid_llm:
+    path: packages/maid_llm
 
 dev_dependencies:
   msix: ^3.9.1

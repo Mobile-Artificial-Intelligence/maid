@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/ui/mobile/pages/home_page.dart';
@@ -8,16 +6,9 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
-import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  if (Platform.isWindows) {
-    Llama.libraryPath = 'bin/llama.dll';
-  } else if (Platform.isLinux || Platform.isAndroid) {
-    Llama.libraryPath = 'libllama.so';
-  }
 
   runApp(
     MultiProvider(

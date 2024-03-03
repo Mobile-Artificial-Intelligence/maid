@@ -10,7 +10,6 @@ import 'package:langchain/langchain.dart';
 import 'package:langchain_mistralai/langchain_mistralai.dart';
 import 'package:langchain_ollama/langchain_ollama.dart';
 import 'package:langchain_openai/langchain_openai.dart';
-import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
@@ -21,9 +20,10 @@ import 'package:maid/static/utilities.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:maid_llm/maid_llm.dart';
 
 class GenerationManager {
-  static LlamaProcessor? _llamaProcessor;
+  static MaidLLM? maidllm;
   static Completer? _completer;
 
   static void prompt(String input, BuildContext context) {
@@ -45,14 +45,6 @@ class GenerationManager {
     final character = context.read<Character>();
     final session = context.read<Session>();
 
-    ModelParams modelParams = ModelParams();
-    modelParams.format = ai.promptFormat;
-    ContextParams contextParams = ContextParams();
-    contextParams.batch = ai.nBatch;
-    contextParams.context = ai.nCtx;
-    contextParams.seed = ai.randomSeed ? Random().nextInt(1000000) : ai.seed;
-    contextParams.threads = ai.nThread;
-    contextParams.threadsBatch = ai.nThread;
     SamplingParams samplingParams = SamplingParams();
     samplingParams.temp = ai.temperature;
     samplingParams.topK = ai.topK;
@@ -68,12 +60,16 @@ class GenerationManager {
     samplingParams.mirostatEta = ai.mirostatEta;
     samplingParams.penalizeNl = ai.penalizeNewline;
 
-    _llamaProcessor = LlamaProcessor(
-        path: ai.model,
-        modelParams: modelParams,
-        contextParams: contextParams,
-        samplingParams: samplingParams,
-        onDone: stop);
+    GptParams gptParams = GptParams();
+    gptParams.seed = ai.randomSeed ? Random().nextInt(1000000) : ai.seed;
+    gptParams.nThreads = ai.nThread;
+    gptParams.nThreadsBatch = ai.nThread;
+    gptParams.nPredict = ai.nPredict;
+    gptParams.nCtx = ai.nCtx;
+    gptParams.nBatch = ai.nBatch;
+    gptParams.nKeep = ai.nKeep;
+    gptParams.sparams = samplingParams;
+    gptParams.model = ai.model;
 
     List<Map<String, dynamic>> messages = [
       {
@@ -93,17 +89,17 @@ class GenerationManager {
 
     messages.addAll(session.getMessages());
 
-    _llamaProcessor!.messages = messages;
+    maidllm = MaidLLM(gptParams);
 
-    _llamaProcessor!.stream.listen((data) {
-      callback.call(data);
+    maidllm?.prompt(input).listen((event) { 
+      callback.call(event);
+    }).onDone(() { 
+      _completer?.complete();
     });
-
-    _llamaProcessor?.prompt(input);
     await _completer?.future;
     callback.call(null);
-    _llamaProcessor?.unloadModel();
-    _llamaProcessor = null;
+    maidllm?.clear();
+    maidllm = null;
     Logger.log('Local generation completed');
   }
 
@@ -279,7 +275,7 @@ class GenerationManager {
   }
 
   static void stop() {
-    _llamaProcessor?.stop();
+    maidllm?.stop();
     _completer?.complete();
     Logger.log('Local generation stopped');
   }

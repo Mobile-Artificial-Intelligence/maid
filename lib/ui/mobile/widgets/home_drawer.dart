@@ -211,7 +211,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             "Updating session $oldName ====> ${controller.text}");
                         session.setRootMessage(
                             controller.text);
-                        sessions.remove(oldName);
                         Navigator.of(context).pop();
                         setState(() {});
                       },

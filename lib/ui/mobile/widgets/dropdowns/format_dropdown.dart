@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/ai_platform.dart';
-import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 import 'package:provider/provider.dart';
+import 'package:maid_llm/maid_llm.dart';
 
 class FormatDropdown extends StatelessWidget {
   const FormatDropdown({super.key});
@@ -15,22 +15,22 @@ class FormatDropdown extends StatelessWidget {
           const Expanded(
             child: Text("Prompt Format"),
           ),
-          DropdownMenu<PromptFormatType>(
+          DropdownMenu<PromptFormat>(
             dropdownMenuEntries: const [
-              DropdownMenuEntry<PromptFormatType>(
-                value: PromptFormatType.raw,
+              DropdownMenuEntry<PromptFormat>(
+                value: PromptFormat.raw,
                 label: "Raw",
               ),
-              DropdownMenuEntry<PromptFormatType>(
-                value: PromptFormatType.chatml,
+              DropdownMenuEntry<PromptFormat>(
+                value: PromptFormat.chatml,
                 label: "ChatML",
               ),
-              DropdownMenuEntry<PromptFormatType>(
-                value: PromptFormatType.alpaca,
+              DropdownMenuEntry<PromptFormat>(
+                value: PromptFormat.alpaca,
                 label: "Alpaca",
               )
             ],
-            onSelected: (PromptFormatType? value) {
+            onSelected: (PromptFormat? value) {
               if (value != null) {
                 ai.promptFormat = value;
               }
