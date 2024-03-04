@@ -6,9 +6,9 @@ import 'package:maid/static/utilities.dart';
 
 class ChatNode {
   final StreamController<String> messageController =
-    StreamController<String>.broadcast();
+      StreamController<String>.broadcast();
   final StreamController<int> finaliseController =
-    StreamController<int>.broadcast();
+      StreamController<int>.broadcast();
 
   final Key key;
   final bool userGenerated;
@@ -26,24 +26,24 @@ class ChatNode {
   }) : children = children ?? [];
 
   ChatNode.fromMap(Map<String, dynamic> map)
-      : key = ValueKey(map['key'] as String? ?? Utilities.keyToString(ValueKey(DateTime.now().millisecondsSinceEpoch))),
+      : key = ValueKey(
+            map['key'] as String? ?? Utilities.keyToString(UniqueKey())),
         message = map['message'] ?? "",
         userGenerated = map['userGenerated'] ?? false,
         currentChild = map['currentChild'] != null
             ? ValueKey(map['currentChild'] as String)
             : null,
         children = (map['children'] ?? [])
-          .map((childMap) => ChatNode.fromMap(childMap))
-          .toList()
-          .cast<ChatNode>();
+            .map((childMap) => ChatNode.fromMap(childMap))
+            .toList()
+            .cast<ChatNode>();
 
   Map<String, dynamic> toMap() {
     return {
       'key': Utilities.keyToString(key),
       'message': message,
-      'currentChild': currentChild != null
-          ? Utilities.keyToString(currentChild!)
-          : null,
+      'currentChild':
+          currentChild != null ? Utilities.keyToString(currentChild!) : null,
       'userGenerated': userGenerated,
       'children': children.map((child) => child.toMap()).toList(),
     };

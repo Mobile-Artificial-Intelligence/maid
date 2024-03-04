@@ -38,7 +38,7 @@ class HomePageState extends State<HomePage> {
       builder: (context, session, user, character, child) {
         Map<Key, bool> history = session.history();
         if (history.isEmpty && character.useGreeting) {
-          final newKey = ValueKey(DateTime.now().millisecondsSinceEpoch);
+          final newKey = UniqueKey();
           final index = Random().nextInt(character.greetings.length);
           session.add(newKey,
               message: Utilities.formatPlaceholders(
