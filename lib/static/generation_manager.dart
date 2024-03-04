@@ -133,7 +133,7 @@ class GenerationManager {
 
     maidllm = MaidLLM(gptParams);
 
-    maidllm?.prompt(chatMessages).listen((message) {
+    maidllm?.prompt(chatMessages, log: Logger.log).listen((message) {
       callback.call(message);
     }).onDone(() {
       _completer?.complete();
