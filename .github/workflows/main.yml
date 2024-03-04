@@ -44,7 +44,6 @@ jobs:
       - name: Build APK
         run: |
           flutter pub get
-          dart run ffigen
           flutter build apk
 
       - uses: actions/upload-artifact@v4
@@ -73,7 +72,6 @@ jobs:
       - name: Build Linux App
         run: |
           flutter pub get
-          dart run ffigen
           flutter build linux
 
       - name: Upload Linux Build
@@ -102,7 +100,6 @@ jobs:
       - name: Build Windows App
         run: |
           flutter pub get
-          dart run ffigen
           flutter build windows
 
       - name: Upload Windows Build
