@@ -57,10 +57,10 @@ class _ChatFieldState extends State<ChatField> {
     final session = context.read<Session>();
 
     session
-        .add(ValueKey(DateTime.now().millisecondsSinceEpoch),
+        .add(UniqueKey(),
             message: _promptController.text.trim(), userGenerated: true)
         .then((value) {
-      session.add(ValueKey(DateTime.now().millisecondsSinceEpoch));
+      session.add(UniqueKey());
     });
 
     GenerationManager.prompt(_promptController.text.trim(), context);
@@ -101,19 +101,18 @@ class _ChatFieldState extends State<ChatField> {
               ),
             ),
             IconButton(
-              onPressed: () {
-                if (!session.isBusy) {
-                  send();
-                }
-              },
-              iconSize: 50,
-              icon: Icon(
-                Icons.arrow_circle_right,
-                color: session.isBusy
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.secondary,
-              )
-            ),
+                onPressed: () {
+                  if (!session.isBusy) {
+                    send();
+                  }
+                },
+                iconSize: 50,
+                icon: Icon(
+                  Icons.arrow_circle_right,
+                  color: session.isBusy
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.secondary,
+                )),
           ],
         ),
       );
