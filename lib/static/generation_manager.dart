@@ -6,7 +6,6 @@ import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:langchain/langchain.dart';
 import 'package:langchain_mistralai/langchain_mistralai.dart';
 import 'package:langchain_ollama/langchain_ollama.dart';
 import 'package:langchain_openai/langchain_openai.dart';
@@ -26,87 +25,9 @@ class GenerationManager {
   static MaidLLM? maidllm;
   static Completer? _completer;
 
-  static void prompt(String input, BuildContext context) {
+  static void prompt(String input, BuildContext context) async {
     context.read<Session>().busy = true;
 
-    if (context.read<AiPlatform>().apiType == AiPlatformType.local) {
-      localPrompt(input, context, context.read<Session>().stream);
-    } else {
-      remotePrompt(input, context, context.read<Session>().stream);
-    }
-  }
-
-  static void localPrompt(String input, BuildContext context,
-      void Function(String?) callback) async {
-    _completer = Completer();
-
-    final ai = context.read<AiPlatform>();
-    final user = context.read<User>();
-    final character = context.read<Character>();
-    final session = context.read<Session>();
-
-    SamplingParams samplingParams = SamplingParams();
-    samplingParams.temp = ai.temperature;
-    samplingParams.topK = ai.topK;
-    samplingParams.topP = ai.topP;
-    samplingParams.tfsZ = ai.tfsZ;
-    samplingParams.typicalP = ai.typicalP;
-    samplingParams.penaltyLastN = ai.penaltyLastN;
-    samplingParams.penaltyRepeat = ai.penaltyRepeat;
-    samplingParams.penaltyFreq = ai.penaltyFreq;
-    samplingParams.penaltyPresent = ai.penaltyPresent;
-    samplingParams.mirostat = ai.mirostat;
-    samplingParams.mirostatTau = ai.mirostatTau;
-    samplingParams.mirostatEta = ai.mirostatEta;
-    samplingParams.penalizeNl = ai.penalizeNewline;
-
-    GptParams gptParams = GptParams();
-    gptParams.seed = ai.randomSeed ? Random().nextInt(1000000) : ai.seed;
-    gptParams.nThreads = ai.nThread;
-    gptParams.nThreadsBatch = ai.nThread;
-    gptParams.nPredict = ai.nPredict;
-    gptParams.nCtx = ai.nCtx;
-    gptParams.nBatch = ai.nBatch;
-    gptParams.nKeep = ai.nKeep;
-    gptParams.sparams = samplingParams;
-    gptParams.model = ai.model;
-    gptParams.instruct = ai.promptFormat == PromptFormat.alpaca;
-    gptParams.chatml = ai.promptFormat == PromptFormat.chatml;
-
-    List<Map<String, dynamic>> messages = [
-      {
-        'role': 'system',
-        'content': '''
-          ${Utilities.formatPlaceholders(character.description, user.name, character.name)}\n\n
-          ${Utilities.formatPlaceholders(character.personality, user.name, character.name)}\n\n
-          ${Utilities.formatPlaceholders(character.scenario, user.name, character.name)}\n\n
-          ${Utilities.formatPlaceholders(character.system, user.name, character.name)}\n\n
-        '''
-      }
-    ];
-
-    if (character.useExamples) {
-      messages.addAll(character.examples);
-    }
-
-    messages.addAll(session.getMessages());
-
-    maidllm = MaidLLM(gptParams);
-
-    maidllm?.prompt(input).listen((event) { 
-      callback.call(event);
-    }).onDone(() { 
-      _completer?.complete();
-    });
-    await _completer?.future;
-    callback.call(null);
-    maidllm?.clear();
-    maidllm = null;
-    Logger.log('Local generation completed');
-  }
-
-  static void remotePrompt(String input, BuildContext context,
-      void Function(String?) callback) async {
     final ai = context.read<AiPlatform>();
     final user = context.read<User>();
     final character = context.read<Character>();
@@ -154,25 +75,74 @@ class GenerationManager {
           break;
       }
 
-      chatMessages.add(ChatMessage.system(
-          Utilities.formatPlaceholders(character.system, user.name, character.name)));
+      chatMessages.add(ChatMessage.system(Utilities.formatPlaceholders(
+          character.system, user.name, character.name)));
     }
 
     chatMessages.add(ChatMessage.humanText(input));
 
     switch (ai.apiType) {
+      case AiPlatformType.local:
+        localRequest(chatMessages, ai, session.stream);
+        break;
       case AiPlatformType.ollama:
-        ollamaRequest(chatMessages, ai, callback);
+        ollamaRequest(chatMessages, ai, session.stream);
         break;
       case AiPlatformType.openAI:
-        openAiRequest(chatMessages, ai, callback);
+        openAiRequest(chatMessages, ai, session.stream);
         break;
       case AiPlatformType.mistralAI:
-        mistralRequest(chatMessages, ai, callback);
+        mistralRequest(chatMessages, ai, session.stream);
         break;
       default:
         break;
     }
+  }
+
+  static void localRequest(List<ChatMessage> chatMessages, AiPlatform ai,
+      void Function(String?) callback) async {
+    _completer = Completer();
+
+    SamplingParams samplingParams = SamplingParams();
+    samplingParams.temp = ai.temperature;
+    samplingParams.topK = ai.topK;
+    samplingParams.topP = ai.topP;
+    samplingParams.tfsZ = ai.tfsZ;
+    samplingParams.typicalP = ai.typicalP;
+    samplingParams.penaltyLastN = ai.penaltyLastN;
+    samplingParams.penaltyRepeat = ai.penaltyRepeat;
+    samplingParams.penaltyFreq = ai.penaltyFreq;
+    samplingParams.penaltyPresent = ai.penaltyPresent;
+    samplingParams.mirostat = ai.mirostat;
+    samplingParams.mirostatTau = ai.mirostatTau;
+    samplingParams.mirostatEta = ai.mirostatEta;
+    samplingParams.penalizeNl = ai.penalizeNewline;
+
+    GptParams gptParams = GptParams();
+    gptParams.seed = ai.randomSeed ? Random().nextInt(1000000) : ai.seed;
+    gptParams.nThreads = ai.nThread;
+    gptParams.nThreadsBatch = ai.nThread;
+    gptParams.nPredict = ai.nPredict;
+    gptParams.nCtx = ai.nCtx;
+    gptParams.nBatch = ai.nBatch;
+    gptParams.nKeep = ai.nKeep;
+    gptParams.sparams = samplingParams;
+    gptParams.model = ai.model;
+    gptParams.instruct = ai.promptFormat == PromptFormat.alpaca;
+    gptParams.chatml = ai.promptFormat == PromptFormat.chatml;
+
+    maidllm = MaidLLM(gptParams);
+
+    maidllm?.prompt(chatMessages).listen((message) {
+      callback.call(message);
+    }).onDone(() {
+      _completer?.complete();
+    });
+    await _completer?.future;
+    callback.call(null);
+    maidllm?.clear();
+    maidllm = null;
+    Logger.log('Local generation completed');
   }
 
   static void ollamaRequest(List<ChatMessage> chatMessages, AiPlatform ai,
