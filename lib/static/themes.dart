@@ -104,6 +104,7 @@ class Themes {
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: secondary,
         selectionColor: tertiary,
+        cursorColor: secondary,
       ),
       inputDecorationTheme: InputDecorationTheme(
         contentPadding: const EdgeInsets.symmetric(
