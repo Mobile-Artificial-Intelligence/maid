@@ -19,7 +19,7 @@ class _SessionTileState extends State<SessionTile> {
     return Consumer<Session>(
       builder: (context, session, child) {
         String displayMessage = widget.session.rootMessage;
-        if (displayMessage.length > 15) {
+        if (displayMessage.length > 30) {
           displayMessage = '${displayMessage.substring(0, 15)}...';
         }
 
