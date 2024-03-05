@@ -157,6 +157,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
     Key sessionKey = sessions.keys.elementAt(index);
     Session sessionData = Session.fromMap(sessions[sessionKey]);
 
-    return SessionTile(session: sessionData);
+    return SessionTile(session: sessionData, onDelete: deleteSession);
+  }
+
+  void deleteSession(Key key) {
+    final session = context.read<Session>();
+
+    if (session.isBusy) return;
+    sessions.remove(key);
+    if (key == session.key) {
+      session.fromMap(sessions.values.firstOrNull ?? {"message": "New Chat"});
+    }
   }
 }
