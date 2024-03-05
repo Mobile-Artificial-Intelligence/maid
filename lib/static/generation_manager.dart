@@ -131,9 +131,9 @@ class GenerationManager {
     gptParams.instruct = ai.promptFormat == PromptFormat.alpaca;
     gptParams.chatml = ai.promptFormat == PromptFormat.chatml;
 
-    maidllm = MaidLLM(gptParams);
+    maidllm = MaidLLM(gptParams, log: Logger.log);
 
-    maidllm?.prompt(chatMessages, log: Logger.log).listen((message) {
+    maidllm?.prompt(chatMessages).listen((message) {
       callback.call(message);
     }).onDone(() {
       _completer?.complete();
