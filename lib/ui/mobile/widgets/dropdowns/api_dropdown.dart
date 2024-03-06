@@ -56,7 +56,6 @@ class ApiDropdown extends StatelessWidget {
                 fontSize: 15.0),
             floatingLabelBehavior: FloatingLabelBehavior.never,
           ),
-          width: 160,
         ),
       );
     });
