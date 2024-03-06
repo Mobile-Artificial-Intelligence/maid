@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/static/logger.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/pages/about_page.dart';
 import 'package:maid/ui/mobile/pages/character_page.dart';
-import 'package:maid/ui/mobile/pages/platform_page.dart';
 import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:maid/ui/mobile/pages/user_page.dart';
 import 'package:maid/ui/mobile/widgets/session_tile.dart';
@@ -108,21 +106,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const CharacterPage()));
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.account_tree_rounded,
-                color: Theme.of(context).colorScheme.onPrimary),
-            title: Text(
-              'Model',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PlatformPage()));
             },
           ),
           ListTile(

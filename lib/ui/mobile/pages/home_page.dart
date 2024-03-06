@@ -1,12 +1,18 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
+import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_field.dart';
+import 'package:maid/ui/mobile/widgets/dropdowns/api_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/home_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -27,8 +33,33 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          elevation: 0.0,
-        ),
+            elevation: 0.0,
+            title: Row(children: [
+              const ApiDropdown(),
+              const Expanded(child: SizedBox()),
+              IconButton(
+                icon: const Icon(Icons.account_tree_rounded),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      switch (context.read<AiPlatform>().apiType) {
+                        case AiPlatformType.llamacpp:
+                          return const LlamaCppPage();
+                        case AiPlatformType.ollama:
+                          return const OllamaPage();
+                        case AiPlatformType.openAI:
+                          return const OpenAiPage();
+                        case AiPlatformType.mistralAI:
+                          return const MistralAiPage();
+                        default:
+                          return const LlamaCppPage();
+                      }
+                    }),
+                  );
+                },
+              ),
+            ])),
         drawer: const HomeDrawer(),
         body: _buildBody());
   }
