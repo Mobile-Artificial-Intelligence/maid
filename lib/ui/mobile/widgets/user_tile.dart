@@ -19,9 +19,52 @@ class UserTile extends StatelessWidget {
           trailing: IconButton(
             icon: const Icon(Icons.more_vert),
             onPressed: () {
-              // Unimplemented
+              _showRenameDialog(context);
             },
           ),
+        );
+      },
+    );
+  }
+
+  void _showRenameDialog(BuildContext context) {
+    final user = context.read<User>();
+    final TextEditingController controller =
+        TextEditingController(text: user.name);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            "Rename User",
+            textAlign: TextAlign.center,
+          ),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              hintText: "Enter new name",
+            ),
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                "Cancel",
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ),
+            FilledButton(
+              onPressed: () {
+                user.name = controller.text;
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Rename",
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ),
+          ],
         );
       },
     );
