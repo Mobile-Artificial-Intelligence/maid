@@ -32,34 +32,33 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            elevation: 0.0,
-            title: Row(children: [
-              const ApiDropdown(),
-              const Expanded(child: SizedBox()),
-              IconButton(
-                icon: const Icon(Icons.account_tree_rounded),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      switch (context.read<AiPlatform>().apiType) {
-                        case AiPlatformType.llamacpp:
-                          return const LlamaCppPage();
-                        case AiPlatformType.ollama:
-                          return const OllamaPage();
-                        case AiPlatformType.openAI:
-                          return const OpenAiPage();
-                        case AiPlatformType.mistralAI:
-                          return const MistralAiPage();
-                        default:
-                          return const LlamaCppPage();
-                      }
-                    }),
-                  );
-                },
-              ),
-            ])),
+        appBar: AppBar(elevation: 0.0, titleSpacing: 0.0, actions: [
+          const SizedBox(width: 34),
+          const ApiDropdown(),
+          const Expanded(child: SizedBox()),
+          IconButton(
+            icon: const Icon(Icons.account_tree_rounded),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  switch (context.read<AiPlatform>().apiType) {
+                    case AiPlatformType.llamacpp:
+                      return const LlamaCppPage();
+                    case AiPlatformType.ollama:
+                      return const OllamaPage();
+                    case AiPlatformType.openAI:
+                      return const OpenAiPage();
+                    case AiPlatformType.mistralAI:
+                      return const MistralAiPage();
+                    default:
+                      return const LlamaCppPage();
+                  }
+                }),
+              );
+            },
+          ),
+        ]),
         drawer: const HomeDrawer(),
         body: _buildBody());
   }

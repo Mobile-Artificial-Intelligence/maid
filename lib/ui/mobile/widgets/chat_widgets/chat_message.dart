@@ -102,10 +102,10 @@ class ChatMessageState extends State<ChatMessage>
               ShaderMask(
                 shaderCallback: (bounds) => const LinearGradient(
                   colors: [
-                    Color.fromARGB(255, 255, 172, 200),
-                    Color.fromARGB(255, 255, 150, 250),
-                    Color.fromARGB(255, 150, 240, 255)
+                    Color.fromARGB(255, 0, 200, 255),
+                    Color.fromARGB(255, 255, 80, 200)
                   ],
+                  stops: [0.5, 0.85],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ).createShader(bounds),
