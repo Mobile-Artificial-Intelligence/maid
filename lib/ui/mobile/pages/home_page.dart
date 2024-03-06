@@ -7,6 +7,7 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_field.dart';
+import 'package:maid/ui/mobile/widgets/dropdowns/api_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/home_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,7 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
+          title: const ApiDropdown(),
         ),
         drawer: const HomeDrawer(),
         body: _buildBody());
