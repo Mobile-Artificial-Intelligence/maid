@@ -260,7 +260,6 @@ class _PlatformPageState extends State<PlatformPage> {
                       endIndent: 10,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    const ApiDropdown(),
                     if (ai.apiType == AiPlatformType.local)
                       const LocalPlatform()
                     else if (ai.apiType == AiPlatformType.ollama)

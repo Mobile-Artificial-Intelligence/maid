@@ -111,21 +111,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.account_tree_rounded,
-                color: Theme.of(context).colorScheme.onPrimary),
-            title: Text(
-              'Model',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const PlatformPage()));
-            },
-          ),
-          ListTile(
             leading: Icon(Icons.settings,
                 color: Theme.of(context).colorScheme.onPrimary),
             title:

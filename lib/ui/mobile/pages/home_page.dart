@@ -5,6 +5,7 @@ import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
+import 'package:maid/ui/mobile/pages/platform_page.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_field.dart';
 import 'package:maid/ui/mobile/widgets/dropdowns/api_dropdown.dart';
@@ -28,9 +29,21 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          elevation: 0.0,
-          title: const ApiDropdown(),
-        ),
+            elevation: 0.0,
+            title: Row(children: [
+              const ApiDropdown(),
+              const Expanded(child: SizedBox()),
+              IconButton(
+                icon: const Icon(Icons.account_tree_rounded),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PlatformPage()),
+                  );
+                },
+              ),
+            ])),
         drawer: const HomeDrawer(),
         body: _buildBody());
   }
