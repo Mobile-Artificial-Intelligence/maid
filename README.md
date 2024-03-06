@@ -360,7 +360,7 @@ MacOS and IOS Releases not available at this time.
 
 ## Testing
 Android version tested on a Oneplus 10 Pro 11gb phone.
-Also tested on Debian Linux, Windows 11.
+Also tested on Fedora Linux, Windows 11.
 Tested with calypso 3b, orcamini 3b, llama 2 7B-Chat and llama 7B.
 
 ## Disclaimer
