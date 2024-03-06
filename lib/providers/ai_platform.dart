@@ -12,7 +12,7 @@ import 'package:maid_llm/maid_llm.dart';
 
 class AiPlatform extends ChangeNotifier {
   PromptFormat _promptFormat = PromptFormat.alpaca;
-  AiPlatformType _apiType = AiPlatformType.local;
+  AiPlatformType _apiType = AiPlatformType.llamacpp;
   String _preset = "Default";
   String _apiKey = "";
   String _url = "";
@@ -276,7 +276,7 @@ class AiPlatform extends ChangeNotifier {
       _promptFormat = PromptFormat.values[
           inputJson["prompt_promptFormat"] ?? PromptFormat.alpaca.index];
       _apiType = AiPlatformType
-          .values[inputJson["api_type"] ?? AiPlatformType.local.index];
+          .values[inputJson["api_type"] ?? AiPlatformType.llamacpp.index];
       _preset = inputJson["preset"] ?? "Default";
       _apiKey = inputJson["api_key"] ?? "";
       _url = inputJson["remote_url"] ?? "";
@@ -413,4 +413,4 @@ class AiPlatform extends ChangeNotifier {
   }
 }
 
-enum AiPlatformType { none, local, openAI, ollama, mistralAI, custom }
+enum AiPlatformType { none, llamacpp, openAI, ollama, mistralAI, custom }

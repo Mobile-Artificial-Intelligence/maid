@@ -82,7 +82,7 @@ class GenerationManager {
     chatMessages.add(ChatMessage.humanText(input));
 
     switch (ai.apiType) {
-      case AiPlatformType.local:
+      case AiPlatformType.llamacpp:
         localRequest(chatMessages, ai, session.stream);
         break;
       case AiPlatformType.ollama:

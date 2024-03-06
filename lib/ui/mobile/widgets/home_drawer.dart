@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/static/logger.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/pages/about_page.dart';
 import 'package:maid/ui/mobile/pages/character_page.dart';
-import 'package:maid/ui/mobile/pages/platform_page.dart';
 import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:maid/ui/mobile/pages/user_page.dart';
 import 'package:maid/ui/mobile/widgets/session_tile.dart';

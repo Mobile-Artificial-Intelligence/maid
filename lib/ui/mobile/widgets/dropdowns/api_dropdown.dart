@@ -23,8 +23,8 @@ class ApiDropdown extends StatelessWidget {
         child: DropdownMenu<AiPlatformType>(
           dropdownMenuEntries: const [
             DropdownMenuEntry<AiPlatformType>(
-              value: AiPlatformType.local,
-              label: "Local",
+              value: AiPlatformType.llamacpp,
+              label: "LlamaCPP",
             ),
             DropdownMenuEntry<AiPlatformType>(
               value: AiPlatformType.ollama,
@@ -56,6 +56,7 @@ class ApiDropdown extends StatelessWidget {
                 fontSize: 15.0),
             floatingLabelBehavior: FloatingLabelBehavior.never,
           ),
+          width: 175,
         ),
       );
     });

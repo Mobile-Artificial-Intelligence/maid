@@ -1,11 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:maid/ui/mobile/pages/platform_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_message.dart';
 import 'package:maid/ui/mobile/widgets/chat_widgets/chat_field.dart';
 import 'package:maid/ui/mobile/widgets/dropdowns/api_dropdown.dart';
@@ -38,8 +42,20 @@ class HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const PlatformPage()),
+                    MaterialPageRoute(builder: (context) {
+                      switch (context.read<AiPlatform>().apiType) {
+                        case AiPlatformType.llamacpp:
+                          return const LlamaCppPage();
+                        case AiPlatformType.ollama:
+                          return const OllamaPage();
+                        case AiPlatformType.openAI:
+                          return const OpenAiPage();
+                        case AiPlatformType.mistralAI:
+                          return const MistralAiPage();
+                        default:
+                          return const LlamaCppPage();
+                      }
+                    }),
                   );
                 },
               ),
