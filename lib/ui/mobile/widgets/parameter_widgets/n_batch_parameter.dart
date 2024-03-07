@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/ai_platform.dart';
-import 'package:maid/ui/mobile/widgets/slider_list_tile.dart';
+import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class NBatchParameter extends StatelessWidget {
