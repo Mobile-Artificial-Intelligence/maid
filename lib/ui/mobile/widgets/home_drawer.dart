@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:maid/ui/mobile/widgets/session_tile.dart';
-import 'package:maid/ui/mobile/widgets/user_tile.dart';
+import 'package:maid/ui/mobile/widgets/tiles/session_tile.dart';
+import 'package:maid/ui/mobile/widgets/tiles/user_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -6,7 +6,7 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/double_button_row.dart';
-import 'package:maid/ui/mobile/widgets/text_field_list_tile.dart';
+import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

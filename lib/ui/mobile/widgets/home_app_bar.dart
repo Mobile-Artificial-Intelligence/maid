@@ -12,7 +12,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(elevation: 0.0, titleSpacing: 0.0, actions: [
+    return AppBar(elevation: 0.0, actions: [
       const SizedBox(width: 34),
       const ApiDropdown(),
       const Expanded(child: SizedBox()),
