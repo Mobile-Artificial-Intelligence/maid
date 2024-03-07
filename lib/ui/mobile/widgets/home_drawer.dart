@@ -60,7 +60,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
         return Drawer(
             child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
+                padding: const EdgeInsets.fromLTRB(10, 40, 10, 10),
                 child: Column(children: [
                   const CharacterTile(),
                   Divider(
