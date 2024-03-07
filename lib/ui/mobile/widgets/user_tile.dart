@@ -10,7 +10,13 @@ class UserTile extends StatelessWidget {
     return Consumer<User>(
       builder: (context, user, child) {
         return ListTile(
-          title: Text(user.name),
+          title: Text(
+            user.name,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: 20,
+            ),
+          ),
           leading: CircleAvatar(
             backgroundImage: const AssetImage("assets/chadUser.png"),
             foregroundImage: Image.file(user.profile).image,

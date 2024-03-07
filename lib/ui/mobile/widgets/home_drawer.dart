@@ -3,10 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:maid/ui/mobile/pages/about_page.dart';
-import 'package:maid/ui/mobile/pages/character_page.dart';
-import 'package:maid/ui/mobile/pages/settings_page.dart';
-import 'package:maid/ui/mobile/pages/user_page.dart';
 import 'package:maid/ui/mobile/widgets/session_tile.dart';
 import 'package:maid/ui/mobile/widgets/user_tile.dart';
 import 'package:provider/provider.dart';
@@ -62,78 +58,80 @@ class _HomeDrawerState extends State<HomeDrawer> {
         });
 
         return Drawer(
-            child: Column(children: [
-          const SizedBox(height: 30.0),
-          FilledButton(
-            onPressed: () {
-              if (session.isBusy) return;
-              final newSession = Session();
-              setState(() {
-                sessions[newSession.key] = newSession.toMap();
-              });
-            },
-            child: Text(
-              "New Chat",
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-          ),
-          Divider(
-            indent: 10,
-            endIndent: 10,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: sessions.length, itemBuilder: _itemBuilder),
-          ),
-          //ListTile(
-          //  leading: Icon(Icons.account_circle,
-          //      color: Theme.of(context).colorScheme.onPrimary),
-          //  title: Text('User', style: Theme.of(context).textTheme.labelLarge),
-          //  onTap: () {
-          //    Navigator.pop(context); // Close the drawer
-          //    Navigator.push(context,
-          //        MaterialPageRoute(builder: (context) => const UserPage()));
-          //  },
-          //),
-          //ListTile(
-          //  leading: Icon(Icons.person,
-          //      color: Theme.of(context).colorScheme.onPrimary),
-          //  title: Text('Character',
-          //      style: Theme.of(context).textTheme.labelLarge),
-          //  onTap: () {
-          //    Navigator.pop(context); // Close the drawer
-          //    Navigator.push(
-          //        context,
-          //        MaterialPageRoute(
-          //            builder: (context) => const CharacterPage()));
-          //  },
-          //),
-          //ListTile(
-          //  leading: Icon(Icons.settings,
-          //      color: Theme.of(context).colorScheme.onPrimary),
-          //  title:
-          //      Text('Settings', style: Theme.of(context).textTheme.labelLarge),
-          //  onTap: () {
-          //    Navigator.pop(context); // Close the drawer
-          //    Navigator.push(
-          //        context,
-          //        MaterialPageRoute(
-          //            builder: (context) => const SettingsPage()));
-          //  },
-          //),
-          //ListTile(
-          //  leading: Icon(Icons.info,
-          //      color: Theme.of(context).colorScheme.onPrimary),
-          //  title: Text('About', style: Theme.of(context).textTheme.labelLarge),
-          //  onTap: () {
-          //    Navigator.pop(context); // Close the drawer
-          //    Navigator.push(context,
-          //        MaterialPageRoute(builder: (context) => const AboutPage()));
-          //  },
-          //),
-          const UserTile()
-        ]));
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
+                child: Column(children: [
+                  FilledButton(
+                    onPressed: () {
+                      if (session.isBusy) return;
+                      final newSession = Session();
+                      setState(() {
+                        sessions[newSession.key] = newSession.toMap();
+                      });
+                    },
+                    child: Text(
+                      "New Chat",
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  ),
+                  Divider(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: sessions.length, itemBuilder: _itemBuilder),
+                  ),
+                  //ListTile(
+                  //  leading: Icon(Icons.account_circle,
+                  //      color: Theme.of(context).colorScheme.onPrimary),
+                  //  title: Text('User', style: Theme.of(context).textTheme.labelLarge),
+                  //  onTap: () {
+                  //    Navigator.pop(context); // Close the drawer
+                  //    Navigator.push(context,
+                  //        MaterialPageRoute(builder: (context) => const UserPage()));
+                  //  },
+                  //),
+                  //ListTile(
+                  //  leading: Icon(Icons.person,
+                  //      color: Theme.of(context).colorScheme.onPrimary),
+                  //  title: Text('Character',
+                  //      style: Theme.of(context).textTheme.labelLarge),
+                  //  onTap: () {
+                  //    Navigator.pop(context); // Close the drawer
+                  //    Navigator.push(
+                  //        context,
+                  //        MaterialPageRoute(
+                  //            builder: (context) => const CharacterPage()));
+                  //  },
+                  //),
+                  //ListTile(
+                  //  leading: Icon(Icons.settings,
+                  //      color: Theme.of(context).colorScheme.onPrimary),
+                  //  title:
+                  //      Text('Settings', style: Theme.of(context).textTheme.labelLarge),
+                  //  onTap: () {
+                  //    Navigator.pop(context); // Close the drawer
+                  //    Navigator.push(
+                  //        context,
+                  //        MaterialPageRoute(
+                  //            builder: (context) => const SettingsPage()));
+                  //  },
+                  //),
+                  //ListTile(
+                  //  leading: Icon(Icons.info,
+                  //      color: Theme.of(context).colorScheme.onPrimary),
+                  //  title: Text('About', style: Theme.of(context).textTheme.labelLarge),
+                  //  onTap: () {
+                  //    Navigator.pop(context); // Close the drawer
+                  //    Navigator.push(context,
+                  //        MaterialPageRoute(builder: (context) => const AboutPage()));
+                  //  },
+                  //),
+                  Divider(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const UserTile()
+                ])));
       },
     );
   }
