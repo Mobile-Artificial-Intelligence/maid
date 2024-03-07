@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
+import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
 import 'package:maid/ui/mobile/widgets/tiles/session_tile.dart';
 import 'package:maid/ui/mobile/widgets/tiles/user_tile.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +62,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
             child: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
                 child: Column(children: [
+                  const CharacterTile(),
+                  Divider(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   FilledButton(
                     onPressed: () {
                       if (session.isBusy) return;
@@ -128,6 +133,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   //  },
                   //),
                   Divider(
+                    height: 0.0,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const UserTile()
