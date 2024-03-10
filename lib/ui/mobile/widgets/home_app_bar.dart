@@ -47,6 +47,9 @@ class _HomeAppBarState extends State<HomeAppBar> {
         .map((String modelName) => PopupMenuItem(
           child: ListTile(
             title: Text(modelName),
+            onTap: () {
+              context.read<AiPlatform>().model = modelName;
+            },
           ),
         ))
         .toList();
