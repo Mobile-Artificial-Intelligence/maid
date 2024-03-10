@@ -42,41 +42,52 @@ class _HomeAppBarState extends State<HomeAppBar> {
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Size size = renderBox.size;
 
-    showMenu(
-      context: context,
-      // Calculate the position based on the button's position and size
-      position: RelativeRect.fromLTRB(
-        offset.dx,
-        offset.dy + size.height,
-        offset.dx,
-        offset.dy,
-      ),
-      items: [
-        PopupMenuItem(
+    context.read<AiPlatform>().getOptions().then((options) {
+      List<PopupMenuItem> dropdownEntries = options
+        .map((String modelName) => PopupMenuItem(
           child: ListTile(
-            title: const Text('LLM Parameters'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  switch (context.read<AiPlatform>().apiType) {
-                    case AiPlatformType.llamacpp:
-                      return const LlamaCppPage();
-                    case AiPlatformType.ollama:
-                      return const OllamaPage();
-                    case AiPlatformType.openAI:
-                      return const OpenAiPage();
-                    case AiPlatformType.mistralAI:
-                      return const MistralAiPage();
-                    default:
-                      return const LlamaCppPage();
-                  }
-                }),
-              );
-            },
+            title: Text(modelName),
           ),
-        ),
-      ],
-    );
+        ))
+        .toList();
+
+        showMenu(
+          context: context,
+          // Calculate the position based on the button's position and size
+          position: RelativeRect.fromLTRB(
+            offset.dx,
+            offset.dy + size.height,
+            offset.dx,
+            offset.dy,
+          ),
+          items: [
+            ...dropdownEntries,
+            PopupMenuItem(
+              child: ListTile(
+                title: const Text('LLM Parameters'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      switch (context.read<AiPlatform>().apiType) {
+                        case AiPlatformType.llamacpp:
+                          return const LlamaCppPage();
+                        case AiPlatformType.ollama:
+                          return const OllamaPage();
+                        case AiPlatformType.openAI:
+                          return const OpenAiPage();
+                        case AiPlatformType.mistralAI:
+                          return const MistralAiPage();
+                        default:
+                          return const LlamaCppPage();
+                      }
+                    }),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+    });
   }
 }
