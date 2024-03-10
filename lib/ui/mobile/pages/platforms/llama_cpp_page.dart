@@ -14,7 +14,6 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_last_n_paramete
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_present_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_repeat_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
-import 'package:maid/ui/mobile/widgets/double_button_row.dart';
 import 'package:maid/ui/mobile/widgets/dropdowns/format_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/tfs_z_parameter.dart';
@@ -70,16 +69,31 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                   ),
                 ),
                 const SizedBox(height: 15.0),
-                DoubleButtonRow(
-                    leftText: "Load GGUF",
-                    leftOnPressed: () {
-                      storageOperationDialog(
-                          context, context.read<AiPlatform>().loadModelFile);
-                    },
-                    rightText: "Unload GGUF",
-                    rightOnPressed: () {
-                      context.read<AiPlatform>().model = "";
-                    }),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      onPressed: () {
+                        storageOperationDialog(
+                            context, context.read<AiPlatform>().loadModelFile);
+                      },
+                      child: Text(
+                        "Load GGUF",
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
+                    FilledButton(
+                      onPressed: () {
+                        context.read<AiPlatform>().model = "";
+                      },
+                      child: Text(
+                        "Unload GGUF",
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                  ],
+                ),
                 Divider(
                   height: 20,
                   indent: 10,
