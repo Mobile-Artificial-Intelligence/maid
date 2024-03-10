@@ -13,29 +13,44 @@ class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   State<HomeAppBar> createState() => _HomeAppBarState();
 
-  // Mirrors the AppBar's preferredSize getter
   @override
   Size get preferredSize => const Size.fromHeight(56.0);
 }
 
 class _HomeAppBarState extends State<HomeAppBar> {
+  final GlobalKey _menuKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    return AppBar(elevation: 0.0, actions: [
-      const SizedBox(width: 34),
-      const ApiDropdown(),
-      const Expanded(child: SizedBox()),
-      IconButton(
-        icon: const Icon(Icons.account_tree_rounded),
-        onPressed: onPressed,
-      )
-    ]);
+    return AppBar(
+      elevation: 0.0,
+      actions: [
+        const SizedBox(width: 34),
+        const ApiDropdown(),
+        const Expanded(child: SizedBox()),
+        IconButton(
+          key: _menuKey, // Assign the GlobalKey to your IconButton
+          icon: const Icon(Icons.account_tree_rounded),
+          onPressed: onPressed,
+        )
+      ],
+    );
   }
 
   void onPressed() {
+    final RenderBox renderBox = _menuKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    final Size size = renderBox.size;
+
     showMenu(
       context: context,
-      position: const RelativeRect.fromLTRB(1, 0, 0, 0),
+      // Calculate the position based on the button's position and size
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + size.height,
+        offset.dx,
+        offset.dy,
+      ),
       items: [
         PopupMenuItem(
           child: ListTile(
