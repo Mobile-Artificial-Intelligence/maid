@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/ai_platform.dart';
-import 'package:maid/ui/mobile/widgets/dropdowns/model_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_keep_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_predict_parameter.dart';
@@ -65,8 +64,6 @@ class _OllamaPageState extends State<OllamaPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const UrlParameter(),
-                const SizedBox(height: 8.0),
-                const ModelDropdown(),
                 const SizedBox(height: 8.0),
                 const UseDefaultParameter(),
                 if (ai.useDefault) ...[

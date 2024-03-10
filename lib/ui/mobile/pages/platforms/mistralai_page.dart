@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/ui/mobile/widgets/dropdowns/model_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
@@ -46,8 +45,6 @@ class _MistralAiPageState extends State<MistralAiPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const UrlParameter(),
-                const SizedBox(height: 8.0),
-                const ModelDropdown(),
                 const SizedBox(height: 20.0),
                 const SeedParameter(),
                 const TopPParameter(),
