@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
+import 'package:maid/providers/user.dart';
+import 'package:maid/static/utilities.dart';
 import 'package:provider/provider.dart';
 
 class CharacterTile extends StatelessWidget {
@@ -7,8 +9,8 @@ class CharacterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Character>(
-      builder: (context, character, child) {
+    return Consumer2<User, Character>(
+      builder: (context, user, character, child) {
         return ListTile(
             leading: CircleAvatar(
               backgroundImage: const AssetImage("assets/maid.png"),
@@ -19,7 +21,14 @@ class CharacterTile extends StatelessWidget {
             title: Column(children: [
               Text(character.name),
               const SizedBox(height: 10.0),
-              Text(character.description, style: const TextStyle(fontSize: 12.0)),
+              Text(
+                Utilities.formatPlaceholders(
+                  character.description, 
+                  user.name, 
+                  character.name
+                ), 
+                style: const TextStyle(fontSize: 12.0)
+              ),
             ])
         );
       },
