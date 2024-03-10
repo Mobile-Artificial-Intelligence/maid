@@ -265,7 +265,11 @@ class AiPlatform extends ChangeNotifier {
   int get nBatch => _nBatch;
   int get nThread => _nThread;
 
-  Future<List<String>> getOptions() {
+  Future<List<String>> getOptions() async {
+    if (_url.isEmpty) {
+      await resetUrl();
+    }
+
     return GenerationManager.getOptions(this);
   }
 

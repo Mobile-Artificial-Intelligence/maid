@@ -24,6 +24,7 @@ import 'package:maid_llm/maid_llm.dart';
 class GenerationManager {
   static MaidLLM? maidllm;
   static Completer? _completer;
+  static String? _ollamaIp;
 
   static void prompt(String input, BuildContext context) async {
     context.read<Session>().busy = true;
@@ -295,6 +296,10 @@ class GenerationManager {
   }
 
   static Future<String> getOllamaUrl() async {
+    if (_ollamaIp != null && (await checkIp(_ollamaIp!)).isNotEmpty) {
+      return 'http://${_ollamaIp!}:11434';
+    }
+
     bool permissionGranted = await getNearbyDevicesPermission();
     if (!permissionGranted) {
       return '';
@@ -321,11 +326,13 @@ class GenerationManager {
 
     // Filter out all empty results and return the first valid URL, if any
     final validUrls = results.where((result) => result.isNotEmpty);
-    return validUrls.isNotEmpty ? validUrls.first : '';
+    _ollamaIp = validUrls.isNotEmpty ? validUrls.first : '';
+
+    return 'http://${_ollamaIp!}:11434';
   }
 
   static Future<String> checkIp(String ip) async {
-    final url = Uri.parse('http://$ip:11434/api/tags');
+    final url = Uri.parse('http://$ip:11434');
     final headers = {"Accept": "application/json"};
 
     try {
@@ -333,7 +340,7 @@ class GenerationManager {
       var response = await request.send();
       if (response.statusCode == 200) {
         Logger.log('Found Ollama at $ip');
-        return 'http://$ip:11434';
+        return ip;
       }
     } catch (e) {
       // Ignore

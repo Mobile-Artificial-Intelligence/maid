@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:provider/provider.dart';
 
-class ApiDropdown extends StatelessWidget {
-  const ApiDropdown({super.key});
+class AiPlatformDropdown extends StatelessWidget {
+  const AiPlatformDropdown({super.key});
 
   @override
   Widget build(BuildContext context) {

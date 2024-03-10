@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/ui/mobile/widgets/dropdowns/model_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_frequency_parameter.dart';
@@ -49,8 +48,6 @@ class _OpenAiPageState extends State<OpenAiPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const UrlParameter(),
-                const SizedBox(height: 8.0),
-                const ModelDropdown(),
                 const SizedBox(height: 20.0),
                 const SeedParameter(),
                 const TemperatureParameter(),
