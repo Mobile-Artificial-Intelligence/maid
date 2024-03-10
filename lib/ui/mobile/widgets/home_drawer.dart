@@ -105,52 +105,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     child: ListView.builder(
                         itemCount: sessions.length, itemBuilder: _itemBuilder),
                   ),
-                  //ListTile(
-                  //  leading: Icon(Icons.account_circle,
-                  //      color: Theme.of(context).colorScheme.onPrimary),
-                  //  title: Text('User', style: Theme.of(context).textTheme.labelLarge),
-                  //  onTap: () {
-                  //    Navigator.pop(context); // Close the drawer
-                  //    Navigator.push(context,
-                  //        MaterialPageRoute(builder: (context) => const UserPage()));
-                  //  },
-                  //),
-                  //ListTile(
-                  //  leading: Icon(Icons.person,
-                  //      color: Theme.of(context).colorScheme.onPrimary),
-                  //  title: Text('Character',
-                  //      style: Theme.of(context).textTheme.labelLarge),
-                  //  onTap: () {
-                  //    Navigator.pop(context); // Close the drawer
-                  //    Navigator.push(
-                  //        context,
-                  //        MaterialPageRoute(
-                  //            builder: (context) => const CharacterPage()));
-                  //  },
-                  //),
-                  //ListTile(
-                  //  leading: Icon(Icons.settings,
-                  //      color: Theme.of(context).colorScheme.onPrimary),
-                  //  title:
-                  //      Text('Settings', style: Theme.of(context).textTheme.labelLarge),
-                  //  onTap: () {
-                  //    Navigator.pop(context); // Close the drawer
-                  //    Navigator.push(
-                  //        context,
-                  //        MaterialPageRoute(
-                  //            builder: (context) => const SettingsPage()));
-                  //  },
-                  //),
-                  //ListTile(
-                  //  leading: Icon(Icons.info,
-                  //      color: Theme.of(context).colorScheme.onPrimary),
-                  //  title: Text('About', style: Theme.of(context).textTheme.labelLarge),
-                  //  onTap: () {
-                  //    Navigator.pop(context); // Close the drawer
-                  //    Navigator.push(context,
-                  //        MaterialPageRoute(builder: (context) => const AboutPage()));
-                  //  },
-                  //),
                   Divider(
                     height: 0.0,
                     color: Theme.of(context).colorScheme.primary,
