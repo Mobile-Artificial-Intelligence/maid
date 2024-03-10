@@ -65,7 +65,16 @@ class ChatMessageState extends State<ChatMessage>
       if (part.isEmpty) continue;
 
       if (i % 2 == 0) {
-        _messageWidgets.add(SelectableText(part));
+        _messageWidgets.add(
+          SelectableText(
+            part,
+            style: const TextStyle(
+              fontWeight: FontWeight.normal,
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          )
+        );
       } else {
         _messageWidgets.addAll([
           const SizedBox(height: 10),
@@ -114,7 +123,7 @@ class ChatMessageState extends State<ChatMessage>
                 child: Text(
                   widget.userGenerated ? user.name : character.name,
                   style: const TextStyle(
-                    // The color must be white (or any color) to ensure the gradient is visible.
+                    fontWeight: FontWeight.normal,
                     color: Colors
                         .white, // This color is needed, but it will be overridden by the shader.
                     fontSize: 20,

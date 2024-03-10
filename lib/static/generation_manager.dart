@@ -40,17 +40,17 @@ class GenerationManager {
 
     List<ChatMessage> chatMessages = [];
 
-    final prePrompt = '''
-      ${Utilities.formatPlaceholders(character.description, user.name, character.name)}\n\n
-      ${Utilities.formatPlaceholders(character.personality, user.name, character.name)}\n\n
-      ${Utilities.formatPlaceholders(character.scenario, user.name, character.name)}\n\n
-      ${Utilities.formatPlaceholders(character.system, user.name, character.name)}\n\n
-    ''';
+    final description = Utilities.formatPlaceholders(character.description, user.name, character.name);
+    final personality = Utilities.formatPlaceholders(character.personality, user.name, character.name);
+    final scenario = Utilities.formatPlaceholders(character.scenario, user.name, character.name);
+    final system = Utilities.formatPlaceholders(character.system, user.name, character.name);
+
+    final preprompt = '$description\n\n$personality\n\n$scenario\n\n$system';
 
     List<Map<String, dynamic>> messages = [
       {
         'role': 'system',
-        'content': prePrompt,
+        'content': preprompt,
       }
     ];
 
@@ -64,6 +64,8 @@ class GenerationManager {
       switch (message['role']) {
         case "user":
           chatMessages.add(ChatMessage.humanText(message['content']));
+          chatMessages.add(ChatMessage.system(Utilities.formatPlaceholders(
+          character.system, user.name, character.name)));
           break;
         case "assistant":
           chatMessages.add(ChatMessage.ai(message['content']));
@@ -74,12 +76,7 @@ class GenerationManager {
         default:
           break;
       }
-
-      chatMessages.add(ChatMessage.system(Utilities.formatPlaceholders(
-          character.system, user.name, character.name)));
     }
-
-    chatMessages.add(ChatMessage.humanText(input));
 
     switch (ai.apiType) {
       case AiPlatformType.llamacpp:
@@ -133,14 +130,16 @@ class GenerationManager {
 
     maidllm = MaidLLM(gptParams, log: Logger.log);
 
-    maidllm?.prompt(chatMessages).listen((message) {
+    maidllm!.prompt(chatMessages).listen((message) {
       callback.call(message);
     }).onDone(() {
-      _completer?.complete();
+      if (_completer?.isCompleted == false) {
+        _completer?.complete();
+      }
     });
     await _completer?.future;
     callback.call(null);
-    maidllm?.clear();
+    maidllm!.clear();
     maidllm = null;
     Logger.log('Local generation completed');
   }
@@ -246,9 +245,13 @@ class GenerationManager {
     callback.call(null);
   }
 
-  static void stop() {
-    maidllm?.stop();
-    _completer?.complete();
+  static void stop() async {
+    await maidllm?.stop();
+    
+    if (_completer?.isCompleted == false) {
+      _completer?.complete();
+    }
+
     Logger.log('Local generation stopped');
   }
 
