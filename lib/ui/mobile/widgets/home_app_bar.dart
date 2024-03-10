@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/ui/mobile/pages/about_page.dart';
+import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
@@ -30,7 +32,10 @@ class _HomeAppBarState extends State<HomeAppBar> {
         const Expanded(child: SizedBox()),
         IconButton(
           key: _menuKey, // Assign the GlobalKey to your IconButton
-          icon: const Icon(Icons.account_tree_rounded),
+          icon: const Icon(
+            Icons.account_tree_rounded,
+            size: 24,
+          ),
           onPressed: onPressed,
         )
       ],
@@ -43,7 +48,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
     final Size size = renderBox.size;
 
     context.read<AiPlatform>().getOptions().then((options) {
-      List<PopupMenuItem> dropdownEntries = options
+      List<PopupMenuEntry<dynamic>> modelOptions = options
         .map((String modelName) => PopupMenuItem(
           padding: EdgeInsets.zero,
           child: Consumer<AiPlatform>(
@@ -71,7 +76,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
             offset.dy,
           ),
           items: [
-            ...dropdownEntries,
+            ...modelOptions,
+            if (modelOptions.isNotEmpty)
+              const PopupMenuDivider(
+                height: 10,
+              ),
             PopupMenuItem(
               padding: EdgeInsets.zero,
               child: ListTile(
@@ -95,6 +104,32 @@ class _HomeAppBarState extends State<HomeAppBar> {
                       }
                     }),
                   );
+                },
+              ),
+            ),
+            PopupMenuItem(
+              padding: EdgeInsets.zero,
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                title: const Text('App Settings'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SettingsPage()));
+                },
+              ),
+            ),
+            PopupMenuItem(
+              padding: EdgeInsets.zero,
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                title: const Text('About'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const AboutPage()));
                 },
               ),
             ),
