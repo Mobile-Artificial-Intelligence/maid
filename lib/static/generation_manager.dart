@@ -130,14 +130,16 @@ class GenerationManager {
 
     maidllm = MaidLLM(gptParams, log: Logger.log);
 
-    maidllm?.prompt(chatMessages).listen((message) {
+    maidllm!.prompt(chatMessages).listen((message) {
       callback.call(message);
     }).onDone(() {
-      _completer?.complete();
+      if (_completer?.isCompleted == false) {
+        _completer?.complete();
+      }
     });
     await _completer?.future;
     callback.call(null);
-    maidllm?.clear();
+    maidllm!.clear();
     maidllm = null;
     Logger.log('Local generation completed');
   }
@@ -245,7 +247,11 @@ class GenerationManager {
 
   static void stop() {
     maidllm?.stop();
-    _completer?.complete();
+    
+    if (_completer?.isCompleted == false) {
+      _completer?.complete();
+    }
+
     Logger.log('Local generation stopped');
   }
 
