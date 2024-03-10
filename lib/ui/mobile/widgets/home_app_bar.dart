@@ -45,13 +45,20 @@ class _HomeAppBarState extends State<HomeAppBar> {
     context.read<AiPlatform>().getOptions().then((options) {
       List<PopupMenuItem> dropdownEntries = options
         .map((String modelName) => PopupMenuItem(
-          child: ListTile(
-            title: Text(modelName),
-            onTap: () {
-              context.read<AiPlatform>().model = modelName;
-            },
-          ),
-        ))
+          padding: EdgeInsets.zero,
+          child: Consumer<AiPlatform>(
+            builder: 
+              (context, ai, child) {
+                return ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  title: Text(modelName),
+                  onTap: () {
+                    ai.model = modelName;
+                  },
+                  tileColor: ai.model == modelName ? Theme.of(context).colorScheme.secondary : null,
+                );
+              }
+        )))
         .toList();
 
         showMenu(
@@ -66,7 +73,9 @@ class _HomeAppBarState extends State<HomeAppBar> {
           items: [
             ...dropdownEntries,
             PopupMenuItem(
+              padding: EdgeInsets.zero,
               child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                 title: const Text('LLM Parameters'),
                 onTap: () {
                   Navigator.push(
