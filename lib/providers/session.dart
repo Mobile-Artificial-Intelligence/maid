@@ -264,11 +264,6 @@ class Session extends ChangeNotifier {
       messages.add({"role": role, "content": current.message});
     }
 
-    //remove last message if it is empty
-    if (messages.isNotEmpty && messages.last.isEmpty) {
-      messages.remove(messages.last);
-    }
-
     if (messages.isNotEmpty) {
       messages.remove(messages.last); //remove last message
     }
