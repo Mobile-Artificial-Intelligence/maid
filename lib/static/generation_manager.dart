@@ -245,8 +245,8 @@ class GenerationManager {
     callback.call(null);
   }
 
-  static void stop() {
-    maidllm?.stop();
+  static void stop() async {
+    await maidllm?.stop();
     
     if (_completer?.isCompleted == false) {
       _completer?.complete();
