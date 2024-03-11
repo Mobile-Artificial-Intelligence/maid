@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/main.dart';
+import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,21 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-          ),
-        ),
-        title: const Text("Settings"),
-      ),
+      appBar: const GenericAppBar(title: "App Settings"),
       body: Consumer<MainProvider>(
         builder: (context, mainProvider, child) {
           return SingleChildScrollView(
