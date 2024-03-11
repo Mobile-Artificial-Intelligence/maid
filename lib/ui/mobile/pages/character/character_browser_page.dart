@@ -49,10 +49,12 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
           });
 
           return GridView(
+            padding: const EdgeInsets.all(8.0),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 6.0,
               mainAxisSpacing: 6.0,
+              childAspectRatio: 3/2,
             ),
             children: [
               for (var character in _characters.entries)
