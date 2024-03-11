@@ -124,3 +124,6 @@ flutter_launcher_icons:
     generate: true
     image_path: "assets/maid.png"
     icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/maid.png"
