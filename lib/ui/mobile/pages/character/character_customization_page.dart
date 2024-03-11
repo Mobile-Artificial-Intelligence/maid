@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
+import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
@@ -103,7 +104,12 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FilledButton(
-                            onPressed: switchCharacter,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const CharacterBrowserPage()));
+                            },
                             child: Text(
                               "Switch Character",
                               style: Theme.of(context).textTheme.labelLarge,

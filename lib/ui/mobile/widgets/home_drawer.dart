@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
+import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
 import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
 import 'package:maid/ui/mobile/widgets/tiles/session_tile.dart';
@@ -64,9 +65,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 padding: const EdgeInsets.fromLTRB(10, 40, 10, 10),
                 child: Column(children: [
                   const CharacterTile(),
-                  Divider(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  const SizedBox(height: 5.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -79,24 +78,40 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                   builder: (context) => const CharacterCustomizationPage()));
                         },
                         child: Text(
-                          "Character",
+                          "Customize",
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ),
                       FilledButton(
                         onPressed: () {
-                          if (session.isBusy) return;
-                          final newSession = Session();
-                          setState(() {
-                            sessions[newSession.key] = newSession.toMap();
-                          });
+                          Navigator.pop(context); // Close the drawer
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const CharacterBrowserPage()));
                         },
                         child: Text(
-                          "New Chat",
+                          "Browse",
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
-                      ),
+                      )
                     ]
+                  ),
+                  Divider(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  FilledButton(
+                    onPressed: () {
+                      if (session.isBusy) return;
+                      final newSession = Session();
+                      setState(() {
+                        sessions[newSession.key] = newSession.toMap();
+                      });
+                    },
+                    child: Text(
+                      "New Chat",
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
                   ),
                   Divider(
                     color: Theme.of(context).colorScheme.primary,

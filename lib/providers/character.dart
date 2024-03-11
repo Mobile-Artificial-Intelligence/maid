@@ -24,6 +24,14 @@ class Character extends ChangeNotifier {
   bool _useExamples = true;
   List<Map<String, dynamic>> _examples = [];
 
+  Character() {
+    init();
+  }
+
+  Character.fromMap(Map<String, dynamic> inputJson) {
+    fromMap(inputJson);
+  }
+
   void newCharacter() {
     final key = UniqueKey().toString();
     _name = "New Character $key";
