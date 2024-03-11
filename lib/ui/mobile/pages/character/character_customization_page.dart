@@ -9,14 +9,14 @@ import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CharacterPage extends StatefulWidget {
-  const CharacterPage({super.key});
+class CharacterCustomizationPage extends StatefulWidget {
+  const CharacterCustomizationPage({super.key});
 
   @override
-  State<CharacterPage> createState() => _CharacterPageState();
+  State<CharacterCustomizationPage> createState() => _CharacterCustomizationPageState();
 }
 
-class _CharacterPageState extends State<CharacterPage> {
+class _CharacterCustomizationPageState extends State<CharacterCustomizationPage> {
   late Map<String, dynamic> _characters;
 
   late TextEditingController _nameController;

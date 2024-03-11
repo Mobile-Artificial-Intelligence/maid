@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:maid/ui/mobile/pages/character_page.dart';
+import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
 import 'package:maid/ui/mobile/widgets/tiles/session_tile.dart';
 import 'package:maid/ui/mobile/widgets/tiles/user_tile.dart';
@@ -76,7 +76,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const CharacterPage()));
+                                  builder: (context) => const CharacterCustomizationPage()));
                         },
                         child: Text(
                           "Character",
