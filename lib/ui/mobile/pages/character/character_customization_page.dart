@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
+import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
 import 'package:provider/provider.dart';
@@ -71,21 +72,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
     );
 
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-            ),
-          ),
-          title: const Text("Character"),
-        ),
+        appBar: const GenericAppBar(title: "Character Customization"),
         body: Consumer<Character>(
           builder: (context, character, child) {
             _characters[character.name] = character.toMap();

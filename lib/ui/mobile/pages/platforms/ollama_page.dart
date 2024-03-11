@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_keep_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_predict_parameter.dart';
@@ -36,21 +37,7 @@ class _OllamaPageState extends State<OllamaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-            ),
-          ),
-          title: const Text("Model"),
-        ),
+        appBar: const GenericAppBar(title: "Ollama Parameters"),
         body: Consumer2<Session, AiPlatform>(
             builder: (context, session, ai, child) {
           return Stack(

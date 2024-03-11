@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {
@@ -8,21 +9,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-            ),
-          ),
-          title: const Text("About"),
-        ),
+        appBar: const GenericAppBar(title: "About Maid"),
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 0.0),
           child: Column(children: [

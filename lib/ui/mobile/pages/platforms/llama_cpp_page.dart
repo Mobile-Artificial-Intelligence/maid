@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalize_nl_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/mirostat_eta_parameter.dart';
@@ -33,21 +34,7 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-            ),
-          ),
-          title: const Text("Model"),
-        ),
+        appBar: const GenericAppBar(title: "LlamaCPP Parameters"),
         body: Consumer<Session>(builder: (context, session, child) {
           return Stack(
             children: [

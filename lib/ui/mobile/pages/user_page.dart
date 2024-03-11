@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
+import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,21 +23,7 @@ class _UserPageState extends State<UserPage> {
     _nameController = TextEditingController(text: user.name);
 
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-            ),
-          ),
-          title: const Text("Character"),
-        ),
+        appBar: const GenericAppBar(title: "User Profile"),
         body: Consumer<User>(
           builder: (context, user, child) {
             SharedPreferences.getInstance().then((prefs) {
