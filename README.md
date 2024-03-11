@@ -361,7 +361,7 @@ MacOS and IOS Releases not available at this time.
 ## Testing
 Android version tested on a Oneplus 10 Pro 11gb phone.
 Also tested on Fedora Linux, Windows 11.
-Tested with calypso 3b, orcamini 3b, llama 2 7B-Chat and llama 7B.
+Tested with calypso 3b, orcamini 3b, llama 2 7B-Chat, llama 7B and many more.
 
 ## Disclaimer
 Please note that the llama.cpp models are owned and officially distributed by Meta. This app only serves as an environment for the model's 
