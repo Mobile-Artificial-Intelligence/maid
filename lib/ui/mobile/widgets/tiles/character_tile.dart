@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';
 import 'package:provider/provider.dart';
 
 class CharacterTile extends StatelessWidget {
