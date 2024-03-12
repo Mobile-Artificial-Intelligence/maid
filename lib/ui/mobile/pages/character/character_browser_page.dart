@@ -48,18 +48,15 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
             prefs.setString("last_character", json.encode(character.toMap()));
           });
 
-          return GridView(
-            padding: const EdgeInsets.all(8.0),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 6.0,
-              mainAxisSpacing: 6.0,
-              childAspectRatio: 3/2,
-            ),
-            children: [
-              for (var character in _characters.entries)
-                CharacterBrowserTile(character: Character.fromMap(character.value))
-            ],
+          return ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: _characters.length,
+            itemBuilder: (context, index) {
+              final character = _characters.values.elementAt(index);
+              return CharacterBrowserTile(
+                character: Character.fromMap(character),
+              );
+            },
           );
         },
       ),
