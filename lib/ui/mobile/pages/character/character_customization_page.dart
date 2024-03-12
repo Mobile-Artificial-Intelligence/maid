@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/static/logger.dart';
 import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
@@ -19,8 +18,6 @@ class CharacterCustomizationPage extends StatefulWidget {
 }
 
 class _CharacterCustomizationPageState extends State<CharacterCustomizationPage> {
-  late Map<String, dynamic> _characters;
-
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late TextEditingController _personalityController;
@@ -30,30 +27,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
   late List<TextEditingController> _exampleControllers;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final prefs = await SharedPreferences.getInstance();
-      final loadedCharacters =
-          json.decode(prefs.getString("characters") ?? "{}");
-      _characters.addAll(loadedCharacters);
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("characters", json.encode(_characters));
-    });
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final character = context.read<Character>();
-    _characters = {character.name: character.toMap()};
 
     _nameController = TextEditingController(text: character.name);
     _descriptionController = TextEditingController(text: character.description);
@@ -76,7 +51,6 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         appBar: const GenericAppBar(title: "Character Customization"),
         body: Consumer<Character>(
           builder: (context, character, child) {
-            _characters[character.name] = character.toMap();
 
             SharedPreferences.getInstance().then((prefs) {
               prefs.setString("last_character", json.encode(character.toMap()));
@@ -205,17 +179,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                                 ),
                                 controller: _nameController,
                                 onChanged: (value) {
-                                  if (_characters.keys.contains(value)) {
-                                    character.fromMap(_characters[value] ?? {});
-                                    Logger.log(
-                                        "Character Set: ${character.name}");
-                                  } else if (value.isNotEmpty) {
-                                    String oldName = character.name;
-                                    Logger.log(
-                                        "Updating character $oldName ====> $value");
-                                    character.name = value;
-                                    _characters.remove(oldName);
-                                  }
+                                  character.name = value;
                                 },
                               ),
                             ),
@@ -381,124 +345,5 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
             );
           },
         ));
-  }
-
-  void switchCharacter() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Consumer<Character>(
-          builder: (context, character, child) {
-            return AlertDialog(
-              title: const Text(
-                "Switch Character",
-                textAlign: TextAlign.center,
-              ),
-              content: SizedBox(
-                height: 200,
-                width: 200,
-                child: ListView.builder(
-                  itemCount: _characters.keys.length,
-                  itemBuilder: (BuildContext context,
-                      int index) {
-                    final item = _characters.keys
-                        .elementAt(index);
-
-                    return Padding(
-                      padding:
-                          const EdgeInsets.all(8.0),
-                      child: Dismissible(
-                        key: ValueKey(item),
-                        background: Container(
-                            color: Colors.red),
-                        onDismissed: (direction) {
-                          setState(() {
-                            _characters.remove(item);
-                            if (character.name ==
-                                item) {
-                              character.fromMap(
-                                  _characters.values
-                                          .lastOrNull ??
-                                      {});
-                            }
-                          });
-                          Logger.log(
-                              "Character Removed: $item");
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: character.name ==
-                                    item
-                                ? Theme.of(context)
-                                    .colorScheme
-                                    .tertiary
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .primary,
-                            borderRadius:
-                                const BorderRadius
-                                    .all(
-                                    Radius.circular(
-                                        15.0)),
-                          ),
-                          child: ListTile(
-                            title: Text(
-                              item,
-                              textAlign:
-                                  TextAlign.center,
-                            ),
-                            onTap: () {
-                              character.fromMap(
-                                  _characters[item]);
-                              Logger.log(
-                                  "Character Set: ${character.name}");
-                              Navigator.of(context)
-                                  .pop();
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                    Radius.circular(20.0)),
-              ),
-              actions: [
-                FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "Close",
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelLarge,
-                  ),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    _characters[character.name] =
-                        character.toMap();
-                    character.newCharacter();
-                    _characters[character.name] =
-                        character.toMap();
-                    character.notify();
-                  },
-                  child: Text(
-                    "New Preset",
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelLarge,
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      });
   }
 }
