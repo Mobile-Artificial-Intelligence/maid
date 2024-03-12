@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
+  Key _key = UniqueKey();
   File _profile = File("assets/defaultCharacter.png");
   String _name = "Maid";
   String _description = "";
@@ -56,6 +57,22 @@ class Character extends ChangeNotifier {
     } else {
       reset();
     }
+  }
+
+  void from(Character character) {
+    _key = character.key;
+    _profile = character.profile;
+    _name = character.name;
+    _description = character.description;
+    _personality = character.personality;
+    _scenario = character.scenario;
+    _useGreeting = character.useGreeting;
+    _greetings = character.greetings;
+    _system = character.system;
+    _useExamples = character.useExamples;
+    _examples = character.examples;
+
+    notifyListeners();
   }
 
   void fromMap(Map<String, dynamic> inputJson) async {
@@ -220,6 +237,8 @@ class Character extends ChangeNotifier {
     _examples.removeRange(_examples.length - 2, _examples.length);
     notifyListeners();
   }
+
+  Key get key => _key;
 
   File get profile => _profile;
 
