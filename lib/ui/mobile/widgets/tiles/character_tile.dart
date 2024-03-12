@@ -11,26 +11,26 @@ class CharacterTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer2<User, Character>(
       builder: (context, user, character, child) {
-        return ListTile(
+        return Column(children: [
+          Text("Character - ${character.name}"),
+          const SizedBox(height: 10.0),
+          ListTile(
             leading: CircleAvatar(
               backgroundImage: const AssetImage("assets/maid.png"),
               foregroundImage: Image.file(character.profile).image,
               radius: 25,
             ),
             minLeadingWidth: 60,
-            title: Column(children: [
-              Text("Character - ${character.name}"),
-              const SizedBox(height: 10.0),
-              Text(
-                Utilities.formatPlaceholders(
-                  character.description, 
-                  user.name, 
-                  character.name
-                ), 
-                style: const TextStyle(fontSize: 12.0)
-              ),
-            ])
-        );
+            title: Text(
+              Utilities.formatPlaceholders(
+                character.description, 
+                user.name, 
+                character.name
+              ), 
+              style: const TextStyle(fontSize: 12.0)
+            )
+          )
+        ]);
       },
     );
   }
