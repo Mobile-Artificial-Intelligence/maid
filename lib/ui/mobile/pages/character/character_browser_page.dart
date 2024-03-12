@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_browser_tile.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterBrowserPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class CharacterBrowserPage extends StatefulWidget {
 class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
   // Changed from Map to List of Character
   final List<Character> _characters = [];
+  Key _current = UniqueKey();
 
   @override
   void initState() {
@@ -28,12 +30,8 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
     final String charactersJson = prefs.getString("characters") ?? '[]';
     final List charactersList = json.decode(charactersJson);
 
-    final String lastCharacterJson = prefs.getString("last_character") ?? '{}';
-    final Map<String, dynamic> lastCharacterMap = json.decode(lastCharacterJson);
-
     setState(() {
       _characters.clear();
-      _characters.add(Character.fromMap(lastCharacterMap));
       for (var characterMap in charactersList) {
         _characters.add(Character.fromMap(characterMap));
       }
@@ -48,6 +46,7 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
 
   Future<void> _saveCharacters() async {
     final prefs = await SharedPreferences.getInstance();
+    _characters.removeWhere((character) => character.key == _current);
     final String charactersJson = json.encode(_characters.map((character) => character.toMap()).toList());
     await prefs.setString("characters", charactersJson);
   }
@@ -56,12 +55,22 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const GenericAppBar(title: "Character Browser"),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: _characters.length,
-        itemBuilder: (context, index) {
-          final character = _characters[index];
-          return CharacterBrowserTile(character: character);
+      body: Consumer<Character>(
+        builder: (context, character, child) {
+          _current = character.key;
+          
+          if (!_characters.contains(character)) {
+            _characters.insert(0, character);
+          }
+
+          return ListView.builder(
+            itemCount: _characters.length,
+            itemBuilder: (context, index) {
+              return CharacterBrowserTile(
+                character: _characters[index],
+              );
+            },
+          );
         },
       ),
     );
