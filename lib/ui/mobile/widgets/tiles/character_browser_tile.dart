@@ -4,42 +4,59 @@ import 'package:maid/providers/user.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:provider/provider.dart';
 
-class CharacterBrowserTile extends StatelessWidget {
+class CharacterBrowserTile extends StatefulWidget {
   final Character character;
 
   const CharacterBrowserTile({super.key, required this.character});
 
   @override
+  State<CharacterBrowserTile> createState() => _CharacterBrowserTileState();
+}
+
+class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
+  bool selected = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<User>(
-      builder: (context, user, child) {
-        return ListTile(
-          tileColor: Theme.of(context).colorScheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          //Square image of the character
-          leading: CircleAvatar(
-            backgroundImage: const AssetImage("assets/maid.png"),
-            foregroundImage: Image.file(character.profile).image,
-            radius: 25,
-          ),
-          minLeadingWidth: 60,
-          title: Column(children: [
-            Text(character.name),
-            const SizedBox(height: 10.0),
-            Text(
-              Utilities.formatPlaceholders(
-                character.description, 
-                user.name, 
-                character.name
-              ), 
-              style: const TextStyle(fontSize: 12.0)
-            ),
-          ])
-        );
+    return ListTile(
+      tileColor: Theme.of(context).colorScheme.primary,
+      selectedTileColor: Theme.of(context).colorScheme.secondary.withOpacity(0.25),
+      textColor: Colors.white,
+      selectedColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      // Square image with rounded corners of the character
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0), // Adjust the corner radius here
+        child: Image(
+          image: Image.file(widget.character.profile).image,
+          width: 50, // Adjust the size as needed
+          height: 50,
+          fit: BoxFit.cover, // This ensures the image covers the square area
+        ),
+      ),
+      minLeadingWidth: 60,
+      title: Column(children: [
+        Text(widget.character.name),
+        const SizedBox(height: 10.0),
+        Text(
+          Utilities.formatPlaceholders(widget.character.description, context.read<User>().name, widget.character.name),
+          style: const TextStyle(fontSize: 12.0),
+        ),
+      ]),
+      selected: selected,
+      onTap: () {
+        context.read<Character>().from(widget.character);
+        setState(() {
+          selected = true;
+        });
+      },
+      onFocusChange: (focus) {
+        setState(() {
+          selected = focus;
+        });
       },
     );
   }
 }
-

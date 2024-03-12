@@ -58,6 +58,21 @@ class Character extends ChangeNotifier {
     }
   }
 
+  void from(Character character) {
+    _profile = character.profile;
+    _name = character.name;
+    _description = character.description;
+    _personality = character.personality;
+    _scenario = character.scenario;
+    _useGreeting = character.useGreeting;
+    _greetings = character.greetings;
+    _system = character.system;
+    _useExamples = character.useExamples;
+    _examples = character.examples;
+
+    notifyListeners();
+  }
+
   void fromMap(Map<String, dynamic> inputJson) async {
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
