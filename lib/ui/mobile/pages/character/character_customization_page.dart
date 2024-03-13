@@ -14,10 +14,12 @@ class CharacterCustomizationPage extends StatefulWidget {
   const CharacterCustomizationPage({super.key});
 
   @override
-  State<CharacterCustomizationPage> createState() => _CharacterCustomizationPageState();
+  State<CharacterCustomizationPage> createState() =>
+      _CharacterCustomizationPageState();
 }
 
-class _CharacterCustomizationPageState extends State<CharacterCustomizationPage> {
+class _CharacterCustomizationPageState
+    extends State<CharacterCustomizationPage> {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late TextEditingController _personalityController;
@@ -51,7 +53,6 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         appBar: const GenericAppBar(title: "Character Customization"),
         body: Consumer<Character>(
           builder: (context, character, child) {
-
             SharedPreferences.getInstance().then((prefs) {
               prefs.setString("last_character", json.encode(character.toMap()));
             });
@@ -82,7 +83,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const CharacterBrowserPage()));
+                                      builder: (context) =>
+                                          const CharacterBrowserPage()));
                             },
                             child: Text(
                               "Switch Character",
@@ -167,7 +169,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         title: Row(
                           children: [
                             const Expanded(
-                              child: Text("Character Name"),
+                              child: Text("Name"),
                             ),
                             Expanded(
                               flex: 2,

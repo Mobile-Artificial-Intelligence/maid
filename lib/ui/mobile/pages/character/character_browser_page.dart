@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
-import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_browser_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,6 +93,11 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
                       8.0), // Adjust the padding value as needed
                   child: CharacterBrowserTile(
                     character: _characters[index],
+                    onDelete: () {
+                      setState(() {
+                        _characters.removeAt(index);
+                      });
+                    },
                   ),
                 );
               },

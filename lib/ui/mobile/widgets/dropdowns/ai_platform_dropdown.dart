@@ -21,43 +21,42 @@ class AiPlatformDropdown extends StatelessWidget {
         blendMode: BlendMode
             .srcIn, // This blend mode applies the shader to the text color.
         child: DropdownMenu<AiPlatformType>(
-          dropdownMenuEntries: const [
-            DropdownMenuEntry<AiPlatformType>(
-              value: AiPlatformType.llamacpp,
-              label: "LlamaCPP",
+            dropdownMenuEntries: const [
+              DropdownMenuEntry<AiPlatformType>(
+                value: AiPlatformType.llamacpp,
+                label: "LlamaCPP",
+              ),
+              DropdownMenuEntry<AiPlatformType>(
+                value: AiPlatformType.ollama,
+                label: "Ollama",
+              ),
+              DropdownMenuEntry<AiPlatformType>(
+                value: AiPlatformType.openAI,
+                label: "OpenAI",
+              ),
+              DropdownMenuEntry<AiPlatformType>(
+                value: AiPlatformType.mistralAI,
+                label: "MistralAI",
+              ),
+            ],
+            onSelected: (AiPlatformType? value) {
+              if (value != null) {
+                ai.apiType = value;
+              }
+            },
+            initialSelection: ai.apiType,
+            inputDecorationTheme: const InputDecorationTheme(
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white,
+                  fontSize: 15.0),
+              hintStyle: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white,
+                  fontSize: 15.0),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
             ),
-            DropdownMenuEntry<AiPlatformType>(
-              value: AiPlatformType.ollama,
-              label: "Ollama",
-            ),
-            DropdownMenuEntry<AiPlatformType>(
-              value: AiPlatformType.openAI,
-              label: "OpenAI",
-            ),
-            DropdownMenuEntry<AiPlatformType>(
-              value: AiPlatformType.mistralAI,
-              label: "MistralAI",
-            ),
-          ],
-          onSelected: (AiPlatformType? value) {
-            if (value != null) {
-              ai.apiType = value;
-            }
-          },
-          initialSelection: ai.apiType,
-          inputDecorationTheme: const InputDecorationTheme(
-            labelStyle: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
-                fontSize: 15.0),
-            hintStyle: TextStyle(
-                fontWeight: FontWeight.normal,
-                color: Colors.white,
-                fontSize: 15.0),
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-          ),
-width: 175
-        ),
+            width: 175),
       );
     });
   }
