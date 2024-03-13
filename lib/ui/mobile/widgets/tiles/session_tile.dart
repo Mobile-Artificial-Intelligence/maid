@@ -24,39 +24,31 @@ class _SessionTileState extends State<SessionTile> {
         }
 
         return GestureDetector(
+          onSecondaryTapUp: _onSecondaryTapUp,
+          onLongPressStart: _onLongPressStart,
+          onTap: () {
+            if (session.isBusy) return;
+            session.from(widget.session);
+          },
           child: ListTile(
-            title: Text(
-              displayMessage,
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            onTap: () {
-              if (session.isBusy) return;
-              session.fromMap(widget.session.toMap());
-            },
-          ),
-          onSecondaryTapUp: (details) =>
-              _onSecondaryTapUp(details, context, session),
-          onLongPressStart: (details) =>
-              _onLongPressStart(details, context, session),
+              title: Text(
+            displayMessage,
+            style: Theme.of(context).textTheme.labelLarge,
+          )),
         );
       },
     );
   }
 
-  void _onSecondaryTapUp(
-          TapUpDetails details, BuildContext context, Session session) =>
-      _showContextMenu(details.globalPosition, context, session);
+  void _onSecondaryTapUp(TapUpDetails details) =>
+      _showContextMenu(details.globalPosition);
 
-  void _onLongPressStart(LongPressStartDetails details, BuildContext context,
-          Session session) =>
-      _showContextMenu(details.globalPosition, context, session);
+  void _onLongPressStart(LongPressStartDetails details) =>
+      _showContextMenu(details.globalPosition);
 
-  void _showContextMenu(
-      Offset position, BuildContext context, Session session) {
+  void _showContextMenu(Offset position) {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
-    final TextEditingController controller =
-        TextEditingController(text: widget.session.rootMessage);
 
     showMenu(
       context: context,
@@ -78,7 +70,7 @@ class _SessionTileState extends State<SessionTile> {
             Navigator.of(context).pop(); // Close the menu first
             // Delayed execution to allow the popup menu to close properly
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              _showRenameDialog(context, controller, session);
+              _showRenameDialog();
             });
           },
         ),
@@ -86,8 +78,10 @@ class _SessionTileState extends State<SessionTile> {
     );
   }
 
-  void _showRenameDialog(
-      BuildContext context, TextEditingController controller, Session session) {
+  void _showRenameDialog() {
+    final TextEditingController controller =
+        TextEditingController(text: widget.session.rootMessage);
+
     showDialog(
       context: context,
       builder: (context) {
@@ -112,10 +106,10 @@ class _SessionTileState extends State<SessionTile> {
             ),
             FilledButton(
               onPressed: () {
-                String oldName = session.rootMessage;
+                String oldName = widget.session.rootMessage;
                 Logger.log(
                     "Updating session $oldName ====> ${controller.text}");
-                session.setRootMessage(controller.text);
+                widget.session.setRootMessage(controller.text);
                 Navigator.of(context).pop();
                 setState(() {});
               },

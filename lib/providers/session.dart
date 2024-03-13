@@ -67,6 +67,12 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
+  void from(Session session) {
+    _root = session._root;
+    tail = _root.findTail();
+    notifyListeners();
+  }
+
   void fromMap(Map<String, dynamic> inputJson) {
     _root = ChatNode.fromMap(inputJson);
     tail = _root.findTail();
