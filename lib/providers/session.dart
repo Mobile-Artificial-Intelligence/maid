@@ -72,6 +72,12 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
+  Session copy() {
+    final session = Session();
+    session.from(this);
+    return session;
+  }
+
   void from(Session session) {
     _key = session.key;
     _root = session.root;

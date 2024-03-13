@@ -64,6 +64,7 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
         for (var element in characters) {
           if (element.key == current) {
             contains = true;
+            break;
           }
         }
 
