@@ -55,10 +55,21 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
   Widget build(BuildContext context) {
     return Consumer<Character>(
       builder: (context, character, child) {
+        // If characters contains a character where character.key == current, 
+        // then insert a copy of character at index 0
         current = character.key;
+        
+        var contains = false;
 
-        if (!characters.contains(character)) {
-          characters.insert(0, character);
+        for (var element in characters) {
+          if (element.key == current) {
+            contains = true;
+            break;
+          }
+        }
+
+        if (!contains) {
+          characters.insert(0, character.copy());
         }
 
         return Scaffold(

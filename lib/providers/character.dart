@@ -59,6 +59,12 @@ class Character extends ChangeNotifier {
     }
   }
 
+  Character copy() {
+    Character newCharacter = Character();
+    newCharacter.from(this);
+    return newCharacter;
+  }
+
   void from(Character character) {
     _key = character.key;
     _profile = character.profile;

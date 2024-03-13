@@ -59,8 +59,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
       builder: (context, session, child) {
         current = session.key;
 
-        if (!sessions.contains(session)) {
-          sessions.insert(0, session);
+        var contains = false;
+
+        for (var element in sessions) {
+          if (element.key == current) {
+            contains = true;
+            break;
+          }
+        }
+
+        if (!contains) {
+          sessions.insert(0, session.copy());
         }
 
         SharedPreferences.getInstance().then((prefs) {
