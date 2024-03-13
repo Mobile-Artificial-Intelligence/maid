@@ -88,16 +88,12 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
       ),
       items: <PopupMenuEntry>[
         PopupMenuItem(
+          onTap: widget.onDelete,
           child: const Text('Delete'),
-          onTap: () {
-            Navigator.of(context).pop(); // Close the menu first
-            widget.onDelete();
-          },
         ),
         PopupMenuItem(
           child: const Text('Rename'),
           onTap: () {
-            Navigator.of(context).pop(); // Close the menu first
             // Delayed execution to allow the popup menu to close properly
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _showRenameDialog(context, controller);
@@ -134,12 +130,13 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
             ),
             FilledButton(
               onPressed: () {
-                String oldName = widget.character.name;
-                Logger.log(
-                    "Updating character $oldName ====> ${controller.text}");
-                widget.character.name = controller.text;
+                setState(() {
+                  String oldName = widget.character.name;
+                  Logger.log(
+                      "Updating character $oldName ====> ${controller.text}");
+                  widget.character.name = controller.text;
+                });
                 Navigator.of(context).pop();
-                setState(() {});
               },
               child: Text(
                 "Rename",
