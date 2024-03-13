@@ -111,7 +111,6 @@ class _SessionTileState extends State<SessionTile> {
                     "Updating session $oldName ====> ${controller.text}");
                 widget.session.setRootMessage(controller.text);
                 Navigator.of(context).pop();
-                setState(() {});
               },
               child: Text(
                 "Rename",

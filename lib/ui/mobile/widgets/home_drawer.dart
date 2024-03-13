@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
 import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
@@ -19,42 +18,50 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  final Map<Key, dynamic> sessions = {};
+  final List<Session> sessions = [];
+  Key current = UniqueKey();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final prefs = await SharedPreferences.getInstance();
-      Map<String, dynamic> loadedSessions =
-          json.decode(prefs.getString("sessions") ?? "{}");
-      Map<Key, dynamic> keyedSessions = loadedSessions.map((key, value) {
-        final valueKey = Utilities.stringToKey(key);
-        return MapEntry(valueKey, value);
-      });
-      sessions.addAll(keyedSessions);
-      setState(() {});
+    _loadSessions();
+  }
+
+  Future<void> _loadSessions() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String sessionsJson = prefs.getString("sessions") ?? '[]';
+    final List sessionsList = json.decode(sessionsJson);
+
+    setState(() {
+      sessions.clear();
+      for (var characterMap in sessionsList) {
+        sessions.add(Session.fromMap(characterMap));
+      }
     });
   }
 
   @override
   void dispose() {
-    SharedPreferences.getInstance().then((prefs) {
-      Map<String, dynamic> encodableSessions = sessions.map((key, value) {
-        final stringKey = Utilities.keyToString(key);
-        return MapEntry(stringKey, value);
-      });
-      prefs.setString("sessions", json.encode(encodableSessions));
-    });
-
+    _saveSessions();
     super.dispose();
+  }
+
+  Future<void> _saveSessions() async {
+    final prefs = await SharedPreferences.getInstance();
+    sessions.removeWhere((session) => session.key == current);
+    final String sessionsJson = json.encode(sessions.map((session) => session.toMap()).toList());
+    await prefs.setString("sessions", sessionsJson);
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
-        sessions[session.key] = session.toMap();
+        current = session.key;
+
+        if (!sessions.contains(session)) {
+          sessions.insert(0, session);
+        }
 
         SharedPreferences.getInstance().then((prefs) {
           prefs.setString("last_session", json.encode(session.toMap()));
@@ -118,7 +125,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                        itemCount: sessions.length, itemBuilder: _itemBuilder),
+                      itemCount: sessions.length, 
+                      itemBuilder: (context, index) {
+                        return SessionTile(
+                          session: sessions[index], 
+                          onDelete: deleteSession
+                        );
+                      }
+                    ),
                   ),
                   Divider(
                     height: 0.0,
@@ -129,13 +143,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ])));
       },
     );
-  }
-
-  Widget? _itemBuilder(BuildContext context, int index) {
-    Key sessionKey = sessions.keys.elementAt(index);
-    Session sessionData = Session.fromMap(sessions[sessionKey]);
-
-    return SessionTile(session: sessionData, onDelete: deleteSession);
   }
 
   void deleteSession(Key key) {
