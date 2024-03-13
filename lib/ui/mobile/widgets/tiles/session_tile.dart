@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 class SessionTile extends StatefulWidget {
   final Session session;
-  final void Function(Key) onDelete;
+  final void Function() onDelete;
 
   const SessionTile({super.key, required this.session, required this.onDelete});
 
@@ -61,7 +61,7 @@ class _SessionTileState extends State<SessionTile> {
           child: const Text('Delete'),
           onTap: () {
             Navigator.of(context).pop(); // Close the menu first
-            widget.onDelete(widget.session.key);
+            widget.onDelete();
           },
         ),
         PopupMenuItem(

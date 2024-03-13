@@ -110,9 +110,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   FilledButton(
                     onPressed: () {
                       if (session.isBusy) return;
-                      final newSession = Session();
                       setState(() {
-                        sessions[newSession.key] = newSession.toMap();
+                        final newSession = Session();
+                        sessions.add(newSession);
+                        session.from(newSession);
                       });
                     },
                     child: Text(
@@ -129,7 +130,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       itemBuilder: (context, index) {
                         return SessionTile(
                           session: sessions[index], 
-                          onDelete: deleteSession
+                          onDelete: () {
+                            if (session.isBusy) return;
+                            setState(() {
+                              if (sessions[index].key == session.key) {
+                                session.from(sessions.firstOrNull ?? Session());
+                              }
+                              sessions.removeAt(index);
+                            });
+                          }
                         );
                       }
                     ),
@@ -143,15 +152,5 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ])));
       },
     );
-  }
-
-  void deleteSession(Key key) {
-    final session = context.read<Session>();
-
-    if (session.isBusy) return;
-    sessions.remove(key);
-    if (key == session.key) {
-      session.fromMap(sessions.values.firstOrNull ?? {"message": "New Chat"});
-    }
   }
 }
