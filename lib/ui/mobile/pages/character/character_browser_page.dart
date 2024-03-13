@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
-import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_browser_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,30 +53,56 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const GenericAppBar(title: "Character Browser"),
-      body: Consumer<Character>(
-        builder: (context, character, child) {
-          _current = character.key;
+    return Consumer<Character>(
+      builder: (context, character, child) {
+        _current = character.key;
 
-          if (!_characters.contains(character)) {
-            _characters.insert(0, character);
-          }
+        if (!_characters.contains(character)) {
+          _characters.insert(0, character);
+        }
 
-          return ListView.builder(
-            itemCount: _characters.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(
-                    8.0), // Adjust the padding value as needed
-                child: CharacterBrowserTile(
-                  character: _characters[index],
+        return Scaffold(
+            appBar: AppBar(
+              elevation: 0.0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              title: const Text("Character Browser"),
+              actions: [
+                const Expanded(child: SizedBox()),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    setState(() {
+                      final newCharacter = Character();
+                      _characters.add(newCharacter);
+                      character.from(newCharacter);
+                    });
+                  },
                 ),
-              );
-            },
-          );
-        },
-      ),
+              ],
+            ),
+            body: ListView.builder(
+              itemCount: _characters.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(
+                      8.0), // Adjust the padding value as needed
+                  child: CharacterBrowserTile(
+                    character: _characters[index],
+                    onDelete: () {
+                      setState(() {
+                        _characters.removeAt(index);
+                      });
+                    },
+                  ),
+                );
+              },
+            ));
+      },
     );
   }
 }
