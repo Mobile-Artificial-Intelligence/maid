@@ -47,7 +47,8 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
   Future<void> _saveCharacters() async {
     final prefs = await SharedPreferences.getInstance();
     _characters.removeWhere((character) => character.key == _current);
-    final String charactersJson = json.encode(_characters.map((character) => character.toMap()).toList());
+    final String charactersJson =
+        json.encode(_characters.map((character) => character.toMap()).toList());
     await prefs.setString("characters", charactersJson);
   }
 
@@ -58,7 +59,7 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
       body: Consumer<Character>(
         builder: (context, character, child) {
           _current = character.key;
-          
+
           if (!_characters.contains(character)) {
             _characters.insert(0, character);
           }
@@ -66,8 +67,12 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
           return ListView.builder(
             itemCount: _characters.length,
             itemBuilder: (context, index) {
-              return CharacterBrowserTile(
-                character: _characters[index],
+              return Padding(
+                padding: const EdgeInsets.all(
+                    8.0), // Adjust the padding value as needed
+                child: CharacterBrowserTile(
+                  character: _characters[index],
+                ),
               );
             },
           );
