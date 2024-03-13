@@ -8,9 +8,10 @@ import 'package:maid/static/generation_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
+  Key _key = UniqueKey();
   bool _busy = false;
   ChatNode _root = ChatNode(key: UniqueKey());
-  ChatNode? tail;
+  ChatNode? _tail;
   String _messageBuffer = "";
 
   bool get isBusy => _busy;
@@ -23,7 +24,11 @@ class Session extends ChangeNotifier {
     return _root.message;
   }
 
-  Key get key => _root.key;
+  ChatNode get root => _root;
+
+  ChatNode? get tail => _tail;
+
+  Key get key => _key;
 
   set busy(bool value) {
     _busy = value;
@@ -63,19 +68,20 @@ class Session extends ChangeNotifier {
     final key = UniqueKey();
     _root = ChatNode(key: key);
     _root.message = "New Chat";
-    tail = null;
+    _tail = null;
     notifyListeners();
   }
 
   void from(Session session) {
-    _root = session._root;
-    tail = _root.findTail();
+    _key = session.key;
+    _root = session.root;
+    _tail = session.tail;
     notifyListeners();
   }
 
   void fromMap(Map<String, dynamic> inputJson) {
     _root = ChatNode.fromMap(inputJson);
-    tail = _root.findTail();
+    _tail = _root.findTail();
     notifyListeners();
   }
 
@@ -114,11 +120,11 @@ class Session extends ChangeNotifier {
     if (found != null) {
       found.message = message;
     } else {
-      tail ??= _root.findTail();
+      _tail ??= _root.findTail();
 
-      tail!.children.add(node);
-      tail!.currentChild = key;
-      tail = tail!.findTail();
+      _tail!.children.add(node);
+      _tail!.currentChild = key;
+      _tail = _tail!.findTail();
     }
 
     if (notify) {
@@ -130,7 +136,7 @@ class Session extends ChangeNotifier {
     var parent = _root.getParent(key);
     if (parent != null) {
       parent.children.removeWhere((element) => element.key == key);
-      tail = _root.findTail();
+      _tail = _root.findTail();
     }
     notifyListeners();
   }
@@ -140,14 +146,14 @@ class Session extends ChangeNotifier {
       finalise();
     } else {
       _messageBuffer += message;
-      tail ??= _root.findTail();
+      _tail ??= _root.findTail();
 
-      if (!(tail!.messageController.isClosed)) {
-        tail!.messageController.add(_messageBuffer);
+      if (!(_tail!.messageController.isClosed)) {
+        _tail!.messageController.add(_messageBuffer);
         _messageBuffer = "";
       }
 
-      tail!.message += message;
+      _tail!.message += message;
     }
   }
 
@@ -157,7 +163,7 @@ class Session extends ChangeNotifier {
       return;
     } else {
       parent.currentChild = null;
-      tail = _root.findTail();
+      _tail = _root.findTail();
       add(UniqueKey(), userGenerated: false);
       notifyListeners();
       GenerationManager.prompt(parent.message, context);
@@ -168,7 +174,7 @@ class Session extends ChangeNotifier {
     var parent = _root.getParent(key);
     if (parent != null) {
       parent.currentChild = null;
-      tail = _root.findTail();
+      _tail = _root.findTail();
     }
     add(UniqueKey(), userGenerated: true, message: message);
     add(UniqueKey(), userGenerated: false);
@@ -179,10 +185,10 @@ class Session extends ChangeNotifier {
   void finalise() {
     _busy = false;
 
-    tail ??= _root.findTail();
+    _tail ??= _root.findTail();
 
-    if (!(tail!.finaliseController.isClosed)) {
-      tail!.finaliseController.add(0);
+    if (!(_tail!.finaliseController.isClosed)) {
+      _tail!.finaliseController.add(0);
     }
 
     _save();
@@ -199,7 +205,7 @@ class Session extends ChangeNotifier {
             .indexWhere((element) => element.key == parent.currentChild);
         if (currentChildIndex < parent.children.length - 1) {
           parent.currentChild = parent.children[currentChildIndex + 1].key;
-          tail = _root.findTail();
+          _tail = _root.findTail();
         }
       }
     }
@@ -217,7 +223,7 @@ class Session extends ChangeNotifier {
             .indexWhere((element) => element.key == parent.currentChild);
         if (currentChildIndex > 0) {
           parent.currentChild = parent.children[currentChildIndex - 1].key;
-          tail = _root.findTail();
+          _tail = _root.findTail();
         }
       }
     }

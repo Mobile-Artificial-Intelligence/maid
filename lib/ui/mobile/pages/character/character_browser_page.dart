@@ -15,8 +15,8 @@ class CharacterBrowserPage extends StatefulWidget {
 
 class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
   // Changed from Map to List of Character
-  final List<Character> _characters = [];
-  Key _current = UniqueKey();
+  final List<Character> characters = [];
+  Key current = UniqueKey();
 
   @override
   void initState() {
@@ -30,9 +30,9 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
     final List charactersList = json.decode(charactersJson);
 
     setState(() {
-      _characters.clear();
+      characters.clear();
       for (var characterMap in charactersList) {
-        _characters.add(Character.fromMap(characterMap));
+        characters.add(Character.fromMap(characterMap));
       }
     });
   }
@@ -45,9 +45,9 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
 
   Future<void> _saveCharacters() async {
     final prefs = await SharedPreferences.getInstance();
-    _characters.removeWhere((character) => character.key == _current);
+    characters.removeWhere((character) => character.key == current);
     final String charactersJson =
-        json.encode(_characters.map((character) => character.toMap()).toList());
+        json.encode(characters.map((character) => character.toMap()).toList());
     await prefs.setString("characters", charactersJson);
   }
 
@@ -55,10 +55,10 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
   Widget build(BuildContext context) {
     return Consumer<Character>(
       builder: (context, character, child) {
-        _current = character.key;
+        current = character.key;
 
-        if (!_characters.contains(character)) {
-          _characters.insert(0, character);
+        if (!characters.contains(character)) {
+          characters.insert(0, character);
         }
 
         return Scaffold(
@@ -78,7 +78,7 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
                   onPressed: () {
                     setState(() {
                       final newCharacter = Character();
-                      _characters.add(newCharacter);
+                      characters.add(newCharacter);
                       character.from(newCharacter);
                     });
                   },
@@ -86,16 +86,16 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
               ],
             ),
             body: ListView.builder(
-              itemCount: _characters.length,
+              itemCount: characters.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(
                       8.0), // Adjust the padding value as needed
                   child: CharacterBrowserTile(
-                    character: _characters[index],
+                    character: characters[index],
                     onDelete: () {
                       setState(() {
-                        _characters.removeAt(index);
+                        characters.removeAt(index);
                       });
                     },
                   ),
