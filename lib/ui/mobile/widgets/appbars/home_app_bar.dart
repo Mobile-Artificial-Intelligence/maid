@@ -20,7 +20,7 @@ class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _HomeAppBarState extends State<HomeAppBar> {
-  final GlobalKey _menuKey = GlobalKey();
+  final iconButtonKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
         const AiPlatformDropdown(),
         const Expanded(child: SizedBox()),
         IconButton(
-          key: _menuKey, // Assign the GlobalKey to your IconButton
+          key: iconButtonKey, // Assign the GlobalKey to your IconButton
           icon: const Icon(
             Icons.account_tree_rounded,
             size: 24,
@@ -43,7 +43,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   }
 
   void onPressed() {
-    final RenderBox renderBox = _menuKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox renderBox = iconButtonKey.currentContext!.findRenderObject() as RenderBox;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Size size = renderBox.size;
 
@@ -113,7 +113,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                 title: const Text('App Settings'),
                 onTap: () {
-                  Navigator.pop(context); // Close the drawer
+                  Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -127,7 +127,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                 title: const Text('About'),
                 onTap: () {
-                  Navigator.pop(context); // Close the drawer
+                  Navigator.pop(context); // Close the menu first
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const AboutPage()));
                 },
