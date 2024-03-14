@@ -5,8 +5,15 @@ import 'package:maid/providers/user.dart';
 import 'package:maid/ui/mobile/widgets/tiles/image_selector_tile.dart';
 import 'package:provider/provider.dart';
 
-class UserTile extends StatelessWidget {
+class UserTile extends StatefulWidget {
   const UserTile({super.key});
+
+  @override
+  State<UserTile> createState() => _UserTileState();
+}
+
+class _UserTileState extends State<UserTile> {
+  final iconButtonKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +33,52 @@ class UserTile extends StatelessWidget {
             radius: 20,
           ),
           trailing: IconButton(
+            key: iconButtonKey,
             icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              _showRenameDialog(context);
-            },
+            onPressed: onPressed,
           ),
         );
       },
     );
   }
 
-  void _showRenameDialog(BuildContext context) {
+  void onPressed() {
+    final RenderBox renderBox = iconButtonKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    final Size size = renderBox.size;
+
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + size.height,
+        offset.dx,
+        offset.dy,
+      ),
+      items: [
+        PopupMenuItem(
+          child: ListTile(
+            title: const Text("Rename"),
+            onTap: () {
+              Navigator.pop(context); // Close the menu first
+              showRenameDialog(context);
+            },
+          ),
+        ),
+        PopupMenuItem(
+          child: ListTile(
+            title: const Text("Change Picture"),
+            onTap: () {
+              Navigator.pop(context); // Close the menu first
+              showImageDialog(context);
+            },
+          ),
+        ),
+      ]
+    );
+  }
+
+  void showRenameDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -81,7 +123,7 @@ class UserTile extends StatelessWidget {
     );
   }
 
-  void _showImageDialog(BuildContext context) {
+  void showImageDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -98,6 +140,7 @@ class UserTile extends StatelessWidget {
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
                 ),
+                shrinkWrap: true,
                 children: [
                   ImageSelectorTile(
                     image: File("assets/chadUser.png")
