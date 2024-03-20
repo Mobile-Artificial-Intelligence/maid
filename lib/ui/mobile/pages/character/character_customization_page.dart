@@ -137,11 +137,11 @@ class _CharacterCustomizationPageState
                           FilledButton(
                             onPressed: () async {
                               await storageOperationDialog(
-                                  context, character.importJSON);
+                                  context, character.exportSTV2);
                               setState(() {});
                             },
                             child: Text(
-                              "Load JSON",
+                              "Save STV2 JSON",
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ),
@@ -149,15 +149,28 @@ class _CharacterCustomizationPageState
                           FilledButton(
                             onPressed: () async {
                               await storageOperationDialog(
-                                  context, character.exportJSON);
+                                  context, character.exportMCF
+                                );
                               setState(() {});
                             },
                             child: Text(
-                              "Save JSON",
+                              "Save MCF JSON",
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ),
                         ],
+                      ),
+                      const SizedBox(height: 15.0),
+                      FilledButton(
+                        onPressed: () async {
+                          await storageOperationDialog(
+                              context, character.importJSON);
+                          setState(() {});
+                        },
+                        child: Text(
+                          "Load JSON",
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
                       ),
                       const SizedBox(height: 20.0),
                       Divider(

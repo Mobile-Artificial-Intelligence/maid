@@ -25,6 +25,8 @@ class Character extends ChangeNotifier {
   bool _useExamples = true;
   List<Map<String, dynamic>> _examples = [];
 
+  Map<String, dynamic> _cachedJson = {};
+
   Character() {
     init();
   }
@@ -84,7 +86,8 @@ class Character extends ChangeNotifier {
   void fromMap(Map<String, dynamic> inputJson) async {
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
-    } else {
+    } 
+    else {
       Directory docDir = await getApplicationDocumentsDirectory();
       String filePath = '${docDir.path}/defaultCharacter.png';
 
@@ -99,43 +102,73 @@ class Character extends ChangeNotifier {
       _profile = newProfileFile;
     }
 
-    _name = inputJson["name"] ?? "Unknown";
-
     if (inputJson.isEmpty) {
       reset();
     }
 
+    if (inputJson["spec"] == "mcf_v1") {
+      fromMCFMap(inputJson);
+    } 
+    else if (inputJson["spec"] == "chara_card_v2") {
+      fromSTV2Map(inputJson);
+    }
+    else if (inputJson["first_mes"] != null) {
+      fromSTV1Map(inputJson);
+    }
+    else {
+      reset();
+    }
+
+    Logger.log("Character created with name: ${inputJson["name"]}");
+    _useGreeting = _greetings.isNotEmpty;
+    _useExamples = _examples.isNotEmpty;
+    notifyListeners();
+  }
+
+  void fromMCFMap(Map<String, dynamic> inputJson) {
+    _name = inputJson["name"] ?? "Unknown";
     _description = inputJson["description"] ?? "";
     _personality = inputJson["personality"] ?? "";
     _scenario = inputJson["scenario"] ?? "";
 
-    _useGreeting = inputJson["use_greeting"] ?? false;
-
-    if (inputJson["greetings"] != null) {
-      _greetings = List<String>.from(inputJson["greetings"]);
-    } else {
-      if (inputJson["first_mes"] != null) {
-        _greetings = [inputJson["first_mes"]];
-      }
-
-      if (inputJson["alternate_greetings"] != null) {
-        _greetings.addAll(inputJson["alternate_greetings"]);
-      }
-    }
+    _greetings = List<String>.from(inputJson["greetings"]);
 
     _system = inputJson["system_prompt"] ?? "";
-
-    _useExamples = inputJson["use_examples"] ?? true;
+    
     if (inputJson["examples"] != null) {
-      final length = inputJson["examples"].length ?? 0;
       _examples = List<Map<String, dynamic>>.generate(
-          length, (i) => inputJson["examples"][i]);
-    } else if (inputJson["mes_example"] != null) {
-      _examples = examplesFromString(inputJson["mes_example"] ?? "");
+        inputJson["examples"].length ?? 0, 
+        (i) => inputJson["examples"][i]
+      );
     }
 
-    Logger.log("Character created with name: ${inputJson["name"]}");
-    notifyListeners();
+    _cachedJson = inputJson;
+  }
+
+  void fromSTV1Map(Map<String, dynamic> inputJson) {
+    _name = inputJson["name"] ?? "Unknown";
+    _description = inputJson["description"] ?? "";
+    _personality = inputJson["personality"] ?? "";
+    _scenario = inputJson["scenario"] ?? "";
+    _greetings = [inputJson["first_mes"] ?? ""];
+    _examples = examplesFromString(inputJson["mes_example"] ?? "");
+    _cachedJson = inputJson;
+  }
+
+  void fromSTV2Map(Map<String, dynamic> inputJson) {
+    if (inputJson["data"] != null) {
+      Map<String, dynamic> data = inputJson["data"];
+
+      fromSTV1Map(data);
+
+      _system = inputJson["system_prompt"] ?? "";
+
+      final alternateGreetings = data["alternate_greetings"];
+      if (alternateGreetings != null) {
+          _greetings.addAll(
+              alternateGreetings.map<String>((item) => item.toString()).toList());
+      }
+    }
   }
 
   Map<String, dynamic> toMap() {
@@ -156,6 +189,49 @@ class Character extends ChangeNotifier {
     jsonCharacter["use_examples"] = _useExamples;
     jsonCharacter["examples"] = _examples;
     jsonCharacter["mes_example"] = examplesToString();
+
+    return jsonCharacter;
+  }
+
+  Map<String, dynamic> toMCFMap() {
+    Map<String, dynamic> jsonCharacter = _cachedJson;
+
+    jsonCharacter["spec"] = "mcf_v1";
+    jsonCharacter["name"] = _name;
+    jsonCharacter["description"] = _description;
+    jsonCharacter["personality"] = _personality;
+    jsonCharacter["scenario"] = _scenario;
+    jsonCharacter["greetings"] = _greetings;
+    jsonCharacter["system_prompt"] = _system;
+    jsonCharacter["examples"] = _examples;
+
+    return jsonCharacter;
+  }
+
+  Map<String, dynamic> toSTV1Map() {
+    Map<String, dynamic> jsonCharacter = _cachedJson;
+
+    jsonCharacter["name"] = _name;
+    jsonCharacter["description"] = _description;
+    jsonCharacter["personality"] = _personality;
+    jsonCharacter["scenario"] = _scenario;
+    jsonCharacter["first_mes"] = _greetings.firstOrNull ?? "";
+    jsonCharacter["mes_example"] = examplesToString();
+
+    return jsonCharacter;
+  }
+
+  Map<String, dynamic> toSTV2Map() {
+    Map<String, dynamic> jsonCharacter = {};
+
+    jsonCharacter["spec"] = "chara_card_v2";
+    jsonCharacter["spec_version"] = "2.0";
+
+    Map<String, dynamic> data = toSTV1Map();
+    data["system_prompt"] = _system;
+    data["alternate_greetings"] = _greetings.sublist(1);
+
+    jsonCharacter["data"] = data;
 
     return jsonCharacter;
   }
@@ -277,10 +353,18 @@ class Character extends ChangeNotifier {
     });
   }
 
-  Future<String> exportJSON(BuildContext context) async {
+  Future<String> exportMCF(BuildContext context) async {
+    return await _exportJSON(context, true);
+  }
+
+  Future<String> exportSTV2(BuildContext context) async {
+    return await _exportJSON(context, false);
+  }
+
+  Future<String> _exportJSON(BuildContext context, bool mcf) async {
     try {
       // Convert the map to a JSON string
-      String jsonString = json.encode(toMap());
+      String jsonString = json.encode(mcf ? toMCFMap() : toSTV2Map());
 
       File? file = await FileManager.save(context, "$_name.json");
 
@@ -328,16 +412,8 @@ class Character extends ChangeNotifier {
       if (image == null) return "Error decoding image";
 
       image.textData = {
-        "name": _name,
-        "description": _description,
-        "personality": _personality,
-        "scenario": _scenario,
-        "greetings": json.encode(_greetings),
-        "first_mes": _greetings.firstOrNull ?? "",
-        "alternate_greetings": json.encode(_greetings.sublist(1)),
-        "system_prompt": _system,
-        "examples": json.encode(_examples),
-        "mes_example": examplesToString(),
+        "Mcf_v1": json.encode(toMCFMap()),
+        "Chara": base64.encode(utf8.encode(json.encode(toSTV2Map())))
       };
 
       File? file = await FileManager.save(context, "$_name.png");
@@ -362,32 +438,17 @@ class Character extends ChangeNotifier {
       final image = decodePng(file.readAsBytesSync());
 
       if (image != null && image.textData != null) {
-        _name = image.textData!["name"] ?? "";
-        _description = image.textData!["description"] ?? "";
-        _personality = image.textData!["personality"] ?? "";
-        _scenario = image.textData!["scenario"] ?? "";
+        if (image.textData!["Mcf_v1"] != null) {
+          Map<String, dynamic> jsonCharacter =
+              json.decode(image.textData!["Mcf_v1"]!);
 
-        if (image.textData!["greetings"] != null) {
-          _greetings = List<String>.from(
-              json.decode(image.textData!["greetings"] ?? "[]"));
-        } else {
-          if (image.textData!["first_mes"] != null) {
-            _greetings = [image.textData!["first_mes"] ?? ""];
-          }
-
-          if (image.textData!["alternate_greetings"] != null) {
-            _greetings.addAll(List<String>.from(
-                json.decode(image.textData!["alternate_greetings"] ?? "[]")));
-          }
+          fromMap(jsonCharacter);
         }
+        else if (image.textData!["Chara"] != null) {
+          Map<String, dynamic> jsonCharacter =
+              json.decode(utf8.decode(base64.decode(image.textData!["Chara"]!)));
 
-        _system = image.textData!["system_prompt"] ?? "";
-
-        if (image.textData!["examples"] != null) {
-          _examples = List<Map<String, dynamic>>.from(
-              json.decode(image.textData!["examples"] ?? "[]"));
-        } else if (image.textData!["mes_example"] != null) {
-          _examples = examplesFromString(image.textData!["mes_example"] ?? "");
+          fromMap(jsonCharacter);
         }
       }
 
