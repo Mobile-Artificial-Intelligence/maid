@@ -25,6 +25,8 @@ class Character extends ChangeNotifier {
   bool _useExamples = true;
   List<Map<String, dynamic>> _examples = [];
 
+  Map<String, dynamic> _cachedJson = {};
+
   Character() {
     init();
   }
@@ -84,7 +86,8 @@ class Character extends ChangeNotifier {
   void fromMap(Map<String, dynamic> inputJson) async {
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
-    } else {
+    } 
+    else {
       Directory docDir = await getApplicationDocumentsDirectory();
       String filePath = '${docDir.path}/defaultCharacter.png';
 
@@ -99,43 +102,70 @@ class Character extends ChangeNotifier {
       _profile = newProfileFile;
     }
 
-    _name = inputJson["name"] ?? "Unknown";
-
     if (inputJson.isEmpty) {
       reset();
     }
 
+    if (inputJson["spec"] == "mcf_v1") {
+      fromMCFMap(inputJson);
+    } 
+    else if (inputJson["spec"] == "chara_card_v2") {
+      fromSTV2Map(inputJson);
+    }
+    else if (inputJson["first_mes"] != null) {
+      fromSTV1Map(inputJson);
+    }
+    else {
+      reset();
+    }
+
+    Logger.log("Character created with name: ${inputJson["name"]}");
+    _useGreeting = _greetings.isNotEmpty;
+    _useExamples = _examples.isNotEmpty;
+    notifyListeners();
+  }
+
+  void fromMCFMap(Map<String, dynamic> inputJson) {
+    _name = inputJson["name"] ?? "Unknown";
     _description = inputJson["description"] ?? "";
     _personality = inputJson["personality"] ?? "";
     _scenario = inputJson["scenario"] ?? "";
 
-    _useGreeting = inputJson["use_greeting"] ?? false;
-
-    if (inputJson["greetings"] != null) {
-      _greetings = List<String>.from(inputJson["greetings"]);
-    } else {
-      if (inputJson["first_mes"] != null) {
-        _greetings = [inputJson["first_mes"]];
-      }
-
-      if (inputJson["alternate_greetings"] != null) {
-        _greetings.addAll(inputJson["alternate_greetings"]);
-      }
-    }
+    _greetings = List<String>.from(inputJson["greetings"]);
 
     _system = inputJson["system_prompt"] ?? "";
-
-    _useExamples = inputJson["use_examples"] ?? true;
+    
     if (inputJson["examples"] != null) {
-      final length = inputJson["examples"].length ?? 0;
       _examples = List<Map<String, dynamic>>.generate(
-          length, (i) => inputJson["examples"][i]);
-    } else if (inputJson["mes_example"] != null) {
-      _examples = examplesFromString(inputJson["mes_example"] ?? "");
+        inputJson["examples"].length ?? 0, 
+        (i) => inputJson["examples"][i]
+      );
     }
 
-    Logger.log("Character created with name: ${inputJson["name"]}");
-    notifyListeners();
+    _cachedJson = inputJson;
+  }
+
+  void fromSTV1Map(Map<String, dynamic> inputJson) {
+    _name = inputJson["name"] ?? "Unknown";
+    _description = inputJson["description"] ?? "";
+    _personality = inputJson["personality"] ?? "";
+    _scenario = inputJson["scenario"] ?? "";
+    _greetings = [inputJson["first_mes"] ?? ""];
+    _examples = examplesFromString(inputJson["mes_example"] ?? "");
+    _cachedJson = inputJson;
+  }
+
+  void fromSTV2Map(Map<String, dynamic> inputJson) {
+    if (inputJson["data"] != null) {
+      Map<String, dynamic> data = inputJson["data"];
+
+      fromSTV1Map(data);
+
+      _system = inputJson["system_prompt"] ?? "";
+      _greetings.addAll(data["alternate_greetings"] ?? []);
+    }
+
+    _cachedJson = inputJson;
   }
 
   Map<String, dynamic> toMap() {
