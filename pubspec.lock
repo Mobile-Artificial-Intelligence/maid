@@ -502,7 +502,7 @@ packages:
       path: "packages/maid_llm"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   maid_ui:
     dependency: "direct main"
     description:
