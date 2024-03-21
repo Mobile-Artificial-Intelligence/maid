@@ -28,7 +28,10 @@ class _CharacterCustomizationPageState
   late List<TextEditingController> _greetingControllers;
   late List<TextEditingController> _exampleControllers;
 
-  void initializeControllers(Character character) {
+  @override
+  Widget build(BuildContext context) {
+    final character = context.read<Character>();
+
     _nameController = TextEditingController(text: character.name);
     _descriptionController = TextEditingController(text: character.description);
     _personalityController = TextEditingController(text: character.personality);
@@ -45,11 +48,6 @@ class _CharacterCustomizationPageState
       (index) =>
           TextEditingController(text: character.examples[index]["content"]),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    initializeControllers(context.read<Character>());
 
     return Scaffold(
       appBar: const GenericAppBar(title: "Character Customization"),
@@ -94,10 +92,7 @@ class _CharacterCustomizationPageState
                         ),
                         const SizedBox(width: 10.0),
                         FilledButton(
-                          onPressed: () {
-                            character.reset();
-                            initializeControllers(character);
-                          },
+                          onPressed: character.reset,
                           child: Text(
                             "Reset All",
                             style: Theme.of(context).textTheme.labelLarge,
@@ -113,9 +108,7 @@ class _CharacterCustomizationPageState
                           onPressed: () async {
                             await storageOperationDialog(
                                 context, character.importImage);
-                            setState(() {
-                              initializeControllers(character);
-                            });
+                            setState(() {});
                           },
                           child: Text(
                             "Load Image",
@@ -127,9 +120,7 @@ class _CharacterCustomizationPageState
                           onPressed: () async {
                             await storageOperationDialog(
                                 context, character.exportImage);
-                            setState(() {
-                              initializeControllers(character);
-                            });
+                            setState(() {});
                           },
                           child: Text(
                             "Save Image",
@@ -146,9 +137,7 @@ class _CharacterCustomizationPageState
                           onPressed: () async {
                             await storageOperationDialog(
                                 context, character.exportSTV2);
-                            setState(() {
-                              initializeControllers(character);
-                            });
+                            setState(() {});
                           },
                           child: Text(
                             "Save STV2 JSON",
@@ -160,9 +149,7 @@ class _CharacterCustomizationPageState
                           onPressed: () async {
                             await storageOperationDialog(
                                 context, character.exportMCF);
-                            setState(() {
-                              initializeControllers(character);
-                            });
+                            setState(() {});
                           },
                           child: Text(
                             "Save MCF JSON",
@@ -176,9 +163,7 @@ class _CharacterCustomizationPageState
                       onPressed: () async {
                         await storageOperationDialog(
                             context, character.importJSON);
-                        setState(() {
-                          initializeControllers(character);
-                        });
+                        setState(() {});
                       },
                       child: Text(
                         "Load JSON",

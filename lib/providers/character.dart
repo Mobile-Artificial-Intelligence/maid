@@ -412,8 +412,8 @@ class Character extends ChangeNotifier {
       if (image == null) return "Error decoding image";
 
       image.textData = {
-        "Mcf_v1": json.encode(toMCFMap()),
-        "Chara": base64.encode(utf8.encode(json.encode(toSTV2Map())))
+        "mcf": json.encode(toMCFMap()),
+        "chara": base64.encode(utf8.encode(json.encode(toSTV2Map())))
       };
 
       File? file = await FileManager.save(context, "$_name.png");
@@ -438,15 +438,24 @@ class Character extends ChangeNotifier {
       final image = decodePng(file.readAsBytesSync());
 
       if (image != null && image.textData != null) {
-        if (image.textData!["Mcf_v1"] != null) {
-          Map<String, dynamic> jsonCharacter =
-              json.decode(image.textData!["Mcf_v1"]!);
+        if (image.textData!["Mcf"] != null ||
+            image.textData!["mcf"] != null
+        ) {
+          Map<String, dynamic> jsonCharacter = json.decode(
+            image.textData!["Mcf"] ?? image.textData!["mcf"]!
+          );
 
           fromMap(jsonCharacter);
         }
-        else if (image.textData!["Chara"] != null) {
-          Map<String, dynamic> jsonCharacter =
-              json.decode(utf8.decode(base64.decode(image.textData!["Chara"]!)));
+        else if (
+          image.textData!["Chara"] != null || 
+          image.textData!["chara"] != null
+        ) {
+          Uint8List  utf8Character = base64.decode(
+            image.textData!["Chara"] ?? image.textData!["chara"]!
+          );
+          String stringCharacter = utf8.decode(utf8Character);
+          Map<String, dynamic> jsonCharacter = json.decode(stringCharacter);
 
           fromMap(jsonCharacter);
         }
