@@ -24,38 +24,42 @@ class OpenAiPage extends StatefulWidget {
 }
 
 class _OpenAiPageState extends State<OpenAiPage> {
+  late AiPlatform ai;
+
+  @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("open_ai_model", json.encode(ai.toMap()));
+    });
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    ai = context.watch<AiPlatform>();
+
     return Scaffold(
-        appBar: const GenericAppBar(title: "OpenAI Parameters"),
-        body: Consumer2<Session, AiPlatform>(
-          builder: (context, session, ai, child) {
-            SharedPreferences.getInstance().then((prefs) {
-              prefs.setString("open_ai_model", json.encode(ai.toMap()));
-            });
-            
-            return SessionBusyOverlay(
-              child: ListView(
-                children: [
-                  const ApiKeyParameter(),
-                  Divider(
-                    height: 20,
-                    indent: 10,
-                    endIndent: 10,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const UrlParameter(),
-                  const SizedBox(height: 20.0),
-                  const SeedParameter(),
-                  const TemperatureParameter(),
-                  const PenaltyFrequencyParameter(),
-                  const PenaltyPresentParameter(),
-                  const NPredictParameter(),
-                  const TopPParameter()
-                ]
-              )
-            );
-        }
+      appBar: const GenericAppBar(title: "OpenAI Parameters"),
+      body: SessionBusyOverlay(
+        child: ListView(
+          children: [
+            const ApiKeyParameter(),
+            Divider(
+              height: 20,
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const UrlParameter(),
+            const SizedBox(height: 20.0),
+            const SeedParameter(),
+            const TemperatureParameter(),
+            const PenaltyFrequencyParameter(),
+            const PenaltyPresentParameter(),
+            const NPredictParameter(),
+            const TopPParameter()
+          ]
+        )
       )
     );
   }

@@ -21,35 +21,39 @@ class MistralAiPage extends StatefulWidget {
 }
 
 class _MistralAiPageState extends State<MistralAiPage> {
+  late AiPlatform ai;
+
+  @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("mistral_ai_model", json.encode(ai.toMap()));
+    });
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: const GenericAppBar(title: "MistralAI Parameters"),
-        body: Consumer2<Session, AiPlatform>(
-          builder: (context, session, ai, child) {
-            SharedPreferences.getInstance().then((prefs) {
-              prefs.setString("mistral_ai_model", json.encode(ai.toMap()));
-            });
+    ai = context.watch<AiPlatform>();
 
-            return SessionBusyOverlay(
-              child: ListView(
-                children: [
-                  const ApiKeyParameter(),
-                  Divider(
-                    height: 20,
-                    indent: 10,
-                    endIndent: 10,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const UrlParameter(),
-                  const SizedBox(height: 20.0),
-                  const SeedParameter(),
-                  const TopPParameter(),
-                  const TemperatureParameter(),
-                ]
-              )
-            );
-        }
+    return Scaffold(
+      appBar: const GenericAppBar(title: "MistralAI Parameters"),
+      body: SessionBusyOverlay(
+        child: ListView(
+          children: [
+            const ApiKeyParameter(),
+            Divider(
+              height: 20,
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const UrlParameter(),
+            const SizedBox(height: 20.0),
+            const SeedParameter(),
+            const TopPParameter(),
+            const TemperatureParameter(),
+          ]
+        )
       )
     );
   }

@@ -35,89 +35,93 @@ class LlamaCppPage extends StatefulWidget {
 }
 
 class _LlamaCppPageState extends State<LlamaCppPage> {
+  late AiPlatform ai;
+
+  @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("llama_cpp_model", json.encode(ai.toMap()));
+    });
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: const GenericAppBar(title: "LlamaCPP Parameters"),
-        body: Consumer2<Session, AiPlatform>(
-          builder: (context, session, ai, child) {
-            SharedPreferences.getInstance().then((prefs) {
-              prefs.setString("llama_cpp_model", json.encode(ai.toMap()));
-            });
+    ai = context.watch<AiPlatform>();
 
-            return SessionBusyOverlay(
-              child: ListView(
+    return Scaffold(
+      appBar: const GenericAppBar(title: "LlamaCPP Parameters"),
+      body: SessionBusyOverlay(
+        child: ListView(
+          children: [
+            ListTile(
+              title: Row(
                 children: [
-                  ListTile(
-                    title: Row(
-                      children: [
-                        const Expanded(
-                          child: Text("Model Path"),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            context.watch<AiPlatform>().model,
-                            textAlign: TextAlign.end,
-                          ),
-                        ),
-                      ],
+                  const Expanded(
+                    child: Text("Model Path"),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      context.watch<AiPlatform>().model,
+                      textAlign: TextAlign.end,
                     ),
                   ),
-                  const SizedBox(height: 15.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FilledButton(
-                        onPressed: () {
-                          storageOperationDialog(
-                              context, context.read<AiPlatform>().loadModelFile);
-                        },
-                        child: Text(
-                          "Load GGUF",
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      FilledButton(
-                        onPressed: () {
-                          context.read<AiPlatform>().model = "";
-                        },
-                        child: Text(
-                          "Unload GGUF",
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                      ),
-                    ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 15.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FilledButton(
+                  onPressed: () {
+                    storageOperationDialog(
+                        context, context.read<AiPlatform>().loadModelFile);
+                  },
+                  child: Text(
+                    "Load GGUF",
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
-                  Divider(
-                    height: 20,
-                    indent: 10,
-                    endIndent: 10,
-                    color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: 10.0),
+                FilledButton(
+                  onPressed: () {
+                    context.read<AiPlatform>().model = "";
+                  },
+                  child: Text(
+                    "Unload GGUF",
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
-                  const FormatDropdown(),
-                  const PenalizeNlParameter(),
-                  const SeedParameter(),
-                  const TemperatureParameter(),
-                  const TopKParameter(),
-                  const TopPParameter(),
-                  const TfsZParameter(),
-                  const TypicalPParameter(),
-                  const PenaltyLastNParameter(),
-                  const PenaltyRepeatParameter(),
-                  const PenaltyFrequencyParameter(),
-                  const PenaltyPresentParameter(),
-                  const MirostatParameter(),
-                  const MirostatTauParameter(),
-                  const MirostatEtaParameter(),
-                  const NCtxParameter(),
-                  const NBatchParameter(),
-                  const NThreadsParameter(),
-                ]
-              )
-            );
-        }
+                ),
+              ],
+            ),
+            Divider(
+              height: 20,
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const FormatDropdown(),
+            const PenalizeNlParameter(),
+            const SeedParameter(),
+            const TemperatureParameter(),
+            const TopKParameter(),
+            const TopPParameter(),
+            const TfsZParameter(),
+            const TypicalPParameter(),
+            const PenaltyLastNParameter(),
+            const PenaltyRepeatParameter(),
+            const PenaltyFrequencyParameter(),
+            const PenaltyPresentParameter(),
+            const MirostatParameter(),
+            const MirostatTauParameter(),
+            const MirostatEtaParameter(),
+            const NCtxParameter(),
+            const NBatchParameter(),
+            const NThreadsParameter(),
+          ]
+        )
       )
     );
   }

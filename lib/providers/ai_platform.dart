@@ -42,6 +42,10 @@ class AiPlatform extends ChangeNotifier {
   int _nThread = 8;
 
   void notify() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setInt("api_type", _apiType.index);
+    });
+
     notifyListeners();
   }
 
@@ -50,14 +54,25 @@ class AiPlatform extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    Map<String, dynamic> lastModel =
-        json.decode(prefs.getString("last_model") ?? "{}");
+    final apiIndex = prefs.getInt("api_type") ?? 0;
 
-    if (lastModel.isNotEmpty) {
-      fromMap(lastModel);
-      Logger.log(lastModel.toString());
-    } else {
-      reset();
+    _apiType = AiPlatformType.values[apiIndex];
+
+    switch (_apiType) {
+      case AiPlatformType.llamacpp:
+        switchLlamaCpp();
+        break;
+      case AiPlatformType.openAI:
+        switchOpenAI();
+        break;
+      case AiPlatformType.ollama:
+        switchOllama();
+        break;
+      case AiPlatformType.mistralAI:
+        switchMistralAI();
+        break;
+      default:
+        reset();
     }
   }
 
@@ -77,16 +92,93 @@ class AiPlatform extends ChangeNotifier {
     return _url;
   }
 
+  void switchLlamaCpp() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastLlamaCpp =
+        json.decode(prefs.getString("llama_cpp_model") ?? "{}");
+    
+    if (lastLlamaCpp.isNotEmpty) {
+      fromMap(lastLlamaCpp);
+      Logger.log(lastLlamaCpp.toString());
+    } 
+    else {
+      reset();
+    }
+
+    notify();
+  }
+
+  void switchOpenAI() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastOpenAI =
+        json.decode(prefs.getString("open_ai_model") ?? "{}");
+    
+    if (lastOpenAI.isNotEmpty) {
+      fromMap(lastOpenAI);
+      Logger.log(lastOpenAI.toString());
+    } 
+    else {
+      reset();
+      await resetUrl();
+    }
+
+    notify();
+  }
+
+  void switchOllama() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastOllama =
+        json.decode(prefs.getString("ollama_model") ?? "{}");
+    
+    if (lastOllama.isNotEmpty) {
+      fromMap(lastOllama);
+      Logger.log(lastOllama.toString());
+    } 
+    else {
+      reset();
+      await resetUrl();
+    }
+
+    notify();
+  }
+
+  void switchMistralAI() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastMistralAI =
+        json.decode(prefs.getString("mistral_ai_model") ?? "{}");
+    
+    if (lastMistralAI.isNotEmpty) {
+      fromMap(lastMistralAI);
+      Logger.log(lastMistralAI.toString());
+    } 
+    else {
+      reset();
+      await resetUrl();
+    }
+
+    notify();
+  }
+
   set apiType(AiPlatformType apiType) {
     switch (apiType) {
-      case AiPlatformType.ollama:
-        _url = "";
+      case AiPlatformType.llamacpp:
+        switchLlamaCpp();
+        break;
       case AiPlatformType.openAI:
-        _url = "https://api.openai.com/v1/";
+        switchOpenAI();
+        break;
+      case AiPlatformType.ollama:
+        switchOllama();
+        break;
       case AiPlatformType.mistralAI:
-        _url = "https://api.mistral.ai/v1/";
+        switchMistralAI();
+        break;
       default:
-        _url = "";
+        reset();
     }
 
     _apiType = apiType;
