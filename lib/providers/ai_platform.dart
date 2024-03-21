@@ -13,7 +13,6 @@ import 'package:maid_llm/maid_llm.dart';
 class AiPlatform extends ChangeNotifier {
   PromptFormat _promptFormat = PromptFormat.alpaca;
   AiPlatformType _apiType = AiPlatformType.llamacpp;
-  String _preset = "Default";
   String _apiKey = "";
   String _url = "";
   String _model = "";
@@ -41,12 +40,6 @@ class AiPlatform extends ChangeNotifier {
   int _nCtx = 512;
   int _nBatch = 512;
   int _nThread = 8;
-
-  void newPreset() {
-    final key = UniqueKey().toString();
-    _preset = "New Preset $key";
-    reset();
-  }
 
   void notify() {
     notifyListeners();
@@ -103,11 +96,6 @@ class AiPlatform extends ChangeNotifier {
 
   set promptFormat(PromptFormat promptFormat) {
     _promptFormat = promptFormat;
-    notifyListeners();
-  }
-
-  set preset(String preset) {
-    _preset = preset;
     notifyListeners();
   }
 
@@ -238,7 +226,6 @@ class AiPlatform extends ChangeNotifier {
 
   PromptFormat get promptFormat => _promptFormat;
   AiPlatformType get apiType => _apiType;
-  String get preset => _preset;
   String get apiKey => _apiKey;
   String get url => _url;
   String get model => _model;
@@ -281,7 +268,6 @@ class AiPlatform extends ChangeNotifier {
           inputJson["prompt_promptFormat"] ?? PromptFormat.alpaca.index];
       _apiType = AiPlatformType
           .values[inputJson["api_type"] ?? AiPlatformType.llamacpp.index];
-      _preset = inputJson["preset"] ?? "Default";
       _apiKey = inputJson["api_key"] ?? "";
       _url = inputJson["remote_url"] ?? "";
       _model = inputJson["model"] ?? "";
@@ -320,7 +306,6 @@ class AiPlatform extends ChangeNotifier {
 
     outputJson["prompt_promptFormat"] = _promptFormat.index;
     outputJson["api_type"] = _apiType.index;
-    outputJson["preset"] = _preset;
     outputJson["api_key"] = _apiKey;
     outputJson["remote_url"] = _url;
     outputJson["model"] = _model;
@@ -356,46 +341,6 @@ class AiPlatform extends ChangeNotifier {
 
       notifyListeners();
     });
-  }
-
-  Future<String> exportModelParameters(BuildContext context) async {
-    try {
-      String jsonString = json.encode(toMap());
-
-      File? file = await FileManager.save(context, "$_preset.json");
-
-      if (file == null) return "Error saving file";
-
-      await file.writeAsString(jsonString);
-
-      return "Model Successfully Saved to ${file.path}";
-    } catch (e) {
-      return "Error: $e";
-    }
-  }
-
-  Future<String> importModelParameters(BuildContext context) async {
-    try {
-      File? file =
-          await FileManager.load(context, "Load Model JSON", [".json"]);
-
-      if (file == null) return "Error loading file";
-
-      Logger.log("Loading parameters from $file");
-
-      String jsonString = await file.readAsString();
-      if (jsonString.isEmpty) return "Failed to load parameters";
-
-      Map<String, dynamic> inputJson = json.decode(jsonString);
-
-      fromMap(inputJson);
-    } catch (e) {
-      reset();
-      return "Error: $e";
-    }
-
-    notifyListeners();
-    return "Parameters Successfully Loaded";
   }
 
   Future<String> loadModelFile(BuildContext context) async {
