@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/ai_platform.dart';
@@ -26,6 +28,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/url_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/use_default.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OllamaPage extends StatefulWidget {
   const OllamaPage({super.key});
@@ -35,57 +38,64 @@ class OllamaPage extends StatefulWidget {
 }
 
 class _OllamaPageState extends State<OllamaPage> {
+  late AiPlatform ai;
+
+  @override
+  void dispose() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("ollama_model", json.encode(ai.toMap()));
+    });
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    ai = context.watch<AiPlatform>();
     return Scaffold(
-        appBar: const GenericAppBar(title: "Ollama Parameters"),
-        body: Consumer2<Session, AiPlatform>(
-            builder: (context, session, ai, child) {
-          return SessionBusyOverlay(
-            child: ListView(
-              children: [
-                const ApiKeyParameter(),
-                Divider(
-                  height: 20,
-                  indent: 10,
-                  endIndent: 10,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const UrlParameter(),
-                const SizedBox(height: 8.0),
-                const UseDefaultParameter(),
-                if (ai.useDefault) ...[
-                  const SizedBox(height: 20.0),
-                  Divider(
-                    height: 20,
-                    indent: 10,
-                    endIndent: 10,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const PenalizeNlParameter(),
-                  const SeedParameter(),
-                  const NThreadsParameter(),
-                  const NCtxParameter(),
-                  const NBatchParameter(),
-                  const NPredictParameter(),
-                  const NKeepParameter(),
-                  const TopKParameter(),
-                  const TopPParameter(),
-                  const TfsZParameter(),
-                  const TypicalPParameter(),
-                  const TemperatureParameter(),
-                  const PenaltyLastNParameter(),
-                  const PenaltyRepeatParameter(),
-                  const PenaltyFrequencyParameter(),
-                  const PenaltyPresentParameter(),
-                  const MirostatParameter(),
-                  const MirostatTauParameter(),
-                  const MirostatEtaParameter()
-                ]
-              ]
-            )
-          );
-        }
+      appBar: const GenericAppBar(title: "Ollama Parameters"),
+      body: SessionBusyOverlay(
+        child: ListView(
+          children: [
+            const ApiKeyParameter(),
+            Divider(
+              height: 20,
+              indent: 10,
+              endIndent: 10,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const UrlParameter(),
+            const SizedBox(height: 8.0),
+            const UseDefaultParameter(),
+            if (ai.useDefault) ...[
+              const SizedBox(height: 20.0),
+              Divider(
+                height: 20,
+                indent: 10,
+                endIndent: 10,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const PenalizeNlParameter(),
+              const SeedParameter(),
+              const NThreadsParameter(),
+              const NCtxParameter(),
+              const NBatchParameter(),
+              const NPredictParameter(),
+              const NKeepParameter(),
+              const TopKParameter(),
+              const TopPParameter(),
+              const TfsZParameter(),
+              const TypicalPParameter(),
+              const TemperatureParameter(),
+              const PenaltyLastNParameter(),
+              const PenaltyRepeatParameter(),
+              const PenaltyFrequencyParameter(),
+              const PenaltyPresentParameter(),
+              const MirostatParameter(),
+              const MirostatTauParameter(),
+              const MirostatEtaParameter()
+            ]
+          ]
+        )
       )
     );
   }

@@ -13,7 +13,6 @@ import 'package:maid_llm/maid_llm.dart';
 class AiPlatform extends ChangeNotifier {
   PromptFormat _promptFormat = PromptFormat.alpaca;
   AiPlatformType _apiType = AiPlatformType.llamacpp;
-  String _preset = "Default";
   String _apiKey = "";
   String _url = "";
   String _model = "";
@@ -42,13 +41,11 @@ class AiPlatform extends ChangeNotifier {
   int _nBatch = 512;
   int _nThread = 8;
 
-  void newPreset() {
-    final key = UniqueKey().toString();
-    _preset = "New Preset $key";
-    reset();
-  }
-
   void notify() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setInt("api_type", _apiType.index);
+    });
+
     notifyListeners();
   }
 
@@ -57,14 +54,25 @@ class AiPlatform extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    Map<String, dynamic> lastModel =
-        json.decode(prefs.getString("last_model") ?? "{}");
+    final apiIndex = prefs.getInt("api_type") ?? 0;
 
-    if (lastModel.isNotEmpty) {
-      fromMap(lastModel);
-      Logger.log(lastModel.toString());
-    } else {
-      reset();
+    _apiType = AiPlatformType.values[apiIndex];
+
+    switch (_apiType) {
+      case AiPlatformType.llamacpp:
+        switchLlamaCpp();
+        break;
+      case AiPlatformType.openAI:
+        switchOpenAI();
+        break;
+      case AiPlatformType.ollama:
+        switchOllama();
+        break;
+      case AiPlatformType.mistralAI:
+        switchMistralAI();
+        break;
+      default:
+        reset();
     }
   }
 
@@ -84,16 +92,93 @@ class AiPlatform extends ChangeNotifier {
     return _url;
   }
 
+  void switchLlamaCpp() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastLlamaCpp =
+        json.decode(prefs.getString("llama_cpp_model") ?? "{}");
+    
+    if (lastLlamaCpp.isNotEmpty) {
+      fromMap(lastLlamaCpp);
+      Logger.log(lastLlamaCpp.toString());
+    } 
+    else {
+      reset();
+    }
+
+    notify();
+  }
+
+  void switchOpenAI() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastOpenAI =
+        json.decode(prefs.getString("open_ai_model") ?? "{}");
+    
+    if (lastOpenAI.isNotEmpty) {
+      fromMap(lastOpenAI);
+      Logger.log(lastOpenAI.toString());
+    } 
+    else {
+      reset();
+      await resetUrl();
+    }
+
+    notify();
+  }
+
+  void switchOllama() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastOllama =
+        json.decode(prefs.getString("ollama_model") ?? "{}");
+    
+    if (lastOllama.isNotEmpty) {
+      fromMap(lastOllama);
+      Logger.log(lastOllama.toString());
+    } 
+    else {
+      reset();
+      await resetUrl();
+    }
+
+    notify();
+  }
+
+  void switchMistralAI() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastMistralAI =
+        json.decode(prefs.getString("mistral_ai_model") ?? "{}");
+    
+    if (lastMistralAI.isNotEmpty) {
+      fromMap(lastMistralAI);
+      Logger.log(lastMistralAI.toString());
+    } 
+    else {
+      reset();
+      await resetUrl();
+    }
+
+    notify();
+  }
+
   set apiType(AiPlatformType apiType) {
     switch (apiType) {
-      case AiPlatformType.ollama:
-        _url = "";
+      case AiPlatformType.llamacpp:
+        switchLlamaCpp();
+        break;
       case AiPlatformType.openAI:
-        _url = "https://api.openai.com/v1/";
+        switchOpenAI();
+        break;
+      case AiPlatformType.ollama:
+        switchOllama();
+        break;
       case AiPlatformType.mistralAI:
-        _url = "https://api.mistral.ai/v1/";
+        switchMistralAI();
+        break;
       default:
-        _url = "";
+        reset();
     }
 
     _apiType = apiType;
@@ -103,11 +188,6 @@ class AiPlatform extends ChangeNotifier {
 
   set promptFormat(PromptFormat promptFormat) {
     _promptFormat = promptFormat;
-    notifyListeners();
-  }
-
-  set preset(String preset) {
-    _preset = preset;
     notifyListeners();
   }
 
@@ -238,7 +318,6 @@ class AiPlatform extends ChangeNotifier {
 
   PromptFormat get promptFormat => _promptFormat;
   AiPlatformType get apiType => _apiType;
-  String get preset => _preset;
   String get apiKey => _apiKey;
   String get url => _url;
   String get model => _model;
@@ -281,7 +360,6 @@ class AiPlatform extends ChangeNotifier {
           inputJson["prompt_promptFormat"] ?? PromptFormat.alpaca.index];
       _apiType = AiPlatformType
           .values[inputJson["api_type"] ?? AiPlatformType.llamacpp.index];
-      _preset = inputJson["preset"] ?? "Default";
       _apiKey = inputJson["api_key"] ?? "";
       _url = inputJson["remote_url"] ?? "";
       _model = inputJson["model"] ?? "";
@@ -320,7 +398,6 @@ class AiPlatform extends ChangeNotifier {
 
     outputJson["prompt_promptFormat"] = _promptFormat.index;
     outputJson["api_type"] = _apiType.index;
-    outputJson["preset"] = _preset;
     outputJson["api_key"] = _apiKey;
     outputJson["remote_url"] = _url;
     outputJson["model"] = _model;
@@ -356,46 +433,6 @@ class AiPlatform extends ChangeNotifier {
 
       notifyListeners();
     });
-  }
-
-  Future<String> exportModelParameters(BuildContext context) async {
-    try {
-      String jsonString = json.encode(toMap());
-
-      File? file = await FileManager.save(context, "$_preset.json");
-
-      if (file == null) return "Error saving file";
-
-      await file.writeAsString(jsonString);
-
-      return "Model Successfully Saved to ${file.path}";
-    } catch (e) {
-      return "Error: $e";
-    }
-  }
-
-  Future<String> importModelParameters(BuildContext context) async {
-    try {
-      File? file =
-          await FileManager.load(context, "Load Model JSON", [".json"]);
-
-      if (file == null) return "Error loading file";
-
-      Logger.log("Loading parameters from $file");
-
-      String jsonString = await file.readAsString();
-      if (jsonString.isEmpty) return "Failed to load parameters";
-
-      Map<String, dynamic> inputJson = json.decode(jsonString);
-
-      fromMap(inputJson);
-    } catch (e) {
-      reset();
-      return "Error: $e";
-    }
-
-    notifyListeners();
-    return "Parameters Successfully Loaded";
   }
 
   Future<String> loadModelFile(BuildContext context) async {
