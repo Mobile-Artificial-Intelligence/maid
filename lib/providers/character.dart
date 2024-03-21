@@ -120,7 +120,6 @@ class Character extends ChangeNotifier {
     }
 
     Logger.log("Character created with name: ${inputJson["name"]}");
-    _useGreeting = _greetings.isNotEmpty;
     _useExamples = _examples.isNotEmpty;
     notifyListeners();
   }
