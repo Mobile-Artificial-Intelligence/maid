@@ -9,6 +9,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/url_parameter.dart';
+import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
 class OpenAiPage extends StatefulWidget {
@@ -24,9 +25,9 @@ class _OpenAiPageState extends State<OpenAiPage> {
     return Scaffold(
         appBar: const GenericAppBar(title: "OpenAI Parameters"),
         body: Consumer<Session>(builder: (context, session, child) {
-          return Stack(
-            children: [
-              ListView(children: [
+          return SessionBusyOverlay(
+            child: ListView(
+              children: [
                 const ApiKeyParameter(),
                 Divider(
                   height: 20,
@@ -42,18 +43,11 @@ class _OpenAiPageState extends State<OpenAiPage> {
                 const PenaltyPresentParameter(),
                 const NPredictParameter(),
                 const TopPParameter()
-              ]),
-              if (session.isBusy)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.4),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-            ],
+              ]
+            )
           );
-        }));
+        }
+      )
+    );
   }
 }

@@ -24,6 +24,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/typical_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/url_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/use_default.dart';
+import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
 class OllamaPage extends StatefulWidget {
@@ -40,9 +41,9 @@ class _OllamaPageState extends State<OllamaPage> {
         appBar: const GenericAppBar(title: "Ollama Parameters"),
         body: Consumer2<Session, AiPlatform>(
             builder: (context, session, ai, child) {
-          return Stack(
-            children: [
-              ListView(children: [
+          return SessionBusyOverlay(
+            child: ListView(
+              children: [
                 const ApiKeyParameter(),
                 Divider(
                   height: 20,
@@ -81,18 +82,11 @@ class _OllamaPageState extends State<OllamaPage> {
                   const MirostatTauParameter(),
                   const MirostatEtaParameter()
                 ]
-              ]),
-              if (session.isBusy)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.4),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-            ],
+              ]
+            )
           );
-        }));
+        }
+      )
+    );
   }
 }

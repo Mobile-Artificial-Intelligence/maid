@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
+import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_browser_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,10 +56,10 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
   Widget build(BuildContext context) {
     return Consumer<Character>(
       builder: (context, character, child) {
-        // If characters contains a character where character.key == current, 
+        // If characters contains a character where character.key == current,
         // then insert a copy of character at index 0
         current = character.key;
-        
+
         var contains = false;
 
         for (var element in characters) {
@@ -73,46 +74,49 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
         }
 
         return Scaffold(
-            appBar: AppBar(
-              elevation: 0.0,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
+          appBar: AppBar(
+            elevation: 0.0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            title: const Text("Character Browser"),
+            actions: [
+              const Expanded(child: SizedBox()),
+              IconButton(
+                icon: const Icon(Icons.add),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  setState(() {
+                    final newCharacter = Character();
+                    characters.add(newCharacter);
+                    character.from(newCharacter);
+                  });
                 },
               ),
-              title: const Text("Character Browser"),
-              actions: [
-                const Expanded(child: SizedBox()),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    setState(() {
-                      final newCharacter = Character();
-                      characters.add(newCharacter);
-                      character.from(newCharacter);
-                    });
-                  },
-                ),
-              ],
-            ),
-            body: ListView.builder(
-              itemCount: characters.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(
-                      8.0), // Adjust the padding value as needed
-                  child: CharacterBrowserTile(
-                    character: characters[index],
-                    onDelete: () {
-                      setState(() {
-                        characters.removeAt(index);
-                      });
-                    },
-                  ),
-                );
-              },
-            ));
+            ],
+          ),
+          body: SessionBusyOverlay(
+              child: ListView.builder(
+                itemCount: characters.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(
+                        8.0), // Adjust the padding value as needed
+                    child: CharacterBrowserTile(
+                      character: characters[index],
+                      onDelete: () {
+                        setState(() {
+                          characters.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
+                },
+              )
+            )
+          );
       },
     );
   }

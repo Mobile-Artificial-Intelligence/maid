@@ -6,6 +6,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/url_parameter.dart';
+import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
 class MistralAiPage extends StatefulWidget {
@@ -21,9 +22,9 @@ class _MistralAiPageState extends State<MistralAiPage> {
     return Scaffold(
         appBar: const GenericAppBar(title: "MistralAI Parameters"),
         body: Consumer<Session>(builder: (context, session, child) {
-          return Stack(
-            children: [
-              ListView(children: [
+          return SessionBusyOverlay(
+            child: ListView(
+              children: [
                 const ApiKeyParameter(),
                 Divider(
                   height: 20,
@@ -36,18 +37,11 @@ class _MistralAiPageState extends State<MistralAiPage> {
                 const SeedParameter(),
                 const TopPParameter(),
                 const TemperatureParameter(),
-              ]),
-              if (session.isBusy)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.4),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-            ],
+              ]
+            )
           );
-        }));
+        }
+      )
+    );
   }
 }

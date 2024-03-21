@@ -21,6 +21,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/tfs_z_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_k_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/typical_p_parameter.dart';
+import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
 class LlamaCppPage extends StatefulWidget {
@@ -35,10 +36,11 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const GenericAppBar(title: "LlamaCPP Parameters"),
-        body: Consumer<Session>(builder: (context, session, child) {
-          return Stack(
-            children: [
-              ListView(children: [
+        body: Consumer<Session>(
+          builder: (context, session, child) {
+          return SessionBusyOverlay(
+            child: ListView(
+              children: [
                 ListTile(
                   title: Row(
                     children: [
@@ -105,18 +107,11 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                 const NCtxParameter(),
                 const NBatchParameter(),
                 const NThreadsParameter(),
-              ]),
-              if (session.isBusy)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.4),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-            ],
+              ]
+            )
           );
-        }));
+        }
+      )
+    );
   }
 }
