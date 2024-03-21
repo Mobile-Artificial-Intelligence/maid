@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/ai_platform.dart';
@@ -23,6 +25,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/typical_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LlamaCppPage extends StatefulWidget {
   const LlamaCppPage({super.key});
@@ -36,80 +39,84 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const GenericAppBar(title: "LlamaCPP Parameters"),
-        body: Consumer<Session>(
-          builder: (context, session, child) {
-          return SessionBusyOverlay(
-            child: ListView(
-              children: [
-                ListTile(
-                  title: Row(
+        body: Consumer2<Session, AiPlatform>(
+          builder: (context, session, ai, child) {
+            SharedPreferences.getInstance().then((prefs) {
+              prefs.setString("llama_cpp_model", json.encode(ai.toMap()));
+            });
+
+            return SessionBusyOverlay(
+              child: ListView(
+                children: [
+                  ListTile(
+                    title: Row(
+                      children: [
+                        const Expanded(
+                          child: Text("Model Path"),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            context.watch<AiPlatform>().model,
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 15.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Expanded(
-                        child: Text("Model Path"),
-                      ),
-                      Expanded(
-                        flex: 2,
+                      FilledButton(
+                        onPressed: () {
+                          storageOperationDialog(
+                              context, context.read<AiPlatform>().loadModelFile);
+                        },
                         child: Text(
-                          context.watch<AiPlatform>().model,
-                          textAlign: TextAlign.end,
+                          "Load GGUF",
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                      ),
+                      const SizedBox(width: 10.0),
+                      FilledButton(
+                        onPressed: () {
+                          context.read<AiPlatform>().model = "";
+                        },
+                        child: Text(
+                          "Unload GGUF",
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 15.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      onPressed: () {
-                        storageOperationDialog(
-                            context, context.read<AiPlatform>().loadModelFile);
-                      },
-                      child: Text(
-                        "Load GGUF",
-                        style: Theme.of(context).textTheme.labelLarge,
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    FilledButton(
-                      onPressed: () {
-                        context.read<AiPlatform>().model = "";
-                      },
-                      child: Text(
-                        "Unload GGUF",
-                        style: Theme.of(context).textTheme.labelLarge,
-                      ),
-                    ),
-                  ],
-                ),
-                Divider(
-                  height: 20,
-                  indent: 10,
-                  endIndent: 10,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const FormatDropdown(),
-                const PenalizeNlParameter(),
-                const SeedParameter(),
-                const TemperatureParameter(),
-                const TopKParameter(),
-                const TopPParameter(),
-                const TfsZParameter(),
-                const TypicalPParameter(),
-                const PenaltyLastNParameter(),
-                const PenaltyRepeatParameter(),
-                const PenaltyFrequencyParameter(),
-                const PenaltyPresentParameter(),
-                const MirostatParameter(),
-                const MirostatTauParameter(),
-                const MirostatEtaParameter(),
-                const NCtxParameter(),
-                const NBatchParameter(),
-                const NThreadsParameter(),
-              ]
-            )
-          );
+                  Divider(
+                    height: 20,
+                    indent: 10,
+                    endIndent: 10,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const FormatDropdown(),
+                  const PenalizeNlParameter(),
+                  const SeedParameter(),
+                  const TemperatureParameter(),
+                  const TopKParameter(),
+                  const TopPParameter(),
+                  const TfsZParameter(),
+                  const TypicalPParameter(),
+                  const PenaltyLastNParameter(),
+                  const PenaltyRepeatParameter(),
+                  const PenaltyFrequencyParameter(),
+                  const PenaltyPresentParameter(),
+                  const MirostatParameter(),
+                  const MirostatTauParameter(),
+                  const MirostatEtaParameter(),
+                  const NCtxParameter(),
+                  const NBatchParameter(),
+                  const NThreadsParameter(),
+                ]
+              )
+            );
         }
       )
     );
