@@ -164,7 +164,7 @@ class AiPlatform extends ChangeNotifier {
   }
 
   set apiType(AiPlatformType apiType) {
-    print("Switching to $apiType");
+    Logger.log("Switching to $apiType");
 
     switch (apiType) {
       case AiPlatformType.llamacpp:
@@ -184,8 +184,6 @@ class AiPlatform extends ChangeNotifier {
     }
 
     _apiType = apiType;
-
-    print("Switched to $_apiType");
 
     notifyListeners();
   }
