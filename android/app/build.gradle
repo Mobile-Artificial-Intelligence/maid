@@ -35,7 +35,7 @@ android {
     ndkVersion flutter.ndkVersion
     
     defaultConfig {
-        compileSdk 34
+        compileSdk 33
     }
 
     compileOptions {
