@@ -164,6 +164,8 @@ class AiPlatform extends ChangeNotifier {
   }
 
   set apiType(AiPlatformType apiType) {
+    print("Switching to $apiType");
+
     switch (apiType) {
       case AiPlatformType.llamacpp:
         switchLlamaCpp();
@@ -182,6 +184,8 @@ class AiPlatform extends ChangeNotifier {
     }
 
     _apiType = apiType;
+
+    print("Switched to $_apiType");
 
     notifyListeners();
   }
@@ -356,10 +360,8 @@ class AiPlatform extends ChangeNotifier {
     if (inputJson.isEmpty) {
       reset();
     } else {
-      _promptFormat = PromptFormat.values[
-          inputJson["prompt_promptFormat"] ?? PromptFormat.alpaca.index];
-      _apiType = AiPlatformType
-          .values[inputJson["api_type"] ?? AiPlatformType.llamacpp.index];
+      _promptFormat = PromptFormat.values[inputJson["prompt_promptFormat"] ?? _promptFormat.index];
+      _apiType = AiPlatformType.values[inputJson["api_type"] ?? _apiType.index];
       _apiKey = inputJson["api_key"] ?? "";
       _url = inputJson["remote_url"] ?? "";
       _model = inputJson["model"] ?? "";
