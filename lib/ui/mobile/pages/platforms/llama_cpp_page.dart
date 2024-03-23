@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/session.dart';
 import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
@@ -27,101 +26,92 @@ import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LlamaCppPage extends StatefulWidget {
+class LlamaCppPage extends StatelessWidget {
   const LlamaCppPage({super.key});
 
   @override
-  State<LlamaCppPage> createState() => _LlamaCppPageState();
-}
-
-class _LlamaCppPageState extends State<LlamaCppPage> {
-  late AiPlatform ai;
-
-  @override
-  void dispose() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("llama_cpp_model", json.encode(ai.toMap()));
-    });
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    ai = context.watch<AiPlatform>();
-
     return Scaffold(
       appBar: const GenericAppBar(title: "LlamaCPP Parameters"),
       body: SessionBusyOverlay(
-        child: ListView(
-          children: [
-            ListTile(
-              title: Row(
-                children: [
-                  const Expanded(
-                    child: Text("Model Path"),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      context.watch<AiPlatform>().model,
-                      textAlign: TextAlign.end,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: Consumer<AiPlatform>(
+          builder: (context, ai, child) {
+            SharedPreferences.getInstance().then((prefs) {
+              prefs.setString("llama_cpp_model", json.encode(ai.toMap()));
+            });
+
+            return ListView(
               children: [
-                FilledButton(
-                  onPressed: () {
-                    storageOperationDialog(
-                        context, context.read<AiPlatform>().loadModelFile);
-                  },
-                  child: Text(
-                    "Load GGUF",
-                    style: Theme.of(context).textTheme.labelLarge,
+                ListTile(
+                  title: Row(
+                    children: [
+                      const Expanded(
+                        child: Text("Model Path"),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          ai.model,
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 10.0),
-                FilledButton(
-                  onPressed: () {
-                    context.read<AiPlatform>().model = "";
-                  },
-                  child: Text(
-                    "Unload GGUF",
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
+                const SizedBox(height: 15.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      onPressed: () {
+                        storageOperationDialog(
+                            context, ai.loadModelFile);
+                      },
+                      child: Text(
+                        "Load GGUF",
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
+                    FilledButton(
+                      onPressed: () {
+                        ai.model = "";
+                      },
+                      child: Text(
+                        "Unload GGUF",
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            Divider(
-              height: 20,
-              indent: 10,
-              endIndent: 10,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const FormatDropdown(),
-            const PenalizeNlParameter(),
-            const SeedParameter(),
-            const TemperatureParameter(),
-            const TopKParameter(),
-            const TopPParameter(),
-            const TfsZParameter(),
-            const TypicalPParameter(),
-            const PenaltyLastNParameter(),
-            const PenaltyRepeatParameter(),
-            const PenaltyFrequencyParameter(),
-            const PenaltyPresentParameter(),
-            const MirostatParameter(),
-            const MirostatTauParameter(),
-            const MirostatEtaParameter(),
-            const NCtxParameter(),
-            const NBatchParameter(),
-            const NThreadsParameter(),
-          ]
-        )
+                Divider(
+                  height: 20,
+                  indent: 10,
+                  endIndent: 10,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const FormatDropdown(),
+                const PenalizeNlParameter(),
+                const SeedParameter(),
+                const TemperatureParameter(),
+                const TopKParameter(),
+                const TopPParameter(),
+                const TfsZParameter(),
+                const TypicalPParameter(),
+                const PenaltyLastNParameter(),
+                const PenaltyRepeatParameter(),
+                const PenaltyFrequencyParameter(),
+                const PenaltyPresentParameter(),
+                const MirostatParameter(),
+                const MirostatTauParameter(),
+                const MirostatEtaParameter(),
+                const NCtxParameter(),
+                const NBatchParameter(),
+                const NThreadsParameter(),
+              ]
+            );
+          },
+        ),
       )
     );
   }
