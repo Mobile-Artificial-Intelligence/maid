@@ -15,10 +15,10 @@ class CharacterTile extends StatelessWidget {
           character.description, 
           user.name, 
           character.name
-        ).substring(0, 100);
+        );
 
         if (title.length >= 200) {
-          title += '...';
+          title = "${title.substring(0, 200)}...";
         }
 
         return Column(children: [

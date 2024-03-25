@@ -57,7 +57,7 @@ class Character extends ChangeNotifier {
       Logger.log(lastCharacter.toString());
       fromMap(lastCharacter);
     } else {
-      reset();
+      await reset();
     }
   }
 
@@ -83,7 +83,7 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fromMap(Map<String, dynamic> inputJson) async {
+  Future<void> fromMap(Map<String, dynamic> inputJson) async {
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
     } 
@@ -103,7 +103,7 @@ class Character extends ChangeNotifier {
     }
 
     if (inputJson.isEmpty) {
-      reset();
+      await reset();
     }
 
     if (inputJson["spec"] == "mcf_v1") {
@@ -116,7 +116,7 @@ class Character extends ChangeNotifier {
       fromSTV1Map(inputJson);
     }
     else {
-      reset();
+      await reset();
     }
 
     Logger.log("Character created with name: ${inputJson["name"]}");
@@ -182,7 +182,7 @@ class Character extends ChangeNotifier {
     jsonCharacter["use_greeting"] = _useGreeting;
     jsonCharacter["greetings"] = _greetings;
     jsonCharacter["first_mes"] = _greetings.firstOrNull ?? "";
-    jsonCharacter["alternate_greetings"] = _greetings.sublist(1);
+    jsonCharacter["alternate_greetings"] = _greetings.isNotEmpty ? _greetings.sublist(1) : [];
     jsonCharacter["system_prompt"] = _system;
 
     jsonCharacter["use_examples"] = _useExamples;
@@ -290,14 +290,10 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  void newExample() {
+  void newExample(bool? user) {
     _examples.addAll([
       {
-        "role": "user",
-        "content": "",
-      },
-      {
-        "role": "assistant",
+        "role": user == null ? "system" : user ? "user" : "assistant",
         "content": "",
       }
     ]);
@@ -309,13 +305,8 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeExample(int index) {
-    _examples.removeRange(index - 2, index);
-    notifyListeners();
-  }
-
   void removeLastExample() {
-    _examples.removeRange(_examples.length - 2, _examples.length);
+    _examples.removeLast();
     notifyListeners();
   }
 
@@ -341,15 +332,20 @@ class Character extends ChangeNotifier {
 
   List<Map<String, dynamic>> get examples => _examples;
 
-  void reset() {
-    // Reset all the internal state to the defaults
-    rootBundle.loadString('assets/default_character.json').then((jsonString) {
-      Map<String, dynamic> jsonCharacter = json.decode(jsonString);
+  Future<void> reset() async {
+    try {
+      await _profile.delete();
+    } catch (e) {
+      Logger.log("Error: $e");
+    }
 
-      fromMap(jsonCharacter);
+    final jsonString = await rootBundle.loadString('assets/default_character.json');
 
-      notifyListeners();
-    });
+    Map<String, dynamic> jsonCharacter = json.decode(jsonString);
+
+    await fromMap(jsonCharacter);
+
+    notifyListeners();
   }
 
   Future<String> exportMCF(BuildContext context) async {
@@ -478,7 +474,7 @@ class Character extends ChangeNotifier {
       notifyListeners();
       return "Character Successfully Loaded";
     } catch (e) {
-      reset();
+      await reset();
       Logger.log("Error: $e");
       return "Error: $e";
     }
