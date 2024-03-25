@@ -18,8 +18,9 @@ class CharacterCustomizationPage extends StatefulWidget {
       _CharacterCustomizationPageState();
 }
 
-class _CharacterCustomizationPageState
-    extends State<CharacterCustomizationPage> {
+class _CharacterCustomizationPageState extends State<CharacterCustomizationPage> {
+  bool _regenerate = true;
+
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late TextEditingController _personalityController;
@@ -30,29 +31,31 @@ class _CharacterCustomizationPageState
 
   @override
   Widget build(BuildContext context) {
-    final character = context.read<Character>();
-
-    _nameController = TextEditingController(text: character.name);
-    _descriptionController = TextEditingController(text: character.description);
-    _personalityController = TextEditingController(text: character.personality);
-    _scenarioController = TextEditingController(text: character.scenario);
-    _systemController = TextEditingController(text: character.system);
-
-    _greetingControllers = List.generate(
-      character.greetings.length,
-      (index) => TextEditingController(text: character.greetings[index]),
-    );
-
-    _exampleControllers = List.generate(
-      character.examples.length,
-      (index) =>
-          TextEditingController(text: character.examples[index]["content"]),
-    );
-
     return Scaffold(
       appBar: const GenericAppBar(title: "Character Customization"),
       body: Consumer<Character>(
         builder: (context, character, child) {
+          if (_regenerate) {
+            _nameController = TextEditingController(text: character.name);
+            _descriptionController = TextEditingController(text: character.description);
+            _personalityController = TextEditingController(text: character.personality);
+            _scenarioController = TextEditingController(text: character.scenario);
+            _systemController = TextEditingController(text: character.system);
+
+            _greetingControllers = List.generate(
+              character.greetings.length,
+              (index) => TextEditingController(text: character.greetings[index]),
+            );
+
+            _exampleControllers = List.generate(
+              character.examples.length,
+              (index) =>
+                  TextEditingController(text: character.examples[index]["content"]),
+            );
+
+            _regenerate = false;
+          }
+
           SharedPreferences.getInstance().then((prefs) {
             prefs.setString("last_character", json.encode(character.toMap()));
           });
@@ -92,7 +95,10 @@ class _CharacterCustomizationPageState
                         ),
                         const SizedBox(width: 10.0),
                         FilledButton(
-                          onPressed: character.reset,
+                          onPressed: () {
+                            _regenerate = true;
+                            character.reset();
+                          },
                           child: Text(
                             "Reset All",
                             style: Theme.of(context).textTheme.labelLarge,
@@ -106,9 +112,8 @@ class _CharacterCustomizationPageState
                       children: [
                         FilledButton(
                           onPressed: () async {
-                            await storageOperationDialog(
-                                context, character.importImage);
-                            setState(() {});
+                            _regenerate = true;
+                            await storageOperationDialog(context, character.importImage);
                           },
                           child: Text(
                             "Load Image",
@@ -118,9 +123,7 @@ class _CharacterCustomizationPageState
                         const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () async {
-                            await storageOperationDialog(
-                                context, character.exportImage);
-                            setState(() {});
+                            await storageOperationDialog(context, character.exportImage);
                           },
                           child: Text(
                             "Save Image",
@@ -135,9 +138,7 @@ class _CharacterCustomizationPageState
                       children: [
                         FilledButton(
                           onPressed: () async {
-                            await storageOperationDialog(
-                                context, character.exportSTV2);
-                            setState(() {});
+                            await storageOperationDialog(context, character.exportSTV2);
                           },
                           child: Text(
                             "Save STV2 JSON",
@@ -147,9 +148,7 @@ class _CharacterCustomizationPageState
                         const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () async {
-                            await storageOperationDialog(
-                                context, character.exportMCF);
-                            setState(() {});
+                            await storageOperationDialog(context, character.exportMCF);
                           },
                           child: Text(
                             "Save MCF JSON",
@@ -161,9 +160,8 @@ class _CharacterCustomizationPageState
                     const SizedBox(height: 15.0),
                     FilledButton(
                       onPressed: () async {
-                        await storageOperationDialog(
-                            context, character.importJSON);
-                        setState(() {});
+                        _regenerate = true;
+                        await storageOperationDialog(context, character.importJSON);
                       },
                       child: Text(
                         "Load JSON",
@@ -299,14 +297,38 @@ class _CharacterCustomizationPageState
                         children: [
                           FilledButton(
                             onPressed: () {
-                              _exampleControllers.add(
-                                  TextEditingController()); // For the user part
-                              _exampleControllers.add(
-                                  TextEditingController()); // For the assistant part
-                              character.newExample();
+                              _regenerate = true;
+                              character.newExample(true);
                             },
                             child: Text(
-                              "Add Example",
+                              "Add Prompt",
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                          ),
+                          const SizedBox(width: 10.0),
+                          FilledButton(
+                            onPressed: () {
+                              _regenerate = true;
+                              character.newExample(false);
+                            },
+                            child: Text(
+                              "Add Response",
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FilledButton(
+                            onPressed: () {
+                              _regenerate = true;
+                              character.newExample(null);
+                            },
+                            child: Text(
+                              "Add System",
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ),
@@ -314,21 +336,17 @@ class _CharacterCustomizationPageState
                           FilledButton(
                             onPressed: () {
                               if (_exampleControllers.length >= 2) {
-                                _exampleControllers
-                                    .removeLast(); // Remove assistant part controller
-                                _exampleControllers
-                                    .removeLast(); // Remove user part controller
+                                _regenerate = true;
                                 character.removeLastExample();
                               }
                             },
                             child: Text(
-                              "Remove Example",
+                              "Remove Last",
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10.0),
                       if (character.examples.isNotEmpty) ...[
                         for (int i = 0; i < character.examples.length; i++)
                           TextFieldListTile(

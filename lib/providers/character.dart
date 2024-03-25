@@ -57,7 +57,7 @@ class Character extends ChangeNotifier {
       Logger.log(lastCharacter.toString());
       fromMap(lastCharacter);
     } else {
-      reset();
+      await reset();
     }
   }
 
@@ -83,27 +83,24 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fromMap(Map<String, dynamic> inputJson) async {
+  Future<void> fromMap(Map<String, dynamic> inputJson) async {
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
-    } 
-    else {
+    }
+    else if (_profile.path.contains("defaultCharacter")) {
       Directory docDir = await getApplicationDocumentsDirectory();
       String filePath = '${docDir.path}/defaultCharacter.png';
 
       File newProfileFile = File(filePath);
-      if (!await newProfileFile.exists()) {
-        ByteData data = await rootBundle.load('assets/defaultCharacter.png');
-        List<int> bytes =
-            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-        await newProfileFile.writeAsBytes(bytes);
-      }
+      ByteData data = await rootBundle.load('assets/defaultCharacter.png');
+      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      await newProfileFile.writeAsBytes(bytes);
 
       _profile = newProfileFile;
     }
 
     if (inputJson.isEmpty) {
-      reset();
+      await reset();
     }
 
     if (inputJson["spec"] == "mcf_v1") {
@@ -116,7 +113,7 @@ class Character extends ChangeNotifier {
       fromSTV1Map(inputJson);
     }
     else {
-      reset();
+      await reset();
     }
 
     Logger.log("Character created with name: ${inputJson["name"]}");
@@ -182,7 +179,7 @@ class Character extends ChangeNotifier {
     jsonCharacter["use_greeting"] = _useGreeting;
     jsonCharacter["greetings"] = _greetings;
     jsonCharacter["first_mes"] = _greetings.firstOrNull ?? "";
-    jsonCharacter["alternate_greetings"] = _greetings.sublist(1);
+    jsonCharacter["alternate_greetings"] = _greetings.isNotEmpty ? _greetings.sublist(1) : [];
     jsonCharacter["system_prompt"] = _system;
 
     jsonCharacter["use_examples"] = _useExamples;
@@ -290,14 +287,10 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  void newExample() {
+  void newExample(bool? user) {
     _examples.addAll([
       {
-        "role": "user",
-        "content": "",
-      },
-      {
-        "role": "assistant",
+        "role": user == null ? "system" : user ? "user" : "assistant",
         "content": "",
       }
     ]);
@@ -309,13 +302,8 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeExample(int index) {
-    _examples.removeRange(index - 2, index);
-    notifyListeners();
-  }
-
   void removeLastExample() {
-    _examples.removeRange(_examples.length - 2, _examples.length);
+    _examples.removeLast();
     notifyListeners();
   }
 
@@ -341,15 +329,16 @@ class Character extends ChangeNotifier {
 
   List<Map<String, dynamic>> get examples => _examples;
 
-  void reset() {
-    // Reset all the internal state to the defaults
-    rootBundle.loadString('assets/default_character.json').then((jsonString) {
-      Map<String, dynamic> jsonCharacter = json.decode(jsonString);
+  Future<void> reset() async {
+    _profile = File("assets/defaultCharacter.png");
 
-      fromMap(jsonCharacter);
+    final jsonString = await rootBundle.loadString('assets/default_character.json');
 
-      notifyListeners();
-    });
+    Map<String, dynamic> jsonCharacter = json.decode(jsonString);
+
+    await fromMap(jsonCharacter);
+
+    notifyListeners();
   }
 
   Future<String> exportMCF(BuildContext context) async {
@@ -408,16 +397,32 @@ class Character extends ChangeNotifier {
     try {
       final image = decodeImage(_profile.readAsBytesSync());
 
-      if (image == null) return "Error decoding image";
+      if (image == null) throw "Error decoding image";
+
+      String mcfMap = "";
+
+      try {
+        mcfMap = json.encode(toMCFMap());
+      } catch (e) {
+        Exception("Error encoding MCF Map: $e");
+      }
+
+      String stv2Map = "";
+
+      try {
+        stv2Map = base64.encode(utf8.encode(json.encode(toSTV2Map())));
+      } catch (e) {
+        Exception("Error encoding STV2 Map: $e");
+      }
 
       image.textData = {
-        "mcf": json.encode(toMCFMap()),
-        "chara": base64.encode(utf8.encode(json.encode(toSTV2Map())))
+        "mcf": mcfMap,
+        "chara": stv2Map
       };
 
       File? file = await FileManager.save(context, "$_name.png");
 
-      if (file == null) return "Error saving file";
+      if (file == null) throw "Error saving file";
 
       await file.writeAsBytes(encodePng(image));
 
@@ -444,7 +449,7 @@ class Character extends ChangeNotifier {
             image.textData!["Mcf"] ?? image.textData!["mcf"]!
           );
 
-          fromMap(jsonCharacter);
+          await fromMap(jsonCharacter);
         }
         else if (
           image.textData!["Chara"] != null || 
@@ -456,7 +461,7 @@ class Character extends ChangeNotifier {
           String stringCharacter = utf8.decode(utf8Character);
           Map<String, dynamic> jsonCharacter = json.decode(stringCharacter);
 
-          fromMap(jsonCharacter);
+          await fromMap(jsonCharacter);
         }
       }
 
@@ -464,21 +469,16 @@ class Character extends ChangeNotifier {
       String filePath = '${docDir.path}/$_name.png';
 
       File newProfileFile = File(filePath);
-      if (!await newProfileFile.exists()) {
-        ByteData data = await file
-            .readAsBytes()
-            .then((bytes) => ByteData.view(bytes.buffer));
-        List<int> bytes =
-            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-        await newProfileFile.writeAsBytes(bytes);
-      }
+      ByteData data = await file.readAsBytes().then((bytes) => ByteData.view(bytes.buffer));
+      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      await newProfileFile.writeAsBytes(bytes);
 
       _profile = newProfileFile;
 
       notifyListeners();
       return "Character Successfully Loaded";
     } catch (e) {
-      reset();
+      await reset();
       Logger.log("Error: $e");
       return "Error: $e";
     }
