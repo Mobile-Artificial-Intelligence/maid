@@ -520,16 +520,12 @@ class Character extends ChangeNotifier {
   String examplesToString() {
     StringBuffer buffer = StringBuffer();
 
-    try {
-      for (var i = 0; i < _examples.length; i += 2) {
-        buffer.writeln('<START>');
-        buffer.writeln('{{user}}: ${_examples[i]["content"]}');
-        if (i + 1 < _examples.length) {
-          buffer.writeln('{{char}}:${_examples[i + 1]["content"]}');
-        }
+    for (var i = 0; i < _examples.length; i += 2) {
+      buffer.writeln('<START>');
+      buffer.writeln('{{user}}: ${_examples[i]["content"]}');
+      if (i + 1 < _examples.length) {
+        buffer.writeln('{{char}}:${_examples[i + 1]["content"]}');
       }
-    } catch (e) {
-      Exception("Error converting examples to string: $e");
     }
 
     return buffer.toString();
