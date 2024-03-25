@@ -86,18 +86,15 @@ class Character extends ChangeNotifier {
   Future<void> fromMap(Map<String, dynamic> inputJson) async {
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
-    } 
-    else {
+    }
+    else if (_profile.path.contains("defaultCharacter")) {
       Directory docDir = await getApplicationDocumentsDirectory();
       String filePath = '${docDir.path}/defaultCharacter.png';
 
       File newProfileFile = File(filePath);
-      if (!await newProfileFile.exists()) {
-        ByteData data = await rootBundle.load('assets/defaultCharacter.png');
-        List<int> bytes =
-            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-        await newProfileFile.writeAsBytes(bytes);
-      }
+      ByteData data = await rootBundle.load('assets/defaultCharacter.png');
+      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      await newProfileFile.writeAsBytes(bytes);
 
       _profile = newProfileFile;
     }
@@ -333,11 +330,7 @@ class Character extends ChangeNotifier {
   List<Map<String, dynamic>> get examples => _examples;
 
   Future<void> reset() async {
-    try {
-      await _profile.delete();
-    } catch (e) {
-      Logger.log("Error: $e");
-    }
+    _profile = File("assets/defaultCharacter.png");
 
     final jsonString = await rootBundle.loadString('assets/default_character.json');
 
@@ -404,16 +397,32 @@ class Character extends ChangeNotifier {
     try {
       final image = decodeImage(_profile.readAsBytesSync());
 
-      if (image == null) return "Error decoding image";
+      if (image == null) throw "Error decoding image";
+
+      String mcfMap = "";
+
+      try {
+        mcfMap = json.encode(toMCFMap());
+      } catch (e) {
+        Exception("Error encoding MCF Map: $e");
+      }
+
+      String stv2Map = "";
+
+      try {
+        stv2Map = base64.encode(utf8.encode(json.encode(toSTV2Map())));
+      } catch (e) {
+        Exception("Error encoding STV2 Map: $e");
+      }
 
       image.textData = {
-        "mcf": json.encode(toMCFMap()),
-        "chara": base64.encode(utf8.encode(json.encode(toSTV2Map())))
+        "mcf": mcfMap,
+        "chara": stv2Map
       };
 
       File? file = await FileManager.save(context, "$_name.png");
 
-      if (file == null) return "Error saving file";
+      if (file == null) throw "Error saving file";
 
       await file.writeAsBytes(encodePng(image));
 
@@ -440,7 +449,7 @@ class Character extends ChangeNotifier {
             image.textData!["Mcf"] ?? image.textData!["mcf"]!
           );
 
-          fromMap(jsonCharacter);
+          await fromMap(jsonCharacter);
         }
         else if (
           image.textData!["Chara"] != null || 
@@ -452,7 +461,7 @@ class Character extends ChangeNotifier {
           String stringCharacter = utf8.decode(utf8Character);
           Map<String, dynamic> jsonCharacter = json.decode(stringCharacter);
 
-          fromMap(jsonCharacter);
+          await fromMap(jsonCharacter);
         }
       }
 
@@ -460,14 +469,9 @@ class Character extends ChangeNotifier {
       String filePath = '${docDir.path}/$_name.png';
 
       File newProfileFile = File(filePath);
-      if (!await newProfileFile.exists()) {
-        ByteData data = await file
-            .readAsBytes()
-            .then((bytes) => ByteData.view(bytes.buffer));
-        List<int> bytes =
-            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-        await newProfileFile.writeAsBytes(bytes);
-      }
+      ByteData data = await file.readAsBytes().then((bytes) => ByteData.view(bytes.buffer));
+      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      await newProfileFile.writeAsBytes(bytes);
 
       _profile = newProfileFile;
 
@@ -516,12 +520,16 @@ class Character extends ChangeNotifier {
   String examplesToString() {
     StringBuffer buffer = StringBuffer();
 
-    for (var i = 0; i < _examples.length; i += 2) {
-      buffer.writeln('<START>');
-      buffer.writeln('{{user}}: ${_examples[i]["content"]}');
-      if (i + 1 < _examples.length) {
-        buffer.writeln('{{char}}:${_examples[i + 1]["content"]}');
+    try {
+      for (var i = 0; i < _examples.length; i += 2) {
+        buffer.writeln('<START>');
+        buffer.writeln('{{user}}: ${_examples[i]["content"]}');
+        if (i + 1 < _examples.length) {
+          buffer.writeln('{{char}}:${_examples[i + 1]["content"]}');
+        }
       }
+    } catch (e) {
+      Exception("Error converting examples to string: $e");
     }
 
     return buffer.toString();
