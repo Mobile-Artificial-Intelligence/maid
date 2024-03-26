@@ -54,7 +54,7 @@ class AiPlatform extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    final apiIndex = prefs.getInt("api_type") ?? 0;
+    final apiIndex = prefs.getInt("api_type") ?? AiPlatformType.llamacpp.index;
 
     _apiType = AiPlatformType.values[apiIndex];
 
@@ -454,4 +454,4 @@ class AiPlatform extends ChangeNotifier {
   }
 }
 
-enum AiPlatformType { none, llamacpp, openAI, ollama, mistralAI, custom }
+enum AiPlatformType { llamacpp, openAI, ollama, mistralAI, custom }
