@@ -79,6 +79,8 @@ class GenerationManager {
       }
     }
 
+    Logger.log("Prompting with ${ai.apiType.name}");
+
     switch (ai.apiType) {
       case AiPlatformType.llamacpp:
         localRequest(chatMessages, ai, session.stream);
