@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:maid/providers/user.dart';
+import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/widgets/tiles/image_selector_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:maid_ui/maid_ui.dart';
 
 class UserTile extends StatefulWidget {
   const UserTile({super.key});
@@ -27,9 +27,8 @@ class _UserTileState extends State<UserTile> {
               fontSize: 20,
             ),
           ),
-          leading: CircleAvatar(
-            backgroundImage: const AssetImage("assets/chadUser.png"),
-            foregroundImage: Image.file(user.profile).image,
+          leading: FutureAvatar(
+            image: user.profile,
             radius: 20,
           ),
           trailing: IconButton(
@@ -143,13 +142,13 @@ class _UserTileState extends State<UserTile> {
                 shrinkWrap: true,
                 children: [
                   ImageSelectorTile(
-                    image: File("assets/chadUser.png")
+                    image: Utilities.fileFromAssetImage("chadUser.png")
                   ),
                   ImageSelectorTile(
-                    image: File("assets/thadUser.png")
+                    image: Utilities.fileFromAssetImage("thadUser.png")
                   ),
                   ImageSelectorTile(
-                    image: File("assets/eugeneUser.png")
+                    image: Utilities.fileFromAssetImage("eugeneUser.png")
                   ),
                 ]
               ),

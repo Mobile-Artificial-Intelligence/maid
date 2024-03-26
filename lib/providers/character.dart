@@ -7,12 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
+import 'package:maid/static/utilities.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
   Key _key = UniqueKey();
-  File _profile = File("assets/defaultCharacter.png");
+  File? _profile;
   String _name = "Maid";
   String _description = "";
   String _personality = "";
@@ -67,9 +68,9 @@ class Character extends ChangeNotifier {
     return newCharacter;
   }
 
-  void from(Character character) {
+  void from(Character character) async {
     _key = character.key;
-    _profile = character.profile;
+    _profile = await character.profile;
     _name = character.name;
     _description = character.description;
     _personality = character.personality;
@@ -87,16 +88,8 @@ class Character extends ChangeNotifier {
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
     }
-    else if (_profile.path.contains("defaultCharacter")) {
-      Directory docDir = await getApplicationDocumentsDirectory();
-      String filePath = '${docDir.path}/defaultCharacter.png';
-
-      File newProfileFile = File(filePath);
-      ByteData data = await rootBundle.load('assets/defaultCharacter.png');
-      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-      await newProfileFile.writeAsBytes(bytes);
-
-      _profile = newProfileFile;
+    else if (_profile == null || _profile!.path.contains("defaultCharacter")) {
+      _profile = await Utilities.fileFromAssetImage("defaultCharacter.png");
     }
 
     if (inputJson.isEmpty) {
@@ -170,7 +163,7 @@ class Character extends ChangeNotifier {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> jsonCharacter = {};
 
-    jsonCharacter["profile"] = _profile.path;
+    jsonCharacter["profile"] = _profile!.path;
 
     jsonCharacter["name"] = _name;
     jsonCharacter["description"] = _description;
@@ -309,7 +302,9 @@ class Character extends ChangeNotifier {
 
   Key get key => _key;
 
-  File get profile => _profile;
+  Future<File> get profile async {
+    return _profile ??= await Utilities.fileFromAssetImage("defaultCharacter.png");
+  }
 
   String get name => _name;
 
@@ -330,7 +325,7 @@ class Character extends ChangeNotifier {
   List<Map<String, dynamic>> get examples => _examples;
 
   Future<void> reset() async {
-    _profile = File("assets/defaultCharacter.png");
+    _profile = await Utilities.fileFromAssetImage("defaultCharacter.png");
 
     final jsonString = await rootBundle.loadString('assets/default_character.json');
 
@@ -395,7 +390,7 @@ class Character extends ChangeNotifier {
 
   Future<String> exportImage(BuildContext context) async {
     try {
-      final image = decodeImage(_profile.readAsBytesSync());
+      final image = decodeImage(_profile!.readAsBytesSync());
 
       if (image == null) throw "Error decoding image";
 

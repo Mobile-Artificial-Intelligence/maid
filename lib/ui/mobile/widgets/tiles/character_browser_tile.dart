@@ -3,6 +3,7 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/utilities.dart';
+import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 
 class CharacterBrowserTile extends StatefulWidget {
@@ -36,16 +37,9 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               // Square image with rounded corners of the character
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                    10.0), // Adjust the corner radius here
-                child: Image(
-                  image: Image.file(widget.character.profile).image,
-                  width: 50, // Adjust the size as needed
-                  height: 50,
-                  fit: BoxFit
-                      .cover, // This ensures the image covers the square area
-                ),
+              leading: FutureTileImage(
+                image: widget.character.profile,
+                borderRadius: BorderRadius.circular(10),
               ),
               minLeadingWidth: 60,
               title: Column(children: [

@@ -2,19 +2,24 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:maid/static/utilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class User extends ChangeNotifier {
-  File _profile = File("assets/chadUser.png");
+  File? _profile;
   String _name = "User";
 
-  File get profile => _profile;
+  Future<File> get profile async {
+    return _profile ?? await Utilities.fileFromAssetImage("chadUser.png");
+  }
 
   String get name => _name;
 
-  set profile(File value) {
-    _profile = value;
-    notifyListeners();
+  set profile(Future<File> value) {
+    value.then((File file) {
+      _profile = file;
+      notifyListeners();
+    });
   }
 
   set name(String value) {
@@ -37,11 +42,11 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fromMap(Map<String, dynamic> inputJson) {
+  void fromMap(Map<String, dynamic> inputJson) async {
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
     } else {
-      _profile = File("assets/chadUser.png");
+      _profile ??= await Utilities.fileFromAssetImage("chadUser.png");
     }
 
     _name = inputJson["name"];
@@ -50,13 +55,13 @@ class User extends ChangeNotifier {
 
   Map<String, dynamic> toMap() {
     return {
-      "profile": _profile.path,
+      "profile": _profile!.path,
       "name": _name,
     };
   }
 
-  void reset() {
-    _profile = File("assets/chadUser.png");
+  void reset() async {
+    _profile = await Utilities.fileFromAssetImage("chadUser.png");
     _name = "User";
     notifyListeners();
   }

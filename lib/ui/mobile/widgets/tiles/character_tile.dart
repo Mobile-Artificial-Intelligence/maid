@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/utilities.dart';
+import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 
 class CharacterTile extends StatelessWidget {
@@ -25,9 +26,8 @@ class CharacterTile extends StatelessWidget {
           Text("Character - ${character.name}"),
           const SizedBox(height: 10.0),
           ListTile(
-            leading: CircleAvatar(
-              backgroundImage: const AssetImage("assets/maid.png"),
-              foregroundImage: Image.file(character.profile).image,
+            leading: FutureAvatar(
+              image: character.profile,
               radius: 25,
             ),
             minLeadingWidth: 60,

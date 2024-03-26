@@ -98,13 +98,8 @@ class ChatMessageState extends State<ChatMessage>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(width: 10.0),
-              CircleAvatar(
-                backgroundImage: widget.userGenerated
-                    ? const AssetImage("assets/chadUser.png")
-                    : const AssetImage("assets/defaultCharacter.png"),
-                foregroundImage: Image.file(
-                        widget.userGenerated ? user.profile : character.profile)
-                    .image,
+              FutureAvatar(
+                image: widget.userGenerated ? user.profile : character.profile,
                 radius: 16,
               ),
               const SizedBox(width: 10.0),

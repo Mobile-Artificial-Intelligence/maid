@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/user.dart';
 import 'package:provider/provider.dart';
+import 'package:maid_ui/maid_ui.dart';
 
 class ImageSelectorTile extends StatelessWidget {
-  final File image;
+  final Future<File> image;
 
   const ImageSelectorTile({super.key, required this.image});
 
@@ -17,13 +18,10 @@ class ImageSelectorTile extends StatelessWidget {
         user.profile = image;
       },
       child: GridTile(
-        child: ClipRRect(
+        child: FutureTileImage(
+          image: image,
           borderRadius: BorderRadius.circular(10),
-          child: Image.file(
-            image,
-            fit: BoxFit.cover,
-          ),
-        )
+        ),
       ),
     );
   }
