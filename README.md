@@ -32,7 +32,27 @@ Maid is a cross-platform Flutter app for interfacing with GGUF / llama.cpp model
   </table>
 </div>
 
-## Works on multiple devices :
+## Cloning
+Maid utilises git submodules extensively. To clone the repository, use the following command:
+
+```bash
+git clone --recursive https://github.com/Mobile-Artificial-Intelligence/maid.git
+```
+
+## Installing Build Dependencies
+To install the build on fedora based systems, use the following command:
+
+```bash
+sudo dnf install -y clang cmake make ninja-build pkg-config gtk3-devel vulkan-devel
+```
+
+To install the build on debian based systems, use the following command:
+
+```bash
+sudo apt-get install -y cmake ninja-build pkg-config libgtk-3-dev libvulkan-dev
+```
+
+## Platform Support
 Windows, Linux, Android.
 [Releases page.](https://github.com/Mobile-Artificial-Intelligence/maid/releases)
 MacOS and IOS Releases not available at this time.
@@ -362,7 +382,3 @@ MacOS and IOS Releases not available at this time.
 Android version tested on a Oneplus 10 Pro 11gb phone.
 Also tested on Fedora Linux, Windows 11.
 Tested with calypso 3b, orcamini 3b, llama 2 7B-Chat, llama 7B and many more.
-
-## Disclaimer
-Please note that the llama.cpp models are owned and officially distributed by Meta. This app only serves as an environment for the model's 
-capabilities and functionality. The developers of this app do not provide the LLaMA models and are not responsible for any issues related to their usage.
