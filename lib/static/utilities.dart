@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Utilities {
   static String keyToString(Key key) {
@@ -35,5 +39,19 @@ class Utilities {
     // This creates a regular expression that ignores case (case-insensitive)
     RegExp exp = RegExp(RegExp.escape(from), caseSensitive: false);
     return original.replaceAll(exp, replaceWith);
+  }
+
+  static Future<File> fileFromAssetImage(String asset) async {
+    final assetPath = 'assets/$asset';
+
+    final docDir = await getApplicationDocumentsDirectory();
+
+    final path = '${docDir.path}/$asset';
+
+    final byteData = await rootBundle.load(assetPath);
+
+    final buffer = byteData.buffer.asUint8List();
+
+    return File(path)..writeAsBytesSync(buffer);
   }
 }

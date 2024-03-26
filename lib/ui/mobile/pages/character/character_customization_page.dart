@@ -7,6 +7,7 @@ import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
+import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -65,9 +66,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                 child: Column(
                   children: [
                     const SizedBox(height: 10.0),
-                    CircleAvatar(
-                      backgroundImage: const AssetImage("assets/maid.png"),
-                      foregroundImage: Image.file(character.profile).image,
+                    FutureAvatar(
+                      image: character.profile,
                       radius: 75,
                     ),
                     const SizedBox(height: 20.0),
