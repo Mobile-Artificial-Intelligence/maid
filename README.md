@@ -40,13 +40,13 @@ git clone --recursive https://github.com/Mobile-Artificial-Intelligence/maid.git
 ```
 
 ## Installing Build Dependencies
-To install the build on fedora based systems, use the following command:
+To install the dependencies on fedora based systems, use the following command:
 
 ```bash
 sudo dnf install -y clang cmake make ninja-build pkg-config gtk3-devel vulkan-devel
 ```
 
-To install the build on debian based systems, use the following command:
+To install the bdependencies on debian based systems, use the following command:
 
 ```bash
 sudo apt-get install -y cmake ninja-build pkg-config libgtk-3-dev libvulkan-dev
