@@ -22,12 +22,12 @@ Maid is a cross-platform Flutter app for interfacing with GGUF / llama.cpp model
   </table>
   <table>
     <tr>
-      <td><img src=".images/demo7.jpg" width="600"></td>
-      <td><img src=".images/demo8.jpg" width="600"></td>
+      <td><img src=".images/demo7.png" width="600"></td>
+      <td><img src=".images/demo8.png" width="600"></td>
     </tr>
     <tr>
-      <td><img src=".images/demo9.jpg" width="600"></td>
-      <td><img src=".images/demo10.jpg" width="600"></td>
+      <td><img src=".images/demo9.png" width="600"></td>
+      <td><img src=".images/demo10.png" width="600"></td>
     </tr>
   </table>
 </div>
