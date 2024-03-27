@@ -10,24 +10,24 @@ Maid is a cross-platform Flutter app for interfacing with GGUF / llama.cpp model
 <div align="center">
   <table>
     <tr>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo1.jpg?raw=true" width="200"></td>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo2.jpg?raw=true" width="200"></td>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo3.jpg?raw=true" width="200"></td>
+      <td><img src=".images/demo1.jpg" width="200"></td>
+      <td><img src=".images/demo2.jpg" width="200"></td>
+      <td><img src=".images/demo3.jpg" width="200"></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo4.jpg?raw=true" width="200"></td>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo5.jpg?raw=true" width="200"></td>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo6.jpg?raw=true" width="200"></td>
+      <td><img src=".images/demo4.jpg" width="200"></td>
+      <td><img src=".images/demo5.jpg" width="200"></td>
+      <td><img src=".images/demo6.jpg" width="200"></td>
     </tr>
   </table>
   <table>
     <tr>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo7.png?raw=true" width="600"></td>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo8.png?raw=true" width="600"></td>
+      <td><img src=".images/demo7.jpg" width="600"></td>
+      <td><img src=".images/demo8.jpg" width="600"></td>
     </tr>
     <tr>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo9.png?raw=true" width="600"></td>
-      <td><img src="https://github.com/Mobile-Artificial-Intelligence/maid/blob/main/.images/demo10.png?raw=true" width="600"></td>
+      <td><img src=".images/demo9.jpg" width="600"></td>
+      <td><img src=".images/demo10.jpg" width="600"></td>
     </tr>
   </table>
 </div>
