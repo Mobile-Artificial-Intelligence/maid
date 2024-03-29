@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -423,6 +424,38 @@ class AiPlatform extends ChangeNotifier {
     outputJson["n_thread"] = _nThread;
 
     return outputJson;
+  }
+
+  GptParams toGptParams() {
+    SamplingParams samplingParams = SamplingParams();
+    samplingParams.temp = _temperature;
+    samplingParams.topK = _topK;
+    samplingParams.topP = _topP;
+    samplingParams.tfsZ = _tfsZ;
+    samplingParams.typicalP = _typicalP;
+    samplingParams.penaltyLastN = _penaltyLastN;
+    samplingParams.penaltyRepeat = _penaltyRepeat;
+    samplingParams.penaltyFreq = _penaltyFreq;
+    samplingParams.penaltyPresent = _penaltyPresent;
+    samplingParams.mirostat = _mirostat;
+    samplingParams.mirostatTau = _mirostatTau;
+    samplingParams.mirostatEta = _mirostatEta;
+    samplingParams.penalizeNl = _penalizeNewline;
+
+    GptParams gptParams = GptParams();
+    gptParams.seed = _randomSeed ? Random().nextInt(1000000) : _seed;
+    gptParams.nThreads = _nThread;
+    gptParams.nThreadsBatch = _nThread;
+    gptParams.nPredict = _nPredict;
+    gptParams.nCtx = _nCtx;
+    gptParams.nBatch = _nBatch;
+    gptParams.nKeep = _nKeep;
+    gptParams.sparams = samplingParams;
+    gptParams.model = _model;
+    gptParams.instruct = _promptFormat == PromptFormat.alpaca;
+    gptParams.chatml = _promptFormat == PromptFormat.chatml;
+
+    return gptParams;
   }
 
   void reset() {

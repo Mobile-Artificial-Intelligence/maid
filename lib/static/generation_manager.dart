@@ -103,35 +103,7 @@ class GenerationManager {
       void Function(String?) callback) async {
     _completer = Completer();
 
-    SamplingParams samplingParams = SamplingParams();
-    samplingParams.temp = ai.temperature;
-    samplingParams.topK = ai.topK;
-    samplingParams.topP = ai.topP;
-    samplingParams.tfsZ = ai.tfsZ;
-    samplingParams.typicalP = ai.typicalP;
-    samplingParams.penaltyLastN = ai.penaltyLastN;
-    samplingParams.penaltyRepeat = ai.penaltyRepeat;
-    samplingParams.penaltyFreq = ai.penaltyFreq;
-    samplingParams.penaltyPresent = ai.penaltyPresent;
-    samplingParams.mirostat = ai.mirostat;
-    samplingParams.mirostatTau = ai.mirostatTau;
-    samplingParams.mirostatEta = ai.mirostatEta;
-    samplingParams.penalizeNl = ai.penalizeNewline;
-
-    GptParams gptParams = GptParams();
-    gptParams.seed = ai.randomSeed ? Random().nextInt(1000000) : ai.seed;
-    gptParams.nThreads = ai.nThread;
-    gptParams.nThreadsBatch = ai.nThread;
-    gptParams.nPredict = ai.nPredict;
-    gptParams.nCtx = ai.nCtx;
-    gptParams.nBatch = ai.nBatch;
-    gptParams.nKeep = ai.nKeep;
-    gptParams.sparams = samplingParams;
-    gptParams.model = ai.model;
-    gptParams.instruct = ai.promptFormat == PromptFormat.alpaca;
-    gptParams.chatml = ai.promptFormat == PromptFormat.chatml;
-
-    maidllm = MaidLLM(gptParams, log: Logger.log);
+    maidllm = MaidLLM(ai.toGptParams(), log: Logger.log);
 
     maidllm!.prompt(chatMessages).listen((message) {
       callback.call(message);
