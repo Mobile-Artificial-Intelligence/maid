@@ -94,9 +94,9 @@ class LlamaCppModel extends LargeLanguageModel {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      ...super.toJson(),
+      ...super.toMap(),
       'path': path,
       'nKeep': nKeep,
       'nCtx': nCtx,

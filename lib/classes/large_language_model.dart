@@ -26,7 +26,7 @@ abstract class LargeLanguageModel {
     useDefault = json['useDefault'] ?? false;
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'name': name,
       'seed': seed,

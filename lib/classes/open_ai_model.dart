@@ -44,9 +44,9 @@ class OpenAiModel extends LargeLanguageModel {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      ...super.toJson(),
+      ...super.toMap(),
       'url': url,
       'token': token,
       'nPredict': nPredict,

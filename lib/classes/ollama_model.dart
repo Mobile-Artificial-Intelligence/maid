@@ -101,9 +101,9 @@ class OllamaModel extends LargeLanguageModel {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
-      ...super.toJson(),
+      ...super.toMap(),
       'ip': ip,
       'url': url,
       'nKeep': nKeep,
