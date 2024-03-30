@@ -135,7 +135,7 @@ class LlamaCppModel extends LargeLanguageModel {
   
   @override
   Future<List<String>> getOptions() async {
-    throw [];
+    return [];
   }
   
   @override
