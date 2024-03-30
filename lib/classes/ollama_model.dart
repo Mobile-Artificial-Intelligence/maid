@@ -35,11 +35,11 @@ class OllamaModel extends LargeLanguageModel {
   late double mirostatEta;
 
   late bool penalizeNewline;
-  late bool useDefault;
 
   OllamaModel({
     super.seed,
     super.temperature,
+    super.useDefault,
     this.name = '',
     this.ip = '',
     this.url = '',
@@ -61,7 +61,6 @@ class OllamaModel extends LargeLanguageModel {
     this.mirostatTau = 5.0,
     this.mirostatEta = 0.1,
     this.penalizeNewline = true,
-    this.useDefault = true,
   });
 
   OllamaModel.fromJson(Map<String, dynamic> json) {
@@ -102,8 +101,7 @@ class OllamaModel extends LargeLanguageModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'seed': seed,
-      'temperature': temperature,
+      ...super.toJson(),
       'name': name,
       'ip': ip,
       'url': url,
@@ -125,7 +123,6 @@ class OllamaModel extends LargeLanguageModel {
       'mirostatTau': mirostatTau,
       'mirostatEta': mirostatEta,
       'penalizeNewline': penalizeNewline,
-      'useDefault': useDefault,
     };
   }
 

@@ -67,8 +67,7 @@ class LlamaCppModel extends LargeLanguageModel {
 
   @override
   void fromJson(Map<String, dynamic> json) {
-    seed = json['seed'] ?? 0;
-    temperature = json['temperature'] ?? 0.8;
+    super.fromJson(json);
     path = json['path'] ?? '';
     nKeep = json['nKeep'] ?? 48;
     nCtx = json['nCtx'] ?? 512;
@@ -94,8 +93,7 @@ class LlamaCppModel extends LargeLanguageModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'seed': seed,
-      'temperature': temperature,
+      ...super.toJson(),
       'path': path,
       'nKeep': nKeep,
       'nCtx': nCtx,
@@ -120,6 +118,12 @@ class LlamaCppModel extends LargeLanguageModel {
   }
 
   GptParams toGptParams() {
+    if (useDefault) {
+      GptParams gptParams = GptParams();
+      gptParams.model = path;
+      return gptParams;
+    }
+
     SamplingParams samplingParams = SamplingParams();
     samplingParams.temp = temperature;
     samplingParams.topK = topK;
