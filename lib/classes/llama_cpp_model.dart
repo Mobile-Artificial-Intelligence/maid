@@ -54,14 +54,14 @@ class LlamaCppModel extends LargeLanguageModel {
   @override
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
-    promptFormat = json['promptFormat'] ?? PromptFormat.alpaca;
+    promptFormat = PromptFormat.values[json['promptFormat']] ?? PromptFormat.alpaca;
   }
 
   @override
   Map<String, dynamic> toMap() {
     return {
       ...super.toMap(),
-      'promptFormat': promptFormat
+      'promptFormat': promptFormat.index
     };
   }
 

@@ -15,19 +15,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Session extends ChangeNotifier {
   Key _key = UniqueKey();
   bool _busy = false;
-  LargeLanguageModel _model = LlamaCppModel();
+  LargeLanguageModel model = LlamaCppModel();
   ChatNode _root = ChatNode(key: UniqueKey());
   ChatNode? _tail;
   String _messageBuffer = "";
 
   bool get isBusy => _busy;
-
-  LargeLanguageModel get model => _model;
-
-  set model(LargeLanguageModel model) {
-    _model = model;
-    notifyListeners();
-  }
 
   String get rootMessage {
     final message = getFirstUserMessage();
@@ -61,6 +54,10 @@ class Session extends ChangeNotifier {
     } else {
       newSession();
     }
+  }
+
+  void notify() {
+    notifyListeners();
   }
 
   Session() {
@@ -319,13 +316,13 @@ class Session extends ChangeNotifier {
     Logger.log(lastLlamaCpp.toString());
     
     if (lastLlamaCpp.isNotEmpty) {
-      _model = LlamaCppModel.fromMap(lastLlamaCpp);
+      model = LlamaCppModel.fromMap(lastLlamaCpp);
     } 
     else {
-      _model = LlamaCppModel();
+      model = LlamaCppModel();
     }
 
-    prefs.setInt("llm_type", _model.type.index);
+    prefs.setInt("llm_type", model.type.index);
     notifyListeners();
   }
 
@@ -336,13 +333,13 @@ class Session extends ChangeNotifier {
     Logger.log(lastOpenAI.toString());
     
     if (lastOpenAI.isNotEmpty) {
-      _model = OpenAiModel.fromMap(lastOpenAI);
+      model = OpenAiModel.fromMap(lastOpenAI);
     } 
     else {
-      _model = OpenAiModel();
+      model = OpenAiModel();
     }
 
-    prefs.setInt("llm_type", _model.type.index);
+    prefs.setInt("llm_type", model.type.index);
     notifyListeners();
   }
 
@@ -353,14 +350,14 @@ class Session extends ChangeNotifier {
     Logger.log(lastOllama.toString());
     
     if (lastOllama.isNotEmpty) {
-      _model = OllamaModel.fromMap(lastOllama);
+      model = OllamaModel.fromMap(lastOllama);
     } 
     else {
-      _model = OllamaModel();
-      await _model.resetUri();
+      model = OllamaModel();
+      await model.resetUri();
     }
 
-    prefs.setInt("llm_type", _model.type.index);
+    prefs.setInt("llm_type", model.type.index);
     notifyListeners();
   }
 
@@ -371,13 +368,13 @@ class Session extends ChangeNotifier {
     Logger.log(lastMistralAI.toString());
     
     if (lastMistralAI.isNotEmpty) {
-      _model = MistralAiModel.fromMap(lastMistralAI);
+      model = MistralAiModel.fromMap(lastMistralAI);
     } 
     else {
-      _model = MistralAiModel();
+      model = MistralAiModel();
     }
 
-    prefs.setInt("llm_type", _model.type.index);
+    prefs.setInt("llm_type", model.type.index);
     notifyListeners();
   }
 }

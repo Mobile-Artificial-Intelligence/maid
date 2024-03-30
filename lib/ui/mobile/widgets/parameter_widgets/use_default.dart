@@ -14,6 +14,7 @@ class UseDefaultParameter extends StatelessWidget {
           value: session.model.useDefault,
           onChanged: (value) {
             session.model.useDefault = value;
+            session.notify();
           },
         );
       }

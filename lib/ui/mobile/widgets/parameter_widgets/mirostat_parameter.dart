@@ -18,6 +18,7 @@ class MirostatParameter extends StatelessWidget {
           sliderDivisions: 127,
           onValueChanged: (value) {
             session.model.mirostat = value.round();
+            session.notify();
           }
         );
       }

@@ -18,6 +18,7 @@ class NCtxParameter extends StatelessWidget {
           sliderDivisions: 4095,
           onValueChanged: (value) {
             session.model.nCtx = value.round();
+            session.notify();
           }
         );
       }

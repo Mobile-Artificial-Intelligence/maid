@@ -26,6 +26,8 @@ class NThreadsParameter extends StatelessWidget {
             } else {
               session.model.nThread = value.round();
             }
+
+            session.notify();
           });
     });
   }

@@ -64,9 +64,10 @@ class LlamaCppPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FilledButton(
-                      onPressed: () {
-                        storageOperationDialog(
+                      onPressed: () async {
+                        await storageOperationDialog(
                             context, (session.model as LlamaCppModel).loadModel);
+                        session.notify();
                       },
                       child: Text(
                         "Load GGUF",
@@ -77,6 +78,7 @@ class LlamaCppPage extends StatelessWidget {
                     FilledButton(
                       onPressed: () {
                         session.model.resetUri();
+                        session.notify();
                       },
                       child: Text(
                         "Unload GGUF",

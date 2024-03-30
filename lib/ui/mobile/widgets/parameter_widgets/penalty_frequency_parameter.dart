@@ -18,6 +18,7 @@ class PenaltyFrequencyParameter extends StatelessWidget {
           sliderDivisions: 100,
           onValueChanged: (value) {
             session.model.penaltyFreq = value;
+            session.notify();
           }
         );
       }

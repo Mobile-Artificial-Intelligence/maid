@@ -18,6 +18,7 @@ class PenaltyPresentParameter extends StatelessWidget {
           sliderDivisions: 100,
           onValueChanged: (value) {
             session.model.penaltyPresent = value;
+            session.notify();
           }
         );
       }

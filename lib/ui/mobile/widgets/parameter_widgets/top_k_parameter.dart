@@ -18,6 +18,7 @@ class TopKParameter extends StatelessWidget {
           sliderDivisions: 127,
           onValueChanged: (value) {
             session.model.topK = value.round();
+            session.notify();
           }
         );
       }

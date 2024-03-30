@@ -18,6 +18,7 @@ class PenaltyLastNParameter extends StatelessWidget {
           sliderDivisions: 127,
           onValueChanged: (value) {
             session.model.penaltyLastN = value.round();
+            session.notify();
           }
         );
       }

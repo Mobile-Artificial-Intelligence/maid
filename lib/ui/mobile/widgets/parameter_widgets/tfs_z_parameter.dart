@@ -18,6 +18,7 @@ class TfsZParameter extends StatelessWidget {
           sliderDivisions: 100,
           onValueChanged: (value) {
             session.model.tfsZ = value;
+            session.notify();
           }
         );
       }

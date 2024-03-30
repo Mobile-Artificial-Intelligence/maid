@@ -35,6 +35,7 @@ class FormatDropdown extends StatelessWidget {
                 onSelected: (PromptFormat? value) {
                   if (value != null) {
                     (session.model as LlamaCppModel).promptFormat = value;
+                    session.notify();
                   }
                 },
                 initialSelection: (session.model as LlamaCppModel).promptFormat,

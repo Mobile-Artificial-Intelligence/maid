@@ -18,6 +18,7 @@ class TemperatureParameter extends StatelessWidget {
           sliderDivisions: 100,
           onValueChanged: (value) {
             session.model.temperature = value;
+            session.notify();
           }
         );
       }

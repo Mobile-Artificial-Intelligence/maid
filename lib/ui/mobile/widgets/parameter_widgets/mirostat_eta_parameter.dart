@@ -18,6 +18,7 @@ class MirostatEtaParameter extends StatelessWidget {
           sliderDivisions: 100,
           onValueChanged: (value) {
             session.model.mirostatEta = value;
+            session.notify();
           }
         );
       }

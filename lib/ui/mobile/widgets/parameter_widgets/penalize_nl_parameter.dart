@@ -14,6 +14,7 @@ class PenalizeNlParameter extends StatelessWidget {
           value: session.model.penalizeNewline,
           onChanged: (value) {
             session.model.penalizeNewline = value;
+            session.notify();
           },
         );
       }

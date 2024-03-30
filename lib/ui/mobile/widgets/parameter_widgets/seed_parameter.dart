@@ -19,6 +19,7 @@ class SeedParameter extends StatelessWidget {
               value: session.model.randomSeed,
               onChanged: (value) {
                 session.model.randomSeed = value;
+                session.notify();
               },
             ),
             Divider(
@@ -43,6 +44,7 @@ class SeedParameter extends StatelessWidget {
                         ),
                         onChanged: (value) {
                           session.model.seed = int.parse(value);
+                          session.notify();
                         },
                       ),
                     ),

@@ -18,6 +18,7 @@ class NBatchParameter extends StatelessWidget {
           sliderDivisions: 4095,
           onValueChanged: (value) {
             session.model.nBatch = value.round();
+            session.notify();
           }
         );
       }

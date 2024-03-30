@@ -18,6 +18,7 @@ class NKeepParameter extends StatelessWidget {
           sliderDivisions: 1023,
           onValueChanged: (value) {
             session.model.nKeep = value.round();
+            session.notify();
           }
         );
       }

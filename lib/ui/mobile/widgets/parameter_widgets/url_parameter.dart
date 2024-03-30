@@ -37,6 +37,7 @@ class UrlParameter extends StatelessWidget {
               ),
               onChanged: (value) {
                 context.read<Session>().model.uri = value;
+                context.read<Session>().notify();
               },
             ),
           ),

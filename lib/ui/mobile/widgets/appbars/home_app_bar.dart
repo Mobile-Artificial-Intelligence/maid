@@ -60,6 +60,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                   title: Text(modelName),
                   onTap: () {
                     session.model.name = modelName;
+                    session.notify();
                   },
                   tileColor: session.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
                 );
