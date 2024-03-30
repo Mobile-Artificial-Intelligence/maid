@@ -24,6 +24,11 @@ class Session extends ChangeNotifier {
 
   LargeLanguageModel get model => _model;
 
+  set model(LargeLanguageModel model) {
+    _model = model;
+    notifyListeners();
+  }
+
   String get rootMessage {
     final message = getFirstUserMessage();
     if (message != null) {

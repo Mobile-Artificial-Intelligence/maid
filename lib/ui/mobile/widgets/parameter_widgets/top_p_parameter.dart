@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -8,16 +8,19 @@ class TopPParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, ai, child) {
-      return SliderListTile(
+    return Consumer<Session>(
+      builder: (context, session, child) {
+        return SliderListTile(
           labelText: 'top_p',
-          inputValue: ai.topP,
+          inputValue: session.model.topP,
           sliderMin: 0.0,
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            ai.topP = value;
-          });
-    });
+            session.model.topP = value;
+          }
+        );
+      }
+    );
   }
 }

@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -10,20 +11,20 @@ class NThreadsParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, ai, child) {
+    return Consumer<Session>(builder: (context, session, child) {
       return SliderListTile(
           labelText: 'n_threads',
-          inputValue: ai.nThread,
+          inputValue: session.model.nThread,
           sliderMin: 1.0,
-          sliderMax: ai.apiType == AiPlatformType.llamacpp
+          sliderMax: session.model.type == AiPlatformType.llamacpp
               ? Platform.numberOfProcessors.toDouble()
               : 128.0,
           sliderDivisions: 127,
           onValueChanged: (value) {
             if (value.round() > Platform.numberOfProcessors) {
-              ai.nThread = Platform.numberOfProcessors;
+              session.model.nThread = Platform.numberOfProcessors;
             } else {
-              ai.nThread = value.round();
+              session.model.nThread = value.round();
             }
           });
     });

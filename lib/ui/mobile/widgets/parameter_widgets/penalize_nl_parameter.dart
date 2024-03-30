@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
 class PenalizeNlParameter extends StatelessWidget {
@@ -7,14 +7,16 @@ class PenalizeNlParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, ai, child) {
-      return SwitchListTile(
-        title: const Text('penalize_nl'),
-        value: ai.penalizeNewline,
-        onChanged: (value) {
-          ai.penalizeNewline = value;
-        },
-      );
-    });
+    return Consumer<Session>(
+      builder: (context, session, child) {
+        return SwitchListTile(
+          title: const Text('penalize_nl'),
+          value: session.model.penalizeNewline,
+          onChanged: (value) {
+            session.model.penalizeNewline = value;
+          },
+        );
+      }
+    );
   }
 }

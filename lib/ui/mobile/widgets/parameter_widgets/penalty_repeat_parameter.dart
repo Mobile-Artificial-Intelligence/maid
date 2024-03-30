@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -8,16 +8,19 @@ class PenaltyRepeatParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, ai, child) {
-      return SliderListTile(
+    return Consumer<Session>(
+      builder: (context, session, child) {
+        return SliderListTile(
           labelText: 'penalty_repeat',
-          inputValue: ai.penaltyRepeat,
+          inputValue: session.model.penaltyRepeat,
           sliderMin: 0.0,
           sliderMax: 2.0,
           sliderDivisions: 200,
           onValueChanged: (value) {
-            ai.penaltyRepeat = value;
-          });
-    });
+            session.model.penaltyRepeat = value;
+          }
+        );
+      }
+    );
   }
 }

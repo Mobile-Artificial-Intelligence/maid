@@ -8,8 +8,9 @@ class LargeLanguageModel  extends ChangeNotifier {
   late String uri;
   late String token;
 
+  late bool randomSeed;
   late bool useDefault;
-  late bool penalizeNewline = true;
+  late bool penalizeNewline;
 
   late int seed = 0;
   late int nKeep = 48;
@@ -39,6 +40,7 @@ class LargeLanguageModel  extends ChangeNotifier {
     this.name = '',
     this.uri = '',
     this.token = '',
+    this.randomSeed = true,
     this.useDefault = false,
     this.penalizeNewline = true,
     this.seed = 0,
@@ -70,6 +72,7 @@ class LargeLanguageModel  extends ChangeNotifier {
     name = json['name'] ?? '';
     uri = json['uri'] ?? '';
     token = json['token'] ?? '';
+    randomSeed = json['randomSeed'] ?? true;
     useDefault = json['useDefault'] ?? false;
     penalizeNewline = json['penalizeNewline'] ?? true;
     seed = json['seed'] ?? 0;
@@ -98,6 +101,7 @@ class LargeLanguageModel  extends ChangeNotifier {
       'name': name,
       'uri': uri,
       'token': token,
+      'randomSeed': randomSeed,
       'useDefault': useDefault,
       'penalizeNewline': penalizeNewline,
       'seed': seed,

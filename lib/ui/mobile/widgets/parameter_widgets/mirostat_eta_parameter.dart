@@ -11,14 +11,15 @@ class MirostatEtaParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-            labelText: 'mirostat_eta',
-            inputValue: session.model.mirostatEta,
-            sliderMin: 0.0,
-            sliderMax: 1.0,
-            sliderDivisions: 100,
-            onValueChanged: (value) {
-              session.model.mirostatEta = value;
-            });
+          labelText: 'mirostat_eta',
+          inputValue: session.model.mirostatEta,
+          sliderMin: 0.0,
+          sliderMax: 1.0,
+          sliderDivisions: 100,
+          onValueChanged: (value) {
+            session.model.mirostatEta = value;
+          }
+        );
       }
     );
   }

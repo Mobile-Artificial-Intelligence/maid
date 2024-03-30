@@ -12,11 +12,12 @@ class ApiKeyParameter extends StatelessWidget {
     controller.text = context.read<Session>().model.token;
 
     return TextFieldListTile(
-        headingText: "API Key",
-        labelText: "API Key",
-        controller: controller,
-        onChanged: (value) {
-          context.read<Session>().model.token = value;
-        });
+      headingText: "API Key",
+      labelText: "API Key",
+      controller: controller,
+      onChanged: (value) {
+        context.read<Session>().model.token = value;
+      }
+    );
   }
 }
