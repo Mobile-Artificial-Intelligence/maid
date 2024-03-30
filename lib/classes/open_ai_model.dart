@@ -34,11 +34,6 @@ class OpenAiModel extends LargeLanguageModel {
   }
 
   @override
-  Map<String, dynamic> toMap() {
-    return super.toMap();
-  }
-
-  @override
   Stream<String> prompt(List<ChatMessage> messages) async* {
     try {
       final chat = ChatOpenAI(
