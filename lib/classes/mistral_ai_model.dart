@@ -7,18 +7,14 @@ class MistralAiModel extends LargeLanguageModel {
   @override
   AiPlatformType get type => AiPlatformType.mistralAI;
 
-  late String url;
-  late String token;
-  late double topP;
-
   MistralAiModel({
     super.name,
+    super.uri = 'https://api.mistral.ai/v1/',
+    super.token,
     super.useDefault,
     super.seed,
     super.temperature,
-    this.url = 'https://api.mistral.ai/v1/',
-    this.token = '',
-    this.topP = 0.95
+    super.topP
   });
 
   MistralAiModel.fromMap(Map<String, dynamic> json) {
@@ -28,7 +24,7 @@ class MistralAiModel extends LargeLanguageModel {
   @override
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
-    url = json['url'] ?? 'https://api.mistral.ai/v1/';
+    uri = json['url'] ?? 'https://api.mistral.ai/v1/';
     token = json['token'] ?? '';
     topP = json['topP'] ?? 0.95;
   }
@@ -37,9 +33,6 @@ class MistralAiModel extends LargeLanguageModel {
   Map<String, dynamic> toMap() {
     return {
       ...super.toMap(),
-      'url': url,
-      'token': token,
-      'topP': topP
     };
   }
 
@@ -47,7 +40,7 @@ class MistralAiModel extends LargeLanguageModel {
   Stream<String> prompt(List<ChatMessage> messages) async* {
     try {
       final chat = ChatMistralAI(
-        baseUrl: '$url/v1',
+        baseUrl: '$uri/v1',
         apiKey: token,
         defaultOptions: ChatMistralAIOptions(
           model: name,
@@ -72,7 +65,7 @@ class MistralAiModel extends LargeLanguageModel {
   }
   
   @override
-  Future<void> resetUrl() async {
-    url = 'https://api.mistral.ai/v1/';
+  Future<void> resetUri() async {
+    uri = 'https://api.mistral.ai/v1/';
   }
 }

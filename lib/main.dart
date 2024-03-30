@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/user.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:maid/ui/mobile/pages/home_page.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/character.dart';
@@ -9,8 +8,6 @@ import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  GenerationManager.getOllamaUrl();
 
   runApp(
     MultiProvider(

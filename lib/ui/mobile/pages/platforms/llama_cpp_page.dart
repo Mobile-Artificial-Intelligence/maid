@@ -52,7 +52,7 @@ class LlamaCppPage extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          (session.model as LlamaCppModel).path,
+                          session.model.uri,
                           textAlign: TextAlign.end,
                         ),
                       ),
@@ -76,7 +76,7 @@ class LlamaCppPage extends StatelessWidget {
                     const SizedBox(width: 10.0),
                     FilledButton(
                       onPressed: () {
-                        (session.model as LlamaCppModel).resetUrl();
+                        session.model.resetUri();
                       },
                       child: Text(
                         "Unload GGUF",

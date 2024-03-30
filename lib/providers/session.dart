@@ -352,7 +352,7 @@ class Session extends ChangeNotifier {
     } 
     else {
       _model = OllamaModel();
-      await _model.resetUrl();
+      await _model.resetUri();
     }
 
     prefs.setInt("llm_type", _model.type.index);

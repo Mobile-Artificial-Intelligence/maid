@@ -7,25 +7,15 @@ class OpenAiModel extends LargeLanguageModel {
   @override
   AiPlatformType get type => AiPlatformType.openAI;
 
-  late String url;
-  late String token;
-
-  late int nPredict;
-  late double topP;
-  late double penaltyPresent;
-  late double penaltyFreq;
-
   OpenAiModel({
-    super.useDefault,
-    super.seed,
-    super.temperature,
     super.name,
-    this.url = 'https://api.openai.com/v1/',
-    this.token = '',
-    this.nPredict = 512,
-    this.topP = 0.95,
-    this.penaltyPresent = 0.0,
-    this.penaltyFreq = 0.0
+    super.uri = 'https://api.openai.com/v1/',
+    super.token,
+    super.seed,
+    super.nPredict,
+    super.topP,
+    super.penaltyPresent,
+    super.penaltyFreq,
   });
 
   OpenAiModel.fromMap(Map<String, dynamic> json) {
@@ -35,7 +25,7 @@ class OpenAiModel extends LargeLanguageModel {
   @override
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
-    url = json['url'] ?? 'https://api.openai.com/v1/';
+    uri = json['url'] ?? 'https://api.openai.com/v1/';
     token = json['token'] ?? '';
     nPredict = json['nPredict'] ?? 512;
     topP = json['topP'] ?? 0.95;
@@ -45,22 +35,14 @@ class OpenAiModel extends LargeLanguageModel {
 
   @override
   Map<String, dynamic> toMap() {
-    return {
-      ...super.toMap(),
-      'url': url,
-      'token': token,
-      'nPredict': nPredict,
-      'topP': topP,
-      'penaltyPresent': penaltyPresent,
-      'penaltyFreq': penaltyFreq
-    };
+    return super.toMap();
   }
 
   @override
   Stream<String> prompt(List<ChatMessage> messages) async* {
     try {
       final chat = ChatOpenAI(
-        baseUrl: url,
+        baseUrl: uri,
         apiKey: token,
         defaultOptions: ChatOpenAIOptions(
           model: name,
@@ -88,7 +70,7 @@ class OpenAiModel extends LargeLanguageModel {
   }
   
   @override
-  Future<void> resetUrl() async {
-    url = 'https://api.openai.com/v1/';
+  Future<void> resetUri() async {
+    uri = 'https://api.openai.com/v1/';
   }
 }
