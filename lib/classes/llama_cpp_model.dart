@@ -1,9 +1,16 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
-import 'package:maid/classes/llm.dart';
+import 'package:flutter/material.dart';
+import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/static/file_manager.dart';
+import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
 
-class LlamaCppModel extends LLM {
+class LlamaCppModel extends LargeLanguageModel {
+  MaidLLM? _maidLLM;
+
   late String path;
 
   late int nKeep;
@@ -142,5 +149,33 @@ class LlamaCppModel extends LLM {
     gptParams.chatml = promptFormat == PromptFormat.chatml;
 
     return gptParams;
+  }
+
+  Future<String> loadModel(BuildContext context) async {
+    try {
+      File? file =
+          await FileManager.load(context, "Load Model File", [".gguf"]);
+
+      if (file == null) return "Error loading file";
+
+      Logger.log("Loading model from $file");
+
+      path = file.path;
+      _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
+    } catch (e) {
+      return "Error: $e";
+    }
+
+    return "Model Successfully Loaded";
+  }
+
+  Stream<String> prompt(List<ChatMessage> messages) {
+    _maidLLM ??= MaidLLM(toGptParams(), log: Logger.log);
+
+    return _maidLLM!.prompt(messages);
+  }
+
+  void stop() async {
+    await _maidLLM?.stop();
   }
 }

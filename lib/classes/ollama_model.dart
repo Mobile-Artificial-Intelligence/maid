@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart';
 import 'package:lan_scanner/lan_scanner.dart';
-import 'package:maid/classes/llm.dart';
+import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class OllamaModel extends LLM {
+class OllamaModel extends LargeLanguageModel {
   late String name;
   late String ip;
   late String url;

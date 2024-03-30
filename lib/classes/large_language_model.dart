@@ -1,13 +1,13 @@
-abstract class LLM {
+abstract class LargeLanguageModel {
   late int seed;
   late double temperature;
 
-  LLM({
+  LargeLanguageModel({
     this.seed = 0, 
     this.temperature = 0.8
   });
 
-  LLM.fromJson(Map<String, dynamic> json) {
+  LargeLanguageModel.fromJson(Map<String, dynamic> json) {
     fromJson(json);
   }
 
