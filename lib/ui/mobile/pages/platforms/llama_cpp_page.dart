@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/classes/llama_cpp_model.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalize_nl_parameter.dart';
@@ -34,10 +35,10 @@ class LlamaCppPage extends StatelessWidget {
     return Scaffold(
       appBar: const GenericAppBar(title: "LlamaCPP Parameters"),
       body: SessionBusyOverlay(
-        child: Consumer<AiPlatform>(
-          builder: (context, ai, child) {
+        child: Consumer<Session>(
+          builder: (context, session, child) {
             SharedPreferences.getInstance().then((prefs) {
-              prefs.setString("llama_cpp_model", json.encode(ai.toMap()));
+              prefs.setString("llama_cpp_model", json.encode(session.model.toMap()));
             });
 
             return ListView(
@@ -51,7 +52,7 @@ class LlamaCppPage extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          ai.model,
+                          session.model.uri,
                           textAlign: TextAlign.end,
                         ),
                       ),
@@ -63,9 +64,10 @@ class LlamaCppPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FilledButton(
-                      onPressed: () {
-                        storageOperationDialog(
-                            context, ai.loadModelFile);
+                      onPressed: () async {
+                        await storageOperationDialog(
+                            context, (session.model as LlamaCppModel).loadModel);
+                        session.notify();
                       },
                       child: Text(
                         "Load GGUF",
@@ -75,7 +77,8 @@ class LlamaCppPage extends StatelessWidget {
                     const SizedBox(width: 10.0),
                     FilledButton(
                       onPressed: () {
-                        ai.model = "";
+                        session.model.resetUri();
+                        session.notify();
                       },
                       child: Text(
                         "Unload GGUF",

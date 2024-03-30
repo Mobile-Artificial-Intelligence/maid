@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -8,16 +8,20 @@ class TfsZParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, ai, child) {
-      return SliderListTile(
+    return Consumer<Session>(
+      builder: (context, session, child) {
+        return SliderListTile(
           labelText: 'tfs_z',
-          inputValue: ai.tfsZ,
+          inputValue: session.model.tfsZ,
           sliderMin: 0.0,
           sliderMax: 1.0,
           sliderDivisions: 100,
           onValueChanged: (value) {
-            ai.tfsZ = value;
-          });
-    });
+            session.model.tfsZ = value;
+            session.notify();
+          }
+        );
+      }
+    );
   }
 }

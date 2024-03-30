@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_keep_parameter.dart';
@@ -37,10 +37,10 @@ class OllamaPage extends StatelessWidget {
     return Scaffold(
       appBar: const GenericAppBar(title: "Ollama Parameters"),
       body: SessionBusyOverlay(
-        child: Consumer<AiPlatform>(
-          builder: (context, ai, child) {
+        child: Consumer<Session>(
+          builder: (context, session, child) {
             SharedPreferences.getInstance().then((prefs) {
-              prefs.setString("ollama_model", json.encode(ai.toMap()));
+              prefs.setString("ollama_model", json.encode(session.model.toMap()));
             });
 
             return ListView(
@@ -55,7 +55,7 @@ class OllamaPage extends StatelessWidget {
                 const UrlParameter(),
                 const SizedBox(height: 8.0),
                 const UseDefaultParameter(),
-                if (ai.useDefault) ...[
+                if (session.model.useDefault) ...[
                   const SizedBox(height: 20.0),
                   Divider(
                     height: 20,

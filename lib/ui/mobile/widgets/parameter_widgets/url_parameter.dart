@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
 class UrlParameter extends StatelessWidget {
@@ -8,7 +8,7 @@ class UrlParameter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController controller = TextEditingController();
-    controller.text = context.read<AiPlatform>().url;
+    controller.text = context.read<Session>().model.uri;
 
 
     return ListTile(
@@ -19,7 +19,9 @@ class UrlParameter extends StatelessWidget {
           ),
           IconButton(
             onPressed: () async {
-              controller.text = await context.read<AiPlatform>().resetUrl();
+              final model = context.read<Session>().model;
+              await model.resetUri();
+              controller.text = model.uri;
             }, 
             icon: const Icon(Icons.refresh),
           ),
@@ -34,7 +36,8 @@ class UrlParameter extends StatelessWidget {
                 labelText: "URL",
               ),
               onChanged: (value) {
-                context.read<AiPlatform>().url = value;
+                context.read<Session>().model.uri = value;
+                context.read<Session>().notify();
               },
             ),
           ),

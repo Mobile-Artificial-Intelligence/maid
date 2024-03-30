@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/pages/about_page.dart';
 import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:provider/provider.dart';
-import 'package:maid/providers/ai_platform.dart';
 import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
@@ -47,20 +48,21 @@ class _HomeAppBarState extends State<HomeAppBar> {
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Size size = renderBox.size;
 
-    context.read<AiPlatform>().getOptions().then((options) {
+    context.read<Session>().model.getOptions().then((options) {
       List<PopupMenuEntry<dynamic>> modelOptions = options
         .map((String modelName) => PopupMenuItem(
           padding: EdgeInsets.zero,
-          child: Consumer<AiPlatform>(
+          child: Consumer<Session>(
             builder: 
-              (context, ai, child) {
+              (context, session, child) {
                 return ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                   title: Text(modelName),
                   onTap: () {
-                    ai.model = modelName;
+                    session.model.name = modelName;
+                    session.notify();
                   },
-                  tileColor: ai.model == modelName ? Theme.of(context).colorScheme.secondary : null,
+                  tileColor: session.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
                 );
               }
         )))
@@ -90,7 +92,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) {
-                      switch (context.read<AiPlatform>().apiType) {
+                      switch (context.read<Session>().model.type) {
                         case AiPlatformType.llamacpp:
                           return const LlamaCppPage();
                         case AiPlatformType.ollama:

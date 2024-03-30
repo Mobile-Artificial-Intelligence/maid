@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
@@ -78,11 +78,13 @@ class _ChatFieldState extends State<ChatField> {
         child: Row(
           children: [
             if (session.isBusy &&
-                context.read<AiPlatform>().apiType != AiPlatformType.ollama)
-              const IconButton(
-                  onPressed: GenerationManager.stop,
+                session.model.type != AiPlatformType.ollama)
+              IconButton(
+                  onPressed: () {
+                    GenerationManager.stop(context);
+                  },
                   iconSize: 50,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.stop_circle_sharp,
                     color: Colors.red,
                   )),

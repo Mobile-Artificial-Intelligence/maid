@@ -2,6 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/classes/llama_cpp_model.dart';
+import 'package:maid/classes/mistral_ai_model.dart';
+import 'package:maid/classes/ollama_model.dart';
+import 'package:maid/classes/open_ai_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/static/generation_manager.dart';
@@ -10,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Session extends ChangeNotifier {
   Key _key = UniqueKey();
   bool _busy = false;
+  LargeLanguageModel model = LlamaCppModel();
   ChatNode _root = ChatNode(key: UniqueKey());
   ChatNode? _tail;
   String _messageBuffer = "";
@@ -48,6 +54,10 @@ class Session extends ChangeNotifier {
     } else {
       newSession();
     }
+  }
+
+  void notify() {
+    notifyListeners();
   }
 
   Session() {
@@ -297,5 +307,74 @@ class Session extends ChangeNotifier {
   StreamController<int> getFinaliseStream(Key key) {
     return _root.find(key)?.finaliseController ??
         StreamController<int>.broadcast();
+  }
+
+  void switchLlamaCpp() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastLlamaCpp = json.decode(prefs.getString("llama_cpp_model") ?? "{}");
+    Logger.log(lastLlamaCpp.toString());
+    
+    if (lastLlamaCpp.isNotEmpty) {
+      model = LlamaCppModel.fromMap(lastLlamaCpp);
+    } 
+    else {
+      model = LlamaCppModel();
+    }
+
+    prefs.setInt("llm_type", model.type.index);
+    notifyListeners();
+  }
+
+  void switchOpenAI() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastOpenAI = json.decode(prefs.getString("open_ai_model") ?? "{}");
+    Logger.log(lastOpenAI.toString());
+    
+    if (lastOpenAI.isNotEmpty) {
+      model = OpenAiModel.fromMap(lastOpenAI);
+    } 
+    else {
+      model = OpenAiModel();
+    }
+
+    prefs.setInt("llm_type", model.type.index);
+    notifyListeners();
+  }
+
+  void switchOllama() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastOllama = json.decode(prefs.getString("ollama_model") ?? "{}");
+    Logger.log(lastOllama.toString());
+    
+    if (lastOllama.isNotEmpty) {
+      model = OllamaModel.fromMap(lastOllama);
+    } 
+    else {
+      model = OllamaModel();
+      await model.resetUri();
+    }
+
+    prefs.setInt("llm_type", model.type.index);
+    notifyListeners();
+  }
+
+  void switchMistralAI() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastMistralAI = json.decode(prefs.getString("mistral_ai_model") ?? "{}");
+    Logger.log(lastMistralAI.toString());
+    
+    if (lastMistralAI.isNotEmpty) {
+      model = MistralAiModel.fromMap(lastMistralAI);
+    } 
+    else {
+      model = MistralAiModel();
+    }
+
+    prefs.setInt("llm_type", model.type.index);
+    notifyListeners();
   }
 }

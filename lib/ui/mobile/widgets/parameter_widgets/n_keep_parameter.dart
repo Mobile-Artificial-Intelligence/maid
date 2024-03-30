@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/ai_platform.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -8,16 +8,20 @@ class NKeepParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AiPlatform>(builder: (context, ai, child) {
+    return Consumer<Session>(
+      builder: (context, session, child) {
       return SliderListTile(
           labelText: 'n_keep',
-          inputValue: ai.nKeep,
+          inputValue: session.model.nKeep,
           sliderMin: 1.0,
           sliderMax: 1024.0,
           sliderDivisions: 1023,
           onValueChanged: (value) {
-            ai.nKeep = value.round();
-          });
-    });
+            session.model.nKeep = value.round();
+            session.notify();
+          }
+        );
+      }
+    );
   }
 }
