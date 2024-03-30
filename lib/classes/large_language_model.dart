@@ -1,3 +1,5 @@
+import 'package:langchain/langchain.dart';
+
 abstract class LargeLanguageModel {
   late int seed;
   late double temperature;
@@ -22,4 +24,6 @@ abstract class LargeLanguageModel {
       'temperature': temperature
     };
   }
+
+  Stream<String> prompt(List<ChatMessage> messages);
 }

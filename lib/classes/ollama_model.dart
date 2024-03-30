@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart';
 import 'package:lan_scanner/lan_scanner.dart';
+import 'package:langchain/langchain.dart';
+import 'package:langchain_ollama/langchain_ollama.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -33,6 +35,7 @@ class OllamaModel extends LargeLanguageModel {
   late double mirostatEta;
 
   late bool penalizeNewline;
+  late bool useDefault;
 
   OllamaModel({
     super.seed,
@@ -58,6 +61,7 @@ class OllamaModel extends LargeLanguageModel {
     this.mirostatTau = 5.0,
     this.mirostatEta = 0.1,
     this.penalizeNewline = true,
+    this.useDefault = true,
   });
 
   OllamaModel.fromJson(Map<String, dynamic> json) {
@@ -92,6 +96,7 @@ class OllamaModel extends LargeLanguageModel {
     mirostatEta = json['mirostatEta'] ?? 0.1;
 
     penalizeNewline = json['penalizeNewline'] ?? true;
+    useDefault = json['useDefault'] ?? true;
   }
 
   @override
@@ -120,6 +125,7 @@ class OllamaModel extends LargeLanguageModel {
       'mirostatTau': mirostatTau,
       'mirostatEta': mirostatEta,
       'penalizeNewline': penalizeNewline,
+      'useDefault': useDefault,
     };
   }
 
@@ -208,6 +214,52 @@ class OllamaModel extends LargeLanguageModel {
     } else {
       Logger.log("Nearby Devices - permission denied");
       return false;
+    }
+  }
+
+  @override
+  Stream<String> prompt(List<ChatMessage> messages) async* {
+    try {
+      ChatOllama chat;
+      if (useDefault) {
+        chat = ChatOllama(
+          baseUrl: '$url/api',
+          defaultOptions: ChatOllamaOptions(
+            model: name,
+          ),
+        );
+      } else {
+        chat = ChatOllama(
+          baseUrl: '$url/api',
+          defaultOptions: ChatOllamaOptions(
+            model: name,
+            numKeep: nKeep,
+            seed: seed,
+            numPredict: nPredict,
+            topK: topK,
+            topP: topP,
+            typicalP: typicalP,
+            temperature: temperature,
+            repeatPenalty: penaltyRepeat,
+            frequencyPenalty: penaltyFreq,
+            presencePenalty: penaltyPresent,
+            mirostat: mirostat,
+            mirostatTau: mirostatTau,
+            mirostatEta: mirostatEta,
+            numCtx: nCtx,
+            numBatch: nBatch,
+            numThread: nThread,
+          ),
+        );
+      }
+
+      final stream = chat.stream(PromptValue.chat(messages));
+
+      await for (final ChatResult response in stream) {
+        yield response.firstOutputAsString;
+      }
+    } catch (e) {
+      Logger.log('Error: $e');
     }
   }
 }
