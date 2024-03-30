@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
@@ -81,7 +82,8 @@ class _ChatFieldState extends State<ChatField> {
                 session.model.type != AiPlatformType.ollama)
               IconButton(
                   onPressed: () {
-                    GenerationManager.stop(context);
+                    (session.model as LlamaCppModel).stop();
+                    session.busy = false;
                   },
                   iconSize: 50,
                   icon: const Icon(
