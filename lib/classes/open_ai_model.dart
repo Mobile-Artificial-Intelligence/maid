@@ -4,7 +4,9 @@ import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 
 class OpenAiModel extends LargeLanguageModel {
-  late String name;
+  @override
+  AiPlatformType get type => AiPlatformType.openAI;
+
   late String url;
   late String token;
 
@@ -17,8 +19,8 @@ class OpenAiModel extends LargeLanguageModel {
     super.useDefault,
     super.seed,
     super.temperature,
-    this.name = '',
-    this.url = '',
+    super.name,
+    this.url = 'https://api.openai.com/v1/',
     this.token = '',
     this.nPredict = 512,
     this.topP = 0.95,
@@ -26,15 +28,14 @@ class OpenAiModel extends LargeLanguageModel {
     this.penaltyFreq = 0.0
   });
 
-  OpenAiModel.fromJson(Map<String, dynamic> json) {
-    fromJson(json);
+  OpenAiModel.fromMap(Map<String, dynamic> json) {
+    fromMap(json);
   }
 
   @override
-  void fromJson(Map<String, dynamic> json) {
-    super.fromJson(json);
-    name = json['name'] ?? '';
-    url = json['url'] ?? '';
+  void fromMap(Map<String, dynamic> json) {
+    super.fromMap(json);
+    url = json['url'] ?? 'https://api.openai.com/v1/';
     token = json['token'] ?? '';
     nPredict = json['nPredict'] ?? 512;
     topP = json['topP'] ?? 0.95;
@@ -46,7 +47,6 @@ class OpenAiModel extends LargeLanguageModel {
   Map<String, dynamic> toJson() {
     return {
       ...super.toJson(),
-      'name': name,
       'url': url,
       'token': token,
       'nPredict': nPredict,
@@ -80,5 +80,15 @@ class OpenAiModel extends LargeLanguageModel {
     } catch (e) {
       Logger.log('Error: $e');
     }
+  }
+  
+  @override
+  Future<List<String>> getOptions() async {
+    return ["gpt-3.5-turbo", "gpt-4-32k"];
+  }
+  
+  @override
+  Future<void> resetUrl() async {
+    url = 'https://api.openai.com/v1/';
   }
 }

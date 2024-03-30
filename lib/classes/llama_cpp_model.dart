@@ -9,6 +9,9 @@ import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
 
 class LlamaCppModel extends LargeLanguageModel {
+  @override
+  AiPlatformType get type => AiPlatformType.llamacpp;
+
   MaidLLM? _maidLLM;
 
   late String path;
@@ -61,13 +64,13 @@ class LlamaCppModel extends LargeLanguageModel {
     this.promptFormat = PromptFormat.alpaca
   });
 
-  LlamaCppModel.fromJson(Map<String, dynamic> json) {
-    fromJson(json);
+  LlamaCppModel.fromMap(Map<String, dynamic> json) {
+    fromMap(json);
   }
 
   @override
-  void fromJson(Map<String, dynamic> json) {
-    super.fromJson(json);
+  void fromMap(Map<String, dynamic> json) {
+    super.fromMap(json);
     path = json['path'] ?? '';
     nKeep = json['nKeep'] ?? 48;
     nCtx = json['nCtx'] ?? 512;
@@ -182,5 +185,15 @@ class LlamaCppModel extends LargeLanguageModel {
 
   void stop() async {
     await _maidLLM?.stop();
+  }
+  
+  @override
+  Future<List<String>> getOptions() async {
+    throw [];
+  }
+  
+  @override
+  Future<void> resetUrl() async {
+    path = '';
   }
 }

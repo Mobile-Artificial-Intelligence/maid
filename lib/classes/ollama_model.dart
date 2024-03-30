@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -11,7 +12,9 @@ import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class OllamaModel extends LargeLanguageModel {
-  late String name;
+  @override
+  AiPlatformType get type => AiPlatformType.ollama;
+  
   late String ip;
   late String url;
 
@@ -40,7 +43,7 @@ class OllamaModel extends LargeLanguageModel {
     super.seed,
     super.temperature,
     super.useDefault,
-    this.name = '',
+    super.name,
     this.ip = '',
     this.url = '',
     this.nKeep = 48,
@@ -63,15 +66,14 @@ class OllamaModel extends LargeLanguageModel {
     this.penalizeNewline = true,
   });
 
-  OllamaModel.fromJson(Map<String, dynamic> json) {
-    fromJson(json);
+  OllamaModel.fromMap(Map<String, dynamic> json) {
+    fromMap(json);
   }
 
   @override
-  void fromJson(Map<String, dynamic> json) {
-    super.fromJson(json);
+  void fromMap(Map<String, dynamic> json) {
+    super.fromMap(json);
 
-    name = json['name'] ?? '';
     ip = json['ip'] ?? '';
     url = json['url'] ?? '';
 
@@ -102,7 +104,6 @@ class OllamaModel extends LargeLanguageModel {
   Map<String, dynamic> toJson() {
     return {
       ...super.toJson(),
-      'name': name,
       'ip': ip,
       'url': url,
       'nKeep': nKeep,
@@ -126,6 +127,7 @@ class OllamaModel extends LargeLanguageModel {
     };
   }
 
+  @override
   Future<void> resetUrl() async {
     if (ip.isNotEmpty && (await _checkIpForOllama(ip)).isNotEmpty) {
       url = 'http://$ip:11434';
@@ -181,42 +183,14 @@ class OllamaModel extends LargeLanguageModel {
     return '';
   }
 
-  Future<bool> _getNearbyDevicesPermission() async {
-    if (!Platform.isAndroid && !Platform.isIOS) {
-      return true;
-    }
-
-    // Get sdk version
-    final sdk = await DeviceInfoPlugin()
-        .androidInfo
-        .then((value) => value.version.sdkInt);
-    var permissions = <Permission>[]; // List of permissions to request
-
-    if (sdk <= 32) {
-      // ACCESS_FINE_LOCATION is required
-      permissions.add(Permission.location);
-    } else {
-      // NEARBY_WIFI_DEVICES is required
-      permissions.add(Permission.nearbyWifiDevices);
-    }
-
-    // Request permissions and check if all are granted
-    Map<Permission, PermissionStatus> statuses = await permissions.request();
-    bool allPermissionsGranted =
-        statuses.values.every((status) => status.isGranted);
-
-    if (allPermissionsGranted) {
-      Logger.log("Nearby Devices - permission granted");
-      return true;
-    } else {
-      Logger.log("Nearby Devices - permission denied");
-      return false;
-    }
-  }
-
   @override
   Stream<String> prompt(List<ChatMessage> messages) async* {
     try {
+      bool permissionGranted = await _getNearbyDevicesPermission();
+      if (!permissionGranted) {
+        throw Exception('Permission denied');
+      }
+
       ChatOllama chat;
       if (useDefault) {
         chat = ChatOllama(
@@ -257,6 +231,70 @@ class OllamaModel extends LargeLanguageModel {
       }
     } catch (e) {
       Logger.log('Error: $e');
+    }
+  }
+  
+  @override
+  Future<List<String>> getOptions() async {
+    bool permissionGranted = await _getNearbyDevicesPermission();
+    if (!permissionGranted) {
+      return [];
+    }
+
+    final uri = Uri.parse("$url/api/tags");
+    final headers = {"Accept": "application/json"};
+
+    try {
+      var request = Request("GET", uri)..headers.addAll(headers);
+
+      var response = await request.send();
+      var responseString = await response.stream.bytesToString();
+      var data = json.decode(responseString);
+
+      List<String> options = [];
+      if (data['models'] != null) {
+        for (var option in data['models']) {
+          options.add(option['name']);
+        }
+      }
+
+      return options;
+    } catch (e) {
+      Logger.log('Error: $e');
+      return [];
+    }
+  }
+
+  Future<bool> _getNearbyDevicesPermission() async {
+    if (!Platform.isAndroid && !Platform.isIOS) {
+      return true;
+    }
+
+    // Get sdk version
+    final sdk = await DeviceInfoPlugin()
+        .androidInfo
+        .then((value) => value.version.sdkInt);
+    var permissions = <Permission>[]; // List of permissions to request
+
+    if (sdk <= 32) {
+      // ACCESS_FINE_LOCATION is required
+      permissions.add(Permission.location);
+    } else {
+      // NEARBY_WIFI_DEVICES is required
+      permissions.add(Permission.nearbyWifiDevices);
+    }
+
+    // Request permissions and check if all are granted
+    Map<Permission, PermissionStatus> statuses = await permissions.request();
+    bool allPermissionsGranted =
+        statuses.values.every((status) => status.isGranted);
+
+    if (allPermissionsGranted) {
+      Logger.log("Nearby Devices - permission granted");
+      return true;
+    } else {
+      Logger.log("Nearby Devices - permission denied");
+      return false;
     }
   }
 }

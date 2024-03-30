@@ -4,30 +4,31 @@ import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 
 class MistralAiModel extends LargeLanguageModel {
-  late String name;
+  @override
+  AiPlatformType get type => AiPlatformType.mistralAI;
+
   late String url;
   late String token;
   late double topP;
 
   MistralAiModel({
+    super.name,
     super.useDefault,
     super.seed,
     super.temperature,
-    this.name = '',
-    this.url = '',
+    this.url = 'https://api.mistral.ai/v1/',
     this.token = '',
     this.topP = 0.95
   });
 
-  MistralAiModel.fromJson(Map<String, dynamic> json) {
-    fromJson(json);
+  MistralAiModel.fromMap(Map<String, dynamic> json) {
+    fromMap(json);
   }
 
   @override
-  void fromJson(Map<String, dynamic> json) {
-    super.fromJson(json);
-    name = json['name'] ?? '';
-    url = json['url'] ?? '';
+  void fromMap(Map<String, dynamic> json) {
+    super.fromMap(json);
+    url = json['url'] ?? 'https://api.mistral.ai/v1/';
     token = json['token'] ?? '';
     topP = json['topP'] ?? 0.95;
   }
@@ -36,7 +37,6 @@ class MistralAiModel extends LargeLanguageModel {
   Map<String, dynamic> toJson() {
     return {
       ...super.toJson(),
-      'name': name,
       'url': url,
       'token': token,
       'topP': topP
@@ -64,5 +64,15 @@ class MistralAiModel extends LargeLanguageModel {
     } catch (e) {
       Logger.log('Error: $e');
     }
+  }
+  
+  @override
+  Future<List<String>> getOptions() async {
+    return ["mistral-small", "mistral-medium", "mistral-large"];
+  }
+  
+  @override
+  Future<void> resetUrl() async {
+    url = 'https://api.mistral.ai/v1/';
   }
 }
