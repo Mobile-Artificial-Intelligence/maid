@@ -43,18 +43,17 @@ class ChatMessageState extends State<ChatMessage>
           _messageWidgets.clear();
           _parseMessage(_message);
         });
-      });
+      }).onDone(() { 
+        _message = _message.trim();
 
-      session.getFinaliseStream(widget.key!).stream.listen((_) {
-        setState(() {
-          _message = _message.trim();
-          _parseMessage(_message);
-          session.add(
-            widget.key!,
-            message: _message, userGenerated: widget.userGenerated
-          );
-          _finalised = true;
-        });
+        _parseMessage(_message);
+
+        session.add(
+          widget.key!,
+          message: _message, userGenerated: widget.userGenerated
+        );
+
+        _finalised = true;
       });
     }
   }
@@ -258,7 +257,6 @@ class ChatMessageState extends State<ChatMessage>
   @override
   void dispose() {
     session.getMessageStream(widget.key!).close();
-    session.getFinaliseStream(widget.key!).close();
     super.dispose();
   }
 }

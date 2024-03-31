@@ -180,8 +180,6 @@ class Session extends ChangeNotifier {
     messages.addAll(getMessages());
 
     for (var message in messages) {
-      print(message);
-
       switch (message['role']) {
         case "user":
           chatMessages.add(ChatMessage.humanText(message['content']));
@@ -298,9 +296,7 @@ class Session extends ChangeNotifier {
 
     _tail ??= _root.findTail();
 
-    if (!(_tail!.finaliseController.isClosed)) {
-      _tail!.finaliseController.add(0);
-    }
+    _tail!.messageController.close();
 
     notifyListeners();
   }
@@ -398,12 +394,7 @@ class Session extends ChangeNotifier {
         StreamController<String>.broadcast();
   }
 
-  StreamController<int> getFinaliseStream(Key key) {
-    return _root.find(key)?.finaliseController ??
-        StreamController<int>.broadcast();
-  }
-
-  /// ------------------- Model Switching -------------------
+  /// -------------------------------------- Model Switching --------------------------------------
 
   void switchLlamaCpp() async {
     final prefs = await SharedPreferences.getInstance();

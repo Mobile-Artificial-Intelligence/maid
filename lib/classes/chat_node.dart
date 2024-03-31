@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/static/utilities.dart';
 
 class ChatNode {
-  final StreamController<String> messageController =
-      StreamController<String>.broadcast();
-  final StreamController<int> finaliseController =
-      StreamController<int>.broadcast();
+  final StreamController<String> messageController = StreamController<String>.broadcast();
 
   final Key key;
   final bool userGenerated;
