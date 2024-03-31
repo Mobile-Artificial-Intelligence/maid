@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/static/generation_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -64,7 +63,7 @@ class _ChatFieldState extends State<ChatField> {
       session.add(UniqueKey());
     });
 
-    GenerationManager.prompt(_promptController.text.trim(), context);
+    session.prompt(_promptController.text.trim(), context);
 
     setState(() {
       _promptController.clear();
@@ -81,10 +80,7 @@ class _ChatFieldState extends State<ChatField> {
             if (session.isBusy &&
                 session.model.type != AiPlatformType.ollama)
               IconButton(
-                  onPressed: () {
-                    (session.model as LlamaCppModel).stop();
-                    session.busy = false;
-                  },
+                  onPressed: session.stop,
                   iconSize: 50,
                   icon: const Icon(
                     Icons.stop_circle_sharp,

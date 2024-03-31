@@ -2,14 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:langchain/langchain.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/classes/mistral_ai_model.dart';
 import 'package:maid/classes/ollama_model.dart';
 import 'package:maid/classes/open_ai_model.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/classes/chat_node.dart';
-import 'package:maid/static/generation_manager.dart';
+import 'package:maid/static/utilities.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
@@ -68,17 +72,12 @@ class Session extends ChangeNotifier {
     fromMap(inputJson);
   }
 
-  void _save() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("last_session", json.encode(toMap()));
-    });
-  }
-
   void newSession() {
     final key = UniqueKey();
     _root = ChatNode(key: key);
     _root.message = "New Chat";
     _tail = null;
+    model = LlamaCppModel();
     notifyListeners();
   }
 
@@ -92,17 +91,43 @@ class Session extends ChangeNotifier {
     _key = session.key;
     _root = session.root;
     _tail = session.tail;
+    model = session.model;
     notifyListeners();
   }
 
   void fromMap(Map<String, dynamic> inputJson) {
-    _root = ChatNode.fromMap(inputJson);
+    _root = ChatNode.fromMap(inputJson['root']);
     _tail = _root.findTail();
+
+    final type = AiPlatformType.values[inputJson['llm_type'] ?? AiPlatformType.llamacpp.index];
+
+    switch (type) {
+      case AiPlatformType.llamacpp:
+        switchLlamaCpp();
+        break;
+      case AiPlatformType.openAI:
+        switchOpenAI();
+        break;
+      case AiPlatformType.ollama:
+        switchOllama();
+        break;
+      case AiPlatformType.mistralAI:
+        switchMistralAI();
+        break;
+      default:
+        switchLlamaCpp();
+        break;
+    }
+    
     notifyListeners();
   }
 
   Map<String, dynamic> toMap() {
-    return _root.toMap();
+    return {
+      'root': _root.toMap(),
+      'llm_type': model.type.index,
+      'model': model.toMap(),
+    };
   }
 
   String getMessage(Key key) {
@@ -122,6 +147,99 @@ class Session extends ChangeNotifier {
 
   void setRootMessage(String message) {
     _root.message = message;
+    notifyListeners();
+  }
+
+  void prompt(String input, BuildContext context) async {
+    _busy = true;
+    notifyListeners();
+
+    final user = context.read<User>();
+    final character = context.read<Character>();
+
+    List<ChatMessage> chatMessages = [];
+
+    final description = Utilities.formatPlaceholders(character.description, user.name, character.name);
+    final personality = Utilities.formatPlaceholders(character.personality, user.name, character.name);
+    final scenario = Utilities.formatPlaceholders(character.scenario, user.name, character.name);
+    final system = Utilities.formatPlaceholders(character.system, user.name, character.name);
+
+    final preprompt = '$description\n\n$personality\n\n$scenario\n\n$system';
+
+    List<Map<String, dynamic>> messages = [
+      {
+        'role': 'system',
+        'content': preprompt,
+      }
+    ];
+
+    if (character.useExamples) {
+      messages.addAll(character.examples);
+    }
+
+    messages.addAll(getMessages());
+
+    for (var message in messages) {
+      switch (message['role']) {
+        case "user":
+          chatMessages.add(ChatMessage.humanText(message['content']));
+          chatMessages.add(ChatMessage.system(Utilities.formatPlaceholders(
+          character.system, user.name, character.name)));
+          break;
+        case "assistant":
+          chatMessages.add(ChatMessage.ai(message['content']));
+          break;
+        case "system": // Under normal circumstances, this should never be called
+          chatMessages.add(ChatMessage.system(message['content']));
+          break;
+        default:
+          break;
+      }
+    }
+
+    Logger.log("Prompting with ${model.type.name}");
+
+    final stringStream = model.prompt(chatMessages);
+
+    await for (var message in stringStream) {
+      stream(message);
+    }
+
+    _busy = false;
+    finalise();
+    notifyListeners();
+  }
+
+  void regenerate(Key key, BuildContext context) {
+    var parent = _root.getParent(key);
+    if (parent == null) {
+      return;
+    } else {
+      parent.currentChild = null;
+      _tail = _root.findTail();
+      add(UniqueKey(), userGenerated: false);
+      notifyListeners();
+      prompt(parent.message, context);
+    }
+  }
+
+  void edit(Key key, String message, BuildContext context) {
+    var parent = _root.getParent(key);
+    if (parent != null) {
+      parent.currentChild = null;
+      _tail = _root.findTail();
+    }
+    add(UniqueKey(), userGenerated: true, message: message);
+    add(UniqueKey(), userGenerated: false);
+    notifyListeners();
+    prompt(message, context);
+  }
+
+  void stop() {
+    (model as LlamaCppModel).stop();
+    _busy = false;
+    Logger.log('Local generation stopped');
+    finalise();
     notifyListeners();
   }
 
@@ -173,31 +291,6 @@ class Session extends ChangeNotifier {
     }
   }
 
-  void regenerate(Key key, BuildContext context) {
-    var parent = _root.getParent(key);
-    if (parent == null) {
-      return;
-    } else {
-      parent.currentChild = null;
-      _tail = _root.findTail();
-      add(UniqueKey(), userGenerated: false);
-      notifyListeners();
-      GenerationManager.prompt(parent.message, context);
-    }
-  }
-
-  void edit(Key key, BuildContext context, String message) {
-    var parent = _root.getParent(key);
-    if (parent != null) {
-      parent.currentChild = null;
-      _tail = _root.findTail();
-    }
-    add(UniqueKey(), userGenerated: true, message: message);
-    add(UniqueKey(), userGenerated: false);
-    notifyListeners();
-    GenerationManager.prompt(message, context);
-  }
-
   void finalise() {
     _busy = false;
 
@@ -207,7 +300,6 @@ class Session extends ChangeNotifier {
       _tail!.finaliseController.add(0);
     }
 
-    _save();
     notifyListeners();
   }
 
@@ -308,6 +400,8 @@ class Session extends ChangeNotifier {
     return _root.find(key)?.finaliseController ??
         StreamController<int>.broadcast();
   }
+
+  /// ------------------- Model Switching -------------------
 
   void switchLlamaCpp() async {
     final prefs = await SharedPreferences.getInstance();

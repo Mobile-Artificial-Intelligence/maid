@@ -227,7 +227,7 @@ class ChatMessageState extends State<ChatMessage>
                 _editing = false;
                 _finalised = true;
               });
-              session.edit(widget.key!, context, inputMessage);
+              session.edit(widget.key!, inputMessage, context);
             },
             icon: const Icon(Icons.done)),
         IconButton(
