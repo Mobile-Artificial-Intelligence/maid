@@ -39,11 +39,12 @@ class HomePageState extends State<HomePage> {
         if (history.isEmpty && character.useGreeting) {
           final newKey = UniqueKey();
           final index = Random().nextInt(character.greetings.length);
-          session.add(newKey,
-              message: Utilities.formatPlaceholders(
-                  character.greetings[index], user.name, character.name),
-              userGenerated: false,
-              notify: false);
+          session.add(
+            newKey,
+            message: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
+            userGenerated: false,
+            notify: false
+          );
           history = {newKey: false};
         }
 

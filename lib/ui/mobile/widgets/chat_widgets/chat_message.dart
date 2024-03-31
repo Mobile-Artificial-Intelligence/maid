@@ -49,8 +49,10 @@ class ChatMessageState extends State<ChatMessage>
         setState(() {
           _message = _message.trim();
           _parseMessage(_message);
-          session.add(widget.key!,
-              message: _message, userGenerated: widget.userGenerated);
+          session.add(
+            widget.key!,
+            message: _message, userGenerated: widget.userGenerated
+          );
           _finalised = true;
         });
       });

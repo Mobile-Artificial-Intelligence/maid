@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
-import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:provider/provider.dart';
@@ -49,21 +48,25 @@ class _ChatFieldState extends State<ChatField> {
     super.dispose();
   }
 
-  void send() {
+  void send() async {
     if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
     }
 
     final session = context.read<Session>();
 
-    session
-        .add(UniqueKey(),
-            message: _promptController.text.trim(), userGenerated: true)
-        .then((value) {
-      session.add(UniqueKey());
-    });
+    
+    session.add(
+      UniqueKey(), 
+      message: _promptController.text.trim(), 
+      userGenerated: true
+    );
 
-    session.prompt(_promptController.text.trim(), context);
+    session.add(
+      UniqueKey()
+    );
+
+    session.prompt(context);
 
     setState(() {
       _promptController.clear();

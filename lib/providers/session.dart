@@ -150,7 +150,7 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  void prompt(String input, BuildContext context) async {
+  void prompt(BuildContext context) async {
     _busy = true;
     notifyListeners();
 
@@ -180,6 +180,8 @@ class Session extends ChangeNotifier {
     messages.addAll(getMessages());
 
     for (var message in messages) {
+      print(message);
+
       switch (message['role']) {
         case "user":
           chatMessages.add(ChatMessage.humanText(message['content']));
@@ -219,7 +221,7 @@ class Session extends ChangeNotifier {
       _tail = _root.findTail();
       add(UniqueKey(), userGenerated: false);
       notifyListeners();
-      prompt(parent.message, context);
+      prompt(context);
     }
   }
 
@@ -232,7 +234,7 @@ class Session extends ChangeNotifier {
     add(UniqueKey(), userGenerated: true, message: message);
     add(UniqueKey(), userGenerated: false);
     notifyListeners();
-    prompt(message, context);
+    prompt(context);
   }
 
   void stop() {
@@ -243,17 +245,17 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> add(Key key,
+  void add(Key key,
       {String message = "",
       bool userGenerated = false,
-      bool notify = true}) async {
-    final node =
-        ChatNode(key: key, message: message, userGenerated: userGenerated);
+      bool notify = true}) {
+    final node = ChatNode(key: key, message: message, userGenerated: userGenerated);
 
     var found = _root.find(key);
     if (found != null) {
       found.message = message;
-    } else {
+    } 
+    else {
       _tail ??= _root.findTail();
 
       _tail!.children.add(node);
