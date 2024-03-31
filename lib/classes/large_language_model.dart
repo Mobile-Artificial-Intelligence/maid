@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:langchain/langchain.dart';
 
-class LargeLanguageModel  extends ChangeNotifier {
+class LargeLanguageModel {
   AiPlatformType get type => AiPlatformType.none;
 
   late String name;

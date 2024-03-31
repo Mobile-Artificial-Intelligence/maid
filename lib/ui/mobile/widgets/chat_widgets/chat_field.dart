@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:maid/classes/chat_node.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
@@ -56,15 +57,18 @@ class _ChatFieldState extends State<ChatField> {
     final session = context.read<Session>();
 
     
-    session.add(
+    session.chat.add(
       UniqueKey(), 
       message: _promptController.text.trim(), 
-      userGenerated: true
+      role: ChatRole.user
     );
 
-    session.add(
-      UniqueKey()
+    session.chat.add(
+      UniqueKey(),
+      role: ChatRole.assistant
     );
+
+    session.notify();
 
     session.prompt(context);
 

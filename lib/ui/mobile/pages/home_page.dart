@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:maid/classes/chat_node.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
@@ -35,24 +36,23 @@ class HomePageState extends State<HomePage> {
   Widget _buildBody() {
     return Consumer3<Session, User, Character>(
       builder: (context, session, user, character, child) {
-        Map<Key, bool> history = session.history();
+        Map<Key, ChatRole> history = session.chat.getHistory();
         if (history.isEmpty && character.useGreeting) {
           final newKey = UniqueKey();
           final index = Random().nextInt(character.greetings.length);
-          session.add(
+          session.chat.add(
             newKey,
             message: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
-            userGenerated: false,
-            notify: false
+            role: ChatRole.assistant
           );
-          history = {newKey: false};
+          history = {newKey: ChatRole.assistant};
         }
 
         chatWidgets.clear();
         for (var key in history.keys) {
           chatWidgets.add(ChatMessage(
             key: key,
-            userGenerated: history[key] ?? false,
+            role: history[key] ?? ChatRole.assistant,
           ));
         }
 
