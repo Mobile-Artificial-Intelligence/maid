@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/chat_node.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
@@ -7,11 +8,11 @@ import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessage extends StatefulWidget {
-  final bool userGenerated;
+  final ChatRole role;
 
   const ChatMessage({
     required super.key,
-    this.userGenerated = false,
+    this.role = ChatRole.assistant,
   });
 
   @override
@@ -32,12 +33,12 @@ class ChatMessageState extends State<ChatMessage>
     super.initState();
     session = context.read<Session>();
 
-    if (session.getMessage(widget.key!).isNotEmpty) {
-      _message = session.getMessage(widget.key!);
+    if (session.chat.messageOf(widget.key!).isNotEmpty) {
+      _message = session.chat.messageOf(widget.key!);
       _parseMessage(_message);
       _finalised = true;
     } else {
-      session.getMessageStream(widget.key!).stream.listen((textChunk) {
+      session.chat.getMessageStream(widget.key!).stream.listen((textChunk) {
         setState(() {
           _message += textChunk;
           _messageWidgets.clear();
@@ -48,10 +49,13 @@ class ChatMessageState extends State<ChatMessage>
 
         _parseMessage(_message);
 
-        session.add(
+        session.chat.add(
           widget.key!,
-          message: _message, userGenerated: widget.userGenerated
+          message: _message, 
+          role: widget.role
         );
+
+        session.notify();
 
         _finalised = true;
       });
@@ -90,8 +94,8 @@ class ChatMessageState extends State<ChatMessage>
   Widget build(BuildContext context) {
     return Consumer3<Session, User, Character>(
       builder: (context, session, user, character, child) {
-        int currentIndex = session.index(widget.key!);
-        int siblingCount = session.siblingCount(widget.key!);
+        int currentIndex = session.chat.indexOf(widget.key!);
+        int siblingCount = session.chat.siblingCountOf(widget.key!);
         bool busy = session.isBusy;
 
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -100,7 +104,7 @@ class ChatMessageState extends State<ChatMessage>
             children: [
               const SizedBox(width: 10.0),
               FutureAvatar(
-                image: widget.userGenerated ? user.profile : character.profile,
+                image: widget.role == ChatRole.user ? user.profile : character.profile,
                 radius: 16,
               ),
               const SizedBox(width: 10.0),
@@ -117,7 +121,7 @@ class ChatMessageState extends State<ChatMessage>
                 blendMode: BlendMode
                     .srcIn, // This blend mode applies the shader to the text color.
                 child: Text(
-                  widget.userGenerated ? user.name : character.name,
+                  widget.role == ChatRole.user ? user.name : character.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Colors
@@ -136,7 +140,8 @@ class ChatMessageState extends State<ChatMessage>
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
                         if (busy) return;
-                        session.last(widget.key!);
+                        session.chat.last(widget.key!);
+                        session.notify();
                       },
                       icon: Icon(Icons.arrow_left,
                           color: Theme.of(context).colorScheme.onPrimary)),
@@ -146,7 +151,8 @@ class ChatMessageState extends State<ChatMessage>
                     padding: const EdgeInsets.all(0),
                     onPressed: () {
                       if (busy) return;
-                      session.next(widget.key!);
+                      session.chat.next(widget.key!);
+                      session.notify();
                     },
                     icon: Icon(Icons.arrow_right,
                         color: Theme.of(context).colorScheme.onPrimary),
@@ -168,7 +174,7 @@ class ChatMessageState extends State<ChatMessage>
   }
 
   List<Widget> _messageOptions() {
-    return widget.userGenerated ? _userOptions() : _assistantOptions();
+    return widget.role == ChatRole.user ? _userOptions() : _assistantOptions();
   }
 
   List<Widget> _userOptions() {
@@ -252,11 +258,5 @@ class ChatMessageState extends State<ChatMessage>
       else
         ..._messageWidgets
     ];
-  }
-
-  @override
-  void dispose() {
-    session.getMessageStream(widget.key!).close();
-    super.dispose();
   }
 }

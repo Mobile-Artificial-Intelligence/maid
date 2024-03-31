@@ -18,7 +18,7 @@ class _SessionTileState extends State<SessionTile> {
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
-        String displayMessage = widget.session.rootMessage;
+        String displayMessage = widget.session.name;
         if (displayMessage.length > 30) {
           displayMessage = '${displayMessage.substring(0, 30)}...';
         }
@@ -80,7 +80,7 @@ class _SessionTileState extends State<SessionTile> {
 
   void _showRenameDialog() {
     final TextEditingController controller =
-        TextEditingController(text: widget.session.rootMessage);
+        TextEditingController(text: widget.session.name);
 
     showDialog(
       context: context,
@@ -106,10 +106,10 @@ class _SessionTileState extends State<SessionTile> {
             ),
             FilledButton(
               onPressed: () {
-                String oldName = widget.session.rootMessage;
+                String oldName = widget.session.name;
                 Logger.log(
                     "Updating session $oldName ====> ${controller.text}");
-                widget.session.setRootMessage(controller.text);
+                widget.session.name = controller.text;
                 Navigator.of(context).pop();
               },
               child: Text(

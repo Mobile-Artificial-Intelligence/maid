@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:langchain/langchain.dart';
+import 'package:maid/classes/chat_node_tree.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/classes/mistral_ai_model.dart';
@@ -20,28 +21,24 @@ class Session extends ChangeNotifier {
   Key _key = UniqueKey();
   bool _busy = false;
   LargeLanguageModel model = LlamaCppModel();
-  ChatNode _root = ChatNode(key: UniqueKey());
-  ChatNode? _tail;
-  String _messageBuffer = "";
+  ChatNodeTree chat = ChatNodeTree();
+  
+  String _name = "";
 
   bool get isBusy => _busy;
 
-  String get rootMessage {
-    final message = getFirstUserMessage();
-    if (message != null) {
-      _root.message = message;
-    }
-    return _root.message;
-  }
-
-  ChatNode get root => _root;
-
-  ChatNode? get tail => _tail;
+  String get name => _name;
+  
 
   Key get key => _key;
 
   set busy(bool value) {
     _busy = value;
+    notifyListeners();
+  }
+
+  set name(String name) {
+    _name = name;
     notifyListeners();
   }
 
@@ -68,36 +65,35 @@ class Session extends ChangeNotifier {
     newSession();
   }
 
+  Session.from(Session session) {
+    from(session);
+  }
+
   Session.fromMap(Map<String, dynamic> inputJson) {
     fromMap(inputJson);
   }
 
   void newSession() {
-    final key = UniqueKey();
-    _root = ChatNode(key: key);
-    _root.message = "New Chat";
-    _tail = null;
+    name = "New Chat";
+    chat = ChatNodeTree();
     model = LlamaCppModel();
     notifyListeners();
   }
 
   Session copy() {
-    final session = Session();
-    session.from(this);
-    return session;
+    return Session.from(this);
   }
 
   void from(Session session) {
     _key = session.key;
-    _root = session.root;
-    _tail = session.tail;
+    _name = session.name;
+    chat = session.chat;
     model = session.model;
     notifyListeners();
   }
 
   void fromMap(Map<String, dynamic> inputJson) {
-    _root = ChatNode.fromMap(inputJson['root']);
-    _tail = _root.findTail();
+    chat.root = ChatNode.fromMap(inputJson['chat'] ?? {});
 
     final type = AiPlatformType.values[inputJson['llm_type'] ?? AiPlatformType.llamacpp.index];
 
@@ -124,30 +120,10 @@ class Session extends ChangeNotifier {
 
   Map<String, dynamic> toMap() {
     return {
-      'root': _root.toMap(),
+      'chat': chat.root.toMap(),
       'llm_type': model.type.index,
       'model': model.toMap(),
     };
-  }
-
-  String getMessage(Key key) {
-    return _root.find(key)?.message ?? "";
-  }
-
-  String? getFirstUserMessage() {
-    var current = _root;
-    while (current.currentChild != null) {
-      current = current.find(current.currentChild!)!;
-      if (current.userGenerated) {
-        return current.message;
-      }
-    }
-    return null;
-  }
-
-  void setRootMessage(String message) {
-    _root.message = message;
-    notifyListeners();
   }
 
   void prompt(BuildContext context) async {
@@ -177,7 +153,7 @@ class Session extends ChangeNotifier {
       messages.addAll(character.examples);
     }
 
-    messages.addAll(getMessages());
+    messages.addAll(chat.getMessages());
 
     for (var message in messages) {
       switch (message['role']) {
@@ -211,26 +187,24 @@ class Session extends ChangeNotifier {
   }
 
   void regenerate(Key key, BuildContext context) {
-    var parent = _root.getParent(key);
+    var parent = chat.parentOf(key);
     if (parent == null) {
       return;
     } else {
       parent.currentChild = null;
-      _tail = _root.findTail();
-      add(UniqueKey(), userGenerated: false);
+      chat.add(UniqueKey(), role: ChatRole.assistant);
       notifyListeners();
       prompt(context);
     }
   }
 
   void edit(Key key, String message, BuildContext context) {
-    var parent = _root.getParent(key);
+    var parent = chat.parentOf(key);
     if (parent != null) {
       parent.currentChild = null;
-      _tail = _root.findTail();
     }
-    add(UniqueKey(), userGenerated: true, message: message);
-    add(UniqueKey(), userGenerated: false);
+    chat.add(UniqueKey(), role: ChatRole.user, message: message);
+    chat.add(UniqueKey(), role: ChatRole.assistant);
     notifyListeners();
     prompt(context);
   }
@@ -243,155 +217,27 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  void add(Key key,
-      {String message = "",
-      bool userGenerated = false,
-      bool notify = true}) {
-    final node = ChatNode(key: key, message: message, userGenerated: userGenerated);
-
-    var found = _root.find(key);
-    if (found != null) {
-      found.message = message;
-    } 
-    else {
-      _tail ??= _root.findTail();
-
-      _tail!.children.add(node);
-      _tail!.currentChild = key;
-      _tail = _tail!.findTail();
-    }
-
-    if (notify) {
-      notifyListeners();
-    }
-  }
-
-  void remove(Key key) {
-    var parent = _root.getParent(key);
-    if (parent != null) {
-      parent.children.removeWhere((element) => element.key == key);
-      _tail = _root.findTail();
-    }
-    notifyListeners();
-  }
-
   void stream(String? message) async {
     if (message == null) {
       finalise();
     } else {
-      _messageBuffer += message;
-      _tail ??= _root.findTail();
+      chat.buffer += message;
 
-      if (!(_tail!.messageController.isClosed)) {
-        _tail!.messageController.add(_messageBuffer);
-        _messageBuffer = "";
+      if (!(chat.tail.messageController.isClosed)) {
+        chat.tail.messageController.add(chat.buffer);
+        chat.buffer = "";
       }
 
-      _tail!.message += message;
+      chat.tail.message += message;
     }
   }
 
   void finalise() {
     _busy = false;
 
-    _tail ??= _root.findTail();
-
-    _tail!.messageController.close();
+    chat.tail.messageController.close();
 
     notifyListeners();
-  }
-
-  void next(Key key) {
-    var parent = _root.getParent(key);
-    if (parent != null) {
-      if (parent.currentChild == null) {
-        parent.currentChild = key;
-      } else {
-        var currentChildIndex = parent.children
-            .indexWhere((element) => element.key == parent.currentChild);
-        if (currentChildIndex < parent.children.length - 1) {
-          parent.currentChild = parent.children[currentChildIndex + 1].key;
-          _tail = _root.findTail();
-        }
-      }
-    }
-
-    notifyListeners();
-  }
-
-  void last(Key key) {
-    var parent = _root.getParent(key);
-    if (parent != null) {
-      if (parent.currentChild == null) {
-        parent.currentChild = key;
-      } else {
-        var currentChildIndex = parent.children
-            .indexWhere((element) => element.key == parent.currentChild);
-        if (currentChildIndex > 0) {
-          parent.currentChild = parent.children[currentChildIndex - 1].key;
-          _tail = _root.findTail();
-        }
-      }
-    }
-
-    notifyListeners();
-  }
-
-  int siblingCount(Key key) {
-    var parent = _root.getParent(key);
-    if (parent != null) {
-      return parent.children.length;
-    } else {
-      return 0;
-    }
-  }
-
-  int index(Key key) {
-    var parent = _root.getParent(key);
-    if (parent != null) {
-      return parent.children.indexWhere((element) => element.key == key);
-    } else {
-      return 0;
-    }
-  }
-
-  Map<Key, bool> history() {
-    final Map<Key, bool> history = {};
-    var current = _root;
-
-    while (current.currentChild != null) {
-      current = current.find(current.currentChild!)!;
-      history[current.key] = current.userGenerated;
-    }
-
-    return history;
-  }
-
-  List<Map<String, dynamic>> getMessages() {
-    final List<Map<String, dynamic>> messages = [];
-    var current = _root;
-
-    while (current.currentChild != null) {
-      current = current.find(current.currentChild!)!;
-      String role;
-      if (current.userGenerated) {
-        role = "user";
-      } else {
-        role = "assistant";
-      }
-      messages.add({"role": role, "content": current.message});
-    }
-
-    if (messages.isNotEmpty) {
-      messages.remove(messages.last); //remove last message
-    }
-
-    return messages;
-  }
-
-  StreamController<String> getMessageStream(Key key) {
-    return _root.find(key)?.messageController ??
-        StreamController<String>.broadcast();
   }
 
   /// -------------------------------------- Model Switching --------------------------------------
