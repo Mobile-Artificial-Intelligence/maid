@@ -125,11 +125,13 @@ class LlamaCppModel extends LargeLanguageModel {
   @override
   Stream<String> prompt(List<ChatMessage> messages) {
     // This is a temporary fix to avoid a crash in maid_llm
-    _maidLLM?.clear();
-    _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
+    //_maidLLM?.clear();
+    //_maidLLM = MaidLLM(toGptParams(), log: Logger.log);
+    
+    for (var element in messages) { Logger.log(element.contentAsString);}
 
     // This is the correct implementation
-    //_maidLLM ??= MaidLLM(toGptParams(), log: Logger.log);
+    _maidLLM ??= MaidLLM(toGptParams(), log: Logger.log);
 
     return _maidLLM!.prompt(messages);
   }
