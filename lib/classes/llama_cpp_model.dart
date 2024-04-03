@@ -130,9 +130,12 @@ class LlamaCppModel extends LargeLanguageModel {
   }
 
   void reset() {
-    _maidLLM ??= MaidLLM(toGptParams(), log: Logger.log);
-
-    _maidLLM?.reset(toGptParams());
+    if (_maidLLM == null) {
+      _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
+    } 
+    else {
+      _maidLLM!.reset(toGptParams());
+    }
   }
 
   void stop() async {
