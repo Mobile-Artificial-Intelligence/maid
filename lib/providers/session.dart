@@ -190,12 +190,16 @@ class Session extends ChangeNotifier {
     var parent = chat.parentOf(key);
     if (parent == null) {
       return;
-    } else {
-      parent.currentChild = null;
-      chat.add(UniqueKey(), role: ChatRole.assistant);
-      notifyListeners();
-      prompt(context);
+    } 
+    parent.currentChild = null;
+    chat.add(UniqueKey(), role: ChatRole.assistant);
+
+    if (model.type == AiPlatformType.llamacpp) {
+      (model as LlamaCppModel).reset();
     }
+    
+    prompt(context);
+    notifyListeners();
   }
 
   void edit(Key key, String message, BuildContext context) {
@@ -205,8 +209,13 @@ class Session extends ChangeNotifier {
     }
     chat.add(UniqueKey(), role: ChatRole.user, message: message);
     chat.add(UniqueKey(), role: ChatRole.assistant);
-    notifyListeners();
+
+    if (model.type == AiPlatformType.llamacpp) {
+      (model as LlamaCppModel).reset();
+    }
+
     prompt(context);
+    notifyListeners();
   }
 
   void stop() {

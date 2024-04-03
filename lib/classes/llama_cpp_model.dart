@@ -129,6 +129,10 @@ class LlamaCppModel extends LargeLanguageModel {
     return _maidLLM!.prompt(messages);
   }
 
+  void reset() {
+    _maidLLM?.reset(toGptParams());
+  }
+
   void stop() async {
     await _maidLLM?.stop();
   }
