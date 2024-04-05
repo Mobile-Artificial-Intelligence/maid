@@ -139,13 +139,18 @@ class LlamaCppModel extends LargeLanguageModel {
     }
   }
 
+  @override
+  void save() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("llama_cpp_model", json.encode(toMap()));
+    });
+  }
+
   void init() {
     try {
       _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
 
-      SharedPreferences.getInstance().then((prefs) {
-        prefs.setString("llama_cpp_model", json.encode(toMap()));
-      });
+      save();
     } catch (e) {
       Logger.log("Error initializing model: $e");
     }

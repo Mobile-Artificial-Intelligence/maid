@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/session.dart';
@@ -17,15 +15,14 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_last_n_paramete
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_present_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_repeat_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
-import 'package:maid/ui/mobile/widgets/dropdowns/format_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/tfs_z_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_k_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/typical_p_parameter.dart';
+import 'package:maid/ui/mobile/widgets/dropdowns/format_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LlamaCppPage extends StatefulWidget {
   const LlamaCppPage({super.key});

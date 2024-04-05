@@ -10,6 +10,7 @@ import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OllamaModel extends LargeLanguageModel {
   @override
@@ -231,5 +232,12 @@ class OllamaModel extends LargeLanguageModel {
       Logger.log("Nearby Devices - permission denied");
       return false;
     }
+  }
+
+  @override
+  void save() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("ollama_model", json.encode(toMap()));
+    });
   }
 }

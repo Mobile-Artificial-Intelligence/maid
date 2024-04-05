@@ -136,6 +136,10 @@ class LargeLanguageModel {
   Future<void> resetUri() {
     throw UnimplementedError();
   }
+
+  void save() {
+    throw UnimplementedError();
+  }
 }
 
 enum AiPlatformType { none, llamacpp, openAI, ollama, mistralAI, custom }

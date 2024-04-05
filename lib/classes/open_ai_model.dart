@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:langchain/langchain.dart';
 import 'package:langchain_openai/langchain_openai.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OpenAiModel extends LargeLanguageModel {
   @override
@@ -67,5 +70,12 @@ class OpenAiModel extends LargeLanguageModel {
   @override
   Future<void> resetUri() async {
     uri = 'https://api.openai.com/v1/';
+  }
+
+  @override
+  void save() {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("open_ai_model", json.encode(toMap()));
+    });
   }
 }
