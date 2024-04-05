@@ -190,10 +190,6 @@ class Session extends ChangeNotifier {
     } 
     parent.currentChild = null;
     chat.add(UniqueKey(), role: ChatRole.assistant);
-
-    if (model.type == AiPlatformType.llamacpp) {
-      (model as LlamaCppModel).reset();
-    }
     
     prompt(context);
     notifyListeners();
@@ -206,10 +202,6 @@ class Session extends ChangeNotifier {
     }
     chat.add(UniqueKey(), role: ChatRole.user, message: message);
     chat.add(UniqueKey(), role: ChatRole.assistant);
-
-    if (model.type == AiPlatformType.llamacpp) {
-      (model as LlamaCppModel).reset();
-    }
 
     prompt(context);
     notifyListeners();
