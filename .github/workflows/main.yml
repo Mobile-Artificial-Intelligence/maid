@@ -92,7 +92,13 @@ jobs:
         
       - name: Install dependencies
         run: |
-          choco install -y cmake ninja vulkan-sdk
+          choco install -y cmake ninja
+
+      -name: Install Vulkan SDK
+        uses: humbletim/install-vulkan-sdk@v1.1.1
+        with:
+          version: latest
+          cache: true
 
       - name: Build Windows App
         run: |
