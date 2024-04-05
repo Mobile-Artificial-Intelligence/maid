@@ -139,7 +139,7 @@ class Session extends ChangeNotifier {
     final scenario = Utilities.formatPlaceholders(character.scenario, user.name, character.name);
     final system = Utilities.formatPlaceholders(character.system, user.name, character.name);
 
-    final preprompt = '$description\n\n$personality\n\n$scenario\n\n$system';
+    final preprompt = 'Description: $description\nPersonality: $personality\nScenario: $scenario\nSystem: $system';
 
     List<Map<String, dynamic>> messages = [
       {
@@ -158,13 +158,11 @@ class Session extends ChangeNotifier {
       switch (message['role']) {
         case "user":
           chatMessages.add(ChatMessage.humanText(message['content']));
-          chatMessages.add(ChatMessage.system(Utilities.formatPlaceholders(
-          character.system, user.name, character.name)));
           break;
         case "assistant":
           chatMessages.add(ChatMessage.ai(message['content']));
           break;
-        case "system": // Under normal circumstances, this should never be called
+        case "system": // Under normal circumstances, this should only be used for preprompt
           chatMessages.add(ChatMessage.system(message['content']));
           break;
         default:
