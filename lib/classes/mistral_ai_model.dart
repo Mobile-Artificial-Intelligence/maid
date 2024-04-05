@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:langchain/langchain.dart';
 import 'package:langchain_mistralai/langchain_mistralai.dart';
@@ -11,6 +12,7 @@ class MistralAiModel extends LargeLanguageModel {
   AiPlatformType get type => AiPlatformType.mistralAI;
 
   MistralAiModel({
+    super.listener, 
     super.name,
     super.uri = 'https://api.mistral.ai/v1/',
     super.token,
@@ -20,16 +22,16 @@ class MistralAiModel extends LargeLanguageModel {
     super.topP
   });
 
-  MistralAiModel.fromMap(Map<String, dynamic> json) {
+  MistralAiModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
+    addListener(listener);
     fromMap(json);
   }
 
   @override
   void fromMap(Map<String, dynamic> json) {
+    if (json['uri'] == null) json['uri'] = 'https://api.mistral.ai/v1/';
     super.fromMap(json);
-    uri = json['url'] ?? 'https://api.mistral.ai/v1/';
-    token = json['token'] ?? '';
-    topP = json['topP'] ?? 0.95;
+    notifyListeners();
   }
 
   @override
@@ -70,6 +72,7 @@ class MistralAiModel extends LargeLanguageModel {
   @override
   Future<void> resetUri() async {
     uri = 'https://api.mistral.ai/v1/';
+    notifyListeners();
   }
 
   @override

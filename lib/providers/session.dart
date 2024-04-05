@@ -75,7 +75,7 @@ class Session extends ChangeNotifier {
   void newSession() {
     name = "New Chat";
     chat = ChatNodeTree();
-    model = LlamaCppModel();
+    model = LlamaCppModel(listener: notify);
     notifyListeners();
   }
 
@@ -261,10 +261,10 @@ class Session extends ChangeNotifier {
     Logger.log(lastLlamaCpp.toString());
     
     if (lastLlamaCpp.isNotEmpty) {
-      model = LlamaCppModel.fromMap(lastLlamaCpp);
+      model = LlamaCppModel.fromMap(notify, lastLlamaCpp);
     } 
     else {
-      model = LlamaCppModel();
+      model = LlamaCppModel(listener: notify);
     }
 
     prefs.setInt("llm_type", model.type.index);
@@ -278,10 +278,10 @@ class Session extends ChangeNotifier {
     Logger.log(lastOpenAI.toString());
     
     if (lastOpenAI.isNotEmpty) {
-      model = OpenAiModel.fromMap(lastOpenAI);
+      model = OpenAiModel.fromMap(notify, lastOpenAI);
     } 
     else {
-      model = OpenAiModel();
+      model = OpenAiModel(listener: notify);
     }
 
     prefs.setInt("llm_type", model.type.index);
@@ -295,10 +295,10 @@ class Session extends ChangeNotifier {
     Logger.log(lastOllama.toString());
     
     if (lastOllama.isNotEmpty) {
-      model = OllamaModel.fromMap(lastOllama);
+      model = OllamaModel.fromMap(notify, lastOllama);
     } 
     else {
-      model = OllamaModel();
+      model = OllamaModel(listener: notify);
       await model.resetUri();
     }
 
@@ -313,10 +313,10 @@ class Session extends ChangeNotifier {
     Logger.log(lastMistralAI.toString());
     
     if (lastMistralAI.isNotEmpty) {
-      model = MistralAiModel.fromMap(lastMistralAI);
+      model = MistralAiModel.fromMap(notify, lastMistralAI);
     } 
     else {
-      model = MistralAiModel();
+      model = MistralAiModel(listener: notify);
     }
 
     prefs.setInt("llm_type", model.type.index);

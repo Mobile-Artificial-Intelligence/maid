@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart';
@@ -16,9 +17,10 @@ class OllamaModel extends LargeLanguageModel {
   @override
   AiPlatformType get type => AiPlatformType.ollama;
   
-  late String ip;
+  late String _ip;
 
   OllamaModel({
+    super.listener, 
     super.name,
     super.uri,
     super.useDefault,
@@ -42,31 +44,36 @@ class OllamaModel extends LargeLanguageModel {
     super.nCtx,
     super.nBatch,
     super.nThread,
-    this.ip = '',
-  });
+    String ip = '',
+  }) {
+    _ip = ip;
+  }
 
-  OllamaModel.fromMap(Map<String, dynamic> json) {
+  OllamaModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
+    addListener(listener);
     fromMap(json);
   }
 
   @override
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
-    ip = json['ip'] ?? '';
+    _ip = json['ip'] ?? '';
+    notifyListeners();
   }
 
   @override
   Map<String, dynamic> toMap() {
     return {
       ...super.toMap(),
-      'ip': ip,
+      'ip': _ip,
     };
   }
 
   @override
   Future<void> resetUri() async {
-    if (ip.isNotEmpty && (await _checkIpForOllama(ip)).isNotEmpty) {
-      uri = 'http://$ip:11434';
+    if (_ip.isNotEmpty && (await _checkIpForOllama(_ip)).isNotEmpty) {
+      uri = 'http://$_ip:11434';
+      notifyListeners();
       return;
     }
 
@@ -96,9 +103,10 @@ class OllamaModel extends LargeLanguageModel {
 
     // Filter out all empty results and return the first valid URL, if any
     final validUrls = results.where((result) => result.isNotEmpty);
-    ip = validUrls.isNotEmpty ? validUrls.first : '';
+    _ip = validUrls.isNotEmpty ? validUrls.first : '';
 
-    uri = 'http://$ip:11434';
+    uri = 'http://$_ip:11434';
+    notifyListeners();
   }
 
   Future<String> _checkIpForOllama(String ip) async {

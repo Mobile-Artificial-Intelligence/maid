@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:langchain/langchain.dart';
 import 'package:langchain_openai/langchain_openai.dart';
@@ -11,6 +12,7 @@ class OpenAiModel extends LargeLanguageModel {
   AiPlatformType get type => AiPlatformType.openAI;
 
   OpenAiModel({
+    super.listener, 
     super.name,
     super.uri = 'https://api.openai.com/v1/',
     super.token,
@@ -21,7 +23,8 @@ class OpenAiModel extends LargeLanguageModel {
     super.penaltyFreq,
   });
 
-  OpenAiModel.fromMap(Map<String, dynamic> json) {
+  OpenAiModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
+    addListener(listener);
     fromMap(json);
   }
 
@@ -34,6 +37,7 @@ class OpenAiModel extends LargeLanguageModel {
     topP = json['topP'] ?? 0.95;
     penaltyPresent = json['penaltyPresent'] ?? 0.0;
     penaltyFreq = json['penaltyFreq'] ?? 0.0;
+    notifyListeners();
   }
 
   @override
@@ -70,6 +74,7 @@ class OpenAiModel extends LargeLanguageModel {
   @override
   Future<void> resetUri() async {
     uri = 'https://api.openai.com/v1/';
+    notifyListeners();
   }
 
   @override

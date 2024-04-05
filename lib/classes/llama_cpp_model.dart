@@ -16,9 +16,17 @@ class LlamaCppModel extends LargeLanguageModel {
 
   MaidLLM? _maidLLM;
 
-  late PromptFormat promptFormat;
+  PromptFormat _promptFormat = PromptFormat.alpaca;
+
+  PromptFormat get promptFormat => _promptFormat;
+
+  set promptFormat(PromptFormat value) {
+    _promptFormat = value;
+    notifyListeners();
+  }
   
   LlamaCppModel({
+    super.listener, 
     super.name,
     super.uri,
     super.useDefault,
@@ -42,21 +50,25 @@ class LlamaCppModel extends LargeLanguageModel {
     super.nCtx,
     super.nBatch,
     super.nThread,
-    this.promptFormat = PromptFormat.alpaca
+    PromptFormat promptFormat = PromptFormat.alpaca
   }) {
     if (uri.isNotEmpty && Directory(uri).existsSync()) {
       _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
     }
+
+    _promptFormat = promptFormat;
   }
 
-  LlamaCppModel.fromMap(Map<String, dynamic> json) {
+  LlamaCppModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
+    addListener(listener);
     fromMap(json);
   }
 
   @override
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
-    promptFormat = PromptFormat.values[json['promptFormat']];
+    _promptFormat = PromptFormat.values[json['promptFormat']];
+    notifyListeners();
   }
 
   @override
@@ -120,6 +132,7 @@ class LlamaCppModel extends LargeLanguageModel {
 
       name = file.path.split('/').last;
       uri = file.path;
+      notifyListeners();
     } catch (e) {
       return "Error: $e";
     }
@@ -181,5 +194,6 @@ class LlamaCppModel extends LargeLanguageModel {
   @override
   Future<void> resetUri() async {
     uri = '';
+    notifyListeners();
   }
 }
