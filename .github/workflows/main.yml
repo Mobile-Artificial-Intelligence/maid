@@ -94,7 +94,7 @@ jobs:
         run: |
           choco install -y cmake ninja
 
-      -name: Install Vulkan SDK
+      - name: Install Vulkan SDK
         uses: humbletim/install-vulkan-sdk@v1.1.1
         with:
           version: latest
