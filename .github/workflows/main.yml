@@ -92,7 +92,7 @@ jobs:
         
       - name: Install dependencies
         run: |
-          choco install -y cmake ninja
+          choco install -y cmake ninja vulkan-sdk
 
       - name: Build Windows App
         run: |
