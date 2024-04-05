@@ -27,8 +27,22 @@ import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LlamaCppPage extends StatelessWidget {
+class LlamaCppPage extends StatefulWidget {
   const LlamaCppPage({super.key});
+
+  @override
+  State<LlamaCppPage> createState() => _LlamaCppPageState();
+}
+
+class _LlamaCppPageState extends State<LlamaCppPage> {
+  Session? cachedSession;
+
+  @override
+  void dispose() {
+    (cachedSession!.model as LlamaCppModel).init();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +51,7 @@ class LlamaCppPage extends StatelessWidget {
       body: SessionBusyOverlay(
         child: Consumer<Session>(
           builder: (context, session, child) {
-            SharedPreferences.getInstance().then((prefs) {
-              prefs.setString("llama_cpp_model", json.encode(session.model.toMap()));
-            });
+            cachedSession = session;
 
             return ListView(
               children: [
@@ -119,3 +131,5 @@ class LlamaCppPage extends StatelessWidget {
     );
   }
 }
+
+ 

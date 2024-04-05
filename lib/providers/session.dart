@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -245,6 +244,10 @@ class Session extends ChangeNotifier {
     _busy = false;
 
     chat.tail.messageController.close();
+
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("last_session", json.encode(toMap()));
+    });
 
     notifyListeners();
   }

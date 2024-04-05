@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -7,6 +8,7 @@ import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LlamaCppModel extends LargeLanguageModel {
   @override
@@ -66,6 +68,10 @@ class LlamaCppModel extends LargeLanguageModel {
   }
 
   GptParams toGptParams() {
+    if (uri.isEmpty) {
+      throw Exception("Model URI is empty");
+    }
+
     if (useDefault) {
       GptParams gptParams = GptParams();
       gptParams.model = uri;
@@ -114,7 +120,6 @@ class LlamaCppModel extends LargeLanguageModel {
 
       name = file.path.split('/').last;
       uri = file.path;
-      _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
     } catch (e) {
       return "Error: $e";
     }
@@ -124,17 +129,38 @@ class LlamaCppModel extends LargeLanguageModel {
 
   @override
   Stream<String> prompt(List<ChatMessage> messages) {
-    _maidLLM ??= MaidLLM(toGptParams(), log: Logger.log);
+    try {
+      _maidLLM ??= MaidLLM(toGptParams(), log: Logger.log);
 
-    return _maidLLM!.prompt(messages);
+      return _maidLLM!.prompt(messages);
+    } catch (e) {
+      Logger.log("Error initializing model: $e");
+      return const Stream.empty();
+    }
+  }
+
+  void init() {
+    try {
+      _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
+
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setString("llama_cpp_model", json.encode(toMap()));
+      });
+    } catch (e) {
+      Logger.log("Error initializing model: $e");
+    }
   }
 
   void reset() {
-    if (_maidLLM == null) {
-      _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
-    } 
-    else {
-      _maidLLM!.reset(toGptParams());
+    try {
+      if (_maidLLM == null) {
+        _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
+      } 
+      else {
+        _maidLLM!.reset(toGptParams());
+      }
+    } catch (e) {
+      Logger.log("Error resetting model: $e");
     }
   }
 
