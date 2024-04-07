@@ -43,8 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       });
                     });
                   },
-                  child: Text("Clear Cache",
-                      style: Theme.of(context).textTheme.labelLarge),
+                  child: const Text("Clear Cache"),
                 ),
                 Divider(
                   height: 20,

@@ -18,6 +18,16 @@ class FormatDropdown extends StatelessWidget {
                 child: Text("Prompt Format"),
               ),
               DropdownMenu<PromptFormat>(
+                hintText: "Select Format",
+                inputDecorationTheme: InputDecorationTheme(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  fillColor: Theme.of(context).colorScheme.secondary,
+                  filled: true,
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                ),
                 dropdownMenuEntries: const [
                   DropdownMenuEntry<PromptFormat>(
                     value: PromptFormat.raw,

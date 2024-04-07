@@ -75,6 +75,8 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
 
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.background,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
             elevation: 0.0,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
@@ -84,7 +86,6 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
             ),
             title: const Text("Character Browser"),
             actions: [
-              const Expanded(child: SizedBox()),
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {

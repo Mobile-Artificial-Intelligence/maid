@@ -8,7 +8,7 @@ import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
-import 'package:maid/ui/mobile/widgets/dropdowns/ai_platform_dropdown.dart';
+import 'package:maid/ui/mobile/widgets/dropdowns/llm_dropdown.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -26,10 +26,12 @@ class _HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      foregroundColor: Theme.of(context).colorScheme.onPrimary,
       elevation: 0.0,
       actions: [
         const SizedBox(width: 34),
-        const AiPlatformDropdown(),
+        const LlmDropdown(),
         const Expanded(child: SizedBox()),
         IconButton(
           key: iconButtonKey, // Assign the GlobalKey to your IconButton

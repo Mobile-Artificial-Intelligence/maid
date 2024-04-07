@@ -3,8 +3,8 @@ import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
-class AiPlatformDropdown extends StatelessWidget {
-  const AiPlatformDropdown({super.key});
+class LlmDropdown extends StatelessWidget {
+  const LlmDropdown({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,15 +62,11 @@ class AiPlatformDropdown extends StatelessWidget {
                 }
               },
               initialSelection: session.model.type,
+              textStyle: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
               inputDecorationTheme: const InputDecorationTheme(
-                labelStyle: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white,
-                    fontSize: 15.0),
-                hintStyle: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white,
-                    fontSize: 15.0),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
               width: 175),
