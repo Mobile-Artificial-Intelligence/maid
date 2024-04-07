@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class OllamaModel extends LargeLanguageModel {
   @override
-  AiPlatformType get type => AiPlatformType.ollama;
+  LargeLanguageModelType get type => LargeLanguageModelType.ollama;
   
   late String _ip;
 

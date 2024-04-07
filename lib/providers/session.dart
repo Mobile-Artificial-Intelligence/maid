@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:langchain/langchain.dart';
 import 'package:maid/classes/chat_node_tree.dart';
+import 'package:maid/classes/google_gemini_model.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/classes/mistral_ai_model.dart';
@@ -28,7 +29,6 @@ class Session extends ChangeNotifier {
 
   String get name => _name;
   
-
   Key get key => _key;
 
   set busy(bool value) {
@@ -94,19 +94,19 @@ class Session extends ChangeNotifier {
   void fromMap(Map<String, dynamic> inputJson) {
     chat.root = ChatNode.fromMap(inputJson['chat'] ?? {});
 
-    final type = AiPlatformType.values[inputJson['llm_type'] ?? AiPlatformType.llamacpp.index];
+    final type = LargeLanguageModelType.values[inputJson['llm_type'] ?? LargeLanguageModelType.llamacpp.index];
 
     switch (type) {
-      case AiPlatformType.llamacpp:
+      case LargeLanguageModelType.llamacpp:
         switchLlamaCpp();
         break;
-      case AiPlatformType.openAI:
+      case LargeLanguageModelType.openAI:
         switchOpenAI();
         break;
-      case AiPlatformType.ollama:
+      case LargeLanguageModelType.ollama:
         switchOllama();
         break;
-      case AiPlatformType.mistralAI:
+      case LargeLanguageModelType.mistralAI:
         switchMistralAI();
         break;
       default:
@@ -307,6 +307,23 @@ class Session extends ChangeNotifier {
     } 
     else {
       model = MistralAiModel(listener: notify);
+    }
+
+    prefs.setInt("llm_type", model.type.index);
+    notifyListeners();
+  }
+
+  void switchGemini() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    Map<String, dynamic> lastGemini = json.decode(prefs.getString("google_gemini_model") ?? "{}");
+    Logger.log(lastGemini.toString());
+    
+    if (lastGemini.isNotEmpty) {
+      model = GoogleGeminiModel.fromMap(notify, lastGemini);
+    } 
+    else {
+      model = GoogleGeminiModel(listener: notify);
     }
 
     prefs.setInt("llm_type", model.type.index);

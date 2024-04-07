@@ -57,6 +57,7 @@ dependencies:
     path: packages/maid_ui
   maid_llm:
     path: packages/maid_llm
+  google_generative_ai: ^0.2.3
 
 dev_dependencies:
   msix: ^3.9.1

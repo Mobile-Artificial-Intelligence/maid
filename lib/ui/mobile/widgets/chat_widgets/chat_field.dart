@@ -85,7 +85,7 @@ class _ChatFieldState extends State<ChatField> {
         child: Row(
           children: [
             if (session.isBusy &&
-                session.model.type != AiPlatformType.ollama)
+                session.model.type != LargeLanguageModelType.ollama)
               IconButton(
                   onPressed: session.stop,
                   iconSize: 50,

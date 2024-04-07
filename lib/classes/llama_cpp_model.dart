@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LlamaCppModel extends LargeLanguageModel {
   @override
-  AiPlatformType get type => AiPlatformType.llamacpp;
+  LargeLanguageModelType get type => LargeLanguageModelType.llamacpp;
 
   MaidLLM? _maidLLM;
 

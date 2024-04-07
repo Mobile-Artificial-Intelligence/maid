@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/pages/about_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/gemini_page.dart';
 import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
@@ -95,14 +96,16 @@ class _HomeAppBarState extends State<HomeAppBar> {
                     context,
                     MaterialPageRoute(builder: (context) {
                       switch (context.read<Session>().model.type) {
-                        case AiPlatformType.llamacpp:
+                        case LargeLanguageModelType.llamacpp:
                           return const LlamaCppPage();
-                        case AiPlatformType.ollama:
+                        case LargeLanguageModelType.ollama:
                           return const OllamaPage();
-                        case AiPlatformType.openAI:
+                        case LargeLanguageModelType.openAI:
                           return const OpenAiPage();
-                        case AiPlatformType.mistralAI:
+                        case LargeLanguageModelType.mistralAI:
                           return const MistralAiPage();
+                        case LargeLanguageModelType.gemini:
+                          return const GoogleGeminiPage();
                         default:
                           return const LlamaCppPage();
                       }

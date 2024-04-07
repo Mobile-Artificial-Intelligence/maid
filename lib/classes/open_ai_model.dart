@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class OpenAiModel extends LargeLanguageModel {
   @override
-  AiPlatformType get type => AiPlatformType.openAI;
+  LargeLanguageModelType get type => LargeLanguageModelType.openAI;
 
   OpenAiModel({
     super.listener, 

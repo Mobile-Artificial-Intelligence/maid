@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MistralAiModel extends LargeLanguageModel {
   @override
-  AiPlatformType get type => AiPlatformType.mistralAI;
+  LargeLanguageModelType get type => LargeLanguageModelType.mistralAI;
 
   MistralAiModel({
     super.listener, 

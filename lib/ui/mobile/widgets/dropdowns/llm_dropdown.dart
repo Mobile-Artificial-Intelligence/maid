@@ -22,39 +22,46 @@ class LlmDropdown extends StatelessWidget {
           ).createShader(bounds),
           blendMode: BlendMode
               .srcIn, // This blend mode applies the shader to the text color.
-          child: DropdownMenu<AiPlatformType>(
+          child: DropdownMenu<LargeLanguageModelType>(
               dropdownMenuEntries: const [
-                DropdownMenuEntry<AiPlatformType>(
-                  value: AiPlatformType.llamacpp,
+                DropdownMenuEntry<LargeLanguageModelType>(
+                  value: LargeLanguageModelType.llamacpp,
                   label: "LlamaCPP",
                 ),
-                DropdownMenuEntry<AiPlatformType>(
-                  value: AiPlatformType.ollama,
+                DropdownMenuEntry<LargeLanguageModelType>(
+                  value: LargeLanguageModelType.ollama,
                   label: "Ollama",
                 ),
-                DropdownMenuEntry<AiPlatformType>(
-                  value: AiPlatformType.openAI,
+                DropdownMenuEntry<LargeLanguageModelType>(
+                  value: LargeLanguageModelType.openAI,
                   label: "OpenAI",
                 ),
-                DropdownMenuEntry<AiPlatformType>(
-                  value: AiPlatformType.mistralAI,
+                DropdownMenuEntry<LargeLanguageModelType>(
+                  value: LargeLanguageModelType.mistralAI,
                   label: "MistralAI",
                 ),
+                DropdownMenuEntry<LargeLanguageModelType>(
+                  value: LargeLanguageModelType.gemini,
+                  label: "Gemini",
+                ),
               ],
-              onSelected: (AiPlatformType? value) {
+              onSelected: (LargeLanguageModelType? value) {
                 if (value != null) {
                   switch (value) {
-                    case AiPlatformType.llamacpp:
+                    case LargeLanguageModelType.llamacpp:
                       session.switchLlamaCpp();
                       break;
-                    case AiPlatformType.openAI:
+                    case LargeLanguageModelType.openAI:
                       session.switchOpenAI();
                       break;
-                    case AiPlatformType.ollama:
+                    case LargeLanguageModelType.ollama:
                       session.switchOllama();
                       break;
-                    case AiPlatformType.mistralAI:
+                    case LargeLanguageModelType.mistralAI:
                       session.switchMistralAI();
+                      break;
+                    case LargeLanguageModelType.gemini:
+                      session.switchGemini();
                       break;
                     default:
                       break;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:langchain/langchain.dart';
 
 class LargeLanguageModel extends ChangeNotifier {
-  AiPlatformType get type => AiPlatformType.none;
+  LargeLanguageModelType get type => LargeLanguageModelType.none;
 
   String _name = '';
   String _uri = '';
@@ -282,6 +282,8 @@ class LargeLanguageModel extends ChangeNotifier {
     _nCtx = json['nCtx'] ?? 512;
     _nBatch = json['nBatch'] ?? 512;
     _nThread = json['nThread'] ?? 8;
+
+    notifyListeners();
   }
 
   Map<String, dynamic> toMap() {
@@ -331,4 +333,4 @@ class LargeLanguageModel extends ChangeNotifier {
   }
 }
 
-enum AiPlatformType { none, llamacpp, openAI, ollama, mistralAI, custom }
+enum LargeLanguageModelType { none, llamacpp, openAI, ollama, mistralAI, gemini }
