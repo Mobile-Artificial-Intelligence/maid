@@ -77,6 +77,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
         });
 
         return Drawer(
+          backgroundColor: Theme.of(context).colorScheme.background,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20)
+              ),
+            ),
             child: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 40, 10, 10),
                 child: Column(children: [

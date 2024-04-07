@@ -26,6 +26,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      foregroundColor: Theme.of(context).colorScheme.onPrimary,
       elevation: 0.0,
       actions: [
         const SizedBox(width: 34),

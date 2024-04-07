@@ -35,72 +35,12 @@ class Themes {
     required Color inversePrimary,
   }) {
     return ThemeData(
-      iconTheme: IconThemeData(color: onPrimary),
-      textTheme: TextTheme(
-        titleLarge: TextStyle(
-          color: onPrimary,
-          fontSize: 30.0,
-          fontWeight: FontWeight.bold,
-        ),
-        titleMedium: TextStyle(
-          color: onPrimary,
-          fontSize: 15.0,
-        ),
-        titleSmall: TextStyle(
-          color: onPrimary,
-          fontSize: 20.0,
-        ),
-        bodyMedium: TextStyle(
-          color: onPrimary,
-          fontSize: 15.0,
-          fontWeight: FontWeight.bold,
-        ),
-        labelLarge: TextStyle(
-          color: onPrimary,
-          fontWeight: FontWeight.bold,
+      filledButtonTheme: FilledButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(secondary),
         ),
       ),
-      appBarTheme: AppBarTheme(
-        backgroundColor: background,
-        foregroundColor: onPrimary,
-        titleTextStyle: TextStyle(
-          color: onPrimary,
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-        ),
-        iconTheme: IconThemeData(color: onPrimary),
-      ),
-      drawerTheme: DrawerThemeData(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20),
-                bottomRight: Radius.circular(20)),
-          ),
-          backgroundColor: background),
-      dropdownMenuTheme: DropdownMenuThemeData(
-        textStyle: TextStyle(
-          color: onPrimary,
-          fontSize: 20.0,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20.0, vertical: 15.0), // Padding inside the TextField
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            borderSide: BorderSide.none,
-          ),
-          labelStyle: const TextStyle(
-              fontWeight: FontWeight.normal,
-              color: Colors.grey,
-              fontSize: 15.0),
-          hintStyle: TextStyle(
-              fontWeight: FontWeight.normal, color: onPrimary, fontSize: 15.0),
-          fillColor: primary,
-          filled: true,
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-        ),
-      ),
-      scaffoldBackgroundColor: background,
+
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: secondary,
         selectionColor: tertiary,
