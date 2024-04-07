@@ -14,7 +14,7 @@ class LargeLanguageModel extends ChangeNotifier {
 
   int _seed = 0;
   int _nKeep = 48;
-  int _nPredict = 512;
+  int _nPredict = 256;
   int _topK = 40;
   
   double _topP = 0.95;
@@ -203,7 +203,7 @@ class LargeLanguageModel extends ChangeNotifier {
     bool penalizeNewline = true,
     int seed = 0,
     int nKeep = 48,
-    int nPredict = 512,
+    int nPredict = 256,
     int topK = 40,
     double topP = 0.95,
     double minP = 0.1,
@@ -265,7 +265,7 @@ class LargeLanguageModel extends ChangeNotifier {
     _penalizeNewline = json['penalizeNewline'] ?? true;
     _seed = json['seed'] ?? 0;
     _nKeep = json['nKeep'] ?? 48;
-    _nPredict = json['nPredict'] ?? 512;
+    _nPredict = json['nPredict'] ?? 256;
     _topK = json['topK'] ?? 40;
     _topP = json['topP'] ?? 0.95;
     _minP = json['minP'] ?? 0.1;

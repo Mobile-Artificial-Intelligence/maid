@@ -3,6 +3,7 @@ import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalize_nl_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/mirostat_eta_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/mirostat_parameter.dart';
@@ -118,6 +119,7 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                 const MirostatTauParameter(),
                 const MirostatEtaParameter(),
                 const NCtxParameter(),
+                const NPredictParameter(),
                 const NBatchParameter(),
                 const NThreadsParameter(),
               ]
