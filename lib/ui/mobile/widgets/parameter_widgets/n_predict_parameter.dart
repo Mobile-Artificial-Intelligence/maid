@@ -13,8 +13,8 @@ class NPredictParameter extends StatelessWidget {
           labelText: 'n_predict',
           inputValue: session.model.nPredict,
           sliderMin: 1.0,
-          sliderMax: 1024.0,
-          sliderDivisions: 1023,
+          sliderMax: 4096.0,
+          sliderDivisions: 4095,
           onValueChanged: (value) {
             session.model.nPredict = value.round();
             session.notify();
