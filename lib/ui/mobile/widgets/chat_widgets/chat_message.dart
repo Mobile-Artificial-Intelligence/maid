@@ -35,19 +35,14 @@ class ChatMessageState extends State<ChatMessage>
 
     if (session.chat.messageOf(widget.key!).isNotEmpty) {
       _message = session.chat.messageOf(widget.key!);
-      _parseMessage(_message);
       _finalised = true;
     } else {
       session.chat.getMessageStream(widget.key!).stream.listen((textChunk) {
         setState(() {
           _message += textChunk;
-          _messageWidgets.clear();
-          _parseMessage(_message);
         });
       }).onDone(() { 
         _message = _message.trim();
-
-        _parseMessage(_message);
 
         session.chat.add(
           widget.key!,
@@ -62,32 +57,35 @@ class ChatMessageState extends State<ChatMessage>
     }
   }
 
-  void _parseMessage(String message) {
-    _messageWidgets.clear();
+  Widget _messageBuilder(String message) {
+    List<Widget> widgets = [];
     List<String> parts = message.split('```');
+
     for (int i = 0; i < parts.length; i++) {
       String part = parts[i].trim();
       if (part.isEmpty) continue;
 
       if (i % 2 == 0) {
-        _messageWidgets.add(
-          SelectableText(
-            part,
-            style: const TextStyle(
+        widgets.add(SelectableText(part, style: TextStyle(
               fontWeight: FontWeight.normal,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onPrimary,
               fontSize: 16,
-            ),
+            )
           )
         );
       } else {
-        _messageWidgets.addAll([
+        widgets.addAll([
           const SizedBox(height: 10),
-          CodeBox(code: part),
-          const SizedBox(height: 10)
+          CodeBox(code: part), // Assuming CodeBox is a widget you've defined for displaying code.
+          const SizedBox(height: 10),
         ]);
       }
     }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widgets,
+    );
   }
 
   @override
@@ -253,10 +251,10 @@ class ChatMessageState extends State<ChatMessage>
 
   List<Widget> _standardColumn() {
     return [
-      if (!_finalised && _messageWidgets.isEmpty)
-        const TypingIndicator()
+      if (!_finalised && _message.isEmpty)
+        const TypingIndicator() // Assuming TypingIndicator is a custom widget you've defined.
       else
-        ..._messageWidgets
+        _messageBuilder(_message),
     ];
   }
 }
