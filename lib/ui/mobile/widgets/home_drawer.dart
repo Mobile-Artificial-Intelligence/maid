@@ -100,9 +100,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               MaterialPageRoute(
                                   builder: (context) => const CharacterCustomizationPage()));
                         },
-                        child: Text(
-                          "Customize",
-                          style: Theme.of(context).textTheme.labelLarge,
+                        child: const Text(
+                          "Customize"
                         ),
                       ),
                       FilledButton(
@@ -113,9 +112,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               MaterialPageRoute(
                                   builder: (context) => const CharacterBrowserPage()));
                         },
-                        child: Text(
-                          "Browse",
-                          style: Theme.of(context).textTheme.labelLarge,
+                        child: const Text(
+                          "Browse"
                         ),
                       )
                     ]
@@ -132,9 +130,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         session.from(newSession);
                       });
                     },
-                    child: Text(
-                      "New Chat",
-                      style: Theme.of(context).textTheme.labelLarge,
+                    child: const Text(
+                      "New Chat"
                     ),
                   ),
                   Divider(
