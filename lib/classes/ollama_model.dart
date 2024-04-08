@@ -162,26 +162,19 @@ class OllamaModel extends LargeLanguageModel {
 
       if (!useDefault) {
         bodyJson['options'] = {
-          "num_keep": nKeep,
-          "seed": seed,
-          "num_predict": nPredict,
-          "top_k": topK,
-          "top_p": topP,
-          "min_p": minP,
-          "tfs_z": tfsZ,
-          "typical_p": typicalP,
-          "repeat_last_n": penaltyLastN,
-          "temperature": temperature,
-          "repeat_penalty": penaltyRepeat,
-          "presence_penalty": penaltyPresent,
-          "frequency_penalty": penaltyFreq,
           "mirostat": mirostat,
           "mirostat_tau": mirostatTau,
           "mirostat_eta": mirostatEta,
-          "penalize_newline": penalizeNewline,
           "num_ctx": nCtx,
-          "num_batch": nBatch,
           "num_thread": nThread,
+          "repeat_last_n": penaltyLastN,
+          "repeat_penalty": penaltyRepeat,
+          "temperature": temperature,
+          "seed": seed,
+          "tfs_z": tfsZ,
+          "num_predict": nPredict,
+          "top_k": topK,
+          "top_p": topP,          
         };
       }
 
@@ -199,7 +192,9 @@ class OllamaModel extends LargeLanguageModel {
 
       await for (var value in strings) {
         final data = json.decode(value);
+        print(data);
         final responseText = data['message']['content'] as String?;
+        print(responseText);
         final done = data['done'] as bool?;
 
         if (responseText != null && responseText.isNotEmpty) {
