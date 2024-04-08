@@ -55,7 +55,7 @@ class OllamaPage extends StatelessWidget {
                 const UrlParameter(),
                 const SizedBox(height: 8.0),
                 const UseDefaultParameter(),
-                if (session.model.useDefault) ...[
+                if (!session.model.useDefault) ...[
                   const SizedBox(height: 20.0),
                   Divider(
                     height: 20,

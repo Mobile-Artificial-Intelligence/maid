@@ -138,7 +138,78 @@ class OllamaModel extends LargeLanguageModel {
         throw Exception('Permission denied');
       }
 
-      // Unimplemented
+      List<Map<String, dynamic>> chat = [];
+
+      for (var message in messages) {
+        chat.add({
+          'role': message.role.name,
+          'content': message.content,
+        });
+      }
+
+      final url = Uri.parse("$uri/api/chat");
+
+      final headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "MAID"
+      };
+
+      var bodyJson = {
+        "model": name,
+        "messages": chat,
+        "stream": true
+      };
+
+      if (!useDefault) {
+        bodyJson['options'] = {
+          "num_keep": nKeep,
+          "seed": seed,
+          "num_predict": nPredict,
+          "top_k": topK,
+          "top_p": topP,
+          "min_p": minP,
+          "tfs_z": tfsZ,
+          "typical_p": typicalP,
+          "repeat_last_n": penaltyLastN,
+          "temperature": temperature,
+          "repeat_penalty": penaltyRepeat,
+          "presence_penalty": penaltyPresent,
+          "frequency_penalty": penaltyFreq,
+          "mirostat": mirostat,
+          "mirostat_tau": mirostatTau,
+          "mirostat_eta": mirostatEta,
+          "penalize_newline": penalizeNewline,
+          "num_ctx": nCtx,
+          "num_batch": nBatch,
+          "num_thread": nThread,
+        };
+      }
+
+      final body = json.encode(bodyJson);
+
+      var request = Request("POST", url)
+        ..headers.addAll(headers)
+        ..body = body;
+        
+      final streamedResponse = await request.send();
+
+      final strings = streamedResponse.stream
+          .transform(utf8.decoder)
+          .transform(const LineSplitter());
+
+      await for (var value in strings) {
+        final data = json.decode(value);
+        final responseText = data['message']['content'] as String?;
+        final done = data['done'] as bool?;
+
+        if (responseText != null && responseText.isNotEmpty) {
+          yield responseText;
+        }
+
+        if (done ?? false) {
+          break;
+        }
+      }
     } catch (e) {
       Logger.log('Error: $e');
     }
