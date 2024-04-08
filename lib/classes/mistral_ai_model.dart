@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:langchain/langchain.dart';
-import 'package:langchain_mistralai/langchain_mistralai.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
+import 'package:maid_llm/maid_llm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MistralAiModel extends LargeLanguageModel {
@@ -42,23 +41,9 @@ class MistralAiModel extends LargeLanguageModel {
   }
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(List<ChatNode> messages) async* {
     try {
-      final chat = ChatMistralAI(
-        baseUrl: '$uri/v1',
-        apiKey: token,
-        defaultOptions: ChatMistralAIOptions(
-          model: name,
-          topP: topP,
-          temperature: temperature,
-        ),
-      );
-
-      final stream = chat.stream(PromptValue.chat(messages));
-
-      await for (final ChatResult response in stream) {
-        yield response.firstOutputAsString;
-      }
+      //Unimplemented
     } catch (e) {
       Logger.log('Error: $e');
     }

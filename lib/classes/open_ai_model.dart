@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:langchain/langchain.dart';
-import 'package:langchain_openai/langchain_openai.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
+import 'package:maid_llm/maid_llm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OpenAiModel extends LargeLanguageModel {
@@ -41,26 +40,9 @@ class OpenAiModel extends LargeLanguageModel {
   }
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(List<ChatNode> messages) async* {
     try {
-      final chat = ChatOpenAI(
-        baseUrl: uri,
-        apiKey: token,
-        defaultOptions: ChatOpenAIOptions(
-          model: name,
-          temperature: temperature,
-          frequencyPenalty: penaltyFreq,
-          presencePenalty: penaltyPresent,
-          maxTokens: nPredict,
-          topP: topP
-        )
-      );
-
-      final stream = chat.stream(PromptValue.chat(messages));
-
-      await for (final ChatResult response in stream) {
-        yield response.firstOutputAsString;
-      }
+      //Unimplemented
     } catch (e) {
       Logger.log('Error: $e');
     }

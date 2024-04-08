@@ -141,7 +141,7 @@ class LlamaCppModel extends LargeLanguageModel {
   }
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) {
+  Stream<String> prompt(List<ChatNode> messages) {
     try {
       _maidLLM ??= MaidLLM(toGptParams(), log: Logger.log);
 

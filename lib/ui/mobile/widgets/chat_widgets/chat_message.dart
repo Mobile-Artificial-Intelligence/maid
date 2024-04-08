@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/chat_node.dart';
+import 'package:maid_llm/src/chat_node.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
@@ -21,7 +21,6 @@ class ChatMessage extends StatefulWidget {
 
 class ChatMessageState extends State<ChatMessage>
     with SingleTickerProviderStateMixin {
-  final List<Widget> _messageWidgets = [];
   late Session session;
   final TextEditingController _messageController = TextEditingController();
   String _message = "";
@@ -46,7 +45,7 @@ class ChatMessageState extends State<ChatMessage>
 
         session.chat.add(
           widget.key!,
-          message: _message, 
+          content: _message, 
           role: widget.role
         );
 

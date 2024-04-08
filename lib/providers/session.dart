@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:langchain/langchain.dart';
-import 'package:maid/classes/chat_node_tree.dart';
+import 'package:maid_llm/src/chat_node_tree.dart';
 import 'package:maid/classes/google_gemini_model.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
@@ -12,7 +12,7 @@ import 'package:maid/classes/open_ai_model.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/classes/chat_node.dart';
+import 'package:maid_llm/src/chat_node.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -132,8 +132,6 @@ class Session extends ChangeNotifier {
     final user = context.read<User>();
     final character = context.read<Character>();
 
-    List<ChatMessage> chatMessages = [];
-
     final description = Utilities.formatPlaceholders(character.description, user.name, character.name);
     final personality = Utilities.formatPlaceholders(character.personality, user.name, character.name);
     final scenario = Utilities.formatPlaceholders(character.scenario, user.name, character.name);
@@ -141,38 +139,14 @@ class Session extends ChangeNotifier {
 
     final preprompt = 'Description: $description\nPersonality: $personality\nScenario: $scenario\nSystem: $system';
 
-    List<Map<String, dynamic>> messages = [
-      {
-        'role': 'system',
-        'content': preprompt,
-      }
-    ];
+    List<ChatNode> messages = [];
 
-    if (character.useExamples) {
-      messages.addAll(character.examples);
-    }
-
-    messages.addAll(chat.getMessages());
-
-    for (var message in messages) {
-      switch (message['role']) {
-        case "user":
-          chatMessages.add(ChatMessage.humanText(message['content']));
-          break;
-        case "assistant":
-          chatMessages.add(ChatMessage.ai(message['content']));
-          break;
-        case "system": // Under normal circumstances, this should only be used for preprompt
-          chatMessages.add(ChatMessage.system(message['content']));
-          break;
-        default:
-          break;
-      }
-    }
+    messages.add(ChatNode(key: UniqueKey(), role: ChatRole.system, content: preprompt));
+    messages.addAll(chat.getChat());
 
     Logger.log("Prompting with ${model.type.name}");
 
-    final stringStream = model.prompt(chatMessages);
+    final stringStream = model.prompt(messages);
 
     await for (var message in stringStream) {
       stream(message);
@@ -200,7 +174,7 @@ class Session extends ChangeNotifier {
     if (parent != null) {
       parent.currentChild = null;
     }
-    chat.add(UniqueKey(), role: ChatRole.user, message: message);
+    chat.add(UniqueKey(), role: ChatRole.user, content: message);
     chat.add(UniqueKey(), role: ChatRole.assistant);
 
     prompt(context);
@@ -226,7 +200,7 @@ class Session extends ChangeNotifier {
         chat.buffer = "";
       }
 
-      chat.tail.message += message;
+      chat.tail.content += message;
     }
   }
 

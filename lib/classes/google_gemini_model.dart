@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:langchain/langchain.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
+import 'package:maid_llm/maid_llm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoogleGeminiModel extends LargeLanguageModel {
@@ -27,7 +27,7 @@ class GoogleGeminiModel extends LargeLanguageModel {
   }
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(List<ChatNode> messages) async* {
     try {
       final model = GenerativeModel(
         model: name, 
@@ -60,23 +60,25 @@ class GoogleGeminiModel extends LargeLanguageModel {
     }
   }
 
-  (List<Content>, Content) _toContent(List<ChatMessage> messages) {
+  (List<Content>, Content) _toContent(List<ChatNode> messages) {
     List<Content> history = [];
     Content? content;
 
     for (var message in messages) {
-      if (message is SystemChatMessage) {
-        history.add(Content.text(message.contentAsString));
-      } else if (message is HumanChatMessage) {
-        if (content != null) {
-          history.add(content);
-        }
+      switch (message.role) {
+        case ChatRole.system:
+          history.add(Content.text(message.content));
+          break;
+        case ChatRole.user:
+          if (content != null) {
+            history.add(content);
+          }
 
-        content = Content.text(message.contentAsString);
-      } else if (message is AIChatMessage) {
-        history.add(Content.model([TextPart(message.contentAsString)]));
-      } else {
-        throw Exception('Unknown ChatMessage type');
+          content = Content.text(message.content);
+          break;
+        case ChatRole.assistant:
+          history.add(Content.model([TextPart(message.content)]));
+          break;
       }
     }
 

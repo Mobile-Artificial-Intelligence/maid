@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:maid/classes/chat_node.dart';
+import 'package:maid_llm/src/chat_node.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
@@ -42,7 +42,7 @@ class HomePageState extends State<HomePage> {
           final index = Random().nextInt(character.greetings.length);
           session.chat.add(
             newKey,
-            message: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
+            content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
             role: ChatRole.assistant
           );
           history = {newKey: ChatRole.assistant};

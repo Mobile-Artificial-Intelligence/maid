@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:langchain/langchain.dart';
+import 'package:maid_llm/maid_llm.dart';
 
 class LargeLanguageModel extends ChangeNotifier {
   LargeLanguageModelType get type => LargeLanguageModelType.none;
@@ -325,7 +325,7 @@ class LargeLanguageModel extends ChangeNotifier {
     };
   }
 
-  Stream<String> prompt(List<ChatMessage> messages) {
+  Stream<String> prompt(List<ChatNode> messages) {
     throw UnimplementedError();
   }
 
