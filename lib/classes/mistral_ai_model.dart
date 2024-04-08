@@ -14,7 +14,7 @@ class MistralAiModel extends LargeLanguageModel {
   MistralAiModel({
     super.listener, 
     super.name,
-    super.uri = 'https://api.mistral.ai/v1/',
+    super.uri = 'https://api.mistral.ai',
     super.token,
     super.useDefault,
     super.seed,
@@ -29,7 +29,7 @@ class MistralAiModel extends LargeLanguageModel {
 
   @override
   void fromMap(Map<String, dynamic> json) {
-    if (json['uri'] == null) json['uri'] = 'https://api.mistral.ai/v1/';
+    if (json['uri'] == null) json['uri'] = 'https://api.mistral.ai';
     super.fromMap(json);
     notifyListeners();
   }
@@ -66,12 +66,12 @@ class MistralAiModel extends LargeLanguageModel {
   
   @override
   Future<List<String>> getOptions() async {
-    return ["mistral-small", "mistral-medium", "mistral-large"];
+    return ["mistral-small", "mistral-medium"];
   }
   
   @override
   Future<void> resetUri() async {
-    uri = 'https://api.mistral.ai/v1/';
+    uri = 'https://api.mistral.ai';
     notifyListeners();
   }
 
