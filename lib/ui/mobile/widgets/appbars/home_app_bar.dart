@@ -53,6 +53,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
     List<String> options = context.read<Session>().model.options;
 
+    print(options);
+
     List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
       padding: EdgeInsets.zero,
       child: Consumer<Session>(
@@ -63,7 +65,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
               title: Text(modelName),
               onTap: () {
                 session.model.name = modelName;
-                session.notify();
               },
               tileColor: session.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
             );

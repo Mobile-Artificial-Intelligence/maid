@@ -65,8 +65,8 @@ class MistralAiModel extends LargeLanguageModel {
   }
   
   @override
-  Future<List<String>> updateOptions() async {
-    return ["mistral-small", "mistral-medium"];
+  Future<void> updateOptions() async {
+    options = ["mistral-small", "mistral-medium"];
   }
   
   @override
