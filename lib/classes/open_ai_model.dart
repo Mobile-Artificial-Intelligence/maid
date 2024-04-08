@@ -67,13 +67,15 @@ class OpenAiModel extends LargeLanguageModel {
   }
   
   @override
-  Future<List<String>> getOptions() async {
-    return ["gpt-3.5-turbo", "gpt-4-32k"];
+  Future<void> updateOptions() async {
+    options = ["gpt-3.5-turbo", "gpt-4-32k"];
   }
   
   @override
   Future<void> resetUri() async {
     uri = 'https://api.openai.com/v1/';
+
+    await updateOptions();
     notifyListeners();
   }
 

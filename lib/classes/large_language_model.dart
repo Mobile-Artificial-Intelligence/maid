@@ -8,6 +8,8 @@ class LargeLanguageModel extends ChangeNotifier {
   String _uri = '';
   String _token = '';
 
+  List<String> _options = [];
+
   bool _randomSeed = true;
   bool _useDefault = false;
   bool _penalizeNewline = true;
@@ -39,6 +41,8 @@ class LargeLanguageModel extends ChangeNotifier {
   String get name => _name;
   String get uri => _uri;
   String get token => _token;
+
+  List<String> get options => _options;
 
   bool get randomSeed => _randomSeed;
   bool get useDefault => _useDefault;
@@ -80,6 +84,11 @@ class LargeLanguageModel extends ChangeNotifier {
 
   set token(String value) {
     _token = value;
+    notifyListeners();
+  }
+
+  set options(List<String> value) {
+    _options = value;
     notifyListeners();
   }
 
@@ -320,7 +329,7 @@ class LargeLanguageModel extends ChangeNotifier {
     throw UnimplementedError();
   }
 
-  Future<List<String>> getOptions() {
+  Future<void> updateOptions() {
     throw UnimplementedError();
   }
 

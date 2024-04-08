@@ -51,97 +51,96 @@ class _HomeAppBarState extends State<HomeAppBar> {
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Size size = renderBox.size;
 
-    context.read<Session>().model.getOptions().then((options) {
-      List<PopupMenuEntry<dynamic>> modelOptions = options
-        .map((String modelName) => PopupMenuItem(
-          padding: EdgeInsets.zero,
-          child: Consumer<Session>(
-            builder: 
-              (context, session, child) {
-                return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  title: Text(modelName),
-                  onTap: () {
-                    session.model.name = modelName;
-                    session.notify();
-                  },
-                  tileColor: session.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
-                );
-              }
-        )))
-        .toList();
+    List<String> options = context.read<Session>().model.options;
 
-        showMenu(
-          context: context,
-          // Calculate the position based on the button's position and size
-          position: RelativeRect.fromLTRB(
-            offset.dx,
-            offset.dy + size.height,
-            offset.dx,
-            offset.dy,
+    List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
+      padding: EdgeInsets.zero,
+      child: Consumer<Session>(
+        builder: 
+          (context, session, child) {
+            return ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+              title: Text(modelName),
+              onTap: () {
+                session.model.name = modelName;
+                session.notify();
+              },
+              tileColor: session.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
+            );
+          }
+    )))
+    .toList();
+    
+    showMenu(
+      context: context,
+      // Calculate the position based on the button's position and size
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy + size.height,
+        offset.dx,
+        offset.dy,
+      ),
+      items: [
+        ...modelOptions,
+        if (modelOptions.isNotEmpty)
+          const PopupMenuDivider(
+            height: 10,
           ),
-          items: [
-            ...modelOptions,
-            if (modelOptions.isNotEmpty)
-              const PopupMenuDivider(
-                height: 10,
-              ),
-            PopupMenuItem(
-              padding: EdgeInsets.zero,
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                title: const Text('LLM Parameters'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      switch (context.read<Session>().model.type) {
-                        case LargeLanguageModelType.llamacpp:
-                          return const LlamaCppPage();
-                        case LargeLanguageModelType.ollama:
-                          return const OllamaPage();
-                        case LargeLanguageModelType.openAI:
-                          return const OpenAiPage();
-                        case LargeLanguageModelType.mistralAI:
-                          return const MistralAiPage();
-                        case LargeLanguageModelType.gemini:
-                          return const GoogleGeminiPage();
-                        default:
-                          return const LlamaCppPage();
-                      }
-                    }),
-                  );
-                },
-              ),
-            ),
-            PopupMenuItem(
-              padding: EdgeInsets.zero,
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                title: const Text('App Settings'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SettingsPage()));
-                },
-              ),
-            ),
-            PopupMenuItem(
-              padding: EdgeInsets.zero,
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                title: const Text('About'),
-                onTap: () {
-                  Navigator.pop(context); // Close the menu first
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const AboutPage()));
-                },
-              ),
-            ),
-          ],
-        );
-    });
+        PopupMenuItem(
+          padding: EdgeInsets.zero,
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            title: const Text('LLM Parameters'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  switch (context.read<Session>().model.type) {
+                    case LargeLanguageModelType.llamacpp:
+                      return const LlamaCppPage();
+                    case LargeLanguageModelType.ollama:
+                      return const OllamaPage();
+                    case LargeLanguageModelType.openAI:
+                      return const OpenAiPage();
+                    case LargeLanguageModelType.mistralAI:
+                      return const MistralAiPage();
+                    case LargeLanguageModelType.gemini:
+                      return const GoogleGeminiPage();
+                    default:
+                      return const LlamaCppPage();
+                  }
+                }),
+              );
+            },
+          ),
+        ),
+        PopupMenuItem(
+          padding: EdgeInsets.zero,
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            title: const Text('App Settings'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SettingsPage()));
+            },
+          ),
+        ),
+        PopupMenuItem(
+          padding: EdgeInsets.zero,
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            title: const Text('About'),
+            onTap: () {
+              Navigator.pop(context); // Close the menu first
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AboutPage()));
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

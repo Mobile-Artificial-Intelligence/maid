@@ -65,13 +65,15 @@ class MistralAiModel extends LargeLanguageModel {
   }
   
   @override
-  Future<List<String>> getOptions() async {
+  Future<List<String>> updateOptions() async {
     return ["mistral-small", "mistral-medium"];
   }
   
   @override
   Future<void> resetUri() async {
     uri = 'https://api.mistral.ai';
+
+    await updateOptions();
     notifyListeners();
   }
 

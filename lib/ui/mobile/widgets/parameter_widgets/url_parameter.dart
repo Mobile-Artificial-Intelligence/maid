@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
-class UrlParameter extends StatelessWidget {
+class UrlParameter extends StatefulWidget {
   const UrlParameter({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
-    controller.text = context.read<Session>().model.uri;
+  State<UrlParameter> createState() => _UrlParameterState();
+}
 
+class _UrlParameterState extends State<UrlParameter> {
+  final TextEditingController controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    controller.text = context.read<Session>().model.uri;
 
     return ListTile(
       title: Row(
@@ -37,7 +42,6 @@ class UrlParameter extends StatelessWidget {
               ),
               onChanged: (value) {
                 context.read<Session>().model.uri = value;
-                context.read<Session>().notify();
               },
             ),
           ),
