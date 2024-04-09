@@ -52,7 +52,7 @@ class OpenAiModel extends LargeLanguageModel {
     }
     
     try {
-      final url = Uri.parse('$uri/v1/chat/completions');
+      final url = Uri.parse('$uri/v1/completions');
       
       final headers = {
         "Accept": "application/json",
