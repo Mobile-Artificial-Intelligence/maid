@@ -52,7 +52,7 @@ class OpenAiModel extends LargeLanguageModel {
     }
     
     try {
-      final url = Uri.parse('$uri/v1/completions');
+      final url = Uri.parse('$uri/v1/chat/completions');
       
       final headers = {
         "Accept": "application/json",
@@ -96,7 +96,40 @@ class OpenAiModel extends LargeLanguageModel {
   
   @override
   Future<void> updateOptions() async {
-    options = ["gpt-3.5-turbo", "gpt-4-32k"];
+    try {
+      final url = Uri.parse('$uri/v1/models');
+
+      final headers = {
+        "Accept": "application/json",
+        'Authorization':'Bearer $token',
+      };
+
+      final request = Request("GET", url)
+        ..headers.addAll(headers);
+      
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final body = await response.stream.bytesToString();
+        final data = json.decode(body);
+        Logger.log('Data: $data');
+
+        final models = data['data'] as List<dynamic>?;
+
+        if (models != null) {
+          options = models
+            .where((model) => model['id'].contains('gpt-3.5') || model['id'].contains('gpt-4'))
+            .map((model) => model['id'] as String)
+            .toList();
+        } else {
+          options = [];
+        }
+      } else {
+        throw Exception('Failed to update options: ${response.statusCode}');
+      }
+    } catch (e) {
+      Logger.log('Error: $e');
+    }
   }
   
   @override
