@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:http/http.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
@@ -41,8 +42,53 @@ class OpenAiModel extends LargeLanguageModel {
 
   @override
   Stream<String> prompt(List<ChatNode> messages) async* {
+    List<Map<String, dynamic>> chat = [];
+
+    for (var message in messages) {
+      chat.add({
+        'role': message.role.name,
+        'content': message.content,
+      });
+    }
+    
     try {
-      //Unimplemented
+      final url = Uri.parse('$uri/v1/chat/completions');
+      
+      final headers = {
+        "Accept": "application/json",
+        'Authorization':'Bearer $token',
+      };
+
+      final body = {
+        'model': name,
+        'messages': chat,
+        'temperature': temperature,
+        'top_p': topP,
+        'max_tokens': nPredict,
+        'stream': true,
+        'random_seed': seed
+      };
+      
+      final request = Request("POST", url)
+        ..headers.addAll(headers)
+        ..body = json.encode(body);
+
+      final response = await request.send();
+
+      final stream = response.stream
+          .transform(utf8.decoder)
+          .transform(const LineSplitter());
+
+      await for (final line in stream) {
+        final data = json.decode(line);
+        Logger.log('Data: $data');
+
+        final content = data['choices'][0]['delta']['content'] as String?;
+
+        if (content != null && content.isNotEmpty) {
+          yield content;
+        }
+      }
     } catch (e) {
       Logger.log('Error: $e');
     }
