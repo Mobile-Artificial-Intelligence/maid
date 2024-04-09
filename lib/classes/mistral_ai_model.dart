@@ -84,7 +84,11 @@ class MistralAiModel extends LargeLanguageModel {
         final data = json.decode(line);
         Logger.log('Data: $data');
 
-        // TODO: Implement response handling
+        final content = data['choices'][0]['delta']['content'] as String?;
+
+        if (content != null && content.isNotEmpty) {
+          yield content;
+        }
       }
     } catch (e) {
       Logger.log('Error: $e');
