@@ -184,12 +184,12 @@ class OllamaModel extends LargeLanguageModel {
         
       final streamedResponse = await request.send();
 
-      final strings = streamedResponse.stream
+      final stream = streamedResponse.stream
           .transform(utf8.decoder)
           .transform(const LineSplitter());
 
-      await for (var value in strings) {
-        final data = json.decode(value);
+      await for (final line in stream) {
+        final data = json.decode(line);
         final responseText = data['message']['content'] as String?;
         final done = data['done'] as bool?;
 

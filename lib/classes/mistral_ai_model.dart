@@ -43,8 +43,49 @@ class MistralAiModel extends LargeLanguageModel {
 
   @override
   Stream<String> prompt(List<ChatNode> messages) async* {
+    List<Map<String, dynamic>> chat = [];
+
+    for (var message in messages) {
+      chat.add({
+        'role': message.role.name,
+        'content': message.content,
+      });
+    }
+
     try {
-      //Unimplemented
+      final url = Uri.parse('$uri/v1/chat/completions');
+      
+      final headers = {
+        "Accept": "application/json",
+        'Authorization':'Bearer $token',
+      };
+
+      final body = {
+        'model': name,
+        'messages': chat,
+        'temperature': temperature,
+        'top_p': topP,
+        'max_tokens': nPredict,
+        'stream': true,
+        'random_seed': seed
+      };
+      
+      final request = Request("POST", url)
+        ..headers.addAll(headers)
+        ..body = json.encode(body);
+
+      final response = await request.send();
+
+      final stream = response.stream
+          .transform(utf8.decoder)
+          .transform(const LineSplitter());
+
+      await for (final line in stream) {
+        final data = json.decode(line);
+        Logger.log('Data: $data');
+
+        // TODO: Implement response handling
+      }
     } catch (e) {
       Logger.log('Error: $e');
     }
@@ -56,6 +97,7 @@ class MistralAiModel extends LargeLanguageModel {
       final url = Uri.parse('$uri/v1/models');
       
       final headers = {
+        "Accept": "application/json",
         'Authorization':'Bearer $token',
       };
 
