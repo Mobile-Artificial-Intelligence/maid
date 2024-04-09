@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:http/http.dart';
+import 'package:langchain_openai/langchain_openai.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
@@ -14,7 +15,7 @@ class OpenAiModel extends LargeLanguageModel {
   OpenAiModel({
     super.listener, 
     super.name,
-    super.uri = 'https://api.openai.com/v1/',
+    super.uri = 'https://api.openai.com/v1',
     super.token,
     super.seed,
     super.nPredict,
@@ -31,7 +32,7 @@ class OpenAiModel extends LargeLanguageModel {
   @override
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
-    uri = json['url'] ?? 'https://api.openai.com/v1/';
+    uri = json['url'] ?? 'https://api.openai.com/v1';
     token = json['token'] ?? '';
     nPredict = json['nPredict'] ?? 512;
     topP = json['topP'] ?? 0.95;
@@ -42,52 +43,47 @@ class OpenAiModel extends LargeLanguageModel {
 
   @override
   Stream<String> prompt(List<ChatNode> messages) async* {
-    List<Map<String, dynamic>> chat = [];
+    List<ChatMessage> chatMessages = [];
 
     for (var message in messages) {
-      chat.add({
-        'role': message.role.name,
-        'content': message.content,
-      });
+      Logger.log("Message: ${message.content}");
+      if (message.content.isEmpty) {
+        continue;
+      }
+
+      switch (message.role) {
+        case ChatRole.user:
+          chatMessages.add(ChatMessage.humanText(message.content));
+          break;
+        case ChatRole.assistant:
+          chatMessages.add(ChatMessage.ai(message.content));
+          break;
+        case ChatRole.system: // Under normal circumstances, this should only be used for preprompt
+          chatMessages.add(ChatMessage.system(message.content));
+          break;
+        default:
+          break;
+      }
     }
-    
+
     try {
-      final url = Uri.parse('$uri/v1/chat/completions');
-      
-      final headers = {
-        "Accept": "application/json",
-        'Authorization':'Bearer $token',
-      };
+      final chat = ChatOpenAI(
+        baseUrl: uri,
+        apiKey: token,
+        defaultOptions: ChatOpenAIOptions(
+          model: name,
+          temperature: temperature,
+          frequencyPenalty: penaltyFreq,
+          presencePenalty: penaltyPresent,
+          maxTokens: nPredict,
+          topP: topP
+        )
+      );
 
-      final body = {
-        'model': name,
-        'messages': chat,
-        'temperature': temperature,
-        'top_p': topP,
-        'max_tokens': nPredict,
-        'stream': true,
-        'random_seed': seed
-      };
-      
-      final request = Request("POST", url)
-        ..headers.addAll(headers)
-        ..body = json.encode(body);
+      final stream = chat.stream(PromptValue.chat(chatMessages));
 
-      final response = await request.send();
-
-      final stream = response.stream
-          .transform(utf8.decoder)
-          .transform(const LineSplitter());
-
-      await for (final line in stream) {
-        final data = json.decode(line);
-        Logger.log('Data: $data');
-
-        final content = data['choices'][0]['delta']['content'] as String?;
-
-        if (content != null && content.isNotEmpty) {
-          yield content;
-        }
+      await for (final ChatResult response in stream) {
+        yield response.firstOutputAsString;
       }
     } catch (e) {
       Logger.log('Error: $e');
@@ -97,10 +93,11 @@ class OpenAiModel extends LargeLanguageModel {
   @override
   Future<void> updateOptions() async {
     try {
-      final url = Uri.parse('$uri/v1/models');
+      final url = Uri.parse('$uri/models');
 
       final headers = {
-        "Accept": "application/json",
+        'Content-Type': 'application/json',
+        'Accept':'application/json',
         'Authorization':'Bearer $token',
       };
 
@@ -134,7 +131,7 @@ class OpenAiModel extends LargeLanguageModel {
   
   @override
   Future<void> resetUri() async {
-    uri = 'https://api.openai.com/v1/';
+    uri = 'https://api.openai.com/v1';
 
     await updateOptions();
     notifyListeners();

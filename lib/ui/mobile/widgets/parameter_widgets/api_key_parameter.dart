@@ -17,7 +17,7 @@ class ApiKeyParameter extends StatelessWidget {
       controller: controller,
       onChanged: (value) {
         context.read<Session>().model.token = value;
-        context.read<Session>().notify();
+        context.read<Session>().model.updateOptions();
       }
     );
   }

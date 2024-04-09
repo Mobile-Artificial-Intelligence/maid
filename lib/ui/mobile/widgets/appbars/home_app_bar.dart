@@ -53,8 +53,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
     List<String> options = context.read<Session>().model.options;
 
-    print(options);
-
     List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
       padding: EdgeInsets.zero,
       child: Consumer<Session>(
