@@ -154,14 +154,14 @@ class OllamaModel extends LargeLanguageModel {
         "User-Agent": "MAID"
       };
 
-      var bodyJson = {
+      var body = {
         "model": name,
         "messages": chat,
         "stream": true
       };
 
       if (!useDefault) {
-        bodyJson['options'] = {
+        body['options'] = {
           "mirostat": mirostat,
           "mirostat_tau": mirostatTau,
           "mirostat_eta": mirostatEta,
@@ -178,11 +178,9 @@ class OllamaModel extends LargeLanguageModel {
         };
       }
 
-      final body = json.encode(bodyJson);
-
       var request = Request("POST", url)
         ..headers.addAll(headers)
-        ..body = body;
+        ..body = json.encode(body);
         
       final streamedResponse = await request.send();
 
@@ -192,9 +190,7 @@ class OllamaModel extends LargeLanguageModel {
 
       await for (var value in strings) {
         final data = json.decode(value);
-        print(data);
         final responseText = data['message']['content'] as String?;
-        print(responseText);
         final done = data['done'] as bool?;
 
         if (responseText != null && responseText.isNotEmpty) {

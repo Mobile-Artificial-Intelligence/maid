@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:http/http.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
@@ -51,7 +52,36 @@ class MistralAiModel extends LargeLanguageModel {
   
   @override
   Future<void> updateOptions() async {
-    options = ["mistral-small", "mistral-medium"];
+    try {
+      final url = Uri.parse('$uri/v1/models');
+      
+      final headers = {
+        'Authorization':'Bearer $token',
+      };
+
+      final request = Request("GET", url)
+        ..headers.addAll(headers);
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final body = await response.stream.bytesToString();
+        final data = json.decode(body);
+        Logger.log('Data: $data');
+
+        final models = data['data'] as List<dynamic>?;
+
+        if (models != null) {
+          options = models.map((model) => model['id'] as String).toList();
+        } else {
+          options = [];
+        }
+      } else {
+        throw Exception('Failed to update options: ${response.statusCode}');
+      }
+    } catch (e) {
+      Logger.log('Error: $e');
+    }
   }
   
   @override
