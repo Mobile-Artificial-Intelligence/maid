@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:http/http.dart';
+import 'package:langchain/langchain.dart';
 import 'package:langchain_mistralai/langchain_mistralai.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
@@ -80,9 +81,7 @@ class MistralAiModel extends LargeLanguageModel {
 
       final stream = chat.stream(PromptValue.chat(chatMessages));
 
-      await for (final ChatResult response in stream) {
-        yield response.firstOutputAsString;
-      }
+      yield* stream.map((final res) => res.output.content);
     } catch (e) {
       Logger.log('Error: $e');
     }

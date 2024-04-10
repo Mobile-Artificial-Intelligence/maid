@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:langchain/langchain.dart';
 import 'package:maid_llm/src/chat_node_tree.dart';
 import 'package:maid/classes/google_gemini_model.dart';
 import 'package:maid/classes/large_language_model.dart';
