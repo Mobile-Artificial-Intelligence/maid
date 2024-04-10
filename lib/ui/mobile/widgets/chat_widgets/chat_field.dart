@@ -26,7 +26,7 @@ class _ChatFieldState extends State<ChatField> {
     if (Platform.isAndroid || Platform.isIOS) {
       // For sharing or opening text coming from outside the app while the app is in the memory
       _intentDataStreamSubscription =
-          ReceiveSharingIntent.getMediaStream().listen((value) {
+          ReceiveSharingIntent.instance.getMediaStream().listen((value) {
         setState(() {
           _promptController.text = value.first.path;
         });
@@ -35,7 +35,7 @@ class _ChatFieldState extends State<ChatField> {
       });
 
       // For sharing or opening text coming from outside the app while the app is closed
-      ReceiveSharingIntent.getInitialMedia().then((value) {
+      ReceiveSharingIntent.instance.getInitialMedia().then((value) {
         setState(() {
           _promptController.text = value.first.path;
         });
