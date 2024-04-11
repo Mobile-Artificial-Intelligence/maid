@@ -5,6 +5,8 @@ import 'dart:ui';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart';
 import 'package:lan_scanner/lan_scanner.dart';
+import 'package:langchain/langchain.dart';
+import 'package:langchain_ollama/langchain_ollama.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
@@ -132,75 +134,71 @@ class OllamaModel extends LargeLanguageModel {
 
   @override
   Stream<String> prompt(List<ChatNode> messages) async* {
+    List<ChatMessage> chatMessages = [];
+
+    for (var message in messages) {
+      Logger.log("Message: ${message.content}");
+      if (message.content.isEmpty) {
+        continue;
+      }
+
+      switch (message.role) {
+        case ChatRole.user:
+          chatMessages.add(ChatMessage.humanText(message.content));
+          break;
+        case ChatRole.assistant:
+          chatMessages.add(ChatMessage.ai(message.content));
+          break;
+        case ChatRole.system: // Under normal circumstances, this should only be used for preprompt
+          chatMessages.add(ChatMessage.system(message.content));
+          break;
+        default:
+          break;
+      }
+    }
+
     try {
       bool permissionGranted = await _getNearbyDevicesPermission();
       if (!permissionGranted) {
         throw Exception('Permission denied');
       }
 
-      List<Map<String, dynamic>> chat = [];
-
-      for (var message in messages) {
-        chat.add({
-          'role': message.role.name,
-          'content': message.content,
-        });
+      ChatOllama chat;
+      if (useDefault) {
+        chat = ChatOllama(
+          baseUrl: '$uri/api',
+          defaultOptions: ChatOllamaOptions(
+            model: name,
+          ),
+        );
+      } else {
+        chat = ChatOllama(
+          baseUrl: '$uri/api',
+          defaultOptions: ChatOllamaOptions(
+            model: name,
+            numKeep: nKeep,
+            seed: seed,
+            numPredict: nPredict,
+            topK: topK,
+            topP: topP,
+            typicalP: typicalP,
+            temperature: temperature,
+            repeatPenalty: penaltyRepeat,
+            frequencyPenalty: penaltyFreq,
+            presencePenalty: penaltyPresent,
+            mirostat: mirostat,
+            mirostatTau: mirostatTau,
+            mirostatEta: mirostatEta,
+            numCtx: nCtx,
+            numBatch: nBatch,
+            numThread: nThread,
+          ),
+        );
       }
 
-      final url = Uri.parse("$uri/api/chat");
+      final stream = chat.stream(PromptValue.chat(chatMessages));
 
-      final headers = {
-        "Content-Type": "application/json",
-        "User-Agent": "MAID"
-      };
-
-      var body = {
-        "model": name,
-        "messages": chat,
-        "stream": true
-      };
-
-      if (!useDefault) {
-        body['options'] = {
-          "mirostat": mirostat,
-          "mirostat_tau": mirostatTau,
-          "mirostat_eta": mirostatEta,
-          "num_ctx": nCtx,
-          "num_thread": nThread,
-          "repeat_last_n": penaltyLastN,
-          "repeat_penalty": penaltyRepeat,
-          "temperature": temperature,
-          "seed": seed,
-          "tfs_z": tfsZ,
-          "num_predict": nPredict,
-          "top_k": topK,
-          "top_p": topP,          
-        };
-      }
-
-      var request = Request("POST", url)
-        ..headers.addAll(headers)
-        ..body = json.encode(body);
-        
-      final streamedResponse = await request.send();
-
-      final stream = streamedResponse.stream
-          .transform(utf8.decoder)
-          .transform(const LineSplitter());
-
-      await for (final line in stream) {
-        final data = json.decode(line);
-        final responseText = data['message']['content'] as String?;
-        final done = data['done'] as bool?;
-
-        if (responseText != null && responseText.isNotEmpty) {
-          yield responseText;
-        }
-
-        if (done ?? false) {
-          break;
-        }
-      }
+      yield* stream.map((final res) => res.output.content);
     } catch (e) {
       Logger.log('Error: $e');
     }

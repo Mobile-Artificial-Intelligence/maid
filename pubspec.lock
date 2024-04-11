@@ -360,6 +360,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.0"
+  langchain_ollama:
+    dependency: "direct main"
+    description:
+      name: langchain_ollama
+      sha256: a2a0624022631ae16ad6ebd3a635768fedca24d55b2a76a4e6d8d1d03f8d65fa
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   langchain_openai:
     dependency: "direct main"
     description:
@@ -502,6 +510,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
+  ollama_dart:
+    dependency: transitive
+    description:
+      name: ollama_dart
+      sha256: "0af52c17a6dda9f6a30d79b9529bf38128d9b01dabd9d5f625040a32035eec24"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3+1"
   openai_dart:
     dependency: transitive
     description:
