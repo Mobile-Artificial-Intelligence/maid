@@ -12,24 +12,24 @@ Maid supports sillytavern character cards to allow you to interact with all your
 <div align="center">
   <table>
     <tr>
-      <td><img src=".images/demo1.jpg" width="200"></td>
-      <td><img src=".images/demo2.jpg" width="200"></td>
-      <td><img src=".images/demo3.jpg" width="200"></td>
+      <td><img src="media/demo1.jpg" width="200"></td>
+      <td><img src="media/demo2.jpg" width="200"></td>
+      <td><img src="media/demo3.jpg" width="200"></td>
     </tr>
     <tr>
-      <td><img src=".images/demo4.jpg" width="200"></td>
-      <td><img src=".images/demo5.jpg" width="200"></td>
-      <td><img src=".images/demo6.jpg" width="200"></td>
+      <td><img src="media/demo4.jpg" width="200"></td>
+      <td><img src="media/demo5.jpg" width="200"></td>
+      <td><img src="media/demo6.jpg" width="200"></td>
     </tr>
   </table>
   <table>
     <tr>
-      <td><img src=".images/demo7.png" width="600"></td>
-      <td><img src=".images/demo8.png" width="600"></td>
+      <td><img src="media/demo7.png" width="600"></td>
+      <td><img src="media/demo8.png" width="600"></td>
     </tr>
     <tr>
-      <td><img src=".images/demo9.png" width="600"></td>
-      <td><img src=".images/demo10.png" width="600"></td>
+      <td><img src="media/demo9.png" width="600"></td>
+      <td><img src="media/demo10.png" width="600"></td>
     </tr>
   </table>
 </div>
