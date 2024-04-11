@@ -1,0 +1,3 @@
+Maid is an cross-platform free and open source application for interfacing with llama.cpp models locally, and with Ollama, Mistral, Google Gemini and OpenAI models remotely.
+
+Maid supports sillytavern character cards to allow you to interact with all your favorite characters.
