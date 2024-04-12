@@ -14,10 +14,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.19.1'
+      - name: Add Flutter to PATH
+        run: echo "./flutter/bin" >> $GITHUB_PATH
       
       - name: Install dependencies
         run: |
@@ -56,10 +54,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.19.1'
+      - name: Add Flutter to PATH
+        run: echo "./flutter/bin" >> $GITHUB_PATH
         
       - name: Install dependencies
         run: |
@@ -85,10 +81,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.19.1'
+      - name: Add Flutter to PATH
+        run: echo "./flutter/bin" >> $GITHUB_PATH
         
       - name: Install dependencies
         run: |
