@@ -41,6 +41,7 @@ jobs:
 
       - name: Build APK
         run: |
+          flutter config --no-analytics
           flutter pub get
           flutter build apk
 
