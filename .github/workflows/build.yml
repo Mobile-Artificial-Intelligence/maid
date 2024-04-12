@@ -20,12 +20,10 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Add Flutter to PATH
-        run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
-
-      - name: Verify Flutter Setup
-        run: |
-          flutter doctor
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.5'
       
       - name: Install dependencies
         run: |
@@ -64,12 +62,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Add Flutter to PATH
-        run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
-
-      - name: Verify Flutter Setup
-        run: |
-          flutter doctor
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.5'
         
       - name: Install dependencies
         run: |
@@ -95,12 +91,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Add Flutter to PATH
-        run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
-
-      - name: Verify Flutter Setup
-        run: |
-          flutter doctor
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.5'
         
       - name: Install dependencies
         run: |
