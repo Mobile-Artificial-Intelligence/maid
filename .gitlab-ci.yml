@@ -8,6 +8,11 @@ build-apk:
     - main
   variables:
     repo: /home/runner/work/maid
+    FLUTTER_HOME: $repo/maid/flutter
+  before_script:
+    - apk add --no-cache git
+    - git submodule sync --recursive
+    - git submodule update --init --recursive
   script:
     - mkdir -p /home/runner
     - chown vagrant /home/runner
@@ -15,13 +20,22 @@ build-apk:
     - mv com.danemadsen.maid $repo/maid
     - pushd $repo/maid
     - export PUB_CACHE=$(pwd)/.pub-cache
-    - flutter/bin/flutter config --no-analytics
-    - flutter/bin/flutter packages pub get
+    - $FLUTTER_HOME/bin/flutter config --no-analytics
+    - $FLUTTER_HOME/bin/flutter packages pub get
     - popd
     - mv $repo/maid com.danemadsen.maid
     - mv com.danemadsen.maid $repo/maid
     - pushd $repo/maid
-    - flutter/bin/flutter build apk
+    - echo "Decoding Keystore File"
+    - echo "$KEYSTORE" | base64 --decode > android/app/key.jks
+    - |
+      echo "storeFile=key.jks" > android/key.properties
+      echo "storePassword=$STORE_PASSWORD" >> android/key.properties
+      echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
+      echo "releasePassword=$KEY_PASSWORD" >> android/key.properties
+      echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+      echo "releaseAlias=$KEY_ALIAS" >> android/key.properties
+    - $FLUTTER_HOME/bin/flutter build apk
     - popd
     - mv $repo/maid com.danemadsen.maid
   artifacts:
