@@ -9,10 +9,13 @@ build-apk:
   variables:
     repo: /home/runner/work/maid 
   before_script:
+    - apt-get update 
+    - apt-get install -y openjdk-17-jdk  # Install OpenJDK 17
     - git submodule sync --recursive
     - git submodule update --init --recursive
   script:
     - export PUB_CACHE=$(pwd)/.pub-cache
+    - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 
 
     # Build and configure Flutter from submodule
     - ./packages/flutter/bin/flutter config --no-analytics
