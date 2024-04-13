@@ -9,7 +9,9 @@ build-apk:
   only:
     - main
   variables:
-    repo: /home/runner/work/maid 
+    repo: /home/runner/work/maid
+    ANDROID_HOME: /opt/android-sdk
+    ANDROID_SDK_ROOT: ${ANDROID_HOME}
   before_script:
     - apt-get update 
     - apt-get install -y openjdk-17-jdk-headless  # Install OpenJDK 17
