@@ -3,14 +3,18 @@ stages:
 
 build-apk:
   stage: build
-  image: cirrusci/flutter:latest # Still use the Flutter image for its dependencies
+  image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm
+  tags:
+    - saas-linux-medium-amd64
   only:
     - main
   variables:
     repo: /home/runner/work/maid 
   before_script:
     - apt-get update 
-    - apt-get install -y openjdk-17-jdk  # Install OpenJDK 17
+    - apt-get install -y openjdk-17-jdk-headless  # Install OpenJDK 17
+    - rm -rf $ANDROID_HOME/tools  # TODO remove once sdkmanager can upgrade installed packages
+    - sdkmanager "tools" "platform-tools" "build-tools;31.0.0"
     - git submodule sync --recursive
     - git submodule update --init --recursive
   script:
@@ -22,12 +26,12 @@ build-apk:
     - ./packages/flutter/bin/flutter packages pub get
 
     # Decrypt the keystore
-    - echo "$KEYSTORE" | base64 --decode > android/app/key.jks
+    - echo "$KEYSTORE" | base64 --decode > ./android/app/key.jks
     - |
-      echo "storeFile=key.jks" > android/key.properties
-      echo "storePassword=$STORE_PASSWORD" >> android/key.properties
-      echo "releasePassword=$KEY_PASSWORD" >> android/key.properties
-      echo "releaseAlias=$KEY_ALIAS" >> android/key.properties
+      echo "storeFile=key.jks" > ./android/key.properties
+      echo "storePassword=$STORE_PASSWORD" >> ./android/key.properties
+      echo "releasePassword=$KEY_PASSWORD" >> ./android/key.properties
+      echo "releaseAlias=$KEY_ALIAS" >> ./android/key.properties
 
     # Build the APK (now from the project root)
     - ./packages/flutter/bin/flutter build apk
