@@ -10,34 +10,28 @@ build-apk:
     repo: /home/runner/work/maid
     FLUTTER_HOME: $repo/maid/flutter
   before_script:
-    - apk add --no-cache git
+    - apt-get update 
+    - apt-get install -y git
     - git submodule sync --recursive
     - git submodule update --init --recursive
   script:
     - mkdir -p /home/runner
-    - chown vagrant /home/runner
-    - mkdir -p $repo
-    - mv com.danemadsen.maid $repo/maid
+    - mkdir -p $repo/maid
     - pushd $repo/maid
     - export PUB_CACHE=$(pwd)/.pub-cache
     - $FLUTTER_HOME/bin/flutter config --no-analytics
     - $FLUTTER_HOME/bin/flutter packages pub get
-    - popd
-    - mv $repo/maid com.danemadsen.maid
-    - mv com.danemadsen.maid $repo/maid
-    - pushd $repo/maid
-    - echo "Decoding Keystore File"
-    - echo "$KEYSTORE" | base64 --decode > android/app/key.jks
-    - |
-      echo "storeFile=key.jks" > android/key.properties
-      echo "storePassword=$STORE_PASSWORD" >> android/key.properties
-      echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
-      echo "releasePassword=$KEY_PASSWORD" >> android/key.properties
-      echo "keyAlias=$KEY_ALIAS" >> android/key.properties
-      echo "releaseAlias=$KEY_ALIAS" >> android/key.properties
+
+    # Secure files usage
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output mobile-ai.jks "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/1"'
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output key.properties "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/2"'
+
+    # Use the secure files in the build
+    - cp mobile-ai.jks android/app/
+    - cp key.properties android/
+
     - $FLUTTER_HOME/bin/flutter build apk
     - popd
-    - mv $repo/maid com.danemadsen.maid
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
