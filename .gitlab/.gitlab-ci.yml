@@ -15,17 +15,15 @@ build-apk:
     - export PUB_CACHE=$(pwd)/.pub-cache
 
     # Build and configure Flutter from submodule
-    - cd packages/flutter   
-    - $PWD/bin/flutter config --no-analytics
-    - $PWD/bin/flutter packages pub get
+    - ./packages/flutter/bin/flutter config --no-analytics
+    - ./packages/flutter/bin/flutter packages pub get
 
     # Secure files usage 
-    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output ../android/app/mobile-ai.jks "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/1"' 
-    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output ../android/key.properties "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/2"'
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output ./android/app/mobile-ai.jks "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/1"' 
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output ./android/key.properties "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/2"'
 
     # Build the APK (now from the project root)
-    - cd ..   # Navigate back to the project root
-    - $PWD/packages/flutter/bin/flutter build apk  # Use relative path from root
+    - ./packages/flutter/bin/flutter build apk
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
