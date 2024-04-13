@@ -1,0 +1,29 @@
+stages:
+  - build
+
+build-apk:
+  stage: build
+  image: cirrusci/flutter:latest
+  only:
+    - main
+  variables:
+    repo: /home/runner/work/maid
+  script:
+    - mkdir -p /home/runner
+    - chown vagrant /home/runner
+    - mkdir -p $repo
+    - mv com.danemadsen.maid $repo/maid
+    - pushd $repo/maid
+    - export PUB_CACHE=$(pwd)/.pub-cache
+    - flutter/bin/flutter config --no-analytics
+    - flutter/bin/flutter packages pub get
+    - popd
+    - mv $repo/maid com.danemadsen.maid
+    - mv com.danemadsen.maid $repo/maid
+    - pushd $repo/maid
+    - flutter/bin/flutter build apk
+    - popd
+    - mv $repo/maid com.danemadsen.maid
+  artifacts:
+    paths:
+      - build/app/outputs/flutter-apk/app-release.apk

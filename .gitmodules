@@ -4,7 +4,3 @@
 [submodule "packages/maid_llm"]
 	path = packages/maid_llm
 	url = https://github.com/Mobile-Artificial-Intelligence/maid_llm.git
-[submodule "flutter"]
-	path = flutter
-	url = https://github.com/flutter/flutter.git
-	branch = stable
