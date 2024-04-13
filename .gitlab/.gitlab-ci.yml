@@ -13,6 +13,8 @@ build-apk:
     ANDROID_HOME: /opt/android-sdk
     ANDROID_SDK_ROOT: ${ANDROID_HOME}
   before_script:
+    - rm -rf /home/vagrant/build
+    - rm -rf /opt/android-sdk/ndk
     - apt-get update 
     - apt-get install -y openjdk-17-jdk-headless  # Install OpenJDK 17
     - rm -rf $ANDROID_HOME/tools  # TODO remove once sdkmanager can upgrade installed packages
