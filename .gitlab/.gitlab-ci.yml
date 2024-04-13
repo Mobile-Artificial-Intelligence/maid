@@ -8,7 +8,7 @@ build-apk:
     - main
   variables:
     repo: /home/runner/work/maid
-    FLUTTER_HOME: $repo/maid/flutter
+    FLUTTER_HOME: $repo/packages/flutter
   before_script:
     - apt-get update 
     - apt-get install -y git
