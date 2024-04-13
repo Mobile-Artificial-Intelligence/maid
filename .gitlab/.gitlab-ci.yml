@@ -7,31 +7,25 @@ build-apk:
   only:
     - main
   variables:
-    repo: /home/runner/work/maid
-    FLUTTER_HOME: $repo/packages/flutter
+    repo: /home/runner/work/maid 
   before_script:
-    - apt-get update 
-    - apt-get install -y git
     - git submodule sync --recursive
     - git submodule update --init --recursive
   script:
-    - mkdir -p /home/runner
-    - mkdir -p $repo/maid
-    - pushd $repo/maid
     - export PUB_CACHE=$(pwd)/.pub-cache
-    - $FLUTTER_HOME/bin/flutter config --no-analytics
-    - $FLUTTER_HOME/bin/flutter packages pub get
 
-    # Secure files usage
-    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output mobile-ai.jks "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/1"'
-    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output key.properties "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/2"'
+    # Build and configure Flutter from submodule
+    - cd packages/flutter   # Navigate into the Flutter submodule directory
+    - $PWD/bin/flutter config --no-analytics
+    - $PWD/bin/flutter packages pub get
 
-    # Use the secure files in the build
-    - cp mobile-ai.jks android/app/
-    - cp key.properties android/
+    # Secure files usage 
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output ../android/app/mobile-ai.jks "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/1"' 
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --output ../android/key.properties "$CI_API_V4_URL/projects/$CI_PROJECT_ID/secure_files/2"'
 
-    - $FLUTTER_HOME/bin/flutter build apk
-    - popd
+    # Build the APK (now from the project root)
+    - cd ..   # Navigate back to project root
+    - packages/flutter/bin/flutter build apk
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
