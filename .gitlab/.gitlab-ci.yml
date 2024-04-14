@@ -37,8 +37,8 @@ build-apk:
       echo "releasePassword=$KEY_PASSWORD" >> ./android/key.properties
       echo "releaseAlias=$KEY_ALIAS" >> ./android/key.properties
 
-    # Build the APK (now from the project root)
-    - ./packages/flutter/bin/flutter build apk
+    # Build the APKs split by ABI
+    - ./packages/flutter/bin/flutter build apk --split-per-abi
   artifacts:
     paths:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/flutter-apk/*

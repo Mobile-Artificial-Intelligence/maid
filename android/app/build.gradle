@@ -57,6 +57,15 @@ android {
         versionName flutterVersionName
     }
 
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a', 'x86_64'
+            universalApk false
+        }
+    }
+
     signingConfigs {
         release {
             if (keystoreProperties['storeFile']) {
