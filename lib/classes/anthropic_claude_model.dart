@@ -140,4 +140,9 @@ class ClaudeModel extends LargeLanguageModel {
       prefs.setString("mistral_ai_model", json.encode(toMap()));
     });
   }
+
+  @override
+  void reset() {
+    fromMap({});
+  }
 }

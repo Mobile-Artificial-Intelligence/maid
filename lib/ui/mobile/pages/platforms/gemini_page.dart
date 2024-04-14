@@ -28,6 +28,19 @@ class GoogleGeminiPage extends StatelessWidget {
 
             return ListView(
               children: [
+                Align(
+                  alignment: Alignment.center, // Center the button horizontally
+                  child: FilledButton(
+                    onPressed: () {
+                      session.model.reset();
+                    },
+                    child: Text(
+                      "Reset",
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10.0),
                 const ApiKeyParameter(),
                 Divider(
                   height: 20,

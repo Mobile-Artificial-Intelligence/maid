@@ -70,6 +70,19 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                   ),
                 ),
                 const SizedBox(height: 15.0),
+                Align(
+                  alignment: Alignment.center, // Center the button horizontally
+                  child: FilledButton(
+                    onPressed: () {
+                      session.model.reset();
+                    },
+                    child: Text(
+                      "Reset",
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

@@ -45,6 +45,19 @@ class OllamaPage extends StatelessWidget {
 
             return ListView(
               children: [
+                Align(
+                  alignment: Alignment.center, // Center the button horizontally
+                  child: FilledButton(
+                    onPressed: () {
+                      session.model.reset();
+                    },
+                    child: Text(
+                      "Reset",
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10.0),
                 const ApiKeyParameter(),
                 Divider(
                   height: 20,
@@ -54,6 +67,7 @@ class OllamaPage extends StatelessWidget {
                 ),
                 const UrlParameter(),
                 const SizedBox(height: 8.0),
+                const SeedParameter(),
                 const UseDefaultParameter(),
                 if (!session.model.useDefault) ...[
                   const SizedBox(height: 20.0),
@@ -64,7 +78,6 @@ class OllamaPage extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const PenalizeNlParameter(),
-                  const SeedParameter(),
                   const NThreadsParameter(),
                   const NCtxParameter(),
                   const NBatchParameter(),

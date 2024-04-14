@@ -337,6 +337,10 @@ class LargeLanguageModel extends ChangeNotifier {
     throw UnimplementedError();
   }
 
+  void reset() {
+    fromMap({});
+  }
+
   void save() {
     throw UnimplementedError();
   }

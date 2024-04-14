@@ -169,6 +169,7 @@ class OllamaModel extends LargeLanguageModel {
           baseUrl: '$uri/api',
           defaultOptions: ChatOllamaOptions(
             model: name,
+            seed: seed
           ),
         );
       } else {
@@ -272,5 +273,10 @@ class OllamaModel extends LargeLanguageModel {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setString("ollama_model", json.encode(toMap()));
     });
+  }
+
+  @override
+  void reset() {
+    fromMap({});
   }
 }
