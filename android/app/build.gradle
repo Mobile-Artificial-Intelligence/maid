@@ -54,15 +54,10 @@ android {
         versionName flutterVersionName
     }
 
-    // Conditionally apply ABI splits
-    if (project.hasProperty("split-per-abi")) {
-        splits {
-            abi {
-                enable true
-                reset()
-                include 'arm64-v8a', 'x86_64'
-                universalApk false  // This will be false for split builds
-            }
+    splits {
+        abi {
+            enable true
+            universalApk true
         }
     }
 
