@@ -58,21 +58,26 @@ android {
     }
 
     signingConfigs {
-
-        release   {
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['releaseAlias']
-            keyPassword keystoreProperties['releasePassword']
+        release {
+            if (keystoreProperties['storeFile']) {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['releaseAlias']
+                keyPassword keystoreProperties['releasePassword']
+            } else {
+                throw new GradleException("Keystore file not found or not configured in key.properties")
+            }
         }
-        
-        debug   {
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['releaseAlias']
-            keyPassword keystoreProperties['releasePassword']
+        debug {
+            if (keystoreProperties['storeFile']) {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['releaseAlias']
+                keyPassword keystoreProperties['releasePassword']
+            } else {
+                throw new GradleException("Keystore file not found or not configured in key.properties")
+            }
         }
-
     }
 
     buildTypes {
