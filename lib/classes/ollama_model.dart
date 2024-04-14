@@ -169,6 +169,7 @@ class OllamaModel extends LargeLanguageModel {
           baseUrl: '$uri/api',
           defaultOptions: ChatOllamaOptions(
             model: name,
+            seed: seed
           ),
         );
       } else {

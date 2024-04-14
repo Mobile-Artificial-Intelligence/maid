@@ -64,6 +64,7 @@ class OllamaPage extends StatelessWidget {
                 ),
                 const UrlParameter(),
                 const SizedBox(height: 8.0),
+                const SeedParameter(),
                 const UseDefaultParameter(),
                 if (!session.model.useDefault) ...[
                   const SizedBox(height: 20.0),
@@ -74,7 +75,6 @@ class OllamaPage extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const PenalizeNlParameter(),
-                  const SeedParameter(),
                   const NThreadsParameter(),
                   const NCtxParameter(),
                   const NBatchParameter(),
