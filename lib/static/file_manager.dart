@@ -150,6 +150,7 @@ class FileManager {
     }
 
     if (result == null) {
+      Logger.log("Image file not selected");
       return null;
     }
 

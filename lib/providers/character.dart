@@ -97,12 +97,15 @@ class Character extends ChangeNotifier {
     }
 
     if (inputJson["spec"] == "mcf_v1") {
+      Logger.log("Character loaded from MCF");
       fromMCFMap(inputJson);
     } 
     else if (inputJson["spec"] == "chara_card_v2") {
+      Logger.log("Character loaded from STV2");
       fromSTV2Map(inputJson);
     }
     else if (inputJson["first_mes"] != null) {
+      Logger.log("Character loaded from STV1");
       fromSTV1Map(inputJson);
     }
     else {
@@ -333,6 +336,8 @@ class Character extends ChangeNotifier {
 
     await fromMap(jsonCharacter);
 
+    Logger.log("Character reset");
+
     notifyListeners();
   }
 
@@ -432,10 +437,14 @@ class Character extends ChangeNotifier {
     try {
       File? file = await FileManager.loadImage(context, "Load Character Image");
 
-      if (file == null) return "Error loading file";
+      if (file == null) throw Exception("File is null");
 
-      final image = decodePng(file.readAsBytesSync());
+      ByteData data = await file.readAsBytes().then((bytes) => ByteData.view(bytes.buffer));
+      Uint8List bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
+      final image = decodePng(bytes);
+
+      bool characterLoaded = false;
       if (image != null && image.textData != null) {
         if (image.textData!["Mcf"] != null ||
             image.textData!["mcf"] != null
@@ -445,6 +454,7 @@ class Character extends ChangeNotifier {
           );
 
           await fromMap(jsonCharacter);
+          characterLoaded = true;
         }
         else if (
           image.textData!["Chara"] != null || 
@@ -457,6 +467,7 @@ class Character extends ChangeNotifier {
           Map<String, dynamic> jsonCharacter = json.decode(stringCharacter);
 
           await fromMap(jsonCharacter);
+          characterLoaded = true;
         }
       }
 
@@ -464,14 +475,16 @@ class Character extends ChangeNotifier {
       String filePath = '${docDir.path}/$_name.png';
 
       File newProfileFile = File(filePath);
-      ByteData data = await file.readAsBytes().then((bytes) => ByteData.view(bytes.buffer));
-      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
       await newProfileFile.writeAsBytes(bytes);
 
       _profile = newProfileFile;
 
       notifyListeners();
-      return "Character Successfully Loaded";
+      if (characterLoaded) {
+        return "Character Successfully Loaded";
+      } else {
+        return "Image Successfully Loaded";
+      }
     } catch (e) {
       await reset();
       Logger.log("Error: $e");
