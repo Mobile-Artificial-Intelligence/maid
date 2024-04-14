@@ -142,4 +142,9 @@ class OpenAiModel extends LargeLanguageModel {
       prefs.setString("open_ai_model", json.encode(toMap()));
     });
   }
+
+  @override
+  void reset() {
+    fromMap({});
+  }
 }

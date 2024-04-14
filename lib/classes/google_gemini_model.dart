@@ -106,4 +106,9 @@ class GoogleGeminiModel extends LargeLanguageModel {
       prefs.setString("google_gemini_model", json.encode(toMap()));
     });
   }
+
+  @override
+  void reset() {
+    fromMap({});
+  }
 }

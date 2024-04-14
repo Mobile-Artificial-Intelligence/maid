@@ -67,7 +67,7 @@ class LlamaCppModel extends LargeLanguageModel {
   @override
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
-    _promptFormat = PromptFormat.values[json['promptFormat']];
+    _promptFormat = PromptFormat.values[json['promptFormat'] ?? PromptFormat.alpaca.index];
     notifyListeners();
   }
 
@@ -182,5 +182,10 @@ class LlamaCppModel extends LargeLanguageModel {
   Future<void> resetUri() async {
     uri = '';
     notifyListeners();
+  }
+
+  @override
+  void reset() {
+    fromMap({});
   }
 }

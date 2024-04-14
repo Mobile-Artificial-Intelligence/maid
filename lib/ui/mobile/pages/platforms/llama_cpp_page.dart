@@ -53,6 +53,16 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
 
             return ListView(
               children: [
+                FilledButton(
+                  onPressed: () {
+                    session.model.reset();
+                  },
+                  child: Text(
+                    "Reset",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ),
+                const SizedBox(height: 10.0),
                 ListTile(
                   title: Row(
                     children: [

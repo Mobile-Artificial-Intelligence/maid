@@ -28,6 +28,16 @@ class MistralAiPage extends StatelessWidget {
 
             return ListView(
               children: [
+                FilledButton(
+                  onPressed: () {
+                    session.model.reset();
+                  },
+                  child: Text(
+                    "Reset",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ),
+                const SizedBox(height: 10.0),
                 const ApiKeyParameter(),
                 Divider(
                   height: 20,

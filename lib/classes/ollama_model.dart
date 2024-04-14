@@ -273,4 +273,9 @@ class OllamaModel extends LargeLanguageModel {
       prefs.setString("ollama_model", json.encode(toMap()));
     });
   }
+
+  @override
+  void reset() {
+    fromMap({});
+  }
 }
