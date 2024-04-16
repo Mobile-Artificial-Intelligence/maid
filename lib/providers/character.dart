@@ -442,7 +442,7 @@ class Character extends ChangeNotifier {
 
       final bytes = file.readAsBytesSync();
 
-      final image = decodePng(bytes);
+      final image = decodeImage(bytes);
 
       bool characterLoaded = false;
       if (image != null && image.textData != null) {
