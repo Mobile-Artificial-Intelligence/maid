@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/file_manager.dart';
@@ -124,7 +125,7 @@ class LlamaCppModel extends LargeLanguageModel {
   Future<String> loadModel(BuildContext context) async {
     try {
       File? file =
-          await FileManager.load(context, "Load Model File", [".gguf"]);
+          await FileManager.load(context, "Load Model File", FileType.any);
 
       if (file == null) return "Error loading file";
 

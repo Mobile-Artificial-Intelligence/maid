@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/static/file_manager.dart';
@@ -370,7 +371,7 @@ class Character extends ChangeNotifier {
   Future<String> importJSON(BuildContext context) async {
     try {
       File? file =
-          await FileManager.load(context, "Load Character JSON", [".json"]);
+          await FileManager.load(context, "Load Character JSON", FileType.any);
 
       if (file == null) return "Error loading file";
 
@@ -435,7 +436,7 @@ class Character extends ChangeNotifier {
 
   Future<String> importImage(BuildContext context) async {
     try {
-      File? file = await FileManager.loadImage(context, "Load Character Image");
+      File? file = await FileManager.load(context, "Load Character Image", FileType.image);
 
       if (file == null) throw Exception("File is null");
 
