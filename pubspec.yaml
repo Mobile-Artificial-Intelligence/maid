@@ -42,8 +42,10 @@ dependencies:
   flutter_linkify: ^6.0.0
   http: ^1.1.0
   provider: ^6.1.1
+  device_info_plus: ^9.1.1
   langchain: ^0.5.0
   langchain_openai: ^0.5.0
+  langchain_ollama: ^0.1.0
   langchain_mistralai: ^0.1.0
   receive_sharing_intent: ^1.6.7
   network_info_plus: ^4.1.0+1
@@ -53,7 +55,6 @@ dependencies:
   maid_llm:
     path: packages/maid_llm
   google_generative_ai: ^0.2.3
-  langchain_ollama: ^0.1.0
 
 dev_dependencies:
   msix: ^3.9.1
