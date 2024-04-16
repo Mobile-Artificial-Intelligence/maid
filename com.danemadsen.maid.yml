@@ -91,7 +91,7 @@ Builds:
       - mv $repo/maid com.danemadsen.maid
 
   - versionName: 1.2.5
-    versionCode: 23
+    versionCode: 22
     commit: 55aa7dccd5c596131b55d6fcf56c1a6e24e46109
     submodules: true
     sudo:
@@ -135,4 +135,4 @@ AutoUpdateMode: Version
 UpdateCheckMode: Tags
 UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
 CurrentVersion: 1.2.5
-CurrentVersionCode: 2
+CurrentVersionCode: 22
