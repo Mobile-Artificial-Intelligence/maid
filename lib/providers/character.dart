@@ -440,8 +440,7 @@ class Character extends ChangeNotifier {
 
       if (file == null) throw Exception("File is null");
 
-      ByteData data = await file.readAsBytes().then((bytes) => ByteData.view(bytes.buffer));
-      Uint8List bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+      final bytes = file.readAsBytesSync();
 
       final image = decodePng(bytes);
 
