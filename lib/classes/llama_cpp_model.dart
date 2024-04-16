@@ -125,7 +125,7 @@ class LlamaCppModel extends LargeLanguageModel {
   Future<String> loadModel(BuildContext context) async {
     try {
       File? file =
-          await FileManager.load(context, "Load Model File", FileType.any);
+          await FileManager.load("Load Model File", FileType.any);
 
       if (file == null) return "Error loading file";
 

@@ -355,7 +355,7 @@ class Character extends ChangeNotifier {
       // Convert the map to a JSON string
       String jsonString = json.encode(mcf ? toMCFMap() : toSTV2Map());
 
-      File? file = await FileManager.save(context, "$_name.json");
+      File? file = await FileManager.save("$_name.json");
 
       if (file == null) return "Error saving file";
 
@@ -371,7 +371,7 @@ class Character extends ChangeNotifier {
   Future<String> importJSON(BuildContext context) async {
     try {
       File? file =
-          await FileManager.load(context, "Load Character JSON", FileType.any);
+          await FileManager.load("Load Character JSON", FileType.any);
 
       if (file == null) return "Error loading file";
 
@@ -421,7 +421,7 @@ class Character extends ChangeNotifier {
         "chara": stv2Map
       };
 
-      File? file = await FileManager.save(context, "$_name.png");
+      File? file = await FileManager.save("$_name.png");
 
       if (file == null) throw "Error saving file";
 

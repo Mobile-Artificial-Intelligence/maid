@@ -1,12 +1,10 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
 
 class FileManager {
   static Future<File?> load(
-    BuildContext context, 
     String dialogTitle,
     FileType fileType,
   ) async {
@@ -25,7 +23,7 @@ class FileManager {
     }
   }
 
-  static Future<File?> save(BuildContext context, String fileName) async {
+  static Future<File?> save(String fileName) async {
     String? result = await FilePicker.platform.saveFile(
       dialogTitle: "Save Model File",
       type: FileType.any,
