@@ -68,12 +68,13 @@ class MaidAppState extends State<MaidApp> {
         }
 
         return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Maid',
-            theme: Themes.lightTheme(),
-            darkTheme: Themes.darkTheme(),
-            themeMode: mainProvider.themeMode,
-            home: const HomePage(title: "Maid"));
+          debugShowCheckedModeBanner: false,
+          title: 'Maid',
+          theme: Themes.lightTheme(),
+          darkTheme: Themes.darkTheme(),
+          themeMode: mainProvider.themeMode,
+          home: const HomePage(title: "Maid")
+        );
       },
     );
   }
