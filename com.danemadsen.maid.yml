@@ -10,17 +10,17 @@ AutoName: Maid
 
 RepoType: git
 Repo: https://github.com/Mobile-Artificial-Intelligence/maid
-Binaries: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid.apk
 
 Builds:
   - versionName: 1.2.5
     versionCode: 2
-    commit: 1db86e287f5d6d6c9f1fe659dd39b8b8efff15cf
+    commit: 55aa7dccd5c596131b55d6fcf56c1a6e24e46109
     submodules: true
     sudo:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
-    output: build/app/outputs/flutter-apk/*.apk
+    output: build/app/outputs/apk/release/app-universal-release.apk
+    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-universal.apk
     rm:
       - linux
       - macos
@@ -47,7 +47,85 @@ Builds:
       - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
       - export PUB_CACHE=$(pwd)/.pub-cache
-      - packages/flutter/bin/flutter build apk --split-per-abi --target-platform="android-arm64"
+      - packages/flutter/bin/flutter build apk --split-per-abi
+      - popd
+      - mv $repo/maid com.danemadsen.maid
+
+  - versionName: 1.2.5
+    versionCode: 21
+    commit: 55aa7dccd5c596131b55d6fcf56c1a6e24e46109
+    submodules: true
+    sudo:
+      - mkdir -p /builds/mobile-artificial-intelligence
+      - chown vagrant /builds/mobile-artificial-intelligence
+    output: build/app/outputs/apk/release/app-x86_64-release.apk
+    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-x86_64.apk
+    rm:
+      - linux
+      - macos
+      - windows
+    prebuild:
+      - export repo=/builds/mobile-artificial-intelligence
+      - mkdir -p $repo
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - packages/flutter/bin/flutter config --no-analytics
+      - packages/flutter/bin/flutter packages pub get
+      - popd
+      - mv $repo/maid com.danemadsen.maid
+    scanignore:
+      - packages/flutter/bin/cache
+    scandelete:
+      - .pub-cache
+      - packages/flutter
+    build:
+      - export repo=/builds/mobile-artificial-intelligence
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - packages/flutter/bin/flutter build apk --split-per-abi
+      - popd
+      - mv $repo/maid com.danemadsen.maid
+
+  - versionName: 1.2.5
+    versionCode: 23
+    commit: 55aa7dccd5c596131b55d6fcf56c1a6e24e46109
+    submodules: true
+    sudo:
+      - mkdir -p /builds/mobile-artificial-intelligence
+      - chown vagrant /builds/mobile-artificial-intelligence
+    output: build/app/outputs/apk/release/app-arm64-release.apk
+    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-arm64.apk
+    rm:
+      - linux
+      - macos
+      - windows
+    prebuild:
+      - export repo=/builds/mobile-artificial-intelligence
+      - mkdir -p $repo
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - packages/flutter/bin/flutter config --no-analytics
+      - packages/flutter/bin/flutter packages pub get
+      - popd
+      - mv $repo/maid com.danemadsen.maid
+    scanignore:
+      - packages/flutter/bin/cache
+    scandelete:
+      - .pub-cache
+      - packages/flutter
+    build:
+      - export repo=/builds/mobile-artificial-intelligence
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - packages/flutter/bin/flutter build apk --split-per-abi
       - popd
       - mv $repo/maid com.danemadsen.maid
 
