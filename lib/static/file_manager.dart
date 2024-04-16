@@ -12,6 +12,7 @@ class FileManager {
       dialogTitle: dialogTitle,
       type: fileType,
       allowMultiple: false,
+      allowCompression: false
     );
 
     if (result != null && result.files.isNotEmpty) {
