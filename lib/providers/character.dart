@@ -436,13 +436,17 @@ class Character extends ChangeNotifier {
 
   Future<String> importImage(BuildContext context) async {
     try {
-      File? file = await FileManager.load(context, "Load Character Image", FileType.image);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        dialogTitle: "Load Character Image",
+        type: FileType.image,
+        allowMultiple: false,
+      );
 
-      if (file == null) throw Exception("File is null");
+      if (result == null || result.files.isEmpty) throw Exception("No file selected");
 
-      final bytes = file.readAsBytesSync();
+      String filePath = result.files.single.path!;
 
-      final image = decodeImage(bytes);
+      final image = await decodePngFile(filePath);
 
       bool characterLoaded = false;
       if (image != null && image.textData != null) {
@@ -472,10 +476,10 @@ class Character extends ChangeNotifier {
       }
 
       Directory docDir = await getApplicationDocumentsDirectory();
-      String filePath = '${docDir.path}/$_name.png';
+      String newFilePath = '${docDir.path}/$_name.png';
 
-      File newProfileFile = File(filePath);
-      await newProfileFile.writeAsBytes(bytes);
+      File newProfileFile = File(newFilePath);
+      await newProfileFile.writeAsBytes(File(filePath).readAsBytesSync());
 
       _profile = newProfileFile;
 
