@@ -7,10 +7,8 @@ on:
       - dev
 
 jobs:
-  setup-build:
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      flutter-sdk-path: ${{ steps.flutter-setup.outputs.flutter-path }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,7 +22,6 @@ jobs:
           distribution: 'adopt'
 
       - name: Setup Flutter
-        id: flutter-setup
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.5'
@@ -43,38 +40,25 @@ jobs:
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
 
-  build-apk:
-    needs: setup-build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Setup Outputs
-        uses: actions/checkout@v2
-      - name: Build APK
+      - name: Setup Flutter
         run: |
           flutter config --no-analytics
           flutter pub get
+
+      - name: Build APK
+        run: |
           flutter build apk --split-per-abi
-        env:
-          PATH: ${{ needs.setup-build.outputs.flutter-sdk-path }}:$PATH
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: maid-android-apk
           path: build/app/outputs/apk/release
 
-  build-aab:
-    needs: setup-build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Setup Outputs
-        uses: actions/checkout@v2
       - name: Build appbundle
         run: |
-          flutter config --no-analytics
-          flutter pub get
           flutter build appbundle
-        env:
-          PATH: ${{ needs.setup-build.outputs.flutter-sdk-path }}:$PATH
+  
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
