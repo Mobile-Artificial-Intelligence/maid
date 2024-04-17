@@ -1,0 +1,42 @@
+name: Build Windows
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:        
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.5'
+        
+      - name: Install dependencies
+        run: |
+          choco install -y cmake ninja
+
+      - name: Install Vulkan SDK
+        uses: humbletim/install-vulkan-sdk@v1.1.1
+        with:
+          version: latest
+          cache: true
+
+      - name: Build Windows App
+        run: |
+          flutter pub get
+          flutter build windows
+
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-windows
+          path: build/windows/x64/bundle
