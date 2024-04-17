@@ -1,4 +1,4 @@
-name: Validate Fastlane Supply Metadata
+name: Validate Fastlane
 
 on:
   pull_request:

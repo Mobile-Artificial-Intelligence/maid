@@ -1,6 +1,8 @@
 name: Build Linux
 
 on:
+  release:
+    types: [published]
   push:
     branches:
       - main
