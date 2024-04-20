@@ -10,7 +10,7 @@ class FileManager {
   ) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       dialogTitle: dialogTitle,
-      type: fileType,
+      type: FileType.any,
       allowMultiple: false,
       allowCompression: false
     );
