@@ -37,3 +37,43 @@ jobs:
         with:
           name: maid-linux
           path: build/linux/x64/release/bundle
+  
+  create-appimage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Linux Build
+        uses: actions/download-artifact@v4
+        with:
+          name: maid-linux
+
+      - name: Setup AppImage tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y appimagetool
+
+      - name: Prepare AppDir
+        run: |
+          mkdir -p AppDir/usr/bin
+          cp -r maid-linux/* AppDir/usr/bin/
+          cp assets/maid.png AppDir/usr/bin/
+          echo '[Desktop Entry]
+          Name=Maid
+          Exec=maid
+          Icon=maid.png
+          Type=Application
+          Categories=Utility;' > AppDir/maid.desktop
+          chmod +x AppDir/usr/bin/maid
+          
+      - name: Create AppImage
+        run: |
+          appimagetool AppDir maid.AppImage
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-appimage
+          path: ./maid.AppImage
