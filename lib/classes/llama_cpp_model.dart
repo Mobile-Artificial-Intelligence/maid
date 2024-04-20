@@ -6,7 +6,6 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
-import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -124,10 +123,21 @@ class LlamaCppModel extends LargeLanguageModel {
 
   Future<String> loadModel(BuildContext context) async {
     try {
-      File? file =
-          await FileManager.load("Load Model File", FileType.any);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        dialogTitle: "Load Model File",
+        type: FileType.any,
+        allowMultiple: false,
+        allowCompression: false
+      );
 
-      if (file == null) return "Error loading file";
+      File file;
+      if (result != null && result.files.isNotEmpty) {
+        Logger.log("File selected: ${result.files.single.path}");
+        file = File(result.files.single.path!);
+      } else {
+        Logger.log("No file selected");
+        throw Exception("File is null");
+      }
 
       Logger.log("Loading model from $file");
 

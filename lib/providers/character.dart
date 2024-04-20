@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:maid/static/file_manager.dart';
 import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
 import 'package:maid/static/utilities.dart';
@@ -355,9 +354,19 @@ class Character extends ChangeNotifier {
       // Convert the map to a JSON string
       String jsonString = json.encode(mcf ? toMCFMap() : toSTV2Map());
 
-      File? file = await FileManager.save("$_name.json");
+      String? result = await FilePicker.platform.saveFile(
+        dialogTitle: "Save Character JSON",
+        type: FileType.any,
+      );
 
-      if (file == null) return "Error saving file";
+      File file;
+      if (result != null) {
+        Logger.log("File saved: $result");
+        file = File(result);
+      } else {
+        Logger.log("File not saved");
+        throw Exception("File not saved");
+      }
 
       await file.writeAsString(jsonString);
 
@@ -370,10 +379,21 @@ class Character extends ChangeNotifier {
 
   Future<String> importJSON(BuildContext context) async {
     try {
-      File? file =
-          await FileManager.load("Load Character JSON", FileType.any);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        dialogTitle: "Load Character JSON",
+        type: FileType.any,
+        allowMultiple: false,
+        allowCompression: false
+      );
 
-      if (file == null) return "Error loading file";
+      File file;
+      if (result != null && result.files.isNotEmpty) {
+        Logger.log("File selected: ${result.files.single.path}");
+        file = File(result.files.single.path!);
+      } else {
+        Logger.log("No file selected");
+        throw Exception("File is null");
+      }
 
       String jsonString = await file.readAsString();
       if (jsonString.isEmpty) return "Failed to load character";
@@ -421,9 +441,19 @@ class Character extends ChangeNotifier {
         "chara": stv2Map
       };
 
-      File? file = await FileManager.save("$_name.png");
+      String? result = await FilePicker.platform.saveFile(
+        dialogTitle: "Save Character Image",
+        type: FileType.any,
+      );
 
-      if (file == null) throw "Error saving file";
+      File file;
+      if (result != null) {
+        Logger.log("File saved: $result");
+        file = File(result);
+      } else {
+        Logger.log("File not saved");
+        throw Exception("File not saved");
+      }
 
       await file.writeAsBytes(encodePng(image));
 
@@ -436,9 +466,21 @@ class Character extends ChangeNotifier {
 
   Future<String> importImage(BuildContext context) async {
     try {
-      File? file = await FileManager.load("Load Character Image", FileType.image);
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        dialogTitle: "Load Character Image",
+        type: FileType.any,
+        allowMultiple: false,
+        allowCompression: false
+      );
 
-      if (file == null) throw Exception("File is null");
+      File file;
+      if (result != null && result.files.isNotEmpty) {
+        Logger.log("File selected: ${result.files.single.path}");
+        file = File(result.files.single.path!);
+      } else {
+        Logger.log("No file selected");
+        throw Exception("File is null");
+      }
 
       final bytes = file.readAsBytesSync();
 
