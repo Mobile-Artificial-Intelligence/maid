@@ -24,7 +24,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Setup Flutter Path
-        run: echo "./package/flutter/bin" >> $GITHUB_ENV        
+        run: echo "PATH=$PWD/packages/flutter/bin:$PATH" >> $GITHUB_ENV        
 
       - name: Decode Keystore File
         env:
