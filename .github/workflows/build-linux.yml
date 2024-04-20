@@ -64,7 +64,7 @@ jobs:
 
       - name: Prepare AppDir
         run: |
-          mkdir -p AppDir/usr/bin
+          mkdir AppDir
           cp -r maid-linux/* AppDir/
           cp assets/maid.png AppDir/maid.png
           echo '[Desktop Entry]
@@ -73,7 +73,7 @@ jobs:
           Icon=maid
           Type=Application
           Categories=Utility;' > AppDir/maid.desktop
-          chmod +x AppDir/usr/bin/maid
+          chmod +x AppDir/maid
 
       - name: List contents of maid-linux
         run: |
