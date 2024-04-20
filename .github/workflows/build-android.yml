@@ -24,9 +24,8 @@ jobs:
           distribution: 'adopt'
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.19.5'
+        run: |
+          source ./setup_flutter.sh
 
       - name: Decode Keystore File
         env:
