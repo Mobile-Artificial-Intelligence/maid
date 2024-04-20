@@ -51,6 +51,11 @@ jobs:
           name: maid-linux
           path: maid-linux
 
+      - name: Install AppImage tools and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfuse2
+
       - name: Download and Install AppImageTool
         run: |
           wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
