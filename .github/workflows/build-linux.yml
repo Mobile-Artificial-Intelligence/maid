@@ -74,16 +74,10 @@ jobs:
           Type=Application
           Categories=Utility;' > AppDir/maid.desktop
           chmod +x AppDir/maid
-
-      - name: List contents of maid-linux
-        run: |
-          echo "Listing contents of maid-linux:"
-          ls -R maid-linux
-        
-      - name: List contents of AppDir
-        run: |
-          echo "Listing contents of AppDir:"
-          ls -R AppDir
+          echo '#!/bin/bash
+          HERE="$(dirname "$(readlink -f "${0}")")"
+          exec "$HERE/maid" "$@"' > AppDir/AppRun
+          chmod +x AppDir/AppRun
 
       - name: Create AppImage
         run: |
