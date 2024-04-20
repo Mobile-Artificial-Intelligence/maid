@@ -23,9 +23,8 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Setup Flutter
-        run: |
-          source ./setup_flutter.sh
+      - name: Setup Flutter Path
+        run: echo "./package/flutter/bin" >> $GITHUB_ENV        
 
       - name: Decode Keystore File
         env:
