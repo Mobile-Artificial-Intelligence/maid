@@ -66,6 +66,7 @@ jobs:
         run: |
           mkdir -p AppDir/usr/bin
           cp -r maid-linux/* AppDir/usr/bin/
+          cp maid-linux/maid AppDir/usr/bin/
           cp assets/maid.png AppDir/maid.png
           echo '[Desktop Entry]
           Name=Maid
@@ -74,6 +75,16 @@ jobs:
           Type=Application
           Categories=Utility;' > AppDir/maid.desktop
           chmod +x AppDir/usr/bin/maid
+
+      - name: List contents of maid-linux
+        run: |
+          echo "Listing contents of maid-linux:"
+          ls -R maid-linux
+        
+      - name: List contents of AppDir
+        run: |
+          echo "Listing contents of AppDir:"
+          ls -R AppDir
 
       - name: Create AppImage
         run: |
