@@ -66,8 +66,7 @@ jobs:
         run: |
           mkdir -p AppDir/usr/bin
           cp -r maid-linux/* AppDir/usr/bin/
-          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-          cp assets/maid.png AppDir/usr/share/icons/hicolor/256x256/apps/maid.png
+          cp assets/maid.png AppDir/maid.png
           echo '[Desktop Entry]
           Name=Maid
           Exec=maid
