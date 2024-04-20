@@ -54,7 +54,7 @@ jobs:
       - name: Install AppImage tools and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libfuse2
+          sudo apt-get install -y appstream util-linux libfuse2
 
       - name: Download and Install AppImageTool
         run: |
@@ -66,11 +66,12 @@ jobs:
         run: |
           mkdir -p AppDir/usr/bin
           cp -r maid-linux/* AppDir/usr/bin/
-          cp assets/maid.png AppDir/usr/bin/
+          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+          cp assets/maid.png AppDir/usr/share/icons/hicolor/256x256/apps/maid.png
           echo '[Desktop Entry]
           Name=Maid
           Exec=maid
-          Icon=maid.png
+          Icon=maid
           Type=Application
           Categories=Utility;' > AppDir/maid.desktop
           chmod +x AppDir/usr/bin/maid
