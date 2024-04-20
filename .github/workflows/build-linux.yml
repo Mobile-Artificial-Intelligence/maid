@@ -66,11 +66,11 @@ jobs:
         run: |
           mkdir AppDir
           cp -r maid-linux/* AppDir/
-          cp assets/maid.png AppDir/maid.png
+          cp assets/maid.png AppDir/icon.png
           echo '[Desktop Entry]
           Name=Maid
           Exec=maid
-          Icon=maid
+          Icon=icon
           Type=Application
           Categories=Utility;' > AppDir/maid.desktop
           chmod +x AppDir/maid
