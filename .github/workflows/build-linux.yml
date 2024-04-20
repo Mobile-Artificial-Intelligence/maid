@@ -65,8 +65,7 @@ jobs:
       - name: Prepare AppDir
         run: |
           mkdir -p AppDir/usr/bin
-          cp -r maid-linux/* AppDir/usr/bin/
-          cp maid-linux/maid AppDir/usr/bin/
+          cp -r maid-linux/* AppDir/
           cp assets/maid.png AppDir/maid.png
           echo '[Desktop Entry]
           Name=Maid
