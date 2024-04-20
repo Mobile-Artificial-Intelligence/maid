@@ -23,8 +23,10 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Setup Flutter Path
-        run: echo "PATH=$PWD/packages/flutter/bin:$PATH" >> $GITHUB_ENV        
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.5'
 
       - name: Decode Keystore File
         env:
