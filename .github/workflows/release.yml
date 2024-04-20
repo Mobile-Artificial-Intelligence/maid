@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-    build_android:
+    build-android:
         runs-on: ubuntu-latest
         steps:
           - name: Checkout code
@@ -61,3 +61,83 @@ jobs:
             with:
               name: maid-android-aab
               path: build/app/outputs/bundle/release/app-release.aab
+
+    build-linux:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+          with:
+            submodules: recursive
+            
+        - name: Setup Flutter
+          uses: subosito/flutter-action@v2
+          with:
+            flutter-version: '3.19.5'
+        
+        - name: Install dependencies
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y cmake ninja-build pkg-config libgtk-3-dev libvulkan-dev
+            
+        - name: Build Linux App
+          run: |
+            flutter pub get
+            flutter build linux
+            
+        - name: Upload Linux Build
+          uses: actions/upload-artifact@v4
+          with:
+            name: maid-linux
+            path: build/linux/x64/release/bundle
+        
+    create-appimage:
+      needs: build-linux
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+            
+        - name: Download Linux Build
+          uses: actions/download-artifact@v4
+          with:
+            name: maid-linux
+            path: maid-linux
+            
+        - name: Install AppImage tools and dependencies
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y appstream util-linux libfuse2
+            
+        - name: Download and Install AppImageTool
+          run: |
+            wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+            chmod +x appimagetool-x86_64.AppImage
+            sudo mv appimagetool-x86_64.AppImage /usr/local/bin/appimagetool
+            
+        - name: Prepare AppDir
+          run: |
+            mkdir AppDir
+            cp -r maid-linux/* AppDir/
+            cp assets/maid.png AppDir/icon.png
+            echo '[Desktop Entry]
+            Name=Maid
+            Exec=maid
+            Icon=icon
+            Type=Application
+            Categories=Utility;' > AppDir/maid.desktop
+            chmod +x AppDir/maid
+            echo '#!/bin/bash
+            HERE="$(dirname "$(readlink -f "${0}")")"
+            exec "$HERE/maid" "$@"' > AppDir/AppRun
+            chmod +x AppDir/AppRun
+            
+        - name: Create AppImage
+          run: |
+            appimagetool AppDir maid.AppImage
+            
+        - name: Upload AppImage
+          uses: actions/upload-artifact@v4
+          with:
+            name: maid-appimage
+            path: ./maid.AppImage

@@ -25,7 +25,10 @@ class Utilities {
   }
 
   static String formatPlaceholders(
-      String input, String userName, String characterName) {
+    String input, 
+    String userName, 
+    String characterName
+  ) {
     input = replaceCaseInsensitive(input, "{{char}}", characterName);
     input = replaceCaseInsensitive(input, "<BOT>", characterName);
     input = replaceCaseInsensitive(input, "{{user}}", userName);
@@ -35,7 +38,10 @@ class Utilities {
   }
 
   static String replaceCaseInsensitive(
-      String original, String from, String replaceWith) {
+    String original, 
+    String from, 
+    String replaceWith
+  ) {
     // This creates a regular expression that ignores case (case-insensitive)
     RegExp exp = RegExp(RegExp.escape(from), caseSensitive: false);
     return original.replaceAll(exp, replaceWith);
