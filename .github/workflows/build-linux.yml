@@ -49,6 +49,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: maid-linux
+          path: maid-linux
 
       - name: Download and Install AppImageTool
         run: |
