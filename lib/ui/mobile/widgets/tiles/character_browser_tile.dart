@@ -27,31 +27,10 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
         selected = character.key == widget.character.key;
 
         return GestureDetector(
-          child: ListTile(
-              tileColor: Theme.of(context).colorScheme.primary,
-              selectedTileColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.25),
-              textColor: Colors.white,
-              selectedColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              // Square image with rounded corners of the character
-              leading: FutureTileImage(
+          child: FutureTileImage(
                 image: widget.character.profile,
                 borderRadius: BorderRadius.circular(10),
               ),
-              minLeadingWidth: 60,
-              title: Column(children: [
-                Text(widget.character.name),
-                const SizedBox(height: 10.0),
-                Text(
-                  Utilities.formatPlaceholders(widget.character.description,
-                      user.name, widget.character.name),
-                  style: const TextStyle(fontSize: 12.0),
-                ),
-              ]),
-              selected: selected),
           onTap: () {
             character.from(widget.character);
           },

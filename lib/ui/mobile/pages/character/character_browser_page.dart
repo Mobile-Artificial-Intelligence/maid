@@ -99,7 +99,7 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
             ],
           ),
           body: SessionBusyOverlay(
-              child: ListView.builder(
+              child: GridView.builder(
                 itemCount: characters.length,
                 itemBuilder: (context, index) {
                   return Padding(
@@ -114,7 +114,13 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
                       },
                     ),
                   );
-                },
+                }, 
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                  childAspectRatio: 0.75
+                )
               )
             )
           );
