@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class User extends ChangeNotifier {
   File? _profile;
@@ -38,21 +36,6 @@ class User extends ChangeNotifier {
 
   set name(String value) {
     _name = value;
-    notifyListeners();
-  }
-
-  void init() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, dynamic> lastUser =
-        json.decode(prefs.getString("last_user") ?? "{}") ?? {};
-
-    if (lastUser.isNotEmpty) {
-      fromMap(lastUser);
-    } else {
-      reset();
-    }
-
     notifyListeners();
   }
 
