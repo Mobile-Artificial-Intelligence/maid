@@ -17,8 +17,6 @@ class CharacterBrowserTile extends StatefulWidget {
 }
 
 class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
-  bool selected = false;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -39,26 +37,31 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
                       fit: BoxFit.cover,
                     ),
                     Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        color: Colors.black54, // Semi-transparent background
-                        child: Text(
-                          widget.character.name,
-                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    Align(
                       alignment: Alignment.bottomLeft,
                       child: Container(
                         padding: const EdgeInsets.all(8),
-                        color: Colors.black54, // Semi-transparent background
-                        child: Text(
-                          widget.character.description,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: Colors.white),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [Colors.black.withOpacity(0.8), Colors.transparent],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.character.name,
+                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              widget.character.description,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
                       ),
                     ),
