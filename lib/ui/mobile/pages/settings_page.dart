@@ -26,12 +26,48 @@ class _SettingsPageState extends State<SettingsPage> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                SwitchListTile(
-                  title: const Text('Theme (Light/Dark)'),
-                  value: mainProvider.isDarkMode,
-                  onChanged: (value) {
-                    mainProvider.toggleTheme();
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                    child: Row(
+                    children: [
+                      const Expanded(
+                        child: Text("Theme Mode"),
+                      ),
+                      DropdownMenu<ThemeMode>(
+                        hintText: "Select Theme Mode",
+                        inputDecorationTheme: InputDecorationTheme(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          fillColor: Theme.of(context).colorScheme.secondary,
+                          filled: true,
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                        ),
+                        dropdownMenuEntries: const [
+                          DropdownMenuEntry<ThemeMode>(
+                            value: ThemeMode.system,
+                            label: "System",
+                          ),
+                          DropdownMenuEntry<ThemeMode>(
+                            value: ThemeMode.light,
+                            label: "Light",
+                          ),
+                          DropdownMenuEntry<ThemeMode>(
+                            value: ThemeMode.dark,
+                            label: "Dark",
+                          )
+                        ],
+                        onSelected: (ThemeMode? value) {
+                          if (value != null) {
+                            mainProvider.themeMode = value;
+                          }
+                        },
+                        initialSelection: mainProvider.themeMode,
+                        width: 200,
+                      )
+                    ],
+                  ),
                 ),
                 FilledButton(
                   onPressed: () {

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid_llm/src/chat_node_tree.dart';
 import 'package:maid/classes/google_gemini_model.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
@@ -11,7 +10,7 @@ import 'package:maid/classes/open_ai_model.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid_llm/src/chat_node.dart';
+import 'package:maid_llm/maid_llm.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,21 +37,6 @@ class Session extends ChangeNotifier {
   set name(String name) {
     _name = name;
     notifyListeners();
-  }
-
-  void init() async {
-    Logger.log("Session Initialised");
-
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, dynamic> lastSession =
-        json.decode(prefs.getString("last_session") ?? "{}") ?? {};
-
-    if (lastSession.isNotEmpty) {
-      fromMap(lastSession);
-    } else {
-      newSession();
-    }
   }
 
   void notify() {
@@ -91,6 +75,11 @@ class Session extends ChangeNotifier {
   }
 
   void fromMap(Map<String, dynamic> inputJson) {
+    if (inputJson.isEmpty) {
+      newSession();
+      return;
+    }
+
     chat.root = ChatNode.fromMap(inputJson['chat'] ?? {});
 
     final type = LargeLanguageModelType.values[inputJson['llm_type'] ?? LargeLanguageModelType.llamacpp.index];

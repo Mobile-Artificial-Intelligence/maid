@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/ui/mobile/pages/home_page.dart';
@@ -5,17 +7,32 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/themes.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
+
+  String? lastUserString = prefs.getString("last_user");
+  Map<String, dynamic> lastUser = json.decode(lastUserString ?? "{}");
+  User user = User.fromMap(lastUser);
+
+  String? lastCharacterString = prefs.getString("last_character");
+  Map<String, dynamic> lastCharacter = json.decode(lastCharacterString ?? "{}");
+  Character character = Character.fromMap(lastCharacter);
+
+  String? lastSessionString = prefs.getString("last_session");
+  Map<String, dynamic> lastSession = json.decode(lastSessionString ?? "{}");
+  Session session = Session.fromMap(lastSession);
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => MainProvider()),
-        ChangeNotifierProvider(create: (context) => User()),
-        ChangeNotifierProvider(create: (context) => Character()),
-        ChangeNotifierProvider(create: (context) => Session()),
+        ChangeNotifierProvider(create: (context) => user),
+        ChangeNotifierProvider(create: (context) => character),
+        ChangeNotifierProvider(create: (context) => session),
       ],
       child: const MaidApp(),
     ),
@@ -24,26 +41,15 @@ void main() {
 
 class MainProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.dark;
-  bool _initialised = false;
 
   ThemeMode get themeMode => _themeMode;
 
-  bool get isDarkMode => _themeMode == ThemeMode.dark;
-
-  bool get initialised => _initialised;
-
-  void toggleTheme() {
-    _themeMode =
-        _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+  set themeMode(ThemeMode value) {
+    _themeMode = value;
     notifyListeners();
   }
 
-  void init() {
-    _initialised = true;
-  }
-
   void reset() {
-    _initialised = false;
     notifyListeners();
   }
 }
@@ -58,15 +64,8 @@ class MaidApp extends StatefulWidget {
 class MaidAppState extends State<MaidApp> {
   @override
   Widget build(BuildContext context) {
-    return Consumer4<MainProvider, User, Character, Session>(
-      builder: (context, mainProvider, user, character, session, child) {
-        if (!mainProvider.initialised) {
-          mainProvider.init();
-          user.init();
-          character.init();
-          session.init();
-        }
-
+    return Consumer<MainProvider>(
+      builder: (context, mainProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Maid',

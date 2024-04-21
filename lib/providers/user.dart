@@ -1,18 +1,30 @@
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class User extends ChangeNotifier {
   File? _profile;
   String _name = "User";
 
+  User() {
+    reset();
+  }
+
+  User.from(User user) {
+    _profile = profileFile;
+    _name = user.name;
+  }
+
+  User.fromMap(Map<String, dynamic> inputMap) {
+    fromMap(inputMap);
+  }
+
   Future<File> get profile async {
     return _profile ?? await Utilities.fileFromAssetImage("chadUser.png");
   }
 
+  File? get profileFile => _profile;
   String get name => _name;
 
   set profile(Future<File> value) {
@@ -27,29 +39,19 @@ class User extends ChangeNotifier {
     notifyListeners();
   }
 
-  void init() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, dynamic> lastUser =
-        json.decode(prefs.getString("last_user") ?? "{}") ?? {};
-
-    if (lastUser.isNotEmpty) {
-      fromMap(lastUser);
-    } else {
+  void fromMap(Map<String, dynamic> inputMap) async {
+    if (inputMap.isEmpty) {
       reset();
+      return;
     }
 
-    notifyListeners();
-  }
-
-  void fromMap(Map<String, dynamic> inputJson) async {
-    if (inputJson["profile"] != null) {
-      _profile = File(inputJson["profile"]);
+    if (inputMap["profile"] != null) {
+      _profile = File(inputMap["profile"]);
     } else {
       _profile ??= await Utilities.fileFromAssetImage("chadUser.png");
     }
 
-    _name = inputJson["name"];
+    _name = inputMap["name"];
     notifyListeners();
   }
 

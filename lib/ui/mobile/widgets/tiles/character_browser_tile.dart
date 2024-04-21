@@ -1,9 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
-import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/static/utilities.dart';
-import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 
 class CharacterBrowserTile extends StatefulWidget {
@@ -18,47 +17,68 @@ class CharacterBrowserTile extends StatefulWidget {
 }
 
 class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
-  bool selected = false;
-
   @override
   Widget build(BuildContext context) {
-    return Consumer2<Character, User>(
-      builder: (context, character, user, child) {
-        selected = character.key == widget.character.key;
-
-        return GestureDetector(
-          child: ListTile(
-              tileColor: Theme.of(context).colorScheme.primary,
-              selectedTileColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.25),
-              textColor: Colors.white,
-              selectedColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              // Square image with rounded corners of the character
-              leading: FutureTileImage(
-                image: widget.character.profile,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              minLeadingWidth: 60,
-              title: Column(children: [
-                Text(widget.character.name),
-                const SizedBox(height: 10.0),
-                Text(
-                  Utilities.formatPlaceholders(widget.character.description,
-                      user.name, widget.character.name),
-                  style: const TextStyle(fontSize: 12.0),
-                ),
-              ]),
-              selected: selected),
-          onTap: () {
-            character.from(widget.character);
-          },
-          onSecondaryTapUp: (details) => _onSecondaryTapUp(details, context),
-          onLongPressStart: (details) => _onLongPressStart(details, context),
-        );
+    return GestureDetector(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: FutureBuilder<File>(
+          future: widget.character.profile,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return const Icon(Icons.error);
+              } else {
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.file(
+                      snapshot.data!,
+                      fit: BoxFit.cover,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [Colors.black.withOpacity(0.8), Colors.transparent],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.character.name,
+                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              widget.character.description,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            } else {
+              return const CircularProgressIndicator();
+            }
+          }
+        )
+      ),
+      onTap: () {
+        context.read<Character>().from(widget.character);
       },
+      onSecondaryTapUp: (details) => _onSecondaryTapUp(details, context),
+      onLongPressStart: (details) => _onLongPressStart(details, context),
     );
   }
 
