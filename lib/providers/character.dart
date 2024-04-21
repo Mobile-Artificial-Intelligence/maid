@@ -9,7 +9,6 @@ import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
   Key _key = UniqueKey();
@@ -29,13 +28,7 @@ class Character extends ChangeNotifier {
   Map<String, dynamic> _cachedJson = {};
 
   Character() {
-    final key = UniqueKey().toString();
-    _name = "New Character $key";
     reset();
-  }
-
-  Character.last() {
-    init();
   }
 
   Character.fromMap(Map<String, dynamic> inputJson) {
@@ -44,21 +37,6 @@ class Character extends ChangeNotifier {
 
   void notify() {
     notifyListeners();
-  }
-
-  void init() async {
-    Logger.log("Character Initialised");
-
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, dynamic> lastCharacter = json.decode(prefs.getString("last_character") ?? "{}");
-
-    if (lastCharacter.isNotEmpty) {
-      Logger.log(lastCharacter.toString());
-      fromMap(lastCharacter);
-    } else {
-      await reset();
-    }
   }
 
   Character copy() {
@@ -91,10 +69,6 @@ class Character extends ChangeNotifier {
       _profile = await Utilities.fileFromAssetImage("defaultCharacter.png");
     }
 
-    if (inputJson.isEmpty) {
-      await reset();
-    }
-
     if (inputJson["spec"] == "mcf_v1") {
       Logger.log("Character loaded from MCF");
       fromMCFMap(inputJson);
@@ -111,7 +85,6 @@ class Character extends ChangeNotifier {
       await reset();
     }
 
-    Logger.log("Character created with name: ${inputJson["name"]}");
     _useExamples = _examples.isNotEmpty;
     notifyListeners();
   }
