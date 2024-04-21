@@ -37,7 +37,7 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
                       fit: BoxFit.cover,
                     ),
                     Align(
-                      alignment: Alignment.bottomLeft,
+                      alignment: Alignment.bottomCenter,
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
