@@ -29,17 +29,17 @@ class Character extends ChangeNotifier {
   Map<String, dynamic> _cachedJson = {};
 
   Character() {
+    final key = UniqueKey().toString();
+    _name = "New Character $key";
+    reset();
+  }
+
+  Character.last() {
     init();
   }
 
   Character.fromMap(Map<String, dynamic> inputJson) {
     fromMap(inputJson);
-  }
-
-  void newCharacter() {
-    final key = UniqueKey().toString();
-    _name = "New Character $key";
-    reset();
   }
 
   void notify() {
@@ -51,8 +51,7 @@ class Character extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    Map<String, dynamic> lastCharacter =
-        json.decode(prefs.getString("last_character") ?? "{}");
+    Map<String, dynamic> lastCharacter = json.decode(prefs.getString("last_character") ?? "{}");
 
     if (lastCharacter.isNotEmpty) {
       Logger.log(lastCharacter.toString());

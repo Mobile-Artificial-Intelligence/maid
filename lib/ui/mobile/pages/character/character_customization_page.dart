@@ -59,6 +59,22 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
 
           SharedPreferences.getInstance().then((prefs) {
             prefs.setString("last_character", json.encode(character.toMap()));
+
+            final String charactersJson = prefs.getString("characters") ?? '[]';
+            final List charactersList = json.decode(charactersJson);
+
+            List<Character> characters;
+            characters = charactersList.map((characterMap) {
+              return Character.fromMap(characterMap);
+            }).toList();
+
+            characters.removeWhere((listCharacter) => character.key == listCharacter.key);
+            characters.insert(0, character);
+
+            final String newCharactersJson =
+                json.encode(characters.map((character) => character.toMap()).toList());
+
+            prefs.setString("characters", newCharactersJson);
           });
 
           return SessionBusyOverlay(

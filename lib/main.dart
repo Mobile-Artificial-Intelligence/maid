@@ -14,7 +14,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => MainProvider()),
         ChangeNotifierProvider(create: (context) => User()),
-        ChangeNotifierProvider(create: (context) => Character()),
+        ChangeNotifierProvider(create: (context) => Character.last()),
         ChangeNotifierProvider(create: (context) => Session()),
       ],
       child: const MaidApp(),

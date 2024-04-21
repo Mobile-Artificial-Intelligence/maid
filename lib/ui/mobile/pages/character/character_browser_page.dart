@@ -54,77 +54,56 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Character>(
-      builder: (context, character, child) {
-        // If characters contains a character where character.key == current,
-        // then insert a copy of character at index 0
-        current = character.key;
-
-        var contains = false;
-
-        for (var element in characters) {
-          if (element.key == current) {
-            contains = true;
-            break;
-          }
-        }
-
-        if (!contains) {
-          characters.insert(0, character.copy());
-        }
-
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            elevation: 0.0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            title: const Text("Character Browser"),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: const Text("Character Browser"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              setState(() {
+                final newCharacter = Character();
+                characters.add(newCharacter);
+                context.read<Character>().from(newCharacter);
+              });
+            },
+          ),
+        ],
+      ),
+      body: SessionBusyOverlay(
+        child: GridView.builder(
+          itemCount: characters.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(
+                  8.0), // Adjust the padding value as needed
+              child: CharacterBrowserTile(
+                character: characters[index],
+                onDelete: () {
                   setState(() {
-                    final newCharacter = Character();
-                    characters.add(newCharacter);
-                    character.from(newCharacter);
+                    characters.removeAt(index);
                   });
                 },
               ),
-            ],
-          ),
-          body: SessionBusyOverlay(
-              child: GridView.builder(
-                itemCount: characters.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(
-                        8.0), // Adjust the padding value as needed
-                    child: CharacterBrowserTile(
-                      character: characters[index],
-                      onDelete: () {
-                        setState(() {
-                          characters.removeAt(index);
-                        });
-                      },
-                    ),
-                  );
-                }, 
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
-                  childAspectRatio: 0.75
-                )
-              )
-            )
-          );
-      },
+            );
+          }, 
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            crossAxisSpacing: 8.0,
+            mainAxisSpacing: 8.0,
+            childAspectRatio: 0.75
+          )
+        )
+      )
     );
   }
 }
