@@ -17,10 +17,10 @@ class Character extends ChangeNotifier {
   String _description = "";
   String _personality = "";
   String _scenario = "";
+  String _system = "";
 
   bool _useGreeting = false;
   List<String> _greetings = [];
-  String _system = "";
 
   bool _useExamples = true;
   List<Map<String, dynamic>> _examples = [];
@@ -280,7 +280,11 @@ class Character extends ChangeNotifier {
       _description,
       _personality,
       _scenario,
-      _system
+      _system,
+      _useGreeting.toString(),
+      _greetings.join(),
+      _useExamples.toString(),
+      _examples.join(),
     ];
 
     final bytes = utf8.encode(hashList.join());
