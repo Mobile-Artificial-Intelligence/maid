@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  crypto: ^3.0.3
   image: ^4.1.7
   path_provider: ^2.0.2
   permission_handler: ^11.0.1
