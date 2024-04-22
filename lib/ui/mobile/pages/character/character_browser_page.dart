@@ -17,7 +17,6 @@ class CharacterBrowserPage extends StatefulWidget {
 class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
   // Changed from Map to List of Character
   final List<Character> characters = [];
-  Key current = UniqueKey();
 
   @override
   void initState() {
@@ -36,20 +35,6 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
         characters.add(Character.fromMap(characterMap));
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _saveCharacters();
-    super.dispose();
-  }
-
-  Future<void> _saveCharacters() async {
-    final prefs = await SharedPreferences.getInstance();
-    characters.removeWhere((character) => character.key == current);
-    final String charactersJson =
-        json.encode(characters.map((character) => character.toMap()).toList());
-    await prefs.setString("characters", charactersJson);
   }
 
   @override

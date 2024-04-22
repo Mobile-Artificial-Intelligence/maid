@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -11,16 +12,15 @@ import 'package:maid/static/utilities.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Character extends ChangeNotifier {
-  Key _key = UniqueKey();
   File? _profile;
   String _name = "Maid";
   String _description = "";
   String _personality = "";
   String _scenario = "";
+  String _system = "";
 
   bool _useGreeting = false;
   List<String> _greetings = [];
-  String _system = "";
 
   bool _useExamples = true;
   List<Map<String, dynamic>> _examples = [];
@@ -46,7 +46,6 @@ class Character extends ChangeNotifier {
   }
 
   void from(Character character) async {
-    _key = character.key;
     _profile = await character.profile;
     _name = character.name;
     _description = character.description;
@@ -138,21 +137,17 @@ class Character extends ChangeNotifier {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> jsonCharacter = {};
 
+    jsonCharacter["spec"] = "mcf_v1";
     jsonCharacter["profile"] = _profile!.path;
-
     jsonCharacter["name"] = _name;
     jsonCharacter["description"] = _description;
     jsonCharacter["personality"] = _personality;
     jsonCharacter["scenario"] = _scenario;
     jsonCharacter["use_greeting"] = _useGreeting;
     jsonCharacter["greetings"] = _greetings;
-    jsonCharacter["first_mes"] = _greetings.firstOrNull ?? "";
-    jsonCharacter["alternate_greetings"] = _greetings.isNotEmpty ? _greetings.sublist(1) : [];
     jsonCharacter["system_prompt"] = _system;
-
     jsonCharacter["use_examples"] = _useExamples;
     jsonCharacter["examples"] = _examples;
-    jsonCharacter["mes_example"] = examplesToString();
 
     return jsonCharacter;
   }
@@ -275,10 +270,26 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  Key get key => _key;
-
   Future<File> get profile async {
     return _profile ??= await Utilities.fileFromAssetImage("defaultCharacter.png");
+  }
+
+  String get hash {
+    List<String> hashList = [
+      _name,
+      _description,
+      _personality,
+      _scenario,
+      _system,
+      _useGreeting.toString(),
+      _greetings.join(),
+      _useExamples.toString(),
+      _examples.join(),
+    ];
+
+    final bytes = utf8.encode(hashList.join());
+
+    return sha256.convert(bytes).toString();
   }
 
   String get name => _name;

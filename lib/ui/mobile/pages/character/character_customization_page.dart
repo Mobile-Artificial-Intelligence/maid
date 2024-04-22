@@ -68,7 +68,11 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
               return Character.fromMap(characterMap);
             }).toList();
 
-            characters.removeWhere((listCharacter) => character.key == listCharacter.key);
+            characters.removeWhere((listCharacter) {
+              print("Character Hash: ${character.hash}");
+              print("List Character Hash: ${listCharacter.hash}");
+              return character.hash == listCharacter.hash;
+            });
             characters.insert(0, character);
 
             final String newCharactersJson =
