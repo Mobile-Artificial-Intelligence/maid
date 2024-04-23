@@ -84,7 +84,7 @@ class _ChatFieldState extends State<ChatField> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            if (session.isBusy &&
+            if (!session.chat.tail.finalised &&
                 session.model.type != LargeLanguageModelType.ollama)
               IconButton(
                   onPressed: session.stop,
@@ -109,14 +109,14 @@ class _ChatFieldState extends State<ChatField> {
             ),
             IconButton(
                 onPressed: () {
-                  if (!session.isBusy) {
+                  if (session.chat.tail.finalised ) {
                     send();
                   }
                 },
                 iconSize: 50,
                 icon: Icon(
                   Icons.arrow_circle_right,
-                  color: session.isBusy
+                  color: !session.chat.tail.finalised 
                       ? Theme.of(context).colorScheme.onPrimary
                       : Theme.of(context).colorScheme.secondary,
                 )),

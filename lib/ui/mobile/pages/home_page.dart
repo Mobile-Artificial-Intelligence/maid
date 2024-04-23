@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:maid/ui/mobile/widgets/chat_widgets/chat_field.dart';
 import 'package:maid/ui/mobile/widgets/appbars/home_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/home_drawer.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -36,23 +38,29 @@ class HomePageState extends State<HomePage> {
   Widget _buildBody() {
     return Consumer3<Session, User, Character>(
       builder: (context, session, user, character, child) {
-        Map<Key, ChatRole> history = session.chat.getHistory();
-        if (history.isEmpty && character.useGreeting) {
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString("last_session", json.encode(session.toMap()));
+        });
+        
+        List<ChatNode> chat = session.chat.getChat();
+        if (chat.isEmpty && character.useGreeting) {
           final newKey = UniqueKey();
           final index = Random().nextInt(character.greetings.length);
-          session.chat.add(
-            newKey,
+
+          final message = ChatNode(
+            key: newKey,
+            role: ChatRole.assistant,
             content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
-            role: ChatRole.assistant
           );
-          history = {newKey: ChatRole.assistant};
+
+          session.chat.addNode(message);
+          chat = [message];
         }
 
         chatWidgets.clear();
-        for (var key in history.keys) {
+        for (final message in chat) {
           chatWidgets.add(ChatMessage(
-            key: key,
-            role: history[key] ?? ChatRole.assistant,
+            node: message,
           ));
         }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid_llm/src/chat_node.dart';
+import 'package:maid_llm/maid_llm.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
@@ -8,53 +8,19 @@ import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessage extends StatefulWidget {
-  final ChatRole role;
+  final ChatNode node;
 
   const ChatMessage({
-    required super.key,
-    this.role = ChatRole.assistant,
+    super.key,
+    required this.node,
   });
 
   @override
   ChatMessageState createState() => ChatMessageState();
 }
 
-class ChatMessageState extends State<ChatMessage>
-    with SingleTickerProviderStateMixin {
-  late Session session;
-  final TextEditingController _messageController = TextEditingController();
-  String _message = "";
-  bool _finalised = false;
+class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
   bool _editing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    session = context.read<Session>();
-
-    if (session.chat.messageOf(widget.key!).isNotEmpty) {
-      _message = session.chat.messageOf(widget.key!);
-      _finalised = true;
-    } else {
-      session.chat.getMessageStream(widget.key!).stream.listen((textChunk) {
-        setState(() {
-          _message += textChunk;
-        });
-      }).onDone(() { 
-        _message = _message.trim();
-
-        session.chat.add(
-          widget.key!,
-          content: _message, 
-          role: widget.role
-        );
-
-        session.notify();
-
-        _finalised = true;
-      });
-    }
-  }
 
   Widget _messageBuilder(String message) {
     List<Widget> widgets = [];
@@ -91,9 +57,8 @@ class ChatMessageState extends State<ChatMessage>
   Widget build(BuildContext context) {
     return Consumer3<Session, User, Character>(
       builder: (context, session, user, character, child) {
-        int currentIndex = session.chat.indexOf(widget.key!);
-        int siblingCount = session.chat.siblingCountOf(widget.key!);
-        bool busy = session.isBusy;
+        int currentIndex = session.chat.indexOf(widget.node.key);
+        int siblingCount = session.chat.siblingCountOf(widget.node.key);
 
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
@@ -101,7 +66,7 @@ class ChatMessageState extends State<ChatMessage>
             children: [
               const SizedBox(width: 10.0),
               FutureAvatar(
-                image: widget.role == ChatRole.user ? user.profile : character.profile,
+                image: widget.node.role == ChatRole.user ? user.profile : character.profile,
                 radius: 16,
               ),
               const SizedBox(width: 10.0),
@@ -118,7 +83,7 @@ class ChatMessageState extends State<ChatMessage>
                 blendMode: BlendMode
                     .srcIn, // This blend mode applies the shader to the text color.
                 child: Text(
-                  widget.role == ChatRole.user ? user.name : character.name,
+                  widget.node.role == ChatRole.user ? user.name : character.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Colors
@@ -128,7 +93,7 @@ class ChatMessageState extends State<ChatMessage>
                 ),
               ),
               const Expanded(child: SizedBox()), // Spacer
-              if (_finalised) ..._messageOptions(),
+              if (widget.node.finalised) ..._messageOptions(),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -136,8 +101,8 @@ class ChatMessageState extends State<ChatMessage>
                   IconButton(
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
-                        if (busy) return;
-                        session.chat.last(widget.key!);
+                        if (!session.chat.tail.finalised) return;
+                        session.chat.last(widget.node.key);
                         session.notify();
                       },
                       icon: Icon(Icons.arrow_left,
@@ -147,8 +112,8 @@ class ChatMessageState extends State<ChatMessage>
                   IconButton(
                     padding: const EdgeInsets.all(0),
                     onPressed: () {
-                      if (busy) return;
-                      session.chat.next(widget.key!);
+                      if (!session.chat.tail.finalised) return;
+                      session.chat.next(widget.node.key);
                       session.notify();
                     },
                     icon: Icon(Icons.arrow_right,
@@ -171,18 +136,16 @@ class ChatMessageState extends State<ChatMessage>
   }
 
   List<Widget> _messageOptions() {
-    return widget.role == ChatRole.user ? _userOptions() : _assistantOptions();
+    return widget.node.role == ChatRole.user ? _userOptions() : _assistantOptions();
   }
 
   List<Widget> _userOptions() {
     return [
       IconButton(
         onPressed: () {
-          if (session.isBusy) return;
+          if (!context.read<Session>().chat.tail.finalised) return;
           setState(() {
-            _messageController.text = _message;
             _editing = true;
-            _finalised = false;
           });
         },
         icon: const Icon(Icons.edit),
@@ -194,8 +157,8 @@ class ChatMessageState extends State<ChatMessage>
     return [
       IconButton(
         onPressed: () {
-          if (session.isBusy) return;
-          session.regenerate(widget.key!, context);
+          if (!context.read<Session>().chat.tail.finalised) return;
+          context.read<Session>().regenerate(widget.node.key, context);
           setState(() {});
         },
         icon: const Icon(Icons.refresh),
@@ -204,11 +167,11 @@ class ChatMessageState extends State<ChatMessage>
   }
 
   List<Widget> _editingColumn() {
-    final busy = context.watch<Session>().isBusy;
+    final messageController = TextEditingController(text: widget.node.content);
 
     return [
       TextField(
-        controller: _messageController,
+        controller: messageController,
         autofocus: true,
         cursorColor: Theme.of(context).colorScheme.secondary,
         style: Theme.of(context).textTheme.bodyMedium,
@@ -224,23 +187,18 @@ class ChatMessageState extends State<ChatMessage>
         IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
-              if (busy) return;
-              final inputMessage = _messageController.text;
+              if (!context.watch<Session>().chat.tail.finalised) return;
               setState(() {
-                _messageController.text = _message;
                 _editing = false;
-                _finalised = true;
               });
-              session.edit(widget.key!, inputMessage, context);
+              context.read<Session>().edit(widget.node.key, messageController.text, context);
             },
             icon: const Icon(Icons.done)),
         IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
               setState(() {
-                _messageController.text = _message;
                 _editing = false;
-                _finalised = true;
               });
             },
             icon: const Icon(Icons.close))
@@ -250,10 +208,10 @@ class ChatMessageState extends State<ChatMessage>
 
   List<Widget> _standardColumn() {
     return [
-      if (!_finalised && _message.isEmpty)
+      if (!widget.node.finalised && widget.node.content.isEmpty)
         const TypingIndicator() // Assuming TypingIndicator is a custom widget you've defined.
       else
-        _messageBuilder(_message),
+        _messageBuilder(widget.node.content),
     ];
   }
 }
