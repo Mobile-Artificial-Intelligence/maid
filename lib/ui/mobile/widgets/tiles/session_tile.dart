@@ -27,7 +27,7 @@ class _SessionTileState extends State<SessionTile> {
           onSecondaryTapUp: _onSecondaryTapUp,
           onLongPressStart: _onLongPressStart,
           onTap: () {
-            if (session.isBusy) return;
+            if (!session.chat.tail.finalised) return;
             session.from(widget.session);
           },
           child: ListTile(

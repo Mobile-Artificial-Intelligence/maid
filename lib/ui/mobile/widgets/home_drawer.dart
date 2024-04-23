@@ -123,7 +123,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   ),
                   FilledButton(
                     onPressed: () {
-                      if (session.isBusy) return;
+                      if (!session.chat.tail.finalised) return;
                       setState(() {
                         final newSession = Session();
                         sessions.add(newSession);
@@ -144,7 +144,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         return SessionTile(
                           session: sessions[index], 
                           onDelete: () {
-                            if (session.isBusy) return;
+                            if (!session.chat.tail.finalised) return;
                             setState(() {
                               if (sessions[index].key == session.key) {
                                 session.from(sessions.firstOrNull ?? Session());

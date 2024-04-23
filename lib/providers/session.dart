@@ -17,20 +17,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
   Key _key = UniqueKey();
-  bool _busy = false;
   LargeLanguageModel model = LlamaCppModel();
   ChatNodeTree chat = ChatNodeTree();
   
   String _name = "";
-
-  bool get isBusy => _busy;
 
   String get name => _name;
   
   Key get key => _key;
 
   set busy(bool value) {
-    _busy = value;
     notifyListeners();
   }
 
@@ -114,9 +110,6 @@ class Session extends ChangeNotifier {
   }
 
   void prompt(BuildContext context) async {
-    _busy = true;
-    notifyListeners();
-
     final user = context.read<User>();
     final character = context.read<Character>();
 
@@ -136,12 +129,8 @@ class Session extends ChangeNotifier {
 
     final stringStream = model.prompt(messages);
 
-    await for (var message in stringStream) {
-      stream(message);
-    }
+    await chat.tail.streamIn(stringStream);
 
-    _busy = false;
-    finalise();
     notifyListeners();
   }
 
@@ -171,31 +160,11 @@ class Session extends ChangeNotifier {
 
   void stop() {
     (model as LlamaCppModel).stop();
-    _busy = false;
     Logger.log('Local generation stopped');
-    finalise();
     notifyListeners();
   }
 
-  void stream(String? message) async {
-    if (message == null) {
-      finalise();
-    } else {
-      chat.buffer += message;
-
-      if (!(chat.tail.messageController.isClosed)) {
-        chat.tail.messageController.add(chat.buffer);
-        chat.buffer = "";
-      }
-
-      chat.tail.content += message;
-    }
-  }
-
   void finalise() {
-    _busy = false;
-
-    chat.tail.messageController.close();
 
     SharedPreferences.getInstance().then((prefs) {
       prefs.setString("last_session", json.encode(toMap()));

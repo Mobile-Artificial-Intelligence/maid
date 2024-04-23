@@ -17,7 +17,7 @@ class _SessionBusyOverlayState extends State<SessionBusyOverlay> {
     return Stack(
       children: [
         widget.child,
-        if (context.watch<Session>().isBusy)
+        if (!context.watch<Session>().chat.tail.finalised)
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.4),
