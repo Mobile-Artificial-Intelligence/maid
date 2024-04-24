@@ -8,21 +8,19 @@ import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessage extends StatefulWidget {
-  final ChatNode node;
-
   const ChatMessage({
-    super.key,
-    required this.node,
+    required super.key,
   });
 
   @override
-  ChatMessageState createState() => ChatMessageState();
+  State<ChatMessage> createState() => _ChatMessageState();
 }
 
-class ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
-  bool _editing = false;
+class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
+  late ChatNode node;
+  bool editing = false;
 
-  Widget _messageBuilder(String message) {
+  Widget messageBuilder(String message) {
     List<Widget> widgets = [];
     List<String> parts = message.split('```');
 
@@ -57,8 +55,10 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
   Widget build(BuildContext context) {
     return Consumer3<Session, User, Character>(
       builder: (context, session, user, character, child) {
-        int currentIndex = session.chat.indexOf(widget.node.key);
-        int siblingCount = session.chat.siblingCountOf(widget.node.key);
+        node = session.chat.find(widget.key!)!;
+
+        int currentIndex = session.chat.indexOf(widget.key!);
+        int siblingCount = session.chat.siblingCountOf(widget.key!);
 
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
@@ -66,7 +66,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
             children: [
               const SizedBox(width: 10.0),
               FutureAvatar(
-                image: widget.node.role == ChatRole.user ? user.profile : character.profile,
+                image: node.role == ChatRole.user ? user.profile : character.profile,
                 radius: 16,
               ),
               const SizedBox(width: 10.0),
@@ -83,7 +83,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
                 blendMode: BlendMode
                     .srcIn, // This blend mode applies the shader to the text color.
                 child: Text(
-                  widget.node.role == ChatRole.user ? user.name : character.name,
+                  node.role == ChatRole.user ? user.name : character.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Colors
@@ -93,7 +93,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
                 ),
               ),
               const Expanded(child: SizedBox()), // Spacer
-              if (widget.node.finalised) ..._messageOptions(),
+              if (node.finalised) ...messageOptions(),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -102,7 +102,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
                         if (!session.chat.tail.finalised) return;
-                        session.chat.last(widget.node.key);
+                        session.chat.last(node.key);
                         session.notify();
                       },
                       icon: Icon(Icons.arrow_left,
@@ -113,7 +113,7 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
                     padding: const EdgeInsets.all(0),
                     onPressed: () {
                       if (!session.chat.tail.finalised) return;
-                      session.chat.next(widget.node.key);
+                      session.chat.next(node.key);
                       session.notify();
                     },
                     icon: Icon(Icons.arrow_right,
@@ -128,24 +128,24 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: _editing ? _editingColumn() : _standardColumn(),
+                children: editing ? editingColumn() : standardColumn(),
               ))
         ]);
       },
     );
   }
 
-  List<Widget> _messageOptions() {
-    return widget.node.role == ChatRole.user ? _userOptions() : _assistantOptions();
+  List<Widget> messageOptions() {
+    return node.role == ChatRole.user ? userOptions() : assistantOptions();
   }
 
-  List<Widget> _userOptions() {
+  List<Widget> userOptions() {
     return [
       IconButton(
         onPressed: () {
           if (!context.read<Session>().chat.tail.finalised) return;
           setState(() {
-            _editing = true;
+            editing = true;
           });
         },
         icon: const Icon(Icons.edit),
@@ -153,12 +153,12 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     ];
   }
 
-  List<Widget> _assistantOptions() {
+  List<Widget> assistantOptions() {
     return [
       IconButton(
         onPressed: () {
           if (!context.read<Session>().chat.tail.finalised) return;
-          context.read<Session>().regenerate(widget.node.key, context);
+          context.read<Session>().regenerate(node.key, context);
           setState(() {});
         },
         icon: const Icon(Icons.refresh),
@@ -166,8 +166,8 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     ];
   }
 
-  List<Widget> _editingColumn() {
-    final messageController = TextEditingController(text: widget.node.content);
+  List<Widget> editingColumn() {
+    final messageController = TextEditingController(text: node.content);
 
     return [
       TextField(
@@ -189,16 +189,16 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
             onPressed: () {
               if (!context.watch<Session>().chat.tail.finalised) return;
               setState(() {
-                _editing = false;
+                editing = false;
               });
-              context.read<Session>().edit(widget.node.key, messageController.text, context);
+              context.read<Session>().edit(node.key, messageController.text, context);
             },
             icon: const Icon(Icons.done)),
         IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
               setState(() {
-                _editing = false;
+                editing = false;
               });
             },
             icon: const Icon(Icons.close))
@@ -206,12 +206,12 @@ class ChatMessageState extends State<ChatMessage> with SingleTickerProviderState
     ];
   }
 
-  List<Widget> _standardColumn() {
+  List<Widget> standardColumn() {
     return [
-      if (!widget.node.finalised && widget.node.content.isEmpty)
+      if (!node.finalised && node.content.isEmpty)
         const TypingIndicator() // Assuming TypingIndicator is a custom widget you've defined.
       else
-        _messageBuilder(widget.node.content),
+        messageBuilder(node.content),
     ];
   }
 }
