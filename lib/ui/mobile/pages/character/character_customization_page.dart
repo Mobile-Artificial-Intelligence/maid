@@ -31,6 +31,46 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
   late List<TextEditingController> _exampleControllers;
 
   @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _personalityController.dispose();
+    _scenarioController.dispose();
+    _systemController.dispose();
+    
+    for (var controller in _greetingControllers) {
+      controller.dispose();
+    }
+    for (var controller in _exampleControllers) {
+      controller.dispose();
+    }
+
+    SharedPreferences.getInstance().then((prefs) {
+      final characterString = prefs.getString("last_character");
+      final character = Character.fromMap(json.decode(characterString ?? "{}"));
+
+      final String charactersJson = prefs.getString("characters") ?? '[]';
+      final List charactersList = json.decode(charactersJson);
+
+      List<Character> characters;
+      characters = charactersList.map((characterMap) {
+        return Character.fromMap(characterMap);
+      }).toList();
+
+      characters.removeWhere((listCharacter) {
+        return character.hash == listCharacter.hash;
+      });
+      characters.insert(0, character);
+
+      final String newCharactersJson =
+          json.encode(characters.map((character) => character.toMap()).toList());
+
+      prefs.setString("characters", newCharactersJson);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const GenericAppBar(title: "Character Customization"),
@@ -59,26 +99,6 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
 
           SharedPreferences.getInstance().then((prefs) {
             prefs.setString("last_character", json.encode(character.toMap()));
-
-            final String charactersJson = prefs.getString("characters") ?? '[]';
-            final List charactersList = json.decode(charactersJson);
-
-            List<Character> characters;
-            characters = charactersList.map((characterMap) {
-              return Character.fromMap(characterMap);
-            }).toList();
-
-            characters.removeWhere((listCharacter) {
-              print("Character Hash: ${character.hash}");
-              print("List Character Hash: ${listCharacter.hash}");
-              return character.hash == listCharacter.hash;
-            });
-            characters.insert(0, character);
-
-            final String newCharactersJson =
-                json.encode(characters.map((character) => character.toMap()).toList());
-
-            prefs.setString("characters", newCharactersJson);
           });
 
           return SessionBusyOverlay(
