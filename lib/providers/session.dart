@@ -129,7 +129,12 @@ class Session extends ChangeNotifier {
 
     final stringStream = model.prompt(messages);
 
-    await chat.tail.streamIn(stringStream);
+    await for (var message in stringStream) {
+      chat.tail.content += message;
+      notifyListeners();
+    }
+
+    chat.tail.finalised = true;
 
     notifyListeners();
   }

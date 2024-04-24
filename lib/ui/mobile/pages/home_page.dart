@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:maid_llm/src/chat_node.dart';
+import 'package:maid_llm/maid_llm.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
@@ -44,11 +44,10 @@ class HomePageState extends State<HomePage> {
         
         List<ChatNode> chat = session.chat.getChat();
         if (chat.isEmpty && character.useGreeting) {
-          final newKey = UniqueKey();
           final index = Random().nextInt(character.greetings.length);
 
           final message = ChatNode(
-            key: newKey,
+            key: UniqueKey(),
             role: ChatRole.assistant,
             content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
           );
@@ -60,7 +59,7 @@ class HomePageState extends State<HomePage> {
         chatWidgets.clear();
         for (final message in chat) {
           chatWidgets.add(ChatMessage(
-            node: message,
+            key: message.key,
           ));
         }
 
