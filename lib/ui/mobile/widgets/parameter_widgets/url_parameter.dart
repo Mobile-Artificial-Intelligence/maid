@@ -26,7 +26,9 @@ class _UrlParameterState extends State<UrlParameter> {
             onPressed: () async {
               final model = context.read<Session>().model;
               await model.resetUri();
-              controller.text = model.uri;
+              setState(() {
+                controller.text = model.uri;
+              });
             }, 
             icon: const Icon(Icons.refresh),
           ),
