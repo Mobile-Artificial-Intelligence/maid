@@ -165,9 +165,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () {
-                            save().then((value) {
-                              storageOperationDialog(context, character.exportImage);
-                            });
+                            storageOperationDialog(context, character.exportImage);
                           },
                           child: Text(
                             "Save Image",
@@ -182,9 +180,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       children: [
                         FilledButton(
                           onPressed: () {
-                            save().then((value) {
-                              storageOperationDialog(context, character.exportSTV2);
-                            });
+                            storageOperationDialog(context, character.exportSTV2);
                           },
                           child: Text(
                             "Save STV2 JSON",
@@ -194,9 +190,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () {
-                            save().then((value) {
-                              storageOperationDialog(context, character.exportMCF);
-                            });
+                            storageOperationDialog(context, character.exportMCF);
                           },
                           child: Text(
                             "Save MCF JSON",
