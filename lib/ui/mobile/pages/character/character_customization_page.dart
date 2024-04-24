@@ -30,6 +30,31 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
   late List<TextEditingController> greetingControllers;
   late List<TextEditingController> exampleControllers;
 
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final characterString = prefs.getString("last_character");
+    final character = Character.fromMap(json.decode(characterString ?? "{}"));
+
+    final String charactersJson = prefs.getString("characters") ?? '[]';
+    final List charactersList = json.decode(charactersJson);
+
+    List<Character> characters;
+    characters = charactersList.map((characterMap) {
+      return Character.fromMap(characterMap);
+    }).toList();
+
+    characters.removeWhere((listCharacter) {
+      return character.hash == listCharacter.hash;
+    });
+    characters.insert(0, character);
+
+    final String newCharactersJson =
+        json.encode(characters.map((character) => character.toMap()).toList());
+
+    prefs.setString("characters", newCharactersJson);
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -46,11 +71,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       controller.dispose();
     }
 
-    SharedPreferences.getInstance().then((prefs) {
-      final characterString = prefs.getString("last_character");
-      final character = Character.fromMap(json.decode(characterString ?? "{}"));
-      character.save();
-    });
+    save();
   }
 
   @override
@@ -76,6 +97,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
               (index) =>
                   TextEditingController(text: character.examples[index]["content"]),
             );
+
+            save();
 
             regenerate = false;
           }
@@ -105,7 +128,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       children: [
                         FilledButton(
                           onPressed: () {
-                            character.save();
+                            save();
                           },
                           child: Text(
                             "Save Changes",
@@ -142,7 +165,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () {
-                            character.save().then((value) async {
+                            save().then((value) {
                               storageOperationDialog(context, character.exportImage);
                             });
                           },
@@ -159,7 +182,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       children: [
                         FilledButton(
                           onPressed: () {
-                            character.save().then((value) async {
+                            save().then((value) {
                               storageOperationDialog(context, character.exportSTV2);
                             });
                           },
@@ -171,7 +194,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () {
-                            character.save().then((value) async {
+                            save().then((value) {
                               storageOperationDialog(context, character.exportMCF);
                             });
                           },
