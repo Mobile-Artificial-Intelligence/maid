@@ -10,6 +10,7 @@ import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
   File? _profile;

@@ -50,8 +50,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
     final RenderBox renderBox = iconButtonKey.currentContext!.findRenderObject() as RenderBox;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Size size = renderBox.size;
+    final Session session = context.read<Session>();
 
-    List<String> options = context.read<Session>().model.options;
+    session.model.updateOptions();
+
+    List<String> options = session.model.options;
 
     List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
       padding: EdgeInsets.zero,
