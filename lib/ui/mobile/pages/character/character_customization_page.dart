@@ -20,53 +20,36 @@ class CharacterCustomizationPage extends StatefulWidget {
 }
 
 class _CharacterCustomizationPageState extends State<CharacterCustomizationPage> {
-  bool _regenerate = true;
+  bool regenerate = true;
 
-  late TextEditingController _nameController;
-  late TextEditingController _descriptionController;
-  late TextEditingController _personalityController;
-  late TextEditingController _scenarioController;
-  late TextEditingController _systemController;
-  late List<TextEditingController> _greetingControllers;
-  late List<TextEditingController> _exampleControllers;
+  late TextEditingController nameController;
+  late TextEditingController descriptionController;
+  late TextEditingController personalityController;
+  late TextEditingController scenarioController;
+  late TextEditingController systemController;
+  late List<TextEditingController> greetingControllers;
+  late List<TextEditingController> exampleControllers;
 
   @override
   void dispose() {
     super.dispose();
-    _nameController.dispose();
-    _descriptionController.dispose();
-    _personalityController.dispose();
-    _scenarioController.dispose();
-    _systemController.dispose();
+    nameController.dispose();
+    descriptionController.dispose();
+    personalityController.dispose();
+    scenarioController.dispose();
+    systemController.dispose();
     
-    for (var controller in _greetingControllers) {
+    for (var controller in greetingControllers) {
       controller.dispose();
     }
-    for (var controller in _exampleControllers) {
+    for (var controller in exampleControllers) {
       controller.dispose();
     }
 
     SharedPreferences.getInstance().then((prefs) {
       final characterString = prefs.getString("last_character");
       final character = Character.fromMap(json.decode(characterString ?? "{}"));
-
-      final String charactersJson = prefs.getString("characters") ?? '[]';
-      final List charactersList = json.decode(charactersJson);
-
-      List<Character> characters;
-      characters = charactersList.map((characterMap) {
-        return Character.fromMap(characterMap);
-      }).toList();
-
-      characters.removeWhere((listCharacter) {
-        return character.hash == listCharacter.hash;
-      });
-      characters.insert(0, character);
-
-      final String newCharactersJson =
-          json.encode(characters.map((character) => character.toMap()).toList());
-
-      prefs.setString("characters", newCharactersJson);
+      character.save();
     });
   }
 
@@ -76,25 +59,25 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       appBar: const GenericAppBar(title: "Character Customization"),
       body: Consumer<Character>(
         builder: (context, character, child) {
-          if (_regenerate) {
-            _nameController = TextEditingController(text: character.name);
-            _descriptionController = TextEditingController(text: character.description);
-            _personalityController = TextEditingController(text: character.personality);
-            _scenarioController = TextEditingController(text: character.scenario);
-            _systemController = TextEditingController(text: character.system);
+          if (regenerate) {
+            nameController = TextEditingController(text: character.name);
+            descriptionController = TextEditingController(text: character.description);
+            personalityController = TextEditingController(text: character.personality);
+            scenarioController = TextEditingController(text: character.scenario);
+            systemController = TextEditingController(text: character.system);
 
-            _greetingControllers = List.generate(
+            greetingControllers = List.generate(
               character.greetings.length,
               (index) => TextEditingController(text: character.greetings[index]),
             );
 
-            _exampleControllers = List.generate(
+            exampleControllers = List.generate(
               character.examples.length,
               (index) =>
                   TextEditingController(text: character.examples[index]["content"]),
             );
 
-            _regenerate = false;
+            regenerate = false;
           }
 
           SharedPreferences.getInstance().then((prefs) {
@@ -122,21 +105,17 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       children: [
                         FilledButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CharacterBrowserPage()));
+                            character.save();
                           },
                           child: Text(
-                            "Switch Character",
+                            "Save Changes",
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
                         const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () {
-                            _regenerate = true;
+                            regenerate = true;
                             character.reset();
                           },
                           child: Text(
@@ -151,9 +130,9 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FilledButton(
-                          onPressed: () async {
-                            _regenerate = true;
-                            await storageOperationDialog(context, character.importImage);
+                          onPressed: () {
+                            regenerate = true;
+                            storageOperationDialog(context, character.importImage);
                           },
                           child: Text(
                             "Load Image",
@@ -162,8 +141,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         ),
                         const SizedBox(width: 10.0),
                         FilledButton(
-                          onPressed: () async {
-                            await storageOperationDialog(context, character.exportImage);
+                          onPressed: () {
+                            character.save().then((value) async {
+                              storageOperationDialog(context, character.exportImage);
+                            });
                           },
                           child: Text(
                             "Save Image",
@@ -177,8 +158,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FilledButton(
-                          onPressed: () async {
-                            await storageOperationDialog(context, character.exportSTV2);
+                          onPressed: () {
+                            character.save().then((value) async {
+                              storageOperationDialog(context, character.exportSTV2);
+                            });
                           },
                           child: Text(
                             "Save STV2 JSON",
@@ -187,8 +170,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         ),
                         const SizedBox(width: 10.0),
                         FilledButton(
-                          onPressed: () async {
-                            await storageOperationDialog(context, character.exportMCF);
+                          onPressed: () {
+                            character.save().then((value) async {
+                              storageOperationDialog(context, character.exportMCF);
+                            });
                           },
                           child: Text(
                             "Save MCF JSON",
@@ -198,15 +183,34 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       ],
                     ),
                     const SizedBox(height: 15.0),
-                    FilledButton(
-                      onPressed: () async {
-                        _regenerate = true;
-                        await storageOperationDialog(context, character.importJSON);
-                      },
-                      child: Text(
-                        "Load JSON",
-                        style: Theme.of(context).textTheme.labelLarge,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FilledButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CharacterBrowserPage()));
+                          },
+                          child: Text(
+                            "Switch Character",
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
+                        const SizedBox(width: 10.0),
+                        FilledButton(
+                          onPressed: () {
+                            regenerate = true;
+                            storageOperationDialog(context, character.importJSON);
+                          },
+                          child: Text(
+                            "Load JSON",
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 20.0),
                     Divider(
@@ -228,7 +232,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                               decoration: const InputDecoration(
                                 labelText: "Name",
                               ),
-                              controller: _nameController,
+                              controller: nameController,
                               onChanged: (value) {
                                 character.name = value;
                               },
@@ -240,7 +244,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                     TextFieldListTile(
                       headingText: 'Description',
                       labelText: 'Description',
-                      controller: _descriptionController,
+                      controller: descriptionController,
                       onChanged: (value) {
                         character.description = value;
                       },
@@ -249,7 +253,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                     TextFieldListTile(
                       headingText: 'Personality',
                       labelText: 'Personality',
-                      controller: _personalityController,
+                      controller: personalityController,
                       onChanged: (value) {
                         character.personality = value;
                       },
@@ -258,7 +262,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                     TextFieldListTile(
                       headingText: 'Scenario',
                       labelText: 'Scenario',
-                      controller: _scenarioController,
+                      controller: scenarioController,
                       onChanged: (value) {
                         character.scenario = value;
                       },
@@ -267,7 +271,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                     TextFieldListTile(
                       headingText: 'System Prompt',
                       labelText: 'System Prompt',
-                      controller: _systemController,
+                      controller: systemController,
                       onChanged: (value) {
                         character.system = value;
                       },
@@ -312,7 +316,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                           TextFieldListTile(
                             headingText: 'Greeting $i',
                             labelText: 'Greeting $i',
-                            controller: _greetingControllers[i],
+                            controller: greetingControllers[i],
                             onChanged: (value) {
                               character.updateGreeting(i, value);
                             },
@@ -337,7 +341,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         children: [
                           FilledButton(
                             onPressed: () {
-                              _regenerate = true;
+                              regenerate = true;
                               character.newExample(true);
                             },
                             child: Text(
@@ -348,7 +352,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                           const SizedBox(width: 10.0),
                           FilledButton(
                             onPressed: () {
-                              _regenerate = true;
+                              regenerate = true;
                               character.newExample(false);
                             },
                             child: Text(
@@ -364,7 +368,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         children: [
                           FilledButton(
                             onPressed: () {
-                              _regenerate = true;
+                              regenerate = true;
                               character.newExample(null);
                             },
                             child: Text(
@@ -375,8 +379,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                           const SizedBox(width: 10.0),
                           FilledButton(
                             onPressed: () {
-                              if (_exampleControllers.length >= 2) {
-                                _regenerate = true;
+                              if (exampleControllers.length >= 2) {
+                                regenerate = true;
                                 character.removeLastExample();
                               }
                             },
@@ -393,7 +397,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                             headingText:
                                 '${character.examples[i]["role"]} content',
                             labelText: character.examples[i]["role"],
-                            controller: _exampleControllers[i],
+                            controller: exampleControllers[i],
                             onChanged: (value) {
                               character.updateExample(i, value);
                             },

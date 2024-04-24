@@ -10,6 +10,7 @@ import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
   File? _profile;
@@ -85,6 +86,7 @@ class Character extends ChangeNotifier {
     }
 
     _useExamples = _examples.isNotEmpty;
+    save();
     notifyListeners();
   }
 
@@ -560,5 +562,27 @@ class Character extends ChangeNotifier {
     }
 
     return buffer.toString();
+  }
+
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final String charactersJson = prefs.getString("characters") ?? '[]';
+    final List charactersList = json.decode(charactersJson);
+
+    List<Character> characters;
+    characters = charactersList.map((characterMap) {
+      return Character.fromMap(characterMap);
+    }).toList();
+
+    characters.removeWhere((listCharacter) {
+      return hash == listCharacter.hash;
+    });
+
+    characters.insert(0, this);
+
+    final String newCharactersJson = json.encode(characters.map((character) => character.toMap()).toList());
+
+    prefs.setString("characters", newCharactersJson);
   }
 }
