@@ -88,7 +88,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
           SharedPreferences.getInstance().then((prefs) {
             prefs.setString("last_character", json.encode(character.toMap()));
           });
-          
+
           if (regenerate) {
             nameController = TextEditingController(text: character.name);
             descriptionController = TextEditingController(text: character.description);
@@ -210,11 +210,14 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       children: [
                         FilledButton(
                           onPressed: () {
+                            Navigator.of(context).pop();
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CharacterBrowserPage()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                  const CharacterBrowserPage()
+                              )
+                            );
                           },
                           child: Text(
                             "Switch Character",
