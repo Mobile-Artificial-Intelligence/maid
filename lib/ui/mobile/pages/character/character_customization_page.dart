@@ -85,6 +85,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       appBar: const GenericAppBar(title: "Character Customization"),
       body: Consumer<Character>(
         builder: (context, character, child) {
+          SharedPreferences.getInstance().then((prefs) {
+            prefs.setString("last_character", json.encode(character.toMap()));
+          });
+          
           if (regenerate) {
             nameController = TextEditingController(text: character.name);
             descriptionController = TextEditingController(text: character.description);
@@ -107,10 +111,6 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
 
             regenerate = false;
           }
-
-          SharedPreferences.getInstance().then((prefs) {
-            prefs.setString("last_character", json.encode(character.toMap()));
-          });
 
           return SessionBusyOverlay(
               child: SingleChildScrollView(
