@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class CharacterBrowserTile extends StatefulWidget {
 }
 
 class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
+  Timer? longPressTimer;
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -48,18 +51,9 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
               hoverColor: Colors.black.withOpacity(0.1),
               highlightColor: Colors.black.withOpacity(0.2),
               splashColor: Colors.black.withOpacity(0.2),
-              onTap: () {
-                context.read<Character>().from(widget.character);
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                      const CharacterCustomizationPage()
-                  )
-                );
-              },
-              onSecondaryTapUp: (details) => _onSecondaryTapUp(details, context),
+              onTapDown: onTapDown,
+              onTapUp: onTapUp,
+              onSecondaryTapUp: (details) => showContextMenu(details.globalPosition),
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: const BoxDecoration(
@@ -86,8 +80,7 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
                     ),
                   ],
                 ),
-              ),
-              //onLongPressStart: (details) => _onLongPressStart(details, context),
+              )
             )
           )
         ],
@@ -95,13 +88,28 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
     );
   }
 
-  void _onSecondaryTapUp(TapUpDetails details, BuildContext context) =>
-      _showContextMenu(details.globalPosition, context);
+  void onTapDown(TapDownDetails details) {
+    longPressTimer = Timer(const Duration(seconds: 1), () {
+      showContextMenu(details.globalPosition);
+    });
+  }
 
-  void _onLongPressStart(LongPressStartDetails details, BuildContext context) =>
-      _showContextMenu(details.globalPosition, context);
+  void onTapUp(TapUpDetails details) {
+    if (longPressTimer?.isActive ?? false) {
+      longPressTimer?.cancel();
+      context.read<Character>().from(widget.character);
+      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+            const CharacterCustomizationPage()
+        )
+      );
+    }
+  }      
 
-  void _showContextMenu(Offset position, BuildContext context) {
+  void showContextMenu(Offset position) {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
     final TextEditingController controller =
