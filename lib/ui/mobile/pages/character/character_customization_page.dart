@@ -34,7 +34,12 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
     final prefs = await SharedPreferences.getInstance();
 
     final characterString = prefs.getString("last_character");
-    final character = Character.fromMap(json.decode(characterString ?? "{}"));
+
+    if (characterString == null) {
+      return;
+    }
+
+    final character = Character.fromMap(json.decode(characterString));
 
     final String charactersJson = prefs.getString("characters") ?? '[]';
     final List charactersList = json.decode(charactersJson);
