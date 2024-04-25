@@ -20,72 +20,76 @@ class CharacterBrowserTile extends StatefulWidget {
 class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: FutureBuilder<File>(
-          future: widget.character.profile,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return const Icon(Icons.error);
-              } else {
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.file(
-                      snapshot.data!,
-                      fit: BoxFit.cover,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.center,
-                          colors: [Colors.black, Colors.transparent],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: FutureBuilder<File>(
+        future: widget.character.profile,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return const Icon(Icons.error);
+            } else {
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.file(
+                    snapshot.data!,
+                    fit: BoxFit.cover,
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: () {
+                        context.read<Character>().from(widget.character);
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                              const CharacterCustomizationPage()
+                          )
+                        );
+                      },
+                      onSecondaryTapUp: (details) => _onSecondaryTapUp(details, context),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.center,
+                            colors: [Colors.black, Colors.transparent],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.character.name,
+                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              widget.character.description,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.character.name,
-                            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            widget.character.description,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              }
-            } else {
-              return const CircularProgressIndicator();
+                      //onLongPressStart: (details) => _onLongPressStart(details, context),
+                    )
+                  )
+                ],
+              );
             }
+          } else {
+            return const CircularProgressIndicator();
           }
-        )
-      ),
-      onTap: () {
-        context.read<Character>().from(widget.character);
-        Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-              const CharacterCustomizationPage()
-          )
-        );
-      },
-      onSecondaryTapUp: (details) => _onSecondaryTapUp(details, context),
-      onLongPressStart: (details) => _onLongPressStart(details, context),
+        }
+      )
     );
   }
 
