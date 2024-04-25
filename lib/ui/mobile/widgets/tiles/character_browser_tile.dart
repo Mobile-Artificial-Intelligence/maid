@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/logger.dart';
+import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';
 import 'package:provider/provider.dart';
 
 class CharacterBrowserTile extends StatefulWidget {
@@ -17,78 +19,97 @@ class CharacterBrowserTile extends StatefulWidget {
 }
 
 class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
+  Timer? longPressTimer;
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: FutureBuilder<File>(
-          future: widget.character.profile,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return const Icon(Icons.error);
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          FutureBuilder<File>(
+            future: widget.character.profile,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return const Icon(Icons.error);
+                } else {
+                  return Image.file(
+                    snapshot.data!,
+                    fit: BoxFit.cover,
+                  );
+                }
               } else {
-                return Stack(
-                  fit: StackFit.expand,
+                return const CircularProgressIndicator();
+              }
+            }
+          ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              hoverColor: Colors.black.withOpacity(0.1),
+              highlightColor: Colors.black.withOpacity(0.2),
+              splashColor: Colors.black.withOpacity(0.2),
+              onTapDown: onTapDown,
+              onTapUp: onTapUp,
+              onSecondaryTapUp: (details) => showContextMenu(details.globalPosition),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.center,
+                    colors: [Colors.black, Colors.transparent],
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.file(
-                      snapshot.data!,
-                      fit: BoxFit.cover,
+                    Text(
+                      widget.character.name,
+                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [Colors.black.withOpacity(0.8), Colors.transparent],
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.character.name,
-                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              widget.character.description,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
+                    Text(
+                      widget.character.description,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ],
-                );
-              }
-            } else {
-              return const CircularProgressIndicator();
-            }
-          }
-        )
-      ),
-      onTap: () {
-        context.read<Character>().from(widget.character);
-      },
-      onSecondaryTapUp: (details) => _onSecondaryTapUp(details, context),
-      onLongPressStart: (details) => _onLongPressStart(details, context),
+                ),
+              )
+            )
+          )
+        ],
+      )
     );
   }
 
-  void _onSecondaryTapUp(TapUpDetails details, BuildContext context) =>
-      _showContextMenu(details.globalPosition, context);
+  void onTapDown(TapDownDetails details) {
+    longPressTimer = Timer(const Duration(seconds: 1), () {
+      showContextMenu(details.globalPosition);
+    });
+  }
 
-  void _onLongPressStart(LongPressStartDetails details, BuildContext context) =>
-      _showContextMenu(details.globalPosition, context);
+  void onTapUp(TapUpDetails details) {
+    if (longPressTimer?.isActive ?? false) {
+      longPressTimer?.cancel();
+      context.read<Character>().from(widget.character);
+      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+            const CharacterCustomizationPage()
+        )
+      );
+    }
+  }      
 
-  void _showContextMenu(Offset position, BuildContext context) {
+  void showContextMenu(Offset position) {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
     final TextEditingController controller =

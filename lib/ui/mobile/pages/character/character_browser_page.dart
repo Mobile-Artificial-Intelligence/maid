@@ -26,12 +26,17 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
 
   Future<void> _loadCharacters() async {
     final prefs = await SharedPreferences.getInstance();
-    final String charactersJson = prefs.getString("characters") ?? '[]';
+
+    final String? charactersJson = prefs.getString("characters");
+    if (charactersJson == null) {
+      return;
+    }
+
     final List charactersList = json.decode(charactersJson);
 
     setState(() {
       characters.clear();
-      for (var characterMap in charactersList) {
+      for (final characterMap in charactersList) {
         characters.add(Character.fromMap(characterMap));
       }
     });

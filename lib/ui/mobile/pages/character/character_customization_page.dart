@@ -34,7 +34,12 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
     final prefs = await SharedPreferences.getInstance();
 
     final characterString = prefs.getString("last_character");
-    final character = Character.fromMap(json.decode(characterString ?? "{}"));
+
+    if (characterString == null) {
+      return;
+    }
+
+    final character = Character.fromMap(json.decode(characterString));
 
     final String charactersJson = prefs.getString("characters") ?? '[]';
     final List charactersList = json.decode(charactersJson);
@@ -80,6 +85,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       appBar: const GenericAppBar(title: "Character Customization"),
       body: Consumer<Character>(
         builder: (context, character, child) {
+          SharedPreferences.getInstance().then((prefs) {
+            prefs.setString("last_character", json.encode(character.toMap()));
+          });
+
           if (regenerate) {
             nameController = TextEditingController(text: character.name);
             descriptionController = TextEditingController(text: character.description);
@@ -102,10 +111,6 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
 
             regenerate = false;
           }
-
-          SharedPreferences.getInstance().then((prefs) {
-            prefs.setString("last_character", json.encode(character.toMap()));
-          });
 
           return SessionBusyOverlay(
               child: SingleChildScrollView(
@@ -205,11 +210,14 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       children: [
                         FilledButton(
                           onPressed: () {
+                            Navigator.of(context).pop();
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CharacterBrowserPage()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                  const CharacterBrowserPage()
+                              )
+                            );
                           },
                           child: Text(
                             "Switch Character",
