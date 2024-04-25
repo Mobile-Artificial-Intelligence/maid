@@ -311,7 +311,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FilledButton(
-                            onPressed: character.newGreeting,
+                            onPressed: () {
+                              regenerate = true;
+                              character.newGreeting();
+                            },
                             child: Text(
                               "Add Greeting",
                               style: Theme.of(context).textTheme.labelLarge,
@@ -319,7 +322,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                           ),
                           const SizedBox(width: 10.0),
                           FilledButton(
-                            onPressed: character.removeLastGreeting,
+                            onPressed: () {
+                              regenerate = true;
+                              character.removeLastGreeting();
+                            },
                             child: Text(
                               "Remove Greeting",
                               style: Theme.of(context).textTheme.labelLarge,

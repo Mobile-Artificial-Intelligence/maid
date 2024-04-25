@@ -10,7 +10,6 @@ import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
   File? _profile;
@@ -139,7 +138,7 @@ class Character extends ChangeNotifier {
     Map<String, dynamic> jsonCharacter = {};
 
     jsonCharacter["spec"] = "mcf_v1";
-    jsonCharacter["profile"] = _profile!.path;
+    jsonCharacter["profile"] = _profile?.path;
     jsonCharacter["name"] = _name;
     jsonCharacter["description"] = _description;
     jsonCharacter["personality"] = _personality;

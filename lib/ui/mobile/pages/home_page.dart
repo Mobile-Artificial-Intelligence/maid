@@ -43,17 +43,24 @@ class HomePageState extends State<HomePage> {
         });
         
         List<ChatNode> chat = session.chat.getChat();
-        if (chat.isEmpty && character.useGreeting) {
+        if (
+          chat.isEmpty && 
+          character.useGreeting && 
+          character.greetings.isNotEmpty
+        ) {
           final index = Random().nextInt(character.greetings.length);
 
-          final message = ChatNode(
-            key: UniqueKey(),
-            role: ChatRole.assistant,
-            content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
-          );
-
-          session.chat.addNode(message);
-          chat = [message];
+          if (character.greetings[index].isNotEmpty) {
+            final message = ChatNode(
+              key: UniqueKey(),
+              role: ChatRole.assistant,
+              content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
+              finalised: true
+            );
+  
+            session.chat.addNode(message);
+            chat = [message];
+          }
         }
 
         chatWidgets.clear();

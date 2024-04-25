@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/character.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/main.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
@@ -74,6 +76,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     SharedPreferences.getInstance().then((prefs) {
                       prefs.clear();
                       mainProvider.reset();
+                      context.read<Character>().reset();
+                      context.read<Session>().newSession();
                       setState(() {
                         Logger.clear();
                       });
