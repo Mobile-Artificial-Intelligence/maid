@@ -22,73 +22,75 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
-      child: FutureBuilder<File>(
-        future: widget.character.profile,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return const Icon(Icons.error);
-            } else {
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.file(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          FutureBuilder<File>(
+            future: widget.character.profile,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return const Icon(Icons.error);
+                } else {
+                  return Image.file(
                     snapshot.data!,
                     fit: BoxFit.cover,
-                  ),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: () {
-                        context.read<Character>().from(widget.character);
-                        Navigator.of(context).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                              const CharacterCustomizationPage()
-                          )
-                        );
-                      },
-                      onSecondaryTapUp: (details) => _onSecondaryTapUp(details, context),
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.center,
-                            colors: [Colors.black, Colors.transparent],
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.character.name,
-                              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              widget.character.description,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      //onLongPressStart: (details) => _onLongPressStart(details, context),
-                    )
-                  )
-                ],
-              );
+                  );
+                }
+              } else {
+                return const CircularProgressIndicator();
+              }
             }
-          } else {
-            return const CircularProgressIndicator();
-          }
-        }
+          ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              hoverColor: Colors.black.withOpacity(0.1),
+              highlightColor: Colors.black.withOpacity(0.2),
+              splashColor: Colors.black.withOpacity(0.2),
+              onTap: () {
+                context.read<Character>().from(widget.character);
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                      const CharacterCustomizationPage()
+                  )
+                );
+              },
+              onSecondaryTapUp: (details) => _onSecondaryTapUp(details, context),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.center,
+                    colors: [Colors.black, Colors.transparent],
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.character.name,
+                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      widget.character.description,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              //onLongPressStart: (details) => _onLongPressStart(details, context),
+            )
+          )
+        ],
       )
     );
   }
