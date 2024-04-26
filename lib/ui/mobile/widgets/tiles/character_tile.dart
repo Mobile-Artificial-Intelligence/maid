@@ -27,6 +27,7 @@ class CharacterTile extends StatelessWidget {
           const SizedBox(height: 10.0),
           ListTile(
             leading: FutureAvatar(
+              key: character.key,
               image: character.profile,
               radius: 25,
             ),

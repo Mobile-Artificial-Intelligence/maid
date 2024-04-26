@@ -28,6 +28,7 @@ class _UserTileState extends State<UserTile> {
             ),
           ),
           leading: FutureAvatar(
+            key: user.key,
             image: user.profile,
             radius: 20,
           ),
