@@ -157,7 +157,7 @@ class _UserTileState extends State<UserTile> {
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
-                    "Cancel",
+                    "Close",
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),

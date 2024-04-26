@@ -34,13 +34,13 @@ class User extends ChangeNotifier {
   set profile(Future<File> value) {
     value.then((File file) {
       _profile = file;
-      notify();
+      notifyListeners();
     });
   }
 
   set name(String value) {
     _name = value;
-    notify();
+    notifyListeners();
   }
 
   void fromMap(Map<String, dynamic> inputMap) async {
@@ -56,7 +56,7 @@ class User extends ChangeNotifier {
     }
 
     _name = inputMap["name"];
-    notify();
+    notifyListeners();
   }
 
   Map<String, dynamic> toMap() {
@@ -69,11 +69,12 @@ class User extends ChangeNotifier {
   void reset() async {
     _profile = await Utilities.fileFromAssetImage("chadUser.png");
     _name = "User";
-    notify();
+    notifyListeners();
   }
 
-  void notify() {
+  @override
+  void notifyListeners() {
     _key = UniqueKey();
-    notifyListeners();
+    super.notifyListeners();
   }
 }
