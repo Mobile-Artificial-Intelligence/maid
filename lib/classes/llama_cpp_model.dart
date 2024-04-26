@@ -160,7 +160,7 @@ class LlamaCppModel extends LargeLanguageModel {
       uri = file.path;
       notifyListeners();
     } catch (e) {
-      return "Error: $e";
+      return e.toString();
     }
 
     return "Model Successfully Loaded";

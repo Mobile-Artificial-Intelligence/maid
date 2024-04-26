@@ -87,9 +87,11 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FilledButton(
-                      onPressed: () async {
-                        await storageOperationDialog(
-                            context, (session.model as LlamaCppModel).loadModel);
+                      onPressed: () {
+                        storageOperationDialog(
+                          context, 
+                          (session.model as LlamaCppModel).loadModel
+                        );
                         session.notify();
                       },
                       child: Text(

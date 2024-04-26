@@ -3,34 +3,48 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
-Future<void> storageOperationDialog(BuildContext context, Future<String> Function(BuildContext context) storageFunction) async {
-  String ret = await storageFunction(context);
-  // Ensure that the context is still valid before attempting to show the dialog.
-  if (context.mounted) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            ret,
-            textAlign: TextAlign.center,
-          ),
-          actionsAlignment: MainAxisAlignment.center,
-          actions: [
-            FilledButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                "Close",
-                style: Theme.of(context).textTheme.labelLarge,
+void storageOperationDialog(BuildContext context, Future<String> Function(BuildContext context) storageFunction) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return FutureBuilder<String>(
+        future: storageFunction(context),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return AlertDialog(
+              title: Text(
+                snapshot.data!,
+                textAlign: TextAlign.center
               ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+              actionsAlignment: MainAxisAlignment.center,
+              actions: [
+                FilledButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Close",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const AlertDialog(
+              title: Text(
+                "Storage Operation Pending",
+                textAlign: TextAlign.center
+              ),
+              content: Center(
+                heightFactor: 1.0,
+                child: CircularProgressIndicator(),
+              )
+            );
+          }
+        },
+      );
+    },
+  );
 }
 
 void showMissingRequirementsDialog(BuildContext context) {
