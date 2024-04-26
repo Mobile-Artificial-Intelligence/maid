@@ -118,6 +118,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                   children: [
                     const SizedBox(height: 10.0),
                     FutureAvatar(
+                      key: character.key,
                       image: character.profile,
                       radius: 75,
                     ),

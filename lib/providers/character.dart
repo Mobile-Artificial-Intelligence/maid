@@ -298,6 +298,8 @@ class Character extends ChangeNotifier {
     return sha256.convert(bytes).toString();
   }
 
+  Key get key => ValueKey(hash);
+
   String get name => _name;
 
   String get description => _description;

@@ -28,6 +28,7 @@ class _UserTileState extends State<UserTile> {
             ),
           ),
           leading: FutureAvatar(
+            key: user.key,
             image: user.profile,
             radius: 20,
           ),
@@ -156,7 +157,7 @@ class _UserTileState extends State<UserTile> {
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
-                    "Cancel",
+                    "Close",
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),

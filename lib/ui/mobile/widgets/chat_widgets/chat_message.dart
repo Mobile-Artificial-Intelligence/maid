@@ -66,6 +66,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
             children: [
               const SizedBox(width: 10.0),
               FutureAvatar(
+                key: node.role == ChatRole.user ? user.key : character.key,
                 image: node.role == ChatRole.user ? user.profile : character.profile,
                 radius: 16,
               ),
@@ -187,7 +188,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
         IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
-              if (!context.watch<Session>().chat.tail.finalised) return;
+              if (!context.read<Session>().chat.tail.finalised) return;
               setState(() {
                 editing = false;
               });

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/static/utilities.dart';
 
 class User extends ChangeNotifier {
+  Key _key = UniqueKey();
   File? _profile;
   String _name = "User";
 
@@ -12,7 +13,8 @@ class User extends ChangeNotifier {
   }
 
   User.from(User user) {
-    _profile = profileFile;
+    _key = user.key;
+    _profile = user.profileFile;
     _name = user.name;
   }
 
@@ -26,6 +28,8 @@ class User extends ChangeNotifier {
 
   File? get profileFile => _profile;
   String get name => _name;
+  
+  Key get key => _key;
 
   set profile(Future<File> value) {
     value.then((File file) {
@@ -66,5 +70,11 @@ class User extends ChangeNotifier {
     _profile = await Utilities.fileFromAssetImage("chadUser.png");
     _name = "User";
     notifyListeners();
+  }
+
+  @override
+  void notifyListeners() {
+    _key = UniqueKey();
+    super.notifyListeners();
   }
 }
