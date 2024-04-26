@@ -24,6 +24,21 @@ class LlamaCppModel extends LargeLanguageModel {
     _promptFormat = value;
     notifyListeners();
   }
+
+  @override
+  List<String> get missingRequirements {
+    List<String> missing = [];
+
+    if (uri.isEmpty) {
+      missing.add('- A path to the model file is required.\n');
+    } 
+    
+    if (!File(uri).existsSync()) {
+      missing.add('- The file provided does not exist.\n');
+    }
+    
+    return missing;
+  }
   
   LlamaCppModel({
     super.listener, 
@@ -145,7 +160,7 @@ class LlamaCppModel extends LargeLanguageModel {
       uri = file.path;
       notifyListeners();
     } catch (e) {
-      return "Error: $e";
+      return e.toString();
     }
 
     return "Model Successfully Loaded";

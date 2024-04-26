@@ -27,6 +27,21 @@ class GoogleGeminiModel extends LargeLanguageModel {
   }
 
   @override
+  List<String> get missingRequirements {
+    List<String> missing = [];
+
+    if (name.isEmpty) {
+      missing.add('- A model option is required for prompting.\n');
+    }
+
+    if (token.isEmpty) {
+      missing.add('- An authentication token is required for prompting.\n');
+    } 
+    
+    return missing;
+  }
+
+  @override
   Stream<String> prompt(List<ChatNode> messages) async* {
     try {
       final model = GenerativeModel(

@@ -20,6 +20,21 @@ class OllamaModel extends LargeLanguageModel {
   
   String _ip = '';
 
+  @override
+  List<String> get missingRequirements {
+    List<String> missing = [];
+
+    if (name.isEmpty) {
+      missing.add('- A model option is required for prompting.\n');
+    } 
+    
+    if (uri.isEmpty) {
+      missing.add('- A compatible URL is required for prompting.\n');
+    }
+    
+    return missing;
+  }
+
   OllamaModel({
     super.listener, 
     super.name,
