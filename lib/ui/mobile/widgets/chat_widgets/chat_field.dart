@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid_llm/src/chat_node.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
@@ -109,7 +110,10 @@ class _ChatFieldState extends State<ChatField> {
             ),
             IconButton(
                 onPressed: () {
-                  if (session.chat.tail.finalised ) {
+                  if (session.model.missingRequirements.isNotEmpty) {
+                    showMissingRequirementsDialog(context);
+                  }
+                  else if (session.chat.tail.finalised) {
                     send();
                   }
                 },

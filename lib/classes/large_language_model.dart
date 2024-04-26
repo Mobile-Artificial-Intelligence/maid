@@ -325,6 +325,24 @@ class LargeLanguageModel extends ChangeNotifier {
     };
   }
 
+  List<String> get missingRequirements {
+    List<String> missing = [];
+
+    if (_name.isEmpty) {
+      missing.add('- A model option is required for prompting.\n');
+    } 
+    
+    if (_uri.isEmpty) {
+      missing.add('- A compatible URL is required for prompting.\n');
+    }
+
+    if (_token.isEmpty) {
+      missing.add('- An authentication token is required for prompting.\n');
+    } 
+    
+    return missing;
+  }
+
   Stream<String> prompt(List<ChatNode> messages) {
     throw UnimplementedError();
   }

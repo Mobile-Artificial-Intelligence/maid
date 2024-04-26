@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid_llm/maid_llm.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
@@ -145,9 +146,15 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
       IconButton(
         onPressed: () {
           if (!context.read<Session>().chat.tail.finalised) return;
-          setState(() {
-            editing = true;
-          });
+          
+          if (context.read<Session>().model.missingRequirements.isNotEmpty) {
+            showMissingRequirementsDialog(context);
+          }
+          else {
+            setState(() {
+              editing = true;
+            });
+          }
         },
         icon: const Icon(Icons.edit),
       ),
@@ -159,8 +166,13 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
       IconButton(
         onPressed: () {
           if (!context.read<Session>().chat.tail.finalised) return;
-          context.read<Session>().regenerate(node.key, context);
-          setState(() {});
+
+          if (context.read<Session>().model.missingRequirements.isNotEmpty) {
+            showMissingRequirementsDialog(context);
+          } else {
+            context.read<Session>().regenerate(node.key, context);
+            setState(() {});
+          }
         },
         icon: const Icon(Icons.refresh),
       ),
@@ -189,10 +201,16 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
             padding: const EdgeInsets.all(0),
             onPressed: () {
               if (!context.read<Session>().chat.tail.finalised) return;
-              setState(() {
-                editing = false;
-              });
-              context.read<Session>().edit(node.key, messageController.text, context);
+
+              if (context.read<Session>().model.missingRequirements.isNotEmpty) {
+                showMissingRequirementsDialog(context);
+              } 
+              else {
+                setState(() {
+                  editing = false;
+                });
+                context.read<Session>().edit(node.key, messageController.text, context);
+              }
             },
             icon: const Icon(Icons.done)),
         IconButton(

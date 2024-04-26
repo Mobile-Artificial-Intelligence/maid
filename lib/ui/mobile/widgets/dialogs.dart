@@ -1,5 +1,7 @@
   
 import 'package:flutter/material.dart';
+import 'package:maid/providers/session.dart';
+import 'package:provider/provider.dart';
 
 Future<void> storageOperationDialog(BuildContext context, Future<String> Function(BuildContext context) storageFunction) async {
   String ret = await storageFunction(context);
@@ -9,13 +11,11 @@ Future<void> storageOperationDialog(BuildContext context, Future<String> Functio
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(ret),
-          alignment: Alignment.center,
-          actionsAlignment: MainAxisAlignment.center,
-          backgroundColor: Theme.of(context).colorScheme.background,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          title: Text(
+            ret,
+            textAlign: TextAlign.center,
           ),
+          actionsAlignment: MainAxisAlignment.center,
           actions: [
             FilledButton(
               onPressed: () {
@@ -31,4 +31,33 @@ Future<void> storageOperationDialog(BuildContext context, Future<String> Functio
       },
     );
   }
+}
+
+void showMissingRequirementsDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      final requirement = context.read<Session>().model.missingRequirements;
+
+      return AlertDialog(
+        title: const Text(
+          "Missing Requirements",
+          textAlign: TextAlign.center
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        content: Text(
+          requirement.join()
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              "OK",
+              style: Theme.of(context).textTheme.labelLarge
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
