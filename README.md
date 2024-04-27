@@ -375,6 +375,7 @@ MacOS and IOS Releases not available at this time.
 - Documentation
 - Testing and Building on MacOS and IOS
 - Spreading the word
+- [Google Play Testing](https://github.com/Mobile-Artificial-Intelligence/maid/discussions/499)
 
 ## Special Thanks and Related Projects
 - [davidmigloz/langchain_dart](https://github.com/davidmigloz/langchain_dart)
