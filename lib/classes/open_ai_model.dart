@@ -10,13 +10,15 @@ import 'package:maid_llm/maid_llm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OpenAiModel extends LargeLanguageModel {
+  static const String defaultUrl = 'https://api.openai.com/v1';
+
   @override
   LargeLanguageModelType get type => LargeLanguageModelType.openAI;
 
   OpenAiModel({
     super.listener, 
     super.name,
-    super.uri = 'https://api.openai.com/v1',
+    super.uri = defaultUrl,
     super.token,
     super.seed,
     super.nPredict,
@@ -33,13 +35,32 @@ class OpenAiModel extends LargeLanguageModel {
   @override
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
-    uri = json['url'] ?? 'https://api.openai.com/v1';
+    uri = json['url'] ?? defaultUrl;
     token = json['token'] ?? '';
     nPredict = json['nPredict'] ?? 512;
     topP = json['topP'] ?? 0.95;
     penaltyPresent = json['penaltyPresent'] ?? 0.0;
     penaltyFreq = json['penaltyFreq'] ?? 0.0;
     notifyListeners();
+  }
+
+  @override
+  List<String> get missingRequirements {
+    List<String> missing = [];
+
+    if (name.isEmpty) {
+      missing.add('- A model option is required for prompting.\n');
+    } 
+    
+    if (uri.isEmpty) {
+      missing.add('- A compatible URL is required for prompting.\n');
+    }
+
+    if (uri == defaultUrl && token.isEmpty) {
+      missing.add('- An authentication token is required for prompting.\n');
+    } 
+    
+    return missing;
   }
 
   @override
@@ -113,10 +134,17 @@ class OpenAiModel extends LargeLanguageModel {
         final models = data['data'] as List<dynamic>?;
 
         if (models != null) {
-          options = models
+          if (uri == defaultUrl) {
+            options = models
             .where((model) => model['id'].contains('gpt-3.5') || model['id'].contains('gpt-4'))
             .map((model) => model['id'] as String)
             .toList();
+          } 
+          else {
+            options = models
+            .map((model) => model['id'] as String)
+            .toList();
+          }
         } else {
           options = [];
         }
@@ -130,7 +158,7 @@ class OpenAiModel extends LargeLanguageModel {
   
   @override
   Future<void> resetUri() async {
-    uri = 'https://api.openai.com/v1';
+    uri = defaultUrl;
 
     await updateOptions();
     notifyListeners();

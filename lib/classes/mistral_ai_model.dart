@@ -10,13 +10,15 @@ import 'package:maid_llm/maid_llm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MistralAiModel extends LargeLanguageModel {
+  static const String defaultUrl = 'https://api.mistral.ai';
+
   @override
   LargeLanguageModelType get type => LargeLanguageModelType.mistralAI;
 
   MistralAiModel({
     super.listener, 
     super.name,
-    super.uri = 'https://api.mistral.ai',
+    super.uri = defaultUrl,
     super.token,
     super.useDefault,
     super.seed,
@@ -31,7 +33,7 @@ class MistralAiModel extends LargeLanguageModel {
 
   @override
   void fromMap(Map<String, dynamic> json) {
-    if (json['uri'] == null) json['uri'] = 'https://api.mistral.ai';
+    if (json['uri'] == null) json['uri'] = defaultUrl;
     super.fromMap(json);
     notifyListeners();
   }
@@ -124,7 +126,7 @@ class MistralAiModel extends LargeLanguageModel {
   
   @override
   Future<void> resetUri() async {
-    uri = 'https://api.mistral.ai';
+    uri = defaultUrl;
 
     await updateOptions();
     notifyListeners();
