@@ -8,13 +8,15 @@ import 'package:maid_llm/maid_llm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ClaudeModel extends LargeLanguageModel {
+  static const String defaultUrl = 'https://api.anthropic.com';
+
   @override
   LargeLanguageModelType get type => LargeLanguageModelType.mistralAI;
 
   ClaudeModel({
     super.listener, 
     super.name,
-    super.uri = 'https://api.anthropic.com',
+    super.uri = defaultUrl,
     super.token,
     super.useDefault,
     super.seed,
@@ -30,7 +32,7 @@ class ClaudeModel extends LargeLanguageModel {
 
   @override
   void fromMap(Map<String, dynamic> json) {
-    if (json['uri'] == null) json['uri'] = 'https://api.anthropic.com';
+    if (json['uri'] == null) json['uri'] = defaultUrl;
     super.fromMap(json);
     notifyListeners();
   }
@@ -128,7 +130,7 @@ class ClaudeModel extends LargeLanguageModel {
   
   @override
   Future<void> resetUri() async {
-    uri = 'https://api.anthropic.com';
+    uri = defaultUrl;
 
     await updateOptions();
     notifyListeners();
