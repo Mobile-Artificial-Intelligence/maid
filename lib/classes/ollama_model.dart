@@ -39,6 +39,7 @@ class OllamaModel extends LargeLanguageModel {
     super.listener, 
     super.name,
     super.uri,
+    super.token,
     super.useDefault,
     super.penalizeNewline,
     super.seed,
@@ -198,6 +199,7 @@ class OllamaModel extends LargeLanguageModel {
       } else {
         chat = ChatOllama(
           baseUrl: '$uri/api',
+          headers: { 'Authorization': 'Bearer: $token' },
           defaultOptions: ChatOllamaOptions(
             model: name,
             numKeep: nKeep,
