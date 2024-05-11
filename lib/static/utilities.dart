@@ -50,7 +50,7 @@ class Utilities {
   static Future<File> fileFromAssetImage(String asset) async {
     final assetPath = 'assets/$asset';
 
-    final docDir = await getApplicationDocumentsDirectory();
+    final docDir = await getTemporaryDirectory();
 
     final path = '${docDir.path}/$asset';
 
