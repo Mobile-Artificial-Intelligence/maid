@@ -151,9 +151,19 @@ class _UserTileState extends State<UserTile> {
                   ImageSelectorTile(
                     image: Utilities.fileFromAssetImage("eugeneUser.png")
                   ),
+                  ImageSelectorTile(
+                    image: User.customImageFuture
+                  ),
                 ]
               ),
               actions: [
+                FilledButton(
+                  onPressed: user.loadImage,
+                  child: Text(
+                    "Load Custom",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ),
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
