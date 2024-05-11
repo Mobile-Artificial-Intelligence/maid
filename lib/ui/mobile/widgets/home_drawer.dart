@@ -18,23 +18,23 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  final List<Session> sessions = [];
+  List<Session> sessions = [];
   Key current = UniqueKey();
 
   @override
   void initState() {
     super.initState();
-    _loadSessions();
+    loadSessions();
   }
 
-  Future<void> _loadSessions() async {
+  Future<void> loadSessions() async {
     final prefs = await SharedPreferences.getInstance();
     final String sessionsJson = prefs.getString("sessions") ?? '[]';
     final List sessionsList = json.decode(sessionsJson);
 
     setState(() {
       sessions.clear();
-      for (var characterMap in sessionsList) {
+      for (final characterMap in sessionsList) {
         sessions.add(Session.fromMap(characterMap));
       }
     });
@@ -42,11 +42,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   @override
   void dispose() {
-    _saveSessions();
+    saveSessions();
     super.dispose();
   }
 
-  Future<void> _saveSessions() async {
+  Future<void> saveSessions() async {
     final prefs = await SharedPreferences.getInstance();
     sessions.removeWhere((session) => session.key == current);
     final String sessionsJson = json.encode(sessions.map((session) => session.toMap()).toList());
@@ -85,84 +85,95 @@ class _HomeDrawerState extends State<HomeDrawer> {
               ),
             ),
             child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 40, 10, 10),
-                child: Column(children: [
-                  const CharacterTile(),
-                  const SizedBox(height: 5.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FilledButton(
-                        onPressed: () {
-                          Navigator.pop(context); // Close the drawer
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const CharacterCustomizationPage()));
-                        },
-                        child: const Text(
-                          "Customize"
-                        ),
+              padding: const EdgeInsets.fromLTRB(10, 40, 10, 10),
+              child: Column(children: [
+                const CharacterTile(),
+                const SizedBox(height: 5.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FilledButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close the drawer
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const CharacterCustomizationPage()));
+                      },
+                      child: const Text(
+                        "Customize"
                       ),
-                      FilledButton(
-                        onPressed: () {
-                          Navigator.pop(context); // Close the drawer
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const CharacterBrowserPage()));
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close the drawer
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const CharacterBrowserPage()));
+                      },
+                      child: const Text(
+                        "Browse"
+                      ),
+                    )
+                  ]
+                ),
+                Divider(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                FilledButton(
+                  onPressed: () {
+                    if (!session.chat.tail.finalised) return;
+                    setState(() {
+                      final newSession = Session();
+                      sessions.add(newSession);
+                      session.from(newSession);
+                    });
+                  },
+                  child: const Text(
+                    "New Chat"
+                  ),
+                ),
+                Divider(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: sessions.length, 
+                    itemBuilder: (context, index) {
+                      return SessionTile(
+                        session: sessions[index], 
+                        onDelete: () {
+                          if (!session.chat.tail.finalised) return;
+                          setState(() {
+                            if (sessions[index].key == session.key) {
+                              session.from(sessions.firstOrNull ?? Session());
+                            }
+                            sessions.removeAt(index);
+                          });
                         },
-                        child: const Text(
-                          "Browse"
-                        ),
-                      )
-                    ]
+                        onRename: (value) {
+                          setState(() {
+                            if (sessions[index].key == session.key) {
+                              session.name = value;
+                            }
+                            sessions[index].name = value;
+                          });
+                        },
+                      );
+                    }
                   ),
-                  Divider(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  FilledButton(
-                    onPressed: () {
-                      if (!session.chat.tail.finalised) return;
-                      setState(() {
-                        final newSession = Session();
-                        sessions.add(newSession);
-                        session.from(newSession);
-                      });
-                    },
-                    child: const Text(
-                      "New Chat"
-                    ),
-                  ),
-                  Divider(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: sessions.length, 
-                      itemBuilder: (context, index) {
-                        return SessionTile(
-                          session: sessions[index], 
-                          onDelete: () {
-                            if (!session.chat.tail.finalised) return;
-                            setState(() {
-                              if (sessions[index].key == session.key) {
-                                session.from(sessions.firstOrNull ?? Session());
-                              }
-                              sessions.removeAt(index);
-                            });
-                          }
-                        );
-                      }
-                    ),
-                  ),
-                  Divider(
-                    height: 0.0,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(height: 5.0),
-                  const UserTile()
-                ])));
+                ),
+                Divider(
+                  height: 0.0,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 5.0),
+                const UserTile()
+              ]
+            )
+          )
+        );
       },
     );
   }

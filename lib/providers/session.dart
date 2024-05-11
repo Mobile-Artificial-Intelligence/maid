@@ -76,6 +76,8 @@ class Session extends ChangeNotifier {
       return;
     }
 
+    _name = inputJson['name'] ?? "New Chat";
+
     chat.root = ChatNode.fromMap(inputJson['chat'] ?? {});
 
     final type = LargeLanguageModelType.values[inputJson['llm_type'] ?? LargeLanguageModelType.llamacpp.index];
@@ -103,6 +105,7 @@ class Session extends ChangeNotifier {
 
   Map<String, dynamic> toMap() {
     return {
+      'name': name,
       'chat': chat.root.toMap(),
       'llm_type': model.type.index,
       'model': model.toMap(),

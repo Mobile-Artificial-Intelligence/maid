@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/session.dart'; // Ensure this is your actual path
-import 'package:maid/static/logger.dart'; // Ensure this is your actual path
+import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
 class SessionTile extends StatefulWidget {
   final Session session;
   final void Function() onDelete;
+  final void Function(String) onRename;
 
-  const SessionTile({super.key, required this.session, required this.onDelete});
+  const SessionTile({super.key, required this.session, required this.onDelete, required this.onRename});
 
   @override
   State<SessionTile> createState() => _SessionTileState();
@@ -24,8 +24,8 @@ class _SessionTileState extends State<SessionTile> {
         }
 
         return GestureDetector(
-          onSecondaryTapUp: _onSecondaryTapUp,
-          onLongPressStart: _onLongPressStart,
+          onSecondaryTapUp: onSecondaryTapUp,
+          onLongPressStart: onLongPressStart,
           onTap: () {
             if (!session.chat.tail.finalised) return;
             session.from(widget.session);
@@ -40,13 +40,13 @@ class _SessionTileState extends State<SessionTile> {
     );
   }
 
-  void _onSecondaryTapUp(TapUpDetails details) =>
-      _showContextMenu(details.globalPosition);
+  void onSecondaryTapUp(TapUpDetails details) =>
+      showContextMenu(details.globalPosition);
 
-  void _onLongPressStart(LongPressStartDetails details) =>
-      _showContextMenu(details.globalPosition);
+  void onLongPressStart(LongPressStartDetails details) =>
+      showContextMenu(details.globalPosition);
 
-  void _showContextMenu(Offset position) {
+  void showContextMenu(Offset position) {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -58,27 +58,18 @@ class _SessionTileState extends State<SessionTile> {
       ),
       items: <PopupMenuEntry>[
         PopupMenuItem(
+          onTap: widget.onDelete,
           child: const Text('Delete'),
-          onTap: () {
-            Navigator.of(context).pop(); // Close the menu first
-            widget.onDelete();
-          },
         ),
         PopupMenuItem(
+          onTap: showRenameDialog,
           child: const Text('Rename'),
-          onTap: () {
-            Navigator.of(context).pop(); // Close the menu first
-            // Delayed execution to allow the popup menu to close properly
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _showRenameDialog();
-            });
-          },
         ),
       ],
     );
   }
 
-  void _showRenameDialog() {
+  void showRenameDialog() {
     final TextEditingController controller =
         TextEditingController(text: widget.session.name);
 
@@ -106,10 +97,8 @@ class _SessionTileState extends State<SessionTile> {
             ),
             FilledButton(
               onPressed: () {
-                String oldName = widget.session.name;
-                Logger.log(
-                    "Updating session $oldName ====> ${controller.text}");
-                widget.session.name = controller.text;
+                widget.onRename(controller.text);
+
                 Navigator.of(context).pop();
               },
               child: Text(
