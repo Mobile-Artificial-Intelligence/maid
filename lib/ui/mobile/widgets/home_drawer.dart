@@ -34,7 +34,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
     setState(() {
       sessions.clear();
-      for (var characterMap in sessionsList) {
+      for (final characterMap in sessionsList) {
         sessions.add(Session.fromMap(characterMap));
       }
     });
@@ -151,7 +151,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               }
                               sessions.removeAt(index);
                             });
-                          }
+                          },
+                          onRename: (value) {
+                            setState(() {
+                              sessions[index].name = value;
+                            });
+                          },
                         );
                       }
                     ),
