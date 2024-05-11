@@ -191,6 +191,7 @@ class OllamaModel extends LargeLanguageModel {
       if (useDefault) {
         chat = ChatOllama(
           baseUrl: '$uri/api',
+          headers: { 'Authorization': 'Bearer: $token' },
           defaultOptions: ChatOllamaOptions(
             model: name,
             seed: seed
