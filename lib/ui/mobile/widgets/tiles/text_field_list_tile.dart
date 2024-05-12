@@ -22,25 +22,20 @@ class TextFieldListTile extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Row(
+      title: Column(
         children: [
-          Expanded(
-            child: Text(headingText),
-          ),
-          Expanded(
-            flex: 2,
-            child: TextField(
-              keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
-              maxLines: multiline ? null : 1,
-              cursorColor: Theme.of(context).colorScheme.secondary,
-              controller: controller ?? TextEditingController(text: initialValue),
-              decoration: InputDecoration(
-                labelText: labelText,
-              ),
-              onSubmitted: onSubmitted,
-              onChanged: onChanged,
+          Text(headingText),
+          TextField(
+            keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
+            maxLines: multiline ? null : 1,
+            cursorColor: Theme.of(context).colorScheme.secondary,
+            controller: controller ?? TextEditingController(text: initialValue),
+            decoration: InputDecoration(
+              labelText: labelText,
             ),
-          ),
+            onSubmitted: onSubmitted,
+            onChanged: onChanged,
+          )
         ],
       ),
     );
