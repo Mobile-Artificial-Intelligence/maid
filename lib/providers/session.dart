@@ -196,8 +196,6 @@ class Session extends ChangeNotifier {
       model = LlamaCppModel(listener: notify);
     }
 
-    model.updateOptions();
-
     prefs.setInt("llm_type", model.type.index);
     notifyListeners();
   }
@@ -214,8 +212,6 @@ class Session extends ChangeNotifier {
     else {
       model = OpenAiModel(listener: notify);
     }
-
-    model.updateOptions();
 
     prefs.setInt("llm_type", model.type.index);
     notifyListeners();
@@ -235,8 +231,6 @@ class Session extends ChangeNotifier {
       await model.resetUri();
     }
 
-    model.updateOptions();
-
     prefs.setInt("llm_type", model.type.index);
     notifyListeners();
   }
@@ -254,8 +248,6 @@ class Session extends ChangeNotifier {
       model = MistralAiModel(listener: notify);
     }
 
-    model.updateOptions();
-
     prefs.setInt("llm_type", model.type.index);
     notifyListeners();
   }
@@ -272,8 +264,6 @@ class Session extends ChangeNotifier {
     else {
       model = GoogleGeminiModel(listener: notify);
     }
-
-    model.updateOptions();
 
     prefs.setInt("llm_type", model.type.index);
     notifyListeners();

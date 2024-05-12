@@ -103,15 +103,13 @@ class GoogleGeminiModel extends LargeLanguageModel {
   }
   
   @override
-  Future<void> updateOptions() async {
-    options = ["gemini-pro", "gemini-pro-vision"];
+  Future<List<String>> get options async {
+    return ["gemini-pro", "gemini-pro-vision"];
   }
   
   @override
   Future<void> resetUri() async {
     uri = ''; // No URI to reset
-
-    await updateOptions();
     notifyListeners();
   }
 

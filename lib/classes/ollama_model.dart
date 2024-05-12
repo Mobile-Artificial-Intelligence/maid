@@ -64,8 +64,6 @@ class OllamaModel extends LargeLanguageModel {
     String ip = '',
   }) {
     _ip = ip;
-
-    updateOptions();
   }
 
   OllamaModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
@@ -134,7 +132,6 @@ class OllamaModel extends LargeLanguageModel {
 
     uri = 'http://$_ip:11434';
 
-    await updateOptions();
     notifyListeners();
   }
 
@@ -232,10 +229,10 @@ class OllamaModel extends LargeLanguageModel {
   }
   
   @override
-  Future<void> updateOptions() async {
+  Future<List<String>> get options async {
     bool permissionGranted = await _getNearbyDevicesPermission();
     if (!permissionGranted) {
-      return;
+      return [];
     }
 
     final url = Uri.parse("$uri/api/tags");
@@ -255,9 +252,10 @@ class OllamaModel extends LargeLanguageModel {
         }
       }
 
-      options = newOptions;
+      return newOptions;
     } catch (e) {
       Logger.log('Error: $e');
+      return [];
     }
   }
 

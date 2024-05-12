@@ -92,9 +92,9 @@ class ClaudeModel extends LargeLanguageModel {
       Logger.log('Error: $e');
     }
   }
-  
+
   @override
-  Future<void> updateOptions() async {
+  Future<List<String>> get options async {
     try {
       final url = Uri.parse('$uri/v1/models');
       
@@ -116,23 +116,22 @@ class ClaudeModel extends LargeLanguageModel {
         final models = data['data'] as List<dynamic>?;
 
         if (models != null) {
-          options = models.map((model) => model['id'] as String).toList();
+          return models.map((model) => model['id'] as String).toList();
         } else {
-          options = [];
+          throw Exception('Model Data is null');
         }
       } else {
         throw Exception('Failed to update options: ${response.statusCode}');
       }
     } catch (e) {
       Logger.log('Error: $e');
+      return [];
     }
   }
   
   @override
   Future<void> resetUri() async {
     uri = defaultUrl;
-
-    await updateOptions();
     notifyListeners();
   }
 
