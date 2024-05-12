@@ -82,6 +82,9 @@ class Themes {
         selectionColor: tertiary,
         cursorColor: secondary,
       ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: secondary,
+      ),
       colorScheme: isDark ? ColorScheme.dark(
         background: background,
         onBackground: onBackground,

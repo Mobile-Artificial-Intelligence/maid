@@ -47,7 +47,7 @@ class _MenuButtonState extends State<MenuButton> {
                   height: 24,  // Height of the CircularProgressIndicator
                   child: Center(
                     child: CircularProgressIndicator(
-                      strokeWidth: 2.0,  // Adjust the thickness of the spinner here
+                      strokeWidth: 3.0,  // Adjust the thickness of the spinner here
                     ),
                   ),
                 ),
