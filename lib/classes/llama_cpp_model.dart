@@ -200,11 +200,6 @@ class LlamaCppModel extends LargeLanguageModel {
   }
   
   @override
-  Future<void> updateOptions() async {
-    options = [];
-  }
-  
-  @override
   Future<void> resetUri() async {
     uri = '';
     notifyListeners();

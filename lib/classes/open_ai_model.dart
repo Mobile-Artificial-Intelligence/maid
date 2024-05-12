@@ -111,7 +111,7 @@ class OpenAiModel extends LargeLanguageModel {
   }
   
   @override
-  Future<void> updateOptions() async {
+  Future<List<String>> get options async {
     try {
       final url = Uri.parse('$uri/models');
 
@@ -135,32 +135,31 @@ class OpenAiModel extends LargeLanguageModel {
 
         if (models != null) {
           if (uri == defaultUrl) {
-            options = models
+            return models
             .where((model) => model['id'].contains('gpt-3.5') || model['id'].contains('gpt-4'))
             .map((model) => model['id'] as String)
             .toList();
           } 
           else {
-            options = models
+            return models
             .map((model) => model['id'] as String)
             .toList();
           }
         } else {
-          options = [];
+          throw Exception('Model Data is null');
         }
       } else {
         throw Exception('Failed to update options: ${response.statusCode}');
       }
     } catch (e) {
       Logger.log('Error: $e');
+      return [];
     }
   }
   
   @override
   Future<void> resetUri() async {
     uri = defaultUrl;
-
-    await updateOptions();
     notifyListeners();
   }
 
