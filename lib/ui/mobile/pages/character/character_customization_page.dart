@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
+import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
@@ -244,28 +245,14 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       endIndent: 10,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    ListTile(
-                      title: Row(
-                        children: [
-                          const Expanded(
-                            child: Text("Name"),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: TextField(
-                              cursorColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              decoration: const InputDecoration(
-                                labelText: "Name",
-                              ),
-                              controller: nameController,
-                              onChanged: (value) {
-                                character.name = value;
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+                    TextFieldListTile(
+                      headingText: 'Name',
+                      labelText: 'Name',
+                      controller: nameController,
+                      onChanged: (value) {
+                        character.name = value;
+                      },
+                      multiline: false,
                     ),
                     TextFieldListTile(
                       headingText: 'Description',
@@ -427,7 +414,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         for (int i = 0; i < character.examples.length; i++)
                           TextFieldListTile(
                             headingText:
-                                '${character.examples[i]["role"]} content',
+                                '${Utilities.capitalizeFirst(character.examples[i]["role"])} Content',
                             labelText: character.examples[i]["role"],
                             controller: exampleControllers[i],
                             onChanged: (value) {
