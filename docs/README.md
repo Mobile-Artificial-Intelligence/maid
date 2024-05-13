@@ -1,17 +1,28 @@
 # Supported API's
 
+|     Parameter     | Llama.cpp | Ollama | OpenAI | MistralAI | Gemini |
+| ----------------- | --------- | ------ | ------ | --------- | ------ |
+| Name              | Yes       | Yes    | Yes    | Yes       | Yes    |
+| Temperature       | Yes       | Yes    | Yes    | Yes       | Yes    |
+| Response Format   | No        | Yes    | Yes    | No        | No     |
+| NKeep             | No        | Yes    | No     | No        | No     |
+| NPredict          | No        | Yes    | No     | No        | No     |
+| TopK              | Yes       | Yes    | No     | No        | No     |
+| TopP              | Yes       | Yes    | Yes    | Yes       | Yes    |
+| TfsZ              | Yes       | Yes    | No     | No        | No     |
+| TypicalP          | Yes       | Yes    | No     | No        | No     |
+| Repeat Last N     | Yes       | Yes    | No     | No        | No     |
+| Repeat Penalty    | Yes       | Yes    | No     | No        | No     |
+| Presence Penalty  | Yes       | Yes    | Yes    | No        | No     |
+| Frequency Penalty | Yes       | Yes    | Yes    | No        | No     |
+| Newline Penalty   | Yes       | Yes    | No     | No        | No     |
+| Stop              | No        | Yes    | Yes    | No        | No     |
+| Mirostat          | Yes       | Yes    | No     | No        | No     |
+| Mirostat Tau      | Yes       | Yes    | No     | No        | No     |
+| Mirostat Eta      | Yes       | Yes    | No     | No        | No     |
+
 <div align="center">
   <table cellspacing="0" border="0">
-  	<colgroup width="117"></colgroup>
-  	<colgroup span="3" width="68"></colgroup>
-  	<colgroup width="85"></colgroup>
-  	<tr>
-  		<td height="18" align="center"><b><font face="Liberation Serif">Parameter</font></b></td>
-  		<td align="center"><b><font face="Liberation Serif">Local</font></b></td>
-  		<td align="center"><b><font face="Liberation Serif">Ollama</font></b></td>
-  		<td align="center"><b><font face="Liberation Serif">OpenAI</font></b></td>
-  		<td align="center"><b><font face="Liberation Serif">MistralAI</font></b></td>
-  	</tr>
   	<tr>
   		<td height="18" align="center"><font face="Liberation Serif">model</font></td>
   		<td align="center" bgcolor="#00A933"><b><font face="Liberation Serif" color="#FFFFFF">Y</font></b></td>
