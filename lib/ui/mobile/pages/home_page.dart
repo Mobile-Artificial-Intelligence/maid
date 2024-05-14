@@ -52,7 +52,6 @@ class HomePageState extends State<HomePage> {
 
           if (character.greetings[index].isNotEmpty) {
             final message = ChatNode(
-              key: UniqueKey(),
               role: ChatRole.assistant,
               content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
               finalised: true
@@ -65,9 +64,7 @@ class HomePageState extends State<HomePage> {
 
         chatWidgets.clear();
         for (final message in chat) {
-          chatWidgets.add(ChatMessage(
-            key: message.key,
-          ));
+          chatWidgets.add(ChatMessage(hash: message.hash));
         }
 
         return Builder(

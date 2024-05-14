@@ -125,7 +125,7 @@ class Session extends ChangeNotifier {
 
     List<ChatNode> messages = [];
 
-    messages.add(ChatNode(key: UniqueKey(), role: ChatRole.system, content: preprompt));
+    messages.add(ChatNode(role: ChatRole.system, content: preprompt));
     messages.addAll(chat.getChat());
 
     Logger.log("Prompting with ${model.type.name}");
@@ -142,25 +142,25 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  void regenerate(Key key, BuildContext context) {
-    var parent = chat.parentOf(key);
+  void regenerate(String hash, BuildContext context) {
+    var parent = chat.parentOf(hash);
     if (parent == null) {
       return;
     } 
     parent.currentChild = null;
-    chat.add(UniqueKey(), role: ChatRole.assistant);
+    chat.add(role: ChatRole.assistant);
     
     prompt(context);
     notifyListeners();
   }
 
-  void edit(Key key, String message, BuildContext context) {
-    var parent = chat.parentOf(key);
+  void edit(String hash, String message, BuildContext context) {
+    var parent = chat.parentOf(hash);
     if (parent != null) {
       parent.currentChild = null;
     }
-    chat.add(UniqueKey(), role: ChatRole.user, content: message);
-    chat.add(UniqueKey(), role: ChatRole.assistant);
+    chat.add(role: ChatRole.user, content: message);
+    chat.add(role: ChatRole.assistant);
 
     prompt(context);
     notifyListeners();

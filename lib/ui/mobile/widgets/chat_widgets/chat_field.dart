@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
-import 'package:maid_llm/src/chat_node.dart';
+import 'package:maid_llm/maid_llm.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
@@ -59,13 +59,11 @@ class _ChatFieldState extends State<ChatField> {
 
     
     session.chat.add(
-      UniqueKey(), 
       content: _promptController.text.trim(), 
       role: ChatRole.user
     );
 
     session.chat.add(
-      UniqueKey(),
       role: ChatRole.assistant
     );
 

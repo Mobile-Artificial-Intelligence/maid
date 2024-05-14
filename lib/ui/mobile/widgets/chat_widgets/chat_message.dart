@@ -9,8 +9,11 @@ import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessage extends StatefulWidget {
+  final String hash;
+
   const ChatMessage({
-    required super.key,
+    super.key,
+    required this.hash,
   });
 
   @override
@@ -56,10 +59,10 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Consumer3<Session, User, Character>(
       builder: (context, session, user, character, child) {
-        node = session.chat.find(widget.key!)!;
+        node = session.chat.find(widget.hash)!;
 
-        int currentIndex = session.chat.indexOf(widget.key!);
-        int siblingCount = session.chat.siblingCountOf(widget.key!);
+        int currentIndex = session.chat.indexOf(widget.hash);
+        int siblingCount = session.chat.siblingCountOf(widget.hash);
 
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
@@ -104,7 +107,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
                         if (!session.chat.tail.finalised) return;
-                        session.chat.last(node.key);
+                        session.chat.last(node.hash);
                         session.notify();
                       },
                       icon: Icon(Icons.arrow_left,
@@ -115,7 +118,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
                     padding: const EdgeInsets.all(0),
                     onPressed: () {
                       if (!session.chat.tail.finalised) return;
-                      session.chat.next(node.key);
+                      session.chat.next(node.hash);
                       session.notify();
                     },
                     icon: Icon(Icons.arrow_right,
@@ -170,7 +173,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
           if (context.read<Session>().model.missingRequirements.isNotEmpty) {
             showMissingRequirementsDialog(context);
           } else {
-            context.read<Session>().regenerate(node.key, context);
+            context.read<Session>().regenerate(node.hash, context);
             setState(() {});
           }
         },
@@ -209,7 +212,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
                 setState(() {
                   editing = false;
                 });
-                context.read<Session>().edit(node.key, messageController.text, context);
+                context.read<Session>().edit(node.hash, messageController.text, context);
               }
             },
             icon: const Icon(Icons.done)),
