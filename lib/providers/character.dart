@@ -332,15 +332,15 @@ class Character extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> exportMCF(BuildContext context) async {
-    return await _exportJSON(context, true);
+  Future<String> exportMCF() async {
+    return await _exportJSON(true);
   }
 
-  Future<String> exportSTV2(BuildContext context) async {
-    return await _exportJSON(context, false);
+  Future<String> exportSTV2() async {
+    return await _exportJSON(false);
   }
 
-  Future<String> _exportJSON(BuildContext context, bool mcf) async {
+  Future<String> _exportJSON(bool mcf) async {
     try {
       // Convert the map to a JSON string
       String jsonString = json.encode(mcf ? toMCFMap() : toSTV2Map());
@@ -368,7 +368,7 @@ class Character extends ChangeNotifier {
     }
   }
 
-  Future<String> importJSON(BuildContext context) async {
+  Future<String> importJSON() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         dialogTitle: "Load Character JSON",
@@ -405,7 +405,7 @@ class Character extends ChangeNotifier {
     }
   }
 
-  Future<String> exportImage(BuildContext context) async {
+  Future<String> exportImage() async {
     try {
       final image = decodeImage(_profile!.readAsBytesSync());
 
@@ -455,7 +455,7 @@ class Character extends ChangeNotifier {
     }
   }
 
-  Future<String> importImage(BuildContext context) async {
+  Future<String> importImage() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         dialogTitle: "Load Character Image",

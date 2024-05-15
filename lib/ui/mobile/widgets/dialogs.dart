@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
-void storageOperationDialog(BuildContext context, Future<String> Function(BuildContext context) storageFunction) {
+void storageOperationDialog(BuildContext context, Future<String> Function() storageFunction) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return FutureBuilder<String>(
-        future: storageFunction(context),
+        future: storageFunction(),
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return AlertDialog(

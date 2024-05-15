@@ -5,10 +5,11 @@ import 'package:maid/ui/mobile/pages/about_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/gemini_page.dart';
 import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:provider/provider.dart';
-import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart'
+if (dart.library.html) 'package:maid/ui/mobile/pages/platforms/mock_llama_cpp_page.dart';
 
 class MenuButton extends StatefulWidget {
   const MenuButton({super.key});

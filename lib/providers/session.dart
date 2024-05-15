@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/google_gemini_model.dart';
 import 'package:maid/classes/large_language_model.dart';
-import 'package:maid/classes/llama_cpp_model.dart';
+import 'package:maid/classes/llama_cpp_model.dart'
+if (dart.library.html) 'package:maid/classes/mock_llama_cpp_model.dart';
 import 'package:maid/classes/mistral_ai_model.dart';
 import 'package:maid/classes/ollama_model.dart';
 import 'package:maid/classes/open_ai_model.dart';
@@ -17,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
   Key _key = UniqueKey();
-  LargeLanguageModel model = LlamaCppModel();
+  LargeLanguageModel model = kIsWeb ? OllamaModel() : LlamaCppModel(); // On web, use OllamaModel by default
   ChatNodeTree chat = ChatNodeTree();
   
   String _name = "";
@@ -54,7 +56,7 @@ class Session extends ChangeNotifier {
   void newSession() {
     name = "New Chat";
     chat = ChatNodeTree();
-    model = LlamaCppModel(listener: notify);
+    model = kIsWeb ? OllamaModel(listener: notify) : LlamaCppModel(listener: notify);
     notifyListeners();
   }
 
@@ -80,7 +82,7 @@ class Session extends ChangeNotifier {
 
     chat.root = ChatNode.fromMap(inputJson['chat'] ?? {});
 
-    final type = LargeLanguageModelType.values[inputJson['llm_type'] ?? LargeLanguageModelType.llamacpp.index];
+    final type = LargeLanguageModelType.values[inputJson['llm_type'] ?? LargeLanguageModelType.ollama.index];
 
     switch (type) {
       case LargeLanguageModelType.llamacpp:

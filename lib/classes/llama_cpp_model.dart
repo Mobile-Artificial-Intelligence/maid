@@ -137,7 +137,7 @@ class LlamaCppModel extends LargeLanguageModel {
     return gptParams;
   }
 
-  Future<String> loadModel(BuildContext context) async {
+  Future<String> loadModel() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         dialogTitle: "Load Model File",

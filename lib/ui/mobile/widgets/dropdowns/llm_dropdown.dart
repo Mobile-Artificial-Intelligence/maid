@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
@@ -24,6 +25,7 @@ class LlmDropdown extends StatelessWidget {
               .srcIn, // This blend mode applies the shader to the text color.
           child: DropdownMenu<LargeLanguageModelType>(
               dropdownMenuEntries: const [
+                if (!kIsWeb)
                 DropdownMenuEntry<LargeLanguageModelType>(
                   value: LargeLanguageModelType.llamacpp,
                   label: "LlamaCPP",
