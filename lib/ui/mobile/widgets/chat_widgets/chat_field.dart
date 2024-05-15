@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid_llm/chat_node.dart';
@@ -24,7 +25,7 @@ class _ChatFieldState extends State<ChatField> {
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       // For sharing or opening text coming from outside the app while the app is in the memory
       _intentDataStreamSubscription =
           ReceiveSharingIntent.instance.getMediaStream().listen((value) {
@@ -51,7 +52,7 @@ class _ChatFieldState extends State<ChatField> {
   }
 
   void send() async {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       FocusScope.of(context).unfocus();
     }
 
