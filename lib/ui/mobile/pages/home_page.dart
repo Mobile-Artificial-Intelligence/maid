@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:maid_llm/maid_llm.dart';
+import 'package:maid_llm/chat_node.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
+import 'package:maid_llm/chat_node.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LlamaCppModel extends LargeLanguageModel {

@@ -10,7 +10,7 @@ import 'package:maid/classes/open_ai_model.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid_llm/maid_llm.dart';
+import 'package:maid_llm/chat_node.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
