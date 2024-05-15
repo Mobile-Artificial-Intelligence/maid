@@ -6,9 +6,10 @@
 | Temperature             | Yes       | Yes    | Yes    | Yes       | Yes    |
 | Response Format         | No        | Yes    | Yes    | No        | No     |
 | NKeep                   | No        | Yes    | No     | No        | No     |
-| NPredict                | No        | Yes    | No     | No        | No     |
-| TopK                    | Yes       | Yes    | No     | No        | No     |
+| NPredict                | No        | Yes    | No     | No        | Yes    |
+| TopK                    | Yes       | Yes    | No     | No        | Yes    |
 | TopP                    | Yes       | Yes    | Yes    | Yes       | Yes    |
+| MinP                    | Yes       | Yes    | No     | No        | No     |
 | TfsZ                    | Yes       | Yes    | No     | No        | No     |
 | TypicalP                | Yes       | Yes    | No     | No        | No     |
 | Repeat Last N           | Yes       | Yes    | No     | No        | No     |
