@@ -137,7 +137,10 @@ class OllamaModel extends LargeLanguageModel {
 
   Future<String> _checkIpForOllama(String ip) async {
     final url = Uri.parse('http://$ip:11434');
-    final headers = {"Accept": "application/json"};
+    final headers = {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token'
+    };
 
     try {
       var request = Request("GET", url)..headers.addAll(headers);
@@ -188,7 +191,7 @@ class OllamaModel extends LargeLanguageModel {
       if (useDefault) {
         chat = ChatOllama(
           baseUrl: '$uri/api',
-          headers: { 'Authorization': 'Bearer: $token' },
+          headers: { 'Authorization': 'Bearer $token' },
           defaultOptions: ChatOllamaOptions(
             model: name,
             seed: seed
@@ -197,7 +200,7 @@ class OllamaModel extends LargeLanguageModel {
       } else {
         chat = ChatOllama(
           baseUrl: '$uri/api',
-          headers: { 'Authorization': 'Bearer: $token' },
+          headers: { 'Authorization': 'Bearer $token' },
           defaultOptions: ChatOllamaOptions(
             model: name,
             numKeep: nKeep,
@@ -236,7 +239,10 @@ class OllamaModel extends LargeLanguageModel {
     }
 
     final url = Uri.parse("$uri/api/tags");
-    final headers = {"Accept": "application/json"};
+    final headers = {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token'
+    };
 
     try {
       var request = Request("GET", url)..headers.addAll(headers);
