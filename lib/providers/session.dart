@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/google_gemini_model.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart'
-if (dart.library.html) 'package:maid/classes/mock_llama_cpp_model.dart';
+if (dart.library.html) 'package:maid/mocks/mock_llama_cpp_model.dart';
 import 'package:maid/classes/mistral_ai_model.dart';
 import 'package:maid/classes/ollama_model.dart';
 import 'package:maid/classes/open_ai_model.dart';
