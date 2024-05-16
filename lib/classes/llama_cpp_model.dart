@@ -110,6 +110,7 @@ class LlamaCppModel extends LargeLanguageModel {
     samplingParams.temp = temperature;
     samplingParams.topK = topK;
     samplingParams.topP = topP;
+    samplingParams.minP = minP;
     samplingParams.tfsZ = tfsZ;
     samplingParams.typicalP = typicalP;
     samplingParams.penaltyLastN = penaltyLastN;

@@ -47,7 +47,6 @@ class OllamaModel extends LargeLanguageModel {
     super.nPredict,
     super.topK,
     super.topP,
-    super.minP,
     super.tfsZ,
     super.typicalP,
     super.temperature,

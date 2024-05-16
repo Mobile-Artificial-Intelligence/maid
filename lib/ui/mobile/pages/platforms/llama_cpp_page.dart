@@ -3,6 +3,7 @@ import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/min_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalize_nl_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/mirostat_eta_parameter.dart';
@@ -124,6 +125,7 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                 const TemperatureParameter(),
                 const TopKParameter(),
                 const TopPParameter(),
+                const MinPParameter(),
                 const TfsZParameter(),
                 const TypicalPParameter(),
                 const PenaltyLastNParameter(),
