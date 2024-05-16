@@ -1,7 +1,5 @@
 <div align="center">
-  <picture>
-    <img alt="logo" height="200px" src="assets/maid.png">
-  </picture>
+  <img alt="logo" height="200px" src="assets/maid.png">
 </div>
 
 # Maid - Mobile Artificial Intelligence Distribution
