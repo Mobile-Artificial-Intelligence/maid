@@ -18,11 +18,11 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_present_paramet
 import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_repeat_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/template_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/tfs_z_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_k_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/typical_p_parameter.dart';
-import 'package:maid/ui/mobile/widgets/dropdowns/format_dropdown.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
@@ -119,7 +119,13 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const FormatDropdown(),
+                const TemplateParameter(),
+                Divider(
+                  height: 20,
+                  indent: 10,
+                  endIndent: 10,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 const PenalizeNlParameter(),
                 const SeedParameter(),
                 const TemperatureParameter(),

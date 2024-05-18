@@ -32,8 +32,8 @@ class LargeLanguageModel extends ChangeNotifier {
   double _mirostatTau = 5.0;
   double _mirostatEta = 0.1;
   
-  int _nCtx = 512;
-  int _nBatch = 512;
+  int _nCtx = 0;
+  int _nBatch = 2048;
   int _nThread = 8;
 
   String get name => _name;
@@ -221,8 +221,8 @@ class LargeLanguageModel extends ChangeNotifier {
     int mirostat = 0,
     double mirostatTau = 5.0,
     double mirostatEta = 0.1,
-    int nCtx = 512,
-    int nBatch = 512,
+    int nCtx = 0,
+    int nBatch = 2048,
     int nThread = 8
   }) {
     if (listener != null) {
@@ -265,7 +265,7 @@ class LargeLanguageModel extends ChangeNotifier {
     _uri = json['uri'] ?? '';
     _token = json['token'] ?? '';
     _randomSeed = json['randomSeed'] ?? true;
-    _useDefault = json['useDefault'] ?? false;
+    _useDefault = json['useDefault'] ?? true;
     _penalizeNewline = json['penalizeNewline'] ?? true;
     _seed = json['seed'] ?? 0;
     _nKeep = json['nKeep'] ?? 48;
@@ -283,8 +283,8 @@ class LargeLanguageModel extends ChangeNotifier {
     _mirostat = json['mirostat'] ?? 0;
     _mirostatTau = json['mirostatTau'] ?? 5.0;
     _mirostatEta = json['mirostatEta'] ?? 0.1;
-    _nCtx = json['nCtx'] ?? 512;
-    _nBatch = json['nBatch'] ?? 512;
+    _nCtx = json['nCtx'] ?? 0;
+    _nBatch = json['nBatch'] ?? 2048;
     _nThread = json['nThread'] ?? 8;
 
     notifyListeners();

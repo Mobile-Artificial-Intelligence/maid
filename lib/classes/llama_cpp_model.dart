@@ -17,12 +17,12 @@ class LlamaCppModel extends LargeLanguageModel {
 
   MaidLLM? _maidLLM;
 
-  PromptFormat _promptFormat = PromptFormat.alpaca;
+  String _template = '';
 
-  PromptFormat get promptFormat => _promptFormat;
+  String get template => _template;
 
-  set promptFormat(PromptFormat value) {
-    _promptFormat = value;
+  set template(String value) {
+    _template = value;
     notifyListeners();
   }
 
@@ -66,13 +66,13 @@ class LlamaCppModel extends LargeLanguageModel {
     super.nCtx,
     super.nBatch,
     super.nThread,
-    PromptFormat promptFormat = PromptFormat.alpaca
+    String template = '',
   }) {
     if (uri.isNotEmpty && Directory(uri).existsSync()) {
       _maidLLM = MaidLLM(toGptParams(), log: Logger.log);
     }
 
-    _promptFormat = promptFormat;
+    _template = template;
   }
 
   LlamaCppModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
@@ -83,7 +83,7 @@ class LlamaCppModel extends LargeLanguageModel {
   @override
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
-    _promptFormat = PromptFormat.values[json['promptFormat'] ?? PromptFormat.alpaca.index];
+    _template = json['template'] ?? '';
     notifyListeners();
   }
 
@@ -91,7 +91,7 @@ class LlamaCppModel extends LargeLanguageModel {
   Map<String, dynamic> toMap() {
     return {
       ...super.toMap(),
-      'promptFormat': promptFormat.index
+      'template': _template,
     };
   }
 
@@ -132,8 +132,6 @@ class LlamaCppModel extends LargeLanguageModel {
     gptParams.nKeep = nKeep;
     gptParams.sparams = samplingParams;
     gptParams.model = uri;
-    gptParams.instruct = promptFormat == PromptFormat.alpaca;
-    gptParams.chatml = promptFormat == PromptFormat.chatml;
 
     return gptParams;
   }
@@ -173,7 +171,7 @@ class LlamaCppModel extends LargeLanguageModel {
     try {
       _maidLLM ??= MaidLLM(toGptParams(), log: Logger.log);
 
-      return _maidLLM!.prompt(messages);
+      return _maidLLM!.prompt(messages, _template);
     } catch (e) {
       Logger.log("Error initializing model: $e");
       return const Stream.empty();
