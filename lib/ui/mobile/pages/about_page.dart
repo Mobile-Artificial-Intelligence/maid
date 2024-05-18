@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:maid/mocks/mock_llama_cpp_page.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AboutPage extends StatelessWidget {
+class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
+
+  @override
+  State<AboutPage> createState() => _AboutPageState();
+}
+
+class _AboutPageState extends State<AboutPage> {
+  int _counter = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +22,24 @@ class AboutPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 0.0),
           child: Column(children: [
             const SizedBox(height: 20.0),
-            Image.asset(
-              "assets/maid.png",
-              width: 150,
-              height: 150,
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _counter++;
+                });
+
+                if (_counter >= 10) {
+                  Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LlamaCppPage()));
+                }
+              },
+              child: Image.asset(
+                "assets/maid.png",
+                width: 150,
+                height: 150,
+              ),
             ),
             const SizedBox(height: 30.0),
             Text(
