@@ -4,11 +4,13 @@
 
 # Maid - Mobile Artificial Intelligence Distribution
 
-<a href="https://f-droid.org/packages/com.danemadsen.maid/">
-    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="80">
-</a>
+<div align="center">
+  <a href="https://f-droid.org/packages/com.danemadsen.maid/">
+      <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+      alt="Get it on F-Droid"
+      height="80">
+  </a>
+</div>
 
 Maid is an cross-platform free and open source application for interfacing with llama.cpp models locally, and with Ollama, Mistral, Google Gemini and OpenAI models remotely.
 
