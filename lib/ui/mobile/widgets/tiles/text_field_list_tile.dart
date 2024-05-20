@@ -26,12 +26,14 @@ class TextFieldListTile extends StatelessWidget {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // Align the text to the start
         children: [
-          Text(headingText),
+          Semantics(
+            label: 'Heading',
+            child: Text(headingText),
+          ),
           const SizedBox(height: 5.0),
           Semantics(
-            label: '$labelText input',
+            label: labelText,
             hint: multiline ? 'Multi-line text input' : 'Single-line text input',
-            textField: true,
             child: TextField(
               keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
               maxLines: multiline ? null : 1,

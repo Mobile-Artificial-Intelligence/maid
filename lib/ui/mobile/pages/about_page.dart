@@ -27,24 +27,22 @@ class _AboutPageState extends State<AboutPage> {
               hint: 'Maid Logo',
               button: true,
               image: true,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _counter++;
-                  });
+              onTap: () {
+                setState(() {
+                  _counter++;
+                });
 
-                  if (_counter >= 10) {
-                    Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LlamaCppPage()));
-                  }
-                },
-                child: Image.asset(
-                  "assets/maid.png",
-                  width: 150,
-                  height: 150,
-                ),
+                if (_counter >= 10) {
+                  Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LlamaCppPage()));
+                }
+              },
+              child: Image.asset(
+                "assets/maid.png",
+                width: 150,
+                height: 150,
               ),
             ),
             const SizedBox(height: 30.0),

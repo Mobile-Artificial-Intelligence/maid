@@ -38,50 +38,39 @@ class SliderListTile extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: Text(labelText)
+            child: Text(labelText),
           ),
           Expanded(
             flex: 6,
-            child: Semantics(
-              label: '$labelText slider',
-              hint: 'Slide to set $labelText value',
-              value: labelValue,
-              slider: true,
-              child: Slider(
-                value: inputValue.toDouble(),
-                min: sliderMin,
-                max: sliderMax,
-                divisions: sliderDivisions,
-                label: labelValue,
-                onChanged: (double value) {
-                  onValueChanged(value);
-                },
-              )
-            )
+            child: Slider(
+              value: inputValue.toDouble(),
+              min: sliderMin,
+              max: sliderMax,
+              divisions: sliderDivisions,
+              label: labelValue,
+              onChanged: (double value) {
+                onValueChanged(value);
+              },
+            ),
           ),
           Expanded(
             flex: 2,
-            child: Semantics(
-              label: '$labelText input',
-              hint: 'Enter $labelText value',
-              textField: true,
-              child: TextFormField(
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.number,
-                controller: textController,
-                onEditingComplete: () {
-                  final parsedValue =
-                      double.tryParse(textController.text) ?? sliderMin;
-                  if (parsedValue < sliderMin) {
-                    onValueChanged(sliderMin);
-                  } else if (parsedValue > sliderMax) {
-                    onValueChanged(sliderMax);
-                  } else {
-                    onValueChanged(parsedValue);
-                  }
-                },
-              ),
-            )
+            child: TextFormField(
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              controller: textController,
+              onEditingComplete: () {
+                final parsedValue =
+                    double.tryParse(textController.text) ?? sliderMin;
+                if (parsedValue < sliderMin) {
+                  onValueChanged(sliderMin);
+                } else if (parsedValue > sliderMax) {
+                  onValueChanged(sliderMax);
+                } else {
+                  onValueChanged(parsedValue);
+                }
+              },
+            ),
           ),
         ],
       ),
