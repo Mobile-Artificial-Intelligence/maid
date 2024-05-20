@@ -17,16 +17,18 @@ class ImageSelectorTile extends StatelessWidget {
       hint: 'Tap to select image',
       image: true,
       button: true,
-      onTap: () {
-        final user = context.read<User>();
-        user.profile = image;
-      },
-      child: GridTile(
-        child: FutureTileImage(
-          image: image,
-          borderRadius: BorderRadius.circular(10),
+      child: GestureDetector(
+          onTap: () {
+          final user = context.read<User>();
+          user.profile = image;
+        },
+        child: GridTile(
+          child: FutureTileImage(
+            image: image,
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
-      ),
+      )
     );
   }
 }

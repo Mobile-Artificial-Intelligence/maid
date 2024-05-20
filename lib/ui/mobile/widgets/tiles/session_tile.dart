@@ -23,23 +23,23 @@ class _SessionTileState extends State<SessionTile> {
           displayMessage = '${displayMessage.substring(0, 30)}...';
         }
 
-        return GestureDetector(
-          onSecondaryTapUp: onSecondaryTapUp,
-          onLongPressStart: onLongPressStart,
-          onTap: () {
-            if (!session.chat.tail.finalised) return;
-            session.from(widget.session);
-          },
-          child: Semantics(
-            label: 'Session Tile',
-            onTapHint: 'Switch to session',
+        return Semantics(
+          label: 'Session Tile',
+          onTapHint: 'Switch to session',
+          child: GestureDetector(
+            onSecondaryTapUp: onSecondaryTapUp,
+            onLongPressStart: onLongPressStart,
+            onTap: () {
+              if (!session.chat.tail.finalised) return;
+              session.from(widget.session);
+            },
             child: ListTile(
               title: Text(
                 displayMessage,
                 style: Theme.of(context).textTheme.labelLarge,
               )
             )
-          ),
+          )
         );
       },
     );

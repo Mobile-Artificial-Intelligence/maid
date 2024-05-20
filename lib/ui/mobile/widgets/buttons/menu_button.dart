@@ -9,7 +9,7 @@ import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart'
-if (dart.library.html) 'package:maid/mocks/mock_llama_cpp_page.dart';
+    if (dart.library.html) 'package:maid/mocks/mock_llama_cpp_page.dart';
 
 class MenuButton extends StatefulWidget {
   const MenuButton({super.key});
@@ -41,16 +41,19 @@ class _MenuButtonState extends State<MenuButton> {
       builder: (context, session, child) {
         if (canUseCache(session)) {
           options = cache;
-          return IconButton(
-            key: iconButtonKey,
-            icon: const Icon(
-              Icons.account_tree_rounded,
-              size: 24,
+          return Semantics(
+            label: 'Model Options Menu',
+            hint: 'Tap to open the model options menu',
+            child: IconButton(
+              key: iconButtonKey,
+              icon: const Icon(
+                Icons.account_tree_rounded,
+                size: 24,
+              ),
+              onPressed: onPressed,
             ),
-            onPressed: onPressed,
           );
-        } 
-        else {
+        } else {
           lastModelType = session.model.type;
           lastCheck = DateTime.now();
 
@@ -61,32 +64,40 @@ class _MenuButtonState extends State<MenuButton> {
                 options = snapshot.data as List<String>;
                 cache = options;
 
-                return IconButton(
-                  key: iconButtonKey,
-                  icon: const Icon(
-                    Icons.account_tree_rounded,
-                    size: 24,
+                return Semantics(
+                  label: 'Model Options Menu',
+                  hint: 'Tap to open the model options menu',
+                  child: IconButton(
+                    key: iconButtonKey,
+                    icon: const Icon(
+                      Icons.account_tree_rounded,
+                      size: 24,
+                    ),
+                    onPressed: onPressed,
                   ),
-                  onPressed: onPressed,
                 );
               } else {
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),  // Adjust padding to match the visual space of the IconButton
-                  child: SizedBox(
-                    width: 24,  // Width of the CircularProgressIndicator
-                    height: 24,  // Height of the CircularProgressIndicator
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3.0,  // Adjust the thickness of the spinner here
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),  // Adjust padding to match the visual space of the IconButton
+                  child: Semantics(
+                    label: 'Loading Model Options',
+                    hint: 'Please wait, loading model options',
+                    child: const SizedBox(
+                      width: 24,  // Width of the CircularProgressIndicator
+                      height: 24,  // Height of the CircularProgressIndicator
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3.0,  // Adjust the thickness of the spinner here
+                        ),
                       ),
                     ),
                   ),
                 );
               }
-            }
+            },
           );
         }
-      }
+      },
     );
   }
 
@@ -98,20 +109,19 @@ class _MenuButtonState extends State<MenuButton> {
     List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
       padding: EdgeInsets.zero,
       child: Consumer<Session>(
-        builder: 
-          (context, session, child) {
-            return ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-              title: Text(modelName),
-              onTap: () {
-                session.model.name = modelName;
-              },
-              tileColor: session.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
-            );
-          }
-    )))
-    .toList();
-    
+        builder: (context, session, child) {
+          return ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            title: Text(modelName),
+            onTap: () {
+              session.model.name = modelName;
+            },
+            tileColor: session.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
+          );
+        },
+      ),
+    )).toList();
+
     showMenu(
       context: context,
       // Calculate the position based on the button's position and size
