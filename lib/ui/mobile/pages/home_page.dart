@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:maid_llm/chat_node.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
@@ -27,9 +28,11 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const HomeAppBar(),
-        drawer: const HomeDrawer(),
-        body: _buildBody());
+      appBar: const HomeAppBar(),
+      drawer: const HomeDrawer(),
+      body: _buildChat(),
+      bottomNavigationBar: const ChatField(),
+    );
   }
 
   List<ChatMessage> _getChatWidgets(List<ChatNode> chat) {
@@ -42,7 +45,7 @@ class HomePageState extends State<HomePage> {
     return chatWidgets;
   }
 
-  Widget _buildBody() {
+  Widget _buildChat() {
     return Consumer3<Session, User, Character>(
       builder: (context, session, user, character, child) {
         SharedPreferences.getInstance().then((prefs) {
@@ -81,18 +84,11 @@ class HomePageState extends State<HomePage> {
                 Scaffold.of(context).openDrawer();
               }
             },
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: chatWidgets.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return chatWidgets[index];
-                    },
-                  ),
-                ),
-                const ChatField(),
-              ],
+            child: ListView.builder(
+              itemCount: chatWidgets.length,
+              itemBuilder: (BuildContext context, int index) {
+                return chatWidgets[index];
+              },
             )
           ),
         );

@@ -34,15 +34,12 @@ class LlmDropdown extends StatelessWidget {
           label: 'Large language model API Dropdown',
           hint: 'The current API is ${session.model.type.displayName}.',
           excludeSemantics: true,
-          onIncrease: () {
+          onTapHint: 'Cycle through available APIs',
+          onTap: () {
             final length = LargeLanguageModelType.values.length;
-            final newIndex = session.model.type.index + 1;
-            final newValue = LargeLanguageModelType.values[min(newIndex, length - 1)];
-            _onSelected(newValue, context);
-          },
-          onDecrease: () {
-            final newIndex = session.model.type.index - 1;
-            final newValue = LargeLanguageModelType.values[max(newIndex, 0)];
+            final currentIndex = session.model.type.index;
+            final newIndex = (currentIndex % (length - 1)) + 1;
+            final newValue = LargeLanguageModelType.values[newIndex];
             _onSelected(newValue, context);
           },
           child: DropdownMenu<LargeLanguageModelType>(

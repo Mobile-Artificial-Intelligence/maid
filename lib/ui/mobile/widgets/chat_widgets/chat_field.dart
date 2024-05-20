@@ -38,9 +38,11 @@ class _ChatFieldState extends State<ChatField> {
 
       // For sharing or opening text coming from outside the app while the app is closed
       ReceiveSharingIntent.instance.getInitialMedia().then((value) {
-        setState(() {
-          _promptController.text = value.first.path;
-        });
+        if (value.isNotEmpty) {
+          setState(() {
+            _promptController.text = value.first.path;
+          });
+        }
       });
     }
   }
@@ -79,52 +81,56 @@ class _ChatFieldState extends State<ChatField> {
 
   @override
   Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: _buildRow(),
+    );
+  }
+
+  Widget _buildRow() {
     return Consumer<Session>(builder: (context, session, child) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            if (!session.chat.tail.finalised &&
-                session.model.type != LargeLanguageModelType.ollama)
-              IconButton(
-                  onPressed: session.stop,
-                  iconSize: 50,
-                  icon: const Icon(
-                    Icons.stop_circle_sharp,
-                    color: Colors.red,
-                  )),
-            Expanded(
-              child: TextField(
-                keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 9,
-                enableInteractiveSelection: true,
-                controller: _promptController,
-                cursorColor: Theme.of(context).colorScheme.secondary,
-                decoration: InputDecoration(
-                  labelText: 'Prompt',
-                  hintStyle: Theme.of(context).textTheme.labelSmall,
-                ),
+      return Row(
+        children: [
+          if (!session.chat.tail.finalised &&
+              session.model.type != LargeLanguageModelType.ollama)
+            IconButton(
+                onPressed: session.stop,
+                iconSize: 50,
+                icon: const Icon(
+                  Icons.stop_circle_sharp,
+                  color: Colors.red,
+                )),
+          Expanded(
+            child: TextField(
+              keyboardType: TextInputType.multiline,
+              minLines: 1,
+              maxLines: 9,
+              enableInteractiveSelection: true,
+              controller: _promptController,
+              cursorColor: Theme.of(context).colorScheme.secondary,
+              decoration: InputDecoration(
+                labelText: 'Prompt',
+                hintStyle: Theme.of(context).textTheme.labelSmall,
               ),
             ),
-            IconButton(
-                onPressed: () {
-                  if (session.model.missingRequirements.isNotEmpty) {
-                    showMissingRequirementsDialog(context);
-                  }
-                  else if (session.chat.tail.finalised) {
-                    send();
-                  }
-                },
-                iconSize: 50,
-                icon: Icon(
-                  Icons.arrow_circle_right,
-                  color: !session.chat.tail.finalised 
-                      ? Theme.of(context).colorScheme.onPrimary
-                      : Theme.of(context).colorScheme.secondary,
-                )),
-          ],
-        ),
+          ),
+          IconButton(
+              onPressed: () {
+                if (session.model.missingRequirements.isNotEmpty) {
+                  showMissingRequirementsDialog(context);
+                }
+                else if (session.chat.tail.finalised) {
+                  send();
+                }
+              },
+              iconSize: 50,
+              icon: Icon(
+                Icons.arrow_circle_right,
+                color: !session.chat.tail.finalised 
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.secondary,
+              )),
+        ],
       );
     });
   }
