@@ -11,7 +11,7 @@ class TopKParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-          labelText: 'top_k',
+          labelText: 'TopK',
           inputValue: session.model.topK,
           sliderMin: 1.0,
           sliderMax: 128.0,

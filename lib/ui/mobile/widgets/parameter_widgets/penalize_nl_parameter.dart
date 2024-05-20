@@ -10,7 +10,7 @@ class PenalizeNlParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SwitchListTile(
-          title: const Text('penalize_nl'),
+          title: const Text('Penalize New Line'),
           value: session.model.penalizeNewline,
           onChanged: (value) {
             session.model.penalizeNewline = value;

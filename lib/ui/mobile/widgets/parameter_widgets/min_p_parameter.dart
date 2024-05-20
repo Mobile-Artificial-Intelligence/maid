@@ -11,7 +11,7 @@ class MinPParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-          labelText: 'min_p',
+          labelText: 'MinP',
           inputValue: session.model.minP,
           sliderMin: 0.0,
           sliderMax: 1.0,

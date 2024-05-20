@@ -11,7 +11,7 @@ class TemperatureParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-          labelText: 'temperature',
+          labelText: 'Temperature',
           inputValue: session.model.temperature,
           sliderMin: 0.0,
           sliderMax: 1.0,

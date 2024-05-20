@@ -24,15 +24,22 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final ScrollController _consoleScrollController = ScrollController();
-  List<ChatMessage> chatWidgets = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const HomeAppBar(),
         drawer: const HomeDrawer(),
         body: _buildBody());
+  }
+
+  List<ChatMessage> _getChatWidgets(List<ChatNode> chat) {
+    List<ChatMessage> chatWidgets = [];
+
+    for (final message in chat) {
+      chatWidgets.add(ChatMessage(hash: message.hash));
+    }
+
+    return chatWidgets;
   }
 
   Widget _buildBody() {
@@ -43,6 +50,7 @@ class HomePageState extends State<HomePage> {
         });
         
         List<ChatNode> chat = session.chat.getChat();
+
         if (
           chat.isEmpty && 
           character.useGreeting && 
@@ -56,16 +64,13 @@ class HomePageState extends State<HomePage> {
               content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
               finalised: true
             );
-  
+
             session.chat.addNode(message);
             chat = [message];
           }
         }
 
-        chatWidgets.clear();
-        for (final message in chat) {
-          chatWidgets.add(ChatMessage(hash: message.hash));
-        }
+        final chatWidgets = _getChatWidgets(chat);
 
         return Builder(
           builder: (BuildContext context) => GestureDetector(
@@ -87,7 +92,6 @@ class HomePageState extends State<HomePage> {
                   children: [
                     Expanded(
                       child: ListView.builder(
-                        controller: _consoleScrollController,
                         itemCount: chatWidgets.length,
                         itemBuilder: (BuildContext context, int index) {
                           return chatWidgets[index];

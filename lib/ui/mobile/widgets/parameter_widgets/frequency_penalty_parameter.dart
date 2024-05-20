@@ -3,21 +3,21 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
-class PenaltyRepeatParameter extends StatelessWidget {
-  const PenaltyRepeatParameter({super.key});
+class FrequencyPenaltyParameter extends StatelessWidget {
+  const FrequencyPenaltyParameter({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-          labelText: 'penalty_repeat',
-          inputValue: session.model.penaltyRepeat,
+          labelText: 'Frequency Penalty',
+          inputValue: session.model.penaltyFreq,
           sliderMin: 0.0,
-          sliderMax: 2.0,
-          sliderDivisions: 200,
+          sliderMax: 1.0,
+          sliderDivisions: 100,
           onValueChanged: (value) {
-            session.model.penaltyRepeat = value;
+            session.model.penaltyFreq = value;
             session.notify();
           }
         );

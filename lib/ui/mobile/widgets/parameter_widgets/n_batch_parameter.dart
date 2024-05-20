@@ -11,7 +11,7 @@ class NBatchParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-          labelText: 'n_batch',
+          labelText: 'NBatch',
           inputValue: session.model.nBatch,
           sliderMin: 1.0,
           sliderMax: 4096.0,

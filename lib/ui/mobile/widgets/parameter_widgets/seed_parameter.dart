@@ -14,13 +14,17 @@ class SeedParameter extends StatelessWidget {
       builder: (context, session, child) {
         return Column(
           children: [
-            SwitchListTile(
-              title: const Text('random_seed'),
-              value: session.model.randomSeed,
-              onChanged: (value) {
-                session.model.randomSeed = value;
-                session.notify();
-              },
+            Semantics(
+              label: 'Random Seed Toggle',
+              hint: 'Switch to toggle random seed',
+              child: SwitchListTile(
+                title: const Text('Random Seed'),
+                value: session.model.randomSeed,
+                onChanged: (value) {
+                  session.model.randomSeed = value;
+                  session.notify();
+                },
+              ),
             ),
             Divider(
               height: 20,

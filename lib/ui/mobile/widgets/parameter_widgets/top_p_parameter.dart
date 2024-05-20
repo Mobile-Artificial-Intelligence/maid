@@ -11,7 +11,7 @@ class TopPParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-          labelText: 'top_p',
+          labelText: 'TopP',
           inputValue: session.model.topP,
           sliderMin: 0.0,
           sliderMax: 1.0,

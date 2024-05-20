@@ -5,8 +5,8 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_predict_parameter.dart';
-import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_frequency_parameter.dart';
-import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_present_parameter.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/frequency_penalty_parameter.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/present_penalty_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
@@ -55,8 +55,8 @@ class OpenAiPage extends StatelessWidget {
                 const SizedBox(height: 20.0),
                 const SeedParameter(),
                 const TemperatureParameter(),
-                const PenaltyFrequencyParameter(),
-                const PenaltyPresentParameter(),
+                const FrequencyPenaltyParameter(),
+                const PresentPenaltyParameter(),
                 const NPredictParameter(),
                 const TopPParameter()
               ]

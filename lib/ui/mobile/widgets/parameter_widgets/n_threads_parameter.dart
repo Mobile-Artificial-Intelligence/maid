@@ -13,7 +13,7 @@ class NThreadsParameter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Session>(builder: (context, session, child) {
       return SliderListTile(
-          labelText: 'n_threads',
+          labelText: 'NThreads',
           inputValue: session.model.nThread,
           sliderMin: 1.0,
           sliderMax: session.model.type == LargeLanguageModelType.llamacpp

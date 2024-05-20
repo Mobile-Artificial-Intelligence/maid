@@ -11,7 +11,7 @@ class TfsZParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-          labelText: 'tfs_z',
+          labelText: 'TfsZ',
           inputValue: session.model.tfsZ,
           sliderMin: 0.0,
           sliderMax: 1.0,

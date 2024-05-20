@@ -13,10 +13,10 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/mirostat_tau_parameter.
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_batch_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_ctx_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_threads_parameter.dart';
-import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_frequency_parameter.dart';
-import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_last_n_parameter.dart';
-import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_present_parameter.dart';
-import 'package:maid/ui/mobile/widgets/parameter_widgets/penalty_repeat_parameter.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/frequency_penalty_parameter.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/last_n_penalty_parameter.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/present_penalty_parameter.dart';
+import 'package:maid/ui/mobile/widgets/parameter_widgets/repeat_penalty_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/tfs_z_parameter.dart';
@@ -88,10 +88,10 @@ class OllamaPage extends StatelessWidget {
                   const TfsZParameter(),
                   const TypicalPParameter(),
                   const TemperatureParameter(),
-                  const PenaltyLastNParameter(),
-                  const PenaltyRepeatParameter(),
-                  const PenaltyFrequencyParameter(),
-                  const PenaltyPresentParameter(),
+                  const LastNPenaltyParameter(),
+                  const RepeatPenaltyParameter(),
+                  const FrequencyPenaltyParameter(),
+                  const PresentPenaltyParameter(),
                   const MirostatParameter(),
                   const MirostatTauParameter(),
                   const MirostatEtaParameter()

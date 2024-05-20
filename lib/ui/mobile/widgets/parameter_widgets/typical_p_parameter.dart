@@ -11,7 +11,7 @@ class TypicalPParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-          labelText: 'typical_p',
+          labelText: 'TypicalP',
           inputValue: session.model.typicalP,
           sliderMin: 0.0,
           sliderMax: 1.0,

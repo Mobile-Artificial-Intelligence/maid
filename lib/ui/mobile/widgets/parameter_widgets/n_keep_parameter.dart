@@ -11,7 +11,7 @@ class NKeepParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
       return SliderListTile(
-          labelText: 'n_keep',
+          labelText: 'NKeep',
           inputValue: session.model.nKeep,
           sliderMin: 1.0,
           sliderMax: 1024.0,

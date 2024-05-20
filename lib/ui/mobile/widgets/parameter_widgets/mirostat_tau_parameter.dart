@@ -11,7 +11,7 @@ class MirostatTauParameter extends StatelessWidget {
     return Consumer<Session>(
       builder: (context, session, child) {
         return SliderListTile(
-          labelText: 'mirostat_tau',
+          labelText: 'MirostatTau',
           inputValue: session.model.mirostatTau,
           sliderMin: 0.0,
           sliderMax: 10.0,
