@@ -93,28 +93,43 @@ class _ChatFieldState extends State<ChatField> {
         children: [
           if (!session.chat.tail.finalised &&
               session.model.type != LargeLanguageModelType.ollama)
-            IconButton(
+            Semantics(
+              label: 'Stop button',
+              hint: 'Double tap to stop inference.',
+              excludeSemantics: true,
+              child: IconButton(
                 onPressed: session.stop,
                 iconSize: 50,
                 icon: const Icon(
                   Icons.stop_circle_sharp,
                   color: Colors.red,
-                )),
-          Expanded(
-            child: TextField(
-              keyboardType: TextInputType.multiline,
-              minLines: 1,
-              maxLines: 9,
-              enableInteractiveSelection: true,
-              controller: _promptController,
-              cursorColor: Theme.of(context).colorScheme.secondary,
-              decoration: InputDecoration(
-                labelText: 'Prompt',
-                hintStyle: Theme.of(context).textTheme.labelSmall,
+                )
               ),
             ),
+          Expanded(
+            child: Semantics(
+              label: 'Prompt text field',
+              hint: 'Text to be sent to the model for a response.',
+              excludeSemantics: true,
+              child: TextField(
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 9,
+                enableInteractiveSelection: true,
+                controller: _promptController,
+                cursorColor: Theme.of(context).colorScheme.secondary,
+                decoration: InputDecoration(
+                  labelText: 'Prompt',
+                  hintStyle: Theme.of(context).textTheme.labelSmall,
+                ),
+              )
+            ),
           ),
-          IconButton(
+          Semantics(
+            label: 'Prompt button',
+            hint: 'Double tap to prompt the model for a response.',
+            excludeSemantics: true,
+            child: IconButton(
               onPressed: () {
                 if (session.model.missingRequirements.isNotEmpty) {
                   showMissingRequirementsDialog(context);
@@ -129,7 +144,9 @@ class _ChatFieldState extends State<ChatField> {
                 color: !session.chat.tail.finalised 
                     ? Theme.of(context).colorScheme.onPrimary
                     : Theme.of(context).colorScheme.secondary,
-              )),
+              )
+            )
+          )
         ],
       );
     });
