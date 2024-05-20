@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
@@ -213,12 +212,9 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                         FilledButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            Navigator.push(
+                            Navigator.pushNamed(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                  const CharacterBrowserPage()
-                              )
+                              '/characters'
                             );
                           },
                           child: Text(

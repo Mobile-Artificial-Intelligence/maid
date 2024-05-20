@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';
 import 'package:provider/provider.dart';
 
 class CharacterBrowserTile extends StatefulWidget {
@@ -99,12 +98,9 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
       longPressTimer?.cancel();
       context.read<Character>().from(widget.character);
       Navigator.of(context).pop();
-      Navigator.push(
+      Navigator.pushNamed(
         context,
-        MaterialPageRoute(
-          builder: (context) =>
-            const CharacterCustomizationPage()
-        )
+        '/character'
       );
     }
   }      

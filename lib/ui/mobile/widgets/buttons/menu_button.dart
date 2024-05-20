@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/ui/mobile/pages/about_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/gemini_page.dart';
-import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:provider/provider.dart';
-import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart'
-if (dart.library.html) 'package:maid/mocks/mock_llama_cpp_page.dart';
 
 class MenuButton extends StatefulWidget {
   const MenuButton({super.key});
@@ -133,25 +125,20 @@ class _MenuButtonState extends State<MenuButton> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
             title: const Text('Model Settings'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  switch (context.read<Session>().model.type) {
-                    case LargeLanguageModelType.llamacpp:
-                      return const LlamaCppPage();
-                    case LargeLanguageModelType.ollama:
-                      return const OllamaPage();
-                    case LargeLanguageModelType.openAI:
-                      return const OpenAiPage();
-                    case LargeLanguageModelType.mistralAI:
-                      return const MistralAiPage();
-                    case LargeLanguageModelType.gemini:
-                      return const GoogleGeminiPage();
-                    default:
-                      return const LlamaCppPage();
-                  }
-                }),
-              );
+              switch (context.read<Session>().model.type) {
+                case LargeLanguageModelType.llamacpp:
+                  Navigator.pushNamed(context, '/llamacpp');
+                case LargeLanguageModelType.ollama:
+                  Navigator.pushNamed(context, '/ollama');
+                case LargeLanguageModelType.openAI:
+                  Navigator.pushNamed(context, '/openai');
+                case LargeLanguageModelType.mistralAI:
+                  Navigator.pushNamed(context, '/mistralai');
+                case LargeLanguageModelType.gemini:
+                  Navigator.pushNamed(context, '/gemini');
+                default:
+                  throw Exception('Invalid model type');
+              }
             },
           ),
         ),
@@ -163,10 +150,10 @@ class _MenuButtonState extends State<MenuButton> {
             onTap: () {
               cache.clear();
               Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsPage()));
+              Navigator.pushNamed(
+                context,
+                '/settings'
+              );
             },
           ),
         ),
@@ -177,8 +164,7 @@ class _MenuButtonState extends State<MenuButton> {
             title: const Text('About'),
             onTap: () {
               Navigator.pop(context); // Close the menu first
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const AboutPage()));
+              Navigator.pushNamed(context, '/about');
             },
           ),
         ),

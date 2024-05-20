@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
-import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
 import 'package:maid/ui/mobile/widgets/tiles/session_tile.dart';
 import 'package:maid/ui/mobile/widgets/tiles/user_tile.dart';
@@ -95,10 +93,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     FilledButton(
                       onPressed: () {
                         Navigator.pop(context); // Close the drawer
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const CharacterCustomizationPage()));
+                        Navigator.pushNamed(
+                          context,
+                          '/character'
+                        );
                       },
                       child: const Text(
                         "Customize"
@@ -107,10 +105,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     FilledButton(
                       onPressed: () {
                         Navigator.pop(context); // Close the drawer
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const CharacterBrowserPage()));
+                        Navigator.pushNamed(
+                          context,
+                          '/characters'
+                        );
                       },
                       child: const Text(
                         "Browse"
