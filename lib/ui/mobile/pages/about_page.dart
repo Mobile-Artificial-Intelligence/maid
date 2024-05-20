@@ -22,11 +22,7 @@ class _AboutPageState extends State<AboutPage> {
           padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 0.0),
           child: Column(children: [
             const SizedBox(height: 20.0),
-            Semantics(
-              label: 'Maid Logo',
-              hint: 'Maid Logo',
-              button: true,
-              image: true,
+            GestureDetector(
               onTap: () {
                 setState(() {
                   _counter++;

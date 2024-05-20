@@ -30,16 +30,11 @@ class _SessionTileState extends State<SessionTile> {
             if (!session.chat.tail.finalised) return;
             session.from(widget.session);
           },
-          child: Semantics(
-            label: 'Session Tile',
-            onTapHint: 'Switch to session',
-            child: ListTile(
+          child: ListTile(
               title: Text(
-                displayMessage,
-                style: Theme.of(context).textTheme.labelLarge,
-              )
-            )
-          ),
+            displayMessage,
+            style: Theme.of(context).textTheme.labelLarge,
+          )),
         );
       },
     );

@@ -12,11 +12,7 @@ class ImageSelectorTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: 'Image selector tile',
-      hint: 'Tap to select image',
-      image: true,
-      button: true,
+    return GestureDetector(
       onTap: () {
         final user = context.read<User>();
         user.profile = image;
