@@ -23,13 +23,16 @@ class LlmDropdown extends StatelessWidget {
           ).createShader(bounds),
           blendMode: BlendMode
               .srcIn, // This blend mode applies the shader to the text color.
-          child: DropdownMenu<LargeLanguageModelType>(
+          child: Semantics(
+            label: 'Language Model API Selection',
+            hint: 'Select a large language model API',
+            child: DropdownMenu<LargeLanguageModelType>(
               dropdownMenuEntries: const [
                 if (!kIsWeb)
-                DropdownMenuEntry<LargeLanguageModelType>(
-                  value: LargeLanguageModelType.llamacpp,
-                  label: "LlamaCPP",
-                ),
+                  DropdownMenuEntry<LargeLanguageModelType>(
+                    value: LargeLanguageModelType.llamacpp,
+                    label: "LlamaCPP",
+                  ),
                 DropdownMenuEntry<LargeLanguageModelType>(
                   value: LargeLanguageModelType.ollama,
                   label: "Ollama",
@@ -78,9 +81,11 @@ class LlmDropdown extends StatelessWidget {
               inputDecorationTheme: const InputDecorationTheme(
                 floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
-              width: 175),
+              width: 175,
+            ),
+          ),
         );
-      }
+      },
     );
   }
 }

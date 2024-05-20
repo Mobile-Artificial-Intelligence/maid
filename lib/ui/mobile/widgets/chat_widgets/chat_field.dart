@@ -86,43 +86,56 @@ class _ChatFieldState extends State<ChatField> {
           children: [
             if (!session.chat.tail.finalised &&
                 session.model.type != LargeLanguageModelType.ollama)
-              IconButton(
+              Semantics(
+                label: 'Stop',
+                hint: 'Stop the current response generation process',
+                child: IconButton(
                   onPressed: session.stop,
                   iconSize: 50,
                   icon: const Icon(
                     Icons.stop_circle_sharp,
                     color: Colors.red,
-                  )),
+                  )
+                ),
+              ),
             Expanded(
-              child: TextField(
-                keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 9,
-                enableInteractiveSelection: true,
-                controller: _promptController,
-                cursorColor: Theme.of(context).colorScheme.secondary,
-                decoration: InputDecoration(
-                  labelText: 'Prompt',
-                  hintStyle: Theme.of(context).textTheme.labelSmall,
+              child: Semantics(
+                label: 'Prompt Input',
+                hint: 'Enter your prompt here',
+                child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  minLines: 1,
+                  maxLines: 9,
+                  enableInteractiveSelection: true,
+                  controller: _promptController,
+                  cursorColor: Theme.of(context).colorScheme.secondary,
+                  decoration: InputDecoration(
+                    labelText: 'Prompt',
+                    hintStyle: Theme.of(context).textTheme.labelSmall,
+                  ),
                 ),
               ),
             ),
-            IconButton(
+            Semantics(
+              label: 'Send prompt',
+              hint: 'Send the prompt',
+              child: IconButton(
                 onPressed: () {
                   if (session.model.missingRequirements.isNotEmpty) {
                     showMissingRequirementsDialog(context);
-                  }
-                  else if (session.chat.tail.finalised) {
+                  } else if (session.chat.tail.finalised) {
                     send();
                   }
                 },
                 iconSize: 50,
                 icon: Icon(
                   Icons.arrow_circle_right,
-                  color: !session.chat.tail.finalised 
+                  color: !session.chat.tail.finalised
                       ? Theme.of(context).colorScheme.onPrimary
                       : Theme.of(context).colorScheme.secondary,
-                )),
+                )
+              ),
+            ),
           ],
         ),
       );

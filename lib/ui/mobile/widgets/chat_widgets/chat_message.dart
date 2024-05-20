@@ -4,7 +4,6 @@ import 'package:maid_llm/chat_node.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
-
 import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 
@@ -69,62 +68,72 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(width: 10.0),
-              FutureAvatar(
-                key: node.role == ChatRole.user ? user.key : character.key,
-                image: node.role == ChatRole.user ? user.profile : character.profile,
-                radius: 16,
+              Semantics(
+                label: node.role == ChatRole.user ? 'User avatar' : 'Character avatar',
+                child: FutureAvatar(
+                  key: node.role == ChatRole.user ? user.key : character.key,
+                  image: node.role == ChatRole.user ? user.profile : character.profile,
+                  radius: 16,
+                ),
               ),
               const SizedBox(width: 10.0),
-              ShaderMask(
-                shaderCallback: (bounds) => const LinearGradient(
-                  colors: [
-                    Color.fromARGB(255, 0, 200, 255),
-                    Color.fromARGB(255, 255, 80, 200)
-                  ],
-                  stops: [0.5, 0.85],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ).createShader(bounds),
-                blendMode: BlendMode
-                    .srcIn, // This blend mode applies the shader to the text color.
-                child: Text(
-                  node.role == ChatRole.user ? user.name : character.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors
-                        .white, // This color is needed, but it will be overridden by the shader.
-                    fontSize: 20,
+              Semantics(
+                label: 'Name of the sender',
+                child: ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 0, 200, 255),
+                      Color.fromARGB(255, 255, 80, 200)
+                    ],
+                    stops: [0.5, 0.85],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ).createShader(bounds),
+                  blendMode: BlendMode
+                      .srcIn, // This blend mode applies the shader to the text color.
+                  child: Text(
+                    node.role == ChatRole.user ? user.name : character.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors
+                          .white, // This color is needed, but it will be overridden by the shader.
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ),
               const Expanded(child: SizedBox()), // Spacer
               if (node.finalised) ...messageOptions(),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  IconButton(
+              Semantics(
+                label: 'Navigation buttons',
+                hint: 'Navigate through messages',
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    IconButton(
+                        padding: const EdgeInsets.all(0),
+                        onPressed: () {
+                          if (!session.chat.tail.finalised) return;
+                          session.chat.last(node.hash);
+                          session.notify();
+                        },
+                        icon: Icon(Icons.arrow_left,
+                            color: Theme.of(context).colorScheme.onPrimary)),
+                    Text('${currentIndex + 1}/$siblingCount',
+                        style: Theme.of(context).textTheme.labelLarge),
+                    IconButton(
                       padding: const EdgeInsets.all(0),
                       onPressed: () {
                         if (!session.chat.tail.finalised) return;
-                        session.chat.last(node.hash);
+                        session.chat.next(node.hash);
                         session.notify();
                       },
-                      icon: Icon(Icons.arrow_left,
-                          color: Theme.of(context).colorScheme.onPrimary)),
-                  Text('${currentIndex + 1}/$siblingCount',
-                      style: Theme.of(context).textTheme.labelLarge),
-                  IconButton(
-                    padding: const EdgeInsets.all(0),
-                    onPressed: () {
-                      if (!session.chat.tail.finalised) return;
-                      session.chat.next(node.hash);
-                      session.notify();
-                    },
-                    icon: Icon(Icons.arrow_right,
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                ],
+                      icon: Icon(Icons.arrow_right,
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ],
+                ),
               )
             ],
           ),
@@ -146,38 +155,45 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
 
   List<Widget> userOptions() {
     return [
-      IconButton(
-        onPressed: () {
-          if (!context.read<Session>().chat.tail.finalised) return;
-          
-          if (context.read<Session>().model.missingRequirements.isNotEmpty) {
-            showMissingRequirementsDialog(context);
-          }
-          else {
-            setState(() {
-              editing = true;
-            });
-          }
-        },
-        icon: const Icon(Icons.edit),
+      Semantics(
+        label: 'Edit message',
+        hint: 'Edit this message',
+        child: IconButton(
+          onPressed: () {
+            if (!context.read<Session>().chat.tail.finalised) return;
+            
+            if (context.read<Session>().model.missingRequirements.isNotEmpty) {
+              showMissingRequirementsDialog(context);
+            } else {
+              setState(() {
+                editing = true;
+              });
+            }
+          },
+          icon: const Icon(Icons.edit),
+        ),
       ),
     ];
   }
 
   List<Widget> assistantOptions() {
     return [
-      IconButton(
-        onPressed: () {
-          if (!context.read<Session>().chat.tail.finalised) return;
+      Semantics(
+        label: 'Regenerate message',
+        hint: 'Regenerate this message',
+        child: IconButton(
+          onPressed: () {
+            if (!context.read<Session>().chat.tail.finalised) return;
 
-          if (context.read<Session>().model.missingRequirements.isNotEmpty) {
-            showMissingRequirementsDialog(context);
-          } else {
-            context.read<Session>().regenerate(node.hash, context);
-            setState(() {});
-          }
-        },
-        icon: const Icon(Icons.refresh),
+            if (context.read<Session>().model.missingRequirements.isNotEmpty) {
+              showMissingRequirementsDialog(context);
+            } else {
+              context.read<Session>().regenerate(node.hash, context);
+              setState(() {});
+            }
+          },
+          icon: const Icon(Icons.refresh),
+        ),
       ),
     ];
   }
@@ -186,44 +202,57 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
     final messageController = TextEditingController(text: node.content);
 
     return [
-      TextField(
-        controller: messageController,
-        autofocus: true,
-        cursorColor: Theme.of(context).colorScheme.secondary,
-        style: Theme.of(context).textTheme.bodyMedium,
-        decoration: InputDecoration(
-          hintText: "Edit Message",
-          fillColor: Theme.of(context).colorScheme.background,
-          contentPadding: EdgeInsets.zero,
+      Semantics(
+        label: 'Editing message',
+        hint: 'Edit your message here',
+        child: TextField(
+          controller: messageController,
+          autofocus: true,
+          cursorColor: Theme.of(context).colorScheme.secondary,
+          style: Theme.of(context).textTheme.bodyMedium,
+          decoration: InputDecoration(
+            hintText: "Edit Message",
+            fillColor: Theme.of(context).colorScheme.background,
+            contentPadding: EdgeInsets.zero,
+          ),
+          maxLines: null,
+          keyboardType: TextInputType.multiline,
         ),
-        maxLines: null,
-        keyboardType: TextInputType.multiline,
       ),
       Row(children: [
-        IconButton(
+        Semantics(
+          label: 'Confirm edit',
+          hint: 'Confirm editing the message',
+          child: IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
               if (!context.read<Session>().chat.tail.finalised) return;
-
+              
               if (context.read<Session>().model.missingRequirements.isNotEmpty) {
                 showMissingRequirementsDialog(context);
-              } 
-              else {
+              } else {
                 setState(() {
                   editing = false;
                 });
                 context.read<Session>().edit(node.hash, messageController.text, context);
               }
             },
-            icon: const Icon(Icons.done)),
-        IconButton(
+            icon: const Icon(Icons.done)
+          ),
+        ),
+        Semantics(
+          label: 'Cancel edit',
+          hint: 'Cancel editing the message',
+          child: IconButton(
             padding: const EdgeInsets.all(0),
             onPressed: () {
               setState(() {
                 editing = false;
               });
             },
-            icon: const Icon(Icons.close))
+            icon: const Icon(Icons.close)
+          ),
+        ),
       ])
     ];
   }
@@ -231,9 +260,17 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
   List<Widget> standardColumn() {
     return [
       if (!node.finalised && node.content.isEmpty)
-        const TypingIndicator() // Assuming TypingIndicator is a custom widget you've defined.
+        Semantics(
+          label: 'Typing indicator',
+          hint: 'Indicates that the user is typing',
+          child: const TypingIndicator(),
+        )
       else
-        messageBuilder(node.content),
+        Semantics(
+          label: 'Message content',
+          hint: 'Content of the message',
+          child: messageBuilder(node.content),
+        ),
     ];
   }
 }

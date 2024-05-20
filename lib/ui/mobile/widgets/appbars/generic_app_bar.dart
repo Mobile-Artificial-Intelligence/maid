@@ -11,13 +11,20 @@ class GenericAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
       elevation: 0.0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
+      leading: Semantics(
+        label: 'Back button',
+        hint: 'Navigates to the previous screen',
+        child: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
-      title: Text(title),
+      title: Semantics(
+        label: 'AppBar title',
+        child: Text(title),
+      ),
     );
   }
 
