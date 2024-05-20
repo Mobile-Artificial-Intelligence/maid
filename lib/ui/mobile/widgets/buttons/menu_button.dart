@@ -29,56 +29,61 @@ class _MenuButtonState extends State<MenuButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Session>(
-      builder: (context, session, child) {
-        if (canUseCache(session)) {
-          options = cache;
-          return IconButton(
-            key: iconButtonKey,
-            icon: const Icon(
-              Icons.account_tree_rounded,
-              size: 24,
-            ),
-            onPressed: onPressed,
-          );
-        } 
-        else {
-          lastModelType = session.model.type;
-          lastCheck = DateTime.now();
+    return Semantics(
+      label: 'Menu Button',
+      hint: 'Open the menu to select a model or switch to a different page',
+      excludeSemantics: true,
+      child: Consumer<Session>(
+        builder: (context, session, child) {
+          if (canUseCache(session)) {
+            options = cache;
+            return IconButton(
+              key: iconButtonKey,
+              icon: const Icon(
+                Icons.account_tree_rounded,
+                size: 24,
+              ),
+              onPressed: onPressed,
+            );
+          } 
+          else {
+            lastModelType = session.model.type;
+            lastCheck = DateTime.now();
 
-          return FutureBuilder(
-            future: session.model.options,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                options = snapshot.data as List<String>;
-                cache = options;
+            return FutureBuilder(
+              future: session.model.options,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  options = snapshot.data as List<String>;
+                  cache = options;
 
-                return IconButton(
-                  key: iconButtonKey,
-                  icon: const Icon(
-                    Icons.account_tree_rounded,
-                    size: 24,
-                  ),
-                  onPressed: onPressed,
-                );
-              } else {
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),  // Adjust padding to match the visual space of the IconButton
-                  child: SizedBox(
-                    width: 24,  // Width of the CircularProgressIndicator
-                    height: 24,  // Height of the CircularProgressIndicator
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3.0,  // Adjust the thickness of the spinner here
+                  return IconButton(
+                    key: iconButtonKey,
+                    icon: const Icon(
+                      Icons.account_tree_rounded,
+                      size: 24,
+                    ),
+                    onPressed: onPressed,
+                  );
+                } else {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),  // Adjust padding to match the visual space of the IconButton
+                    child: SizedBox(
+                      width: 24,  // Width of the CircularProgressIndicator
+                      height: 24,  // Height of the CircularProgressIndicator
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3.0,  // Adjust the thickness of the spinner here
+                        ),
                       ),
                     ),
-                  ),
-                );
+                  );
+                }
               }
-            }
-          );
+            );
+          }
         }
-      }
+      )
     );
   }
 

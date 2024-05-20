@@ -81,28 +81,19 @@ class HomePageState extends State<HomePage> {
                 Scaffold.of(context).openDrawer();
               }
             },
-            child: Stack(
+            child: Column(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: chatWidgets.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return chatWidgets[index];
+                    },
                   ),
                 ),
-                Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: chatWidgets.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return chatWidgets[index];
-                        },
-                      ),
-                    ),
-                    const ChatField(),
-                  ],
-                ),
+                const ChatField(),
               ],
-            ),
+            )
           ),
         );
       },
