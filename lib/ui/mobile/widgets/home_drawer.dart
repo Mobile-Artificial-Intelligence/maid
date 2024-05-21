@@ -76,100 +76,100 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
         return Drawer(
           backgroundColor: Theme.of(context).colorScheme.background,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-              ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20),
+              bottomRight: Radius.circular(20)
             ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 40, 10, 10),
-              child: Column(children: [
-                const CharacterTile(),
-                const SizedBox(height: 5.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    FilledButton(
-                      onPressed: () {
-                        Navigator.pop(context); // Close the drawer
-                        Navigator.pushNamed(
-                          context,
-                          '/character'
-                        );
-                      },
-                      child: const Text(
-                        "Customize"
-                      ),
-                    ),
-                    FilledButton(
-                      onPressed: () {
-                        Navigator.pop(context); // Close the drawer
-                        Navigator.pushNamed(
-                          context,
-                          '/characters'
-                        );
-                      },
-                      child: const Text(
-                        "Browse"
-                      ),
-                    )
-                  ]
-                ),
-                Divider(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                FilledButton(
-                  onPressed: () {
-                    if (!session.chat.tail.finalised) return;
-                    setState(() {
-                      final newSession = Session();
-                      sessions.add(newSession);
-                      session.from(newSession);
-                    });
-                  },
-                  child: const Text(
-                    "New Chat"
-                  ),
-                ),
-                Divider(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: sessions.length, 
-                    itemBuilder: (context, index) {
-                      return SessionTile(
-                        session: sessions[index], 
-                        onDelete: () {
-                          if (!session.chat.tail.finalised) return;
-                          setState(() {
-                            if (sessions[index].key == session.key) {
-                              session.from(sessions.firstOrNull ?? Session());
-                            }
-                            sessions.removeAt(index);
-                          });
-                        },
-                        onRename: (value) {
-                          setState(() {
-                            if (sessions[index].key == session.key) {
-                              session.name = value;
-                            }
-                            sessions[index].name = value;
-                          });
-                        },
+          ),
+          child: SafeArea(
+            minimum: const EdgeInsets.all(10.0),
+            child: Column(children: [
+              const CharacterTile(),
+              const SizedBox(height: 5.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FilledButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the drawer
+                      Navigator.pushNamed(
+                        context,
+                        '/character'
                       );
-                    }
+                    },
+                    child: const Text(
+                      "Customize"
+                    ),
                   ),
+                  FilledButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the drawer
+                      Navigator.pushNamed(
+                        context,
+                        '/characters'
+                      );
+                    },
+                    child: const Text(
+                      "Browse"
+                    ),
+                  )
+                ]
+              ),
+              Divider(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              FilledButton(
+                onPressed: () {
+                  if (!session.chat.tail.finalised) return;
+                  setState(() {
+                    final newSession = Session();
+                    sessions.add(newSession);
+                    session.from(newSession);
+                  });
+                },
+                child: const Text(
+                  "New Chat"
                 ),
-                Divider(
-                  height: 0.0,
-                  color: Theme.of(context).colorScheme.primary,
+              ),
+              Divider(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: sessions.length, 
+                  itemBuilder: (context, index) {
+                    return SessionTile(
+                      session: sessions[index], 
+                      onDelete: () {
+                        if (!session.chat.tail.finalised) return;
+                        setState(() {
+                          if (sessions[index].key == session.key) {
+                            session.from(sessions.firstOrNull ?? Session());
+                          }
+                          sessions.removeAt(index);
+                        });
+                      },
+                      onRename: (value) {
+                        setState(() {
+                          if (sessions[index].key == session.key) {
+                            session.name = value;
+                          }
+                          sessions[index].name = value;
+                        });
+                      },
+                    );
+                  }
                 ),
-                const SizedBox(height: 5.0),
-                const UserTile()
-              ]
-            )
+              ),
+              Divider(
+                height: 0.0,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(height: 5.0),
+              const UserTile()
+            ]
+          )
           )
         );
       },

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:maid_llm/chat_node.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
@@ -30,8 +29,18 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: const HomeAppBar(),
       drawer: const HomeDrawer(),
-      body: _buildChat(),
-      bottomNavigationBar: const ChatField(),
+      body: _buildBody()
+    );
+  }
+
+  Widget _buildBody() {
+    return Column(
+      children: [
+        Expanded(
+          child: _buildChat(),
+        ),
+        const ChatField(),
+      ],
     );
   }
 

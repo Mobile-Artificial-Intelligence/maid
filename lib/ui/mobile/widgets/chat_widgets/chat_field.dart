@@ -81,8 +81,8 @@ class _ChatFieldState extends State<ChatField> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    return SafeArea(
+      minimum: const EdgeInsets.all(8.0),
       child: _buildRow(),
     );
   }
