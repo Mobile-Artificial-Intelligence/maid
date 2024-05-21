@@ -25,8 +25,9 @@ class _ChatBranchSwitcherState extends State<ChatBranchSwitcher> {
         return Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
+          children: [
             IconButton(
+              tooltip: 'Previous chat branch',
               padding: const EdgeInsets.all(0),
               onPressed: () {
                 if (!session.chat.tail.finalised) return;
@@ -40,9 +41,11 @@ class _ChatBranchSwitcherState extends State<ChatBranchSwitcher> {
             ),
             Text(
               '${currentIndex + 1}/$siblingCount',
-              style: Theme.of(context).textTheme.labelLarge
+              style: Theme.of(context).textTheme.labelLarge,
+              semanticsLabel: 'Chat branch ${currentIndex + 1} of $siblingCount',
             ),
             IconButton(
+              tooltip: 'Next chat branch',
               padding: const EdgeInsets.all(0),
               onPressed: () {
                 if (!session.chat.tail.finalised) return;

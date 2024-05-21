@@ -49,8 +49,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
                   node.role == ChatRole.user ? user.name : character.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.normal,
-                    color: Colors
-                        .white, // This color is needed, but it will be overridden by the shader.
+                    color: Colors.white,
                     fontSize: 20,
                   ),
                 )
@@ -80,6 +79,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
   List<Widget> userOptions() {
     return [
       IconButton(
+        tooltip: 'Edit Message',
         onPressed: onEdit,
         icon: const Icon(Icons.edit),
       ),
@@ -89,6 +89,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
   List<Widget> assistantOptions() {
     return [
       IconButton(
+        tooltip: 'Regenerate Response',
         onPressed: onRegenerate,
         icon: const Icon(Icons.refresh),
       ),
@@ -125,11 +126,13 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
       ),
       Row(children: [
         IconButton(
+          tooltip: 'Approve Edit',
           padding: const EdgeInsets.all(0),
           onPressed: () => onEditingDone(messageController.text),
           icon: const Icon(Icons.done)
         ),
         IconButton(
+          tooltip: 'Cancel Edit',
           padding: const EdgeInsets.all(0),
           onPressed: onEditingCancel,
           icon: const Icon(Icons.close)
@@ -156,7 +159,10 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
       if (part.isEmpty) continue;
 
       if (i % 2 == 0) {
-        widgets.add(SelectableText(part, style: TextStyle(
+        widgets.add(
+          SelectableText(
+            part, 
+            style: TextStyle(
               fontWeight: FontWeight.normal,
               color: Theme.of(context).colorScheme.onPrimary,
               fontSize: 16,
