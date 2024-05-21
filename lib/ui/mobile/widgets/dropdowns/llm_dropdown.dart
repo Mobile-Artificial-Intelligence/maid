@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
+import 'package:maid/ui/mobile/widgets/shaders/blade_runner_gradient.dart';
 import 'package:provider/provider.dart';
 
 class LlmDropdown extends StatelessWidget {
@@ -9,18 +10,8 @@ class LlmDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (bounds) => const LinearGradient(
-        colors: [
-          Color.fromARGB(255, 0, 200, 255),
-          Color.fromARGB(255, 255, 80, 200)
-        ],
-        stops: [0.25, 0.75],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ).createShader(bounds),
-      blendMode: BlendMode
-          .srcIn, // This blend mode applies the shader to the text color.
+    return BladeRunnerGradientShader(
+      stops: const [0.25, 0.75],
       child: dropdownBuilder()
     );
   }
