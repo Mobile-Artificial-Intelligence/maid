@@ -129,8 +129,16 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 20.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    GridView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(16.0),
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200.0,
+                        crossAxisSpacing: 10.0,
+                        mainAxisSpacing: 15.0,
+                        childAspectRatio: 6,
+                        mainAxisExtent: 30
+                      ),
                       children: [
                         FilledButton(
                           onPressed: () {
@@ -138,10 +146,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                           },
                           child: Text(
                             "Save Changes",
+                            softWrap: false,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
-                        const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () {
                             regenerate = true;
@@ -149,15 +157,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                           },
                           child: Text(
                             "Reset All",
+                            softWrap: false,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 15.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
                         FilledButton(
                           onPressed: () {
                             regenerate = true;
@@ -165,50 +168,40 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                           },
                           child: Text(
                             "Load Image",
+                            softWrap: false,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
-                        const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () {
                             storageOperationDialog(context, character.exportImage);
                           },
                           child: Text(
                             "Save Image",
+                            softWrap: false,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 15.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
                         FilledButton(
                           onPressed: () {
                             storageOperationDialog(context, character.exportSTV2);
                           },
                           child: Text(
                             "Save STV2 JSON",
+                            softWrap: false,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
-                        const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () {
                             storageOperationDialog(context, character.exportMCF);
                           },
                           child: Text(
                             "Save MCF JSON",
+                            softWrap: false,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 15.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
                         FilledButton(
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -219,10 +212,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                           },
                           child: Text(
                             "Switch Character",
+                            softWrap: false,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
-                        const SizedBox(width: 10.0),
                         FilledButton(
                           onPressed: () {
                             regenerate = true;
@@ -230,6 +223,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                           },
                           child: Text(
                             "Load JSON",
+                            softWrap: false,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
@@ -299,31 +293,27 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       },
                     ),
                     if (character.useGreeting) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FilledButton(
-                            onPressed: () {
-                              regenerate = true;
-                              character.newGreeting();
-                            },
-                            child: Text(
-                              "Add Greeting",
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
+                      ListTile(
+                        leading: FilledButton(
+                          onPressed: () {
+                            regenerate = true;
+                            character.newGreeting();
+                          },
+                          child: Text(
+                            "Add Greeting",
+                            style: Theme.of(context).textTheme.labelLarge,
                           ),
-                          const SizedBox(width: 10.0),
-                          FilledButton(
-                            onPressed: () {
-                              regenerate = true;
-                              character.removeLastGreeting();
-                            },
-                            child: Text(
-                              "Remove Greeting",
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
+                        ),
+                        trailing: FilledButton(
+                          onPressed: () {
+                            regenerate = true;
+                            character.removeLastGreeting();
+                          },
+                          child: Text(
+                            "Remove Greeting",
+                            style: Theme.of(context).textTheme.labelLarge,
                           ),
-                        ],
+                        ),
                       ),
                       const SizedBox(height: 10.0),
                       if (character.greetings.isNotEmpty) ...[
@@ -351,60 +341,52 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
                       },
                     ),
                     if (character.useExamples) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FilledButton(
-                            onPressed: () {
-                              regenerate = true;
-                              character.newExample(true);
-                            },
-                            child: Text(
-                              "Add Prompt",
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
+                      ListTile(
+                        leading: FilledButton(
+                          onPressed: () {
+                            regenerate = true;
+                            character.newExample(true);
+                          },
+                          child: Text(
+                            "Add Prompt",
+                            style: Theme.of(context).textTheme.labelLarge,
                           ),
-                          const SizedBox(width: 10.0),
-                          FilledButton(
-                            onPressed: () {
-                              regenerate = true;
-                              character.newExample(false);
-                            },
-                            child: Text(
-                              "Add Response",
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
+                        ),
+                        trailing: FilledButton(
+                          onPressed: () {
+                            regenerate = true;
+                            character.newExample(false);
+                          },
+                          child: Text(
+                            "Add Response",
+                            style: Theme.of(context).textTheme.labelLarge,
                           ),
-                        ],
+                        ),
                       ),
                       const SizedBox(height: 10.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FilledButton(
-                            onPressed: () {
+                      ListTile(
+                        leading: FilledButton(
+                          onPressed: () {
+                            regenerate = true;
+                            character.newExample(null);
+                          },
+                          child: Text(
+                            "Add System",
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
+                        trailing: FilledButton(
+                          onPressed: () {
+                            if (exampleControllers.length >= 2) {
                               regenerate = true;
-                              character.newExample(null);
-                            },
-                            child: Text(
-                              "Add System",
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
+                              character.removeLastExample();
+                            }
+                          },
+                          child: Text(
+                            "Remove Last",
+                            style: Theme.of(context).textTheme.labelLarge,
                           ),
-                          const SizedBox(width: 10.0),
-                          FilledButton(
-                            onPressed: () {
-                              if (exampleControllers.length >= 2) {
-                                regenerate = true;
-                                character.removeLastExample();
-                              }
-                            },
-                            child: Text(
-                              "Remove Last",
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
-                          ),
-                        ],
+                        )
                       ),
                       if (character.examples.isNotEmpty) ...[
                         for (int i = 0; i < character.examples.length; i++)
