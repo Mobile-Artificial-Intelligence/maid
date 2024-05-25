@@ -160,37 +160,31 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   Widget characterButtonsRow(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.pushNamed(
-                context,
-                '/character'
-              );
-            },
-            child: const Text(
-              "Customize"
-            ),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(context); // Close the drawer
-              Navigator.pushNamed(
-                context,
-                '/characters'
-              );
-            },
-            child: const Text(
-              "Browse"
-            ),
-          ),
-        ]
+    return ListTile(
+      leading: FilledButton(
+        onPressed: () {
+          Navigator.pop(context); // Close the drawer
+          Navigator.pushNamed(
+            context,
+            '/character'
+          );
+        },
+        child: const Text(
+          "Customize"
+        ),
       ),
+      trailing: FilledButton(
+        onPressed: () {
+          Navigator.pop(context); // Close the drawer
+          Navigator.pushNamed(
+            context,
+            '/characters'
+          );
+        },
+        child: const Text(
+          "Browse"
+        ),
+      )
     );
   }
 }
