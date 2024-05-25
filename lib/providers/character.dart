@@ -434,19 +434,13 @@ class Character extends ChangeNotifier {
 
       String? result = await FilePicker.platform.saveFile(
         dialogTitle: "Save Character Image",
-        type: FileType.any,
+        type: FileType.image,
+        bytes: encodePng(image),
       );
 
-      File file;
-      if (result != null) {
-        Logger.log("File saved: $result");
-        file = File(result);
-      } else {
-        Logger.log("File not saved");
+      if (result == null) {
         throw Exception("File not saved");
       }
-
-      await file.writeAsBytes(encodePng(image));
 
       return "Character Successfully Saved";
     } catch (e) {
@@ -459,7 +453,7 @@ class Character extends ChangeNotifier {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         dialogTitle: "Load Character Image",
-        type: FileType.any,
+        type: FileType.image,
         allowMultiple: false,
         allowCompression: false
       );
