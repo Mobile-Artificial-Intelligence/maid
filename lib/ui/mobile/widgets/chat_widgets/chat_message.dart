@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/ui/mobile/widgets/chat_widgets/chat_branch_switcher.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/shaders/blade_runner_gradient.dart';
 import 'package:maid_llm/chat_node.dart';
@@ -56,7 +55,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
               ),
               const Expanded(child: SizedBox()), // Spacer
               if (node.finalised) ...messageOptions(),
-              ChatBranchSwitcher(hash: widget.hash)
+              branchSwitcher()
             ],
           ),
           Padding(
@@ -148,6 +147,53 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
       else
         messageBuilder(node.content),
     ];
+  }
+
+  Widget branchSwitcher() {
+    return Consumer<Session>(
+      builder: (BuildContext context, Session session, Widget? child) {
+        int currentIndex = session.chat.indexOf(widget.hash);
+        int siblingCount = session.chat.siblingCountOf(widget.hash);
+
+        return Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              tooltip: 'Previous chat branch',
+              padding: const EdgeInsets.all(0),
+              onPressed: () {
+                if (!session.chat.tail.finalised) return;
+                session.chat.last(widget.hash);
+                session.notify();
+              },
+              icon: Icon(
+                Icons.arrow_left,
+                color: Theme.of(context).colorScheme.onPrimary
+              )
+            ),
+            Text(
+              '${currentIndex + 1}/$siblingCount',
+              style: Theme.of(context).textTheme.labelLarge,
+              semanticsLabel: 'Chat branch ${currentIndex + 1} of $siblingCount',
+            ),
+            IconButton(
+              tooltip: 'Next chat branch',
+              padding: const EdgeInsets.all(0),
+              onPressed: () {
+                if (!session.chat.tail.finalised) return;
+                session.chat.next(widget.hash);
+                session.notify();
+              },
+              icon: Icon(
+                Icons.arrow_right,
+                color: Theme.of(context).colorScheme.onPrimary
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget messageBuilder(String message) {
