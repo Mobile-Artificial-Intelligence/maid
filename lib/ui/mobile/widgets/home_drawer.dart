@@ -100,35 +100,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           children: [
             const CharacterTile(),
             const SizedBox(height: 5.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Close the drawer
-                    Navigator.pushNamed(
-                      context,
-                      '/character'
-                    );
-                  },
-                  child: const Text(
-                    "Customize"
-                  ),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Close the drawer
-                    Navigator.pushNamed(
-                      context,
-                      '/characters'
-                    );
-                  },
-                  child: const Text(
-                    "Browse"
-                  ),
-                )
-              ]
-            ),
+            characterButtonsRow(context),
             Divider(
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -184,6 +156,41 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ]
         )
       )
+    );
+  }
+
+  Widget characterButtonsRow(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.pushNamed(
+                context,
+                '/character'
+              );
+            },
+            child: const Text(
+              "Customize"
+            ),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.pushNamed(
+                context,
+                '/characters'
+              );
+            },
+            child: const Text(
+              "Browse"
+            ),
+          ),
+        ]
+      ),
     );
   }
 }

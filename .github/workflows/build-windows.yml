@@ -1,8 +1,6 @@
 name: Build Windows
 
 on:
-  release:
-    types: [published]
   push:
     branches:
       - main

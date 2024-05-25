@@ -60,22 +60,18 @@ class _UserTileState extends State<UserTile> {
       ),
       items: [
         PopupMenuItem(
-          child: ListTile(
-            title: const Text("Rename"),
-            onTap: () {
-              Navigator.pop(context); // Close the menu first
-              showRenameDialog(context);
-            },
-          ),
+          child: const Text("Rename"),
+          onTap: () {
+            Navigator.pop(context); // Close the menu first
+            showRenameDialog(context);
+          },
         ),
         PopupMenuItem(
-          child: ListTile(
-            title: const Text("Change Picture"),
-            onTap: () {
-              Navigator.pop(context); // Close the menu first
-              showImageDialog(context);
-            },
-          ),
+          child: const Text("Change Picture"),
+          onTap: () {
+            Navigator.pop(context); // Close the menu first
+            showImageDialog(context);
+          },
         ),
       ]
     );
@@ -137,27 +133,30 @@ class _UserTileState extends State<UserTile> {
                 "Change Profile Picture",
                 textAlign: TextAlign.center,
               ),
-              content: GridView(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
+              content: SizedBox(
+                width: 300,
+                child: GridView(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                  ),
+                  shrinkWrap: true,
+                  children: [
+                    ImageSelectorTile(
+                      image: Utilities.fileFromAssetImage("chadUser.png"),
+                    ),
+                    ImageSelectorTile(
+                      image: Utilities.fileFromAssetImage("thadUser.png"),
+                    ),
+                    ImageSelectorTile(
+                      image: Utilities.fileFromAssetImage("eugeneUser.png"),
+                    ),
+                    ImageSelectorTile(
+                      image: User.customImageFuture,
+                    ),
+                  ],
                 ),
-                shrinkWrap: true,
-                children: [
-                  ImageSelectorTile(
-                    image: Utilities.fileFromAssetImage("chadUser.png")
-                  ),
-                  ImageSelectorTile(
-                    image: Utilities.fileFromAssetImage("thadUser.png")
-                  ),
-                  ImageSelectorTile(
-                    image: Utilities.fileFromAssetImage("eugeneUser.png")
-                  ),
-                  ImageSelectorTile(
-                    image: User.customImageFuture
-                  ),
-                ]
               ),
               actions: [
                 FilledButton(
@@ -175,6 +174,7 @@ class _UserTileState extends State<UserTile> {
                   ),
                 ),
               ],
+              actionsAlignment: MainAxisAlignment.spaceEvenly,
             );
           },
         );

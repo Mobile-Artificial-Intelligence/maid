@@ -1,8 +1,6 @@
 name: Build Android
 
 on:
-  release:
-    types: [published]
   push:
     branches:
       - main
