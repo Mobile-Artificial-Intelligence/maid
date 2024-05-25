@@ -18,27 +18,30 @@ class _UserTileState extends State<UserTile> {
   @override
   Widget build(BuildContext context) {
     return Consumer<User>(
-      builder: (context, user, child) {
-        return ListTile(
-          title: Text(
-            user.name,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: 20,
-            ),
-          ),
-          leading: FutureAvatar(
-            key: user.key,
-            image: user.profile,
-            radius: 20,
-          ),
-          trailing: IconButton(
-            key: iconButtonKey,
-            icon: const Icon(Icons.more_vert),
-            onPressed: onPressed,
-          ),
-        );
-      },
+      builder: listTileBuilder,
+    );
+  }
+
+  Widget listTileBuilder(BuildContext context, User user, Widget? child) {
+    return ListTile(
+      title: Text(
+        user.name,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary,
+          fontSize: 20,
+        ),
+      ),
+      leading: FutureAvatar(
+        key: user.key,
+        image: user.profile,
+        radius: 20,
+      ),
+      trailing: IconButton(
+        tooltip: 'User Menu',
+        key: iconButtonKey,
+        icon: const Icon(Icons.more_vert),
+        onPressed: onPressed,
+      ),
     );
   }
 
