@@ -11,7 +11,6 @@ class MenuButton extends StatefulWidget {
 }
 
 class _MenuButtonState extends State<MenuButton> {
-  final iconButtonKey = GlobalKey();
   static LargeLanguageModelType lastModelType = LargeLanguageModelType.none;
   static DateTime lastCheck = DateTime.now();
   static List<String> cache = [];
@@ -33,14 +32,13 @@ class _MenuButtonState extends State<MenuButton> {
       builder: (context, session, child) {
         if (canUseCache(session)) {
           options = cache;
-          return IconButton(
+          return PopupMenuButton(
             tooltip: 'Open Menu',
-            key: iconButtonKey,
             icon: const Icon(
               Icons.account_tree_rounded,
               size: 24,
             ),
-            onPressed: onPressed,
+            itemBuilder: itemBuilder
           );
         } 
         else {
@@ -52,14 +50,13 @@ class _MenuButtonState extends State<MenuButton> {
               if (snapshot.connectionState == ConnectionState.done) {
                 options = snapshot.data as List<String>;
                 cache = options;
-                return IconButton(
+                return PopupMenuButton(
                   tooltip: 'Open Menu',
-                  key: iconButtonKey,
                   icon: const Icon(
                     Icons.account_tree_rounded,
                     size: 24,
                   ),
-                  onPressed: onPressed,
+                  itemBuilder: itemBuilder
                 );
               } else {
                 return const Padding(
@@ -82,11 +79,7 @@ class _MenuButtonState extends State<MenuButton> {
     );
   }
 
-  void onPressed() {
-    final RenderBox renderBox = iconButtonKey.currentContext!.findRenderObject() as RenderBox;
-    final Offset offset = renderBox.localToGlobal(Offset.zero);
-    final Size size = renderBox.size;
-
+  List<PopupMenuEntry<dynamic>> itemBuilder(BuildContext context) {
     List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
       padding: EdgeInsets.zero,
       child: Consumer<Session>(
@@ -104,72 +97,62 @@ class _MenuButtonState extends State<MenuButton> {
         )
       )
     ).toList();
-    
-    showMenu(
-      context: context,
-      // Calculate the position based on the button's position and size
-      position: RelativeRect.fromLTRB(
-        offset.dx,
-        offset.dy + size.height,
-        offset.dx,
-        offset.dy,
+
+    return [
+      ...modelOptions,
+      if (modelOptions.isNotEmpty)
+        const PopupMenuDivider(
+          height: 10,
+        ),
+      PopupMenuItem(
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          title: const Text('Model Settings'),
+          onTap: () {
+            switch (context.read<Session>().model.type) {
+              case LargeLanguageModelType.llamacpp:
+                Navigator.pushNamed(context, '/llamacpp');
+              case LargeLanguageModelType.ollama:
+                Navigator.pushNamed(context, '/ollama');
+              case LargeLanguageModelType.openAI:
+                Navigator.pushNamed(context, '/openai');
+              case LargeLanguageModelType.mistralAI:
+                Navigator.pushNamed(context, '/mistralai');
+              case LargeLanguageModelType.gemini:
+                Navigator.pushNamed(context, '/gemini');
+              default:
+                throw Exception('Invalid model type');
+            }
+          },
+        ),
       ),
-      items: [
-        ...modelOptions,
-        if (modelOptions.isNotEmpty)
-          const PopupMenuDivider(
-            height: 10,
-          ),
-        PopupMenuItem(
-          padding: EdgeInsets.zero,
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-            title: const Text('Model Settings'),
-            onTap: () {
-              switch (context.read<Session>().model.type) {
-                case LargeLanguageModelType.llamacpp:
-                  Navigator.pushNamed(context, '/llamacpp');
-                case LargeLanguageModelType.ollama:
-                  Navigator.pushNamed(context, '/ollama');
-                case LargeLanguageModelType.openAI:
-                  Navigator.pushNamed(context, '/openai');
-                case LargeLanguageModelType.mistralAI:
-                  Navigator.pushNamed(context, '/mistralai');
-                case LargeLanguageModelType.gemini:
-                  Navigator.pushNamed(context, '/gemini');
-                default:
-                  throw Exception('Invalid model type');
-              }
-            },
-          ),
+      PopupMenuItem(
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          title: const Text('App Settings'),
+          onTap: () {
+            cache.clear();
+            Navigator.pop(context);
+            Navigator.pushNamed(
+              context,
+              '/settings'
+            );
+          },
         ),
-        PopupMenuItem(
-          padding: EdgeInsets.zero,
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-            title: const Text('App Settings'),
-            onTap: () {
-              cache.clear();
-              Navigator.pop(context);
-              Navigator.pushNamed(
-                context,
-                '/settings'
-              );
-            },
-          ),
+      ),
+      PopupMenuItem(
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          title: const Text('About'),
+          onTap: () {
+            Navigator.pop(context); // Close the menu first
+            Navigator.pushNamed(context, '/about');
+          },
         ),
-        PopupMenuItem(
-          padding: EdgeInsets.zero,
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-            title: const Text('About'),
-            onTap: () {
-              Navigator.pop(context); // Close the menu first
-              Navigator.pushNamed(context, '/about');
-            },
-          ),
-        ),
-      ],
-    );
+      )
+    ];
   }
 }

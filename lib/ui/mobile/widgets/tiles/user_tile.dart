@@ -13,8 +13,6 @@ class UserTile extends StatefulWidget {
 }
 
 class _UserTileState extends State<UserTile> {
-  final iconButtonKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return Consumer<User>(
@@ -36,44 +34,25 @@ class _UserTileState extends State<UserTile> {
         image: user.profile,
         radius: 20,
       ),
-      trailing: IconButton(
+      trailing: PopupMenuButton(
         tooltip: 'User Menu',
-        key: iconButtonKey,
-        icon: const Icon(Icons.more_vert),
-        onPressed: onPressed,
+        itemBuilder: (BuildContext context) => [
+          PopupMenuItem(
+            child: const Text("Rename"),
+            onTap: () {
+              Navigator.pop(context); // Close the menu first
+              showRenameDialog(context);
+            },
+          ),
+          PopupMenuItem(
+            child: const Text("Change Picture"),
+            onTap: () {
+              Navigator.pop(context); // Close the menu first
+              showImageDialog(context);
+            },
+          ),
+        ]
       ),
-    );
-  }
-
-  void onPressed() {
-    final RenderBox renderBox = iconButtonKey.currentContext!.findRenderObject() as RenderBox;
-    final Offset offset = renderBox.localToGlobal(Offset.zero);
-    final Size size = renderBox.size;
-
-    showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(
-        offset.dx,
-        offset.dy + size.height,
-        offset.dx,
-        offset.dy,
-      ),
-      items: [
-        PopupMenuItem(
-          child: const Text("Rename"),
-          onTap: () {
-            Navigator.pop(context); // Close the menu first
-            showRenameDialog(context);
-          },
-        ),
-        PopupMenuItem(
-          child: const Text("Change Picture"),
-          onTap: () {
-            Navigator.pop(context); // Close the menu first
-            showImageDialog(context);
-          },
-        ),
-      ]
     );
   }
 
