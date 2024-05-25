@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/main.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const GenericAppBar(title: "App Settings"),
-      body: Consumer<MainProvider>(
+      body: Consumer<AppPreferences>(
         builder: (context, mainProvider, child) {
           return SingleChildScrollView(
             child: Column(
