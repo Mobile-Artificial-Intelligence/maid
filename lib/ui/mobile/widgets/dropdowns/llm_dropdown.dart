@@ -5,8 +5,15 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/shaders/blade_runner_gradient.dart';
 import 'package:provider/provider.dart';
 
-class LlmDropdown extends StatelessWidget {
+class LlmDropdown extends StatefulWidget {
   const LlmDropdown({super.key});
+
+  @override
+  State<LlmDropdown> createState() => _LlmDropdownState();
+}
+
+class _LlmDropdownState extends State<LlmDropdown> {
+  bool open = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,83 +26,81 @@ class LlmDropdown extends StatelessWidget {
   Widget dropdownBuilder() {
     return Consumer<Session>(
       builder: (context, session, child) {
-        return Semantics(
-          label: 'Large language model API Dropdown',
-          hint: 'The current API is ${session.model.type.displayName}.',
-          excludeSemantics: true,
-          onTapHint: 'Cycle through available APIs',
-          onTap: () {
-            final length = LargeLanguageModelType.values.length;
-            final currentIndex = session.model.type.index;
-            final newIndex = (currentIndex % (length - 1)) + 1;
-            final newValue = LargeLanguageModelType.values[newIndex];
-            _onSelected(newValue, context);
-          },
-          child: DropdownMenu<LargeLanguageModelType>(
-            enableSearch: false,
-            hintText: 'Select Large Language Model API',
-            dropdownMenuEntries: const [
-              if (!kIsWeb)
-              DropdownMenuEntry<LargeLanguageModelType>(
-                value: LargeLanguageModelType.llamacpp,
-                label: "LlamaCPP",
-              ),
-              DropdownMenuEntry<LargeLanguageModelType>(
-                value: LargeLanguageModelType.ollama,
-                label: "Ollama",
-              ),
-              DropdownMenuEntry<LargeLanguageModelType>(
-                value: LargeLanguageModelType.openAI,
-                label: "OpenAI",
-              ),
-              DropdownMenuEntry<LargeLanguageModelType>(
-                value: LargeLanguageModelType.mistralAI,
-                label: "MistralAI",
-              ),
-              DropdownMenuEntry<LargeLanguageModelType>(
-                value: LargeLanguageModelType.gemini,
-                label: "Gemini",
-              ),
-            ],
-            onSelected: (LargeLanguageModelType? value) => _onSelected(value, context),
-            initialSelection: session.model.type,
-            textStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              session.model.type.displayName,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+              )
             ),
-            inputDecorationTheme: const InputDecorationTheme(
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-            ),
-            width: 175
-          )
+            PopupMenuButton(
+              tooltip: 'Select Large Language Model API',
+              icon: Icon(
+                open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                color: Colors.white,
+                size: 24,
+              ),
+              offset: const Offset(0, 40),
+              itemBuilder: itemBuilder,
+              onOpened: () => setState(() => open = true),
+              onCanceled: () => setState(() => open = false),
+              onSelected: (_) => setState(() => open = false)
+            )
+          ]
         );
       }
     );
   }
 
-  void _onSelected(LargeLanguageModelType? value, BuildContext context) {
+  List<PopupMenuEntry<dynamic>> itemBuilder(BuildContext context) {
     final session = context.read<Session>();
 
-    if (value != null) {
-      switch (value) {
-        case LargeLanguageModelType.llamacpp:
-          session.switchLlamaCpp();
-          break;
-        case LargeLanguageModelType.openAI:
-          session.switchOpenAI();
-          break;
-        case LargeLanguageModelType.ollama:
-          session.switchOllama();
-          break;
-        case LargeLanguageModelType.mistralAI:
-          session.switchMistralAI();
-          break;
-        case LargeLanguageModelType.gemini:
-          session.switchGemini();
-          break;
-        default:
-          break;
-      }
-    }
+    return [
+      if (!kIsWeb)
+      PopupMenuItem(
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          title: const Text('LlamaCPP'),
+          onTap: session.switchLlamaCpp,
+        ),
+      ),
+      PopupMenuItem(
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          title: const Text('OpenAI'),
+          onTap: session.switchOpenAI,
+        ),
+      ),
+      PopupMenuItem(
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          title: const Text('Ollama'),
+          onTap: session.switchOllama,
+        ),
+      ),
+      PopupMenuItem(
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          title: const Text('MistralAI'),
+          onTap: session.switchMistralAI,
+        ),
+      ),
+      PopupMenuItem(
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          title: const Text('Gemini'),
+          onTap: session.switchGemini,
+        ),
+      )
+    ];
   }
 }

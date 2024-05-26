@@ -15,7 +15,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
       elevation: 0.0,
       actions: const [
-        SizedBox(width: 34),
+        SizedBox(width: 50),
         LlmDropdown(),
         Expanded(child: SizedBox()),
         MenuButton()
