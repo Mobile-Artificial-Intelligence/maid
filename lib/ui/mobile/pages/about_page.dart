@@ -29,10 +29,13 @@ class _AboutPageState extends State<AboutPage> {
                 });
 
                 if (_counter >= 10) {
+                  _counter = 0;
                   Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LlamaCppPage()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LlamaCppPage()
+                    )
+                  );
                 }
               },
               child: Image.asset(

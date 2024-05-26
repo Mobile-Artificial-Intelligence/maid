@@ -13,7 +13,7 @@ class NCtxParameter extends StatelessWidget {
         return SliderListTile(
           labelText: 'NCtx',
           inputValue: session.model.nCtx,
-          sliderMin: 1.0,
+          sliderMin: 0.0,
           sliderMax: 4096.0,
           sliderDivisions: 4095,
           onValueChanged: (value) {

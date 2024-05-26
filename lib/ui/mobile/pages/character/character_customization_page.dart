@@ -238,10 +238,9 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
           onPressed: () {
             save();
           },
-          child: Text(
+          child: const Text(
             "Save Changes",
-            softWrap: false,
-            style: Theme.of(context).textTheme.labelLarge,
+            softWrap: false
           ),
         ),
         FilledButton(
@@ -249,10 +248,9 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
             regenerate = true;
             character.reset();
           },
-          child: Text(
+          child: const Text(
             "Reset All",
-            softWrap: false,
-            style: Theme.of(context).textTheme.labelLarge,
+            softWrap: false
           ),
         ),
         FilledButton(
@@ -260,40 +258,36 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
             regenerate = true;
             storageOperationDialog(context, character.importImage);
           },
-          child: Text(
+          child: const Text(
             "Load Image",
-            softWrap: false,
-            style: Theme.of(context).textTheme.labelLarge,
+            softWrap: false
           ),
         ),
         FilledButton(
           onPressed: () {
             storageOperationDialog(context, character.exportImage);
           },
-          child: Text(
+          child: const Text(
             "Save Image",
-            softWrap: false,
-            style: Theme.of(context).textTheme.labelLarge,
+            softWrap: false
           ),
         ),
         FilledButton(
           onPressed: () {
             storageOperationDialog(context, character.exportSTV2);
           },
-          child: Text(
+          child: const Text(
             "Save STV2 JSON",
-            softWrap: false,
-            style: Theme.of(context).textTheme.labelLarge,
+            softWrap: false
           ),
         ),
         FilledButton(
           onPressed: () {
             storageOperationDialog(context, character.exportMCF);
           },
-          child: Text(
+          child: const Text(
             "Save MCF JSON",
-            softWrap: false,
-            style: Theme.of(context).textTheme.labelLarge,
+            softWrap: false
           ),
         ),
         FilledButton(
@@ -304,10 +298,9 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
               '/characters'
             );
           },
-          child: Text(
+          child: const Text(
             "Switch Character",
-            softWrap: false,
-            style: Theme.of(context).textTheme.labelLarge,
+            softWrap: false
           ),
         ),
         FilledButton(
@@ -315,10 +308,9 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
             regenerate = true;
             storageOperationDialog(context, character.importJSON);
           },
-          child: Text(
+          child: const Text(
             "Load JSON",
-            softWrap: false,
-            style: Theme.of(context).textTheme.labelLarge,
+            softWrap: false
           ),
         ),
       ],
@@ -333,9 +325,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
             regenerate = true;
             character.newGreeting();
           },
-          child: Text(
-            "Add Greeting",
-            style: Theme.of(context).textTheme.labelLarge,
+          child: const Text(
+            "Add Greeting"
           ),
         ),
         trailing: FilledButton(
@@ -343,9 +334,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
             regenerate = true;
             character.removeLastGreeting();
           },
-          child: Text(
-            "Remove Greeting",
-            style: Theme.of(context).textTheme.labelLarge,
+          child: const Text(
+            "Remove Greeting"
           ),
         ),
       ),
@@ -378,9 +368,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
             regenerate = true;
             character.newExample(true);
           },
-          child: Text(
-            "Add Prompt",
-            style: Theme.of(context).textTheme.labelLarge,
+          child: const Text(
+            "Add Prompt"
           ),
         ),
         trailing: FilledButton(
@@ -388,9 +377,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
             regenerate = true;
             character.newExample(false);
           },
-          child: Text(
-            "Add Response",
-            style: Theme.of(context).textTheme.labelLarge,
+          child: const Text(
+            "Add Response"
           ),
         ),
       ),
@@ -401,9 +389,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
             regenerate = true;
             character.newExample(null);
           },
-          child: Text(
-            "Add System",
-            style: Theme.of(context).textTheme.labelLarge,
+          child: const Text(
+            "Add System"
           ),
         ),
         trailing: FilledButton(
@@ -413,9 +400,8 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
               character.removeLastExample();
             }
           },
-          child: Text(
-            "Remove Last",
-            style: Theme.of(context).textTheme.labelLarge,
+          child: const Text(
+            "Remove Last"
           ),
         )
       ),

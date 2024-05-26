@@ -9,7 +9,7 @@ class LargeLanguageModel extends ChangeNotifier {
   String _token = '';
 
   bool _randomSeed = true;
-  bool _useDefault = false;
+  bool _useDefault = true;
   bool _penalizeNewline = true;
 
   int _seed = 0;
@@ -203,7 +203,7 @@ class LargeLanguageModel extends ChangeNotifier {
     String uri = '',
     String token = '',
     bool randomSeed = true,
-    bool useDefault = false,
+    bool useDefault = true,
     bool penalizeNewline = true,
     int seed = 0,
     int nKeep = 48,

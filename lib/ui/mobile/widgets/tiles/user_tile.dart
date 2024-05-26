@@ -78,9 +78,8 @@ class _UserTileState extends State<UserTile> {
               actions: [
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
-                    "Cancel",
-                    style: Theme.of(context).textTheme.labelLarge,
+                  child: const Text(
+                    "Cancel"
                   ),
                 ),
                 FilledButton(
@@ -88,9 +87,8 @@ class _UserTileState extends State<UserTile> {
                     user.name = controller.text;
                     Navigator.of(context).pop();
                   },
-                  child: Text(
-                    "Rename",
-                    style: Theme.of(context).textTheme.labelLarge,
+                  child: const Text(
+                    "Rename"
                   ),
                 ),
               ],
@@ -140,16 +138,14 @@ class _UserTileState extends State<UserTile> {
               actions: [
                 FilledButton(
                   onPressed: user.loadImage,
-                  child: Text(
-                    "Load Custom",
-                    style: Theme.of(context).textTheme.labelLarge,
+                  child: const Text(
+                    "Load Custom"
                   ),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
-                    "Close",
-                    style: Theme.of(context).textTheme.labelLarge,
+                  child: const Text(
+                    "Close"
                   ),
                 ),
               ],

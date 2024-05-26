@@ -77,9 +77,8 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                     onPressed: () {
                       session.model.reset();
                     },
-                    child: Text(
-                      "Reset",
-                      style: Theme.of(context).textTheme.labelLarge,
+                    child: const Text(
+                      "Reset"
                     ),
                   ),
                 ),
@@ -95,9 +94,8 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                         );
                         session.notify();
                       },
-                      child: Text(
-                        "Load GGUF",
-                        style: Theme.of(context).textTheme.labelLarge,
+                      child: const Text(
+                        "Load GGUF"
                       ),
                     ),
                     const SizedBox(width: 10.0),
@@ -106,9 +104,8 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                         session.model.resetUri();
                         session.notify();
                       },
-                      child: Text(
-                        "Unload GGUF",
-                        style: Theme.of(context).textTheme.labelLarge,
+                      child: const Text(
+                        "Unload GGUF"
                       ),
                     ),
                   ],
