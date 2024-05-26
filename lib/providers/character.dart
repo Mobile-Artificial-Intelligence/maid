@@ -463,7 +463,7 @@ class Character extends ChangeNotifier {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         dialogTitle: "Load Character Image",
-        type: FileType.image,
+        type: FileType.any,
         allowMultiple: false,
         allowCompression: false
       );
