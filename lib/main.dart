@@ -18,24 +18,13 @@ import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
 import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final prefs = await SharedPreferences.getInstance();
-
-  String? lastUserString = prefs.getString("last_user");
-  Map<String, dynamic> lastUser = json.decode(lastUserString ?? "{}");
-  User user = User.fromMap(lastUser);
-
-  String? lastCharacterString = prefs.getString("last_character");
-  Map<String, dynamic> lastCharacter = json.decode(lastCharacterString ?? "{}");
-  Character character = Character.fromMap(lastCharacter);
-
-  String? lastSessionString = prefs.getString("last_session");
-  Map<String, dynamic> lastSession = json.decode(lastSessionString ?? "{}");
-  Session session = Session.fromMap(lastSession);
+  User user = await User.last;
+  Character character = await Character.last;
+  Session session = await Session.last;
 
   runApp(
     MaidApp(user: user, character: character, session: session)

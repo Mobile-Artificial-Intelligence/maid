@@ -90,9 +90,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
   }
 
   Widget buildBody(BuildContext context, Character character, Widget? child) {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("last_character", json.encode(character.toMap()));
-    });
+    character.save();
 
     if (regenerate) {
       nameController = TextEditingController(text: character.name);

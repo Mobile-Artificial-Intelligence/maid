@@ -16,6 +16,7 @@ class ImageSelectorTile extends StatelessWidget {
       onTap: () {
         final user = context.read<User>();
         user.profile = image;
+        user.save();
       },
       child: GridTile(
         child: FutureTileImage(

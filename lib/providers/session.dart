@@ -53,6 +53,22 @@ class Session extends ChangeNotifier {
     fromMap(inputJson);
   }
 
+  static Future<Session> get last async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String? lastSessionString = prefs.getString("last_session");
+
+    Map<String, dynamic> lastSession = json.decode(lastSessionString ?? "{}");
+
+    return Session.fromMap(lastSession);
+  }
+
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString("last_session", json.encode(toMap()));
+  }
+
   void newSession() {
     name = "New Chat";
     chat = ChatNodeTree();
@@ -171,15 +187,6 @@ class Session extends ChangeNotifier {
   void stop() {
     (model as LlamaCppModel).stop();
     Logger.log('Local generation stopped');
-    notifyListeners();
-  }
-
-  void finalise() {
-
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("last_session", json.encode(toMap()));
-    });
-
     notifyListeners();
   }
 

@@ -81,9 +81,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       sessions.insert(0, session.copy());
     }
 
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("last_session", json.encode(session.toMap()));
-    });
+    session.save();
 
     return Drawer(
       semanticLabel: "Drawer Menu",

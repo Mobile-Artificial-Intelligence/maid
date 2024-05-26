@@ -28,18 +28,24 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
     final prefs = await SharedPreferences.getInstance();
 
     final String? charactersJson = prefs.getString("characters");
+
+    characters.clear();
+
     if (charactersJson == null) {
-      return;
-    }
-
-    final List charactersList = json.decode(charactersJson);
-
-    setState(() {
-      characters.clear();
+      final last = await Character.last;
+      setState(() {
+        characters.add(last);
+      });
+    } 
+    else {
+      final List charactersList = json.decode(charactersJson);
+    
       for (final characterMap in charactersList) {
-        characters.add(Character.fromMap(characterMap));
+        setState(() {
+          characters.add(Character.fromMap(characterMap));
+        });
       }
-    });
+    }
   }
 
   @override

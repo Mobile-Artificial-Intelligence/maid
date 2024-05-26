@@ -57,9 +57,7 @@ class HomePageState extends State<HomePage> {
   Widget _buildChat() {
     return Consumer3<Session, User, Character>(
       builder: (context, session, user, character, child) {
-        SharedPreferences.getInstance().then((prefs) {
-          prefs.setString("last_session", json.encode(session.toMap()));
-        });
+        session.save();
         
         List<ChatNode> chat = session.chat.getChat();
 

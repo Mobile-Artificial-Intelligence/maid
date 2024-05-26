@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/utilities.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class User extends ChangeNotifier {
   static File? _customImage;
@@ -28,6 +30,22 @@ class User extends ChangeNotifier {
 
   User.fromMap(Map<String, dynamic> inputMap) {
     fromMap(inputMap);
+  }
+
+  static Future<User> get last async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String? lastUserString = prefs.getString("last_user");
+
+    Map<String, dynamic> lastUser = json.decode(lastUserString ?? "{}");
+
+    return User.fromMap(lastUser);
+  }
+
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString("last_user", json.encode(toMap()));
   }
 
   Future<File> get profile async {
