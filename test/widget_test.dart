@@ -11,6 +11,7 @@ void main() {
     testWidgets('Build and trigger frame', (WidgetTester tester) async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(MaidApp(
+        appPreferences: AppPreferences(),
         user: User(),
         character: Character(),
         session: Session()
@@ -19,6 +20,7 @@ void main() {
 
     testWidgets('Find drawer menu button', (WidgetTester tester) async {
       await tester.pumpWidget(MaidApp(
+        appPreferences: AppPreferences(),
         user: User(),
         character: Character(),
         session: Session()
@@ -30,6 +32,7 @@ void main() {
 
     testWidgets('Open drawer menu', (WidgetTester tester) async {
       await tester.pumpWidget(MaidApp(
+        appPreferences: AppPreferences(),
         user: User(),
         character: Character(),
         session: Session()
