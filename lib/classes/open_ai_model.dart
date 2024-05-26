@@ -34,13 +34,8 @@ class OpenAiModel extends LargeLanguageModel {
 
   @override
   void fromMap(Map<String, dynamic> json) {
+    if (json['uri'] == null) json['uri'] = defaultUrl;
     super.fromMap(json);
-    uri = json['url'] ?? defaultUrl;
-    token = json['token'] ?? '';
-    nPredict = json['nPredict'] ?? 512;
-    topP = json['topP'] ?? 0.95;
-    penaltyPresent = json['penaltyPresent'] ?? 0.0;
-    penaltyFreq = json['penaltyFreq'] ?? 0.0;
     notifyListeners();
   }
 
