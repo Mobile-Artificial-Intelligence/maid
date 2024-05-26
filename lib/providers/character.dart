@@ -348,20 +348,14 @@ class Character extends ChangeNotifier {
       String? result = await FilePicker.platform.saveFile(
         dialogTitle: "Save Character JSON",
         type: FileType.any,
+        bytes: utf8.encode(jsonString),
       );
 
-      File file;
-      if (result != null) {
-        Logger.log("File saved: $result");
-        file = File(result);
-      } else {
-        Logger.log("File not saved");
+      if (result == null) {
         throw Exception("File not saved");
       }
 
-      await file.writeAsString(jsonString);
-
-      return "Character Successfully Saved to ${file.path}";
+      return "Character Successfully Saved";
     } catch (e) {
       Logger.log("Error: $e");
       return "Error: $e";
