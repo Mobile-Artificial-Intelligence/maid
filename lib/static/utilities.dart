@@ -1,29 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Utilities {
-  static String keyToString(Key key) {
-    String keyString = key.toString();
-    return _cleanKeyString(keyString);
-  }
-
-  static Key stringToKey(String string) {
-    return ValueKey(_cleanKeyString(string));
-  }
-
-  static String _cleanKeyString(String keyString) {
-    keyString = keyString.replaceAll('\'', '');
-    keyString = keyString.replaceAll('<', '');
-    keyString = keyString.replaceAll('>', '');
-    keyString = keyString.replaceAll('[', '');
-    keyString = keyString.replaceAll(']', '');
-
-    return keyString;
-  }
-
   static String formatPlaceholders(
     String input, 
     String userName, 
