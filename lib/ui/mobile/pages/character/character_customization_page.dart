@@ -151,13 +151,13 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         color: Theme.of(context).colorScheme.primary,
       ),
       SwitchListTile(
-        title: const Text('Use Preprompt'),
-        value: character.usePreprompt,
+        title: const Text('Use System'),
+        value: character.useSystem,
         onChanged: (value) {
-          character.usePreprompt = value;
+          character.useSystem = value;
         },
       ),
-      if (character.usePreprompt) ...preprompt(character),
+      if (character.useSystem) ...system(character),
       Divider(
         indent: 10,
         endIndent: 10,
@@ -400,7 +400,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
     return widgets;
   }
 
-  List<Widget> preprompt(Character character) {
+  List<Widget> system(Character character) {
     return [
       TextFieldListTile(
         headingText: 'Description',
