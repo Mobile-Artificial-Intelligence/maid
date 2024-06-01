@@ -14,6 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
   File? _profile;
+
+  bool _usePreprompt = true;
   String _name = "Maid";
   String _description = "";
   String _personality = "";
@@ -63,6 +65,7 @@ class Character extends ChangeNotifier {
 
   void from(Character character) async {
     _profile = await character.profile;
+    _usePreprompt = character.usePreprompt;
     _name = character.name;
     _description = character.description;
     _personality = character.personality;
@@ -106,14 +109,16 @@ class Character extends ChangeNotifier {
 
   void fromMCFMap(Map<String, dynamic> inputJson) {
     _name = inputJson["name"] ?? "Unknown";
+    _usePreprompt = inputJson["use_preprompt"] ?? true;
     _description = inputJson["description"] ?? "";
     _personality = inputJson["personality"] ?? "";
     _scenario = inputJson["scenario"] ?? "";
-
-    _greetings = List<String>.from(inputJson["greetings"]);
-
     _system = inputJson["system_prompt"] ?? "";
+
+    _useGreeting = inputJson["use_greeting"] ?? false;
+    _greetings = List<String>.from(inputJson["greetings"]);
     
+    _useExamples = inputJson["use_examples"] ?? false;
     if (inputJson["examples"] != null) {
       _examples = List<Map<String, dynamic>>.generate(
         inputJson["examples"].length ?? 0, 
@@ -155,6 +160,7 @@ class Character extends ChangeNotifier {
 
     jsonCharacter["spec"] = "mcf_v1";
     jsonCharacter["profile"] = _profile?.path;
+    jsonCharacter["use_preprompt"] = _usePreprompt;
     jsonCharacter["name"] = _name;
     jsonCharacter["description"] = _description;
     jsonCharacter["personality"] = _personality;
@@ -213,6 +219,11 @@ class Character extends ChangeNotifier {
 
   set name(String newName) {
     _name = newName;
+    notifyListeners();
+  }
+
+  set usePreprompt(bool usePreprompt) {
+    _usePreprompt = usePreprompt;
     notifyListeners();
   }
 
@@ -317,6 +328,8 @@ class Character extends ChangeNotifier {
   Key get key => ValueKey(hash);
 
   String get name => _name;
+
+  bool get usePreprompt => _usePreprompt;
 
   String get description => _description;
 

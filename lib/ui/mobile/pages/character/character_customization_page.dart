@@ -145,42 +145,19 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         },
         multiline: false,
       ),
-      TextFieldListTile(
-        headingText: 'Description',
-        labelText: 'Description',
-        controller: descriptionController,
-        onChanged: (value) {
-          character.description = value;
-        },
-        multiline: true,
+      Divider(
+        indent: 10,
+        endIndent: 10,
+        color: Theme.of(context).colorScheme.primary,
       ),
-      TextFieldListTile(
-        headingText: 'Personality',
-        labelText: 'Personality',
-        controller: personalityController,
+      SwitchListTile(
+        title: const Text('Use Preprompt'),
+        value: character.usePreprompt,
         onChanged: (value) {
-          character.personality = value;
+          character.usePreprompt = value;
         },
-        multiline: true,
       ),
-      TextFieldListTile(
-        headingText: 'Scenario',
-        labelText: 'Scenario',
-        controller: scenarioController,
-        onChanged: (value) {
-          character.scenario = value;
-        },
-        multiline: true,
-      ),
-      TextFieldListTile(
-        headingText: 'System Prompt',
-        labelText: 'System Prompt',
-        controller: systemController,
-        onChanged: (value) {
-          character.system = value;
-        },
-        multiline: true,
-      ),
+      if (character.usePreprompt) ...preprompt(character),
       Divider(
         indent: 10,
         endIndent: 10,
@@ -421,5 +398,46 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
     }
 
     return widgets;
+  }
+
+  List<Widget> preprompt(Character character) {
+    return [
+      TextFieldListTile(
+        headingText: 'Description',
+        labelText: 'Description',
+        controller: descriptionController,
+        onChanged: (value) {
+          character.description = value;
+        },
+        multiline: true,
+      ),
+      TextFieldListTile(
+        headingText: 'Personality',
+        labelText: 'Personality',
+        controller: personalityController,
+        onChanged: (value) {
+          character.personality = value;
+        },
+        multiline: true,
+      ),
+      TextFieldListTile(
+        headingText: 'Scenario',
+        labelText: 'Scenario',
+        controller: scenarioController,
+        onChanged: (value) {
+          character.scenario = value;
+        },
+        multiline: true,
+      ),
+      TextFieldListTile(
+        headingText: 'System Prompt',
+        labelText: 'System Prompt',
+        controller: systemController,
+        onChanged: (value) {
+          character.system = value;
+        },
+        multiline: true,
+      ),
+    ];
   }
 }
