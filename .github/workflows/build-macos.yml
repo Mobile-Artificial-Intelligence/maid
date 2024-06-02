@@ -1,0 +1,46 @@
+name: Build macOS
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:        
+  build:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [x86_64, arm64]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.5'
+        
+      - name: Install dependencies
+        run: |
+          brew install cmake ninja
+
+      - name: Install Vulkan SDK
+        uses: humbletim/install-vulkan-sdk@v1.1.1
+        with:
+          version: latest
+          cache: true
+
+      - name: Build macOS App
+        run: |
+          flutter pub get
+          flutter build macos --release --target-platform=${{ matrix.arch }}
+
+      - name: Upload macOS Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-macos-${{ matrix.arch }}
+          path: build/macos/Build/Products/Release
