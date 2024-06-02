@@ -37,7 +37,7 @@ jobs:
       - name: Build macOS App
         run: |
           flutter pub get
-          flutter build macos --release --target-platform=${{ matrix.arch }}
+          flutter build macos
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
