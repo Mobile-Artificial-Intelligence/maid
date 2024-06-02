@@ -33,6 +33,10 @@ jobs:
           flutter pub get
           flutter build macos
 
+      - name: Set execute permissions
+        run: |
+          chmod +x build/macos/Build/Products/Release/maid.app
+
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
         with:
