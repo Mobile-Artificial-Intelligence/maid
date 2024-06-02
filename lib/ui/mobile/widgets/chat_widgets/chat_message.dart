@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/shaders/blade_runner_gradient.dart';
-import 'package:maid_llm/chat_node.dart';
+import 'package:maid/classes/chat_node.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
@@ -9,19 +9,19 @@ import 'package:maid/providers/user.dart';
 import 'package:maid_ui/maid_ui.dart';
 import 'package:provider/provider.dart';
 
-class ChatMessage extends StatefulWidget {
+class ChatMessageWidget extends StatefulWidget {
   final String hash;
 
-  const ChatMessage({
+  const ChatMessageWidget({
     super.key,
     required this.hash,
   });
 
   @override
-  State<ChatMessage> createState() => _ChatMessageState();
+  State<ChatMessageWidget> createState() => _ChatMessageWidgetState();
 }
 
-class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
+class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTickerProviderStateMixin {
   late ChatNode node;
   bool editing = false;
 

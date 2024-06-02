@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:maid_llm/chat_node.dart';
+import 'package:maid/classes/chat_node.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
@@ -12,7 +11,6 @@ import 'package:maid/ui/mobile/widgets/chat_widgets/chat_field.dart';
 import 'package:maid/ui/mobile/widgets/appbars/home_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/home_drawer.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -44,11 +42,11 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  List<ChatMessage> _getChatWidgets(List<ChatNode> chat) {
-    List<ChatMessage> chatWidgets = [];
+  List<ChatMessageWidget> _getChatWidgets(List<ChatNode> chat) {
+    List<ChatMessageWidget> chatWidgets = [];
 
     for (final message in chat) {
-      chatWidgets.add(ChatMessage(hash: message.hash));
+      chatWidgets.add(ChatMessageWidget(hash: message.hash));
     }
 
     return chatWidgets;

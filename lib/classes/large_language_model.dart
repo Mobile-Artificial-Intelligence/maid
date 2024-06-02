@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid_llm/chat_node.dart';
+import 'package:maid/classes/chat_node.dart';
 
 class LargeLanguageModel extends ChangeNotifier {
   LargeLanguageModelType get type => LargeLanguageModelType.none;

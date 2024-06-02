@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
-import 'package:maid_llm/chat_node.dart';
+import 'package:maid/classes/chat_node.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LlamaCppModel extends LargeLanguageModel {
@@ -171,7 +171,13 @@ class LlamaCppModel extends LargeLanguageModel {
     try {
       _maidLLM ??= MaidLLM(toGptParams(), log: Logger.log);
 
-      return _maidLLM!.prompt(messages, _template);
+      List<ChatMessage> chatMessages = [];
+
+      for (var message in messages) {
+        chatMessages.add(message.toChatMessage());
+      }
+
+      return _maidLLM!.prompt(chatMessages, _template);
     } catch (e) {
       Logger.log("Error initializing model: $e");
       return const Stream.empty();
