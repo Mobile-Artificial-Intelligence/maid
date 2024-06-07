@@ -117,7 +117,7 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
         style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
           hintText: "Edit Message",
-          fillColor: Theme.of(context).colorScheme.background,
+          fillColor: Theme.of(context).colorScheme.surface,
           contentPadding: EdgeInsets.zero,
         ),
         maxLines: null,

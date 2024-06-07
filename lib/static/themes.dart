@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class Themes {
   static ThemeData lightTheme() {
     return genericTheme(
-      background: Colors.white,
-      onBackground: Colors.grey.shade700,
+      surface: Colors.white,
+      onSurface: Colors.grey.shade700,
       primary: Colors.grey.shade300,
       onPrimary: Colors.black,
       secondary: Colors.blue,
@@ -16,8 +16,8 @@ class Themes {
 
   static ThemeData darkTheme() {
     return genericTheme(
-      background: Colors.grey.shade900,
-      onBackground: Colors.black,
+      surface: Colors.grey.shade900,
+      onSurface: Colors.black,
       primary: Colors.grey.shade800,
       onPrimary: Colors.white,
       secondary: Colors.blue,
@@ -28,8 +28,8 @@ class Themes {
   }
 
   static ThemeData genericTheme({
-    required Color background,
-    required Color onBackground,
+    required Color surface,
+    required Color onSurface,
     required Color primary,
     required Color onPrimary,
     required Color secondary,
@@ -49,14 +49,14 @@ class Themes {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all(Colors.white),
-          backgroundColor: MaterialStateProperty.all(secondary),
+          foregroundColor: WidgetStateProperty.all(Colors.white),
+          backgroundColor: WidgetStateProperty.all(secondary),
         ),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.all(Colors.white),
-        trackColor: MaterialStateProperty.all(secondary),
-        trackOutlineColor: MaterialStateProperty.all(secondary)
+        thumbColor: WidgetStateProperty.all(Colors.white),
+        trackColor: WidgetStateProperty.all(secondary),
+        trackOutlineColor: WidgetStateProperty.all(secondary)
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: tertiary,
@@ -86,16 +86,16 @@ class Themes {
         color: secondary,
       ),
       colorScheme: isDark ? ColorScheme.dark(
-        background: background,
-        onBackground: onBackground,
+        surface: surface,
+        onSurface: onSurface,
         primary: primary,
         onPrimary: onPrimary,
         secondary: secondary,
         tertiary: tertiary,
         inversePrimary: inversePrimary,
       ) : ColorScheme.light(
-        background: background,
-        onBackground: onBackground,
+        surface: surface,
+        onSurface: onSurface,
         primary: primary,
         onPrimary: onPrimary,
         secondary: secondary,
