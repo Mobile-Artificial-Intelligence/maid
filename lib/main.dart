@@ -61,6 +61,18 @@ class MaidApp extends StatelessWidget {
       theme: Themes.lightTheme(),
       darkTheme: Themes.darkTheme(),
       themeMode: appPreferences.themeMode,
+      initialRoute: '/',
+      routes: {
+        '/character': (context) => const CharacterCustomizationPage(),
+        '/characters': (context) => const CharacterBrowserPage(),
+        '/llamacpp': (context) => const LlamaCppPage(),
+        '/ollama': (context) => const OllamaPage(),
+        '/openai': (context) => const OpenAiPage(),
+        '/mistralai': (context) => const MistralAiPage(),
+        '/gemini': (context) => const GoogleGeminiPage(),
+        '/settings': (context) => const SettingsPage(),
+        '/about': (context) => const AboutPage(),
+      },
       home: const DesktopHomePage()
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/ui/desktop/widgets/home_app_bar.dart';
 
 class DesktopHomePage extends StatefulWidget {
   const DesktopHomePage({super.key});
@@ -26,12 +27,10 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
               ],
             ),
           ),
-          Expanded(
+          const Expanded(
             child: Scaffold(
-              appBar: AppBar(
-                title: const Text('Desktop Home Page'),
-              ),
-              body: const Center(
+              appBar: HomeAppBar(),
+              body: Center(
                 child: Text(
                   'Desktop Home Page',
                   style: TextStyle(fontSize: 24),
