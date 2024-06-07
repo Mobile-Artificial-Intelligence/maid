@@ -12,16 +12,14 @@ import 'package:maid/ui/mobile/widgets/appbars/home_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/home_drawer.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  final String title;
-
-  const HomePage({super.key, required this.title});
+class MobileHomePage extends StatefulWidget {
+  const MobileHomePage({super.key});
 
   @override
-  HomePageState createState() => HomePageState();
+  State<MobileHomePage> createState() => _MobileHomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class _MobileHomePageState extends State<MobileHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

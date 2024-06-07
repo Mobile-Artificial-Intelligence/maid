@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/user.dart';
+import 'package:maid/ui/desktop/pages/home_page.dart';
 import 'package:maid/ui/mobile/pages/about_page.dart';
 import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
 import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';
@@ -62,6 +61,17 @@ class MaidApp extends StatelessWidget {
       theme: Themes.lightTheme(),
       darkTheme: Themes.darkTheme(),
       themeMode: appPreferences.themeMode,
+      home: const DesktopHomePage()
+    );
+  }
+
+  Widget mobileApp(AppPreferences appPreferences) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Maid',
+      theme: Themes.lightTheme(),
+      darkTheme: Themes.darkTheme(),
+      themeMode: appPreferences.themeMode,
       initialRoute: '/',
       routes: {
         '/character': (context) => const CharacterCustomizationPage(),
@@ -74,7 +84,7 @@ class MaidApp extends StatelessWidget {
         '/settings': (context) => const SettingsPage(),
         '/about': (context) => const AboutPage(),
       },
-      home: const HomePage(title: "Maid")
+      home: const MobileHomePage()
     );
   }
 }
