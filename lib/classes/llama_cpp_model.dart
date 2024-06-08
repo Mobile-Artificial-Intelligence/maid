@@ -101,9 +101,7 @@ class LlamaCppModel extends LargeLanguageModel {
     }
 
     if (useDefault) {
-      GptParams gptParams = GptParams();
-      gptParams.model = uri;
-      return gptParams;
+      return GptParams(uri);
     }
 
     SamplingParams samplingParams = SamplingParams();
@@ -122,7 +120,7 @@ class LlamaCppModel extends LargeLanguageModel {
     samplingParams.mirostatEta = mirostatEta;
     samplingParams.penalizeNl = penalizeNewline;
 
-    GptParams gptParams = GptParams();
+    GptParams gptParams = GptParams(uri);
     gptParams.seed = seed != 0 ? seed : Random().nextInt(1000000);
     gptParams.nThreads = nThread;
     gptParams.nThreadsBatch = nThread;
@@ -131,7 +129,6 @@ class LlamaCppModel extends LargeLanguageModel {
     gptParams.nBatch = nBatch;
     gptParams.nKeep = nKeep;
     gptParams.sparams = samplingParams;
-    gptParams.model = uri;
 
     return gptParams;
   }
