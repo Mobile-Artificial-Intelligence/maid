@@ -288,6 +288,7 @@ packages:
     description:
       name: flutter_plugin_android_lifecycle
       sha256: "8cf40eebf5dec866a6d1956ad7b4f7016e6c0cc69847ab946833b7d43743809f"
+      sha256: "8cf40eebf5dec866a6d1956ad7b4f7016e6c0cc69847ab946833b7d43743809f"
       url: "https://pub.dev"
     source: hosted
     version: "2.0.19"

@@ -46,6 +46,13 @@ Maid utilises git submodules extensively. To clone the repository, use the follo
 git clone --recursive https://github.com/Mobile-Artificial-Intelligence/maid.git
 ```
 
+Maids repository has flutter linked as a submodule. This is needed for reproducable fdroid builds.
+However, for development you may want to use a local install of flutter. Remove the flutter submodule by running the git command
+
+```bash
+git submodule deinit -f packages/flutter
+```
+
 ## Installing Build Dependencies
 To install the dependencies on fedora based systems, use the following command:
 
