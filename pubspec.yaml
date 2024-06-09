@@ -56,6 +56,7 @@ dependencies:
   maid_llm:
     path: packages/maid_llm
   google_generative_ai: ^0.2.3
+  flutter_resizable_container: ^2.0.0
 
 dev_dependencies:
   flutter_test:
