@@ -85,7 +85,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
     return Drawer(
       semanticLabel: "Drawer Menu",
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(20),

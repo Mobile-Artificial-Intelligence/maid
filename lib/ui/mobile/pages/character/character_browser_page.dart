@@ -52,7 +52,7 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Theme.of(context).colorScheme.background,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         elevation: 0.0,
         leading: IconButton(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/ui/desktop/widgets/home_app_bar.dart';
+import 'package:maid/ui/desktop/widgets/appbars/home_app_bar.dart';
 
 class DesktopHomePage extends StatefulWidget {
   const DesktopHomePage({super.key});

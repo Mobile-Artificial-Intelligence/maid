@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class Themes {
   static ThemeData lightTheme() {
     return genericTheme(
-      surface: Colors.white,
-      onSurface: Colors.grey.shade700,
+      background: Colors.white,
+      onBackground: Colors.grey.shade700,
       primary: Colors.grey.shade300,
       onPrimary: Colors.black,
       secondary: Colors.blue,
@@ -16,8 +16,8 @@ class Themes {
 
   static ThemeData darkTheme() {
     return genericTheme(
-      surface: Colors.grey.shade900,
-      onSurface: Colors.black,
+      background: Colors.grey.shade900,
+      onBackground: Colors.black,
       primary: Colors.grey.shade800,
       onPrimary: Colors.white,
       secondary: Colors.blue,
@@ -28,8 +28,8 @@ class Themes {
   }
 
   static ThemeData genericTheme({
-    required Color surface,
-    required Color onSurface,
+    required Color background,
+    required Color onBackground,
     required Color primary,
     required Color onPrimary,
     required Color secondary,
@@ -86,16 +86,16 @@ class Themes {
         color: secondary,
       ),
       colorScheme: isDark ? ColorScheme.dark(
-        surface: surface,
-        onSurface: onSurface,
+        background: background,
+        onBackground: onBackground,
         primary: primary,
         onPrimary: onPrimary,
         secondary: secondary,
         tertiary: tertiary,
         inversePrimary: inversePrimary,
       ) : ColorScheme.light(
-        surface: surface,
-        onSurface: onSurface,
+        background: background,
+        onBackground: onBackground,
         primary: primary,
         onPrimary: onPrimary,
         secondary: secondary,
