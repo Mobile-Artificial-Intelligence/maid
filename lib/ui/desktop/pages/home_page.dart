@@ -11,14 +11,30 @@ class DesktopHomePage extends StatefulWidget {
 }
 
 class _DesktopHomePageState extends State<DesktopHomePage> {
+  late Color dividerColor = Theme.of(context).colorScheme.primary;
+
+  void onHoverEnter() {
+    setState(() {
+      dividerColor = Theme.of(context).colorScheme.secondary;
+    });
+  }
+
+  void onHoverExit() {
+    setState(() {
+      dividerColor = Theme.of(context).colorScheme.primary;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResizableContainer(
       direction: Axis.horizontal,
       divider: ResizableDivider(
-        color: Theme.of(context).colorScheme.primary,
+        color: dividerColor,
         size: 4,
         thickness: 3,
+        onHoverEnter: onHoverEnter,
+        onHoverExit: onHoverExit,
       ),
       children: [
         ResizableChild(
