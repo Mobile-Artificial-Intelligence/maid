@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_resizable_container/flutter_resizable_container.dart';
 import 'package:maid/ui/desktop/widgets/appbars/home_app_bar.dart';
+import 'package:maid/ui/shared/chat_widgets/chat_body.dart';
 
 class DesktopHomePage extends StatefulWidget {
   const DesktopHomePage({super.key});
@@ -14,11 +15,16 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   Widget build(BuildContext context) {
     return ResizableContainer(
       direction: Axis.horizontal,
+      divider: ResizableDivider(
+        color: Theme.of(context).colorScheme.primary,
+        size: 4,
+        thickness: 3,
+      ),
       children: [
         ResizableChild(
           minSize: 200,
           child: Container(
-            color: Colors.blue,
+            color: Theme.of(context).colorScheme.background,
             child: const Center(
               child: Text(
                 'Side Panel',
@@ -32,12 +38,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
           minSize: 500,
           child: Scaffold(
             appBar: HomeAppBar(),
-            body: Center(
-              child: Text(
-                'Desktop Home Page',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
+            body: ChatBody(),
           ),
         ),
       ]
