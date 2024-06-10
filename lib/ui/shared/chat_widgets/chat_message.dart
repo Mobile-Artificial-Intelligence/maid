@@ -5,8 +5,9 @@ import 'package:maid/classes/chat_node.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
-
-import 'package:maid_ui/maid_ui.dart';
+import 'package:maid/ui/shared/code_box.dart';
+import 'package:maid/ui/shared/future_avatar.dart';
+import 'package:maid/ui/shared/typing_indicator.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessageWidget extends StatefulWidget {

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/widgets/tiles/image_selector_tile.dart';
+import 'package:maid/ui/shared/future_avatar.dart';
 import 'package:provider/provider.dart';
-import 'package:maid_ui/maid_ui.dart';
 
 class UserTile extends StatefulWidget {
   const UserTile({super.key});

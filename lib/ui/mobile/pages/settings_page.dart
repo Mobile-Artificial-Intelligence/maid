@@ -5,7 +5,7 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
-import 'package:maid_ui/maid_ui.dart';
+import 'package:maid/ui/shared/code_box.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_info2/system_info2.dart';
@@ -94,8 +94,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CodeBox(code: Logger.getLog)),
+                  padding: const EdgeInsets.all(10),
+                  child: CodeBox(code: Logger.getLog)
+                ),
                 Text(
                   ram == -1 ? 'RAM: Unknown' : 'RAM: $ram GB',
                   textAlign: TextAlign.center,

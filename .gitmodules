@@ -1,6 +1,3 @@
-[submodule "packages/maid_ui"]
-	path = packages/maid_ui
-	url = https://github.com/danemadsen/maid_ui.git
 [submodule "packages/maid_llm"]
 	path = packages/maid_llm
 	url = https://github.com/Mobile-Artificial-Intelligence/maid_llm.git
