@@ -11,6 +11,7 @@ class DesktopHomePage extends StatefulWidget {
 }
 
 class _DesktopHomePageState extends State<DesktopHomePage> {
+  bool sidePanelOpen = true;
   late Color dividerColor = Theme.of(context).colorScheme.primary;
 
   void onHoverEnter() {
@@ -27,6 +28,29 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          color: Theme.of(context).colorScheme.primary,
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          width: 50,
+          child: Column(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.view_sidebar_rounded),
+                onPressed: () => setState(() {
+                  sidePanelOpen = !sidePanelOpen;
+                }),
+              ),
+            ],
+          ),
+        ),
+        Expanded(child: buildResizableContainer(context))
+      ]
+    );
+  }
+
+  Widget buildResizableContainer(BuildContext context) {
     return ResizableContainer(
       direction: Axis.horizontal,
       divider: ResizableDivider(
@@ -37,6 +61,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
         onHoverExit: onHoverExit,
       ),
       children: [
+        if (sidePanelOpen)
         ResizableChild(
           minSize: 200,
           child: Container(
@@ -49,10 +74,10 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
             ),
           ),
         ),
-        const ResizableChild(
-          size: ResizableSize.ratio(0.8),
+        ResizableChild(
+          size: sidePanelOpen ? const ResizableSize.ratio(0.8) : const ResizableSize.expand(),
           minSize: 500,
-          child: Scaffold(
+          child: const Scaffold(
             appBar: HomeAppBar(),
             body: ChatBody(),
           ),
