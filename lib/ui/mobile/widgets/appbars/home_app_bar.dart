@@ -12,7 +12,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Container(
       height: preferredSize.height,
-      color: Theme.of(context).colorScheme.background,
+      color: Theme.of(context).colorScheme.surface,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

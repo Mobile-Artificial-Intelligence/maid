@@ -69,7 +69,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
               size: const ResizableSize.ratio(0.2),
               minSize: 200,
               child: Container(
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.surface,
                 child: const Center(
                   child: Text(
                     'Side Panel',
