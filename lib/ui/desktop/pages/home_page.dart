@@ -63,6 +63,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
       children: [
         if (sidePanelOpen)
         ResizableChild(
+          size: const ResizableSize.ratio(0.2),
           minSize: 200,
           child: Container(
             color: Theme.of(context).colorScheme.background,
