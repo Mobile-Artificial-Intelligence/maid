@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_preferences.dart';
+import 'package:maid/providers/desktop_layout.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/ui/desktop/pages/home_page.dart';
 import 'package:maid/ui/mobile/pages/about_page.dart';
@@ -73,7 +74,10 @@ class MaidApp extends StatelessWidget {
         '/settings': (context) => const SettingsPage(),
         '/about': (context) => const AboutPage(),
       },
-      home: const DesktopHomePage()
+      home: ChangeNotifierProvider(
+        create: (context) => DesktopLayout(),
+        child: const DesktopHomePage()
+      )
     );
   }
 
