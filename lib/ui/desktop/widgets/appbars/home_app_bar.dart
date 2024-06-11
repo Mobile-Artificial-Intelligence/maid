@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/ui/mobile/widgets/dropdowns/llm_dropdown.dart';
+import 'package:maid/ui/shared/llm_dropdown.dart';
 import 'package:provider/provider.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
