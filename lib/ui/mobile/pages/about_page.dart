@@ -56,7 +56,7 @@ class _AboutPageState extends State<AboutPage> {
                 text:
                     'Maid is a cross-platform open source app for interacting with GGUF Large Language Models. '
                     'This app is distributed under the MIT License. The source code of this project can be found '
-                    'on github ( https://github.com/MaidFoundation/Maid ). Maid is not affiliated with Meta, '
+                    'on github ( https://github.com/Mobile-Artificial-Intelligence/maid ). Maid is not affiliated with Meta, '
                     'OpenAI or any other company that provides a model which can be used with this app. Model files are '
                     'not included with this app and must be downloaded separately. Model files can be downloaded online '
                     'at https://huggingface.co',
