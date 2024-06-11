@@ -14,6 +14,7 @@ class SideBar extends StatelessWidget {
       child: Column(
         children: [
           IconButton(
+            color: Theme.of(context).colorScheme.inversePrimary,
             icon: const Icon(Icons.view_sidebar_rounded),
             onPressed: () {
               context.read<DesktopLayout>().toggleSidePanel();

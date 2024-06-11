@@ -7,7 +7,7 @@ class Themes {
       onPrimary: Colors.black,
       secondary: Colors.blue,
       tertiary: Colors.blue.shade900,
-      inversePrimary: const Color.fromARGB(255, 100, 20, 20),
+      inversePrimary: Colors.orange.shade600,
       isDark: false,
     );
   }
@@ -18,7 +18,7 @@ class Themes {
       onPrimary: Colors.white,
       secondary: Colors.blue,
       tertiary: Colors.blue.shade900,
-      inversePrimary: const Color.fromARGB(255, 100, 20, 20),
+      inversePrimary: Colors.orange.shade600,
       isDark: true,
     );
   }
