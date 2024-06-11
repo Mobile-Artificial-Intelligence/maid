@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_resizable_container/flutter_resizable_container.dart';
 import 'package:maid/providers/desktop_layout.dart';
 import 'package:maid/ui/desktop/widgets/appbars/home_app_bar.dart';
+import 'package:maid/ui/desktop/widgets/side_bar.dart';
 import 'package:maid/ui/shared/chat_widgets/chat_body.dart';
 import 'package:provider/provider.dart';
 
@@ -31,21 +32,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          color: Theme.of(context).colorScheme.primary,
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          width: 50,
-          child: Column(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.view_sidebar_rounded),
-                onPressed: () {
-                  context.read<DesktopLayout>().toggleSidePanel();
-                },
-              ),
-            ],
-          ),
-        ),
+        const SideBar(),
         Expanded(child: buildResizableContainer(context))
       ]
     );
