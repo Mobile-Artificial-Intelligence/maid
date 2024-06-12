@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:maid/mocks/mock_llama_cpp_page.dart';
 import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/static/themes.dart';
+import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
 import 'package:maid/ui/shared/pages/about_page.dart';
 import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
 import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';

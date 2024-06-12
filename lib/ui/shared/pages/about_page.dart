@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:maid/mocks/mock_llama_cpp_page.dart';
+import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
