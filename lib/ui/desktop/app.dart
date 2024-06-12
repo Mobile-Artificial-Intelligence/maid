@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:maid/mocks/mock_llama_cpp_page.dart';
 import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/desktop_layout.dart';
 import 'package:maid/static/themes.dart';
 import 'package:maid/ui/desktop/pages/home_page.dart';
 import 'package:maid/ui/shared/pages/about_page.dart';
-import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
-import 'package:maid/ui/mobile/pages/character/character_customization_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/gemini_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
 import 'package:maid/ui/shared/pages/settings_page.dart';
 import 'package:provider/provider.dart';
 
