@@ -22,68 +22,66 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          FutureBuilder<File>(
-            future: widget.character.profile,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return const Icon(Icons.error);
-                } else {
-                  return Image.file(
-                    snapshot.data!,
-                    fit: BoxFit.cover,
-                  );
-                }
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        FutureBuilder<File>(
+          future: widget.character.profile,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return const Icon(Icons.error);
               } else {
-                return const CircularProgressIndicator();
+                return Image.file(
+                  snapshot.data!,
+                  fit: BoxFit.cover,
+                );
               }
+            } else {
+              return const CircularProgressIndicator();
             }
-          ),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              hoverColor: Colors.black.withOpacity(0.1),
-              highlightColor: Colors.black.withOpacity(0.2),
-              splashColor: Colors.black.withOpacity(0.2),
-              onTapDown: onTapDown,
-              onTapUp: onTapUp,
-              onSecondaryTapUp: (details) => showContextMenu(details.globalPosition),
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.center,
-                    colors: [Colors.black, Colors.transparent],
+          }
+        ),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            hoverColor: Colors.black.withOpacity(0.1),
+            highlightColor: Colors.black.withOpacity(0.2),
+            splashColor: Colors.black.withOpacity(0.2),
+            onTapDown: onTapDown,
+            onTapUp: onTapUp,
+            onSecondaryTapUp: (details) => showContextMenu(details.globalPosition),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.center,
+                  colors: [Colors.black, Colors.transparent],
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.character.name,
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.character.name,
-                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      widget.character.description,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              )
+                  Text(
+                    widget.character.description,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
             )
           )
-        ],
-      )
+        )
+      ],
     );
   }
 

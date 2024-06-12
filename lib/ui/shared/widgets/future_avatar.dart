@@ -25,15 +25,25 @@ class FutureAvatar extends StatelessWidget {
   }
 
   Widget buildButton(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        hoverColor: Colors.black.withOpacity(0.1),
-        highlightColor: Colors.black.withOpacity(0.2),
-        splashColor: Colors.black.withOpacity(0.2),
-        onTap: onPressed,
-        child: buildAvatar(context),
-      )
+    return SizedBox(
+      width: radius != null ? radius! * 2 : 48.0,
+      height: radius != null ? radius! * 2 : 48.0,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          buildAvatar(context),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(50),
+              hoverColor: Colors.black.withOpacity(0.1),
+              highlightColor: Colors.black.withOpacity(0.2),
+              splashColor: Colors.black.withOpacity(0.2),
+              onTap: onPressed
+            ),
+          ),
+        ],
+      ),
     );
   }
 
