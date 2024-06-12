@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,6 +10,22 @@ class AppPreferences extends ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
 
   AppLayout get appLayout => _appLayout;
+
+  bool get useDesktopLayout {
+    if (_appLayout == AppLayout.system) {
+      return Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+    }
+
+    return _appLayout == AppLayout.desktop;
+  }
+
+  bool get useMobileLayout {
+    if (_appLayout == AppLayout.system) {
+      return Platform.isAndroid || Platform.isIOS;
+    }
+
+    return _appLayout == AppLayout.mobile;
+  }
 
   AppPreferences(ThemeMode themeMode, AppLayout appLayout) : 
     _themeMode = themeMode, 
