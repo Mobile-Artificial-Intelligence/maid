@@ -7,7 +7,7 @@ import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
-import 'package:maid/ui/shared/future_avatar.dart';
+import 'package:maid/ui/shared/widgets/future_avatar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

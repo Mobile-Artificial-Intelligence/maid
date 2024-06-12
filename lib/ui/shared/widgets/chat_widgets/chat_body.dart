@@ -6,8 +6,8 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:maid/ui/shared/chat_widgets/chat_field.dart';
-import 'package:maid/ui/shared/chat_widgets/chat_message.dart';
+import 'package:maid/ui/shared/widgets/chat_widgets/chat_field.dart';
+import 'package:maid/ui/shared/widgets/chat_widgets/chat_message.dart';
 import 'package:provider/provider.dart';
 
 class ChatBody extends StatelessWidget {

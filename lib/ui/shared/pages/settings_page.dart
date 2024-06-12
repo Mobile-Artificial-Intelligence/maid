@@ -5,7 +5,7 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
-import 'package:maid/ui/shared/code_box.dart';
+import 'package:maid/ui/shared/widgets/code_box.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_info2/system_info2.dart';

@@ -3,7 +3,7 @@ import 'package:flutter_resizable_container/flutter_resizable_container.dart';
 import 'package:maid/providers/desktop_layout.dart';
 import 'package:maid/ui/desktop/widgets/appbars/home_app_bar.dart';
 import 'package:maid/ui/desktop/widgets/side_bar.dart';
-import 'package:maid/ui/shared/chat_widgets/chat_body.dart';
+import 'package:maid/ui/shared/widgets/chat_widgets/chat_body.dart';
 import 'package:provider/provider.dart';
 
 class DesktopHomePage extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/ui/mobile/widgets/buttons/menu_button.dart';
-import 'package:maid/ui/shared/llm_dropdown.dart';
+import 'package:maid/ui/shared/widgets/llm_dropdown.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
