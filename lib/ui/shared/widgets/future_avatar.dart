@@ -25,7 +25,8 @@ class FutureAvatar extends StatelessWidget {
   }
 
   Widget buildButton(BuildContext context) {
-    return SizedBox(
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
       width: radius != null ? radius! * 2 : 48.0,
       height: radius != null ? radius! * 2 : 48.0,
       child: Stack(
@@ -36,9 +37,9 @@ class FutureAvatar extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(50),
-              hoverColor: Colors.black.withOpacity(0.1),
-              highlightColor: Colors.black.withOpacity(0.2),
-              splashColor: Colors.black.withOpacity(0.2),
+              hoverColor: Colors.white.withOpacity(0.1),
+              highlightColor: Colors.white.withOpacity(0.2),
+              splashColor: Colors.white.withOpacity(0.2),
               onTap: onPressed
             ),
           ),

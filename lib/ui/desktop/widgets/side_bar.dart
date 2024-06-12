@@ -44,6 +44,12 @@ class SideBar extends StatelessWidget {
             context.read<DesktopLayout>().toggleTerminal();
           },
         ),
+        IconButton(
+          icon: const Icon(Icons.settings_rounded),
+          onPressed: () {
+            // TODO: Implement settings page navigation
+          }
+        ),
         const UserButton(),
       ],
     );
