@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/desktop_layout.dart';
+import 'package:maid/ui/desktop/widgets/buttons/user_button.dart';
 import 'package:provider/provider.dart';
 
 class SideBar extends StatelessWidget {
@@ -25,7 +26,6 @@ class SideBar extends StatelessWidget {
     return Column(
       children: [
         IconButton(
-          color: Theme.of(context).colorScheme.inversePrimary,
           icon: const Icon(Icons.view_sidebar_rounded),
           onPressed: () {
             context.read<DesktopLayout>().toggleSidePanel();
@@ -44,6 +44,7 @@ class SideBar extends StatelessWidget {
             context.read<DesktopLayout>().toggleTerminal();
           },
         ),
+        const UserButton(),
       ],
     );
   }

@@ -3,16 +3,41 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class FutureAvatar extends StatelessWidget {
+  final String? tooltip;
   final Future<File> image;
   final double? radius;
+  final void Function()? onPressed;
 
   // Static cache map
   static final Map<Key, File> _cache = {};
 
-  const FutureAvatar({required super.key, required this.image, this.radius});
+  const FutureAvatar({required super.key, required this.image, this.radius, this.onPressed, this.tooltip});
 
   @override
   Widget build(BuildContext context) {
+    return Semantics(
+      label: tooltip ?? 'Avatar',
+      button: onPressed != null,
+      child: onPressed != null ? 
+        buildButton(context) : 
+        buildAvatar(context),
+    );
+  }
+
+  Widget buildButton(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        hoverColor: Colors.black.withOpacity(0.1),
+        highlightColor: Colors.black.withOpacity(0.2),
+        splashColor: Colors.black.withOpacity(0.2),
+        onTap: onPressed,
+        child: buildAvatar(context),
+      )
+    );
+  }
+
+  Widget buildAvatar(BuildContext context) {
     // Check if the image is already cached
     final cachedImage = _cache[key!];
 

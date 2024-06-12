@@ -29,13 +29,6 @@ class DesktopApp extends StatelessWidget {
           themeMode: appPreferences.themeMode,
           initialRoute: '/',
           routes: {
-            '/character': (context) => const CharacterCustomizationPage(),
-            '/characters': (context) => const CharacterBrowserPage(),
-            '/llamacpp': (context) => const LlamaCppPage(),
-            '/ollama': (context) => const OllamaPage(),
-            '/openai': (context) => const OpenAiPage(),
-            '/mistralai': (context) => const MistralAiPage(),
-            '/gemini': (context) => const GoogleGeminiPage(),
             '/settings': (context) => const SettingsPage(),
             '/about': (context) => const AboutPage(),
           },
