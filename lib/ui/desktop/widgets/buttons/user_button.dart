@@ -10,7 +10,12 @@ class UserButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<User>(
       builder: (context, user, child) {
-        return FutureAvatar(key: user.key, image: user.profile, radius: 16, onPressed: () {});
+        return FutureAvatar(
+          key: user.key, 
+          image: user.profile, 
+          radius: 16, 
+          onPressed: () {}
+        );
       },
     );
   }

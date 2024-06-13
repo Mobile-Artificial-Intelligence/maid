@@ -30,11 +30,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Row(
       children: [
         IconButton(
-          tooltip: 'Model Settings',
-          icon: const Icon(Icons.account_tree_rounded), 
-          onPressed: () => openModelSettings(context)
-        ),
-        IconButton(
           tooltip: 'App Settings',
           icon: const Icon(Icons.settings), 
           onPressed: () => openAppSettings(context)
@@ -46,23 +41,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ],
     );
-  }
-
-  void openModelSettings(BuildContext context) {
-    switch (context.read<Session>().model.type) {
-      case LargeLanguageModelType.llamacpp:
-        Navigator.pushNamed(context, '/llamacpp');
-      case LargeLanguageModelType.ollama:
-        Navigator.pushNamed(context, '/ollama');
-      case LargeLanguageModelType.openAI:
-        Navigator.pushNamed(context, '/openai');
-      case LargeLanguageModelType.mistralAI:
-        Navigator.pushNamed(context, '/mistralai');
-      case LargeLanguageModelType.gemini:
-        Navigator.pushNamed(context, '/gemini');
-      default:
-        throw Exception('Invalid model type');
-    }
   }
 
   void openAppSettings(BuildContext context) {

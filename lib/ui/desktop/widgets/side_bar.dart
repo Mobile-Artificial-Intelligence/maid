@@ -26,9 +26,31 @@ class SideBar extends StatelessWidget {
     return Column(
       children: [
         IconButton(
+          tooltip: 'Toggle Side Panel',
           icon: const Icon(Icons.view_sidebar_rounded),
           onPressed: () {
             context.read<DesktopLayout>().toggleSidePanel();
+          },
+        ),
+        IconButton(
+          tooltip: 'Sessions',
+          icon: const Icon(Icons.chat_rounded),
+          onPressed: () {
+            context.read<DesktopLayout>().navigateSidePanel(SidePanelRoute.sessions);
+          },
+        ),
+        IconButton(
+          tooltip: 'Model Settings',
+          icon: const Icon(Icons.account_tree_rounded), 
+          onPressed: () {
+            context.read<DesktopLayout>().navigateSidePanel(SidePanelRoute.modelSettings);
+          },
+        ),
+        IconButton(
+          tooltip: 'Characters',
+          icon: const Icon(Icons.group_rounded),
+          onPressed: () {
+            context.read<DesktopLayout>().navigateSidePanel(SidePanelRoute.characters);
           },
         ),
       ],
@@ -39,15 +61,17 @@ class SideBar extends StatelessWidget {
     return Column(
       children: [
         IconButton(
+          tooltip: 'Toggle Terminal',
           icon: const Icon(Icons.terminal_rounded),
           onPressed: () {
             context.read<DesktopLayout>().toggleTerminal();
           },
         ),
         IconButton(
+          tooltip: 'Toggle Settings',
           icon: const Icon(Icons.settings_rounded),
           onPressed: () {
-            // TODO: Implement settings page navigation
+            context.read<DesktopLayout>().toggleSettings();
           }
         ),
         const UserButton(),
