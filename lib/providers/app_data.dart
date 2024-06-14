@@ -27,8 +27,6 @@ class AppData extends ChangeNotifier {
     }
     
     _sessions.insert(0, session);
-
-    notifyListeners();
   }
 
   set currentCharacter(Character character) {
@@ -41,8 +39,6 @@ class AppData extends ChangeNotifier {
     }
 
     _characters.insert(0, character);
-
-    notifyListeners();
   }
 
   static Future<AppData> get last async {
@@ -88,6 +84,38 @@ class AppData extends ChangeNotifier {
     await Future.wait(futures);
   }
 
+  void setCurrentSession(Session session) {
+    currentSession = session;
+
+    notifyListeners();
+  }
+
+  void setCurrentCharacter(Character character) {
+    currentCharacter = character;
+
+    notifyListeners();
+  }
+
+  void addSession(Session session) {
+    final index = _sessions.indexWhere((element) => element.key == session.key);
+
+    if (index.isNegative) {
+      _sessions.add(session);
+
+      notifyListeners();
+    }
+  }
+
+  void addCharacter(Character character) {
+    final index = _characters.indexWhere((element) => element.key == character.key);
+
+    if (index.isNegative) {
+      _characters.add(character);
+
+      notifyListeners();
+    }
+  }
+
   void removeSession(Session session) {
     final index = _sessions.indexWhere((element) => element.key == session.key);
 
@@ -126,6 +154,23 @@ class AppData extends ChangeNotifier {
 
       notifyListeners();
     }
+  }
+
+  void clearSessions() {
+    _sessions.clear();
+
+    notifyListeners();
+  }
+
+  void clearCharacters() {
+    _characters.clear();
+
+    notifyListeners();
+  }
+
+  void reset() {
+    clearSessions();
+    clearCharacters();
   }
 
   AppData(this._sessions, this._characters);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
+import 'package:maid/ui/mobile/widgets/tiles/character_drawer_tile.dart';
 import 'package:maid/ui/shared/widgets/buttons/new_session_button.dart';
 import 'package:maid/ui/shared/widgets/sessions_list_view.dart';
 import 'package:maid/ui/mobile/widgets/tiles/user_tile.dart';
@@ -41,7 +41,7 @@ class HomeDrawer extends StatelessWidget {
         minimum: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            const CharacterTile(),
+            const CharacterDrawerTile(),
             const SizedBox(height: 5.0),
             characterButtonsRow(context),
             Divider(

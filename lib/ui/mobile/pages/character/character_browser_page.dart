@@ -36,7 +36,7 @@ class CharacterBrowserPage extends StatelessWidget {
             icon: const Icon(Icons.add),
             onPressed: () {
               final newCharacter = Character();
-              appData.currentCharacter = newCharacter;
+              appData.addCharacter(newCharacter);
               character.from(newCharacter);
             },
           ),

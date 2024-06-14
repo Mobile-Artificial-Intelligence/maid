@@ -5,22 +5,18 @@ import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/shared/widgets/future_avatar.dart';
 import 'package:provider/provider.dart';
 
-class CharacterTile extends StatelessWidget {
-  const CharacterTile({super.key});
+class CharacterDrawerTile extends StatelessWidget {
+  const CharacterDrawerTile({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer2<User, Character>(
       builder: (context, user, character, child) {
-        String title = Utilities.formatPlaceholders(
+        final title = Utilities.formatPlaceholders(
           character.description, 
           user.name, 
           character.name
         );
-
-        if (title.length >= 200) {
-          title = "${title.substring(0, 200)}...";
-        }
 
         return Column(children: [
           Text("Character - ${character.name}"),
@@ -33,7 +29,8 @@ class CharacterTile extends StatelessWidget {
             ),
             minLeadingWidth: 60,
             title: Text(
-              title, 
+              title,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 12.0)
             )
           )

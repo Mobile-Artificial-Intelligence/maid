@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
@@ -61,6 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       context.read<User>().reset();
                       context.read<Character>().reset();
                       context.read<Session>().newSession();
+                      context.read<AppData>().reset();
                       setState(() {
                         Logger.clear();
                       });

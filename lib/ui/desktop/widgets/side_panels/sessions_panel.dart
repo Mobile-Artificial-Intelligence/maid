@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/ui/shared/widgets/buttons/clear_sessions_button.dart';
 import 'package:maid/ui/shared/widgets/buttons/new_session_button.dart';
 import 'package:maid/ui/shared/widgets/sessions_list_view.dart';
 
@@ -9,7 +10,13 @@ class SessionsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const NewSessionButton(),
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ClearSessionsButton(),
+            NewSessionButton()
+          ]
+        ),
         centerTitle: true,
       ),
       body: const SessionsListView(),

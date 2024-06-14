@@ -3,8 +3,8 @@ import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
-class NewSessionButton extends StatelessWidget {
-  const NewSessionButton({super.key});
+class ClearSessionsButton extends StatelessWidget {
+  const ClearSessionsButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +17,10 @@ class NewSessionButton extends StatelessWidget {
     return FilledButton(
       onPressed: () {
         if (!session.chat.tail.finalised) return;
-        final newSession = Session();
-        appData.addSession(newSession);
-        session.from(newSession);
+        appData.clearSessions();
       },
       child: const Text(
-        "New Chat"
+        "Clear Chats"
       ),
     );
   }

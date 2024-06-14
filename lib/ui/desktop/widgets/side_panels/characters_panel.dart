@@ -24,7 +24,7 @@ class CharactersPanel extends StatelessWidget {
         title: FilledButton(
           onPressed: () {
             final newCharacter = Character();
-            appData.currentCharacter = newCharacter;
+            appData.addCharacter(newCharacter);
             character.from(newCharacter);
           },
           child: const Text(
