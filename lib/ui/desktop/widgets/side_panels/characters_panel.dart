@@ -5,8 +5,8 @@ import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/shared/widgets/characters_grid_view.dart';
 import 'package:provider/provider.dart';
 
-class CharacterBrowserPage extends StatelessWidget {
-  const CharacterBrowserPage({super.key});
+class CharactersPanel extends StatelessWidget {
+  const CharactersPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,26 +21,17 @@ class CharacterBrowserPage extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+        title: FilledButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            final newCharacter = Character();
+            appData.currentCharacter = newCharacter;
+            character.from(newCharacter);
           },
+          child: const Text(
+            "New Character"
+          )
         ),
-        title: const Text("Character Browser"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              final newCharacter = Character();
-              appData.currentCharacter = newCharacter;
-              character.from(newCharacter);
-            },
-          ),
-        ],
+        centerTitle: true,
       ),
       body: const SessionBusyOverlay(
         child: CharactersGridView(),

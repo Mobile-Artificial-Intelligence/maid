@@ -34,9 +34,13 @@ class AppData extends ChangeNotifier {
   set currentCharacter(Character character) {
     final index = _characters.indexWhere((element) => element.key == character.key);
 
+    if (index == 0) return;
+
     if (!index.isNegative) {
       _characters.removeAt(index);
     }
+
+    _characters.insert(0, character);
 
     notifyListeners();
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/side_panel_route.dart';
 import 'package:maid/providers/desktop_layout.dart';
+import 'package:maid/ui/desktop/widgets/side_panels/characters_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/sessions_panel.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,8 @@ class SidePanelNavigator extends StatelessWidget {
     switch (desktopLayout.sidePanelRoute) {
       case SidePanelRoute.sessions:
         return const SessionsPanel();
+      case SidePanelRoute.characters:
+        return const CharactersPanel();
       default:
         return Scaffold(
           body: Container(
