@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
-import 'package:maid/ui/mobile/widgets/shaders/blade_runner_gradient.dart';
+import 'package:maid/ui/shared/widgets/shaders/blade_runner_gradient.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
