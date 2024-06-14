@@ -3,14 +3,9 @@ import 'package:maid/providers/desktop_layout.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/sessions_panel.dart';
 import 'package:provider/provider.dart';
 
-class SidePanelNavigator extends StatefulWidget {
+class SidePanelNavigator extends StatelessWidget {
   const SidePanelNavigator({super.key});
 
-  @override
-  State<SidePanelNavigator> createState() => _SidePanelNavigatorState();
-}
-
-class _SidePanelNavigatorState extends State<SidePanelNavigator> {
   @override
   Widget build(BuildContext context) {
     return Consumer<DesktopLayout>(
