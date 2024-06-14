@@ -6,6 +6,7 @@ import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/shared/widgets/code_box.dart';
+import 'package:maid/ui/shared/widgets/dropdowns/theme_mode_dropdown.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_info2/system_info2.dart';
@@ -29,46 +30,14 @@ class _SettingsPageState extends State<SettingsPage> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
+                const Padding(
+                  padding: EdgeInsets.all(8),
                     child: Row(
-                    children: [
-                      const Expanded(
+                      children: [
+                      Expanded(
                         child: Text("Theme Mode"),
                       ),
-                      DropdownMenu<ThemeMode>(
-                        hintText: "Select Theme Mode",
-                        inputDecorationTheme: InputDecorationTheme(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide.none,
-                          ),
-                          fillColor: Theme.of(context).colorScheme.secondary,
-                          filled: true,
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                        ),
-                        dropdownMenuEntries: const [
-                          DropdownMenuEntry<ThemeMode>(
-                            value: ThemeMode.system,
-                            label: "System",
-                          ),
-                          DropdownMenuEntry<ThemeMode>(
-                            value: ThemeMode.light,
-                            label: "Light",
-                          ),
-                          DropdownMenuEntry<ThemeMode>(
-                            value: ThemeMode.dark,
-                            label: "Dark",
-                          )
-                        ],
-                        onSelected: (ThemeMode? value) {
-                          if (value != null) {
-                            mainProvider.themeMode = value;
-                          }
-                        },
-                        initialSelection: mainProvider.themeMode,
-                        width: 200,
-                      )
+                      ThemeModeDropdown()
                     ],
                   ),
                 ),

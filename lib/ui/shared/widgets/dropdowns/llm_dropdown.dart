@@ -60,7 +60,6 @@ class _LlmDropdownState extends State<LlmDropdown> {
     final session = context.read<Session>();
 
     return [
-      if (!kIsWeb)
       PopupMenuItem(
         padding: EdgeInsets.zero,
         child: ListTile(

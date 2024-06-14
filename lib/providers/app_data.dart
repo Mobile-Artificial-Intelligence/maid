@@ -20,6 +20,8 @@ class AppData extends ChangeNotifier {
   set currentSession(Session session) {
     final index = _sessions.indexWhere((element) => element.key == session.key);
 
+    if (index == 0) return;
+    
     if (!index.isNegative) {
       _sessions.removeAt(index);
     }
