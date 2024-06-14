@@ -38,21 +38,6 @@ class Character extends ChangeNotifier {
     fromMap(inputJson);
   }
 
-  static Future<Character> get last async {
-    final prefs = await SharedPreferences.getInstance();
-
-    String? lastCharacterString = prefs.getString("last_character");
-
-    Map<String, dynamic> lastCharacter = json.decode(lastCharacterString ?? "{}");
-    
-    return Character.fromMap(lastCharacter);
-  }
-
-  Future<void> save() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("last_character", json.encode(toMap()));
-  }
-
   void notify() {
     notifyListeners();
   }

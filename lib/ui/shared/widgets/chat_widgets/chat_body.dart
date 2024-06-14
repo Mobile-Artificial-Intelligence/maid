@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
@@ -36,9 +37,11 @@ class ChatBody extends StatelessWidget {
   }
 
   Widget _buildChat() {
-    return Consumer3<Session, User, Character>(
-      builder: (context, session, user, character, child) {
-        session.save();
+    return Consumer4<AppData, Session, User, Character>(
+      builder: (context, appData, session, user, character, child) {
+        appData.currentCharacter = character;
+        appData.currentSession = session;
+        appData.save();
         
         List<ChatNode> chat = session.chat.getChat();
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
@@ -83,14 +84,15 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const GenericAppBar(title: "Character Customization"),
-      body: Consumer<Character>(
+      body: Consumer2<AppData, Character>(
         builder: buildBody,
       )
     );
   }
 
-  Widget buildBody(BuildContext context, Character character, Widget? child) {
-    character.save();
+  Widget buildBody(BuildContext context, AppData appData, Character character, Widget? child) {
+    appData.currentCharacter = character;
+    appData.save();
 
     if (regenerate) {
       nameController = TextEditingController(text: character.name);

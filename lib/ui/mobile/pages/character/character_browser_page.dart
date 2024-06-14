@@ -1,55 +1,25 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_browser_tile.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class CharacterBrowserPage extends StatefulWidget {
+class CharacterBrowserPage extends StatelessWidget {
   const CharacterBrowserPage({super.key});
 
-  @override
-  State<CharacterBrowserPage> createState() => _CharacterBrowserPageState();
-}
-
-class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
-  // Changed from Map to List of Character
-  final List<Character> characters = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadCharacters();
-  }
-
-  Future<void> _loadCharacters() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final String? charactersJson = prefs.getString("characters");
-
-    characters.clear();
-
-    if (charactersJson == null) {
-      final last = await Character.last;
-      setState(() {
-        characters.add(last);
-      });
-    } 
-    else {
-      final List charactersList = json.decode(charactersJson);
-    
-      for (final characterMap in charactersList) {
-        setState(() {
-          characters.add(Character.fromMap(characterMap));
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    return Consumer2<AppData, Character>(
+      builder: pageBuilder
+    );
+  }
+
+  Widget pageBuilder(BuildContext context, AppData appData, Character character, Widget? child) {
+    appData.currentCharacter = character;
+    appData.save();
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -66,29 +36,22 @@ class _CharacterBrowserPageState extends State<CharacterBrowserPage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              setState(() {
-                final newCharacter = Character();
-                characters.add(newCharacter);
-                context.read<Character>().from(newCharacter);
-              });
+              final newCharacter = Character();
+              appData.currentCharacter = newCharacter;
+              character.from(newCharacter);
             },
           ),
         ],
       ),
       body: SessionBusyOverlay(
         child: GridView.builder(
-          itemCount: characters.length,
+          itemCount: appData.characters.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.all(
                   8.0), // Adjust the padding value as needed
               child: CharacterBrowserTile(
-                character: characters[index],
-                onDelete: () {
-                  setState(() {
-                    characters.removeAt(index);
-                  });
-                },
+                character: appData.characters[index]
               ),
             );
           }, 

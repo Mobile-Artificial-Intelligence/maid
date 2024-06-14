@@ -25,8 +25,7 @@ class HomeDrawer extends StatelessWidget {
 
   Widget drawerBuilder(BuildContext context, AppData appData, Session session, Widget? child) {
     appData.currentSession = session;
-
-    session.save();
+    appData.save();
 
     return Drawer(
       semanticLabel: "Drawer Menu",
@@ -51,7 +50,7 @@ class HomeDrawer extends StatelessWidget {
               onPressed: () {
                 if (!session.chat.tail.finalised) return;
                 final newSession = Session();
-                appData.addSession(newSession);
+                appData.currentSession = newSession;
                 session.from(newSession);
               },
               child: const Text(

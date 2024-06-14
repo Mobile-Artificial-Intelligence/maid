@@ -82,26 +82,6 @@ class AppData extends ChangeNotifier {
     await Future.wait(futures);
   }
 
-  void addSession(Session session) {
-    final index = _sessions.indexWhere((element) => element.key == session.key);
-
-    if (index.isNegative) {
-      _sessions.insert(0, session);
-
-      notifyListeners();
-    }
-  }
-
-  void addCharacter(Character character) {
-    final index = _characters.indexWhere((element) => element.key == character.key);
-
-    if (index.isNegative) {
-      _characters.insert(0, character);
-
-      notifyListeners();
-    }
-  }
-
   void removeSession(Session session) {
     final index = _sessions.indexWhere((element) => element.key == session.key);
 

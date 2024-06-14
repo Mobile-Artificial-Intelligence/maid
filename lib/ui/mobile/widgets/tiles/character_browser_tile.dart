@@ -2,16 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/logger.dart';
 import 'package:provider/provider.dart';
 
 class CharacterBrowserTile extends StatefulWidget {
   final Character character;
-  final void Function() onDelete;
 
   const CharacterBrowserTile(
-      {super.key, required this.character, required this.onDelete});
+      {super.key, required this.character});
 
   @override
   State<CharacterBrowserTile> createState() => _CharacterBrowserTileState();
@@ -117,7 +117,9 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
       ),
       items: <PopupMenuEntry>[
         PopupMenuItem(
-          onTap: widget.onDelete,
+          onTap: () {
+            context.read<AppData>().removeCharacter(widget.character);
+          },
           child: const Text('Delete'),
         ),
         PopupMenuItem(

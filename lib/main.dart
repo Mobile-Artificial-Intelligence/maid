@@ -14,14 +14,10 @@ void main() async {
   AppPreferences appPreferences = await AppPreferences.last;
   AppData appData = await AppData.last;
   User user = await User.last;
-  Character character = await Character.last;
-  Session session = await Session.last;
 
   runApp(
     MaidApp(
       user: user, 
-      character: character, 
-      session: session, 
       appPreferences: appPreferences, 
       appData: appData
     )
@@ -32,20 +28,19 @@ class MaidApp extends StatelessWidget {
   final AppPreferences appPreferences;
   final AppData appData;
   final User user;
-  final Character character;
-  final Session session;
 
   const MaidApp({
     super.key, 
     required this.user, 
-    required this.character, 
-    required this.session, 
     required this.appPreferences, 
     required this.appData
   });
 
   @override
   Widget build(BuildContext context) {
+    final character = appData.currentCharacter;
+    final session = appData.currentSession;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => appPreferences),
