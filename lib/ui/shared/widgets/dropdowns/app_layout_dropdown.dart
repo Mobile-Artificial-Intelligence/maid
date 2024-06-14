@@ -3,14 +3,14 @@ import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:provider/provider.dart';
 
-class ThemeModeDropdown extends StatefulWidget {
-  const ThemeModeDropdown({super.key});
+class AppLayoutDropdown extends StatefulWidget {
+  const AppLayoutDropdown({super.key});
 
   @override
-  State<ThemeModeDropdown> createState() => _ThemeModeDropdownState();
+  State<AppLayoutDropdown> createState() => _AppLayoutDropdownState();
 }
 
-class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
+class _AppLayoutDropdownState extends State<AppLayoutDropdown> {
   bool open = false;
 
   @override
@@ -21,7 +21,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              Utilities.capitalizeFirst(appPreferences.themeMode.name),
+              Utilities.capitalizeFirst(appPreferences.appLayout.name),
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 16,
@@ -29,7 +29,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
               )
             ),
             PopupMenuButton(
-              tooltip: 'Select App Theme Mode',
+              tooltip: 'Select App Layout Mode',
               icon: Icon(
                 open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
                 color: Theme.of(context).colorScheme.onSurface,
@@ -54,30 +54,30 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('System'),
-          onTap: () => switchThemeMode(context, ThemeMode.system)
+          onTap: () => switchAppLayout(context, AppLayout.system)
         ),
       ),
       PopupMenuItem(
         padding: EdgeInsets.zero,
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-          title: const Text('Light'),
-          onTap: () => switchThemeMode(context, ThemeMode.light)
+          title: const Text('Mobile'),
+          onTap: () => switchAppLayout(context, AppLayout.mobile)
         ),
       ),
       PopupMenuItem(
         padding: EdgeInsets.zero,
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-          title: const Text('Dark'),
-          onTap: () => switchThemeMode(context, ThemeMode.dark)
+          title: const Text('Desktop'),
+          onTap: () => switchAppLayout(context, AppLayout.desktop)
         ),
       )
     ];
   }
 
-  void switchThemeMode(BuildContext context, ThemeMode themeMode) {
+  void switchAppLayout(BuildContext context, AppLayout appLayout) {
     final appPreferences = context.read<AppPreferences>();
-    appPreferences.themeMode = themeMode;
+    appPreferences.appLayout = appLayout;
   }
 }

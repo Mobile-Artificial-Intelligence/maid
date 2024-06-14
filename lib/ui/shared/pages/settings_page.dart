@@ -6,6 +6,7 @@ import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/shared/widgets/code_box.dart';
+import 'package:maid/ui/shared/widgets/dropdowns/app_layout_dropdown.dart';
 import 'package:maid/ui/shared/widgets/dropdowns/theme_mode_dropdown.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,6 +39,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: Text("Theme Mode"),
                       ),
                       ThemeModeDropdown()
+                    ],
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                      Expanded(
+                        child: Text("Application Layout"),
+                      ),
+                      AppLayoutDropdown()
                     ],
                   ),
                 ),
