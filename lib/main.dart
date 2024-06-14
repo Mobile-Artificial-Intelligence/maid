@@ -4,8 +4,6 @@ import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/ui/desktop/app.dart';
 import 'package:maid/ui/mobile/app.dart';
-import 'package:maid/providers/session.dart';
-import 'package:maid/providers/character.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
