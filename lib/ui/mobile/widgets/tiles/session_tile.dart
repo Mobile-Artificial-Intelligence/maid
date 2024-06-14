@@ -1,52 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
-class SessionTile extends StatefulWidget {
+class SessionTile extends StatelessWidget {
   final Session session;
-  final void Function() onDelete;
-  final void Function(String) onRename;
 
-  const SessionTile({super.key, required this.session, required this.onDelete, required this.onRename});
+  const SessionTile({
+    super.key, 
+    required this.session,
+  });
 
-  @override
-  State<SessionTile> createState() => _SessionTileState();
-}
-
-class _SessionTileState extends State<SessionTile> {
   @override
   Widget build(BuildContext context) {
     return Consumer<Session>(
-      builder: (context, session, child) {
-        String displayMessage = widget.session.name;
-        if (displayMessage.length > 30) {
-          displayMessage = '${displayMessage.substring(0, 30)}...';
-        }
-
+      builder: (context, globalSession, child) {
         return GestureDetector(
-          onSecondaryTapUp: onSecondaryTapUp,
-          onLongPressStart: onLongPressStart,
+          onSecondaryTapUp: (TapUpDetails details) =>
+            showContextMenu(context, details.globalPosition),
+          onLongPressStart: (LongPressStartDetails details) =>
+            showContextMenu(context, details.globalPosition),
           onTap: () {
-            if (!session.chat.tail.finalised) return;
-            session.from(widget.session);
+            if (!globalSession.chat.tail.finalised) return;
+            globalSession.from(session);
           },
           child: ListTile(
-              title: Text(
-            displayMessage,
-            style: Theme.of(context).textTheme.labelLarge,
-          )),
+            title: Text(
+              session.name,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelLarge,
+            )
+          ),
         );
       },
     );
   }
 
-  void onSecondaryTapUp(TapUpDetails details) =>
-      showContextMenu(details.globalPosition);
-
-  void onLongPressStart(LongPressStartDetails details) =>
-      showContextMenu(details.globalPosition);
-
-  void showContextMenu(Offset position) {
+  void showContextMenu(BuildContext context, Offset position) {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -58,20 +48,33 @@ class _SessionTileState extends State<SessionTile> {
       ),
       items: <PopupMenuEntry>[
         PopupMenuItem(
-          onTap: widget.onDelete,
+          onTap: () {
+            final globalSession = context.read<Session>();
+            final appData = context.read<AppData>();
+
+            if (!globalSession.chat.tail.finalised) return;
+
+            if (session.key == globalSession.key) {
+              final newSession = appData.sessions.firstOrNull ?? Session();
+              globalSession.from(newSession);
+              appData.currentSessionKey = newSession.key;
+            }
+            
+            appData.removeSession(session);
+          },
           child: const Text('Delete'),
         ),
         PopupMenuItem(
-          onTap: showRenameDialog,
+          onTap: () => showRenameDialog(context),
           child: const Text('Rename'),
         ),
       ],
     );
   }
 
-  void showRenameDialog() {
+  void showRenameDialog(BuildContext context) {
     final TextEditingController controller =
-        TextEditingController(text: widget.session.name);
+        TextEditingController(text: session.name);
 
     showDialog(
       context: context,
@@ -97,7 +100,15 @@ class _SessionTileState extends State<SessionTile> {
             ),
             FilledButton(
               onPressed: () {
-                widget.onRename(controller.text);
+                final globalSession = context.read<Session>();
+
+                if (session.key == globalSession.key) {
+                  globalSession.name = controller.text;
+                }
+
+                session.name = controller.text;
+
+                context.read<AppData>().updateSession(session);
 
                 Navigator.of(context).pop();
               },
