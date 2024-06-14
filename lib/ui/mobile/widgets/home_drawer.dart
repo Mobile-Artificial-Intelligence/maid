@@ -3,7 +3,7 @@ import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
 import 'package:maid/ui/shared/widgets/buttons/new_session_button.dart';
-import 'package:maid/ui/shared/widgets/tiles/session_tile.dart';
+import 'package:maid/ui/shared/widgets/sessions_list_view.dart';
 import 'package:maid/ui/mobile/widgets/tiles/user_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -51,15 +51,8 @@ class HomeDrawer extends StatelessWidget {
             Divider(
               color: Theme.of(context).colorScheme.primary,
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: appData.sessions.length, 
-                itemBuilder: (context, index) {
-                  return SessionTile(
-                    session: appData.sessions[index]
-                  );
-                }
-              ),
+            const Expanded(
+              child: SessionsListView()
             ),
             Divider(
               height: 0.0,
