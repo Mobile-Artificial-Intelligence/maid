@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
+import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';

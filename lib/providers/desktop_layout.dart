@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/enumerators/side_panel_route.dart';
 
 class DesktopLayout extends ChangeNotifier {
   bool _sidePanelOpen = true;
@@ -34,10 +35,4 @@ class DesktopLayout extends ChangeNotifier {
       notifyListeners();
     }
   }
-}
-
-enum SidePanelRoute {
-  sessions,
-  modelSettings,
-  characters
 }

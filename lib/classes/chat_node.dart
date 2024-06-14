@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:crypto/crypto.dart';
+import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid_llm/maid_llm.dart';
 
 class ChatNode {
@@ -49,10 +50,4 @@ class ChatNode {
     var values = List<int>.generate(32, (i) => random.nextInt(256));
     return sha256.convert(values).toString();
   }
-}
-
-enum ChatRole {
-  system,
-  user,
-  assistant
 }

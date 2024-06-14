@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:maid/enumerators/app_layout.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreferences extends ChangeNotifier {
@@ -64,10 +65,4 @@ class AppPreferences extends ChangeNotifier {
   void reset() {
     notifyListeners();
   }
-}
-
-enum AppLayout {
-  system,
-  mobile,
-  desktop
 }

@@ -3,9 +3,9 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:maid/enumerators/chat_role.dart';
+import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
-import 'package:maid/classes/chat_node.dart';
-import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:provider/provider.dart';

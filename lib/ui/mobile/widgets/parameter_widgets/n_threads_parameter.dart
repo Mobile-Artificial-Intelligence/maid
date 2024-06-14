@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';

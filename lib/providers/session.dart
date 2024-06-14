@@ -10,6 +10,8 @@ if (dart.library.html) 'package:maid/mocks/mock_llama_cpp_model.dart';
 import 'package:maid/classes/mistral_ai_model.dart';
 import 'package:maid/classes/ollama_model.dart';
 import 'package:maid/classes/open_ai_model.dart';
+import 'package:maid/enumerators/chat_role.dart';
+import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
