@@ -26,7 +26,7 @@ class SessionTile extends StatelessWidget {
         showContextMenu(context, details.globalPosition),
       onTap: () {
         if (!globalSession.chat.tail.finalised) return;
-        appData.setCurrentSession(session);
+        appData.addSession(session);
         globalSession.from(session);
       },
       child: ListTile(

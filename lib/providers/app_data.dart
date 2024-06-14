@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppData extends ChangeNotifier {
@@ -16,30 +17,6 @@ class AppData extends ChangeNotifier {
   Session get currentSession => _sessions.first;
 
   Character get currentCharacter => _characters.first;
-
-  set currentSession(Session session) {
-    final index = _sessions.indexWhere((element) => element.key == session.key);
-
-    if (index == 0) return;
-    
-    if (!index.isNegative) {
-      _sessions.removeAt(index);
-    }
-    
-    _sessions.insert(0, session);
-  }
-
-  set currentCharacter(Character character) {
-    final index = _characters.indexWhere((element) => element.key == character.key);
-
-    if (index == 0) return;
-
-    if (!index.isNegative) {
-      _characters.removeAt(index);
-    }
-
-    _characters.insert(0, character);
-  }
 
   static Future<AppData> get last async {
     final prefs = await SharedPreferences.getInstance();
@@ -69,7 +46,16 @@ class AppData extends ChangeNotifier {
     return AppData(sessions, characters);
   }
 
-  Future<void> save() async {
+  Future<void> save(BuildContext context) async {
+    final session = context.read<Session>();
+    final character = context.read<Character>();
+
+    _sessions.removeWhere((element) => element.key == session.key);
+    _sessions.insert(0, session);
+
+    _characters.removeWhere((element) => element.key == character.key);
+    _characters.insert(0, character);
+
     final prefs = await SharedPreferences.getInstance();
 
     final sessionsMaps = _sessions.map((e) => e.toMap()).toList();
@@ -82,18 +68,6 @@ class AppData extends ChangeNotifier {
     ];
 
     await Future.wait(futures);
-  }
-
-  void setCurrentSession(Session session) {
-    currentSession = session;
-
-    notifyListeners();
-  }
-
-  void setCurrentCharacter(Character character) {
-    currentCharacter = character;
-
-    notifyListeners();
   }
 
   void addSession(Session session) {

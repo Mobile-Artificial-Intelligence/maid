@@ -19,7 +19,7 @@ class NewSessionButton extends StatelessWidget {
         if (!session.chat.tail.finalised) return;
         final newSession = Session();
         appData.addSession(newSession);
-        session.from(newSession);
+        //session.from(newSession);
       },
       child: const Text(
         "New Chat"

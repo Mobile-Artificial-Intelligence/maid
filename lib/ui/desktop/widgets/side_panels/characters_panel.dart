@@ -16,8 +16,7 @@ class CharactersPanel extends StatelessWidget {
   }
 
   Widget pageBuilder(BuildContext context, AppData appData, Character character, Widget? child) {
-    appData.currentCharacter = character;
-    appData.save();
+    appData.save(context);
     
     return Scaffold(
       appBar: AppBar(

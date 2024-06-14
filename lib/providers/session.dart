@@ -21,7 +21,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
-  Key _key = UniqueKey();
+  late Key _key;
   LargeLanguageModel model = kIsWeb ? OllamaModel() : LlamaCppModel(); // On web, use OllamaModel by default
   ChatNodeTree chat = ChatNodeTree();
   
@@ -45,6 +45,7 @@ class Session extends ChangeNotifier {
   }
 
   Session() {
+    _key = UniqueKey();
     newSession();
   }
 
@@ -57,7 +58,8 @@ class Session extends ChangeNotifier {
   }
 
   void newSession() {
-    name = "New Chat";
+    _key = UniqueKey();
+    _name = "New Chat";
     chat = ChatNodeTree();
     model = kIsWeb ? OllamaModel(listener: notify) : LlamaCppModel(listener: notify);
     notifyListeners();
@@ -80,6 +82,8 @@ class Session extends ChangeNotifier {
       newSession();
       return;
     }
+
+    _key = UniqueKey();
 
     _name = inputJson['name'] ?? "New Chat";
 

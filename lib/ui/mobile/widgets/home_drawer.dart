@@ -25,8 +25,7 @@ class HomeDrawer extends StatelessWidget {
   }
 
   Widget drawerBuilder(BuildContext context, AppData appData, Session session, Widget? child) {
-    appData.currentSession = session;
-    appData.save();
+    appData.save(context);
 
     return Drawer(
       semanticLabel: "Drawer Menu",
