@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node_tree.dart';
 import 'package:maid/classes/google_gemini_model.dart';
 import 'package:maid/classes/large_language_model.dart';
-import 'package:maid/classes/llama_cpp_model.dart'
-if (dart.library.html) 'package:maid/mocks/mock_llama_cpp_model.dart';
+import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/classes/mistral_ai_model.dart';
 import 'package:maid/classes/ollama_model.dart';
 import 'package:maid/classes/open_ai_model.dart';
@@ -21,15 +20,13 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
-  late Key _key;
-  LargeLanguageModel model = kIsWeb ? OllamaModel() : LlamaCppModel(); // On web, use OllamaModel by default
+  LargeLanguageModel model = LlamaCppModel();
   ChatNodeTree chat = ChatNodeTree();
   
   String _name = "";
 
   String get name => _name;
-  
-  Key get key => _key;
+
 
   set busy(bool value) {
     notifyListeners();
@@ -45,7 +42,6 @@ class Session extends ChangeNotifier {
   }
 
   Session() {
-    _key = UniqueKey();
     newSession();
   }
 
@@ -58,7 +54,6 @@ class Session extends ChangeNotifier {
   }
 
   void newSession() {
-    _key = UniqueKey();
     _name = "New Chat";
     chat = ChatNodeTree();
     model = kIsWeb ? OllamaModel(listener: notify) : LlamaCppModel(listener: notify);
@@ -70,7 +65,6 @@ class Session extends ChangeNotifier {
   }
 
   void from(Session session) {
-    _key = session.key;
     _name = session.name;
     chat = session.chat;
     model = session.model;
@@ -82,8 +76,6 @@ class Session extends ChangeNotifier {
       newSession();
       return;
     }
-
-    _key = UniqueKey();
 
     _name = inputJson['name'] ?? "New Chat";
 

@@ -26,7 +26,7 @@ class SessionTile extends StatelessWidget {
         showContextMenu(context, details.globalPosition),
       onTap: () {
         if (!globalSession.chat.tail.finalised) return;
-        appData.addSession(session);
+        appData.swapSessions(globalSession, session);
         globalSession.from(session);
       },
       child: ListTile(
@@ -57,10 +57,13 @@ class SessionTile extends StatelessWidget {
 
             if (!globalSession.chat.tail.finalised) return;
 
-            if (session.key == globalSession.key) {
+            if (session == globalSession) {
+              print("Cannot delete current session");
               final newSession = appData.sessions.firstOrNull ?? Session();
               globalSession.from(newSession);
               appData.addSession(newSession);
+            } else {
+              print("Deleting session: ${session.name}");
             }
             
             appData.removeSession(session);
@@ -109,7 +112,7 @@ class SessionTile extends StatelessWidget {
           onPressed: () {
             final globalSession = context.read<Session>();
 
-            if (session.key == globalSession.key) {
+            if (session == globalSession) {
               globalSession.name = controller.text;
             }
 

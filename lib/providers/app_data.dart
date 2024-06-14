@@ -50,7 +50,7 @@ class AppData extends ChangeNotifier {
     final session = context.read<Session>();
     final character = context.read<Character>();
 
-    _sessions.removeWhere((element) => element.key == session.key);
+    _sessions.remove(session);
     _sessions.insert(0, session);
 
     _characters.removeWhere((element) => element.key == character.key);
@@ -71,7 +71,9 @@ class AppData extends ChangeNotifier {
   }
 
   void addSession(Session session) {
-    final index = _sessions.indexWhere((element) => element.key == session.key);
+    final index = _sessions.indexWhere((element) => element == session);
+
+    print("AddSession: $index");
 
     if (index.isNegative) {
       _sessions.add(session);
@@ -91,7 +93,9 @@ class AppData extends ChangeNotifier {
   }
 
   void removeSession(Session session) {
-    final index = _sessions.indexWhere((element) => element.key == session.key);
+    final index = _sessions.indexWhere((element) => element == session);
+
+    print("RemoveSession: $index");
 
     if (!index.isNegative) {
       _sessions.removeAt(index);
@@ -111,7 +115,7 @@ class AppData extends ChangeNotifier {
   }
 
   void updateSession(Session session) {
-    final index = _sessions.indexWhere((element) => element.key == session.key);
+    final index = _sessions.indexWhere((element) => element == session);
 
     if (!index.isNegative) {
       _sessions[index] = session;
@@ -125,6 +129,34 @@ class AppData extends ChangeNotifier {
 
     if (!index.isNegative) {
       _characters[index] = character;
+
+      notifyListeners();
+    }
+  }
+
+  void swapSessions(Session session1, Session session2) {
+    final index1 = _sessions.indexWhere((element) => element == session1);
+    final index2 = _sessions.indexWhere((element) => element == session2);
+
+    print("SwapSessions: $index1, $index2");
+
+    if (!index1.isNegative && !index2.isNegative) {
+      final temp = _sessions[index1];
+      _sessions[index1] = _sessions[index2];
+      _sessions[index2] = temp;
+
+      notifyListeners();
+    }
+  }
+
+  void swapCharacters(Character character1, Character character2) {
+    final index1 = _characters.indexWhere((element) => element.key == character1.key);
+    final index2 = _characters.indexWhere((element) => element.key == character2.key);
+
+    if (!index1.isNegative && !index2.isNegative) {
+      final temp = _characters[index1];
+      _characters[index1] = _characters[index2];
+      _characters[index2] = temp;
 
       notifyListeners();
     }
