@@ -22,6 +22,13 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
 
   @override
   Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: buildStack(),
+    );
+  }
+
+  Widget buildStack() {
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -45,7 +52,6 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
         Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(10),
             hoverColor: Colors.black.withOpacity(0.1),
             highlightColor: Colors.black.withOpacity(0.2),
             splashColor: Colors.black.withOpacity(0.2),
