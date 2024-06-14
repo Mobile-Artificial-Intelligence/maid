@@ -57,7 +57,7 @@ class SessionTile extends StatelessWidget {
             if (session.key == globalSession.key) {
               final newSession = appData.sessions.firstOrNull ?? Session();
               globalSession.from(newSession);
-              appData.currentSessionKey = newSession.key;
+              appData.currentSession = newSession;
             }
             
             appData.removeSession(session);

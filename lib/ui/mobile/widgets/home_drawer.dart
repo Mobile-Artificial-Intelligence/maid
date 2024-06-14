@@ -24,13 +24,7 @@ class HomeDrawer extends StatelessWidget {
   }
 
   Widget drawerBuilder(BuildContext context, AppData appData, Session session, Widget? child) {
-    appData.currentSessionKey = session.key;
-
-    final index = appData.sessions.indexWhere((element) => element.key == session.key);
-
-    if (index.isNegative) {
-      appData.addSession(session);
-    }
+    appData.currentSession = session;
 
     session.save();
 

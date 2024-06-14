@@ -9,20 +9,33 @@ class AppData extends ChangeNotifier {
   final List<Session> _sessions;
   final List<Character> _characters;
 
-  Key _currentSessionKey = UniqueKey();
-  Key _currentCharacterKey = UniqueKey();
-
   List<Session> get sessions => _sessions;
 
   List<Character> get characters => _characters;
 
-  set currentSessionKey(Key key) {
-    _currentSessionKey = key;
+  Session get currentSession => _sessions.first;
+
+  Character get currentCharacter => _characters.first;
+
+  set currentSession(Session session) {
+    final index = _sessions.indexWhere((element) => element.key == session.key);
+
+    if (!index.isNegative) {
+      _sessions.removeAt(index);
+    }
+    
+    _sessions.insert(0, session);
+
     notifyListeners();
   }
 
-  set currentCharacterKey(Key key) {
-    _currentCharacterKey = key;
+  set currentCharacter(Character character) {
+    final index = _characters.indexWhere((element) => element.key == character.key);
+
+    if (!index.isNegative) {
+      _characters.removeAt(index);
+    }
+
     notifyListeners();
   }
 
@@ -43,23 +56,23 @@ class AppData extends ChangeNotifier {
       characters = (json.decode(charactersString) as List).map((e) => Character.fromMap(e)).toList();
     }
 
+    if (sessions.isEmpty) {
+      sessions.add(Session());
+    }
+
+    if (characters.isEmpty) {
+      characters.add(Character());
+    }
+
     return AppData(sessions, characters);
   }
 
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final sessionsMaps = _sessions.map((e) => {
-      if (e.key != _currentSessionKey) {
-        e.toMap()
-      }
-    }).toList();
+    final sessionsMaps = _sessions.map((e) => e.toMap()).toList();
 
-    final characterMaps = _characters.map((e) => {
-      if (e.key != _currentCharacterKey) {
-        e.toMap()
-      }
-    }).toList();
+    final characterMaps = _characters.map((e) => e.toMap()).toList();
 
     final futures = [
       prefs.setString("sessions", json.encode(sessionsMaps)),
