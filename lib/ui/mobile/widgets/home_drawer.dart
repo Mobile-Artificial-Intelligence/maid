@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
-import 'package:maid/ui/mobile/widgets/tiles/session_tile.dart';
+import 'package:maid/ui/shared/widgets/buttons/new_session_button.dart';
+import 'package:maid/ui/shared/widgets/tiles/session_tile.dart';
 import 'package:maid/ui/mobile/widgets/tiles/user_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -46,17 +47,7 @@ class HomeDrawer extends StatelessWidget {
             Divider(
               color: Theme.of(context).colorScheme.primary,
             ),
-            FilledButton(
-              onPressed: () {
-                if (!session.chat.tail.finalised) return;
-                final newSession = Session();
-                appData.currentSession = newSession;
-                session.from(newSession);
-              },
-              child: const Text(
-                "New Chat"
-              ),
-            ),
+            const NewSessionButton(),
             Divider(
               color: Theme.of(context).colorScheme.primary,
             ),
