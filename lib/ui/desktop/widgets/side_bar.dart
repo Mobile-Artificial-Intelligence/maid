@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/enumerators/side_panel_route.dart';
 import 'package:maid/providers/desktop_navigator.dart';
 import 'package:maid/ui/desktop/widgets/buttons/user_button.dart';
 import 'package:provider/provider.dart';
@@ -37,21 +36,21 @@ class SideBar extends StatelessWidget {
           tooltip: 'Sessions',
           icon: const Icon(Icons.chat_rounded),
           onPressed: () {
-            context.read<DesktopNavigator>().navigateSidePanel(SidePanelRoute.sessions);
+            DesktopNavigator.of(context).navigateSidePanel("/sessions");
           },
         ),
         IconButton(
           tooltip: 'Model Settings',
           icon: const Icon(Icons.account_tree_rounded), 
           onPressed: () {
-            context.read<DesktopNavigator>().navigateSidePanel(SidePanelRoute.modelSettings);
+            DesktopNavigator.of(context).navigateSidePanel("/model");
           },
         ),
         IconButton(
           tooltip: 'Characters',
           icon: const Icon(Icons.group_rounded),
           onPressed: () {
-            context.read<DesktopNavigator>().navigateSidePanel(SidePanelRoute.characters);
+            DesktopNavigator.of(context).navigateSidePanel("/characters");
           },
         ),
       ],
@@ -65,14 +64,14 @@ class SideBar extends StatelessWidget {
           tooltip: 'Toggle Terminal',
           icon: const Icon(Icons.terminal_rounded),
           onPressed: () {
-            context.read<DesktopNavigator>().toggleTerminal();
+            DesktopNavigator.of(context).toggleSettingsPanel();
           },
         ),
         IconButton(
           tooltip: 'Toggle Settings',
           icon: const Icon(Icons.settings_rounded),
           onPressed: () {
-            context.read<DesktopNavigator>().toggleSettings();
+            DesktopNavigator.of(context).toggleSettingsPanel();
           }
         ),
         const UserButton(),
