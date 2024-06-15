@@ -11,7 +11,7 @@ class SessionsListView extends StatelessWidget {
     return Consumer<AppData>(
       builder: (context, appData, child) {
         appData.save();
-        
+
         return ListView.builder(
           itemCount: appData.sessions.length, 
           itemBuilder: (context, index) {

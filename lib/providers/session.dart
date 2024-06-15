@@ -21,6 +21,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Session extends ChangeNotifier {
   LargeLanguageModel model = LlamaCppModel();
   ChatNodeTree chat = ChatNodeTree();
+  Key _key = UniqueKey();
+
+  Key get key => _key;
   
   String _name = "";
 
@@ -69,7 +72,8 @@ class Session extends ChangeNotifier {
   }
 
   void newSession(int index) {
-    _name = "New Chat $index";
+    _key = UniqueKey();
+    _name = "New Chat${index <= 0 ? "" : " $index"}";
     chat = ChatNodeTree();
     model = LlamaCppModel(listener: notify);
     notifyListeners();
@@ -80,6 +84,7 @@ class Session extends ChangeNotifier {
   }
 
   void from(Session session) {
+    _key = session.key;
     _name = session.name;
     chat = session.chat;
     model = session.model;
@@ -88,9 +93,11 @@ class Session extends ChangeNotifier {
 
   void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson.isEmpty) {
-      newSession(-1);
+      newSession(0);
       return;
     }
+
+    _key = UniqueKey();
 
     _name = inputJson['name'] ?? "New Chat";
 

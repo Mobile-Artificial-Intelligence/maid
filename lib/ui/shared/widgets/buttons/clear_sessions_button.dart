@@ -18,6 +18,7 @@ class ClearSessionsButton extends StatelessWidget {
       onPressed: () {
         if (!session.chat.tail.finalised) return;
         appData.clearSessions();
+        appData.currentSession = session;
       },
       child: const Text(
         "Clear Chats"

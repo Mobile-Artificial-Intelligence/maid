@@ -3,7 +3,7 @@ import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
-class SessionTile extends StatelessWidget {
+class SessionTile extends StatefulWidget {
   final Session session;
 
   const SessionTile({
@@ -12,26 +12,35 @@ class SessionTile extends StatelessWidget {
   });
 
   @override
+  State<SessionTile> createState() => _SessionTileState();
+}
+
+class _SessionTileState extends State<SessionTile> {
+  late TextEditingController controller = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
+    controller.text = widget.session.name;
+
     return Consumer2<AppData, Session>(
       builder: buildGestureDetector,
     );
   }
 
-  Widget buildGestureDetector(BuildContext context, AppData appData, Session globalSession, Widget? child) {
+  Widget buildGestureDetector(BuildContext context, AppData appData, Session session, Widget? child) {
     return GestureDetector(
       onSecondaryTapUp: (TapUpDetails details) =>
         showContextMenu(context, details.globalPosition),
       onLongPressStart: (LongPressStartDetails details) =>
         showContextMenu(context, details.globalPosition),
       onTap: () {
-        if (!globalSession.chat.tail.finalised) return;
-        appData.setCurrentSession(globalSession, session);
-        globalSession.from(session);
+        if (!session.chat.tail.finalised) return;
+        appData.setCurrentSession(session, widget.session);
+        session.from(widget.session);
       },
       child: ListTile(
         title: Text(
-          session.name,
+          controller.text,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.labelLarge,
         )
@@ -52,18 +61,18 @@ class SessionTile extends StatelessWidget {
       items: <PopupMenuEntry>[
         PopupMenuItem(
           onTap: () {
-            final globalSession = context.read<Session>();
+            final session = context.read<Session>();
             final appData = context.read<AppData>();
 
-            if (!globalSession.chat.tail.finalised) return;
+            if (!session.chat.tail.finalised) return;
 
-            if (session == globalSession) {
-              final newSession = appData.sessions.firstOrNull ?? Session(-1);
-              globalSession.from(newSession);
+            if (widget.session == session) {
+              final newSession = appData.sessions.firstOrNull ?? Session(0);
+              session.from(newSession);
               appData.addSession(newSession);
             }
             
-            appData.removeSession(session);
+            appData.removeSession(widget.session);
           },
           child: const Text('Delete'),
         ),
@@ -83,9 +92,6 @@ class SessionTile extends StatelessWidget {
   }
 
   Widget buildDialog(BuildContext context) {
-    final TextEditingController controller =
-        TextEditingController(text: session.name);
-
     return AlertDialog(
       title: const Text(
         "Rename Session",
@@ -106,17 +112,17 @@ class SessionTile extends StatelessWidget {
           ),
         ),
         FilledButton(
-          onPressed: () {
-            final globalSession = context.read<Session>();
+          onPressed: () => setState(() {
+            final session = context.read<Session>();
 
-            if (session == globalSession) {
-              globalSession.name = controller.text;
+            if (widget.session == session) {
+              session.name = controller.text;
             }
 
-            session.name = controller.text;
+            widget.session.name = controller.text;
 
             Navigator.of(context).pop();
-          },
+          }),
           child: Text(
             "Rename",
             style: Theme.of(context).textTheme.labelLarge,

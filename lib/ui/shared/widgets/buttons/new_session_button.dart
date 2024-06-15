@@ -14,11 +14,11 @@ class NewSessionButton extends StatelessWidget {
   }
 
   Widget buildButton(BuildContext context, AppData appData, Session session, Widget? child) {
-    final index = appData.sessions.length;
+    final index = appData.nextSessionIndex;
     return FilledButton(
       onPressed: () {
         if (!session.chat.tail.finalised) return;
-        final newSession = Session(index + 1);
+        final newSession = Session(index);
         appData.setCurrentSession(session, newSession);
         session.from(newSession);
       },

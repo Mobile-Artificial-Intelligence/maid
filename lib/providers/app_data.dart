@@ -27,13 +27,26 @@ class AppData extends ChangeNotifier {
 
   Character get currentCharacter => _currentCharacter;
 
+  int get nextSessionIndex {
+    int index = 0;
+
+    for (int i = 1; i <= sessions.length; i++) {
+      if (!sessions.any((element) => element.name == "New Chat $i")) {
+        index = i;
+        break;
+      }
+    }
+
+    return index;
+  }
+
   set currentSession(Session session) {
-    _currentSession = session;
+    _currentSession = session.copy();
     save().then((value) => notifyListeners());
   }
 
   set currentCharacter(Character character) {
-    _currentCharacter = character;
+    _currentCharacter = character.copy();
     save().then((value) => notifyListeners());
   }
 
@@ -55,7 +68,7 @@ class AppData extends ChangeNotifier {
     }
 
     if (sessions.isEmpty) {
-      sessions.add(Session(-1));
+      sessions.add(Session(0));
     }
 
     if (characters.isEmpty) {
@@ -68,7 +81,7 @@ class AppData extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    _sessions.removeWhere((element) => element == _currentSession);
+    _sessions.removeWhere((element) => element.key == _currentSession.key);
     final sessionsMaps = _sessions.map((e) => e.toMap()).toList();
 
     _characters.removeWhere((element) => element.key == _currentCharacter.key);
@@ -83,7 +96,7 @@ class AppData extends ChangeNotifier {
   }
 
   void addSession(Session session) {
-    final index = _sessions.indexWhere((element) => element == session);
+    final index = _sessions.indexWhere((element) => element.key == session.key);
 
     print("AddSession: $index");
 
@@ -103,7 +116,7 @@ class AppData extends ChangeNotifier {
   }
 
   void removeSession(Session session) {
-    final index = _sessions.indexWhere((element) => element == session);
+    final index = _sessions.indexWhere((element) => element.key == session.key);
 
     if (!index.isNegative) {
       _sessions.removeAt(index);
@@ -121,6 +134,10 @@ class AppData extends ChangeNotifier {
   }
 
   void setCurrentSession(Session oldCurrentSession, Session newCurrentSession) {
+    if (oldCurrentSession.key == newCurrentSession.key) {
+      return;
+    }
+
     removeSession(newCurrentSession);
     addSession(oldCurrentSession.copy());
     _currentSession = newCurrentSession;
@@ -128,6 +145,10 @@ class AppData extends ChangeNotifier {
   }
 
   void setCurrentCharacter(Character oldCurrentCharacter, Character newCurrentCharacter) {
+    if (oldCurrentCharacter.key == newCurrentCharacter.key) {
+      return;
+    }
+
     removeCharacter(newCurrentCharacter);
     addCharacter(oldCurrentCharacter.copy());
     _currentCharacter = newCurrentCharacter;
