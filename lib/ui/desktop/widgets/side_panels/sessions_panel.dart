@@ -10,16 +10,29 @@ class SessionsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ClearSessionsButton(),
-            NewSessionButton()
-          ]
+        title: const Text(
+          "Sessions"
         ),
         centerTitle: true,
       ),
-      body: const SessionsListView(),
+      body: buildColumn()
+    );
+  }
+
+  Widget buildColumn() {
+    return const Column(
+      children: [
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 8.0,
+          runSpacing: 4.0,
+          children: [
+            ClearSessionsButton(),
+            NewSessionButton(),
+          ],
+        ),
+        Expanded(child: SessionsListView())
+      ]
     );
   }
 }
