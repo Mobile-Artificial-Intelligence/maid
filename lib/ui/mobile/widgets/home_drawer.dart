@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/ui/mobile/widgets/tiles/character_browser_tile.dart';
+import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
 import 'package:maid/ui/shared/widgets/buttons/clear_sessions_button.dart';
 import 'package:maid/ui/shared/widgets/buttons/new_session_button.dart';
 import 'package:maid/ui/shared/widgets/sessions_list_view.dart';
@@ -41,7 +41,7 @@ class HomeDrawer extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: CharacterBrowserTile(
+              child: CharacterTile(
                 character: character
               )
             ),

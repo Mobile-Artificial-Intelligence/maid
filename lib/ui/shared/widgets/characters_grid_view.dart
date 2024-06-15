@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/ui/mobile/widgets/tiles/character_browser_tile.dart';
+import 'package:maid/ui/mobile/widgets/tiles/character_tile.dart';
 import 'package:provider/provider.dart';
 
 class CharactersGridView extends StatelessWidget {
@@ -20,7 +19,7 @@ class CharactersGridView extends StatelessWidget {
 
     return GridView.builder(
       itemCount: appData.characters.length,
-      itemBuilder: (context, index) => CharacterBrowserTile(
+      itemBuilder: (context, index) => CharacterTile(
         character: appData.characters[index]
       ), 
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(

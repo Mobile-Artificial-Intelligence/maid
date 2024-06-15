@@ -7,17 +7,17 @@ import 'package:maid/providers/character.dart';
 import 'package:maid/static/logger.dart';
 import 'package:provider/provider.dart';
 
-class CharacterBrowserTile extends StatefulWidget {
+class CharacterTile extends StatefulWidget {
   final Character character;
 
-  const CharacterBrowserTile(
+  const CharacterTile(
       {super.key, required this.character});
 
   @override
-  State<CharacterBrowserTile> createState() => _CharacterBrowserTileState();
+  State<CharacterTile> createState() => _CharacterTileState();
 }
 
-class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
+class _CharacterTileState extends State<CharacterTile> {
   Timer? longPressTimer;
 
   @override
