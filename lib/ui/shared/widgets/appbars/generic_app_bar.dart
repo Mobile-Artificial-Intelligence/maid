@@ -8,8 +8,6 @@ class GenericAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      foregroundColor: Theme.of(context).colorScheme.onPrimary,
       elevation: 0.0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),

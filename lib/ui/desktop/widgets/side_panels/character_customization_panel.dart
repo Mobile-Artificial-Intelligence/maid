@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
+import 'package:maid/providers/desktop_navigator.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/shared/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/shared/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
 import 'package:maid/ui/shared/widgets/future_avatar.dart';
+import 'package:maid/ui/shared/widgets/future_tile_image.dart';
 import 'package:provider/provider.dart';
 
 class CharacterCustomizationPanel extends StatefulWidget {
@@ -48,7 +50,18 @@ class _CharacterCustomizationPanelState extends State<CharacterCustomizationPane
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GenericAppBar(title: "Character Customization"),
+      appBar: AppBar(
+        elevation: 0.0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            DesktopNavigator.of(context).navigateSidePanel('/characters');
+          },
+        ),
+        title: const Text(
+          "Character Customization"
+        ),
+      ),
       body: Consumer<AppData>(
         builder: buildBody,
       )
@@ -81,10 +94,13 @@ class _CharacterCustomizationPanelState extends State<CharacterCustomizationPane
 
     return customColumn([
       const SizedBox(height: 10.0),
-      FutureAvatar(
-        key: character.key,
-        image: character.profile,
-        radius: 75,
+      Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: FutureTileImage(
+          key: character.key,
+          image: character.profile,
+          borderRadius: BorderRadius.circular(10.0),
+        )
       ),
       const SizedBox(height: 20.0),
       Text(

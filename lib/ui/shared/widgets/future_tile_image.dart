@@ -6,10 +6,18 @@ class FutureTileImage extends StatelessWidget {
   final Future<File> image;
   final BorderRadius? borderRadius;
 
-  const FutureTileImage({super.key, required this.image, this.borderRadius});
+  const FutureTileImage({required super.key, required this.image, this.borderRadius});
+
+  static final Map<Key, File> _cache = {};
 
   @override
   Widget build(BuildContext context) {
+    final cachedImage = _cache[key!];
+
+    if (cachedImage != null) {
+      return buildImage(cachedImage);
+    }
+
     return FutureBuilder<File>(
       future: image, 
       builder: (context, snapshot) {
@@ -17,18 +25,24 @@ class FutureTileImage extends StatelessWidget {
           if (snapshot.hasError) {
             return const Icon(Icons.error);
           } else {
-            return ClipRRect(
-            borderRadius: borderRadius ?? BorderRadius.zero,
-            child: Image.file(
-              snapshot.data!,
-              fit: BoxFit.cover,
-            ),
-          );
+            _cache[key!] = snapshot.data!;
+
+            return buildImage(snapshot.data!);
           }
         } else {
           return const CircularProgressIndicator();
         }
       }
+    );
+  }
+
+  Widget buildImage(File file) {
+    return ClipRRect(
+      borderRadius: borderRadius ?? BorderRadius.zero,
+      child: Image.file(
+        file,
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

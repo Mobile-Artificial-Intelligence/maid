@@ -19,6 +19,7 @@ class ImageSelectorTile extends StatelessWidget {
       },
       child: GridTile(
         child: FutureTileImage(
+          key: key ?? UniqueKey(),
           image: image,
           borderRadius: BorderRadius.circular(10),
         ),
