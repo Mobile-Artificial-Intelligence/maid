@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
+import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/desktop_navigator.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:maid/ui/shared/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/shared/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
-import 'package:maid/ui/shared/widgets/future_avatar.dart';
 import 'package:maid/ui/shared/widgets/future_tile_image.dart';
 import 'package:provider/provider.dart';
 
-class CharacterCustomizationPanel extends StatefulWidget {
-  const CharacterCustomizationPanel({super.key});
+class CharacterCustomizationPage extends StatefulWidget {
+  const CharacterCustomizationPage({super.key});
 
   @override
-  State<CharacterCustomizationPanel> createState() =>
-      _CharacterCustomizationPanelState();
+  State<CharacterCustomizationPage> createState() =>
+      _CharacterCustomizationPageState();
 }
 
-class _CharacterCustomizationPanelState extends State<CharacterCustomizationPanel> {
+class _CharacterCustomizationPageState extends State<CharacterCustomizationPage> {
   bool regenerate = true;
 
   late TextEditingController nameController;
@@ -55,7 +54,12 @@ class _CharacterCustomizationPanelState extends State<CharacterCustomizationPane
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            DesktopNavigator.of(context).navigateSidePanel('/characters');
+            if (AppPreferences.of(context).isDesktop) {
+              DesktopNavigator.of(context).navigateSidePanel('/characters');
+            } 
+            else {
+              Navigator.of(context).pop();
+            }
           },
         ),
         title: const Text(
