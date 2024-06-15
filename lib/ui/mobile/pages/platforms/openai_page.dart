@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
+import 'package:maid/ui/shared/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/frequency_penalty_parameter.dart';

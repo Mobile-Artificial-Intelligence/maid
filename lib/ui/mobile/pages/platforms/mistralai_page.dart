@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
+import 'package:maid/ui/shared/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
