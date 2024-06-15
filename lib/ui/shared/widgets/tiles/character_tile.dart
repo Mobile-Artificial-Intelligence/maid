@@ -22,52 +22,11 @@ class _CharacterTileState extends State<CharacterTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: buildStack(),
-      ),
-    );
-  }
-
-  Widget buildStack() {
     return Stack(
       fit: StackFit.expand,
       children: [
-        FutureBuilder<File>(
-          future: widget.character.profile,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return const Icon(Icons.error);
-              } else {
-                return Image.file(
-                  snapshot.data!,
-                  fit: BoxFit.cover,
-                );
-              }
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
-        ),
-        Builder(
-          builder: (context) {
-            if (widget.isSelected ?? false) {
-              return const Positioned(
-                top: 8,
-                right: 8,
-                child: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                ),
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ),
+        buildImageContainer(),
+        buildTick(),
         Material(
           color: Colors.transparent,
           child: InkWell(
@@ -78,35 +37,86 @@ class _CharacterTileState extends State<CharacterTile> {
             onTapUp: onTapUp,
             onSecondaryTapUp: (details) => showContextMenu(details.globalPosition),
             child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.center,
-                  colors: [Colors.black, Colors.transparent],
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.character.name,
-                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    widget.character.description,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
+              padding: const EdgeInsets.all(10),
+              child: buildTextColumn(),
+            )
           ),
         ),
       ],
+    );
+  }
+
+  Widget buildTick() {
+    if (widget.isSelected ?? false) {
+      return const Positioned(
+        top: 10,
+        right: 10,
+        child: Icon(
+          Icons.check,
+          color: Colors.white,
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget buildTextColumn() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.character.name,
+          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          widget.character.description,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(color: Colors.white),
+        ),
+      ],
+    );
+  }
+
+  Widget buildImageContainer() {
+    return Container(
+      padding: const EdgeInsets.all(1),
+      margin: const EdgeInsets.all(4),
+      foregroundDecoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.center,
+          colors: [Colors.black, Colors.transparent],
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: buildImage(),
+      ),
+    );
+  }
+
+  Widget buildImage() {
+    return FutureBuilder<File>(
+      future: widget.character.profile,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return const Icon(Icons.error);
+          } else {
+            return Image.file(
+              snapshot.data!,
+              fit: BoxFit.cover,
+            );
+          }
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
     );
   }
 
