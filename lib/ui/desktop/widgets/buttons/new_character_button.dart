@@ -8,17 +8,15 @@ class NewCharacterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppData, Character>(
+    return Consumer<AppData>(
       builder: buildButton
     );
   }
 
-  Widget buildButton(BuildContext context, AppData appData, Character character, Widget? child) {
+  Widget buildButton(BuildContext context, AppData appData, Widget? child) {
     return FilledButton(
       onPressed: () {
-        final newCharacter = Character();
-        appData.setCurrentCharacter(character, newCharacter);
-        character.from(newCharacter);
+        appData.currentCharacter = Character();
       },
       child: const Text(
         "New Character"

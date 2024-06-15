@@ -20,13 +20,13 @@ class HomeDrawer extends StatelessWidget {
       onTap: () {
         Navigator.pop(context);
       },
-      child: Consumer3<AppData, Session, Character>(
+      child: Consumer<AppData>(
         builder: drawerBuilder
       )
     );
   }
 
-  Widget drawerBuilder(BuildContext context, AppData appData, Session session, Character character, Widget? child) {
+  Widget drawerBuilder(BuildContext context, AppData appData, Widget? child) {
     return Drawer(
       semanticLabel: "Drawer Menu",
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -42,7 +42,7 @@ class HomeDrawer extends StatelessWidget {
           children: [
             Expanded(
               child: CharacterTile(
-                character: character
+                character: appData.currentCharacter,
               )
             ),
             const SizedBox(height: 5.0),

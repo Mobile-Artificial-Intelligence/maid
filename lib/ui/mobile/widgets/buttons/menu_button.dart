@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
@@ -28,8 +29,10 @@ class _MenuButtonState extends State<MenuButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Session>(
-      builder: (context, session, child) {
+    return Consumer<AppData>(
+      builder: (context, appData, child) {
+        final session = appData.currentSession;
+        
         if (canUseCache(session)) {
           options = cache;
           return PopupMenuButton(
@@ -82,16 +85,17 @@ class _MenuButtonState extends State<MenuButton> {
   List<PopupMenuEntry<dynamic>> itemBuilder(BuildContext context) {
     List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
       padding: EdgeInsets.zero,
-      child: Consumer<Session>(
-        builder: 
-          (context, session, child) {
+      child: Consumer<AppData>(
+          builder: (context, appData, child) {
+            final model = appData.currentSession.model;
+            
             return ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
               title: Text(modelName),
               onTap: () {
-                session.model.name = modelName;
+                model.name = modelName;
               },
-              tileColor: session.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
+              tileColor: model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
             );
           }
         )
@@ -110,7 +114,7 @@ class _MenuButtonState extends State<MenuButton> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Model Settings'),
           onTap: () {
-            switch (context.read<Session>().model.type) {
+            switch (context.read<AppData>().currentSession.model.type) {
               case LargeLanguageModelType.llamacpp:
                 Navigator.pushNamed(context, '/llamacpp');
               case LargeLanguageModelType.ollama:

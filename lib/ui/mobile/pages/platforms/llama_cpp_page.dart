@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
@@ -34,11 +35,11 @@ class LlamaCppPage extends StatefulWidget {
 }
 
 class _LlamaCppPageState extends State<LlamaCppPage> {
-  Session? cachedSession;
+  late Session session;
 
   @override
   void dispose() {
-    (cachedSession!.model as LlamaCppModel).init();
+    (session.model as LlamaCppModel).init();
 
     super.dispose();
   }
@@ -48,9 +49,9 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
     return Scaffold(
       appBar: const GenericAppBar(title: "LlamaCPP Parameters"),
       body: SessionBusyOverlay(
-        child: Consumer<Session>(
-          builder: (context, session, child) {
-            cachedSession = session;
+        child: Consumer<AppData>(
+          builder: (context, appData, child) {
+            session = appData.currentSession;
 
             return ListView(
               children: [

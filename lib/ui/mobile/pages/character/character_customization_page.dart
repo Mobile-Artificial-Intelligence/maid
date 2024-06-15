@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
@@ -10,7 +8,6 @@ import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
 import 'package:maid/ui/shared/widgets/future_avatar.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterCustomizationPage extends StatefulWidget {
   const CharacterCustomizationPage({super.key});
@@ -52,13 +49,15 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const GenericAppBar(title: "Character Customization"),
-      body: Consumer<Character>(
+      body: Consumer<AppData>(
         builder: buildBody,
       )
     );
   }
 
-  Widget buildBody(BuildContext context, Character character, Widget? child) {
+  Widget buildBody(BuildContext context, AppData appData, Widget? child) {
+    final character = appData.currentCharacter;
+
     if (regenerate) {
       nameController = TextEditingController(text: character.name);
       descriptionController = TextEditingController(text: character.description);

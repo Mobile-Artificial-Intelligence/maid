@@ -1,5 +1,6 @@
   
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
@@ -51,7 +52,7 @@ void showMissingRequirementsDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (context) {
-      final requirement = context.read<Session>().model.missingRequirements;
+      final requirement = context.read<AppData>().currentSession.model.missingRequirements;
 
       return AlertDialog(
         title: const Text(

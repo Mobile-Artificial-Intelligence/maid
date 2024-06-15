@@ -10,7 +10,7 @@ import 'package:maid/classes/ollama_model.dart';
 import 'package:maid/classes/open_ai_model.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/providers/character.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/classes/chat_node.dart';
@@ -137,7 +137,7 @@ class Session extends ChangeNotifier {
 
   void prompt(BuildContext context) async {
     final user = context.read<User>();
-    final character = context.read<Character>();
+    final character = context.read<AppData>().currentCharacter;
 
     final description = Utilities.formatPlaceholders(character.description, user.name, character.name);
     final personality = Utilities.formatPlaceholders(character.personality, user.name, character.name);

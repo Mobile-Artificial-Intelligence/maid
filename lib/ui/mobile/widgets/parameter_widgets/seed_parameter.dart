@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
@@ -8,10 +9,12 @@ class SeedParameter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController controller =
-        TextEditingController(text: context.read<Session>().model.seed.toString());
+        TextEditingController(text: context.read<AppData>().currentSession.model.seed.toString());
 
-    return Consumer<Session>(
-      builder: (context, session, child) {
+    return Consumer<AppData>(
+      builder: (context, appData, child) {
+        final session = appData.currentSession;
+        
         return Column(
           children: [
             SwitchListTile(

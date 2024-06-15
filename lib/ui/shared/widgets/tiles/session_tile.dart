@@ -25,17 +25,17 @@ class _SessionTileState extends State<SessionTile> {
   Widget build(BuildContext context) {
     controller.text = widget.session.name;
 
-    return Consumer2<AppData, Session>(
+    return Consumer<AppData>(
       builder: buildGestureDetector,
     );
   }
 
-  Widget buildGestureDetector(BuildContext context, AppData appData, Session session, Widget? child) {
+  Widget buildGestureDetector(BuildContext context, AppData appData, Widget? child) {
     return InkWell(
       onSecondaryTapUp: (TapUpDetails details) =>
         showContextMenu(context, details.globalPosition),
       onTapDown: onTapDown,
-      onTapUp: (TapUpDetails details) => onTapUp(details, appData, session),
+      onTapUp: (TapUpDetails details) => onTapUp(details, appData),
       child: ListTile(
         title: Text(
           controller.text,
@@ -52,12 +52,10 @@ class _SessionTileState extends State<SessionTile> {
     });
   }
 
-  void onTapUp(TapUpDetails details, AppData appData, Session session) {
+  void onTapUp(TapUpDetails details, AppData appData) {
     if (longPressTimer?.isActive ?? false) {
       longPressTimer?.cancel();
-      if (!session.chat.tail.finalised) return;
-      appData.setCurrentSession(session, widget.session);
-      session.from(widget.session);
+      appData.currentSession = widget.session;
     }
   }  
 
@@ -74,15 +72,10 @@ class _SessionTileState extends State<SessionTile> {
       items: <PopupMenuEntry>[
         PopupMenuItem(
           onTap: () {
-            final session = context.read<Session>();
             final appData = context.read<AppData>();
 
-            if (!session.chat.tail.finalised) return;
-
-            if (widget.session == session) {
-              final newSession = appData.sessions.firstOrNull ?? Session(0);
-              session.from(newSession);
-              appData.addSession(newSession);
+            if (widget.session == appData.currentSession) {
+              appData.currentSession = appData.sessions.firstOrNull ?? Session(0);
             }
             
             appData.removeSession(widget.session);
@@ -126,10 +119,10 @@ class _SessionTileState extends State<SessionTile> {
         ),
         FilledButton(
           onPressed: () => setState(() {
-            final session = context.read<Session>();
+            final appData = context.read<AppData>();
 
-            if (widget.session == session) {
-              session.name = controller.text;
+            if (widget.session == appData.currentSession) {
+              appData.currentSession.name = controller.text;
             }
 
             widget.session.name = controller.text;

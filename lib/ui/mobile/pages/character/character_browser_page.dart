@@ -10,12 +10,12 @@ class CharacterBrowserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppData, Character>(
+    return Consumer<AppData>(
       builder: pageBuilder
     );
   }
 
-  Widget pageBuilder(BuildContext context, AppData appData, Character character, Widget? child) {
+  Widget pageBuilder(BuildContext context, AppData appData, Widget? child) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -32,9 +32,7 @@ class CharacterBrowserPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              final newCharacter = Character();
-              appData.addCharacter(newCharacter);
-              character.from(newCharacter);
+              appData.currentCharacter = Character();
             },
           ),
         ],

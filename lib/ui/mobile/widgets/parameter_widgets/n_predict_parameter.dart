@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -8,8 +8,10 @@ class NPredictParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Session>(builder: (context, session, child) {
-      return SliderListTile(
+    return Consumer<AppData>(
+      builder: (context, appData, child) {
+        final session = appData.currentSession;
+        return SliderListTile(
           labelText: 'NPredict',
           inputValue: session.model.nPredict,
           sliderMin: 1.0,
@@ -18,7 +20,9 @@ class NPredictParameter extends StatelessWidget {
           onValueChanged: (value) {
             session.model.nPredict = value.round();
             session.notify();
-          });
-    });
+          }
+        );
+      }
+    );
   }
 }

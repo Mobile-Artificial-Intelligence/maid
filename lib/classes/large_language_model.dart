@@ -257,10 +257,6 @@ class LargeLanguageModel extends ChangeNotifier {
     _nThread = nThread;
   }
 
-  LargeLanguageModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
-    fromMap(json);
-  }
-
   void fromMap(Map<String, dynamic> json) {
     _name = json['name'] ?? '';
     _uri = json['uri'] ?? '';

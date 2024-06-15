@@ -119,7 +119,7 @@ class _CharacterTileState extends State<CharacterTile> {
   void onTapUp(TapUpDetails details) {
     if (longPressTimer?.isActive ?? false) {
       longPressTimer?.cancel();
-      context.read<Character>().from(widget.character);
+      context.read<AppData>().currentCharacter = widget.character;
       Navigator.of(context).pop();
       Navigator.pushNamed(context, '/character');
     }

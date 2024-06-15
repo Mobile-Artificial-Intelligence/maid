@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
-import 'package:maid/providers/session.dart';
 import 'package:maid/static/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -54,11 +54,11 @@ class _ChatFieldState extends State<ChatField> {
   }
 
   void send() async {
-    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    if (Platform.isAndroid || Platform.isIOS) {
       FocusScope.of(context).unfocus();
     }
 
-    final session = context.read<Session>();
+    final session = context.read<AppData>().currentSession;
 
     
     session.chat.add(
@@ -88,67 +88,71 @@ class _ChatFieldState extends State<ChatField> {
   }
 
   Widget _buildRow() {
-    return Consumer<Session>(builder: (context, session, child) {
-      return Row(
-        children: [
-          if (!session.chat.tail.finalised &&
-              session.model.type != LargeLanguageModelType.ollama)
-            Semantics(
-              label: 'Stop button',
-              hint: 'Double tap to stop inference.',
-              excludeSemantics: true,
-              child: IconButton(
-                onPressed: session.stop,
-                iconSize: 50,
-                icon: const Icon(
-                  Icons.stop_circle_sharp,
-                  color: Colors.red,
+    return Consumer<AppData>(
+      builder: (context, appData, child) {
+        final session = appData.currentSession;
+        
+        return Row(
+          children: [
+            if (!session.chat.tail.finalised &&
+                session.model.type != LargeLanguageModelType.ollama)
+              Semantics(
+                label: 'Stop button',
+                hint: 'Double tap to stop inference.',
+                excludeSemantics: true,
+                child: IconButton(
+                  onPressed: session.stop,
+                  iconSize: 50,
+                  icon: const Icon(
+                    Icons.stop_circle_sharp,
+                    color: Colors.red,
+                  )
+                ),
+              ),
+            Expanded(
+              child: Semantics(
+                label: 'Prompt text field',
+                hint: 'Text to be sent to the model for a response.',
+                excludeSemantics: true,
+                child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  minLines: 1,
+                  maxLines: 9,
+                  enableInteractiveSelection: true,
+                  controller: _promptController,
+                  cursorColor: Theme.of(context).colorScheme.secondary,
+                  decoration: InputDecoration(
+                    labelText: 'Prompt',
+                    hintStyle: Theme.of(context).textTheme.labelSmall,
+                  ),
                 )
               ),
             ),
-          Expanded(
-            child: Semantics(
-              label: 'Prompt text field',
-              hint: 'Text to be sent to the model for a response.',
+            Semantics(
+              label: 'Prompt button',
+              hint: 'Double tap to prompt the model for a response.',
               excludeSemantics: true,
-              child: TextField(
-                keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 9,
-                enableInteractiveSelection: true,
-                controller: _promptController,
-                cursorColor: Theme.of(context).colorScheme.secondary,
-                decoration: InputDecoration(
-                  labelText: 'Prompt',
-                  hintStyle: Theme.of(context).textTheme.labelSmall,
-                ),
-              )
-            ),
-          ),
-          Semantics(
-            label: 'Prompt button',
-            hint: 'Double tap to prompt the model for a response.',
-            excludeSemantics: true,
-            child: IconButton(
-              onPressed: () {
-                if (session.model.missingRequirements.isNotEmpty) {
-                  showMissingRequirementsDialog(context);
-                }
-                else if (session.chat.tail.finalised) {
-                  send();
-                }
-              },
-              iconSize: 50,
-              icon: Icon(
-                Icons.arrow_circle_right,
-                color: !session.chat.tail.finalised 
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.secondary,
+              child: IconButton(
+                onPressed: () {
+                  if (session.model.missingRequirements.isNotEmpty) {
+                    showMissingRequirementsDialog(context);
+                  }
+                  else if (session.chat.tail.finalised) {
+                    send();
+                  }
+                },
+                iconSize: 50,
+                icon: Icon(
+                  Icons.arrow_circle_right,
+                  color: !session.chat.tail.finalised 
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.secondary,
+                )
               )
             )
-          )
-        ],
-      );
-    });
+          ],
+        );
+      }
+    );
   }
 }

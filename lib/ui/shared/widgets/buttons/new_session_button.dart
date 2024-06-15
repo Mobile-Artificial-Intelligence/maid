@@ -8,19 +8,16 @@ class NewSessionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppData, Session>(
+    return Consumer<AppData>(
       builder: buildButton
     );
   }
 
-  Widget buildButton(BuildContext context, AppData appData, Session session, Widget? child) {
+  Widget buildButton(BuildContext context, AppData appData, Widget? child) {
     final index = appData.nextSessionIndex;
     return FilledButton(
       onPressed: () {
-        if (!session.chat.tail.finalised) return;
-        final newSession = Session(index);
-        appData.setCurrentSession(session, newSession);
-        session.from(newSession);
+        appData.currentSession = Session(index);
       },
       child: const Text(
         "New Chat"

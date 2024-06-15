@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:provider/provider.dart';
 
 class SessionBusyOverlay extends StatefulWidget {
@@ -17,7 +17,7 @@ class _SessionBusyOverlayState extends State<SessionBusyOverlay> {
     return Stack(
       children: [
         widget.child,
-        if (!context.watch<Session>().chat.tail.finalised)
+        if (!context.watch<AppData>().currentSession.chat.tail.finalised)
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.4),

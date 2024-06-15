@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,8 @@ class _UrlParameterState extends State<UrlParameter> {
 
   @override
   Widget build(BuildContext context) {
-    controller.text = context.read<Session>().model.uri;
+    final model = context.read<AppData>().currentSession.model;
+    controller.text = model.uri;
 
     return ListTile(
       title: Row(
@@ -24,7 +26,6 @@ class _UrlParameterState extends State<UrlParameter> {
           ),
           IconButton(
             onPressed: () async {
-              final model = context.read<Session>().model;
               await model.resetUri();
               setState(() {
                 controller.text = model.uri;
@@ -43,7 +44,7 @@ class _UrlParameterState extends State<UrlParameter> {
                 labelText: "URL",
               ),
               onChanged: (value) {
-                context.read<Session>().model.uri = value;
+                model.uri = value;
               },
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/shared/widgets/shaders/blade_runner_gradient.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +24,10 @@ class _LlmDropdownState extends State<LlmDropdown> {
   }
 
   Widget dropdownBuilder() {
-    return Consumer<Session>(
-      builder: (context, session, child) {
+    return Consumer<AppData>(
+      builder: (context, appData, child) {
+        final session = appData.currentSession;
+
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -56,7 +59,7 @@ class _LlmDropdownState extends State<LlmDropdown> {
   }
 
   List<PopupMenuEntry<dynamic>> itemBuilder(BuildContext context) {
-    final session = context.read<Session>();
+    final session = context.read<AppData>().currentSession;
 
     return [
       PopupMenuItem(

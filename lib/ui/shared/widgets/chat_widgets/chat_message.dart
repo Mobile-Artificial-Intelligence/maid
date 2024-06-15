@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/chat_role.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/shared/widgets/shaders/blade_runner_gradient.dart';
 import 'package:maid/classes/chat_node.dart';
-import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/ui/shared/widgets/code_box.dart';
@@ -29,8 +29,11 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<Session, User, Character>(
-      builder: (context, session, user, character, child) {
+    return Consumer2<AppData, User>(
+      builder: (context, appData, user, child) {
+        final session = appData.currentSession;
+        final character = appData.currentCharacter;
+
         node = session.chat.find(widget.hash)!;
 
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -98,12 +101,14 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   }
 
   void onRegenerate() {
-    if (!context.read<Session>().chat.tail.finalised) return;
+    final session = context.read<AppData>().currentSession;
 
-    if (context.read<Session>().model.missingRequirements.isNotEmpty) {
+    if (!session.chat.tail.finalised) return;
+
+    if (session.model.missingRequirements.isNotEmpty) {
       showMissingRequirementsDialog(context);
     } else {
-      context.read<Session>().regenerate(node.hash, context);
+      session.regenerate(node.hash, context);
       setState(() {});
     }
   }
@@ -152,8 +157,10 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   }
 
   Widget branchSwitcher() {
-    return Consumer<Session>(
-      builder: (BuildContext context, Session session, Widget? child) {
+    return Consumer<AppData>(
+      builder: (BuildContext context, AppData appData, Widget? child) {
+        final session = appData.currentSession;
+        
         int currentIndex = session.chat.indexOf(widget.hash);
         int siblingCount = session.chat.siblingCountOf(widget.hash);
 
@@ -233,9 +240,11 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   }
 
   void onEdit() {
-    if (!context.read<Session>().chat.tail.finalised) return;
+    final session = context.read<AppData>().currentSession;
+
+    if (!session.chat.tail.finalised) return;
           
-    if (context.read<Session>().model.missingRequirements.isNotEmpty) {
+    if (session.model.missingRequirements.isNotEmpty) {
       showMissingRequirementsDialog(context);
     }
     else {
@@ -246,16 +255,18 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   }
 
   void onEditingDone(String newText) {
-    if (!context.read<Session>().chat.tail.finalised) return;
+    final session = context.read<AppData>().currentSession;
 
-    if (context.read<Session>().model.missingRequirements.isNotEmpty) {
+    if (!session.chat.tail.finalised) return;
+
+    if (session.model.missingRequirements.isNotEmpty) {
       showMissingRequirementsDialog(context);
     } 
     else {
       setState(() {
         editing = false;
       });
-      context.read<Session>().edit(node.hash, newText, context);
+      session.edit(node.hash, newText, context);
     }
   }
 

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/app_preferences.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/ui/desktop/app.dart';
 import 'package:maid/ui/mobile/app.dart';
@@ -14,19 +12,12 @@ void main() async {
   AppPreferences appPreferences = await AppPreferences.last;
   AppData appData = await AppData.last;
   User user = await User.last;
-  Character character = await Character.last;
-  Session session = await Session.last;
-
-  appData.currentCharacter = character;
-  appData.currentSession = session;
 
   runApp(
     MaidApp(
       user: user, 
       appPreferences: appPreferences, 
-      appData: appData,
-      character: character,
-      session: session
+      appData: appData
     )
   );
 }
@@ -35,16 +26,12 @@ class MaidApp extends StatelessWidget {
   final AppPreferences appPreferences;
   final AppData appData;
   final User user;
-  final Character character;
-  final Session session;
 
   const MaidApp({
     super.key, 
     required this.user, 
     required this.appPreferences, 
     required this.appData,
-    required this.character,
-    required this.session
   });
 
   @override
@@ -53,9 +40,7 @@ class MaidApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => appPreferences),
         ChangeNotifierProvider(create: (context) => appData),
-        ChangeNotifierProvider(create: (context) => user),
-        ChangeNotifierProvider(create: (context) => character),
-        ChangeNotifierProvider(create: (context) => session),
+        ChangeNotifierProvider(create: (context) => user)
       ],
       child: Consumer<AppPreferences>(
         builder: (context, appPreferences, child) {

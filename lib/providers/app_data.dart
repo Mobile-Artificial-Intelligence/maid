@@ -41,12 +41,24 @@ class AppData extends ChangeNotifier {
   }
 
   set currentSession(Session session) {
-    _currentSession = session.copy();
+    if (!currentSession.chat.tail.finalised) return;
+
+    _sessions.insert(0, _currentSession);
+
+    _currentSession = session;
+
+    _currentSession.addListener(notify);
+
     save().then((value) => notifyListeners());
   }
 
   set currentCharacter(Character character) {
-    _currentCharacter = character.copy();
+    _characters.insert(0, _currentCharacter);
+
+    _currentCharacter = character;
+
+    _currentCharacter.addListener(notify);
+
     save().then((value) => notifyListeners());
   }
 
@@ -75,7 +87,10 @@ class AppData extends ChangeNotifier {
       characters.add(Character());
     }
 
-    return AppData(sessions, characters);
+    final session = await Session.last;
+    final character = await Character.last;
+
+    return AppData(sessions, characters, session, character);
   }
 
   Future<void> save() async {
@@ -166,7 +181,14 @@ class AppData extends ChangeNotifier {
   void reset() {
     clearSessions();
     clearCharacters();
+    _currentCharacter = Character();
+    _currentSession = Session(0);
+    notifyListeners();
   }
 
-  AppData(this._sessions, this._characters);
+  void notify() {
+    notifyListeners();
+  }
+
+  AppData(this._sessions, this._characters, this._currentSession, this._currentCharacter);
 }

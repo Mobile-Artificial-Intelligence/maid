@@ -38,8 +38,11 @@ class ChatBody extends StatelessWidget {
   }
 
   Widget _buildChat() {
-    return Consumer4<AppData, Session, User, Character>(
-      builder: (context, appData, session, user, character, child) {
+    return Consumer2<AppData, User>(
+      builder: (context, appData, user, child) {
+        final session = appData.currentSession;
+        final character = appData.currentCharacter;
+
         List<ChatNode> chat = session.chat.getChat();
 
         if (

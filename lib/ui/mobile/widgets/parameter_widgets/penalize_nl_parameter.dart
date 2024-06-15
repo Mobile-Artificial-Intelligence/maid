@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:provider/provider.dart';
 
 class PenalizeNlParameter extends StatelessWidget {
@@ -7,8 +7,10 @@ class PenalizeNlParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Session>(
-      builder: (context, session, child) {
+    return Consumer<AppData>(
+      builder: (context, appData, child) {
+        final session = appData.currentSession;
+        
         return SwitchListTile(
           title: const Text('Penalize New Line'),
           value: session.model.penalizeNewline,
