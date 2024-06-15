@@ -4,7 +4,6 @@ import 'package:maid/providers/app_data.dart';
 import 'package:maid/ui/mobile/widgets/dialogs.dart';
 import 'package:maid/ui/shared/widgets/shaders/blade_runner_gradient.dart';
 import 'package:maid/classes/chat_node.dart';
-import 'package:maid/providers/session.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/ui/shared/widgets/code_box.dart';
 import 'package:maid/ui/shared/widgets/future_avatar.dart';
