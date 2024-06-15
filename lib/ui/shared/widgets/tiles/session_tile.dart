@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
@@ -16,6 +18,7 @@ class SessionTile extends StatefulWidget {
 }
 
 class _SessionTileState extends State<SessionTile> {
+  Timer? longPressTimer;
   late TextEditingController controller = TextEditingController();
 
   @override
@@ -28,16 +31,11 @@ class _SessionTileState extends State<SessionTile> {
   }
 
   Widget buildGestureDetector(BuildContext context, AppData appData, Session session, Widget? child) {
-    return GestureDetector(
+    return InkWell(
       onSecondaryTapUp: (TapUpDetails details) =>
         showContextMenu(context, details.globalPosition),
-      onLongPressStart: (LongPressStartDetails details) =>
-        showContextMenu(context, details.globalPosition),
-      onTap: () {
-        if (!session.chat.tail.finalised) return;
-        appData.setCurrentSession(session, widget.session);
-        session.from(widget.session);
-      },
+      onTapDown: onTapDown,
+      onTapUp: (TapUpDetails details) => onTapUp(details, appData, session),
       child: ListTile(
         title: Text(
           controller.text,
@@ -47,6 +45,21 @@ class _SessionTileState extends State<SessionTile> {
       ),
     );
   }
+
+  void onTapDown(TapDownDetails details) {
+    longPressTimer = Timer(const Duration(seconds: 1), () {
+      showContextMenu(context, details.globalPosition);
+    });
+  }
+
+  void onTapUp(TapUpDetails details, AppData appData, Session session) {
+    if (longPressTimer?.isActive ?? false) {
+      longPressTimer?.cancel();
+      if (!session.chat.tail.finalised) return;
+      appData.setCurrentSession(session, widget.session);
+      session.from(widget.session);
+    }
+  }  
 
   void showContextMenu(BuildContext context, Offset position) {
     final RenderBox overlay =
