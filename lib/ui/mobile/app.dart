@@ -3,7 +3,7 @@ import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/static/themes.dart';
 import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
 import 'package:maid/ui/shared/pages/about_page.dart';
-import 'package:maid/ui/mobile/pages/character/character_browser_page.dart';
+import 'package:maid/ui/mobile/pages/character_browser_page.dart';
 import 'package:maid/ui/shared/pages/character_customization_page.dart';
 import 'package:maid/ui/mobile/pages/home_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/gemini_page.dart';
