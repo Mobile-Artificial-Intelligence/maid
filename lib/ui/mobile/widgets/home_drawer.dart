@@ -40,11 +40,24 @@ class HomeDrawer extends StatelessWidget {
         minimum: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            CharacterBrowserTile(
-              character: character
+            Expanded(
+              child: CharacterBrowserTile(
+                character: character
+              )
             ),
             const SizedBox(height: 5.0),
-            characterButtonsRow(context),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(
+                  context,
+                  '/characters'
+                );
+              },
+              child: const Text(
+                "Browse Characters"
+              ),
+            ),
             Divider(
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -69,35 +82,6 @@ class HomeDrawer extends StatelessWidget {
             const UserTile()
           ]
         )
-      )
-    );
-  }
-
-  Widget characterButtonsRow(BuildContext context) {
-    return ListTile(
-      leading: FilledButton(
-        onPressed: () {
-          Navigator.pop(context); // Close the drawer
-          Navigator.pushNamed(
-            context,
-            '/character'
-          );
-        },
-        child: const Text(
-          "Customize"
-        ),
-      ),
-      trailing: FilledButton(
-        onPressed: () {
-          Navigator.pop(context); // Close the drawer
-          Navigator.pushNamed(
-            context,
-            '/characters'
-          );
-        },
-        child: const Text(
-          "Browse"
-        ),
       )
     );
   }
