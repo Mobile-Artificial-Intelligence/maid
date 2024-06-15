@@ -9,9 +9,9 @@ import 'package:provider/provider.dart';
 
 class CharacterTile extends StatefulWidget {
   final Character character;
+  final bool? isSelected;
 
-  const CharacterTile(
-      {super.key, required this.character});
+  const CharacterTile({super.key, required this.character, this.isSelected});
 
   @override
   State<CharacterTile> createState() => _CharacterTileState();
@@ -50,7 +50,23 @@ class _CharacterTileState extends State<CharacterTile> {
             } else {
               return const CircularProgressIndicator();
             }
-          }
+          },
+        ),
+        Builder(
+          builder: (context) {
+            if (widget.isSelected ?? false) {
+              return const Positioned(
+                top: 8,
+                right: 8,
+                child: Icon(
+                  Icons.check,
+                  color: Colors.white,
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
         ),
         Material(
           color: Colors.transparent,
@@ -87,9 +103,9 @@ class _CharacterTileState extends State<CharacterTile> {
                   ),
                 ],
               ),
-            )
-          )
-        )
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -105,18 +121,13 @@ class _CharacterTileState extends State<CharacterTile> {
       longPressTimer?.cancel();
       context.read<Character>().from(widget.character);
       Navigator.of(context).pop();
-      Navigator.pushNamed(
-        context,
-        '/character'
-      );
+      Navigator.pushNamed(context, '/character');
     }
-  }      
+  }
 
   void showContextMenu(Offset position) {
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
-    final TextEditingController controller =
-        TextEditingController(text: widget.character.name);
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final TextEditingController controller = TextEditingController(text: widget.character.name);
 
     showMenu(
       context: context,
@@ -144,8 +155,7 @@ class _CharacterTileState extends State<CharacterTile> {
     );
   }
 
-  void _showRenameDialog(
-      BuildContext context, TextEditingController controller) {
+  void _showRenameDialog(BuildContext context, TextEditingController controller) {
     showDialog(
       context: context,
       builder: (context) {

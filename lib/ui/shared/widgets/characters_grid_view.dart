@@ -20,7 +20,8 @@ class CharactersGridView extends StatelessWidget {
     return GridView.builder(
       itemCount: appData.characters.length,
       itemBuilder: (context, index) => CharacterTile(
-        character: appData.characters[index]
+        character: appData.characters[index],
+        isSelected: appData.currentCharacter == appData.characters[index],
       ), 
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200,
