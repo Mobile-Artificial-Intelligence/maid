@@ -31,36 +31,6 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
   late List<TextEditingController> greetingControllers;
   late List<TextEditingController> exampleControllers;
 
-  Future<void> save() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final characterString = prefs.getString("last_character");
-
-    if (characterString == null) {
-      return;
-    }
-
-    final character = Character.fromMap(json.decode(characterString));
-
-    final String charactersJson = prefs.getString("characters") ?? '[]';
-    final List charactersList = json.decode(charactersJson);
-
-    List<Character> characters;
-    characters = charactersList.map((characterMap) {
-      return Character.fromMap(characterMap);
-    }).toList();
-
-    characters.removeWhere((listCharacter) {
-      return character.hash == listCharacter.hash;
-    });
-    characters.insert(0, character);
-
-    final String newCharactersJson =
-        json.encode(characters.map((character) => character.toMap()).toList());
-
-    prefs.setString("characters", newCharactersJson);
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -76,21 +46,19 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
     for (var controller in exampleControllers) {
       controller.dispose();
     }
-
-    save();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const GenericAppBar(title: "Character Customization"),
-      body: Consumer2<AppData, Character>(
+      body: Consumer<Character>(
         builder: buildBody,
       )
     );
   }
 
-  Widget buildBody(BuildContext context, AppData appData, Character character, Widget? child) {
+  Widget buildBody(BuildContext context, Character character, Widget? child) {
     if (regenerate) {
       nameController = TextEditingController(text: character.name);
       descriptionController = TextEditingController(text: character.description);
@@ -108,8 +76,6 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         (index) =>
             TextEditingController(text: character.examples[index]["content"]),
       );
-
-      save();
 
       regenerate = false;
     }
@@ -208,15 +174,6 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         mainAxisExtent: 30
       ),
       children: [
-        FilledButton(
-          onPressed: () {
-            save();
-          },
-          child: const Text(
-            "Save Changes",
-            softWrap: false
-          ),
-        ),
         FilledButton(
           onPressed: () {
             regenerate = true;

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:crypto/crypto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Character extends ChangeNotifier {
   File? _profile;
 
+  Key _key = UniqueKey();
   bool _useSystem = true;
   String _name = "Maid";
   String _description = "";
@@ -64,6 +64,7 @@ class Character extends ChangeNotifier {
   }
 
   void from(Character character) async {
+    _key = character.key;
     _profile = await character.profile;
     _useSystem = character.useSystem;
     _name = character.name;
@@ -80,6 +81,7 @@ class Character extends ChangeNotifier {
   }
 
   Future<void> fromMap(Map<String, dynamic> inputJson) async {
+    _key = UniqueKey();
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
     }
@@ -301,31 +303,7 @@ class Character extends ChangeNotifier {
     return _profile ??= await Utilities.fileFromAssetImage("defaultCharacter.png");
   }
 
-  String get hash {
-    Uint8List bytes;
-
-    if(_profile != null) {
-      bytes = _profile!.readAsBytesSync();
-    } else {
-      List<String> hashList = [
-        _name,
-        _description,
-        _personality,
-        _scenario,
-        _system,
-        _useGreeting.toString(),
-        _greetings.join(),
-        _useExamples.toString(),
-        _examples.join(),
-      ];
-      
-      bytes = utf8.encode(hashList.join());
-    }
-
-    return sha256.convert(bytes).toString();
-  }
-
-  Key get key => ValueKey(hash);
+  Key get key => _key;
 
   String get name => _name;
 
