@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
+import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/character.dart';
+import 'package:maid/providers/desktop_navigator.dart';
 import 'package:maid/static/logger.dart';
 
 class CharacterTile extends StatefulWidget {
@@ -129,8 +131,14 @@ class _CharacterTileState extends State<CharacterTile> {
     if (longPressTimer?.isActive ?? false) {
       longPressTimer?.cancel();
       AppData.of(context).currentCharacter = widget.character;
-      Navigator.of(context).pop();
-      Navigator.pushNamed(context, '/character');
+      
+      if (AppPreferences.of(context).isDesktop) {
+        DesktopNavigator.of(context).navigateSidePanel('/character');
+      } 
+      else {
+        Navigator.of(context).pop();
+        Navigator.pushNamed(context, '/character');
+      }
     }
   }
 

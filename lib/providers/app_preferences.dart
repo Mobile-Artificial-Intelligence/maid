@@ -13,7 +13,7 @@ class AppPreferences extends ChangeNotifier {
 
   AppLayout get appLayout => _appLayout;
 
-  bool get useDesktopNavigator {
+  bool get isDesktop {
     if (_appLayout == AppLayout.system) {
       return Platform.isWindows || Platform.isLinux || Platform.isMacOS;
     }
@@ -21,7 +21,7 @@ class AppPreferences extends ChangeNotifier {
     return _appLayout == AppLayout.desktop;
   }
 
-  bool get useMobileLayout {
+  bool get isMobile {
     if (_appLayout == AppLayout.system) {
       return Platform.isAndroid || Platform.isIOS;
     }

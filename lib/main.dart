@@ -44,7 +44,7 @@ class MaidApp extends StatelessWidget {
       ],
       child: Consumer<AppPreferences>(
         builder: (context, appPreferences, child) {
-          if (appPreferences.useDesktopNavigator) {
+          if (appPreferences.isDesktop) {
             return const DesktopApp();
           } 
           else {

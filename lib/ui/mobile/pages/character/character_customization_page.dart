@@ -162,16 +162,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
   }
 
   Widget buttonGridView(Character character) {
-    return GridView(
-      shrinkWrap: true,
-      padding: const EdgeInsets.all(16.0),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200.0,
-        crossAxisSpacing: 10.0,
-        mainAxisSpacing: 15.0,
-        childAspectRatio: 6,
-        mainAxisExtent: 30
-      ),
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 8.0,
+      runSpacing: 8.0,
       children: [
         FilledButton(
           onPressed: () {
@@ -249,27 +243,31 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
 
   List<Widget> greetings(Character character) {
     List<Widget> widgets = [
-      ListTile(
-        leading: FilledButton(
-          onPressed: () {
-            regenerate = true;
-            character.newGreeting();
-          },
-          child: const Text(
-            "Add Greeting"
+      Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 8.0,
+        runSpacing: 8.0,
+        children: [
+          FilledButton(
+            onPressed: () {
+              regenerate = true;
+              character.newGreeting();
+            },
+            child: const Text(
+              "Add Greeting"
+            ),
           ),
-        ),
-        trailing: FilledButton(
-          onPressed: () {
-            regenerate = true;
-            character.removeLastGreeting();
-          },
-          child: const Text(
-            "Remove Greeting"
-          ),
-        ),
+          FilledButton(
+            onPressed: () {
+              regenerate = true;
+              character.removeLastGreeting();
+            },
+            child: const Text(
+              "Remove Greeting"
+            ),
+          )
+        ]
       ),
-      const SizedBox(height: 10.0),
     ];
 
     if (character.greetings.isNotEmpty) {
@@ -292,49 +290,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
 
   List<Widget> examples(Character character) {
     List<Widget> widgets = [
-      ListTile(
-        leading: FilledButton(
-          onPressed: () {
-            regenerate = true;
-            character.newExample(true);
-          },
-          child: const Text(
-            "Add Prompt"
-          ),
-        ),
-        trailing: FilledButton(
-          onPressed: () {
-            regenerate = true;
-            character.newExample(false);
-          },
-          child: const Text(
-            "Add Response"
-          ),
-        ),
-      ),
-      const SizedBox(height: 10.0),
-      ListTile(
-        leading: FilledButton(
-          onPressed: () {
-            regenerate = true;
-            character.newExample(null);
-          },
-          child: const Text(
-            "Add System"
-          ),
-        ),
-        trailing: FilledButton(
-          onPressed: () {
-            if (exampleControllers.length >= 2) {
-              regenerate = true;
-              character.removeLastExample();
-            }
-          },
-          child: const Text(
-            "Remove Last"
-          ),
-        )
-      ),
+      examplesButtonsWrap()
     ];
 
     if (character.examples.isNotEmpty) {
@@ -353,6 +309,58 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
     }
 
     return widgets;
+  }
+
+  Widget examplesButtonsWrap() {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 8.0,
+      runSpacing: 8.0,
+      children: [
+        FilledButton(
+          onPressed: () {
+            regenerate = true;
+            Character.of(context).newExample(true);
+          },
+          child: const Text(
+            "Add Prompt",
+            overflow: TextOverflow.ellipsis
+          ),
+        ),
+        FilledButton(
+          onPressed: () {
+            regenerate = true;
+            Character.of(context).newExample(false);
+          },
+          child: const Text(
+            "Add Response",
+            overflow: TextOverflow.ellipsis
+          ),
+        ),
+        FilledButton(
+          onPressed: () {
+            regenerate = true;
+            Character.of(context).newExample(null);
+          },
+          child: const Text(
+            "Add System",
+            overflow: TextOverflow.ellipsis
+          ),
+        ),
+        FilledButton(
+          onPressed: () {
+            if (exampleControllers.length >= 2) {
+              regenerate = true;
+              Character.of(context).removeLastExample();
+            }
+          },
+          child: const Text(
+            "Remove Last",
+            overflow: TextOverflow.ellipsis
+          ),
+        )
+      ]
+    );
   }
 
   List<Widget> system(Character character) {
