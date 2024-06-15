@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/ui/mobile/widgets/dialogs.dart';
+import 'package:maid/ui/shared/widgets/dialogs.dart';
 import 'package:maid/ui/shared/widgets/shaders/blade_runner_gradient.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/providers/user.dart';

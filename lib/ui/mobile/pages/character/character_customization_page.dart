@@ -3,7 +3,7 @@ import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:maid/ui/shared/widgets/appbars/generic_app_bar.dart';
-import 'package:maid/ui/mobile/widgets/dialogs.dart';
+import 'package:maid/ui/shared/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
 import 'package:maid/ui/shared/widgets/future_avatar.dart';

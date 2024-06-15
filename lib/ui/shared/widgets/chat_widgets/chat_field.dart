@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/ui/mobile/widgets/dialogs.dart';
+import 'package:maid/ui/shared/widgets/dialogs.dart';
 import 'package:maid/static/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
