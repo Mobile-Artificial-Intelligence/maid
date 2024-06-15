@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/ui/shared/widgets/future_tile_image.dart';
-import 'package:provider/provider.dart';
 
 class ImageSelectorTile extends StatelessWidget {
   final Future<File> image;
@@ -14,7 +13,7 @@ class ImageSelectorTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final user = context.read<User>();
+        final user = User.of(context);
         user.profile = image;
         user.save();
       },

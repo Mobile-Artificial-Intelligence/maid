@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
 import 'package:maid/static/utilities.dart';
@@ -29,6 +30,8 @@ class Character extends ChangeNotifier {
   List<Map<String, dynamic>> _examples = [];
 
   Map<String, dynamic> _cachedJson = {};
+
+  static Character of(BuildContext context) => AppData.of(context).currentCharacter;
 
   Character() {
     reset();

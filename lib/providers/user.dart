@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/static/utilities.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class User extends ChangeNotifier {
@@ -17,6 +18,8 @@ class User extends ChangeNotifier {
   Key _key = UniqueKey();
   File? _profile;
   String _name = "User";
+
+  static User of(BuildContext context) => Provider.of<User>(context, listen: false);
 
   User() {
     reset();

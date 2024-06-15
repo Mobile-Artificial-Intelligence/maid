@@ -11,11 +11,11 @@ import 'package:maid/classes/open_ai_model.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/providers/app_data.dart';
+import 'package:maid/providers/character.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
@@ -42,6 +42,8 @@ class Session extends ChangeNotifier {
   void notify() {
     notifyListeners();
   }
+
+  static Session of(BuildContext context) => AppData.of(context).currentSession;
 
   Session(int index) {
     newSession(index);
@@ -136,8 +138,8 @@ class Session extends ChangeNotifier {
   }
 
   void prompt(BuildContext context) async {
-    final user = context.read<User>();
-    final character = context.read<AppData>().currentCharacter;
+    final user = User.of(context);
+    final character = Character.of(context);
 
     final description = Utilities.formatPlaceholders(character.description, user.name, character.name);
     final personality = Utilities.formatPlaceholders(character.personality, user.name, character.name);

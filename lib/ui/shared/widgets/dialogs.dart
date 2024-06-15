@@ -1,7 +1,6 @@
   
 import 'package:flutter/material.dart';
-import 'package:maid/providers/app_data.dart';
-import 'package:provider/provider.dart';
+import 'package:maid/providers/session.dart';
 
 void storageOperationDialog(BuildContext context, Future<String> Function() storageFunction) {
   showDialog(
@@ -51,7 +50,7 @@ void showMissingRequirementsDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (context) {
-      final requirement = context.read<AppData>().currentSession.model.missingRequirements;
+      final requirement = Session.of(context).model.missingRequirements;
 
       return AlertDialog(
         title: const Text(

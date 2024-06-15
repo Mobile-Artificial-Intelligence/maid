@@ -57,8 +57,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     SharedPreferences.getInstance().then((prefs) {
                       prefs.clear();
                       mainProvider.reset();
-                      context.read<User>().reset();
-                      context.read<AppData>().reset();
+                      User.of(context).reset();
+                      AppData.of(context).reset();
                       setState(() {
                         Logger.clear();
                       });

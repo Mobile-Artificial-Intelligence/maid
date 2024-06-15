@@ -41,7 +41,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
 
   Widget buildResizableContainer(BuildContext context) {
     return Consumer<DesktopNavigator>(
-      builder: (context, DesktopNavigator, child) {
+      builder: (context, desktopNavigator, child) {
         return ResizableContainer(
           direction: Axis.horizontal,
           divider: ResizableDivider(
@@ -52,14 +52,14 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
             onHoverExit: onHoverExit,
           ),
           children: [
-            if (DesktopNavigator.sidePanelOpen)
+            if (desktopNavigator.sidePanelOpen)
             const ResizableChild(
               size: ResizableSize.ratio(0.2),
               minSize: 200,
               child: SidePanelNavigator(),
             ),
             ResizableChild(
-              size: DesktopNavigator.sidePanelOpen ? const ResizableSize.ratio(0.8) : const ResizableSize.expand(),
+              size: desktopNavigator.sidePanelOpen ? const ResizableSize.ratio(0.8) : const ResizableSize.expand(),
               minSize: 500,
               child: const Scaffold(
                 appBar: HomeAppBar(),

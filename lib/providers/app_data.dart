@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppData extends ChangeNotifier {
@@ -10,6 +11,8 @@ class AppData extends ChangeNotifier {
   final List<Character> _characters;
   late Session _currentSession;
   late Character _currentCharacter;
+
+  static AppData of(BuildContext context) => Provider.of<AppData>(context, listen: false);
 
   List<Session> get sessions {
     _sessions.removeWhere((element) => element == _currentSession);

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/app_data.dart';
+import 'package:maid/providers/session.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
-import 'package:provider/provider.dart';
 
 class ApiKeyParameter extends StatelessWidget {
   const ApiKeyParameter({super.key});
@@ -9,7 +8,7 @@ class ApiKeyParameter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController controller = TextEditingController();
-    final model = context.read<AppData>().currentSession.model;
+    final model = Session.of(context).model;
     controller.text = model.token;
 
     return TextFieldListTile(

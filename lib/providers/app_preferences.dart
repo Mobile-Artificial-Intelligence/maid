@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/app_layout.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreferences extends ChangeNotifier {
@@ -27,6 +28,8 @@ class AppPreferences extends ChangeNotifier {
 
     return _appLayout == AppLayout.mobile;
   }
+
+  static AppPreferences of(BuildContext context) => Provider.of<AppPreferences>(context, listen: false);
 
   AppPreferences(ThemeMode themeMode, AppLayout appLayout) : 
     _themeMode = themeMode, 

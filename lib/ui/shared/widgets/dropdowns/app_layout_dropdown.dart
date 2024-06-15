@@ -78,7 +78,7 @@ class _AppLayoutDropdownState extends State<AppLayoutDropdown> {
   }
 
   void switchAppLayout(BuildContext context, AppLayout appLayout) {
-    final appPreferences = context.read<AppPreferences>();
+    final appPreferences = AppPreferences.of(context);
     appPreferences.appLayout = appLayout;
   }
 }

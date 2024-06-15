@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/static/logger.dart';
-import 'package:provider/provider.dart';
 
 class CharacterTile extends StatefulWidget {
   final Character character;
@@ -129,7 +128,7 @@ class _CharacterTileState extends State<CharacterTile> {
   void onTapUp(TapUpDetails details) {
     if (longPressTimer?.isActive ?? false) {
       longPressTimer?.cancel();
-      context.read<AppData>().currentCharacter = widget.character;
+      AppData.of(context).currentCharacter = widget.character;
       Navigator.of(context).pop();
       Navigator.pushNamed(context, '/character');
     }
@@ -148,7 +147,7 @@ class _CharacterTileState extends State<CharacterTile> {
       items: <PopupMenuEntry>[
         PopupMenuItem(
           onTap: () {
-            context.read<AppData>().removeCharacter(widget.character);
+            AppData.of(context).removeCharacter(widget.character);
           },
           child: const Text('Delete'),
         ),

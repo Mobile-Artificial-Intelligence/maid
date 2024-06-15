@@ -114,7 +114,7 @@ class _MenuButtonState extends State<MenuButton> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Model Settings'),
           onTap: () {
-            switch (context.read<AppData>().currentSession.model.type) {
+            switch (Session.of(context).model.type) {
               case LargeLanguageModelType.llamacpp:
                 Navigator.pushNamed(context, '/llamacpp');
               case LargeLanguageModelType.ollama:

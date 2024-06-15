@@ -77,7 +77,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
   }
 
   void switchThemeMode(BuildContext context, ThemeMode themeMode) {
-    final appPreferences = context.read<AppPreferences>();
+    final appPreferences = AppPreferences.of(context);
     appPreferences.themeMode = themeMode;
   }
 }

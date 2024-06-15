@@ -33,9 +33,9 @@ class _SessionTileState extends State<SessionTile> {
   Widget buildGestureDetector(BuildContext context, AppData appData, Widget? child) {
     return InkWell(
       onSecondaryTapUp: (TapUpDetails details) =>
-        showContextMenu(context, details.globalPosition),
+        showContextMenu(details.globalPosition),
       onTapDown: onTapDown,
-      onTapUp: (TapUpDetails details) => onTapUp(details, appData),
+      onTapUp: onTapUp,
       child: ListTile(
         title: Text(
           controller.text,
@@ -48,18 +48,18 @@ class _SessionTileState extends State<SessionTile> {
 
   void onTapDown(TapDownDetails details) {
     longPressTimer = Timer(const Duration(seconds: 1), () {
-      showContextMenu(context, details.globalPosition);
+      showContextMenu(details.globalPosition);
     });
   }
 
-  void onTapUp(TapUpDetails details, AppData appData) {
+  void onTapUp(TapUpDetails details) {
     if (longPressTimer?.isActive ?? false) {
       longPressTimer?.cancel();
-      appData.currentSession = widget.session;
+      AppData.of(context).currentSession = widget.session;
     }
   }  
 
-  void showContextMenu(BuildContext context, Offset position) {
+  void showContextMenu(Offset position) {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -72,7 +72,7 @@ class _SessionTileState extends State<SessionTile> {
       items: <PopupMenuEntry>[
         PopupMenuItem(
           onTap: () {
-            final appData = context.read<AppData>();
+            final appData = AppData.of(context);
 
             if (widget.session == appData.currentSession) {
               appData.currentSession = appData.sessions.firstOrNull ?? Session(0);
@@ -83,14 +83,14 @@ class _SessionTileState extends State<SessionTile> {
           child: const Text('Delete'),
         ),
         PopupMenuItem(
-          onTap: () => showRenameDialog(context),
+          onTap: showRenameDialog,
           child: const Text('Rename'),
         ),
       ],
     );
   }
 
-  void showRenameDialog(BuildContext context) {
+  void showRenameDialog() {
     showDialog(
       context: context,
       builder: buildDialog,
@@ -119,7 +119,7 @@ class _SessionTileState extends State<SessionTile> {
         ),
         FilledButton(
           onPressed: () => setState(() {
-            final appData = context.read<AppData>();
+            final appData = AppData.of(context);
 
             if (widget.session == appData.currentSession) {
               appData.currentSession.name = controller.text;
