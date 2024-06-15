@@ -61,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       mainProvider.reset();
                       context.read<User>().reset();
                       context.read<Character>().reset();
-                      context.read<Session>().newSession();
+                      context.read<Session>().newSession(1);
                       context.read<AppData>().reset();
                       setState(() {
                         Logger.clear();

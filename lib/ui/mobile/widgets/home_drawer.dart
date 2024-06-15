@@ -25,8 +25,6 @@ class HomeDrawer extends StatelessWidget {
   }
 
   Widget drawerBuilder(BuildContext context, AppData appData, Session session, Widget? child) {
-    appData.save();
-
     return Drawer(
       semanticLabel: "Drawer Menu",
       backgroundColor: Theme.of(context).colorScheme.surface,

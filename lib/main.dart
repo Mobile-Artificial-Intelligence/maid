@@ -17,6 +17,9 @@ void main() async {
   Character character = await Character.last;
   Session session = await Session.last;
 
+  appData.currentCharacter = character;
+  appData.currentSession = session;
+
   runApp(
     MaidApp(
       user: user, 

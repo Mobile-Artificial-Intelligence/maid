@@ -40,8 +40,8 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  Session() {
-    newSession();
+  Session(int index) {
+    newSession(index);
   }
 
   Session.from(Session session) {
@@ -68,8 +68,8 @@ class Session extends ChangeNotifier {
     prefs.setString("last_session", json.encode(toMap()));
   }
 
-  void newSession() {
-    _name = "New Chat";
+  void newSession(int index) {
+    _name = "New Chat $index";
     chat = ChatNodeTree();
     model = LlamaCppModel(listener: notify);
     notifyListeners();
@@ -88,7 +88,7 @@ class Session extends ChangeNotifier {
 
   void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson.isEmpty) {
-      newSession();
+      newSession(-1);
       return;
     }
 

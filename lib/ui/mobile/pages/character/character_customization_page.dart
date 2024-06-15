@@ -91,8 +91,6 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
   }
 
   Widget buildBody(BuildContext context, AppData appData, Character character, Widget? child) {
-    appData.save();
-
     if (regenerate) {
       nameController = TextEditingController(text: character.name);
       descriptionController = TextEditingController(text: character.description);

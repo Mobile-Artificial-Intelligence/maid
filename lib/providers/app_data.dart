@@ -8,14 +8,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppData extends ChangeNotifier {
   final List<Session> _sessions;
   final List<Character> _characters;
+  late Session _currentSession;
+  late Character _currentCharacter;
 
-  List<Session> get sessions => _sessions;
+  List<Session> get sessions {
+    _sessions.removeWhere((element) => element == _currentSession);
 
-  List<Character> get characters => _characters;
+    return List.from([_currentSession, ..._sessions]);
+  }
 
-  Session get currentSession => _sessions.first;
+  List<Character> get characters {
+    _characters.removeWhere((element) => element.key == _currentCharacter.key);
 
-  Character get currentCharacter => _characters.first;
+    return List.from([_currentCharacter, ..._characters]);
+  }
+
+  Session get currentSession => _currentSession;
+
+  Character get currentCharacter => _currentCharacter;
+
+  set currentSession(Session session) {
+    _currentSession = session;
+    save().then((value) => notifyListeners());
+  }
+
+  set currentCharacter(Character character) {
+    _currentCharacter = character;
+    save().then((value) => notifyListeners());
+  }
 
   static Future<AppData> get last async {
     final prefs = await SharedPreferences.getInstance();
@@ -35,7 +55,7 @@ class AppData extends ChangeNotifier {
     }
 
     if (sessions.isEmpty) {
-      sessions.add(Session());
+      sessions.add(Session(-1));
     }
 
     if (characters.isEmpty) {
@@ -48,8 +68,10 @@ class AppData extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
+    _sessions.removeWhere((element) => element == _currentSession);
     final sessionsMaps = _sessions.map((e) => e.toMap()).toList();
 
+    _characters.removeWhere((element) => element.key == _currentCharacter.key);
     final characterMaps = _characters.map((e) => e.toMap()).toList();
 
     final futures = [
@@ -63,8 +85,10 @@ class AppData extends ChangeNotifier {
   void addSession(Session session) {
     final index = _sessions.indexWhere((element) => element == session);
 
+    print("AddSession: $index");
+
     if (index.isNegative) {
-      _sessions.add(session);
+      _sessions.insert(0, session);
       notifyListeners();
     }
   }
@@ -73,7 +97,7 @@ class AppData extends ChangeNotifier {
     final index = _characters.indexWhere((element) => element.key == character.key);
 
     if (index.isNegative) {
-      _characters.add(character);
+      _characters.insert(0, character);
       notifyListeners();
     }
   }
@@ -96,48 +120,18 @@ class AppData extends ChangeNotifier {
     }
   }
 
-  void updateSession(Session session) {
-    final index = _sessions.indexWhere((element) => element == session);
-
-    if (!index.isNegative) {
-      _sessions[index] = session;
-      notifyListeners();
-    }
+  void setCurrentSession(Session oldCurrentSession, Session newCurrentSession) {
+    removeSession(newCurrentSession);
+    addSession(oldCurrentSession.copy());
+    _currentSession = newCurrentSession;
+    save().then((value) => notifyListeners());
   }
 
-  void updateCharacter(Character character) {
-    final index = _characters.indexWhere((element) => element.key == character.key);
-
-    if (!index.isNegative) {
-      _characters[index] = character;
-      notifyListeners();
-    }
-  }
-
-  void swapSessions(Session session1, Session session2) {
-    final index1 = _sessions.indexWhere((element) => element == session1);
-    final index2 = _sessions.indexWhere((element) => element == session2);
-
-    if (!index1.isNegative && !index2.isNegative) {
-      final temp = _sessions[index1];
-      _sessions[index1] = _sessions[index2];
-      _sessions[index2] = temp;
-
-      notifyListeners();
-    }
-  }
-
-  void swapCharacters(Character character1, Character character2) {
-    final index1 = _characters.indexWhere((element) => element.key == character1.key);
-    final index2 = _characters.indexWhere((element) => element.key == character2.key);
-
-    if (!index1.isNegative && !index2.isNegative) {
-      final temp = _characters[index1];
-      _characters[index1] = _characters[index2];
-      _characters[index2] = temp;
-
-      notifyListeners();
-    }
+  void setCurrentCharacter(Character oldCurrentCharacter, Character newCurrentCharacter) {
+    removeCharacter(newCurrentCharacter);
+    addCharacter(oldCurrentCharacter.copy());
+    _currentCharacter = newCurrentCharacter;
+    save().then((value) => notifyListeners());
   }
 
   void clearSessions() {

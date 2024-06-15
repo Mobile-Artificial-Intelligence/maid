@@ -16,6 +16,8 @@ class CharactersGridView extends StatelessWidget {
   }
 
   Widget buildGridView(BuildContext context, AppData appData, Widget? child) {
+    appData.save();
+    
     return GridView.builder(
       itemCount: appData.characters.length,
       itemBuilder: (context, index) => itemBuilder(appData.characters[index]), 
