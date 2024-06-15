@@ -216,19 +216,6 @@ class _CharacterCustomizationPanelState extends State<CharacterCustomizationPane
         ),
         FilledButton(
           onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.pushNamed(
-              context,
-              '/characters'
-            );
-          },
-          child: const Text(
-            "Switch Character",
-            softWrap: false
-          ),
-        ),
-        FilledButton(
-          onPressed: () {
             regenerate = true;
             storageOperationDialog(context, character.importJSON);
           },
