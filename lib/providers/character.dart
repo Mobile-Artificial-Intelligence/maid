@@ -10,6 +10,7 @@ import 'package:maid/static/logger.dart';
 import 'package:image/image.dart';
 import 'package:maid/static/utilities.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
   File? _profile;
@@ -35,6 +36,21 @@ class Character extends ChangeNotifier {
 
   Character.fromMap(Map<String, dynamic> inputJson) {
     fromMap(inputJson);
+  }
+
+  static Future<Character> get last async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String? lastCharacterString = prefs.getString("last_character");
+
+    Map<String, dynamic> lastCharacter = json.decode(lastCharacterString ?? "{}");
+    
+    return Character.fromMap(lastCharacter);
+  }
+
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("last_character", json.encode(toMap()));
   }
 
   void notify() {

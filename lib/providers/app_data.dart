@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppData extends ChangeNotifier {
@@ -46,16 +45,7 @@ class AppData extends ChangeNotifier {
     return AppData(sessions, characters);
   }
 
-  Future<void> save(BuildContext context) async {
-    final session = context.read<Session>();
-    final character = context.read<Character>();
-
-    _sessions.remove(session);
-    _sessions.insert(0, session);
-
-    _characters.removeWhere((element) => element.key == character.key);
-    _characters.insert(0, character);
-
+  Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
     final sessionsMaps = _sessions.map((e) => e.toMap()).toList();
@@ -73,11 +63,8 @@ class AppData extends ChangeNotifier {
   void addSession(Session session) {
     final index = _sessions.indexWhere((element) => element == session);
 
-    print("AddSession: $index");
-
     if (index.isNegative) {
       _sessions.add(session);
-
       notifyListeners();
     }
   }
@@ -87,7 +74,6 @@ class AppData extends ChangeNotifier {
 
     if (index.isNegative) {
       _characters.add(character);
-
       notifyListeners();
     }
   }
@@ -95,11 +81,8 @@ class AppData extends ChangeNotifier {
   void removeSession(Session session) {
     final index = _sessions.indexWhere((element) => element == session);
 
-    print("RemoveSession: $index");
-
     if (!index.isNegative) {
       _sessions.removeAt(index);
-
       notifyListeners();
     }
   }
@@ -109,7 +92,6 @@ class AppData extends ChangeNotifier {
 
     if (!index.isNegative) {
       _characters.removeAt(index);
-
       notifyListeners();
     }
   }
@@ -119,7 +101,6 @@ class AppData extends ChangeNotifier {
 
     if (!index.isNegative) {
       _sessions[index] = session;
-
       notifyListeners();
     }
   }
@@ -129,7 +110,6 @@ class AppData extends ChangeNotifier {
 
     if (!index.isNegative) {
       _characters[index] = character;
-
       notifyListeners();
     }
   }
@@ -137,8 +117,6 @@ class AppData extends ChangeNotifier {
   void swapSessions(Session session1, Session session2) {
     final index1 = _sessions.indexWhere((element) => element == session1);
     final index2 = _sessions.indexWhere((element) => element == session2);
-
-    print("SwapSessions: $index1, $index2");
 
     if (!index1.isNegative && !index2.isNegative) {
       final temp = _sessions[index1];
@@ -164,13 +142,11 @@ class AppData extends ChangeNotifier {
 
   void clearSessions() {
     _sessions.clear();
-
     notifyListeners();
   }
 
   void clearCharacters() {
     _characters.clear();
-
     notifyListeners();
   }
 

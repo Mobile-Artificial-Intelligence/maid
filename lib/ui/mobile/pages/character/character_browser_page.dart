@@ -16,8 +16,6 @@ class CharacterBrowserPage extends StatelessWidget {
   }
 
   Widget pageBuilder(BuildContext context, AppData appData, Character character, Widget? child) {
-    appData.save(context);
-    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,

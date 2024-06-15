@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node_tree.dart';
 import 'package:maid/classes/google_gemini_model.dart';
@@ -53,10 +52,26 @@ class Session extends ChangeNotifier {
     fromMap(inputJson);
   }
 
+  static Future<Session> get last async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String? lastSessionString = prefs.getString("last_session");
+
+    Map<String, dynamic> lastSession = json.decode(lastSessionString ?? "{}");
+
+    return Session.fromMap(lastSession);
+  }
+
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString("last_session", json.encode(toMap()));
+  }
+
   void newSession() {
     _name = "New Chat";
     chat = ChatNodeTree();
-    model = kIsWeb ? OllamaModel(listener: notify) : LlamaCppModel(listener: notify);
+    model = LlamaCppModel(listener: notify);
     notifyListeners();
   }
 
