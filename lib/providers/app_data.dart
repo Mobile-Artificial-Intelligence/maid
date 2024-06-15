@@ -98,8 +98,6 @@ class AppData extends ChangeNotifier {
   void addSession(Session session) {
     final index = _sessions.indexWhere((element) => element.key == session.key);
 
-    print("AddSession: $index");
-
     if (index.isNegative) {
       _sessions.insert(0, session);
       notifyListeners();

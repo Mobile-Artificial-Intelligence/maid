@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
+import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
-import 'package:maid/ui/mobile/widgets/tiles/character_drawer_tile.dart';
+import 'package:maid/ui/mobile/widgets/tiles/character_browser_tile.dart';
+import 'package:maid/ui/shared/widgets/buttons/clear_sessions_button.dart';
 import 'package:maid/ui/shared/widgets/buttons/new_session_button.dart';
 import 'package:maid/ui/shared/widgets/sessions_list_view.dart';
 import 'package:maid/ui/mobile/widgets/tiles/user_tile.dart';
@@ -18,13 +20,13 @@ class HomeDrawer extends StatelessWidget {
       onTap: () {
         Navigator.pop(context);
       },
-      child: Consumer2<AppData, Session>(
+      child: Consumer3<AppData, Session, Character>(
         builder: drawerBuilder
       )
     );
   }
 
-  Widget drawerBuilder(BuildContext context, AppData appData, Session session, Widget? child) {
+  Widget drawerBuilder(BuildContext context, AppData appData, Session session, Character character, Widget? child) {
     return Drawer(
       semanticLabel: "Drawer Menu",
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -38,13 +40,21 @@ class HomeDrawer extends StatelessWidget {
         minimum: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            const CharacterDrawerTile(),
+            CharacterBrowserTile(
+              character: character
+            ),
             const SizedBox(height: 5.0),
             characterButtonsRow(context),
             Divider(
               color: Theme.of(context).colorScheme.primary,
             ),
-            const NewSessionButton(),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ClearSessionsButton(),
+                NewSessionButton(),
+              ]
+            ),
             Divider(
               color: Theme.of(context).colorScheme.primary,
             ),

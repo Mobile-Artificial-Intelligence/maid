@@ -22,9 +22,12 @@ class _CharacterBrowserTileState extends State<CharacterBrowserTile> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: buildStack(),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: buildStack(),
+      ),
     );
   }
 

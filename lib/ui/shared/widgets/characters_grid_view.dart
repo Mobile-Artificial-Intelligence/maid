@@ -17,26 +17,18 @@ class CharactersGridView extends StatelessWidget {
 
   Widget buildGridView(BuildContext context, AppData appData, Widget? child) {
     appData.save();
-    
+
     return GridView.builder(
       itemCount: appData.characters.length,
-      itemBuilder: (context, index) => itemBuilder(appData.characters[index]), 
+      itemBuilder: (context, index) => CharacterBrowserTile(
+        character: appData.characters[index]
+      ), 
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200,
         crossAxisSpacing: 8.0,
         mainAxisSpacing: 8.0,
         childAspectRatio: 0.75
       )
-    );
-  }
-
-  Widget itemBuilder(Character character) {
-    return Padding(
-      padding: const EdgeInsets.all(
-          8.0), // Adjust the padding value as needed
-      child: CharacterBrowserTile(
-        character: character
-      ),
     );
   }
 }
