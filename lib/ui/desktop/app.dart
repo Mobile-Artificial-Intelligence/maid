@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_preferences.dart';
-import 'package:maid/providers/desktop_layout.dart';
+import 'package:maid/providers/desktop_navigator.dart';
 import 'package:maid/static/themes.dart';
 import 'package:maid/ui/desktop/pages/home_page.dart';
 import 'package:maid/ui/shared/pages/about_page.dart';
@@ -26,7 +26,7 @@ class DesktopApp extends StatelessWidget {
             '/about': (context) => const AboutPage(),
           },
           home: ChangeNotifierProvider(
-            create: (context) => DesktopLayout(),
+            create: (context) => DesktopNavigator(),
             child: const DesktopHomePage()
           )
         );

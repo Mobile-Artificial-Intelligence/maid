@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/side_panel_route.dart';
+import 'package:provider/provider.dart';
 
-class DesktopLayout extends ChangeNotifier {
+class DesktopNavigator extends ChangeNotifier {
   bool _sidePanelOpen = true;
   bool _terminalOpen = false;
   bool _settingsOpen = false;
@@ -13,6 +14,8 @@ class DesktopLayout extends ChangeNotifier {
   bool get settingsOpen => _settingsOpen;
 
   SidePanelRoute get sidePanelRoute => _sidePanelRoute;
+
+  static of(BuildContext context) => Provider.of<DesktopNavigator>(context, listen: false);
 
   void toggleSidePanel() {
     _sidePanelOpen = !_sidePanelOpen;

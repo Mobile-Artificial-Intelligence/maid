@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_resizable_container/flutter_resizable_container.dart';
-import 'package:maid/providers/desktop_layout.dart';
+import 'package:maid/providers/desktop_navigator.dart';
 import 'package:maid/ui/desktop/widgets/appbars/home_app_bar.dart';
 import 'package:maid/ui/desktop/widgets/navigators/side_panel_navigator.dart';
 import 'package:maid/ui/desktop/widgets/side_bar.dart';
@@ -40,8 +40,8 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   }
 
   Widget buildResizableContainer(BuildContext context) {
-    return Consumer<DesktopLayout>(
-      builder: (context, desktopLayout, child) {
+    return Consumer<DesktopNavigator>(
+      builder: (context, DesktopNavigator, child) {
         return ResizableContainer(
           direction: Axis.horizontal,
           divider: ResizableDivider(
@@ -52,14 +52,14 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
             onHoverExit: onHoverExit,
           ),
           children: [
-            if (desktopLayout.sidePanelOpen)
+            if (DesktopNavigator.sidePanelOpen)
             const ResizableChild(
               size: ResizableSize.ratio(0.2),
               minSize: 200,
               child: SidePanelNavigator(),
             ),
             ResizableChild(
-              size: desktopLayout.sidePanelOpen ? const ResizableSize.ratio(0.8) : const ResizableSize.expand(),
+              size: DesktopNavigator.sidePanelOpen ? const ResizableSize.ratio(0.8) : const ResizableSize.expand(),
               minSize: 500,
               child: const Scaffold(
                 appBar: HomeAppBar(),
