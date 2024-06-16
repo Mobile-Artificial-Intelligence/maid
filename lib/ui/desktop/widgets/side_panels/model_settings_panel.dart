@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/ui/mobile/pages/platforms/gemini_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/llama_cpp_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
-import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
+import 'package:maid/ui/desktop/widgets/side_panels/model_settings/llama_cpp_panel.dart';
+import 'package:maid/ui/mobile/pages/model_settings/gemini_page.dart';
+import 'package:maid/ui/mobile/pages/model_settings/mistralai_page.dart';
+import 'package:maid/ui/mobile/pages/model_settings/ollama_page.dart';
+import 'package:maid/ui/mobile/pages/model_settings/openai_page.dart';
 import 'package:provider/provider.dart';
 
 class ModelSettingsPanel extends StatelessWidget {
@@ -17,7 +17,7 @@ class ModelSettingsPanel extends StatelessWidget {
       builder: (context, appData, child) {
         switch (appData.currentSession.model.type) {
           case LargeLanguageModelType.llamacpp:
-            return const LlamaCppPage();
+            return const LlamaCppPanel();
           case LargeLanguageModelType.ollama:
             return const OllamaPage();
           case LargeLanguageModelType.openAI:

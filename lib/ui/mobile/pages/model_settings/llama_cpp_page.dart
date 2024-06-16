@@ -72,21 +72,19 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                   ),
                 ),
                 const SizedBox(height: 15.0),
-                Align(
-                  alignment: Alignment.center, // Center the button horizontally
-                  child: FilledButton(
-                    onPressed: () {
-                      session.model.reset();
-                    },
-                    child: const Text(
-                      "Reset"
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  runSpacing: 4,
                   children: [
+                    FilledButton(
+                      onPressed: () {
+                        session.model.reset();
+                      },
+                      child: const Text(
+                        "Reset"
+                      ),
+                    ),
                     FilledButton(
                       onPressed: () {
                         storageOperationDialog(
@@ -99,7 +97,6 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
                         "Load GGUF"
                       ),
                     ),
-                    const SizedBox(width: 10.0),
                     FilledButton(
                       onPressed: () {
                         session.model.resetUri();
