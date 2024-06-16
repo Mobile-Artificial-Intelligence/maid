@@ -69,7 +69,7 @@ class User extends ChangeNotifier {
 
   set name(String value) {
     _name = value;
-    notifyListeners();
+    save().then((value) => notifyListeners());
   }
 
   void fromMap(Map<String, dynamic> inputMap) async {

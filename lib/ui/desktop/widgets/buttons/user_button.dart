@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/providers/desktop_navigator.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/ui/shared/widgets/future_avatar.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,9 @@ class UserButton extends StatelessWidget {
           key: user.key, 
           image: user.profile, 
           radius: 16, 
-          onPressed: () {}
+          onPressed: () {
+            DesktopNavigator.of(context).navigateSettingsPanel("/user-settings");
+          }
         );
       },
     );

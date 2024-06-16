@@ -64,14 +64,14 @@ class SideBar extends StatelessWidget {
           tooltip: 'Toggle Terminal',
           icon: const Icon(Icons.terminal_rounded),
           onPressed: () {
-            DesktopNavigator.of(context).toggleSettingsPanel();
+            DesktopNavigator.of(context).navigateSettingsPanel("/terminal");
           },
         ),
         IconButton(
           tooltip: 'Toggle Settings',
           icon: const Icon(Icons.settings_rounded),
           onPressed: () {
-            DesktopNavigator.of(context).toggleSettingsPanel();
+            DesktopNavigator.of(context).navigateSettingsPanel("/settings");
           }
         ),
         const UserButton(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/ui/desktop/widgets/settings_panels/user_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/characters_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/model_settings_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/sessions_panel.dart';
@@ -7,9 +8,10 @@ import 'package:provider/provider.dart';
 
 class DesktopNavigator extends ChangeNotifier {
   bool _sidePanelOpen = true;
-  bool _settingsPanelOpen = false;
 
   Widget Function(BuildContext) _sidePanelRoute = (context) => const SessionsPanel();
+
+  Widget Function(BuildContext)? _settingsPanelRoute;
 
   final Map<String, Widget Function(BuildContext)> _sidePanelRoutes = {
     "/sessions": (context) => const SessionsPanel(),
@@ -18,10 +20,15 @@ class DesktopNavigator extends ChangeNotifier {
     "/model-settings": (context) => const ModelSettingsPanel(),
   };
 
+  final Map<String, Widget Function(BuildContext)> _settingsPanelRoutes = {
+    "/user-settings": (context) => const UserPanel(),
+  };
+
   bool get sidePanelOpen => _sidePanelOpen;
-  bool get settingsPanelOpen => _settingsPanelOpen;
 
   Widget Function(BuildContext) get sidePanelRoute => _sidePanelRoute;
+
+  Widget Function(BuildContext)? get settingsPanelRoute => _settingsPanelRoute;
 
   static DesktopNavigator of(BuildContext context) => Provider.of<DesktopNavigator>(context, listen: false);
 
@@ -30,15 +37,20 @@ class DesktopNavigator extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleSettingsPanel() {
-    _settingsPanelOpen = !_settingsPanelOpen;
-    notifyListeners();
-  }
-
   void navigateSidePanel(String route) {
     if (_sidePanelRoute != _sidePanelRoutes[route]) {
       _sidePanelRoute = _sidePanelRoutes[route] ?? _sidePanelRoute;
       notifyListeners();
     }
+  }
+
+  void navigateSettingsPanel(String route) {
+    if (_settingsPanelRoute != _settingsPanelRoutes[route]) {
+      _settingsPanelRoute = _settingsPanelRoutes[route] ?? _settingsPanelRoute;
+    }
+    else {
+      _settingsPanelRoute = null;
+    }
+    notifyListeners();
   }
 }

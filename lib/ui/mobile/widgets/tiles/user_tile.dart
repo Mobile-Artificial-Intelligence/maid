@@ -85,7 +85,6 @@ class _UserTileState extends State<UserTile> {
                 FilledButton(
                   onPressed: () {
                     user.name = controller.text;
-                    user.save();
                     Navigator.of(context).pop();
                   },
                   child: const Text(

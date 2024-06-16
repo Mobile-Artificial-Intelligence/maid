@@ -11,19 +11,23 @@ class ImageSelectorTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        final user = User.of(context);
-        user.profile = image;
-        user.save();
-      },
-      child: GridTile(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        hoverColor: Colors.black.withOpacity(0.1),
+        highlightColor: Colors.black.withOpacity(0.2),
+        splashColor: Colors.black.withOpacity(0.2),
+        onTap: () {
+          final user = User.of(context);
+          user.profile = image;
+          user.save();
+        },
         child: FutureTileImage(
           key: key ?? UniqueKey(),
           image: image,
           borderRadius: BorderRadius.circular(10),
         ),
-      ),
+      )
     );
   }
 }
