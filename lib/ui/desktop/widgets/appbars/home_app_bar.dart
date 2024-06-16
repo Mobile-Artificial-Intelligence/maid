@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/ui/desktop/widgets/buttons/load_model_button.dart';
 import 'package:maid/ui/shared/widgets/dropdowns/llm_dropdown.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -17,7 +18,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const LlmDropdown(),
-            IconButton(
+          const Spacer(flex: 1),
+          const Expanded(
+            flex: 8,
+            child: LoadModelButton(),
+          ),
+          const Spacer(flex: 1),
+          IconButton(
             tooltip: 'About',
             icon: const Icon(Icons.info), 
             onPressed: () => openAbout(context)

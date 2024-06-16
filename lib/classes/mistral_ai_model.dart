@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:langchain/langchain.dart';
 import 'package:langchain_mistralai/langchain_mistralai.dart';
@@ -16,6 +16,8 @@ class MistralAiModel extends LargeLanguageModel {
 
   @override
   LargeLanguageModelType get type => LargeLanguageModelType.mistralAI;
+
+  static MistralAiModel of(BuildContext context) => LargeLanguageModel.of(context) as MistralAiModel;
 
   MistralAiModel({
     super.listener, 

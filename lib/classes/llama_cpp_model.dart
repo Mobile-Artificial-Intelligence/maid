@@ -41,6 +41,8 @@ class LlamaCppModel extends LargeLanguageModel {
     
     return missing;
   }
+
+  static LlamaCppModel of(BuildContext context) => LargeLanguageModel.of(context) as LlamaCppModel;
   
   LlamaCppModel({
     super.listener, 

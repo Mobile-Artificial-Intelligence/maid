@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lan_scanner/lan_scanner.dart';
 import 'package:langchain/langchain.dart';
@@ -36,6 +36,8 @@ class OllamaModel extends LargeLanguageModel {
     
     return missing;
   }
+
+  static OllamaModel of(BuildContext context) => LargeLanguageModel.of(context) as OllamaModel;
 
   OllamaModel({
     super.listener, 

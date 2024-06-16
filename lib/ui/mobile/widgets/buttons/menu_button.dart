@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
@@ -114,7 +115,7 @@ class _MenuButtonState extends State<MenuButton> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Model Settings'),
           onTap: () {
-            switch (Session.of(context).model.type) {
+            switch (LargeLanguageModel.of(context).type) {
               case LargeLanguageModelType.llamacpp:
                 Navigator.pushNamed(context, '/llamacpp');
               case LargeLanguageModelType.ollama:

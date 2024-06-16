@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/ui/mobile/widgets/tiles/text_field_list_tile.dart';
 
 class ApiKeyParameter extends StatelessWidget {
@@ -7,16 +7,16 @@ class ApiKeyParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
-    final model = Session.of(context).model;
-    controller.text = model.token;
+    final TextEditingController controller = TextEditingController(
+      text: LargeLanguageModel.of(context).token
+    );
 
     return TextFieldListTile(
       headingText: "API Key",
       labelText: "API Key",
       controller: controller,
       onChanged: (value) {
-        model.token = value;
+        LargeLanguageModel.of(context).token = value;
       }
     );
   }

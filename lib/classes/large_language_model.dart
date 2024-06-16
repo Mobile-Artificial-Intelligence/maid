@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
+import 'package:maid/providers/session.dart';
 
 class LargeLanguageModel extends ChangeNotifier {
   LargeLanguageModelType get type => LargeLanguageModelType.none;
@@ -197,6 +198,8 @@ class LargeLanguageModel extends ChangeNotifier {
     _nThread = value;
     notifyListeners();
   }
+
+  static LargeLanguageModel of(BuildContext context) => Session.of(context).model;
 
   LargeLanguageModel({
     VoidCallback? listener,

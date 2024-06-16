@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:langchain/langchain.dart';
 import 'package:langchain_openai/langchain_openai.dart';
@@ -16,6 +17,8 @@ class OpenAiModel extends LargeLanguageModel {
 
   @override
   LargeLanguageModelType get type => LargeLanguageModelType.openAI;
+
+  static OpenAiModel of(BuildContext context) => LargeLanguageModel.of(context) as OpenAiModel;
 
   OpenAiModel({
     super.listener, 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/classes/large_language_model.dart';
 
 class UrlParameter extends StatefulWidget {
   const UrlParameter({super.key});
@@ -13,8 +13,7 @@ class _UrlParameterState extends State<UrlParameter> {
 
   @override
   Widget build(BuildContext context) {
-    final model = Session.of(context).model;
-    controller.text = model.uri;
+    controller.text = LargeLanguageModel.of(context).uri;
 
     return ListTile(
       title: Row(
@@ -24,9 +23,9 @@ class _UrlParameterState extends State<UrlParameter> {
           ),
           IconButton(
             onPressed: () async {
-              await model.resetUri();
+              await LargeLanguageModel.of(context).resetUri();
               setState(() {
-                controller.text = model.uri;
+                controller.text = LargeLanguageModel.of(context).uri;
               });
             }, 
             icon: const Icon(Icons.refresh),
@@ -42,7 +41,7 @@ class _UrlParameterState extends State<UrlParameter> {
                 labelText: "URL",
               ),
               onChanged: (value) {
-                model.uri = value;
+                LargeLanguageModel.of(context).uri = value;
               },
             ),
           ),

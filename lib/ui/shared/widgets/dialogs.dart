@@ -1,6 +1,6 @@
   
 import 'package:flutter/material.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/classes/large_language_model.dart';
 
 void storageOperationDialog(BuildContext context, Future<String> Function() storageFunction) {
   showDialog(
@@ -50,8 +50,6 @@ void showMissingRequirementsDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (context) {
-      final requirement = Session.of(context).model.missingRequirements;
-
       return AlertDialog(
         title: const Text(
           "Missing Requirements",
@@ -59,7 +57,7 @@ void showMissingRequirementsDialog(BuildContext context) {
         ),
         actionsAlignment: MainAxisAlignment.center,
         content: Text(
-          requirement.join()
+          LargeLanguageModel.of(context).missingRequirements.join()
         ),
         actions: [
           FilledButton(

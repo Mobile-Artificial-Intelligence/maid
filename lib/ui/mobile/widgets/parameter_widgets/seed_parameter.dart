@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/session.dart';
 import 'package:provider/provider.dart';
 
 class SeedParameter extends StatelessWidget {
@@ -8,8 +8,9 @@ class SeedParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller =
-        TextEditingController(text: Session.of(context).model.seed.toString());
+    TextEditingController controller = TextEditingController(
+      text: LargeLanguageModel.of(context).seed.toString()
+    );
 
     return Consumer<AppData>(
       builder: (context, appData, child) {
