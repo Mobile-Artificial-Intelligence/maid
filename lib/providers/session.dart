@@ -164,6 +164,13 @@ class Session extends ChangeNotifier {
 
     chat.tail.finalised = true;
 
+    if (chat.root.children.isNotEmpty && 
+        chat.root.children.first.content.isNotEmpty && 
+        _name.contains("New Chat")
+    ) {
+      _name = chat.root.children.first.content;
+    }
+
     notifyListeners();
   }
 
