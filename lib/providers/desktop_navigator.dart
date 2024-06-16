@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/ui/desktop/widgets/settings_panels/app_settings_panel.dart';
 import 'package:maid/ui/desktop/widgets/settings_panels/user_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/characters_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/model_settings_panel.dart';
@@ -22,6 +23,7 @@ class DesktopNavigator extends ChangeNotifier {
 
   final Map<String, Widget Function(BuildContext)> _settingsPanelRoutes = {
     "/user-settings": (context) => const UserPanel(),
+    "/settings": (context) => const AppSettingsPanel()
   };
 
   bool get sidePanelOpen => _sidePanelOpen;

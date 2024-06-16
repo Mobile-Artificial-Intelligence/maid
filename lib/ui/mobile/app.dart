@@ -10,7 +10,7 @@ import 'package:maid/ui/mobile/pages/platforms/gemini_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/mistralai_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/ollama_page.dart';
 import 'package:maid/ui/mobile/pages/platforms/openai_page.dart';
-import 'package:maid/ui/shared/pages/settings_page.dart';
+import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:provider/provider.dart';
 
 class MobileApp extends StatelessWidget {
