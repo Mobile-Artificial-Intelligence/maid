@@ -33,11 +33,19 @@ class Character extends ChangeNotifier {
 
   static Character of(BuildContext context) => AppData.of(context).currentCharacter;
 
-  Character() {
+  Character(VoidCallback? listener) {
+    if (listener != null) {
+      addListener(listener);
+    }
+
     reset();
   }
 
-  Character.fromMap(Map<String, dynamic> inputJson) {
+  Character.fromMap(VoidCallback? listener, Map<String, dynamic> inputJson) {
+    if (listener != null) {
+      addListener(listener);
+    }
+
     fromMap(inputJson);
   }
 
@@ -48,7 +56,7 @@ class Character extends ChangeNotifier {
 
     Map<String, dynamic> lastCharacter = json.decode(lastCharacterString ?? "{}");
     
-    return Character.fromMap(lastCharacter);
+    return Character.fromMap(null, lastCharacter);
   }
 
   Future<void> save() async {
@@ -58,12 +66,6 @@ class Character extends ChangeNotifier {
 
   void notify() {
     notifyListeners();
-  }
-
-  Character copy() {
-    Character newCharacter = Character();
-    newCharacter.from(this);
-    return newCharacter;
   }
 
   void from(Character character) async {

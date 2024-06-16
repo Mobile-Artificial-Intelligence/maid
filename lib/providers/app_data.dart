@@ -30,19 +30,6 @@ class AppData extends ChangeNotifier {
 
   Character get currentCharacter => _currentCharacter;
 
-  int get nextSessionIndex {
-    int index = 0;
-
-    for (int i = 1; i <= sessions.length; i++) {
-      if (!sessions.any((element) => element.name == "New Chat $i")) {
-        index = i;
-        break;
-      }
-    }
-
-    return index;
-  }
-
   set currentSession(Session session) {
     if (!currentSession.chat.tail.finalised) return;
 
@@ -79,7 +66,7 @@ class AppData extends ChangeNotifier {
     }
 
     if (charactersString != null) {
-      characters = (json.decode(charactersString) as List).map((e) => Character.fromMap(e)).toList();
+      characters = (json.decode(charactersString) as List).map((e) => Character.fromMap(null, e)).toList();
     }
 
     if (sessions.isEmpty) {
@@ -87,7 +74,7 @@ class AppData extends ChangeNotifier {
     }
 
     if (characters.isEmpty) {
-      characters.add(Character());
+      characters.add(Character(null));
     }
 
     final session = await Session.last;
@@ -114,18 +101,20 @@ class AppData extends ChangeNotifier {
   }
 
   void newSession() {
-    final session = Session(notify, nextSessionIndex);
+    int index = 0;
 
-    currentSession = session;
+    for (int i = 1; i <= sessions.length; i++) {
+      if (!sessions.any((element) => element.name == "New Chat $i")) {
+        index = i;
+        break;
+      }
+    }
+
+    currentSession = Session(notify, index);
   }
 
-  void addSession(Session session) {
-    final index = _sessions.indexWhere((element) => element.key == session.key);
-
-    if (index.isNegative) {
-      _sessions.insert(0, session);
-      notifyListeners();
-    }
+  void newCharacter() {
+    currentCharacter = Character(notify);
   }
 
   void addCharacter(Character character) {
@@ -174,13 +163,13 @@ class AppData extends ChangeNotifier {
   void reset() {
     clearSessions();
     clearCharacters();
-    _currentCharacter = Character();
+    _currentCharacter = Character(notify);
     _currentSession = Session(notify, 0);
     notifyListeners();
   }
 
   void notify() {
-    notifyListeners();
+    save().then((value) => notifyListeners());
   }
 
   AppData(this._sessions, this._characters, this._currentSession, this._currentCharacter) {
