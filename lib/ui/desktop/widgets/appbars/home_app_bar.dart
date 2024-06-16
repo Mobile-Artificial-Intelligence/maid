@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/ui/desktop/widgets/buttons/load_model_button.dart';
 import 'package:maid/ui/shared/widgets/dropdowns/llm_dropdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,7 +38,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           IconButton(
             tooltip: "Eject Model",
-            onPressed: () {},
+            onPressed: () {
+              LlamaCppModel.of(context).resetUri();
+              LlamaCppModel.of(context).name = "";
+            },
             icon: const Icon(Icons.eject_rounded),
           ),
           const Spacer(flex: 1),
