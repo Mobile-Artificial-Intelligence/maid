@@ -75,7 +75,7 @@ class AppData extends ChangeNotifier {
     List<Character> characters = [];
 
     if (sessionsString != null) {
-      sessions = (json.decode(sessionsString) as List).map((e) => Session.fromMap(e)).toList();
+      sessions = (json.decode(sessionsString) as List).map((e) => Session.fromMap(null, e)).toList();
     }
 
     if (charactersString != null) {
@@ -83,7 +83,7 @@ class AppData extends ChangeNotifier {
     }
 
     if (sessions.isEmpty) {
-      sessions.add(Session(0));
+      sessions.add(Session(null, 0));
     }
 
     if (characters.isEmpty) {
@@ -113,6 +113,12 @@ class AppData extends ChangeNotifier {
     await Future.wait(futures);
   }
 
+  void newSession() {
+    final session = Session(notify, nextSessionIndex);
+
+    currentSession = session;
+  }
+
   void addSession(Session session) {
     final index = _sessions.indexWhere((element) => element.key == session.key);
 
@@ -132,6 +138,12 @@ class AppData extends ChangeNotifier {
   }
 
   void removeSession(Session session) {
+    if (session == _currentSession) {
+      _currentSession = _sessions.firstOrNull ?? Session(notify, 0);
+      notifyListeners();
+      return;
+    }
+
     final index = _sessions.indexWhere((element) => element.key == session.key);
 
     if (!index.isNegative) {
@@ -149,28 +161,6 @@ class AppData extends ChangeNotifier {
     }
   }
 
-  void setCurrentSession(Session oldCurrentSession, Session newCurrentSession) {
-    if (oldCurrentSession.key == newCurrentSession.key) {
-      return;
-    }
-
-    removeSession(newCurrentSession);
-    addSession(oldCurrentSession.copy());
-    _currentSession = newCurrentSession;
-    save().then((value) => notifyListeners());
-  }
-
-  void setCurrentCharacter(Character oldCurrentCharacter, Character newCurrentCharacter) {
-    if (oldCurrentCharacter.key == newCurrentCharacter.key) {
-      return;
-    }
-
-    removeCharacter(newCurrentCharacter);
-    addCharacter(oldCurrentCharacter.copy());
-    _currentCharacter = newCurrentCharacter;
-    save().then((value) => notifyListeners());
-  }
-
   void clearSessions() {
     _sessions.clear();
     notifyListeners();
@@ -185,7 +175,7 @@ class AppData extends ChangeNotifier {
     clearSessions();
     clearCharacters();
     _currentCharacter = Character();
-    _currentSession = Session(0);
+    _currentSession = Session(notify, 0);
     notifyListeners();
   }
 
@@ -193,5 +183,8 @@ class AppData extends ChangeNotifier {
     notifyListeners();
   }
 
-  AppData(this._sessions, this._characters, this._currentSession, this._currentCharacter);
+  AppData(this._sessions, this._characters, this._currentSession, this._currentCharacter) {
+    _currentSession.addListener(notify);
+    _currentCharacter.addListener(notify);
+  }
 }

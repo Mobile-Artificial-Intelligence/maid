@@ -26,13 +26,11 @@ class _LlmDropdownState extends State<LlmDropdown> {
   Widget dropdownBuilder() {
     return Consumer<AppData>(
       builder: (context, appData, child) {
-        final session = appData.currentSession;
-
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              session.model.type.displayName,
+              appData.currentSession.model.type.displayName,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -59,15 +57,13 @@ class _LlmDropdownState extends State<LlmDropdown> {
   }
 
   List<PopupMenuEntry<dynamic>> itemBuilder(BuildContext context) {
-    final session = Session.of(context);
-
     return [
       PopupMenuItem(
         padding: EdgeInsets.zero,
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('LlamaCPP'),
-          onTap: session.switchLlamaCpp,
+          onTap: Session.of(context).switchLlamaCpp,
         ),
       ),
       PopupMenuItem(
@@ -75,7 +71,7 @@ class _LlmDropdownState extends State<LlmDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('OpenAI'),
-          onTap: session.switchOpenAI,
+          onTap: Session.of(context).switchOpenAI,
         ),
       ),
       PopupMenuItem(
@@ -83,7 +79,7 @@ class _LlmDropdownState extends State<LlmDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Ollama'),
-          onTap: session.switchOllama,
+          onTap: Session.of(context).switchOllama,
         ),
       ),
       PopupMenuItem(
@@ -91,7 +87,7 @@ class _LlmDropdownState extends State<LlmDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('MistralAI'),
-          onTap: session.switchMistralAI,
+          onTap: Session.of(context).switchMistralAI,
         ),
       ),
       PopupMenuItem(
@@ -99,7 +95,7 @@ class _LlmDropdownState extends State<LlmDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Gemini'),
-          onTap: session.switchGemini,
+          onTap: Session.of(context).switchGemini,
         ),
       )
     ];

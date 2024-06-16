@@ -43,7 +43,7 @@ class SideBar extends StatelessWidget {
           tooltip: 'Model Settings',
           icon: const Icon(Icons.account_tree_rounded), 
           onPressed: () {
-            DesktopNavigator.of(context).navigateSidePanel("/model");
+            DesktopNavigator.of(context).navigateSidePanel("/model-settings");
           },
         ),
         IconButton(

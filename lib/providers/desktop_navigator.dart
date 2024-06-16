@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/characters_panel.dart';
+import 'package:maid/ui/desktop/widgets/side_panels/model_settings_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/sessions_panel.dart';
 import 'package:maid/ui/shared/pages/character_customization_page.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,8 @@ class DesktopNavigator extends ChangeNotifier {
   final Map<String, Widget Function(BuildContext)> _sidePanelRoutes = {
     "/sessions": (context) => const SessionsPanel(),
     "/character": (context) => const CharacterCustomizationPage(),
-    "/characters": (context) => const CharactersPanel()
+    "/characters": (context) => const CharactersPanel(),
+    "/model-settings": (context) => const ModelSettingsPanel(),
   };
 
   bool get sidePanelOpen => _sidePanelOpen;

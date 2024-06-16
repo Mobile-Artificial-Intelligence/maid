@@ -71,14 +71,8 @@ class _SessionTileState extends State<SessionTile> {
       ),
       items: <PopupMenuEntry>[
         PopupMenuItem(
-          onTap: () {
-            final appData = AppData.of(context);
-
-            if (widget.session == appData.currentSession) {
-              appData.currentSession = appData.sessions.firstOrNull ?? Session(0);
-            }
-            
-            appData.removeSession(widget.session);
+          onTap: () {  
+            AppData.of(context).removeSession(widget.session);
           },
           child: const Text('Delete'),
         ),

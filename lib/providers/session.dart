@@ -45,15 +45,19 @@ class Session extends ChangeNotifier {
 
   static Session of(BuildContext context) => AppData.of(context).currentSession;
 
-  Session(int index) {
+  Session(VoidCallback? listener, int index) {
+    if (listener != null) {
+      addListener(listener);
+    }
+
     newSession(index);
   }
 
-  Session.from(Session session) {
-    from(session);
-  }
+  Session.fromMap(VoidCallback? listener, Map<String, dynamic> inputJson) {
+    if (listener != null) {
+      addListener(listener);
+    }
 
-  Session.fromMap(Map<String, dynamic> inputJson) {
     fromMap(inputJson);
   }
 
@@ -64,7 +68,7 @@ class Session extends ChangeNotifier {
 
     Map<String, dynamic> lastSession = json.decode(lastSessionString ?? "{}");
 
-    return Session.fromMap(lastSession);
+    return Session.fromMap(null, lastSession);
   }
 
   Future<void> save() async {
@@ -79,10 +83,6 @@ class Session extends ChangeNotifier {
     chat = ChatNodeTree();
     model = LlamaCppModel(listener: notify);
     notifyListeners();
-  }
-
-  Session copy() {
-    return Session.from(this);
   }
 
   void from(Session session) {
