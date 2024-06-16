@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/ui/desktop/widgets/buttons/load_model_button.dart';
 import 'package:maid/ui/shared/widgets/dropdowns/llm_dropdown.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -19,6 +20,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           const LlmDropdown(),
           const Spacer(flex: 1),
+          IconButton(
+            onPressed: () {}, 
+            icon: SizedBox(
+              width: 30.0,
+              height: 30.0,
+              child: SvgPicture.asset(
+                'assets/huggingface-colour.svg',
+              ),
+            )
+          ),
           const Expanded(
             flex: 8,
             child: LoadModelButton(),
