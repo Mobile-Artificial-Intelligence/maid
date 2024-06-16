@@ -53,7 +53,10 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('System'),
-          onTap: () => switchThemeMode(context, ThemeMode.system)
+          onTap: () {
+            switchThemeMode(context, ThemeMode.system);
+            Navigator.pop(context);
+          }
         ),
       ),
       PopupMenuItem(
@@ -61,7 +64,10 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Light'),
-          onTap: () => switchThemeMode(context, ThemeMode.light)
+          onTap: () {
+            switchThemeMode(context, ThemeMode.light);
+            Navigator.pop(context);
+          }
         ),
       ),
       PopupMenuItem(
@@ -69,7 +75,10 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Dark'),
-          onTap: () => switchThemeMode(context, ThemeMode.dark)
+          onTap: () {
+            switchThemeMode(context, ThemeMode.dark);
+            Navigator.pop(context);
+          }
         ),
       )
     ];

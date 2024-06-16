@@ -54,7 +54,10 @@ class _AppLayoutDropdownState extends State<AppLayoutDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('System'),
-          onTap: () => switchAppLayout(context, AppLayout.system)
+          onTap: () {
+            switchAppLayout(context, AppLayout.system);
+            Navigator.pop(context);
+          }
         ),
       ),
       PopupMenuItem(
@@ -62,7 +65,10 @@ class _AppLayoutDropdownState extends State<AppLayoutDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Mobile'),
-          onTap: () => switchAppLayout(context, AppLayout.mobile)
+          onTap: () {
+            switchAppLayout(context, AppLayout.mobile);
+            Navigator.pop(context);
+          }
         ),
       ),
       PopupMenuItem(
@@ -70,7 +76,10 @@ class _AppLayoutDropdownState extends State<AppLayoutDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Desktop'),
-          onTap: () => switchAppLayout(context, AppLayout.desktop)
+          onTap: () {
+            switchAppLayout(context, AppLayout.desktop);
+            Navigator.pop(context);
+          }
         ),
       )
     ];

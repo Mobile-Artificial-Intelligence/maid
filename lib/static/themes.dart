@@ -82,6 +82,12 @@ class Themes {
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: secondary,
       ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: surfaceDim,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+      ),
       colorScheme: isDark ? ColorScheme.dark(
         surfaceDim: surfaceDim,
         primary: primary,

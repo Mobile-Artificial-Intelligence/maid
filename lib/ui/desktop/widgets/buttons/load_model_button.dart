@@ -41,21 +41,29 @@ class LoadModelButton extends StatelessWidget {
   Widget rowBuilder(BuildContext context, AppData appData, Widget? child) {
     final modelName = appData.currentSession.model.name;
 
+    const textStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 14,
+    );
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text("< < <"),
+        const Text(
+          "< < <",
+          style: textStyle,
+        ),
         Expanded(
           child: Text(
             modelName.isNotEmpty ? modelName : "Load Model",
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 14,
-            ),
+            style: textStyle,
           ),
         ),
-        const Text("> > >"),
+        const Text(
+          "> > >",
+          style: textStyle
+        ),
       ],
     );
   }
