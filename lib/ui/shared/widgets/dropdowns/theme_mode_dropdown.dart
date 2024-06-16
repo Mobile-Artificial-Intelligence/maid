@@ -24,8 +24,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
               Utilities.capitalizeFirst(appPreferences.themeMode.name),
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
+                fontSize: 16
               )
             ),
             PopupMenuButton(

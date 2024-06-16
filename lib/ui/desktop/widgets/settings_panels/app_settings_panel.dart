@@ -15,25 +15,37 @@ class AppSettingsPanel extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8),
+          Padding(
+            padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
                 Expanded(
-                  child: Text("Theme Mode"),
+                  child: Text(
+                    "Theme Mode",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 16
+                    )
+                  ),
                 ),
-                ThemeModeDropdown()
+                const ThemeModeDropdown()
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(8),
+          Padding(
+            padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
                 Expanded(
-                  child: Text("Application Layout"),
+                  child: Text(
+                    "Application Layout",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 16
+                    )
+                  ),
                 ),
-                AppLayoutDropdown()
+                const AppLayoutDropdown()
               ],
             ),
           ),
