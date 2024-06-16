@@ -17,33 +17,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const LlmDropdown(),
-          trailingWidgets(context)
+            IconButton(
+            tooltip: 'About',
+            icon: const Icon(Icons.info), 
+            onPressed: () => openAbout(context)
+          ),
         ],
       ),
-    );
-  }
-
-  Widget trailingWidgets(BuildContext context) {
-    return Row(
-      children: [
-        IconButton(
-          tooltip: 'App Settings',
-          icon: const Icon(Icons.settings), 
-          onPressed: () => openAppSettings(context)
-        ),
-        IconButton(
-          tooltip: 'About',
-          icon: const Icon(Icons.info), 
-          onPressed: () => openAbout(context)
-        ),
-      ],
-    );
-  }
-
-  void openAppSettings(BuildContext context) {
-    Navigator.pushNamed(
-      context,
-      '/settings'
     );
   }
 
