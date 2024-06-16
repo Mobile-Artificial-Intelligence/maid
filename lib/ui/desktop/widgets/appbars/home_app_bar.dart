@@ -21,6 +21,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           const LlmDropdown(),
           const Spacer(flex: 1),
           IconButton(
+            tooltip: 'HuggingFace',
             onPressed: () {}, 
             icon: SizedBox(
               width: 30.0,
@@ -33,6 +34,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           const Expanded(
             flex: 8,
             child: LoadModelButton(),
+          ),
+          IconButton(
+            tooltip: "Eject Model",
+            onPressed: () {},
+            icon: const Icon(Icons.eject_rounded),
           ),
           const Spacer(flex: 1),
           IconButton(
