@@ -1,6 +1,7 @@
   
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/providers/app_data.dart';
 
 void storageOperationDialog(BuildContext context, Future<String> Function() storageFunction) {
   showDialog(
@@ -19,6 +20,7 @@ void storageOperationDialog(BuildContext context, Future<String> Function() stor
               actions: [
                 FilledButton(
                   onPressed: () {
+                    AppData.of(context).notify();
                     Navigator.of(context).pop();
                   },
                   child: Text(

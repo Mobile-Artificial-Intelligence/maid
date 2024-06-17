@@ -34,36 +34,47 @@ class SliderGridTile extends StatelessWidget {
     }
 
     return GridTile(
-      child: Column(
-        children: [
-          Text(labelText),
-          Slider(
-            value: inputValue.toDouble(),
-            min: sliderMin,
-            max: sliderMax,
-            divisions: sliderDivisions,
-            label: labelValue,
-            onChanged: (double value) {
-              onValueChanged(value);
-            },
-          ),
-          TextFormField(
-            textAlign: TextAlign.center,
-            keyboardType: TextInputType.number,
-            controller: textController,
-            onEditingComplete: () {
-              final parsedValue =
-                  double.tryParse(textController.text) ?? sliderMin;
-              if (parsedValue < sliderMin) {
-                onValueChanged(sliderMin);
-              } else if (parsedValue > sliderMax) {
-                onValueChanged(sliderMax);
-              } else {
-                onValueChanged(parsedValue);
-              }
-            },
-          ),
-        ],
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceDim,
+          borderRadius: BorderRadius.circular(8.0)
+        ),
+        child: Column(
+          children: [
+            Text(labelText),
+            Flexible(
+              child: Slider(
+                value: inputValue.toDouble(),
+                min: sliderMin,
+                max: sliderMax,
+                divisions: sliderDivisions,
+                label: labelValue,
+                onChanged: (double value) {
+                  onValueChanged(value);
+                },
+              ),
+            ),
+            Flexible(
+              child: TextFormField(
+                textAlign: TextAlign.center,
+                keyboardType: TextInputType.number,
+                controller: textController,
+                onEditingComplete: () {
+                  final parsedValue =
+                      double.tryParse(textController.text) ?? sliderMin;
+                  if (parsedValue < sliderMin) {
+                    onValueChanged(sliderMin);
+                  } else if (parsedValue > sliderMax) {
+                    onValueChanged(sliderMax);
+                  } else {
+                    onValueChanged(parsedValue);
+                  }
+                },
+              ),
+            )
+          ],
+        )
       ),
     );
   }

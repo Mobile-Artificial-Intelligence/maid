@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:provider/provider.dart';
 
-class UseDefaultParameter extends StatelessWidget {
-  const UseDefaultParameter({super.key});
+class PenalizeNlParameter extends StatelessWidget {
+  const PenalizeNlParameter({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +12,10 @@ class UseDefaultParameter extends StatelessWidget {
         final session = appData.currentSession;
         
         return SwitchListTile(
-          title: const Text('Use Default Parameters'),
-          value: session.model.useDefault,
+          title: const Text('Penalize New Line'),
+          value: session.model.penalizeNewline,
           onChanged: (value) {
-            session.model.useDefault = value;
+            session.model.penalizeNewline = value;
             session.notify();
           },
         );
