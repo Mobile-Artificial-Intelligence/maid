@@ -56,19 +56,19 @@ class _LlamaCppPanelState extends State<LlamaCppPanel> {
             session = appData.currentSession;
 
             return ListView(
+              padding: const EdgeInsets.all(8),
               children: [
+                if (session.model.uri.isNotEmpty)
                 ListTile(
-                  title: Row(
+                  title: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    runSpacing: 4,
                     children: [
-                      const Expanded(
-                        child: Text("Model Path"),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          session.model.uri,
-                          textAlign: TextAlign.end,
-                        ),
+                      const Text("Model Path"),
+                      Text(
+                        session.model.uri,
+                        textAlign: TextAlign.end,
                       ),
                     ],
                   ),
