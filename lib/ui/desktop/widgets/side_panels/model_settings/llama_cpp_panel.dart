@@ -3,26 +3,6 @@ import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/session.dart';
 import 'package:maid/ui/shared/widgets/dialogs.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/min_p_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/n_predict_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/penalize_nl_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/mirostat_eta_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/mirostat_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/mirostat_tau_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/n_batch_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/n_ctx_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/n_threads_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/frequency_penalty_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/last_n_penalty_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/present_penalty_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/repeat_penalty_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/seed_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/temperature_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/template_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/tfs_z_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/top_k_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/top_p_parameter.dart';
-import 'package:maid/ui/shared/widgets/parameter_widgets/typical_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +27,9 @@ class _LlamaCppPanelState extends State<LlamaCppPanel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("LlamaCPP Parameters"),
+        title: const Text(
+          "LlamaCPP Parameters"
+        ),
         centerTitle: true,
       ),
       body: SessionBusyOverlay(
@@ -55,23 +37,22 @@ class _LlamaCppPanelState extends State<LlamaCppPanel> {
           builder: (context, appData, child) {
             session = appData.currentSession;
 
-            return ListView(
-              padding: const EdgeInsets.all(8),
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
               children: [
                 if (session.model.uri.isNotEmpty)
-                ListTile(
-                  title: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: [
-                      const Text("Model Path"),
-                      Text(
-                        session.model.uri,
-                        textAlign: TextAlign.end,
-                      ),
-                    ],
-                  ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [
+                    const Text("Model Path"),
+                    Text(
+                      session.model.uri,
+                      textAlign: TextAlign.end,
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10.0),
                 Wrap(
@@ -116,33 +97,97 @@ class _LlamaCppPanelState extends State<LlamaCppPanel> {
                   endIndent: 10,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                const TemplateParameter(),
-                Divider(
-                  height: 20,
-                  indent: 10,
-                  endIndent: 10,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const PenalizeNlParameter(),
-                const SeedParameter(),
-                const TemperatureParameter(),
-                const TopKParameter(),
-                const TopPParameter(),
-                const MinPParameter(),
-                const TfsZParameter(),
-                const TypicalPParameter(),
-                const LastNPenaltyParameter(),
-                const RepeatPenaltyParameter(),
-                const FrequencyPenaltyParameter(),
-                const PresentPenaltyParameter(),
-                const MirostatParameter(),
-                const MirostatTauParameter(),
-                const MirostatEtaParameter(),
-                const NCtxParameter(),
-                const NPredictParameter(),
-                const NBatchParameter(),
-                const NThreadsParameter(),
+                GridView(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 250,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                    childAspectRatio: 1.25
+                  ),
+                  shrinkWrap: true,
+                  children: [
+                    GridTile(
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surfaceDim,
+                          borderRadius: BorderRadius.circular(8.0)
+                        ),
+                        child: Column(
+                          children: [
+                            const Text("Slider Test"),
+                            Flexible(
+                              child: Slider(
+                                value: 50,
+                                min: 0,
+                                max: 100,
+                                divisions: 100,
+                                onChanged: (value) {},
+                              ),
+                            ),
+                            const Flexible(
+                              child: TextField(),
+                            )
+                          ],
+                        )
+                      ),
+                    ),
+                    GridTile(
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surfaceDim,
+                          borderRadius: BorderRadius.circular(8.0)
+                        ),
+                        child: Column(
+                          children: [
+                            const Text("Slider Test"),
+                            Flexible(
+                              child: Slider(
+                                value: 50,
+                                min: 0,
+                                max: 100,
+                                divisions: 100,
+                                onChanged: (value) {},
+                              ),
+                            ),
+                            const Flexible(
+                              child: TextField(),
+                            )
+                          ],
+                        )
+                      ),
+                    ),
+                    GridTile(
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surfaceDim,
+                          borderRadius: BorderRadius.circular(8.0)
+                        ),
+                        child: Column(
+                          children: [
+                            const Text("Slider Test"),
+                            Flexible(
+                              child: Slider(
+                                value: 50,
+                                min: 0,
+                                max: 100,
+                                divisions: 100,
+                                onChanged: (value) {},
+                              ),
+                            ),
+                            const Flexible(
+                              child: TextField(),
+                            )
+                          ],
+                        )
+                      ),
+                    ),
+                  ],
+                )
               ]
+            )
             );
           },
         ),
