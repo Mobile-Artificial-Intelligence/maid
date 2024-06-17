@@ -22,10 +22,7 @@ class TextFieldGridTile extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return GridTile(
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 8,
-        runSpacing: 4,
+      child: Column(
         children: [
           Text(headingText),
           const SizedBox(height: 5.0),

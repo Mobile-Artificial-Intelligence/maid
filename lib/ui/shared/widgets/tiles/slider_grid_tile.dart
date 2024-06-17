@@ -34,46 +34,34 @@ class SliderGridTile extends StatelessWidget {
     }
 
     return GridTile(
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 8,
-        runSpacing: 4,
+      child: Column(
         children: [
-          Expanded(
-            flex: 2,
-            child: Text(labelText),
+          Text(labelText),
+          Slider(
+            value: inputValue.toDouble(),
+            min: sliderMin,
+            max: sliderMax,
+            divisions: sliderDivisions,
+            label: labelValue,
+            onChanged: (double value) {
+              onValueChanged(value);
+            },
           ),
-          Expanded(
-            flex: 6,
-            child: Slider(
-              value: inputValue.toDouble(),
-              min: sliderMin,
-              max: sliderMax,
-              divisions: sliderDivisions,
-              label: labelValue,
-              onChanged: (double value) {
-                onValueChanged(value);
-              },
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: TextFormField(
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              controller: textController,
-              onEditingComplete: () {
-                final parsedValue =
-                    double.tryParse(textController.text) ?? sliderMin;
-                if (parsedValue < sliderMin) {
-                  onValueChanged(sliderMin);
-                } else if (parsedValue > sliderMax) {
-                  onValueChanged(sliderMax);
-                } else {
-                  onValueChanged(parsedValue);
-                }
-              },
-            ),
+          TextFormField(
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            controller: textController,
+            onEditingComplete: () {
+              final parsedValue =
+                  double.tryParse(textController.text) ?? sliderMin;
+              if (parsedValue < sliderMin) {
+                onValueChanged(sliderMin);
+              } else if (parsedValue > sliderMax) {
+                onValueChanged(sliderMax);
+              } else {
+                onValueChanged(parsedValue);
+              }
+            },
           ),
         ],
       ),
