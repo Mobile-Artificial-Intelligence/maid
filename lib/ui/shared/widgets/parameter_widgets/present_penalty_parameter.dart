@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/ui/mobile/widgets/tiles/slider_list_tile.dart';
+import 'package:maid/ui/shared/widgets/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class PresentPenaltyParameter extends StatelessWidget {
