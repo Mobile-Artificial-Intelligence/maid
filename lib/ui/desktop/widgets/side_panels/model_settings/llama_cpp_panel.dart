@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/ui/desktop/widgets/parameters/broken/penalize_nl_parameter.dart';
-import 'package:maid/ui/desktop/widgets/parameters/broken/seed_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/frequency_penalty_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/last_n_penalty_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/min_p_parameter.dart';
