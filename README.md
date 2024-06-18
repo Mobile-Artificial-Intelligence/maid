@@ -82,6 +82,10 @@ MacOS and IOS Releases not available at this time.
 - [davidmigloz/langchain_dart](https://github.com/davidmigloz/langchain_dart)
 - [Mobile-Artificial-Intelligence/maid_llm](https://github.com/Mobile-Artificial-Intelligence/maid_llm)
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Mobile-Artificial-Intelligence/maid&type=Date)](https://star-history.com/#Mobile-Artificial-Intelligence/maid&Date)
+
 ## Testing
 Android version tested on a Oneplus 10 Pro 11gb phone.
 Also tested on Fedora Linux, Windows 11.
