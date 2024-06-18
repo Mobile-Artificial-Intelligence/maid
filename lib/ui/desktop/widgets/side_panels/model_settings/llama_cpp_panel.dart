@@ -48,7 +48,7 @@ class LlamaCppPanel extends StatelessWidget {
             const SizedBox(height: 10.0),
             buildButtons(context),
             buildDivider(context),
-            buildSpecial(),
+            buildWrap(),
             buildDivider(context),
             buildGridView(context),
           ]
@@ -57,7 +57,7 @@ class LlamaCppPanel extends StatelessWidget {
     );
   }
 
-  Widget buildSpecial() {
+  Widget buildWrap() {
     return const Wrap(
       alignment: WrapAlignment.center,
       spacing: 8,
