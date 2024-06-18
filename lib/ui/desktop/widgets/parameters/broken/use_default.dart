@@ -9,18 +9,20 @@ class UseDefaultParameter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
+      builder: buildSwitchContainer
+    );
+  }
+
+  Widget buildSwitchContainer(BuildContext context, AppData appData, Widget? child) {
+    final session = appData.currentSession;
         
-        return SwitchContainer(
-          title: 'Use Default Parameters',
-          initialValue: session.model.useDefault,
-          onChanged: (value) {
-            session.model.useDefault = value;
-            session.notify();
-          },
-        );
-      }
+    return SwitchContainer(
+      title: 'Use Default Parameters',
+      initialValue: session.model.useDefault,
+      onChanged: (value) {
+        session.model.useDefault = value;
+        session.notify();
+      },
     );
   }
 }
