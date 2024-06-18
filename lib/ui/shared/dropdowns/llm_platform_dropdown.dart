@@ -5,14 +5,14 @@ import 'package:maid/providers/session.dart';
 import 'package:maid/ui/shared/shaders/blade_runner_gradient.dart';
 import 'package:provider/provider.dart';
 
-class LlmDropdown extends StatefulWidget {
-  const LlmDropdown({super.key});
+class LlmPlatformDropdown extends StatefulWidget {
+  const LlmPlatformDropdown({super.key});
 
   @override
-  State<LlmDropdown> createState() => _LlmDropdownState();
+  State<LlmPlatformDropdown> createState() => _LlmPlatformDropdownState();
 }
 
-class _LlmDropdownState extends State<LlmDropdown> {
+class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
   bool open = false;
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/ui/desktop/buttons/load_model_button.dart';
-import 'package:maid/ui/shared/dropdowns/llm_dropdown.dart';
+import 'package:maid/ui/shared/dropdowns/llm_platform_dropdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -19,7 +19,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const LlmDropdown(),
+          const LlmPlatformDropdown(),
           const Spacer(flex: 1),
           IconButton(
             tooltip: 'HuggingFace',

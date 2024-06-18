@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/ui/mobile/buttons/menu_button.dart';
-import 'package:maid/ui/shared/dropdowns/llm_dropdown.dart';
+import 'package:maid/ui/shared/dropdowns/llm_platform_dropdown.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -32,7 +32,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           }, 
           icon: const Icon(Icons.menu),
         ),
-        const LlmDropdown(),
+        const LlmPlatformDropdown(),
       ],
     );
   }
