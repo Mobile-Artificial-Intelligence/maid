@@ -19,16 +19,20 @@ class CharactersGridView extends StatelessWidget {
 
     return GridView.builder(
       itemCount: appData.characters.length,
-      itemBuilder: (context, index) => CharacterTile(
-        character: appData.characters[index],
-        isSelected: appData.currentCharacter == appData.characters[index],
-      ), 
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200,
         crossAxisSpacing: 8.0,
         mainAxisSpacing: 8.0,
         childAspectRatio: 0.75
-      )
+      ),
+      itemBuilder: buildCharacterTile, 
+    );
+  }
+
+  Widget buildCharacterTile(BuildContext context, int index) {
+    return CharacterTile(
+      character: AppData.of(context).characters[index],
+      isSelected: AppData.of(context).currentCharacter == AppData.of(context).characters[index],
     );
   }
 }
