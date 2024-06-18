@@ -40,6 +40,7 @@ class DesktopNavigator extends ChangeNotifier {
   }
 
   void navigateSidePanel(String route) {
+    _sidePanelOpen = true;
     if (_sidePanelRoute != _sidePanelRoutes[route]) {
       _sidePanelRoute = _sidePanelRoutes[route] ?? _sidePanelRoute;
       notifyListeners();

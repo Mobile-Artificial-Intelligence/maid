@@ -29,7 +29,7 @@ class SideBar extends StatelessWidget {
           tooltip: 'Toggle Side Panel',
           icon: const Icon(Icons.view_sidebar_rounded),
           onPressed: () {
-            context.read<DesktopNavigator>().toggleSidePanel();
+            DesktopNavigator.of(context).toggleSidePanel();
           },
         ),
         IconButton(
