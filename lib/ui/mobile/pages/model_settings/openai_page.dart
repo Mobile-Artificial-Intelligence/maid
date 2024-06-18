@@ -11,7 +11,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/seed_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/url_parameter.dart';
-import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
+import 'package:maid/ui/shared/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

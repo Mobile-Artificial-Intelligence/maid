@@ -23,7 +23,7 @@ import 'package:maid/ui/desktop/widgets/parameters/top_p_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/typical_p_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/seed_parameter.dart';
 import 'package:maid/ui/shared/widgets/dialogs.dart';
-import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
+import 'package:maid/ui/shared/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
 class LlamaCppPanel extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/ui/desktop/widgets/buttons/new_character_button.dart';
-import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
+import 'package:maid/ui/shared/widgets/session_busy_overlay.dart';
 import 'package:maid/ui/shared/widgets/characters_grid_view.dart';
 
 class CharactersPanel extends StatelessWidget {

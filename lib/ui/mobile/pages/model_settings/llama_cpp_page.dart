@@ -25,7 +25,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/tfs_z_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_k_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/typical_p_parameter.dart';
-import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
+import 'package:maid/ui/shared/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
 class LlamaCppPage extends StatefulWidget {

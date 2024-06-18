@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/providers/app_data.dart';
 import 'package:maid/ui/shared/widgets/appbars/generic_app_bar.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/api_key_parameter.dart';
@@ -8,7 +9,7 @@ import 'package:maid/ui/mobile/widgets/parameter_widgets/n_predict_parameter.dar
 import 'package:maid/ui/mobile/widgets/parameter_widgets/temperature_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_k_parameter.dart';
 import 'package:maid/ui/mobile/widgets/parameter_widgets/top_p_parameter.dart';
-import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
+import 'package:maid/ui/shared/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,7 +35,7 @@ class GoogleGeminiPage extends StatelessWidget {
                   alignment: Alignment.center, // Center the button horizontally
                   child: FilledButton(
                     onPressed: () {
-                      session.model.reset();
+                      LargeLanguageModel.of(context).reset();
                     },
                     child: Text(
                       "Reset",

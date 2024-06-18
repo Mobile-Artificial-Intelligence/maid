@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/providers/app_data.dart';
+import 'package:maid/ui/desktop/widgets/side_panels/model_settings/gemini_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/model_settings/llama_cpp_panel.dart';
-import 'package:maid/ui/mobile/pages/model_settings/gemini_page.dart';
 import 'package:maid/ui/mobile/pages/model_settings/mistralai_page.dart';
 import 'package:maid/ui/mobile/pages/model_settings/ollama_page.dart';
 import 'package:maid/ui/mobile/pages/model_settings/openai_page.dart';
@@ -25,7 +25,7 @@ class ModelSettingsPanel extends StatelessWidget {
           case LargeLanguageModelType.mistralAI:
             return const MistralAiPage();
           case LargeLanguageModelType.gemini:
-            return const GoogleGeminiPage();
+            return const GoogleGeminiPanel();
           default:
             throw Exception('Invalid model type');
         }
