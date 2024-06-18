@@ -26,23 +26,27 @@ class TextFieldContainer extends StatelessWidget{
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.3,
       ),
-      child: Column(
-        children: [
-          Text(headingText),
-          const SizedBox(height: 5.0),
-          TextField(
-            keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
-            maxLines: multiline ? null : 1,
-            cursorColor: Theme.of(context).colorScheme.secondary,
-            controller: controller ?? TextEditingController(text: initialValue),
-            decoration: InputDecoration(
-              labelText: labelText,
-            ),
-            onSubmitted: onSubmitted,
-            onChanged: onChanged,
-          )
-        ],
-      ),
+      child: buildColumn(context),
+    );
+  }
+
+  Widget buildColumn(BuildContext context) {
+    return Column(
+      children: [
+        Text(headingText),
+        const SizedBox(height: 5.0),
+        TextField(
+          keyboardType: multiline ? TextInputType.multiline : TextInputType.text,
+          maxLines: multiline ? null : 1,
+          cursorColor: Theme.of(context).colorScheme.secondary,
+          controller: controller ?? TextEditingController(text: initialValue),
+          decoration: InputDecoration(
+            labelText: labelText,
+          ),
+          onSubmitted: onSubmitted,
+          onChanged: onChanged,
+        )
+      ],
     );
   }
 }
