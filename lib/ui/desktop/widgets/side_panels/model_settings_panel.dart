@@ -5,7 +5,7 @@ import 'package:maid/ui/desktop/widgets/side_panels/model_settings/google_gemini
 import 'package:maid/ui/desktop/widgets/side_panels/model_settings/llama_cpp_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/model_settings/mistral_ai_panel.dart';
 import 'package:maid/ui/desktop/widgets/side_panels/model_settings/ollama_panel.dart';
-import 'package:maid/ui/mobile/pages/model_settings/open_ai_page.dart';
+import 'package:maid/ui/desktop/widgets/side_panels/model_settings/open_ai_panel.dart';
 import 'package:provider/provider.dart';
 
 class ModelSettingsPanel extends StatelessWidget {
@@ -21,7 +21,7 @@ class ModelSettingsPanel extends StatelessWidget {
           case LargeLanguageModelType.ollama:
             return const OllamaPanel();
           case LargeLanguageModelType.openAI:
-            return const OpenAiPage();
+            return const OpenAiPanel();
           case LargeLanguageModelType.mistralAI:
             return const MistralAiPanel();
           case LargeLanguageModelType.gemini:
