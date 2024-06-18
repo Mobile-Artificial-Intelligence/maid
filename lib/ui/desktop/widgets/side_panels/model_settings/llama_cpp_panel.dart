@@ -21,6 +21,7 @@ import 'package:maid/ui/desktop/widgets/parameters/tfs_z_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/top_k_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/top_p_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/typical_p_parameter.dart';
+import 'package:maid/ui/desktop/widgets/parameters/seed_parameter.dart';
 import 'package:maid/ui/shared/widgets/dialogs.dart';
 import 'package:maid/ui/mobile/widgets/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
@@ -62,6 +63,7 @@ class LlamaCppPanel extends StatelessWidget {
       spacing: 8,
       runSpacing: 4,
       children: [
+        SeedParameter(),
         TemplateParameter(),
         PenalizeNlParameter(),
       ],
@@ -141,7 +143,6 @@ class LlamaCppPanel extends StatelessWidget {
       ),
       shrinkWrap: true,
       children: const [
-        //SeedParameter(),
         TemperatureParameter(),
         TopKParameter(),
         TopPParameter(),
