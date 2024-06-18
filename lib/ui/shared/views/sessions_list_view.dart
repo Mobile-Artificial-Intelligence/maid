@@ -9,18 +9,22 @@ class SessionsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppData>(
-      builder: (context, appData, child) {
-        appData.save();
+      builder: buildListView,
+    );
+  }
 
-        return ListView.builder(
-          itemCount: appData.sessions.length, 
-          itemBuilder: (context, index) {
-            return SessionTile(
-              session: appData.sessions[index]
-            );
-          }
-        );
-      },
+  Widget buildListView(BuildContext context, AppData appData, Widget? child) {
+    appData.save();
+
+    return ListView.builder(
+      itemCount: appData.sessions.length, 
+      itemBuilder: buildSessionTile
+    );
+  }
+
+  Widget buildSessionTile(BuildContext context, int index) {
+    return SessionTile(
+      session: AppData.of(context).sessions[index]
     );
   }
 }
