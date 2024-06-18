@@ -15,11 +15,10 @@ class MenuButton extends StatefulWidget {
 class _MenuButtonState extends State<MenuButton> {
   static LargeLanguageModelType lastModelType = LargeLanguageModelType.none;
   static DateTime lastCheck = DateTime.now();
-  static List<String> cache = [];
-  List<String> options = [];
+  static List<String> options = [];
 
   bool canUseCache(Session session) {
-    if (cache.isEmpty && session.model.type != LargeLanguageModelType.llamacpp) return false;
+    if (options.isEmpty && session.model.type != LargeLanguageModelType.llamacpp) return false;
 
     if (session.model.type != lastModelType) return false;
 
@@ -35,7 +34,6 @@ class _MenuButtonState extends State<MenuButton> {
         final session = appData.currentSession;
         
         if (canUseCache(session)) {
-          options = cache;
           return PopupMenuButton(
             tooltip: 'Open Menu',
             icon: const Icon(
@@ -53,7 +51,6 @@ class _MenuButtonState extends State<MenuButton> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 options = snapshot.data as List<String>;
-                cache = options;
                 return PopupMenuButton(
                   tooltip: 'Open Menu',
                   icon: const Icon(
@@ -138,7 +135,7 @@ class _MenuButtonState extends State<MenuButton> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('App Settings'),
           onTap: () {
-            cache.clear();
+            options.clear();
             Navigator.pushNamed(
               context,
               '/settings'
