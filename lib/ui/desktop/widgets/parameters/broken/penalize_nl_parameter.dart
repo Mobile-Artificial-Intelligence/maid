@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
+import 'package:maid/ui/shared/widgets/tiles/switch_container.dart';
 import 'package:provider/provider.dart';
 
 class PenalizeNlParameter extends StatelessWidget {
@@ -11,9 +12,9 @@ class PenalizeNlParameter extends StatelessWidget {
       builder: (context, appData, child) {
         final session = appData.currentSession;
         
-        return SwitchListTile(
-          title: const Text('Penalize New Line'),
-          value: session.model.penalizeNewline,
+        return SwitchContainer(
+          title: 'Penalize New Line',
+          initialValue: session.model.penalizeNewline,
           onChanged: (value) {
             session.model.penalizeNewline = value;
             session.notify();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/app_data.dart';
+import 'package:maid/ui/desktop/widgets/parameters/broken/penalize_nl_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/template_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/frequency_penalty_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/last_n_penalty_parameter.dart';
@@ -46,6 +47,7 @@ class LlamaCppPanel extends StatelessWidget {
             const SizedBox(height: 10.0),
             buildButtons(context),
             buildDivider(context),
+            buildSpecial(),
             buildDivider(context),
             buildGridView(context),
           ]
@@ -55,13 +57,13 @@ class LlamaCppPanel extends StatelessWidget {
   }
 
   Widget buildSpecial() {
-    return Wrap(
+    return const Wrap(
       alignment: WrapAlignment.center,
       spacing: 8,
       runSpacing: 4,
       children: [
         TemplateParameter(),
-
+        PenalizeNlParameter(),
       ],
     );
   }
@@ -79,7 +81,7 @@ class LlamaCppPanel extends StatelessWidget {
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 8,
-      runSpacing: 4,
+      runSpacing: 6,
       children: [
         FilledButton(
           onPressed: () {
@@ -139,7 +141,6 @@ class LlamaCppPanel extends StatelessWidget {
       ),
       shrinkWrap: true,
       children: const [
-        //PenalizeNlParameter(),
         //SeedParameter(),
         TemperatureParameter(),
         TopKParameter(),
