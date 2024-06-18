@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/providers/app_data.dart';
+import 'package:maid/ui/desktop/widgets/parameters/template_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/frequency_penalty_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/last_n_penalty_parameter.dart';
 import 'package:maid/ui/desktop/widgets/parameters/min_p_parameter.dart';
@@ -38,44 +39,39 @@ class LlamaCppPanel extends StatelessWidget {
         centerTitle: true,
       ),
       body: SessionBusyOverlay(
-        child: Consumer<AppData>(
-          builder: paddingBuilder,
+        child: ListView(
+          padding: const EdgeInsets.all(8.0),
+          children: [
+            buildModelName(),
+            const SizedBox(height: 10.0),
+            buildButtons(context),
+            buildDivider(context),
+            buildDivider(context),
+            buildGridView(context),
+          ]
         ),
       )
     );
   }
 
-  Widget paddingBuilder(BuildContext context, AppData appData, Widget? child) {
-    final session = appData.currentSession;
+  Widget buildSpecial() {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 8,
+      runSpacing: 4,
+      children: [
+        TemplateParameter(),
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListView(
-        children: [
-          if (session.model.uri.isNotEmpty)
-          Wrap(
-            alignment: WrapAlignment.center,
-            spacing: 8,
-            runSpacing: 4,
-            children: [
-              const Text("Model Path"),
-              Text(
-                session.model.uri,
-                textAlign: TextAlign.end,
-              ),
-            ],
-          ),
-          const SizedBox(height: 10.0),
-          buildButtons(context),
-          Divider(
-            height: 20,
-            indent: 10,
-            endIndent: 10,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          buildGridView(context),
-        ]
-      )
+      ],
+    );
+  }
+
+  Widget buildDivider(BuildContext context) {
+    return Divider(
+      height: 20,
+      indent: 10,
+      endIndent: 10,
+      color: Theme.of(context).colorScheme.primary,
     );
   }
 
@@ -113,6 +109,23 @@ class LlamaCppPanel extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget buildModelName() {
+    return Consumer<AppData>(
+      builder: (context, appData, child) {
+        final session = appData.currentSession;
+
+        if (session.model.name.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return Text(
+          "Model: ${session.model.name}",
+          textAlign: TextAlign.center,
+        );
+      }
     );
   }
 

@@ -55,21 +55,9 @@ class _LlamaCppPageState extends State<LlamaCppPage> {
 
             return ListView(
               children: [
-                ListTile(
-                  title: Row(
-                    children: [
-                      const Expanded(
-                        child: Text("Model Path"),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          session.model.uri,
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                    ],
-                  ),
+                Text(
+                  "Model: ${session.model.name}",
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 15.0),
                 Wrap(
