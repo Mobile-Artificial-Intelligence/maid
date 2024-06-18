@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/app_data.dart';
-import 'package:maid/ui/shared/widgets/session_busy_overlay.dart';
-import 'package:maid/ui/shared/widgets/characters_grid_view.dart';
+import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
+import 'package:maid/ui/shared/views/characters_grid_view.dart';
 
 class CharacterBrowserPage extends StatelessWidget {
   const CharacterBrowserPage({super.key});

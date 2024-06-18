@@ -3,10 +3,10 @@ import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
-import 'package:maid/ui/shared/widgets/appbars/generic_app_bar.dart';
-import 'package:maid/ui/shared/widgets/code_box.dart';
-import 'package:maid/ui/shared/widgets/dropdowns/app_layout_dropdown.dart';
-import 'package:maid/ui/shared/widgets/dropdowns/theme_mode_dropdown.dart';
+import 'package:maid/ui/mobile/layout/generic_app_bar.dart';
+import 'package:maid/ui/shared/utilities/code_box.dart';
+import 'package:maid/ui/shared/dropdowns/app_layout_dropdown.dart';
+import 'package:maid/ui/shared/dropdowns/theme_mode_dropdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_info2/system_info2.dart';
 

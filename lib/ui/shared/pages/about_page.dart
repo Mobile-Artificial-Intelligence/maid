@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:maid/ui/shared/widgets/appbars/generic_app_bar.dart';
+import 'package:maid/ui/mobile/layout/generic_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {

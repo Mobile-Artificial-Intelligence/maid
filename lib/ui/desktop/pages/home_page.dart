@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_resizable_container/flutter_resizable_container.dart';
 import 'package:maid/providers/desktop_navigator.dart';
-import 'package:maid/ui/desktop/widgets/appbars/home_app_bar.dart';
-import 'package:maid/ui/desktop/widgets/navigators/side_panel_navigator.dart';
-import 'package:maid/ui/desktop/widgets/side_bar.dart';
-import 'package:maid/ui/shared/widgets/chat_widgets/chat_body.dart';
+import 'package:maid/ui/desktop/layout/home_app_bar.dart';
+import 'package:maid/ui/desktop/navigators/side_panel_navigator.dart';
+import 'package:maid/ui/desktop/layout/side_bar.dart';
+import 'package:maid/ui/shared/chat_widgets/chat_body.dart';
 import 'package:provider/provider.dart';
 
 class DesktopHomePage extends StatefulWidget {

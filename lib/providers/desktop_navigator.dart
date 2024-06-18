@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:maid/ui/desktop/widgets/settings_panels/app_settings_panel.dart';
-import 'package:maid/ui/desktop/widgets/settings_panels/user_panel.dart';
-import 'package:maid/ui/desktop/widgets/side_panels/characters_panel.dart';
-import 'package:maid/ui/desktop/widgets/side_panels/model_settings_panel.dart';
-import 'package:maid/ui/desktop/widgets/side_panels/sessions_panel.dart';
+import 'package:maid/ui/desktop/settings_panels/app_settings_panel.dart';
+import 'package:maid/ui/desktop/settings_panels/user_panel.dart';
+import 'package:maid/ui/desktop/side_panels/characters_panel.dart';
+import 'package:maid/ui/desktop/side_panels/model_settings_panel.dart';
+import 'package:maid/ui/desktop/side_panels/sessions_panel.dart';
 import 'package:maid/ui/shared/pages/character_customization_page.dart';
 import 'package:provider/provider.dart';
 

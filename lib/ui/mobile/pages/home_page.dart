@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:maid/ui/shared/widgets/chat_widgets/chat_body.dart';
-import 'package:maid/ui/mobile/widgets/appbars/home_app_bar.dart';
-import 'package:maid/ui/mobile/widgets/home_drawer.dart';
+import 'package:maid/ui/shared/chat_widgets/chat_body.dart';
+import 'package:maid/ui/mobile/layout/home_app_bar.dart';
+import 'package:maid/ui/mobile/layout/home_drawer.dart';
 
 class MobileHomePage extends StatelessWidget {
   const MobileHomePage({super.key});

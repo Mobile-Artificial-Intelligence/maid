@@ -4,10 +4,10 @@ import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/desktop_navigator.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:maid/ui/shared/widgets/dialogs.dart';
-import 'package:maid/ui/shared/widgets/session_busy_overlay.dart';
-import 'package:maid/ui/shared/widgets/tiles/text_field_list_tile.dart';
-import 'package:maid/ui/shared/widgets/future_tile_image.dart';
+import 'package:maid/ui/shared/layout/dialogs.dart';
+import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
+import 'package:maid/ui/shared/tiles/text_field_list_tile.dart';
+import 'package:maid/ui/shared/utilities/future_tile_image.dart';
 import 'package:provider/provider.dart';
 
 class CharacterCustomizationPage extends StatefulWidget {
