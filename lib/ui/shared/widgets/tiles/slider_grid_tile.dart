@@ -41,6 +41,7 @@ class SliderGridTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0)
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(labelText),
             Flexible(

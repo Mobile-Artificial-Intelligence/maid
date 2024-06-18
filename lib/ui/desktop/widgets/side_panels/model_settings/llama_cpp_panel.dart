@@ -63,7 +63,6 @@ class LlamaCppPanel extends StatelessWidget {
       spacing: 8,
       runSpacing: 4,
       children: [
-        SeedParameter(),
         TemplateParameter(),
         PenalizeNlParameter(),
       ],
@@ -143,6 +142,7 @@ class LlamaCppPanel extends StatelessWidget {
       ),
       shrinkWrap: true,
       children: const [
+        SeedParameter(),
         TemperatureParameter(),
         TopKParameter(),
         TopPParameter(),

@@ -9,36 +9,43 @@ class SeedParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.3,
-      ),
-      child: buildColumn(context),
+    return GridTile(
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceDim,
+          borderRadius: BorderRadius.circular(8.0)
+        ),
+        child: Consumer<AppData>(
+          builder: buildColumn
+        ),
+      )
     );
   }
 
-  Widget buildColumn(BuildContext context) {
-    return Column(
-      children: [
-        const Text('Random Seed'),
-        const SizedBox(height: 5.0),
-        buildRow(context)
-      ],
-    );
-  }
+  Widget buildColumn(BuildContext context, AppData appData, Widget? child) {
+    final session = appData.currentSession;
 
-  Widget buildRow(BuildContext context) {
     TextEditingController controller = TextEditingController(
       text: LargeLanguageModel.of(context).seed.toString()
     );
 
-    return Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        buildSwitch(),
-        const SizedBox(width: 5.0),
-        Expanded( // Added Expanded widget here
+        const Text('Random Seed'),
+        Flexible(
+          child: Switch(
+            value: session.model.randomSeed,
+            onChanged: (value) {
+              session.model.randomSeed = value;
+              session.notify();
+            },
+          )
+        ),
+        Flexible(
           child: TextField(
+            enabled: !session.model.randomSeed,
             keyboardType: TextInputType.number,
             cursorColor: Theme.of(context).colorScheme.secondary,
             textAlign: TextAlign.center,
@@ -50,25 +57,9 @@ class SeedParameter extends StatelessWidget {
               LargeLanguageModel.of(context).seed = int.parse(value);
               Session.of(context).notify();
             },
-          ),
-        ),
-      ]
-    );
-  }
-
-  Widget buildSwitch() {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
-        
-        return Switch(
-          value: session.model.randomSeed,
-          onChanged: (value) {
-            session.model.randomSeed = value;
-            session.notify();
-          },
-        );
-      }
+          )
+        )
+      ],
     );
   }
 }
