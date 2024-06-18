@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TextFieldGridTile extends StatelessWidget{
+class TextFieldContainer extends StatelessWidget{
   final String headingText;
   final String labelText;
   final String? initialValue;
@@ -9,7 +9,7 @@ class TextFieldGridTile extends StatelessWidget{
   final void Function(String)? onSubmitted;
   final void Function(String)? onChanged;
 
-  const TextFieldGridTile({super.key, 
+  const TextFieldContainer({super.key, 
     required this.headingText,
     required this.labelText,
     this.initialValue,
@@ -21,7 +21,11 @@ class TextFieldGridTile extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return GridTile(
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.3,
+      ),
       child: Column(
         children: [
           Text(headingText),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/llama_cpp_model.dart';
-import 'package:maid/ui/shared/widgets/tiles/text_field_grid_tile.dart';
+import 'package:maid/ui/shared/widgets/tiles/text_field_container.dart';
 
 class TemplateParameter extends StatelessWidget {
   const TemplateParameter({super.key});
@@ -11,7 +11,7 @@ class TemplateParameter extends StatelessWidget {
       text: LlamaCppModel.of(context).template
     );
 
-    return TextFieldGridTile(
+    return TextFieldContainer(
       headingText: "Template",
       labelText: "Template",
       controller: controller,

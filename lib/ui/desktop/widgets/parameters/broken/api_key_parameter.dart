@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
-import 'package:maid/ui/shared/widgets/tiles/text_field_grid_tile.dart';
+import 'package:maid/ui/shared/widgets/tiles/text_field_container.dart';
 
 class ApiKeyParameter extends StatelessWidget {
   const ApiKeyParameter({super.key});
@@ -11,7 +11,7 @@ class ApiKeyParameter extends StatelessWidget {
       text: LargeLanguageModel.of(context).token
     );
 
-    return TextFieldGridTile(
+    return TextFieldContainer(
       headingText: "API Key",
       labelText: "API Key",
       controller: controller,
