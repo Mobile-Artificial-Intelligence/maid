@@ -28,22 +28,8 @@ import 'package:maid/ui/mobile/parameter_widgets/typical_p_parameter.dart';
 import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
-class LlamaCppPage extends StatefulWidget {
+class LlamaCppPage extends StatelessWidget {
   const LlamaCppPage({super.key});
-
-  @override
-  State<LlamaCppPage> createState() => _LlamaCppPageState();
-}
-
-class _LlamaCppPageState extends State<LlamaCppPage> {
-  late Session session;
-
-  @override
-  void dispose() {
-    (session.model as LlamaCppModel).init();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
