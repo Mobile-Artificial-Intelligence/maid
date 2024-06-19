@@ -60,10 +60,10 @@ class SideBar extends StatelessWidget {
     return Column(
       children: [
         IconButton(
-          tooltip: 'Toggle Terminal',
+          tooltip: 'Toggle Log',
           icon: const Icon(Icons.terminal_rounded),
           onPressed: () {
-            DesktopNavigator.of(context).navigateSettingsPanel("/terminal");
+            DesktopNavigator.of(context).navigateSettingsPanel("/log");
           },
         ),
         IconButton(
