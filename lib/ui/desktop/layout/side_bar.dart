@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/providers/desktop_navigator.dart';
 import 'package:maid/ui/desktop/buttons/user_button.dart';
-import 'package:provider/provider.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});

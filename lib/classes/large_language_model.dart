@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
@@ -50,7 +52,14 @@ class LargeLanguageModel extends ChangeNotifier {
   bool get useDefault => _useDefault;
   bool get penalizeNewline => _penalizeNewline;
 
-  int get seed => _seed;
+  int get seed {
+    if (_randomSeed) {
+      return Random().nextInt(1000000);
+    } else {
+      return _seed;
+    }
+  }
+
   int get nKeep => _nKeep;
   int get nPredict => _nPredict;
   int get topK => _topK;
