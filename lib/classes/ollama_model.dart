@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lan_scanner/lan_scanner.dart';
 import 'package:langchain/langchain.dart';
 import 'package:langchain_ollama/langchain_ollama.dart';
 import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/enumerators/chat_role.dart';
+import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -34,6 +36,8 @@ class OllamaModel extends LargeLanguageModel {
     
     return missing;
   }
+
+  static OllamaModel of(BuildContext context) => LargeLanguageModel.of(context) as OllamaModel;
 
   OllamaModel({
     super.listener, 

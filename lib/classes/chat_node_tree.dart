@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'package:maid/enumerators/chat_role.dart';
+
 import 'chat_node.dart';
 
 class ChatNodeTree {

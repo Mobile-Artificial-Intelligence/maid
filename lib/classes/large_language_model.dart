@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
+import 'package:maid/enumerators/large_language_model_type.dart';
+import 'package:maid/providers/session.dart';
 
 class LargeLanguageModel extends ChangeNotifier {
   LargeLanguageModelType get type => LargeLanguageModelType.none;
@@ -197,6 +199,8 @@ class LargeLanguageModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  static LargeLanguageModel of(BuildContext context) => Session.of(context).model;
+
   LargeLanguageModel({
     VoidCallback? listener,
     String name = '',
@@ -254,10 +258,6 @@ class LargeLanguageModel extends ChangeNotifier {
     _nCtx = nCtx;
     _nBatch = nBatch;
     _nThread = nThread;
-  }
-
-  LargeLanguageModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
-    fromMap(json);
   }
 
   void fromMap(Map<String, dynamic> json) {
@@ -352,26 +352,5 @@ class LargeLanguageModel extends ChangeNotifier {
 
   void save() {
     throw UnimplementedError();
-  }
-}
-
-enum LargeLanguageModelType { none, llamacpp, openAI, ollama, mistralAI, gemini }
-
-extension LargeLanguageModelTypeExtension on LargeLanguageModelType {
-  String get displayName {
-    switch (this) {
-      case LargeLanguageModelType.llamacpp:
-        return 'Llama CPP';
-      case LargeLanguageModelType.ollama:
-        return 'Ollama';
-      case LargeLanguageModelType.openAI:
-        return 'Open AI';
-      case LargeLanguageModelType.mistralAI:
-        return 'Mistral AI';
-      case LargeLanguageModelType.gemini:
-        return 'Gemini';
-      default:
-        return '';
-    }
   }
 }

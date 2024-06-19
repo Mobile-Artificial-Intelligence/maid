@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:maid/enumerators/app_layout.dart';
 
 import 'package:maid/main.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/app_preferences.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/session.dart';
@@ -12,19 +14,17 @@ void main() {
     testWidgets('Build and trigger frame', (WidgetTester tester) async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(MaidApp(
-        appPreferences: AppPreferences(ThemeMode.system),
+        appPreferences: AppPreferences(ThemeMode.system, AppLayout.system),
+        appData: AppData([],[], Session(0), Character()),
         user: User(),
-        character: Character(),
-        session: Session()
       ));
     });
 
     testWidgets('Find drawer menu button', (WidgetTester tester) async {
       await tester.pumpWidget(MaidApp(
-        appPreferences: AppPreferences(ThemeMode.system),
+        appPreferences: AppPreferences(ThemeMode.system, AppLayout.system),
+        appData: AppData([],[], Session(0), Character()),
         user: User(),
-        character: Character(),
-        session: Session()
       ));
       
       // Verify the dawer menu button is present
@@ -33,10 +33,9 @@ void main() {
 
     testWidgets('Open drawer menu', (WidgetTester tester) async {
       await tester.pumpWidget(MaidApp(
-        appPreferences: AppPreferences(ThemeMode.system),
+        appPreferences: AppPreferences(ThemeMode.system, AppLayout.system),
+        appData: AppData([],[], Session(0), Character()),
         user: User(),
-        character: Character(),
-        session: Session()
       ));
 
       // Verify the dawer menu button is present

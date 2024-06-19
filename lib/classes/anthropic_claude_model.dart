@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/static/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +13,8 @@ class ClaudeModel extends LargeLanguageModel {
 
   @override
   LargeLanguageModelType get type => LargeLanguageModelType.mistralAI;
+
+  static ClaudeModel of(BuildContext context) => LargeLanguageModel.of(context) as ClaudeModel;
 
   ClaudeModel({
     super.listener, 

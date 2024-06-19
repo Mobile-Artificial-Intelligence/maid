@@ -1,33 +1,34 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node_tree.dart';
 import 'package:maid/classes/google_gemini_model.dart';
 import 'package:maid/classes/large_language_model.dart';
-import 'package:maid/classes/llama_cpp_model.dart'
-if (dart.library.html) 'package:maid/mocks/mock_llama_cpp_model.dart';
+import 'package:maid/classes/llama_cpp_model.dart';
 import 'package:maid/classes/mistral_ai_model.dart';
 import 'package:maid/classes/ollama_model.dart';
 import 'package:maid/classes/open_ai_model.dart';
+import 'package:maid/enumerators/chat_role.dart';
+import 'package:maid/enumerators/large_language_model_type.dart';
+import 'package:maid/providers/app_data.dart';
 import 'package:maid/providers/character.dart';
 import 'package:maid/providers/user.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/static/utilities.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
-  Key _key = UniqueKey();
-  LargeLanguageModel model = kIsWeb ? OllamaModel() : LlamaCppModel(); // On web, use OllamaModel by default
+  LargeLanguageModel model = LlamaCppModel();
   ChatNodeTree chat = ChatNodeTree();
+  Key _key = UniqueKey();
+
+  Key get key => _key;
   
   String _name = "";
 
   String get name => _name;
-  
-  Key get key => _key;
+
 
   set busy(bool value) {
     notifyListeners();
@@ -42,15 +43,21 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  Session() {
-    newSession();
+  static Session of(BuildContext context) => AppData.of(context).currentSession;
+
+  Session(VoidCallback? listener, int index) {
+    if (listener != null) {
+      addListener(listener);
+    }
+
+    newSession(index);
   }
 
-  Session.from(Session session) {
-    from(session);
-  }
+  Session.fromMap(VoidCallback? listener, Map<String, dynamic> inputJson) {
+    if (listener != null) {
+      addListener(listener);
+    }
 
-  Session.fromMap(Map<String, dynamic> inputJson) {
     fromMap(inputJson);
   }
 
@@ -61,7 +68,7 @@ class Session extends ChangeNotifier {
 
     Map<String, dynamic> lastSession = json.decode(lastSessionString ?? "{}");
 
-    return Session.fromMap(lastSession);
+    return Session.fromMap(null, lastSession);
   }
 
   Future<void> save() async {
@@ -70,15 +77,12 @@ class Session extends ChangeNotifier {
     prefs.setString("last_session", json.encode(toMap()));
   }
 
-  void newSession() {
-    name = "New Chat";
+  void newSession(int index) {
+    _key = UniqueKey();
+    _name = "New Chat${index <= 0 ? "" : " $index"}";
     chat = ChatNodeTree();
-    model = kIsWeb ? OllamaModel(listener: notify) : LlamaCppModel(listener: notify);
+    model = LlamaCppModel(listener: notify);
     notifyListeners();
-  }
-
-  Session copy() {
-    return Session.from(this);
   }
 
   void from(Session session) {
@@ -91,9 +95,11 @@ class Session extends ChangeNotifier {
 
   void fromMap(Map<String, dynamic> inputJson) {
     if (inputJson.isEmpty) {
-      newSession();
+      newSession(0);
       return;
     }
+
+    _key = UniqueKey();
 
     _name = inputJson['name'] ?? "New Chat";
 
@@ -132,8 +138,8 @@ class Session extends ChangeNotifier {
   }
 
   void prompt(BuildContext context) async {
-    final user = context.read<User>();
-    final character = context.read<Character>();
+    final user = User.of(context);
+    final character = Character.of(context);
 
     final description = Utilities.formatPlaceholders(character.description, user.name, character.name);
     final personality = Utilities.formatPlaceholders(character.personality, user.name, character.name);
@@ -157,6 +163,13 @@ class Session extends ChangeNotifier {
     }
 
     chat.tail.finalised = true;
+
+    if (chat.root.children.isNotEmpty && 
+        chat.root.children.first.content.isNotEmpty && 
+        _name.contains("New Chat")
+    ) {
+      _name = chat.root.children.first.content;
+    }
 
     notifyListeners();
   }

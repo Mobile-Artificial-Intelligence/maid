@@ -51,11 +51,11 @@ dependencies:
   receive_sharing_intent: ^1.6.7
   network_info_plus: ^4.1.0+1
   lan_scanner: ^4.0.0+1
-  maid_ui:
-    path: packages/maid_ui
   maid_llm:
     path: packages/maid_llm
   google_generative_ai: ^0.2.3
+  flutter_resizable_container: ^2.0.0
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:

@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/static/logger.dart';
 import 'package:maid_llm/maid_llm.dart';
 import 'package:maid/classes/chat_node.dart';
@@ -40,6 +41,8 @@ class LlamaCppModel extends LargeLanguageModel {
     
     return missing;
   }
+
+  static LlamaCppModel of(BuildContext context) => LargeLanguageModel.of(context) as LlamaCppModel;
   
   LlamaCppModel({
     super.listener, 

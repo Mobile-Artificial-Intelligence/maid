@@ -3,33 +3,30 @@ import 'package:flutter/material.dart';
 class Themes {
   static ThemeData lightTheme() {
     return genericTheme(
-      background: Colors.white,
-      onBackground: Colors.grey.shade700,
-      primary: Colors.grey.shade300,
+      surfaceDim: Colors.grey.shade200,
+      primary: Colors.grey.shade400,
       onPrimary: Colors.black,
       secondary: Colors.blue,
       tertiary: Colors.blue.shade900,
-      inversePrimary: const Color.fromARGB(255, 100, 20, 20),
+      inversePrimary: Colors.orange.shade600,
       isDark: false,
     );
   }
 
   static ThemeData darkTheme() {
     return genericTheme(
-      background: Colors.grey.shade900,
-      onBackground: Colors.black,
+      surfaceDim: Colors.grey.shade900,
       primary: Colors.grey.shade800,
       onPrimary: Colors.white,
       secondary: Colors.blue,
       tertiary: Colors.blue.shade900,
-      inversePrimary: const Color.fromARGB(255, 100, 20, 20),
+      inversePrimary: Colors.orange.shade600,
       isDark: true,
     );
   }
 
   static ThemeData genericTheme({
-    required Color background,
-    required Color onBackground,
+    required Color surfaceDim,
     required Color primary,
     required Color onPrimary,
     required Color secondary,
@@ -49,14 +46,14 @@ class Themes {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all(Colors.white),
-          backgroundColor: MaterialStateProperty.all(secondary),
+          foregroundColor: WidgetStateProperty.all(Colors.white),
+          backgroundColor: WidgetStateProperty.all(secondary),
         ),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.all(Colors.white),
-        trackColor: MaterialStateProperty.all(secondary),
-        trackOutlineColor: MaterialStateProperty.all(secondary)
+        thumbColor: WidgetStateProperty.all(Colors.white),
+        trackColor: WidgetStateProperty.all(secondary),
+        trackOutlineColor: WidgetStateProperty.all(secondary)
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: tertiary,
@@ -85,17 +82,21 @@ class Themes {
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: secondary,
       ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: surfaceDim,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+      ),
       colorScheme: isDark ? ColorScheme.dark(
-        background: background,
-        onBackground: onBackground,
+        surfaceDim: surfaceDim,
         primary: primary,
         onPrimary: onPrimary,
         secondary: secondary,
         tertiary: tertiary,
         inversePrimary: inversePrimary,
       ) : ColorScheme.light(
-        background: background,
-        onBackground: onBackground,
+        surface: surfaceDim,
         primary: primary,
         onPrimary: onPrimary,
         secondary: secondary,
