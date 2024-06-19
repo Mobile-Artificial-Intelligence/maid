@@ -501,7 +501,7 @@ packages:
       path: "packages/maid_llm"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.2"
   matcher:
     dependency: transitive
     description:
