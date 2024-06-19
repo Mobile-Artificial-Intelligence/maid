@@ -11,6 +11,7 @@ class LogPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Consumer3<AppData, AppPreferences, User>(
         builder: buildLog,
       ),
