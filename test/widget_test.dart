@@ -15,7 +15,7 @@ void main() {
       // Build our app and trigger a frame.
       await tester.pumpWidget(MaidApp(
         appPreferences: AppPreferences(ThemeMode.system, AppLayout.system),
-        appData: AppData([],[], Session(0), Character()),
+        appData: AppData([],[], Session(() {},0), Character(() {})),
         user: User(),
       ));
     });
@@ -23,7 +23,7 @@ void main() {
     testWidgets('Find drawer menu button', (WidgetTester tester) async {
       await tester.pumpWidget(MaidApp(
         appPreferences: AppPreferences(ThemeMode.system, AppLayout.system),
-        appData: AppData([],[], Session(0), Character()),
+        appData: AppData([],[], Session(() {}, 0), Character(() {})),
         user: User(),
       ));
       
@@ -34,7 +34,7 @@ void main() {
     testWidgets('Open drawer menu', (WidgetTester tester) async {
       await tester.pumpWidget(MaidApp(
         appPreferences: AppPreferences(ThemeMode.system, AppLayout.system),
-        appData: AppData([],[], Session(0), Character()),
+        appData: AppData([],[], Session(() {}, 0), Character(() {})),
         user: User(),
       ));
 
