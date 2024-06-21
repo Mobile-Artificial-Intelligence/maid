@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/chat_role.dart';
-import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/session.dart';
 import 'package:maid/ui/shared/layout/dialogs.dart';
 import 'package:maid/ui/shared/shaders/blade_runner_gradient.dart';
 import 'package:maid/classes/chat_node.dart';
-import 'package:maid/providers/user.dart';
+import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/shared/utilities/code_box.dart';
 import 'package:maid/ui/shared/utilities/future_avatar.dart';
 import 'package:maid/ui/shared/utilities/typing_indicator.dart';

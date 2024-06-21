@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/classes/providers/session.dart';
 
 class LargeLanguageModel extends ChangeNotifier {
   LargeLanguageModelType get type => LargeLanguageModelType.none;

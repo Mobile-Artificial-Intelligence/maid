@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/session.dart';
 import 'package:provider/provider.dart';
 
 class SessionTile extends StatefulWidget {

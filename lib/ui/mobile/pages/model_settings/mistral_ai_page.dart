@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/app_data.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/mobile/layout/generic_app_bar.dart';
 import 'package:maid/ui/mobile/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/seed_parameter.dart';

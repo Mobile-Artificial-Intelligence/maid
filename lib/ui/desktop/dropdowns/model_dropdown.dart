@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/providers/app_data.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:provider/provider.dart';
 
 class ModelDropdown extends StatefulWidget {

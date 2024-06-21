@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/llama_cpp_model.dart';
+import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/providers/app_data.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/buttons/load_model_button.dart';
 import 'package:maid/ui/desktop/dropdowns/model_dropdown.dart';
 import 'package:maid/ui/shared/dropdowns/llm_platform_dropdown.dart';

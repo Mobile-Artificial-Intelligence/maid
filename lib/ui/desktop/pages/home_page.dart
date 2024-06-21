@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_resizable_container/flutter_resizable_container.dart';
-import 'package:maid/providers/desktop_navigator.dart';
+import 'package:maid/classes/providers/desktop_navigator.dart';
 import 'package:maid/ui/desktop/layout/home_app_bar.dart';
 import 'package:maid/ui/desktop/navigators/side_panel_navigator.dart';
 import 'package:maid/ui/desktop/layout/side_bar.dart';

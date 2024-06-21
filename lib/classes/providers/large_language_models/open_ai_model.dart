@@ -3,34 +3,35 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:langchain/langchain.dart';
-import 'package:langchain_mistralai/langchain_mistralai.dart';
-import 'package:maid/classes/large_language_model.dart';
+import 'package:langchain_openai/langchain_openai.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/static/logger.dart';
+import 'package:maid/classes/static/logger.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MistralAiModel extends LargeLanguageModel {
-  static const String defaultUrl = 'https://api.mistral.ai';
+class OpenAiModel extends LargeLanguageModel {
+  static const String defaultUrl = 'https://api.openai.com/v1';
 
   @override
-  LargeLanguageModelType get type => LargeLanguageModelType.mistralAI;
+  LargeLanguageModelType get type => LargeLanguageModelType.openAI;
 
-  static MistralAiModel of(BuildContext context) => LargeLanguageModel.of(context) as MistralAiModel;
+  static OpenAiModel of(BuildContext context) => LargeLanguageModel.of(context) as OpenAiModel;
 
-  MistralAiModel({
+  OpenAiModel({
     super.listener, 
     super.name,
     super.uri = defaultUrl,
     super.token,
-    super.useDefault,
     super.seed,
-    super.temperature,
-    super.topP
+    super.nPredict,
+    super.topP,
+    super.penaltyPresent,
+    super.penaltyFreq,
   });
 
-  MistralAiModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
+  OpenAiModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
     addListener(listener);
     fromMap(json);
   }
@@ -43,10 +44,22 @@ class MistralAiModel extends LargeLanguageModel {
   }
 
   @override
-  Map<String, dynamic> toMap() {
-    return {
-      ...super.toMap(),
-    };
+  List<String> get missingRequirements {
+    List<String> missing = [];
+
+    if (name.isEmpty) {
+      missing.add('- A model option is required for prompting.\n');
+    } 
+    
+    if (uri.isEmpty) {
+      missing.add('- A compatible URL is required for prompting.\n');
+    }
+
+    if (uri == defaultUrl && token.isEmpty) {
+      missing.add('- An authentication token is required for prompting.\n');
+    } 
+    
+    return missing;
   }
 
   @override
@@ -73,16 +86,19 @@ class MistralAiModel extends LargeLanguageModel {
           break;
       }
     }
-    
+
     try {
-      final chat = ChatMistralAI(
-        baseUrl: '$uri/v1',
+      final chat = ChatOpenAI(
+        baseUrl: uri,
         apiKey: token,
-        defaultOptions: ChatMistralAIOptions(
+        defaultOptions: ChatOpenAIOptions(
           model: name,
-          topP: topP,
           temperature: temperature,
-        ),
+          frequencyPenalty: penaltyFreq,
+          presencePenalty: penaltyPresent,
+          maxTokens: nPredict,
+          topP: topP
+        )
       );
 
       final stream = chat.stream(PromptValue.chat(chatMessages));
@@ -96,16 +112,17 @@ class MistralAiModel extends LargeLanguageModel {
   @override
   Future<List<String>> get options async {
     try {
-      final url = Uri.parse('$uri/v1/models');
-      
+      final url = Uri.parse('$uri/models');
+
       final headers = {
-        "Accept": "application/json",
+        'Content-Type': 'application/json',
+        'Accept':'application/json',
         'Authorization':'Bearer $token',
       };
 
       final request = Request("GET", url)
         ..headers.addAll(headers);
-
+      
       final response = await request.send();
 
       if (response.statusCode == 200) {
@@ -116,7 +133,17 @@ class MistralAiModel extends LargeLanguageModel {
         final models = data['data'] as List<dynamic>?;
 
         if (models != null) {
-          return models.map((model) => model['id'] as String).toList();
+          if (uri == defaultUrl) {
+            return models
+            .where((model) => model['id'].contains('gpt-3.5') || model['id'].contains('gpt-4'))
+            .map((model) => model['id'] as String)
+            .toList();
+          } 
+          else {
+            return models
+            .map((model) => model['id'] as String)
+            .toList();
+          }
         } else {
           throw Exception('Model Data is null');
         }
@@ -138,7 +165,7 @@ class MistralAiModel extends LargeLanguageModel {
   @override
   void save() {
     SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("mistral_ai_model", json.encode(toMap()));
+      prefs.setString("open_ai_model", json.encode(toMap()));
     });
   }
 

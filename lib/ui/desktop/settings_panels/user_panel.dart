@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/user.dart';
-import 'package:maid/static/utilities.dart';
+import 'package:maid/classes/providers/user.dart';
+import 'package:maid/classes/static/utilities.dart';
 import 'package:maid/ui/shared/tiles/image_selector_tile.dart';
 import 'package:maid/ui/shared/tiles/text_field_list_tile.dart';
 

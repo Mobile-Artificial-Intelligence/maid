@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/app_preferences.dart';
-import 'package:maid/providers/user.dart';
-import 'package:maid/static/logger.dart';
+import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/app_preferences.dart';
+import 'package:maid/classes/providers/user.dart';
+import 'package:maid/classes/static/logger.dart';
 import 'package:provider/provider.dart';
 
 class LogPanel extends StatelessWidget {

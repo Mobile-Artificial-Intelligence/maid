@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/large_language_model.dart';
-import 'package:maid/classes/llama_cpp_model.dart';
-import 'package:maid/providers/app_data.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
+import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/parameters/api_key_parameter.dart';
 import 'package:maid/ui/desktop/parameters/n_keep_parameter.dart';
 import 'package:maid/ui/desktop/parameters/penalize_nl_parameter.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/large_language_model.dart';
-import 'package:maid/classes/llama_cpp_model.dart';
-import 'package:maid/providers/app_data.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
+import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/mobile/layout/generic_app_bar.dart';
 import 'package:maid/ui/shared/layout/dialogs.dart';
 import 'package:maid/ui/mobile/parameter_widgets/min_p_parameter.dart';

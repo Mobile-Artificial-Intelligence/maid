@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/app_preferences.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/desktop_navigator.dart';
-import 'package:maid/static/utilities.dart';
+import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/app_preferences.dart';
+import 'package:maid/classes/providers/character.dart';
+import 'package:maid/classes/providers/desktop_navigator.dart';
+import 'package:maid/classes/static/utilities.dart';
 import 'package:maid/ui/shared/layout/dialogs.dart';
 import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
 import 'package:maid/ui/shared/tiles/text_field_list_tile.dart';

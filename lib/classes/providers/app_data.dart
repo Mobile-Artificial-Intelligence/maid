@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/session.dart';
+import 'package:maid/classes/providers/character.dart';
+import 'package:maid/classes/providers/session.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/desktop_navigator.dart';
-import 'package:maid/providers/user.dart';
+import 'package:maid/classes/providers/desktop_navigator.dart';
+import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/shared/utilities/future_avatar.dart';
 import 'package:provider/provider.dart';
 

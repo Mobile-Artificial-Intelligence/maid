@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/app_preferences.dart';
-import 'package:maid/providers/user.dart';
+import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/app_preferences.dart';
+import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/desktop/app.dart';
 import 'package:maid/ui/mobile/app.dart';
 import 'package:provider/provider.dart';

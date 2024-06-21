@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/providers/desktop_navigator.dart';
+import 'package:maid/classes/providers/desktop_navigator.dart';
 import 'package:maid/ui/desktop/buttons/user_button.dart';
 
 class SideBar extends StatelessWidget {

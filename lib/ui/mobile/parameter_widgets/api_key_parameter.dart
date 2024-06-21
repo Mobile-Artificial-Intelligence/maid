@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/large_language_model.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/shared/tiles/text_field_list_tile.dart';
 
 class ApiKeyParameter extends StatelessWidget {

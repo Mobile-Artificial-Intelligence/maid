@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/llama_cpp_model.dart';
+import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/ui/shared/tiles/text_field_container.dart';
 
 class TemplateParameter extends StatelessWidget {

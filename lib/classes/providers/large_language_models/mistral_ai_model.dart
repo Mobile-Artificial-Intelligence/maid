@@ -2,21 +2,24 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:maid/classes/chat_node.dart';
-import 'package:maid/classes/large_language_model.dart';
+import 'package:langchain/langchain.dart';
+import 'package:langchain_mistralai/langchain_mistralai.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
+import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/static/logger.dart';
+import 'package:maid/classes/static/logger.dart';
+import 'package:maid/classes/chat_node.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ClaudeModel extends LargeLanguageModel {
-  static const String defaultUrl = 'https://api.anthropic.com';
+class MistralAiModel extends LargeLanguageModel {
+  static const String defaultUrl = 'https://api.mistral.ai';
 
   @override
   LargeLanguageModelType get type => LargeLanguageModelType.mistralAI;
 
-  static ClaudeModel of(BuildContext context) => LargeLanguageModel.of(context) as ClaudeModel;
+  static MistralAiModel of(BuildContext context) => LargeLanguageModel.of(context) as MistralAiModel;
 
-  ClaudeModel({
+  MistralAiModel({
     super.listener, 
     super.name,
     super.uri = defaultUrl,
@@ -24,11 +27,10 @@ class ClaudeModel extends LargeLanguageModel {
     super.useDefault,
     super.seed,
     super.temperature,
-    super.topK,
     super.topP
   });
 
-  ClaudeModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
+  MistralAiModel.fromMap(VoidCallback listener, Map<String, dynamic> json) {
     addListener(listener);
     fromMap(json);
   }
@@ -41,61 +43,56 @@ class ClaudeModel extends LargeLanguageModel {
   }
 
   @override
+  Map<String, dynamic> toMap() {
+    return {
+      ...super.toMap(),
+    };
+  }
+
+  @override
   Stream<String> prompt(List<ChatNode> messages) async* {
-    List<Map<String, dynamic>> chat = [];
+    List<ChatMessage> chatMessages = [];
 
     for (var message in messages) {
-      chat.add({
-        'role': message.role.name,
-        'content': message.content,
-      });
-    }
-
-    try {
-      final url = Uri.parse('$uri/v1/messages');
-      
-      final headers = {
-        'x-api-key': token,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      };
-
-      final body = {
-        'model': name,
-        'messages': chat,
-        'temperature': temperature,
-        'top_k': topK,
-        'top_p': topP,
-        'max_tokens': nPredict,
-        'stream': true,
-        'random_seed': seed
-      };
-      
-      final request = Request("POST", url)
-        ..headers.addAll(headers)
-        ..body = json.encode(body);
-
-      final response = await request.send();
-
-      final stream = response.stream
-          .transform(utf8.decoder)
-          .transform(const LineSplitter());
-
-      await for (final line in stream) {
-        final data = json.decode(line);
-        Logger.log('Data: $data');
-
-        final content = data['choices'][0]['delta']['content'] as String?;
-
-        if (content != null && content.isNotEmpty) {
-          yield content;
-        }
+      Logger.log("Message: ${message.content}");
+      if (message.content.isEmpty) {
+        continue;
       }
+
+      switch (message.role) {
+        case ChatRole.user:
+          chatMessages.add(ChatMessage.humanText(message.content));
+          break;
+        case ChatRole.assistant:
+          chatMessages.add(ChatMessage.ai(message.content));
+          break;
+        case ChatRole.system: // Under normal circumstances, this should only be used for preprompt
+          chatMessages.add(ChatMessage.system(message.content));
+          break;
+        default:
+          break;
+      }
+    }
+    
+    try {
+      final chat = ChatMistralAI(
+        baseUrl: '$uri/v1',
+        apiKey: token,
+        defaultOptions: ChatMistralAIOptions(
+          model: name,
+          topP: topP,
+          temperature: temperature,
+        ),
+      );
+
+      final stream = chat.stream(PromptValue.chat(chatMessages));
+
+      yield* stream.map((final res) => res.output.content);
     } catch (e) {
       Logger.log('Error: $e');
     }
   }
-
+  
   @override
   Future<List<String>> get options async {
     try {

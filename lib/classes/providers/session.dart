@@ -2,20 +2,20 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node_tree.dart';
-import 'package:maid/classes/google_gemini_model.dart';
-import 'package:maid/classes/large_language_model.dart';
-import 'package:maid/classes/llama_cpp_model.dart';
-import 'package:maid/classes/mistral_ai_model.dart';
-import 'package:maid/classes/ollama_model.dart';
-import 'package:maid/classes/open_ai_model.dart';
+import 'package:maid/classes/providers/large_language_models/google_gemini_model.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
+import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
+import 'package:maid/classes/providers/large_language_models/mistral_ai_model.dart';
+import 'package:maid/classes/providers/large_language_models/ollama_model.dart';
+import 'package:maid/classes/providers/large_language_models/open_ai_model.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/user.dart';
-import 'package:maid/static/logger.dart';
+import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/character.dart';
+import 'package:maid/classes/providers/user.dart';
+import 'package:maid/classes/static/logger.dart';
 import 'package:maid/classes/chat_node.dart';
-import 'package:maid/static/utilities.dart';
+import 'package:maid/classes/static/utilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {

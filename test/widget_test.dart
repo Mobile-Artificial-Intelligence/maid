@@ -3,11 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:maid/enumerators/app_layout.dart';
 
 import 'package:maid/main.dart';
-import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/app_preferences.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/session.dart';
-import 'package:maid/providers/user.dart';
+import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/app_preferences.dart';
+import 'package:maid/classes/providers/character.dart';
+import 'package:maid/classes/providers/session.dart';
+import 'package:maid/classes/providers/user.dart';
 
 void main() {
   group('Change User Picture Tests', () {

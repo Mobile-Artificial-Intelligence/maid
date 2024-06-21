@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/providers/app_data.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/shared/tiles/slider_grid_tile.dart';
 import 'package:provider/provider.dart';
 

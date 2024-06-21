@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/providers/app_data.dart';
-import 'package:maid/providers/app_preferences.dart';
-import 'package:maid/providers/character.dart';
-import 'package:maid/providers/desktop_navigator.dart';
-import 'package:maid/static/logger.dart';
+import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/app_preferences.dart';
+import 'package:maid/classes/providers/character.dart';
+import 'package:maid/classes/providers/desktop_navigator.dart';
+import 'package:maid/classes/static/logger.dart';
 
 class CharacterTile extends StatefulWidget {
   final Character character;
