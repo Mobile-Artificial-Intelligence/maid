@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:maid/ui/desktop/dropdowns/huggingface_model_dropdown.dart';
 
 class HuggingfaceButton extends StatefulWidget {
   const HuggingfaceButton({super.key});
@@ -33,7 +34,7 @@ class _HuggingfaceButtonState extends State<HuggingfaceButton> {
             'Select HuggingFace Model',
             textAlign: TextAlign.center
           ),
-          content: const Text('This is a HuggingFace button.'),
+          content: const HuggingfaceModelDropdown(),
           actions: [
             FilledButton(
               onPressed: () => Navigator.of(context).pop(),

@@ -1,6 +1,5 @@
 [
     {
-        "id": "llama_2_7b_chat",
         "name": "Llama 2 7B Chat",
         "family": "llama2",
         "template": "llama2",
