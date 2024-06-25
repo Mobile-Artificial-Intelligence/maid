@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/huggingface_model.dart';
+import 'package:maid/classes/providers/huggingface_selection.dart';
+import 'package:provider/provider.dart';
 
 class HuggingfaceModelDropdown extends StatefulWidget {
   const HuggingfaceModelDropdown({super.key});
@@ -10,8 +12,6 @@ class HuggingfaceModelDropdown extends StatefulWidget {
 
 class _HuggingfaceModelDropdownState extends State<HuggingfaceModelDropdown> {
   List<HuggingfaceModel> options = [];
-  HuggingfaceModel? selectedModel;
-  String? selectedTag;
   bool modelOpen = false;
   bool tagOpen = false;
 
@@ -53,14 +53,7 @@ class _HuggingfaceModelDropdownState extends State<HuggingfaceModelDropdown> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          selectedModel?.name ?? 'Select Model',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontSize: 16,
-            fontWeight: FontWeight.bold
-          )
-        ),
+        buildModelText(),
         PopupMenuButton(
           tooltip: 'Select HuggingFace Model',
           icon: Icon(
@@ -78,11 +71,35 @@ class _HuggingfaceModelDropdownState extends State<HuggingfaceModelDropdown> {
     );
   }
 
+  Widget buildModelText() {
+    return Consumer<HuggingfaceSelection>(
+      builder: (context, huggingfaceSelection, child) {
+        String text;
+        
+        if (huggingfaceSelection.model != null) {
+          text = huggingfaceSelection.model!.name;
+        } else {
+          text = 'Select Model';
+        }
+
+        return Text(
+          text,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: 16,
+            fontWeight: FontWeight.bold
+          )
+        );
+      }
+    );
+  }
+
   void selectModel(HuggingfaceModel model) {
+    HuggingfaceSelection.of(context).model = model;
+    HuggingfaceSelection.of(context).tag = model.tags.keys.first;
+
     setState(() {
       modelOpen = false;
-      selectedModel = model;
-      selectedTag = model.tags.keys.first;
     });
   }
 
@@ -90,14 +107,7 @@ class _HuggingfaceModelDropdownState extends State<HuggingfaceModelDropdown> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          selectedTag ?? 'Select Tag',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontSize: 16,
-            fontWeight: FontWeight.bold
-          )
-        ),
+        buildTagText(),
         PopupMenuButton(
           tooltip: 'Select HuggingFace Model Tag',
           icon: Icon(
@@ -115,10 +125,34 @@ class _HuggingfaceModelDropdownState extends State<HuggingfaceModelDropdown> {
     );
   }
 
+  Widget buildTagText() {
+    return Consumer<HuggingfaceSelection>(
+      builder: (context, huggingfaceSelection, child) {
+        String text;
+        
+        if (huggingfaceSelection.tag != null) {
+          text = huggingfaceSelection.tag!;
+        } else {
+          text = 'Select Tag';
+        }
+
+        return Text(
+          text,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: 16,
+            fontWeight: FontWeight.bold
+          )
+        );
+      }
+    );
+  }
+
   void selectTag(String tag) {
+    HuggingfaceSelection.of(context).tag = tag;
+
     setState(() {
       tagOpen = false;
-      selectedTag = tag;
     });
   }
 
@@ -133,7 +167,7 @@ class _HuggingfaceModelDropdownState extends State<HuggingfaceModelDropdown> {
   }
 
   List<PopupMenuEntry<String>> tagItemBuilder(BuildContext context) {
-    return selectedModel?.tags.keys.toList().map((String tag) {
+    return HuggingfaceSelection.of(context).model?.tags.keys.toList().map((String tag) {
       return PopupMenuItem<String>(
         value: tag,
         child: Text(tag),
