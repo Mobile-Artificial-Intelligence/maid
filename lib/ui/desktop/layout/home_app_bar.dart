@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/ui/desktop/buttons/huggingface_button.dart';
 import 'package:maid/ui/desktop/buttons/load_model_button.dart';
 import 'package:maid/ui/desktop/dropdowns/model_dropdown.dart';
 import 'package:maid/ui/shared/dropdowns/llm_platform_dropdown.dart';
@@ -55,17 +56,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   List<Widget> llamaCppWidgets(BuildContext context) {
     return [
-      IconButton(
-        tooltip: 'HuggingFace',
-        onPressed: () {}, 
-        icon: SizedBox(
-          width: 30.0,
-          height: 30.0,
-          child: SvgPicture.asset(
-            'assets/huggingface-colour.svg',
-          ),
-        )
-      ),
+      const HuggingfaceButton(),
       const Expanded(
         flex: 8,
         child: LoadModelButton(),
