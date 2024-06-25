@@ -4,9 +4,8 @@ import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/buttons/huggingface_button.dart';
 import 'package:maid/ui/desktop/buttons/load_model_button.dart';
-import 'package:maid/ui/desktop/dropdowns/model_dropdown.dart';
+import 'package:maid/ui/desktop/dropdowns/remote_model_dropdown.dart';
 import 'package:maid/ui/shared/dropdowns/llm_platform_dropdown.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -40,7 +39,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             else
             const Expanded(
               flex: 8,
-              child: ModelDropdown(),
+              child: RemoteModelDropdown(),
             ),
             const Spacer(flex: 1),
             IconButton(

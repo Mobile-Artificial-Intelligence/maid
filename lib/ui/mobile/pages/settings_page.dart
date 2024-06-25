@@ -76,9 +76,11 @@ class _SettingsPageState extends State<SettingsPage> {
             ram == -1 ? 'RAM: Unknown' : 'RAM: $ram GB',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color:
-                  Color.lerp(Colors.red, Colors.green, ram.clamp(0, 8) / 8) ??
-                      Colors.red,
+              color: Color.lerp(
+                Colors.red, 
+                Colors.green, 
+                ram.clamp(0, 8) / 8
+              ),
               fontSize: 15,
             ),
           ),

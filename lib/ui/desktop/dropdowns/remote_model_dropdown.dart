@@ -4,14 +4,14 @@ import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:provider/provider.dart';
 
-class ModelDropdown extends StatefulWidget {
-  const ModelDropdown({super.key});
+class RemoteModelDropdown extends StatefulWidget {
+  const RemoteModelDropdown({super.key});
 
   @override
-  State<StatefulWidget> createState() => _ModelDropdownState();
+  State<StatefulWidget> createState() => _RemoteModelDropdownState();
 }
 
-class _ModelDropdownState extends State<ModelDropdown> {
+class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   static LargeLanguageModelType lastModelType = LargeLanguageModelType.none;
   static DateTime lastCheck = DateTime.now();
   static List<String> options = [];
