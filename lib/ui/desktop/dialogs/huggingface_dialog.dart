@@ -33,25 +33,27 @@ class HuggingfaceDialog extends StatelessWidget {
       builder: (context, huggingfaceSelection, child) {
         return FutureBuilder(
           future: huggingfaceSelection.alreadyExists, 
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return FilledButton(
-                onPressed: () {
-                  final future = HuggingfaceSelection.of(context).download();
-                  LlamaCppModel.of(context).setModelWithFuture(future);
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  (snapshot.data as bool) ? "Select" : "Download"
-                ),
-              );
-            }
-            else {
-              return const CircularProgressIndicator();
-            }
-          },
+          builder: buildFuture,
         );
       },
     );
+  }
+
+  Widget buildFuture(BuildContext context, AsyncSnapshot<bool> snapshot) {
+    if (snapshot.connectionState == ConnectionState.done) {
+      return FilledButton(
+        onPressed: () {
+          final future = HuggingfaceSelection.of(context).download();
+          LlamaCppModel.of(context).setModelWithFuture(future);
+          Navigator.of(context).pop();
+        },
+        child: Text(
+          (snapshot.data as bool) ? "Select" : "Download"
+        ),
+      );
+    }
+    else {
+      return const CircularProgressIndicator();
+    }
   }
 }
