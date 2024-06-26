@@ -10,29 +10,15 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: preferredSize.height,
-      color: Theme.of(context).colorScheme.surface,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          leadWidgets(context),
-          const MenuButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget leadWidgets(BuildContext context) {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          }, 
-          icon: const Icon(Icons.menu),
+    return AppBar(
+      elevation: 0.0,
+      title: const LlmPlatformDropdown(),
+      centerTitle: false,
+      actions: const [
+        Padding(
+          padding: EdgeInsets.only(right: 8.0),
+          child: MenuButton(),
         ),
-        const LlmPlatformDropdown(),
       ],
     );
   }
