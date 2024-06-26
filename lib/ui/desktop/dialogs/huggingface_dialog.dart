@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/huggingface_selection.dart';
+import 'package:maid/ui/desktop/buttons/huggingface_download_button.dart';
 import 'package:maid/ui/desktop/dropdowns/huggingface_model_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,7 @@ class HuggingfaceDialog extends StatelessWidget {
       ),
       content: const HuggingfaceModelDropdown(),
       actions: [
+        const HuggingfaceDownloadButton(),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text(

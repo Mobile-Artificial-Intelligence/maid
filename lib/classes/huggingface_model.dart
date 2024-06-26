@@ -8,6 +8,7 @@ class HuggingfaceModel {
   final String family;
   final String template;
   final String repo;
+  final String branch;
   final Map<String, String> tags;
 
   HuggingfaceModel({
@@ -15,6 +16,7 @@ class HuggingfaceModel {
     required this.family,
     required this.template,
     required this.repo,
+    required this.branch,
     required this.tags,
   });
 
@@ -24,6 +26,7 @@ class HuggingfaceModel {
       family: json['family'],
       template: json['template'],
       repo: json['repo'],
+      branch: json['branch'],
       tags: Map<String, String>.from(json['tags']),
     );
   }

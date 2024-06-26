@@ -4,19 +4,20 @@
         "family": "llama2",
         "template": "llama2",
         "repo": "TheBloke/Llama-2-7B-Chat-GGUF",
+        "branch": "main",
         "tags": {
-            "Q2_K": "/main/llama-2-7b-chat.Q2_K.gguf",
-            "Q3_K_L": "/main/llama-2-7b-chat.Q3_K_L.gguf",
-            "Q3_K_M": "/main/llama-2-7b-chat.Q3_K_M.gguf",
-            "Q3_K_S": "/main/llama-2-7b-chat.Q3_K_S.gguf",
-            "Q4_0": "/main/llama-2-7b-chat.Q4_0.gguf",
-            "Q4_K_M": "/main/llama-2-7b-chat.Q4_K_M.gguf",
-            "Q4_K_S": "/main/llama-2-7b-chat.Q4_K_S.gguf",
-            "Q5_0": "/main/llama-2-7b-chat.Q5_0.gguf",
-            "Q5_K_M": "/main/llama-2-7b-chat.Q5_K_M.gguf",
-            "Q5_K_S": "/main/llama-2-7b-chat.Q5_K_S.gguf",
-            "Q6_K": "/main/llama-2-7b-chat.Q6_K.gguf",
-            "Q8_0": "/main/llama-2-7b-chat.Q8_0.gguf"
+            "Q2_K": "llama-2-7b-chat.Q2_K.gguf",
+            "Q3_K_L": "llama-2-7b-chat.Q3_K_L.gguf",
+            "Q3_K_M": "llama-2-7b-chat.Q3_K_M.gguf",
+            "Q3_K_S": "llama-2-7b-chat.Q3_K_S.gguf",
+            "Q4_0": "llama-2-7b-chat.Q4_0.gguf",
+            "Q4_K_M": "llama-2-7b-chat.Q4_K_M.gguf",
+            "Q4_K_S": "llama-2-7b-chat.Q4_K_S.gguf",
+            "Q5_0": "llama-2-7b-chat.Q5_0.gguf",
+            "Q5_K_M": "llama-2-7b-chat.Q5_K_M.gguf",
+            "Q5_K_S": "llama-2-7b-chat.Q5_K_S.gguf",
+            "Q6_K": "llama-2-7b-chat.Q6_K.gguf",
+            "Q8_0": "llama-2-7b-chat.Q8_0.gguf"
         }
     }
 ]
