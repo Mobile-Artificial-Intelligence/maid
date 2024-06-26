@@ -1,7 +1,29 @@
 [
     {
+        "name": "Llama 2 7B",
+        "family": "llama-2",
+        "series": "7b",
+        "template": "llama2",
+        "repo": "TheBloke/Llama-2-7B-GGUF",
+        "branch": "main",
+        "tags": {
+            "Q2_K": "llama-2-7b.Q2_K.gguf",
+            "Q3_K_L": "llama-2-7b.Q3_K_L.gguf",
+            "Q3_K_M": "llama-2-7b.Q3_K_M.gguf",
+            "Q3_K_S": "llama-2-7b.Q3_K_S.gguf",
+            "Q4_0": "llama-2-7b.Q4_0.gguf",
+            "Q4_K_M": "llama-2-7b.Q4_K_M.gguf",
+            "Q4_K_S": "llama-2-7b.Q4_K_S.gguf",
+            "Q5_0": "llama-2-7b.Q5_0.gguf",
+            "Q5_K_M": "llama-2-7b.Q5_K_M.gguf",
+            "Q5_K_S": "llama-2-7b.Q5_K_S.gguf",
+            "Q6_K": "llama-2-7b.Q6_K.gguf",
+            "Q8_0": "llama-2-7b.Q8_0.gguf"
+        }
+    },
+    {
         "name": "Llama 2 7B Chat",
-        "family": "llama2",
+        "family": "llama-2",
         "series": "7b-chat",
         "template": "llama2",
         "repo": "TheBloke/Llama-2-7B-Chat-GGUF",
@@ -19,6 +41,40 @@
             "Q5_K_S": "llama-2-7b-chat.Q5_K_S.gguf",
             "Q6_K": "llama-2-7b-chat.Q6_K.gguf",
             "Q8_0": "llama-2-7b-chat.Q8_0.gguf"
+        }
+    },
+    {
+        "name": "Llama 2 13B Chat",
+        "family": "llama-2",
+        "series": "13b-chat",
+        "template": "llama2",
+        "repo": "TheBloke/Llama-2-13B-chat-GGUF",
+        "branch": "main",
+        "tags": {
+            "Q2_K": "llama-2-13b-chat.Q2_K.gguf",
+            "Q3_K_L": "llama-2-13b-chat.Q3_K_L.gguf",
+            "Q3_K_M": "llama-2-13b-chat.Q3_K_M.gguf",
+            "Q3_K_S": "llama-2-13b-chat.Q3_K_S.gguf",
+            "Q4_0": "llama-2-13b-chat.Q4_0.gguf",
+            "Q4_K_M": "llama-2-13b-chat.Q4_K_M.gguf",
+            "Q4_K_S": "llama-2-13b-chat.Q4_K_S.gguf",
+            "Q5_0": "llama-2-13b-chat.Q5_0.gguf",
+            "Q5_K_M": "llama-2-13b-chat.Q5_K_M.gguf",
+            "Q5_K_S": "llama-2-13b-chat.Q5_K_S.gguf",
+            "Q6_K": "llama-2-13b-chat.Q6_K.gguf",
+            "Q8_0": "llama-2-13b-chat.Q8_0.gguf"
+        }
+    },
+    {
+        "name": "Phi 3 Mini 4K Instruct",
+        "family": "phi-3",
+        "series": "mini-4k-instruct",
+        "template": "llama2",
+        "repo": "microsoft/Phi-3-mini-4k-instruct-gguf",
+        "branch": "main",
+        "tags": {
+            "Q4": "Phi-3-mini-4k-instruct-q4.gguf",
+            "FP16": "Phi-3-mini-4k-instruct-fp16.gguf"
         }
     }
 ]
