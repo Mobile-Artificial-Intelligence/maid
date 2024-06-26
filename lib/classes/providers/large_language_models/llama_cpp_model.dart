@@ -204,6 +204,13 @@ class LlamaCppModel extends LargeLanguageModel {
   void stop() async {
     await _maidLLM?.stop();
   }
+
+  void setModelWithFuture(Future<(String, String)> future) async {
+    final (filePath, tag) = await future;
+    uri = filePath;
+    name = tag;
+    notifyListeners();
+  }
   
   @override
   Future<void> resetUri() async {

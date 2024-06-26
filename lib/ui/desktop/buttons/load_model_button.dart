@@ -18,8 +18,6 @@ class LoadModelButton extends StatelessWidget {
         }
 
         if (progress >= 100) {
-          LlamaCppModel.of(context).uri = huggingfaceSelection.filePath!;
-          LlamaCppModel.of(context).name = huggingfaceSelection.tagValue!;
           huggingfaceSelection.clearProgress();
           return buildButton(context);
         }

@@ -35,12 +35,16 @@ class HuggingfaceDialog extends StatelessWidget {
           future: huggingfaceSelection.alreadyExists, 
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.data as bool) {
-                return buildSelectButton(context, huggingfaceSelection);
-              }
-              else {
-                return buildDownloadButton(context, huggingfaceSelection);
-              }
+              return FilledButton(
+                onPressed: () {
+                  final future = HuggingfaceSelection.of(context).download();
+                  LlamaCppModel.of(context).setModelWithFuture(future);
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  (snapshot.data as bool) ? "Select" : "Download"
+                ),
+              );
             }
             else {
               return const CircularProgressIndicator();
@@ -48,31 +52,6 @@ class HuggingfaceDialog extends StatelessWidget {
           },
         );
       },
-    );
-  }
-
-  Widget buildDownloadButton(BuildContext context, HuggingfaceSelection huggingfaceSelection) {
-    return FilledButton(
-      onPressed: () {
-        huggingfaceSelection.download();
-        Navigator.of(context).pop();
-      },
-      child: const Text(
-        "Download"
-      ),
-    );
-  }
-
-  Widget buildSelectButton(BuildContext context, HuggingfaceSelection huggingfaceSelection) {
-    return FilledButton(
-      onPressed: () {
-        LlamaCppModel.of(context).uri = huggingfaceSelection.filePath!;
-        LlamaCppModel.of(context).name = huggingfaceSelection.tagValue!;
-        Navigator.of(context).pop();
-      },
-      child: const Text(
-        "Select"
-      ),
     );
   }
 }

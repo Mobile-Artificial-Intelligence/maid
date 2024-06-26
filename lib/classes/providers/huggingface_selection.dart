@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 class HuggingfaceSelection extends ChangeNotifier {
   HuggingfaceModel? _model;
   String? _tag;
-  String? _filePath;
   int? _progress;
 
   HuggingfaceModel? get model => _model;
@@ -24,8 +23,6 @@ class HuggingfaceSelection extends ChangeNotifier {
 
     return _model!.tags[_tag!];
   }
-
-  String? get filePath => _filePath;
 
   int? get progress => _progress;
 
@@ -46,24 +43,14 @@ class HuggingfaceSelection extends ChangeNotifier {
   }
 
   Future<bool> get alreadyExists async {
-    _filePath = await filePathFuture;
-    
-    return File(_filePath!).exists();
-  }
-
-  void download() async {
-    if (_model == null || _tag == null) {
-      Logger.log("Model or tag not selected");
-      return;
-    }
-
     final filePath = await filePathFuture;
 
-    if (File(filePath).existsSync()) {
-      Logger.log("File already exists: $filePath");
-      _filePath = filePath;
-      notifyListeners();
-      return;
+    return File(filePath).exists();
+  }
+
+  Future<(String, String)> download() async {
+    if (_model == null || _tag == null) {
+      return Future.error("Model or tag not selected");
     }
 
     final model = _model!;
@@ -71,8 +58,15 @@ class HuggingfaceSelection extends ChangeNotifier {
     final branch = model.branch;
     final tag = model.tags[_tag!]!;
 
+    final filePath = await filePathFuture;
+
+    if (File(filePath).existsSync()) {
+      Logger.log("File already exists: $filePath");
+      notifyListeners();
+      return (filePath, tag);
+    }
+
     try {
-      _filePath = filePath;
       _progress = 0;
       notifyListeners();
 
@@ -87,23 +81,23 @@ class HuggingfaceSelection extends ChangeNotifier {
         },
       );
 
+      _progress = null;
+      notifyListeners();
+
       Logger.log("Huggingface file downloaded to: $filePath");
-      return;
+      return (filePath, tag);
     } catch (e) {
-      Logger.log("Download failed: $e");
-      return;
+      return Future.error("Download failed: $e");
     }
   }
 
   set model(HuggingfaceModel? model) {
-    _filePath = null;
     _progress = null;
     _model = model;
     notifyListeners();
   }
 
   set tag(String? tag) {
-    _filePath = null;
     _progress = null;
     _tag = tag;
     notifyListeners();
