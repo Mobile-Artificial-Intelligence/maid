@@ -63,7 +63,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
             ),
             ResizableChild(
               size: const ResizableSize.ratio(0.8),
-              minSize: 500,
+              minSize: 800,
               child: buildHomePanel(),
             ),
           ]
