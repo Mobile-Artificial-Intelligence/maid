@@ -11,15 +11,23 @@ class HuggingfaceSelection extends ChangeNotifier {
   HuggingfaceModel? _model;
   String? _tag;
   String? _filePath;
-  double _progress = 0;
+  int? _progress;
 
   HuggingfaceModel? get model => _model;
 
   String? get tag => _tag;
 
+  String? get tagValue {
+    if (_model == null || _tag == null) {
+      return null;
+    }
+
+    return _model!.tags[_tag!];
+  }
+
   String? get filePath => _filePath;
 
-  double get progress => _progress;
+  int? get progress => _progress;
 
   Future<String> get filePathFuture async {
     if (_model == null || _tag == null) {
@@ -62,23 +70,22 @@ class HuggingfaceSelection extends ChangeNotifier {
     final tag = model.tags[_tag!]!;
 
     try {
-
+      _filePath = filePath;
       _progress = 0;
+      notifyListeners();
 
       await Dio().download(
         "https://huggingface.co/$repo/resolve/$branch/$tag?download=true",
         filePath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
-            _progress = received / total;
+            _progress = ((received / total) * 100).ceil();
             notifyListeners();
           }
         },
       );
 
       Logger.log("Huggingface file downloaded to: $filePath");
-
-      _filePath = filePath;
       return;
     } catch (e) {
       Logger.log("Download failed: $e");
@@ -88,16 +95,20 @@ class HuggingfaceSelection extends ChangeNotifier {
 
   set model(HuggingfaceModel? model) {
     _filePath = null;
-    _progress = 0;
+    _progress = null;
     _model = model;
     notifyListeners();
   }
 
   set tag(String? tag) {
     _filePath = null;
-    _progress = 0;
+    _progress = null;
     _tag = tag;
     notifyListeners();
+  }
+
+  void clearProgress() {
+    _progress = null;
   }
 
   static HuggingfaceSelection of(BuildContext context) => context.read<HuggingfaceSelection>();

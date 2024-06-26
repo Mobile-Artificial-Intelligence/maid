@@ -15,7 +15,10 @@ class HuggingfaceDialog extends StatelessWidget {
       content: const HuggingfaceModelDropdown(),
       actions: [
         FilledButton(
-          onPressed: HuggingfaceSelection.of(context).download,
+          onPressed: () {
+            HuggingfaceSelection.of(context).download();
+            Navigator.of(context).pop();
+          },
           child: const Text(
             "Download"
           ),
