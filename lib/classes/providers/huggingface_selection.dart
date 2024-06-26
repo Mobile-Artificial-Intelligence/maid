@@ -46,7 +46,9 @@ class HuggingfaceSelection extends ChangeNotifier {
   }
 
   Future<bool> get alreadyExists async {
-    return File(await filePathFuture).exists();
+    _filePath = await filePathFuture;
+    
+    return File(_filePath!).exists();
   }
 
   void download() async {

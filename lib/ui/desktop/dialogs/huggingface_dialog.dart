@@ -35,11 +35,11 @@ class HuggingfaceDialog extends StatelessWidget {
           future: huggingfaceSelection.alreadyExists, 
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              if (!snapshot.data!) {
-                return buildDownloadButton(context, huggingfaceSelection);
+              if (snapshot.data as bool) {
+                return buildSelectButton(context, huggingfaceSelection);
               }
               else {
-                return buildSelectButton(context, huggingfaceSelection);
+                return buildDownloadButton(context, huggingfaceSelection);
               }
             }
             else {
