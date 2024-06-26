@@ -2,6 +2,7 @@
     {
         "name": "Llama 2 7B Chat",
         "family": "llama2",
+        "series": "7b-chat",
         "template": "llama2",
         "repo": "TheBloke/Llama-2-7B-Chat-GGUF",
         "branch": "main",

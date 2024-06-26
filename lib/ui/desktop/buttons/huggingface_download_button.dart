@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/huggingface_selection.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:maid/classes/static/logger.dart';
 import 'package:dio/dio.dart';
 
 class HuggingfaceDownloadButton extends StatelessWidget {
@@ -9,17 +11,23 @@ class HuggingfaceDownloadButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
-      onPressed: () => download(context),
+      onPressed: () => download(HuggingfaceSelection.of(context)),
       child: const Text(
         "Download"
       ),
     );
   }
 
-  void download(BuildContext context) async {
-    final huggingfaceSelection = HuggingfaceSelection.of(context);
-
+  void download(HuggingfaceSelection huggingfaceSelection) async {
     if (huggingfaceSelection.model == null || huggingfaceSelection.tag == null) {
+      Logger.log("Model or tag not selected");
+      return;
+    }
+
+    final filePath = await huggingfaceSelection.filePath;
+
+    if (File(filePath).existsSync()) {
+      Logger.log("File already exists: $filePath");
       return;
     }
 
@@ -28,13 +36,8 @@ class HuggingfaceDownloadButton extends StatelessWidget {
     final branch = model.branch;
     final tagKey = huggingfaceSelection.tag!;
     final tag = model.tags[tagKey]!;
-    final family = model.family;
     
     try {
-      var dir = await getApplicationDocumentsDirectory();
-
-      String filePath = "${dir.path}/$family/$tag";
-
       await Dio().download(
         "https://huggingface.co/$repo/resolve/$branch/$tag?download=true",
         filePath,
@@ -44,9 +47,9 @@ class HuggingfaceDownloadButton extends StatelessWidget {
           }
         },
       );
-      print("File downloaded to: $filePath");
+      Logger.log("File downloaded to: $filePath");
     } catch (e) {
-      print("Download failed: $e");
+      Logger.log("Download failed: $e");
     }
   }
 }

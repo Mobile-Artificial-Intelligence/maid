@@ -6,6 +6,7 @@ import 'package:maid/classes/static/logger.dart';
 class HuggingfaceModel {
   final String name;
   final String family;
+  final String series;
   final String template;
   final String repo;
   final String branch;
@@ -14,6 +15,7 @@ class HuggingfaceModel {
   HuggingfaceModel({
     required this.name,
     required this.family,
+    required this.series,
     required this.template,
     required this.repo,
     required this.branch,
@@ -24,6 +26,7 @@ class HuggingfaceModel {
     return HuggingfaceModel(
       name: json['name'],
       family: json['family'],
+      series: json['series'],
       template: json['template'],
       repo: json['repo'],
       branch: json['branch'],
