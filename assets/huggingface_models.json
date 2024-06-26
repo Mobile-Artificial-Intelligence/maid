@@ -66,6 +66,108 @@
         }
     },
     {
+        "name": "Mistral 7B",
+        "family": "mistral",
+        "series": "7b",
+        "template": "llama2",
+        "repo": "TheBloke/Mistral-7B-v0.1-GGUF",
+        "branch": "main",
+        "tags": {
+            "Q2_K": "mistral-7b-v0.1.Q2_K.gguf",
+            "Q3_K_L": "mistral-7b-v0.1.Q3_K_L.gguf",
+            "Q3_K_M": "mistral-7b-v0.1.Q3_K_M.gguf",
+            "Q3_K_S": "mistral-7b-v0.1.Q3_K_S.gguf",
+            "Q4_0": "mistral-7b-v0.1.Q4_0.gguf",
+            "Q4_K_M": "mistral-7b-v0.1.Q4_K_M.gguf",
+            "Q4_K_S": "mistral-7b-v0.1.Q4_K_S.gguf",
+            "Q5_0": "mistral-7b-v0.1.Q5_0.gguf",
+            "Q5_K_M": "mistral-7b-v0.1.Q5_K_M.gguf",
+            "Q5_K_S": "mistral-7b-v0.1.Q5_K_S.gguf",
+            "Q6_K": "mistral-7b-v0.1.Q6_K.gguf",
+            "Q8_0": "mistral-7b-v0.1.Q8_0.gguf"
+        }
+    },
+    {
+        "name": "Mistral 7B Instruct v0.1",
+        "family": "mistral",
+        "series": "7b-instruct-v0.1",
+        "template": "llama2",
+        "repo": "TheBloke/Mistral-7B-Instruct-v0.1-GGUF",
+        "branch": "main",
+        "tags": {
+            "Q2_K": "mistral-7b-instruct-v0.1.Q2_K.gguf",
+            "Q3_K_L": "mistral-7b-instruct-v0.1.Q3_K_L.gguf",
+            "Q3_K_M": "mistral-7b-instruct-v0.1.Q3_K_M.gguf",
+            "Q3_K_S": "mistral-7b-instruct-v0.1.Q3_K_S.gguf",
+            "Q4_0": "mistral-7b-instruct-v0.1.Q4_0.gguf",
+            "Q4_K_M": "mistral-7b-instruct-v0.1.Q4_K_M.gguf",
+            "Q4_K_S": "mistral-7b-instruct-v0.1.Q4_K_S.gguf",
+            "Q5_0": "mistral-7b-instruct-v0.1.Q5_0.gguf",
+            "Q5_K_M": "mistral-7b-instruct-v0.1.Q5_K_M.gguf",
+            "Q5_K_S": "mistral-7b-instruct-v0.1.Q5_K_S.gguf",
+            "Q6_K": "mistral-7b-instruct-v0.1.Q6_K.gguf",
+            "Q8_0": "mistral-7b-instruct-v0.1.Q8_0.gguf"
+        }
+    },
+    {
+        "name": "Mistral 7B Instruct v0.2",
+        "family": "mistral",
+        "series": "7b-instruct-v0.2",
+        "template": "llama2",
+        "repo": "TheBloke/Mistral-7B-Instruct-v0.2-GGUF",
+        "branch": "main",
+        "tags": {
+            "Q2_K": "mistral-7b-instruct-v0.2.Q2_K.gguf",
+            "Q3_K_L": "mistral-7b-instruct-v0.2.Q3_K_L.gguf",
+            "Q3_K_M": "mistral-7b-instruct-v0.2.Q3_K_M.gguf",
+            "Q3_K_S": "mistral-7b-instruct-v0.2.Q3_K_S.gguf",
+            "Q4_0": "mistral-7b-instruct-v0.2.Q4_0.gguf",
+            "Q4_K_M": "mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+            "Q4_K_S": "mistral-7b-instruct-v0.2.Q4_K_S.gguf",
+            "Q5_0": "mistral-7b-instruct-v0.2.Q5_0.gguf",
+            "Q5_K_M": "mistral-7b-instruct-v0.2.Q5_K_M.gguf",
+            "Q5_K_S": "mistral-7b-instruct-v0.2.Q5_K_S.gguf",
+            "Q6_K": "mistral-7b-instruct-v0.2.Q6_K.gguf",
+            "Q8_0": "mistral-7b-instruct-v0.2.Q8_0.gguf"
+        }
+    },
+    {
+        "name": "Mixtral 8x7B",
+        "family": "mixtral",
+        "series": "8x7b",
+        "template": "llama2",
+        "repo": "TheBloke/Mixtral-8x7B-v0.1-GGUF",
+        "branch": "main",
+        "tags": {
+            "Q2_K": "mixtral-8x7b-v0.1.Q2_K.gguf",
+            "Q3_K_M": "mixtral-8x7b-v0.1.Q3_K_M.gguf",
+            "Q4_0": "mixtral-8x7b-v0.1.Q4_0.gguf",
+            "Q4_K_M": "mixtral-8x7b-v0.1.Q4_K_M.gguf",
+            "Q5_0": "mixtral-8x7b-v0.1.Q5_0.gguf",
+            "Q5_K_M": "mixtral-8x7b-v0.1.Q5_K_M.gguf",
+            "Q6_K": "mixtral-8x7b-v0.1.Q6_K.gguf",
+            "Q8_0": "mixtral-8x7b-v0.1.Q8_0.gguf"
+        }
+    },
+    {
+        "name": "Mixtral 8x7B Instruct",
+        "family": "mixtral",
+        "series": "8x7b-instruct",
+        "template": "llama2",
+        "repo": "TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF",
+        "branch": "main",
+        "tags": {
+            "Q2_K": "mixtral-8x7b-instruct-v0.1.Q2_K.gguf",
+            "Q3_K_M": "mixtral-8x7b-instruct-v0.1.Q3_K_M.gguf",
+            "Q4_0": "mixtral-8x7b-instruct-v0.1.Q4_0.gguf",
+            "Q4_K_M": "mixtral-8x7b-instruct-v0.1.Q4_K_M.gguf",
+            "Q5_0": "mixtral-8x7b-instruct-v0.1.Q5_0.gguf",
+            "Q5_K_M": "mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf",
+            "Q6_K": "mixtral-8x7b-instruct-v0.1.Q6_K.gguf",
+            "Q8_0": "mixtral-8x7b-instruct-v0.1.Q8_0.gguf"
+        }
+    },
+    {
         "name": "Phi 3 Mini 4K Instruct",
         "family": "phi-3",
         "series": "mini-4k-instruct",
