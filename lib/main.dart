@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
+import 'package:maid/classes/providers/huggingface_selection.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/desktop/app.dart';
 import 'package:maid/ui/mobile/app.dart';
@@ -40,7 +41,8 @@ class MaidApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => appPreferences),
         ChangeNotifierProvider(create: (context) => appData),
-        ChangeNotifierProvider(create: (context) => user)
+        ChangeNotifierProvider(create: (context) => user),
+        ChangeNotifierProvider(create: (context) => HuggingfaceSelection())
       ],
       child: Consumer<AppPreferences>(
         builder: (context, appPreferences, child) {
