@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/classes/providers/app_data.dart';
-import 'package:maid/ui/mobile/layout/generic_app_bar.dart';
+import 'package:maid/ui/mobile/layout/model_settings_app_bar.dart';
 import 'package:maid/ui/mobile/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/temperature_parameter.dart';
@@ -19,7 +19,7 @@ class GoogleGeminiPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GenericAppBar(title: "Google Gemini Parameters"),
+      appBar: const ModelSettingsAppBar(title: "Google Gemini Parameters"),
       body: SessionBusyOverlay(
         child: Consumer<AppData>(
           builder: (context, appData, child) {
@@ -31,19 +31,6 @@ class GoogleGeminiPage extends StatelessWidget {
 
             return ListView(
               children: [
-                Align(
-                  alignment: Alignment.center, // Center the button horizontally
-                  child: FilledButton(
-                    onPressed: () {
-                      LargeLanguageModel.of(context).reset();
-                    },
-                    child: Text(
-                      "Reset",
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10.0),
                 const ApiKeyParameter(),
                 Divider(
                   height: 20,

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/large_language_model.dart';
-import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
-import 'package:maid/classes/providers/app_data.dart';
-import 'package:maid/ui/mobile/layout/generic_app_bar.dart';
-import 'package:maid/ui/shared/dialogs/storage_operation_dialog.dart';
+import 'package:maid/ui/mobile/layout/model_settings_app_bar.dart';
 import 'package:maid/ui/mobile/parameter_widgets/min_p_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/penalize_nl_parameter.dart';
@@ -24,8 +20,8 @@ import 'package:maid/ui/mobile/parameter_widgets/tfs_z_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/top_k_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/typical_p_parameter.dart';
+import 'package:maid/ui/shared/groups/llama_cpp_model_controls.dart';
 import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
-import 'package:provider/provider.dart';
 
 class LlamaCppPage extends StatelessWidget {
   const LlamaCppPage({super.key});
@@ -33,7 +29,7 @@ class LlamaCppPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GenericAppBar(title: "LlamaCPP Parameters"),
+      appBar: const ModelSettingsAppBar(title: "LlamaCPP Parameters"),
       body: SessionBusyOverlay(
         child: buildListView(context),
       )
@@ -43,9 +39,10 @@ class LlamaCppPage extends StatelessWidget {
   Widget buildListView(BuildContext context) {
     return ListView(
       children: [
-        buildModelName(),
-        const SizedBox(height: 15.0),
-        buildButtons(context),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8), 
+          child: LlamaCppModelControls()
+        ),
         Divider(
           height: 20,
           indent: 10,
@@ -79,60 +76,6 @@ class LlamaCppPage extends StatelessWidget {
         const NBatchParameter(),
         const NThreadsParameter(),
       ]
-    );
-  }
-
-  Widget buildButtons(BuildContext context) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 8,
-      runSpacing: 6,
-      children: [
-        FilledButton(
-          onPressed: () {
-            LargeLanguageModel.of(context).reset();
-          },
-          child: const Text(
-            "Reset"
-          ),
-        ),
-        FilledButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => StorageOperationDialog(future: LlamaCppModel.of(context).loadModel())
-            );
-          },
-          child: const Text(
-            "Load GGUF"
-          ),
-        ),
-        FilledButton(
-          onPressed: () {
-            LargeLanguageModel.of(context).resetUri();
-          },
-          child: const Text(
-            "Unload GGUF"
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildModelName() {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
-
-        if (session.model.name.isEmpty) {
-          return const SizedBox.shrink();
-        }
-
-        return Text(
-          "Model: ${session.model.name}",
-          textAlign: TextAlign.center,
-        );
-      }
     );
   }
 }

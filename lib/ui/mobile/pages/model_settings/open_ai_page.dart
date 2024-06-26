@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
-import 'package:maid/ui/mobile/layout/generic_app_bar.dart';
+import 'package:maid/ui/mobile/layout/model_settings_app_bar.dart';
 import 'package:maid/ui/mobile/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/frequency_penalty_parameter.dart';
@@ -21,7 +21,7 @@ class OpenAiPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GenericAppBar(title: "OpenAI Parameters"),
+      appBar: const ModelSettingsAppBar(title: "OpenAI Parameters"),
       body: SessionBusyOverlay(
         child: Consumer<AppData>(
           builder: (context, appData, child) {
@@ -33,19 +33,6 @@ class OpenAiPage extends StatelessWidget {
 
             return ListView(
               children: [
-                Align(
-                  alignment: Alignment.center, // Center the button horizontally
-                  child: FilledButton(
-                    onPressed: () {
-                      session.model.reset();
-                    },
-                    child: Text(
-                      "Reset",
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10.0),
                 const ApiKeyParameter(),
                 Divider(
                   height: 20,

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/classes/providers/app_data.dart';
-import 'package:maid/ui/desktop/buttons/huggingface_button.dart';
-import 'package:maid/ui/desktop/buttons/load_model_button.dart';
 import 'package:maid/ui/desktop/dropdowns/remote_model_dropdown.dart';
 import 'package:maid/ui/shared/dropdowns/llm_platform_dropdown.dart';
+import 'package:maid/ui/shared/groups/llama_cpp_model_controls.dart';
 import 'package:provider/provider.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -34,12 +32,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             const LlmPlatformDropdown(),
             const Spacer(flex: 1),
-            if (model.type == LargeLanguageModelType.llamacpp)
-            ...llamaCppWidgets(context)
-            else
-            const Expanded(
+            Expanded(
               flex: 8,
-              child: RemoteModelDropdown(),
+              child: model.type == LargeLanguageModelType.llamacpp ? 
+                const LlamaCppModelControls() : 
+                const RemoteModelDropdown(),
             ),
             const Spacer(flex: 1),
             IconButton(
@@ -51,24 +48,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         );
       }
     );
-  }
-
-  List<Widget> llamaCppWidgets(BuildContext context) {
-    return [
-      const HuggingfaceButton(),
-      const Expanded(
-        flex: 8,
-        child: LoadModelButton(),
-      ),
-      IconButton(
-        tooltip: "Eject Model",
-        onPressed: () {
-          LlamaCppModel.of(context).resetUri();
-          LlamaCppModel.of(context).name = "";
-        },
-        icon: const Icon(Icons.eject_rounded),
-      )
-    ];
   }
 
   void openAbout(BuildContext context) {

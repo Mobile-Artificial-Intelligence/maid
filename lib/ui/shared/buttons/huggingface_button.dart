@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:maid/ui/desktop/dialogs/huggingface_dialog.dart';
+import 'package:maid/ui/shared/dialogs/huggingface_dialog.dart';
 
 class HuggingfaceButton extends StatelessWidget {
   const HuggingfaceButton({super.key});
