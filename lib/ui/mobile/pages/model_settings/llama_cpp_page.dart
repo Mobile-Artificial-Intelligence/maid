@@ -3,7 +3,7 @@ import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/mobile/layout/generic_app_bar.dart';
-import 'package:maid/ui/shared/layout/dialogs.dart';
+import 'package:maid/ui/shared/dialogs/storage_operation_dialog.dart';
 import 'package:maid/ui/mobile/parameter_widgets/min_p_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/n_predict_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/penalize_nl_parameter.dart';
@@ -98,9 +98,9 @@ class LlamaCppPage extends StatelessWidget {
         ),
         FilledButton(
           onPressed: () {
-            storageOperationDialog(
-              context, 
-              LlamaCppModel.of(context).loadModel
+            showDialog(
+              context: context,
+              builder: (context) => StorageOperationDialog(future: LlamaCppModel.of(context).loadModel())
             );
           },
           child: const Text(

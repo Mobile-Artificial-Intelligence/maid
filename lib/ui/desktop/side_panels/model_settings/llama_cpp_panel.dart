@@ -22,7 +22,7 @@ import 'package:maid/ui/desktop/parameters/top_k_parameter.dart';
 import 'package:maid/ui/desktop/parameters/top_p_parameter.dart';
 import 'package:maid/ui/desktop/parameters/typical_p_parameter.dart';
 import 'package:maid/ui/desktop/parameters/seed_parameter.dart';
-import 'package:maid/ui/shared/layout/dialogs.dart';
+import 'package:maid/ui/shared/dialogs/storage_operation_dialog.dart';
 import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
@@ -94,9 +94,9 @@ class LlamaCppPanel extends StatelessWidget {
         ),
         FilledButton(
           onPressed: () {
-            storageOperationDialog(
-              context, 
-              LlamaCppModel.of(context).loadModel
+            showDialog(
+              context: context,
+              builder: (context) => StorageOperationDialog(future: LlamaCppModel.of(context).loadModel())
             );
           },
           child: const Text(

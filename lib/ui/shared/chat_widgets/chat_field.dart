@@ -7,7 +7,7 @@ import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/session.dart';
-import 'package:maid/ui/shared/layout/dialogs.dart';
+import 'package:maid/ui/shared/dialogs/missing_requirements_dialog.dart';
 import 'package:maid/classes/static/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -136,7 +136,12 @@ class _ChatFieldState extends State<ChatField> {
               child: IconButton(
                 onPressed: () {
                   if (session.model.missingRequirements.isNotEmpty) {
-                    showMissingRequirementsDialog(context);
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const MissingRequirementsDialog();
+                      }
+                    );
                   }
                   else if (session.chat.tail.finalised) {
                     send();

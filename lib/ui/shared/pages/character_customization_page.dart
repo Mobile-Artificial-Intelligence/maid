@@ -4,7 +4,7 @@ import 'package:maid/classes/providers/app_preferences.dart';
 import 'package:maid/classes/providers/character.dart';
 import 'package:maid/classes/providers/desktop_navigator.dart';
 import 'package:maid/classes/static/utilities.dart';
-import 'package:maid/ui/shared/layout/dialogs.dart';
+import 'package:maid/ui/shared/dialogs/storage_operation_dialog.dart';
 import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
 import 'package:maid/ui/shared/tiles/text_field_list_tile.dart';
 import 'package:maid/ui/shared/utilities/future_tile_image.dart';
@@ -200,7 +200,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         FilledButton(
           onPressed: () {
             regenerate = true;
-            storageOperationDialog(context, character.importImage);
+            showDialog(
+              context: context,
+              builder: (context) => StorageOperationDialog(future: character.importImage())
+            );
           },
           child: const Text(
             "Load Image",
@@ -209,7 +212,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         ),
         FilledButton(
           onPressed: () {
-            storageOperationDialog(context, character.exportImage);
+            showDialog(
+              context: context,
+              builder: (context) => StorageOperationDialog(future: character.exportImage())
+            );
           },
           child: const Text(
             "Save Image",
@@ -218,7 +224,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         ),
         FilledButton(
           onPressed: () {
-            storageOperationDialog(context, character.exportSTV2);
+            showDialog(
+              context: context,
+              builder: (context) => StorageOperationDialog(future: character.exportSTV2())
+            );
           },
           child: const Text(
             "Save STV2 JSON",
@@ -227,7 +236,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         ),
         FilledButton(
           onPressed: () {
-            storageOperationDialog(context, character.exportMCF);
+            showDialog(
+              context: context,
+              builder: (context) => StorageOperationDialog(future: character.exportMCF())
+            );
           },
           child: const Text(
             "Save MCF JSON",
@@ -237,7 +249,10 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         FilledButton(
           onPressed: () {
             regenerate = true;
-            storageOperationDialog(context, character.importJSON);
+            showDialog(
+              context: context,
+              builder: (context) => StorageOperationDialog(future: character.importJSON())
+            );
           },
           child: const Text(
             "Load JSON",

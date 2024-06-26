@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/session.dart';
-import 'package:maid/ui/shared/layout/dialogs.dart';
+import 'package:maid/ui/shared/dialogs/missing_requirements_dialog.dart';
 import 'package:maid/ui/shared/shaders/blade_runner_gradient.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/classes/providers/user.dart';
@@ -106,7 +106,12 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
     if (!session.chat.tail.finalised) return;
 
     if (session.model.missingRequirements.isNotEmpty) {
-      showMissingRequirementsDialog(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const MissingRequirementsDialog();
+        }
+      );
     } else {
       session.regenerate(node.hash, context);
       setState(() {});
@@ -245,7 +250,12 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
     if (!session.chat.tail.finalised) return;
           
     if (session.model.missingRequirements.isNotEmpty) {
-      showMissingRequirementsDialog(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const MissingRequirementsDialog();
+        }
+      );
     }
     else {
       setState(() {
@@ -260,7 +270,12 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
     if (!session.chat.tail.finalised) return;
 
     if (session.model.missingRequirements.isNotEmpty) {
-      showMissingRequirementsDialog(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const MissingRequirementsDialog();
+        }
+      );
     } 
     else {
       setState(() {
