@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/user.dart';
-import 'package:maid/classes/static/utilities.dart';
-import 'package:maid/ui/shared/tiles/image_selector_tile.dart';
+import 'package:maid/ui/mobile/dialogs/user_name_dialog.dart';
+import 'package:maid/ui/mobile/dialogs/user_image_dialog.dart';
 import 'package:maid/ui/shared/utilities/future_avatar.dart';
 import 'package:provider/provider.dart';
 
@@ -40,120 +40,25 @@ class _UserTileState extends State<UserTile> {
           PopupMenuItem(
             child: const Text("Rename"),
             onTap: () {
-              Navigator.pop(context); // Close the menu first
-              showRenameDialog(context);
+              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (context) => const UserNameDialog(),
+              );
             },
           ),
           PopupMenuItem(
             child: const Text("Change Picture"),
             onTap: () {
-              Navigator.pop(context); // Close the menu first
-              showImageDialog(context);
+              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (context) => const UserImageDialog(),
+              );
             },
           ),
         ]
       ),
-    );
-  }
-
-  void showRenameDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Consumer<User>(
-          builder: (context, user, child) {
-            final controller = TextEditingController(text: user.name);
-
-            return AlertDialog(
-              title: const Text(
-                "Rename User",
-                textAlign: TextAlign.center,
-              ),
-              content: TextField(
-                controller: controller,
-                decoration: const InputDecoration(
-                  hintText: "Enter new name",
-                ),
-              ),
-              actions: [
-                FilledButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    "Cancel"
-                  ),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    user.name = controller.text;
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    "Rename"
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void showImageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Consumer<User>(
-          builder: (context, user, child) {
-            return AlertDialog(
-              title: const Text(
-                "Change Profile Picture",
-                textAlign: TextAlign.center,
-              ),
-              content: SizedBox(
-                width: 300,
-                child: GridView(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                  ),
-                  shrinkWrap: true,
-                  children: [
-                    ImageSelectorTile(
-                      image: Utilities.fileFromAssetImage("chadUser.png"),
-                    ),
-                    ImageSelectorTile(
-                      image: Utilities.fileFromAssetImage("thadUser.png"),
-                    ),
-                    ImageSelectorTile(
-                      image: Utilities.fileFromAssetImage("eugeneUser.png"),
-                    ),
-                    ImageSelectorTile(
-                      image: User.customImageFuture,
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                FilledButton(
-                  onPressed: user.loadImage,
-                  child: const Text(
-                    "Load Custom"
-                  ),
-                ),
-                FilledButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    "Close"
-                  ),
-                ),
-              ],
-              actionsAlignment: MainAxisAlignment.spaceEvenly,
-            );
-          },
-        );
-      },
     );
   }
 }
