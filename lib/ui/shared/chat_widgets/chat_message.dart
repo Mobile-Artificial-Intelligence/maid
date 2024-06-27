@@ -229,17 +229,22 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   }
 
   Widget buildTypingIndicatorBar(int flex) {
+    double durationFactor = (100 - flex) / 100.0;
+    double animationOffset = Random().nextDouble();
+  
     return Row(
       children: [
         Expanded(
           flex: 100 - flex,
           child: WaveGradientShader(
+            durationFactor: durationFactor,
+            animationOffset: animationOffset,
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 5),
               height: 25,
               width: 25,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceDim,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

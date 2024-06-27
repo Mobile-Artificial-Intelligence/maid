@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 
 class WaveGradientShader extends StatefulWidget {
   final Widget child;
-  const WaveGradientShader({required this.child, super.key});
+  final double durationFactor;
+  final double animationOffset;
+
+  const WaveGradientShader({
+    required this.child,
+    required this.durationFactor,
+    required this.animationOffset,
+    super.key,
+  });
 
   @override
   State<WaveGradientShader> createState() => _WaveGradientShaderState();
@@ -15,9 +23,10 @@ class _WaveGradientShaderState extends State<WaveGradientShader> with SingleTick
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      value: widget.animationOffset,
+      duration: Duration(milliseconds: (3000 * widget.durationFactor).clamp(2000, 4000).toInt()),
       vsync: this,
-    )..repeat(reverse: true);
+    )..repeat();
   }
 
   @override
@@ -28,6 +37,9 @@ class _WaveGradientShaderState extends State<WaveGradientShader> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    final boundary = Theme.of(context).colorScheme.surfaceDim;
+    final wave = Theme.of(context).colorScheme.secondary;
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -36,8 +48,12 @@ class _WaveGradientShaderState extends State<WaveGradientShader> with SingleTick
             return LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              stops: [0.0, _controller.value, 1.0],
-              colors: const [Colors.transparent, Colors.blue, Colors.transparent],
+              stops:  [0.0, _controller.value, 1.0],
+              colors: [
+                boundary,
+                wave,
+                boundary,
+              ],
             ).createShader(bounds);
           },
           child: widget.child,
