@@ -5,9 +5,10 @@ import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/session.dart';
 import 'package:maid/ui/shared/dialogs/missing_requirements_dialog.dart';
-import 'package:maid/ui/shared/shaders/blade_runner_gradient.dart';
+import 'package:maid/ui/shared/shaders/blade_runner_gradient_shader.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/classes/providers/user.dart';
+import 'package:maid/ui/shared/shaders/wave_gradient_shader.dart';
 import 'package:maid/ui/shared/utilities/code_box.dart';
 import 'package:maid/ui/shared/utilities/future_avatar.dart';
 import 'package:provider/provider.dart';
@@ -232,19 +233,21 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
       children: [
         Expanded(
           flex: 100 - flex,
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 5),
-            height: 25,
-            width: 25,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceDim,
-              borderRadius: BorderRadius.circular(10),
+          child: WaveGradientShader(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 5),
+              height: 25,
+              width: 25,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceDim,
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-          )
+          ),
         ),
         Spacer(
           flex: flex,
-        )
+        ),
       ],
     );
   }
