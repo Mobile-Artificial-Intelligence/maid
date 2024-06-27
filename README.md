@@ -5,9 +5,11 @@
 # Maid - Mobile Artificial Intelligence Distribution
 
 <a href="https://f-droid.org/packages/com.danemadsen.maid/">
-  <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-  alt="Get it on F-Droid"
-  height="80">
+  <img 
+    src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80"
+  >
 </a>
 
 Maid is an cross-platform free and open source application for interfacing with llama.cpp models locally, and with Ollama, Mistral, Google Gemini and OpenAI models remotely.
@@ -67,14 +69,14 @@ sudo apt-get install -y cmake ninja-build pkg-config libgtk-3-dev libvulkan-dev
 ```
 
 ## Platform Support
-Windows, Linux, Android.
+Windows, MacOS, Linux, Android.
 [Releases page.](https://github.com/Mobile-Artificial-Intelligence/maid/releases)
-MacOS and IOS Releases not available at this time.
+IOS Releases not available at this time.
 
 ## Help Wanted
 - Write code comments
 - Documentation
-- Testing and Building on MacOS and IOS
+- Testing and Building on IOS
 - Spreading the word
 - [Google Play Testing](https://github.com/Mobile-Artificial-Intelligence/maid/discussions/499)
 
@@ -86,7 +88,14 @@ MacOS and IOS Releases not available at this time.
 
 [![Star History Chart](https://api.star-history.com/svg?repos=Mobile-Artificial-Intelligence/maid&type=Date)](https://star-history.com/#Mobile-Artificial-Intelligence/maid&Date)
 
+## Contributors
+
+<a href="https://github.com/Mobile-Artificial-Intelligence/maid/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Mobile-Artificial-Intelligence/maid&max=500&columns=20&anon=1" />
+</a>
+
 ## Testing
+MacOS version tested on a 
 Android version tested on a Oneplus 10 Pro 11gb phone.
 Also tested on Fedora Linux, Windows 11.
-Tested with calypso 3b, orcamini 3b, llama 2 7B-Chat, llama 7B and many more.
+Tested with calypso 3b, orcamini 3b, minyllama 1.1b, phi 3, mistral 7b, mixtral 8x7b, llama 2 7B-Chat, llama 7B and many more.
