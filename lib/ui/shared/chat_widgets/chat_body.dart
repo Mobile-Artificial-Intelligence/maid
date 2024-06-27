@@ -62,11 +62,6 @@ class ChatBody extends StatelessWidget {
           }
         }
 
-        // Temporary message to indicate the user to start the conversation
-        final message = ChatNode(role: ChatRole.assistant, content: "", finalised: false);
-        session.chat.addNode(message);
-        chat = [message];
-
         final chatWidgets = _getChatWidgets(chat);
 
         return Builder(
