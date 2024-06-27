@@ -93,12 +93,10 @@ class LlamaCppPanel extends StatelessWidget {
           ),
         ),
         FilledButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => StorageOperationDialog(future: LlamaCppModel.of(context).loadModel())
-            );
-          },
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => StorageOperationDialog(future: LlamaCppModel.of(context).loadModel())
+          ),
           child: const Text(
             "Load GGUF"
           ),

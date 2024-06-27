@@ -211,36 +211,30 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
           ),
         ),
         FilledButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => StorageOperationDialog(future: character.exportImage())
-            );
-          },
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => StorageOperationDialog(future: character.exportImage())
+          ),
           child: const Text(
             "Save Image",
             softWrap: false
           ),
         ),
         FilledButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => StorageOperationDialog(future: character.exportSTV2())
-            );
-          },
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => StorageOperationDialog(future: character.exportSTV2())
+          ),
           child: const Text(
             "Save STV2 JSON",
             softWrap: false
           ),
         ),
         FilledButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => StorageOperationDialog(future: character.exportMCF())
-            );
-          },
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => StorageOperationDialog(future: character.exportMCF())
+          ),
           child: const Text(
             "Save MCF JSON",
             softWrap: false

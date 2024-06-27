@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
-import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/parameters/api_key_parameter.dart';
 import 'package:maid/ui/desktop/parameters/n_keep_parameter.dart';
@@ -24,7 +23,6 @@ import 'package:maid/ui/desktop/parameters/typical_p_parameter.dart';
 import 'package:maid/ui/desktop/parameters/seed_parameter.dart';
 import 'package:maid/ui/desktop/parameters/url_parameter.dart';
 import 'package:maid/ui/desktop/parameters/use_default.dart';
-import 'package:maid/ui/shared/dialogs/storage_operation_dialog.dart';
 import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
@@ -102,43 +100,6 @@ class OllamaPanel extends StatelessWidget {
       indent: 10,
       endIndent: 10,
       color: Theme.of(context).colorScheme.primary,
-    );
-  }
-
-  Widget buildButtons(BuildContext context) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 8,
-      runSpacing: 6,
-      children: [
-        FilledButton(
-          onPressed: () {
-            LargeLanguageModel.of(context).reset();
-          },
-          child: const Text(
-            "Reset"
-          ),
-        ),
-        FilledButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => StorageOperationDialog(future: LlamaCppModel.of(context).loadModel())
-            );
-          },
-          child: const Text(
-            "Load GGUF"
-          ),
-        ),
-        FilledButton(
-          onPressed: () {
-            LargeLanguageModel.of(context).resetUri();
-          },
-          child: const Text(
-            "Unload GGUF"
-          ),
-        ),
-      ],
     );
   }
 

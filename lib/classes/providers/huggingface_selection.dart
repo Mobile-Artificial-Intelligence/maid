@@ -91,6 +91,19 @@ class HuggingfaceSelection extends ChangeNotifier {
     }
   }
 
+  Future<void> delete() async {
+    final filePath = await filePathFuture;
+
+    if (File(filePath).existsSync()) {
+      File(filePath).deleteSync();
+      Logger.log("File deleted: $filePath");
+    } 
+    else {
+      Logger.log("File does not exist: $filePath");
+    }
+    notifyListeners();
+  }
+
   set model(HuggingfaceModel? model) {
     _progress = null;
     _model = model;
