@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
-import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/parameters/penalize_nl_parameter.dart';
 import 'package:maid/ui/desktop/parameters/template_parameter.dart';
@@ -22,7 +21,6 @@ import 'package:maid/ui/desktop/parameters/top_k_parameter.dart';
 import 'package:maid/ui/desktop/parameters/top_p_parameter.dart';
 import 'package:maid/ui/desktop/parameters/typical_p_parameter.dart';
 import 'package:maid/ui/desktop/parameters/seed_parameter.dart';
-import 'package:maid/ui/shared/dialogs/storage_operation_dialog.dart';
 import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
 import 'package:provider/provider.dart';
 
@@ -44,9 +42,18 @@ class LlamaCppPanel extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(8.0),
           children: [
-            buildModelName(),
-            const SizedBox(height: 10.0),
-            buildButtons(context),
+            Align(
+              alignment: Alignment.center,
+              child: FilledButton(
+                onPressed: () {
+                  LargeLanguageModel.of(context).reset();
+                },
+                child: Text(
+                  "Reset",
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ),
+            ),
             buildDivider(context),
             buildWrap(),
             buildDivider(context),
@@ -75,41 +82,6 @@ class LlamaCppPanel extends StatelessWidget {
       indent: 10,
       endIndent: 10,
       color: Theme.of(context).colorScheme.primary,
-    );
-  }
-
-  Widget buildButtons(BuildContext context) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 8,
-      runSpacing: 6,
-      children: [
-        FilledButton(
-          onPressed: () {
-            LargeLanguageModel.of(context).reset();
-          },
-          child: const Text(
-            "Reset"
-          ),
-        ),
-        FilledButton(
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => StorageOperationDialog(future: LlamaCppModel.of(context).loadModel())
-          ),
-          child: const Text(
-            "Load GGUF"
-          ),
-        ),
-        FilledButton(
-          onPressed: () {
-            LargeLanguageModel.of(context).resetUri();
-          },
-          child: const Text(
-            "Unload GGUF"
-          ),
-        ),
-      ],
     );
   }
 
