@@ -98,6 +98,10 @@ class ClaudeModel extends LargeLanguageModel {
 
   @override
   Future<List<String>> get options async {
+    if ((uri == defaultUrl && token.isEmpty) || uri.isEmpty) {
+      return [];
+    }
+    
     try {
       final url = Uri.parse('$uri/v1/models');
       
