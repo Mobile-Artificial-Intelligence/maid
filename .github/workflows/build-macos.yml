@@ -48,7 +48,7 @@ jobs:
 
       - name: Sign the App
         run: |
-          codesign --deep --force --verbose --sign "Apple Development: Your Name (XXXXXXXXXX)" build/macos/Build/Products/Release/maid.app
+          codesign --deep --force --verbose --sign ${{ secrets.APPLE_SIGNING_IDENTITY }} build/macos/Build/Products/Release/maid.app
 
       - name: Set execute permissions
         run: |
