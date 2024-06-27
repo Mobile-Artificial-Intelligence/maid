@@ -171,6 +171,7 @@ class Session extends ChangeNotifier {
       _name = chat.root.children.first.content;
     }
 
+    save();
     notifyListeners();
   }
 
@@ -251,7 +252,7 @@ class Session extends ChangeNotifier {
     } 
     else {
       model = OllamaModel(listener: notify);
-      await model.resetUri();
+      model.resetUri();
     }
 
     prefs.setInt("llm_type", model.type.index);

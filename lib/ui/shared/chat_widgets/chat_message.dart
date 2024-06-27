@@ -241,8 +241,7 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
             animationOffset: animationOffset,
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 5),
-              height: 25,
-              width: 25,
+              height: 20,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
