@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/classes/providers/app_data.dart';
@@ -8,7 +10,6 @@ import 'package:maid/classes/chat_node.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/shared/utilities/code_box.dart';
 import 'package:maid/ui/shared/utilities/future_avatar.dart';
-import 'package:maid/ui/shared/utilities/typing_indicator.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessageWidget extends StatefulWidget {
@@ -207,11 +208,45 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
 
   Widget chatColumn() {
     if (!node.finalised && node.content.isEmpty) {
-      return const TypingIndicator();
+      return buildTypingIndicator();
     } 
     else {
       return messageBuilder(node.content);
     }
+  }
+
+  Widget buildTypingIndicator() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        buildTypingIndicatorBar(Random().nextInt(4) + 1),
+        buildTypingIndicatorBar(Random().nextInt(4) + 1),
+        buildTypingIndicatorBar(50 + Random().nextInt(4) + 1),
+      ],
+    );
+  }
+
+  Widget buildTypingIndicatorBar(int flex) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 100 - flex,
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            height: 25,
+            width: 25,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceDim,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          )
+        ),
+        Spacer(
+          flex: flex,
+        )
+      ],
+    );
   }
 
   Widget messageBuilder(String message) {
