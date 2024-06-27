@@ -36,41 +36,40 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
 
         node = session.chat.find(widget.hash)!;
 
-        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(width: 10.0),
-              FutureAvatar(
-                key: node.role == ChatRole.user ? user.key : character.key,
-                image: node.role == ChatRole.user ? user.profile : character.profile,
-                radius: 16,
-              ),
-              const SizedBox(width: 10.0),
-              BladeRunnerGradientShader(
-                stops: const [0.5, 0.85],
-                child: Text(
-                  node.role == ChatRole.user ? user.name : character.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                )
-              ),
-              const Expanded(child: SizedBox()), // Spacer
-              if (node.finalised) ...messageOptions(),
-              branchSwitcher()
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: editing ? editingColumn() : chatColumn(),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start, 
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(width: 10.0),
+                FutureAvatar(
+                  key: node.role == ChatRole.user ? user.key : character.key,
+                  image: node.role == ChatRole.user ? user.profile : character.profile,
+                  radius: 16,
+                ),
+                const SizedBox(width: 10.0),
+                BladeRunnerGradientShader(
+                  stops: const [0.5, 0.85],
+                  child: Text(
+                    node.role == ChatRole.user ? user.name : character.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  )
+                ),
+                const Expanded(child: SizedBox()), // Spacer
+                if (node.finalised) ...messageOptions(),
+                branchSwitcher()
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: editing ? editingColumn() : chatColumn()
             )
-          )
-        ]
+          ]
         );
       },
     );
@@ -118,47 +117,43 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
     }
   }
 
-  List<Widget> editingColumn() {
+  Widget editingColumn() {
     final messageController = TextEditingController(text: node.content);
 
-    return [
-      TextField(
-        controller: messageController,
-        autofocus: true,
-        cursorColor: Theme.of(context).colorScheme.secondary,
-        style: Theme.of(context).textTheme.bodyMedium,
-        decoration: InputDecoration(
-          hintText: "Edit Message",
-          fillColor: Theme.of(context).colorScheme.surface,
-          contentPadding: EdgeInsets.zero,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: messageController,
+          autofocus: true,
+          cursorColor: Theme.of(context).colorScheme.secondary,
+          style: Theme.of(context).textTheme.bodyMedium,
+          decoration: InputDecoration(
+            hintText: "Edit Message",
+            fillColor: Theme.of(context).colorScheme.surface,
+            contentPadding: EdgeInsets.zero,
+          ),
+          maxLines: null,
+          keyboardType: TextInputType.multiline,
         ),
-        maxLines: null,
-        keyboardType: TextInputType.multiline,
-      ),
-      Row(children: [
-        IconButton(
-          tooltip: 'Approve Edit',
-          padding: const EdgeInsets.all(0),
-          onPressed: () => onEditingDone(messageController.text),
-          icon: const Icon(Icons.done)
-        ),
-        IconButton(
-          tooltip: 'Cancel Edit',
-          padding: const EdgeInsets.all(0),
-          onPressed: onEditingCancel,
-          icon: const Icon(Icons.close)
+        Row(
+          children: [
+            IconButton(
+              tooltip: 'Approve Edit',
+              padding: const EdgeInsets.all(0),
+              onPressed: () => onEditingDone(messageController.text),
+              icon: const Icon(Icons.done)
+            ),
+            IconButton(
+              tooltip: 'Cancel Edit',
+              padding: const EdgeInsets.all(0),
+              onPressed: onEditingCancel,
+              icon: const Icon(Icons.close)
+            )
+          ]
         )
-      ])
-    ];
-  }
-
-  List<Widget> chatColumn() {
-    return [
-      if (!node.finalised && node.content.isEmpty)
-        const TypingIndicator()
-      else
-        messageBuilder(node.content),
-    ];
+      ]
+    );
   }
 
   Widget branchSwitcher() {
@@ -208,6 +203,15 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
         );
       },
     );
+  }
+
+  Widget chatColumn() {
+    if (!node.finalised && node.content.isEmpty) {
+      return const TypingIndicator();
+    } 
+    else {
+      return messageBuilder(node.content);
+    }
   }
 
   Widget messageBuilder(String message) {

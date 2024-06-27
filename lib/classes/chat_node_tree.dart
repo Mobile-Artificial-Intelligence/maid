@@ -155,9 +155,7 @@ class ChatNodeTree {
 
     while (current.currentChild != null) {
       current = find(current.currentChild!)!;
-      if (current.content.isNotEmpty) {
-        chat.add(current);
-      }
+      chat.add(current);
     }
 
     return chat;
