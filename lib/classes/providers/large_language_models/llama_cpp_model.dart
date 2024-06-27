@@ -20,6 +20,8 @@ class LlamaCppModel extends LargeLanguageModel {
 
   String _template = '';
 
+  bool _downloading = false;
+
   String get template => _template;
 
   set template(String value) {
@@ -37,6 +39,10 @@ class LlamaCppModel extends LargeLanguageModel {
     
     if (!File(uri).existsSync()) {
       missing.add('- The file provided does not exist.\n');
+    }
+
+    if (_downloading) {
+      missing.add('- The model is currently downloading.\n');
     }
     
     return missing;
@@ -206,9 +212,19 @@ class LlamaCppModel extends LargeLanguageModel {
   }
 
   void setModelWithFuture(Future<(String, String)> future) async {
-    final (filePath, tag) = await future;
-    uri = filePath;
-    name = tag;
+    _downloading = true;
+    notifyListeners();
+
+    try {
+      final (filePath, tag) = await future;
+      uri = filePath;
+      name = tag;
+    } 
+    catch (e) {
+      Logger.log("Error setting model: $e");
+    }
+
+    _downloading = false;
     notifyListeners();
   }
   
