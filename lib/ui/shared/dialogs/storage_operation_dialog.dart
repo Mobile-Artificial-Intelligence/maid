@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/ui/shared/dialogs/loading_dialog.dart';
 
 class StorageOperationDialog extends StatelessWidget {
   final Future<String> future;
@@ -32,16 +33,7 @@ class StorageOperationDialog extends StatelessWidget {
             ],
           );
         } else {
-          return const AlertDialog(
-            title: Text(
-              "Storage Operation Pending",
-              textAlign: TextAlign.center
-            ),
-            content: Center(
-              heightFactor: 1.0,
-              child: CircularProgressIndicator(),
-            )
-          );
+          return const LoadingDialog(title: "Storage Operation Pending");
         }
       },
     );

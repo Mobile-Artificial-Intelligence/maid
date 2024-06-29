@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/huggingface_selection.dart';
 import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
+import 'package:maid/ui/shared/dialogs/loading_dialog.dart';
 import 'package:maid/ui/shared/dropdowns/huggingface_model_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,10 @@ class HuggingfaceDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<HuggingfaceSelection>(
       builder: (context, huggingfaceSelection, child) {
+        if (huggingfaceSelection.progress != null) {
+          return const LoadingDialog(title: "Downloading Model");
+        }
+
         return AlertDialog(
           title: const Text(
             'Select HuggingFace Model',
