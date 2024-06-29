@@ -18,6 +18,7 @@ class WaveGradientShader extends StatefulWidget {
 
 class _WaveGradientShaderState extends State<WaveGradientShader> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late Animation<double> _curvedAnimation;
 
   @override
   void initState() {
@@ -27,6 +28,11 @@ class _WaveGradientShaderState extends State<WaveGradientShader> with SingleTick
       duration: Duration(milliseconds: (3000 * widget.durationFactor).clamp(2000, 4000).toInt()),
       vsync: this,
     )..repeat();
+
+    _curvedAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -41,14 +47,14 @@ class _WaveGradientShaderState extends State<WaveGradientShader> with SingleTick
     final wave = Theme.of(context).colorScheme.secondary;
 
     return AnimatedBuilder(
-      animation: _controller,
+      animation: _curvedAnimation,
       builder: (context, child) {
         return ShaderMask(
           shaderCallback: (bounds) {
             return LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              stops:  [0.0, _controller.value, 1.0],
+              stops:  [0.0, _curvedAnimation.value, 1.0],
               colors: [
                 boundary,
                 wave,

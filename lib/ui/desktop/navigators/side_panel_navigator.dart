@@ -34,7 +34,7 @@ class _SidePanelNavigatorState extends State<SidePanelNavigator> {
 
   Widget buildRoutes(BuildContext context, DesktopNavigator desktopNavigator, Widget? child) {
     if (desktopNavigator.settingsPanelRoute == null) {
-      return desktopNavigator.sidePanelRoute(context);
+      return desktopNavigator.sidePanelRoute!(context);
     }
 
     return ResizableContainer(
@@ -47,11 +47,10 @@ class _SidePanelNavigatorState extends State<SidePanelNavigator> {
         onHoverExit: onHoverExit,
       ),
       children: [
-        if (desktopNavigator.sidePanelOpen)
         ResizableChild(
           size: const ResizableSize.ratio(0.7),
           minSize: 500,
-          child: desktopNavigator.sidePanelRoute(context),
+          child: desktopNavigator.sidePanelRoute!(context),
         ),
         ResizableChild(
           size: const ResizableSize.ratio(0.3),

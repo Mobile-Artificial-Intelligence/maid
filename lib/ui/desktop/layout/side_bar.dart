@@ -25,13 +25,6 @@ class SideBar extends StatelessWidget {
     return Column(
       children: [
         IconButton(
-          tooltip: 'Toggle Side Panel',
-          icon: const Icon(Icons.view_sidebar_rounded),
-          onPressed: () {
-            DesktopNavigator.of(context).toggleSidePanel();
-          },
-        ),
-        IconButton(
           tooltip: 'Sessions',
           icon: const Icon(Icons.chat_rounded),
           onPressed: () {

@@ -42,7 +42,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   Widget buildResizableContainer(BuildContext context) {
     return Consumer<DesktopNavigator>(
       builder: (context, desktopNavigator, child) {
-        if (!desktopNavigator.sidePanelOpen) {
+        if (desktopNavigator.sidePanelRoute == null) {
           return buildHomePanel();
         }
 

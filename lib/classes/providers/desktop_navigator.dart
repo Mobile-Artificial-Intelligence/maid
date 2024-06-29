@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 class DesktopNavigator extends ChangeNotifier {
   bool _sidePanelOpen = true;
 
-  Widget Function(BuildContext) _sidePanelRoute = (context) => const SessionsPanel();
+  Widget Function(BuildContext)? _sidePanelRoute = (context) => const SessionsPanel();
 
   Widget Function(BuildContext)? _settingsPanelRoute;
 
@@ -28,9 +28,7 @@ class DesktopNavigator extends ChangeNotifier {
     "/log": (context) => const LogPanel(),
   };
 
-  bool get sidePanelOpen => _sidePanelOpen;
-
-  Widget Function(BuildContext) get sidePanelRoute => _sidePanelRoute;
+  Widget Function(BuildContext)? get sidePanelRoute => _sidePanelRoute;
 
   Widget Function(BuildContext)? get settingsPanelRoute => _settingsPanelRoute;
 
@@ -42,11 +40,13 @@ class DesktopNavigator extends ChangeNotifier {
   }
 
   void navigateSidePanel(String route) {
-    _sidePanelOpen = true;
     if (_sidePanelRoute != _sidePanelRoutes[route]) {
       _sidePanelRoute = _sidePanelRoutes[route] ?? _sidePanelRoute;
-      notifyListeners();
     }
+    else {
+      _sidePanelRoute = null;
+    }
+    notifyListeners();
   }
 
   void navigateSettingsPanel(String route) {
