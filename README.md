@@ -12,9 +12,7 @@
   >
 </a>
 
-Maid is an cross-platform free and open source application for interfacing with llama.cpp models locally, and with Ollama, Mistral, Google Gemini and OpenAI models remotely.
-
-Maid supports sillytavern character cards to allow you to interact with all your favorite characters.
+Maid is an cross-platform free and open source application for interfacing with llama.cpp models locally, and remotely with Ollama, Mistral, Google Gemini and OpenAI models remotely. Maid supports sillytavern character cards to allow you to interact with all your favorite characters. Maid supports downloading a curated list of Models in-app directly from huggingface.
 
 <div align="center">
   <table>
@@ -99,3 +97,7 @@ MacOS version tested on a
 Android version tested on a Oneplus 10 Pro 11gb phone.
 Also tested on Fedora Linux, Windows 11.
 Tested with calypso 3b, orcamini 3b, minyllama 1.1b, phi 3, mistral 7b, mixtral 8x7b, llama 2 7B-Chat, llama 7B and many more.
+
+## Disclaimer
+
+Maid is distributed under the MIT licence and is provided without warrenty of any kind, express or implied. Maid is not affiliated with Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company providing a model compatible with this application.

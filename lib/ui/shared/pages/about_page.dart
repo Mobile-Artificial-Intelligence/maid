@@ -27,16 +27,18 @@ class AboutPage extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 20.0),
-            Linkify(
-              onOpen: _onOpen,
-              text:
-                'Maid is a cross-platform open source app for interacting with GGUF Large Language Models. '
-                'This app is distributed under the MIT License. The source code of this project can be found '
-                'on github ( https://github.com/Mobile-Artificial-Intelligence/maid ). Maid is not affiliated with Meta, '
-                'OpenAI or any other company that provides a model which can be used with this app. Model files are '
-                'not included with this app and must be downloaded separately. Model files can be downloaded online '
-                'at https://huggingface.co',
-              style: Theme.of(context).textTheme.bodyMedium),
+            Text(
+              'Maid is an cross-platform free and open source application for interfacing '
+              'with llama.cpp models locally, and remotely with Ollama, Mistral, Google '
+              'Gemini and OpenAI models remotely. Maid supports sillytavern character '
+              'cards to allow you to interact with all your favorite characters. Maid '
+              'supports downloading a curated list of Models in-app directly from huggingface. '
+              'Maid is distributed under the MIT licence and is provided without warrenty '
+              'of any kind, express or implied. Maid is not affiliated with Huggingface, '
+              'Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company '
+              'providing a model compatible with this application.',
+              style: Theme.of(context).textTheme.bodyMedium
+            ),
             const SizedBox(height: 20.0),
             Text(
               'Contributors',
