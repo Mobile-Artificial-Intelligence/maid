@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
@@ -26,7 +25,7 @@ class _ChatFieldState extends State<ChatField> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    if (Platform.isAndroid || Platform.isIOS) {
       // For sharing or opening text coming from outside the app while the app is in the memory
       _intentDataStreamSubscription =
           ReceiveSharingIntent.instance.getMediaStream().listen((value) {
