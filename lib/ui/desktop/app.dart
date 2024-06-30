@@ -4,7 +4,6 @@ import 'package:maid/classes/providers/desktop_navigator.dart';
 import 'package:maid/classes/static/themes.dart';
 import 'package:maid/ui/desktop/pages/home_page.dart';
 import 'package:maid/ui/shared/pages/about_page.dart';
-import 'package:maid/ui/mobile/pages/settings_page.dart';
 import 'package:provider/provider.dart';
 
 class DesktopApp extends StatelessWidget {
@@ -22,7 +21,6 @@ class DesktopApp extends StatelessWidget {
           themeMode: appPreferences.themeMode,
           initialRoute: '/',
           routes: {
-            '/settings': (context) => const SettingsPage(),
             '/about': (context) => const AboutPage(),
           },
           home: ChangeNotifierProvider(
