@@ -33,9 +33,10 @@ jobs:
           echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 --decode > macos_certificate.p12
           security create-keychain -p ${{ secrets.APPLE_PASSWORD }} temp.keychain
           security import macos_certificate.p12 -k temp.keychain -P ${{ secrets.APPLE_PASSWORD }} -T /usr/bin/codesign
-          security list-keychains -d user -s temp.keychain
+          security list-keychains -s temp.keychain
           security unlock-keychain -p ${{ secrets.APPLE_PASSWORD }} temp.keychain
           security set-keychain-settings -lut 7200 temp.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k ${{ secrets.APPLE_PASSWORD }} temp.keychain
           mkdir -p ~/Library/Developer/Xcode/Provisioning\ Profiles
           echo "${{ secrets.APPLE_PROVISION_PROFILE }}" | base64 --decode > ~/Library/Developer/Xcode/Provisioning\ Profiles/Github_Actions.provisionprofile
 
@@ -46,9 +47,7 @@ jobs:
 
       - name: Sign macOS App
         run: |
-          echo "Starting codesign process..."
-          codesign --deep --force --verbose=4 --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/maid.app
-          echo "Codesign process completed."
+          codesign --deep --force --verbose --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/maid.app
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
