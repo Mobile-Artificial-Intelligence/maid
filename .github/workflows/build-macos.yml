@@ -46,11 +46,9 @@ jobs:
 
       - name: Sign macOS App
         run: |
-          codesign --deep --force --verbose --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/maid.app
-
-      - name: Set execute permissions
-        run: |
-          chmod +x build/macos/Build/Products/Release/maid.app
+          echo "Starting codesign process..."
+          codesign --deep --force --verbose=4 --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/maid.app
+          echo "Codesign process completed."
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
