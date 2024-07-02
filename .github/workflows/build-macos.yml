@@ -31,11 +31,11 @@ jobs:
       - name: Set up signing certificates
         run: |
           echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 --decode > macos_certificate.p12
-          security create-keychain -p ${{ secrets.APPLE_PASSWORD }} build.keychain
-          security import macos_certificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secrets.APPLE_PASSWORD }} -T /usr/bin/codesign
-          security list-keychains -d user -s ~/Library/Keychains/build.keychain
-          security unlock-keychain -p ${{ secrets.APPLE_PASSWORD }} ~/Library/Keychains/build.keychain
-          security set-keychain-settings -lut 7200 ~/Library/Keychains/build.keychain
+          security create-keychain -p ${{ secrets.APPLE_PASSWORD }} temp.keychain
+          security import macos_certificate.p12 -k temp.keychain -P ${{ secrets.APPLE_PASSWORD }} -T /usr/bin/codesign
+          security list-keychains -d user -s temp.keychain
+          security unlock-keychain -p ${{ secrets.APPLE_PASSWORD }} temp.keychain
+          security set-keychain-settings -lut 7200 temp.keychain
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "${{ secrets.APPLE_PROVISION_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/macos_provisioning.mobileprovision
 
@@ -46,7 +46,7 @@ jobs:
 
       - name: Sign macOS App
         run: |
-          codesign --deep --force --verbose --sign ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }} build/macos/Build/Products/Release/maid.app
+          codesign --deep --force --verbose --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/maid.app
 
       - name: Set execute permissions
         run: |
