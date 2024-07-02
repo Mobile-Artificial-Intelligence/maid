@@ -36,11 +36,9 @@ dependencies:
   permission_handler: ^11.0.1
   shared_preferences: ^2.0.20
   cupertino_icons: ^1.0.2
-  url_launcher: ^6.1.10
   file_picker: ^8.0.0
   path: ^1.8.3
   system_info2: ^4.0.0
-  flutter_linkify: ^6.0.0
   http: ^1.1.0
   provider: ^6.1.1
   device_info_plus: ^9.1.1

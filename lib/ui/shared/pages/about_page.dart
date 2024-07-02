@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:maid/ui/shared/layout/generic_app_bar.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -76,11 +74,5 @@ class AboutPage extends StatelessWidget {
         )
       )
     );
-  }
-
-  Future<void> _onOpen(LinkableElement link) async {
-    if (!await launchUrl(Uri.parse(link.url))) {
-      throw Exception('Could not launch ${link.url}');
-    }
   }
 }
