@@ -60,15 +60,31 @@ jobs:
           cat notarization_output.xml
           REQUEST_UUID=$(xmllint --xpath 'string(//notarization-upload/request-id)' notarization_output.xml)
           echo "Request UUID: $REQUEST_UUID"
-          echo "Waiting for notarization..."
-          sleep 300  # Wait for notarization to complete. Adjust as necessary.
-          xcrun altool --notarization-info $REQUEST_UUID --username "${{ secrets.APPLE_ID }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --output-format xml > notarization_status.xml
-          cat notarization_status.xml
-          NOTARIZATION_STATUS=$(xmllint --xpath 'string(//notarization-info/status)' notarization_status.xml)
-          if [ "$NOTARIZATION_STATUS" != "success" ]; then
-            echo "Notarization failed"
-            exit 1
-          fi
+
+      - name: Check Notarization Status
+        run: |
+          attempts=0
+          while true; do
+            echo "Checking notarization status (attempt $attempts)..."
+            xcrun altool --notarization-info $REQUEST_UUID --username "${{ secrets.APPLE_ID }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --output-format xml > notarization_status.xml
+            cat notarization_status.xml
+            NOTARIZATION_STATUS=$(xmllint --xpath 'string(//notarization-info/status)' notarization_status.xml)
+            if [ "$NOTARIZATION_STATUS" = "success" ]; then
+              echo "Notarization succeeded"
+              break
+            elif [ "$NOTARIZATION_STATUS" = "in progress" ]; then
+              echo "Notarization in progress, waiting..."
+              sleep 60  # Wait before checking again
+              attempts=$((attempts + 1))
+              if [ $attempts -ge 30 ]; then  # Timeout after 30 minutes
+                echo "Notarization timed out"
+                exit 1
+              fi
+            else
+              echo "Notarization failed"
+              exit 1
+            fi
+          done
 
       - name: Staple Notarization Ticket
         run: |
