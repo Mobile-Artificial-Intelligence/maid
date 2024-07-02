@@ -49,12 +49,35 @@ jobs:
       - name: Sign macOS App
         run: |
           codesign --deep --force --verbose --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/Upload/maid.app
-          codesign --verify --deep --verbose build/macos/Build/Products/Release/Upload/maid.app
-          spctl --assess --type execute --verbose=4 build/macos/Build/Products/Release/Upload/maid.app
 
-      - name: Set execute permissions
+      - name: Ensure Executable Permissions
         run: |
           chmod +x build/macos/Build/Products/Release/Upload/maid.app/Contents/MacOS/*
+
+      - name: Notarize macOS App
+        run: |
+          xcrun altool --notarize-app --primary-bundle-id "com.danemadsen.maid" --username "${{ secrets.APPLE_ID }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --file build/macos/Build/Products/Release/Upload/maid.app --output-format xml > notarization_output.xml
+          cat notarization_output.xml
+          REQUEST_UUID=$(xmllint --xpath 'string(//notarization-upload/request-id)' notarization_output.xml)
+          echo "Request UUID: $REQUEST_UUID"
+          echo "Waiting for notarization..."
+          sleep 300  # Wait for notarization to complete. Adjust as necessary.
+          xcrun altool --notarization-info $REQUEST_UUID --username "${{ secrets.APPLE_ID }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --output-format xml > notarization_status.xml
+          cat notarization_status.xml
+          NOTARIZATION_STATUS=$(xmllint --xpath 'string(//notarization-info/status)' notarization_status.xml)
+          if [ "$NOTARIZATION_STATUS" != "success" ]; then
+            echo "Notarization failed"
+            exit 1
+          fi
+
+      - name: Staple Notarization Ticket
+        run: |
+          xcrun stapler staple build/macos/Build/Products/Release/Upload/maid.app
+
+      - name: Verify Code Signature
+        run: |
+          codesign --verify --deep --verbose build/macos/Build/Products/Release/Upload/maid.app
+          spctl --assess --type execute --verbose=4 build/macos/Build/Products/Release/Upload/maid.app
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
