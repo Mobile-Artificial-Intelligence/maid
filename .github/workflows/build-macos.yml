@@ -46,13 +46,15 @@ jobs:
           mkdir -p build/macos/Build/Products/Release/Upload
           mv build/macos/Build/Products/Release/maid.app build/macos/Build/Products/Release/Upload/
 
-      - name: Set execute permissions
-        run: |
-          chmod +x build/macos/Build/Products/Release/Upload/maid.app
-
       - name: Sign macOS App
         run: |
           codesign --deep --force --verbose --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/Upload/maid.app
+          codesign --verify --deep --verbose build/macos/Build/Products/Release/Upload/maid.app
+          spctl --assess --type execute --verbose=4 build/macos/Build/Products/Release/Upload/maid.app
+
+      - name: Set execute permissions
+        run: |
+          chmod +x build/macos/Build/Products/Release/Upload/maid.app/Contents/MacOS/*
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
