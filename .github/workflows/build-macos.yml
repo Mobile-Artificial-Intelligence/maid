@@ -6,7 +6,7 @@ on:
       - main
       - dev
 
-jobs:        
+jobs:
   build:
     runs-on: macos-latest
     strategy:
@@ -28,27 +28,25 @@ jobs:
         run: |
           brew install cmake ninja
 
-      - name: Decode macOS Certificate
+      - name: Set up signing certificates
         run: |
-          echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 --decode > macos-cert.p12
-
-      - name: Import macOS Certificate
-        run: |
-          security create-keychain -p github-action macos-build.keychain
-          security import macos-cert.p12 -k ~/Library/Keychains/macos-build.keychain -P ${{ secrets.APPLE_PASSWORD }} -T /usr/bin/codesign
-          security list-keychains -s ~/Library/Keychains/macos-build.keychain
-          security default-keychain -s ~/Library/Keychains/macos-build.keychain
-          security unlock-keychain -p github-action ~/Library/Keychains/macos-build.keychain
-          security set-key-partition-list -S apple-tool:,apple: -s -k github-action ~/Library/Keychains/macos-build.keychain
+          echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 --decode > macos_certificate.p12
+          security create-keychain -p ${{ secrets.APPLE_PASSWORD }} build.keychain
+          security import macos_certificate.p12 -k ~/Library/Keychains/build.keychain -P ${{ secrets.APPLE_PASSWORD }} -T /usr/bin/codesign
+          security list-keychains -d user -s ~/Library/Keychains/build.keychain
+          security unlock-keychain -p ${{ secrets.APPLE_PASSWORD }} ~/Library/Keychains/build.keychain
+          security set-keychain-settings -lut 7200 ~/Library/Keychains/build.keychain
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.APPLE_PROVISION_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/macos_provisioning.mobileprovision
 
       - name: Build macOS App
         run: |
           flutter pub get
           flutter build macos
 
-      - name: Sign the App
+      - name: Sign macOS App
         run: |
-          codesign --deep --force --verbose --sign ${{ secrets.APPLE_SIGNING_IDENTITY }} build/macos/Build/Products/Release/maid.app
+          codesign --deep --force --verbose --sign ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }} build/macos/Build/Products/Release/maid.app
 
       - name: Set execute permissions
         run: |
