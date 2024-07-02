@@ -45,12 +45,17 @@ jobs:
           flutter pub get
           flutter build macos
 
+      - name: Move .app to Separate Directory
+        run: |
+          mkdir -p build/macos/Build/Products/Release/Upload
+          mv build/macos/Build/Products/Release/maid.app build/macos/Build/Products/Release/Upload/
+
       - name: Sign macOS App
         run: |
-          codesign --deep --force --verbose --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/maid.app
+          codesign --deep --force --verbose --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/Upload/maid.app
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
         with:
           name: maid-macos-${{ matrix.arch }}
-          path: build/macos/Build/Products/Release
+          path: build/macos/Build/Products/Release/Upload
