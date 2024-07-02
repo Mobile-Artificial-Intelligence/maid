@@ -23,10 +23,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.2'
-        
-      - name: Install dependencies
-        run: |
-          brew install cmake ninja
 
       - name: Set up signing certificates
         run: |
