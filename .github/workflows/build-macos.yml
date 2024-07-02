@@ -36,8 +36,8 @@ jobs:
           security list-keychains -d user -s temp.keychain
           security unlock-keychain -p ${{ secrets.APPLE_PASSWORD }} temp.keychain
           security set-keychain-settings -lut 7200 temp.keychain
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "${{ secrets.APPLE_PROVISION_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/macos_provisioning.mobileprovision
+          mkdir -p ~/Library/Developer/Xcode/Provisioning\ Profiles
+          echo "${{ secrets.APPLE_PROVISION_PROFILE }}" | base64 --decode > ~/Library/Developer/Xcode/Provisioning\ Profiles/Github_Actions.provisionprofile
 
       - name: Build macOS App
         run: |
