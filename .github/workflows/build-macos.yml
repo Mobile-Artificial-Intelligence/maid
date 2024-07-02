@@ -46,6 +46,10 @@ jobs:
           mkdir -p build/macos/Build/Products/Release/Upload
           mv build/macos/Build/Products/Release/maid.app build/macos/Build/Products/Release/Upload/
 
+      - name: Set execute permissions
+        run: |
+          chmod +x build/macos/Build/Products/Release/Upload/maid.app
+
       - name: Sign macOS App
         run: |
           codesign --deep --force --verbose --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/Upload/maid.app
