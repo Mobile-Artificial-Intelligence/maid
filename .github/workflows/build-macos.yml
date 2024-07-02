@@ -53,4 +53,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: maid-macos-${{ matrix.arch }}
-          path: build/macos/Build/Products/Release/maid.app
+          path: build/macos/Build/Products/Release
