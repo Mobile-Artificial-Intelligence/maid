@@ -49,7 +49,11 @@ jobs:
       - name: Sign macOS App
         run: |
           codesign --deep --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/Upload/maid.app
-          codesign --verify --deep --verbose build/macos/Build/Products/Release/Upload/maid.app
+
+          find build/macos/Build/Products/Release/Upload/maid.app -type d -name "*.framework" -exec codesign --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" {} \;
+          find build/macos/Build/Products/Release/Upload/maid.app -type f -exec codesign --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" {} \;
+
+          codesign --verify --deep --strict --verbose build/macos/Build/Products/Release/Upload/maid.app
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
