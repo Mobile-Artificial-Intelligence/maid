@@ -48,7 +48,7 @@ jobs:
 
       - name: Sign macOS App
         run: |
-          codesign --deep --force --verbose --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/Upload/maid.app
+          codesign --deep --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/Upload/maid.app
           codesign --verify --deep --verbose build/macos/Build/Products/Release/Upload/maid.app
 
       - name: Upload macOS Build
