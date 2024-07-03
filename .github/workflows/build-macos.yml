@@ -54,8 +54,13 @@ jobs:
 
           codesign --verify --deep --strict --verbose build/macos/Build/Products/Release/Upload/maid.app
 
+      - name: Create DMG
+        run: |
+          mkdir -p dmg
+          hdiutil create dmg/maid.dmg -srcfolder build/macos/Build/Products/Release/Upload/maid.app -ov -format UDZO
+
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
         with:
           name: maid-macos-${{ matrix.arch }}
-          path: build/macos/Build/Products/Release/Upload
+          path: dmg
