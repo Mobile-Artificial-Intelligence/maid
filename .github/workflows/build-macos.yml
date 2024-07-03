@@ -52,20 +52,20 @@ jobs:
       - name: Create DMG
         run: |
           mkdir -p dmg
-          mkdir -p /Volumes/Maid
+          mkdir -p /tmp/Maid
 
           # Create temporary DMG
           hdiutil create dmg/maid_tmp.dmg -volname "Maid" -srcfolder build/macos/Build/Products/Release/maid.app -ov -format UDRW
 
           # Mount the temporary DMG
-          hdiutil attach dmg/maid_tmp.dmg -mountpoint /Volumes/Maid
+          hdiutil attach dmg/maid_tmp.dmg -mountpoint /tmp/Maid
 
           # Copy background image
-          mkdir /Volumes/Maid/.background
-          cp ./media/feature.png /Volumes/Maid/.background/feature.png
+          mkdir /tmp/Maid/.background
+          cp ./media/feature.png /tmp/Maid/.background/feature.png
 
           # Create a symbolic link to the Applications folder
-          ln -s /Applications /Volumes/Maid/Applications
+          ln -s /Applications /tmp/Maid/Applications
 
           # Set the background image
           echo '
@@ -91,7 +91,7 @@ jobs:
           ' | osascript
 
           # Unmount the temporary DMG
-          hdiutil detach /Volumes/Maid
+          hdiutil detach /tmp/Maid
 
           # Convert to final DMG
           hdiutil convert dmg/maid_tmp.dmg -format UDZO -o dmg/maid.dmg
