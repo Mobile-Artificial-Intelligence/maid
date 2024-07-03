@@ -40,24 +40,19 @@ jobs:
           flutter pub get
           flutter build macos
 
-      - name: Move .app to Separate Directory
-        run: |
-          mkdir -p build/macos/Build/Products/Release/Upload
-          mv build/macos/Build/Products/Release/maid.app build/macos/Build/Products/Release/Upload/
-
       - name: Sign macOS App
         run: |
-          codesign --deep --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/Upload/maid.app
+          codesign --deep --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" build/macos/Build/Products/Release/maid.app
 
-          find build/macos/Build/Products/Release/Upload/maid.app -type d -name "*.framework" -exec codesign --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" {} \;
-          find build/macos/Build/Products/Release/Upload/maid.app -type f -exec codesign --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" {} \;
+          find build/macos/Build/Products/Release/maid.app -type d -name "*.framework" -exec codesign --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" {} \;
+          find build/macos/Build/Products/Release/maid.app -type f -exec codesign --force --verbose --options runtime --timestamp --sign "${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" {} \;
 
-          codesign --verify --deep --strict --verbose build/macos/Build/Products/Release/Upload/maid.app
+          codesign --verify --deep --strict --verbose build/macos/Build/Products/Release/maid.app
 
       - name: Create DMG
         run: |
           mkdir -p dmg
-          hdiutil create dmg/maid.dmg -srcfolder build/macos/Build/Products/Release/Upload/maid.app -ov -format UDZO
+          hdiutil create dmg/maid.dmg -srcfolder build/macos/Build/Products/Release/maid.app -ov -format UDZO
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
