@@ -30,10 +30,8 @@ class _MenuButtonState extends State<MenuButton> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
-        
-        if (canUseCache(session)) {
+      builder: (context, appData, child) {   
+        if (canUseCache(appData.currentSession)) {
           return PopupMenuButton(
             tooltip: 'Open Menu',
             icon: const Icon(
@@ -44,10 +42,10 @@ class _MenuButtonState extends State<MenuButton> {
           );
         } 
         else {
-          lastModelType = session.model.type;
+          lastModelType = appData.currentSession.model.type;
           lastCheck = DateTime.now();
           return FutureBuilder(
-            future: session.model.options,
+            future: appData.currentSession.model.options,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 options = snapshot.data as List<String>;
