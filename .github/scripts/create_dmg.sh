@@ -6,7 +6,7 @@ APP_NAME="maid"
 APP_DIR="build/macos/Build/Products/Release/${APP_NAME}.app"
 DMG_DIR="dmg"
 TMP_MOUNT="/tmp/Maid"
-DMG_BACKGROUND_IMG="./media/feature.png"
+DMG_BACKGROUND_IMG="./media/dmg.png"
 
 # Create the dmg and app directories if they do not exist
 mkdir -p ${DMG_DIR}
@@ -33,13 +33,13 @@ tell application "Finder"
     set current view of container window to icon view
     set toolbar visible of container window to false
     set statusbar visible of container window to false
-    set the bounds of container window to {0, 0, 1024, 500}
+    set the bounds of container window to {0, 0, 700, 1000}
     set viewOptions to the icon view options of container window
     set arrangement of viewOptions to not arranged
-    set icon size of viewOptions to 128
+    set icon size of viewOptions to 64
     set background picture of viewOptions to file ".background:feature.png"
-    set position of item "${APP_NAME}.app" of container window to {200, 300}
-    set position of item "Applications" of container window to {800, 300}
+    set position of item "${APP_NAME}.app" of container window to {150, 50}
+    set position of item "Applications" of container window to {150, 300}
     close
     open
     update without registering applications
