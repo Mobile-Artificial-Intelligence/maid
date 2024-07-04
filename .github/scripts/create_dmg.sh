@@ -6,13 +6,13 @@ APP_NAME="maid"
 APP_DIR="build/macos/Build/Products/Release/${APP_NAME}.app"
 DMG_DIR="dmg"
 TMP_MOUNT="/tmp/Maid"
-DMG_BACKGROUND_IMG="./media/dmg.png"
-WINX=0
-WINY=0
+DMG_BACKGROUND_IMG="./media/feature.png"
+WINX=200
+WINY=120
 WINW=700
 WINH=1000
-ICON_SIZE=64
-TEXT_SIZE=12
+ICON_SIZE=90
+TEXT_SIZE=16
 
 # Create the dmg and app directories if they do not exist
 mkdir -p ${DMG_DIR}
@@ -64,8 +64,8 @@ on run
             set background picture of opts to file ".background:feature.png"
 
             -- Positioning
-            set position of item "${APP_NAME}.app" of container window to {150, 50}
-            set position of item "Applications" of container window to {150, 300}
+            set position of item "${APP_NAME}.app" of container window to {350, 750}
+            set position of item "Applications" of container window to {350, 300}
 
             close
             open
