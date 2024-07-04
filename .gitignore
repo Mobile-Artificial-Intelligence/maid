@@ -133,3 +133,4 @@ app.*.symbols
 
 .vscode/
 docs/.~lock.API-Compatability.ods#
+dmg/maid_tmp.dmg
