@@ -14,9 +14,8 @@ DMG_SIZE=1g
 mkdir -p "$(dirname ${DMG_OUTPUT})"
 mkdir -p ${TMP_MOUNT}
 
-# Convert the template DMG to a writable DMG with increased size
-hdiutil convert ${DMG_TEMPLATE} -format UDRW -o ${TMP_DMG}
-hdiutil resize -size ${DMG_SIZE} ${TMP_DMG}.dmg
+# Create a new writable DMG with the specified size
+hdiutil create -srcfolder ${DMG_TEMPLATE} -volname "${APP_NAME}" -format UDRW -size ${DMG_SIZE} ${TMP_DMG}
 
 # Mount the writable DMG
 hdiutil attach ${TMP_DMG}.dmg -mountpoint ${TMP_MOUNT} -nobrowse -noverify -noautoopen
