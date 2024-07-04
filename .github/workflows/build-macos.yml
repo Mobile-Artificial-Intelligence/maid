@@ -63,54 +63,7 @@ jobs:
           xcrun stapler staple "build/macos/Build/Products/Release/maid.app"
 
       - name: Create DMG
-        run: |
-          mkdir -p dmg
-          mkdir -p /tmp/Maid
-
-          # Create temporary DMG
-          hdiutil create dmg/maid_tmp.dmg -volname "Maid" -srcfolder build/macos/Build/Products/Release/maid.app -ov -format UDRW
-
-          # Mount the temporary DMG
-          hdiutil attach dmg/maid_tmp.dmg -mountpoint /tmp/Maid
-
-          # Copy background image
-          mkdir /tmp/Maid/.background
-          cp ./media/feature.png /tmp/Maid/.background/feature.png
-
-          # Create a symbolic link to the Applications folder
-          ln -s /Applications /tmp/Maid/Applications
-
-          # Set the background image
-          echo '
-          tell application "Finder"
-            tell disk "Maid"
-              open
-              set current view of container window to icon view
-              set toolbar visible of container window to false
-              set statusbar visible of container window to false
-              set the bounds of container window to {0, 0, 1024, 500}
-              set viewOptions to the icon view options of container window
-              set arrangement of viewOptions to not arranged
-              set icon size of viewOptions to 128
-              set background picture of viewOptions to file ".background:feature.png"
-              set position of item "maid.app" of container window to {200, 300}
-              set position of item "Applications" of container window to {800, 300}
-              close
-              open
-              update without registering applications
-              delay 5
-            end tell
-          end tell
-          ' | osascript
-
-          # Unmount the temporary DMG
-          hdiutil detach /tmp/Maid
-
-          # Convert to final DMG
-          hdiutil convert dmg/maid_tmp.dmg -format UDZO -o dmg/maid.dmg
-
-          # Remove temporary DMG
-          rm dmg/maid_tmp.dmg
+        run: ./.github/scripts/create_dmg.sh
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
