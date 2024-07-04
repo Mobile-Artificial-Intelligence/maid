@@ -17,26 +17,19 @@ Maid is an cross-platform free and open source application for interfacing with 
 <div align="center">
   <table>
     <tr>
-      <td><img src="media/demo1.jpg" width="200"></td>
-      <td><img src="media/demo2.jpg" width="200"></td>
-      <td><img src="media/demo3.jpg" width="200"></td>
+      <td><img src="media/demo1.jpg" width="200" /></td>
+      <td><img src="media/demo2.jpg" width="200" /></td>
+      <td><img src="media/demo3.jpg" width="200" /></td>
     </tr>
     <tr>
-      <td><img src="media/demo4.jpg" width="200"></td>
-      <td><img src="media/demo5.jpg" width="200"></td>
-      <td><img src="media/demo6.jpg" width="200"></td>
+      <td><img src="media/demo4.jpg" width="200" /></td>
+      <td><img src="media/demo5.jpg" width="200" /></td>
+      <td><img src="media/demo6.jpg" width="200" /></td>
     </tr>
   </table>
-  <table>
-    <tr>
-      <td><img src="media/demo7.png" width="600"></td>
-      <td><img src="media/demo8.png" width="600"></td>
-    </tr>
-    <tr>
-      <td><img src="media/demo9.png" width="600"></td>
-      <td><img src="media/demo10.png" width="600"></td>
-    </tr>
-  </table>
+  <img src="media/desktop_demo_1.png" width="800" />
+  <img src="media/desktop_demo_2.png" width="800" />
+  <img src="media/desktop_demo_3.png" width="800" />
 </div>
 
 ## Cloning
