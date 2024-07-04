@@ -17,14 +17,14 @@ Maid is an cross-platform free and open source application for interfacing with 
 <div align="center">
   <table>
     <tr>
-      <td><img src="media/demo1.jpg" width="200" /></td>
-      <td><img src="media/demo2.jpg" width="200" /></td>
-      <td><img src="media/demo3.jpg" width="200" /></td>
+      <td><img src="media/mobile_demo_1.jpg" width="200" /></td>
+      <td><img src="media/mobile_demo_2.jpg" width="200" /></td>
+      <td><img src="media/mobile_demo_3.jpg" width="200" /></td>
     </tr>
     <tr>
-      <td><img src="media/demo4.jpg" width="200" /></td>
-      <td><img src="media/demo5.jpg" width="200" /></td>
-      <td><img src="media/demo6.jpg" width="200" /></td>
+      <td><img src="media/mobile_demo_4.jpg" width="200" /></td>
+      <td><img src="media/mobile_demo_5.jpg" width="200" /></td>
+      <td><img src="media/mobile_demo_6.jpg" width="200" /></td>
     </tr>
   </table>
   <img src="media/desktop_demo_1.png" width="800" />
