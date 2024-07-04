@@ -53,10 +53,14 @@ jobs:
         run: |
           ditto -c -k --sequesterRsrc --keepParent "build/macos/Build/Products/Release/maid.app" "maid.zip" 
 
-      - name: Notorize macOS App
+      - name: Notarize macOS App
         run: |
           xcrun notarytool store-credentials --apple-id ${{ secrets.APPLE_ID }} --password ${{ secrets.APPLE_APPLICATION_SPECIFIC_PASSWORD }} --team-id ${{ secrets.APPLE_TEAM_ID }} --validate notorization_profile
           xcrun notarytool submit --keychain-profile "notorization_profile" --progress --wait maid.zip
+
+      - name: Staple Notarization Ticket
+        run: |
+          xcrun stapler staple "build/macos/Build/Products/Release/maid.app"
 
       - name: Create DMG
         run: |
@@ -113,3 +117,5 @@ jobs:
         with:
           name: maid-macos-${{ matrix.arch }}
           path: dmg
+
+    timeout-minutes: 20
