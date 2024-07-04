@@ -7,12 +7,12 @@ APP_DIR="build/macos/Build/Products/Release/${APP_NAME}.app"
 DMG_DIR="dmg"
 TMP_MOUNT="/tmp/Maid"
 DMG_BACKGROUND_IMG="./media/feature.png"
-WINX=200
-WINY=120
-WINW=700
-WINH=1000
-ICON_SIZE=90
-TEXT_SIZE=16
+WINX=0
+WINY=0
+WINW=750
+WINH=400
+ICON_SIZE=64
+TEXT_SIZE=14
 
 # Create the dmg and app directories if they do not exist
 mkdir -p ${DMG_DIR}
@@ -38,20 +38,13 @@ on run
         tell disk "${APP_NAME}"
             open
 
-            set theXOrigin to ${WINX}
-            set theYOrigin to ${WINY}
-            set theWidth to ${WINW}
-            set theHeight to ${WINH}
-
-            set theBottomRightX to (theXOrigin + theWidth)
-            set theBottomRightY to (theYOrigin + theHeight)
             set dsStore to "\"" & "/Volumes/${APP_NAME}/.DS_Store\""
 
             tell container window
                 set current view to icon view
                 set toolbar visible to false
                 set statusbar visible to false
-                set the bounds to {theXOrigin, theYOrigin, theBottomRightX, theBottomRightY}
+                set the bounds to {${WINX}, ${WINY}, ${WINW}, ${WINH}}
                 set statusbar visible to false
             end tell
 
@@ -64,8 +57,8 @@ on run
             set background picture of opts to file ".background:feature.png"
 
             -- Positioning
-            set position of item "${APP_NAME}.app" of container window to {350, 750}
-            set position of item "Applications" of container window to {350, 300}
+            set position of item "${APP_NAME}.app" of container window to {450, 200}
+            set position of item "Applications" of container window to {650, 200}
 
             close
             open
@@ -74,7 +67,7 @@ on run
 
             tell container window
                 set statusbar visible to false
-                set the bounds to {theXOrigin, theYOrigin, theBottomRightX - 10, theBottomRightY - 10}
+                set the bounds to {${WINX}, ${WINY}, ${WINW}, ${WINH}}
             end tell
         end tell
 
@@ -83,7 +76,7 @@ on run
         tell disk "${APP_NAME}"
             tell container window
                 set statusbar visible to false
-                set the bounds to {theXOrigin, theYOrigin, theBottomRightX, theBottomRightY}
+                set the bounds to {${WINX}, ${WINY}, ${WINW}, ${WINH}}
             end tell
         end tell
 
