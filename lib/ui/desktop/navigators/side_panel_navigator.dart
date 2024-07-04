@@ -49,12 +49,10 @@ class _SidePanelNavigatorState extends State<SidePanelNavigator> {
       children: [
         ResizableChild(
           size: const ResizableSize.ratio(0.7),
-          minSize: 500,
           child: desktopNavigator.sidePanelRoute!(context),
         ),
         ResizableChild(
           size: const ResizableSize.ratio(0.3),
-          minSize: 300,
           child: desktopNavigator.settingsPanelRoute!(context),
         ),
       ]
