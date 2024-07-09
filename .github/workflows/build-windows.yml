@@ -19,6 +19,9 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.2'
+
+      - name: Update Build Number
+        run: ./scripts/update_build_number.bat
         
       - name: Install dependencies
         run: |

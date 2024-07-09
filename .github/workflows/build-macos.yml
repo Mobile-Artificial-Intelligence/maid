@@ -24,6 +24,9 @@ jobs:
         with:
           flutter-version: '3.22.2'
 
+      - name: Update Build Number
+        run: ./scripts/update_build_number.sh
+
       - name: Install Apple Certificate
         uses: apple-actions/import-codesign-certs@v1
         with:
@@ -63,7 +66,7 @@ jobs:
           xcrun stapler staple "build/macos/Build/Products/Release/maid.app"
 
       - name: Create DMG
-        run: ./.github/scripts/create_dmg.sh
+        run: ./scripts/create_dmg.sh
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4

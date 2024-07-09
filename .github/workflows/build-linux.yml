@@ -19,6 +19,9 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.2'
+
+      - name: Update Build Number
+        run: ./scripts/update_build_number.sh
         
       - name: Install dependencies
         run: |
@@ -61,7 +64,7 @@ jobs:
           sudo mv appimagetool-x86_64.AppImage /usr/local/bin/appimagetool
 
       - name: Create AppImage
-        run: ./.github/scripts/create_appimage.sh
+        run: ./scripts/create_appimage.sh
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
