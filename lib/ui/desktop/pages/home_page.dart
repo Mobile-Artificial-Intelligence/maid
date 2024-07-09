@@ -58,12 +58,10 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
           children: [
             const ResizableChild(
               size: ResizableSize.ratio(0.2),
-              minSize: 200,
               child: SidePanelNavigator(),
             ),
             ResizableChild(
               size: const ResizableSize.ratio(0.8),
-              minSize: 800,
               child: buildHomePanel(),
             ),
           ]
