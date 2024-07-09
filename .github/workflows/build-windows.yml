@@ -19,12 +19,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.2'
-
-      - name: Update Build Number
-        run: |
-          git fetch --prune --unshallow
-          commit_count=$(git rev-list --count HEAD)
-          sed -i -e "s/version: \(.*\)+.*/version: \1+$commit_count/" pubspec.yaml
         
       - name: Install dependencies
         run: |
