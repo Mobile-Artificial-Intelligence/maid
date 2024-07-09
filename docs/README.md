@@ -62,3 +62,27 @@
 2. Press the menu button on the top right and select `Model Settings` option.
 3. Paste your API Key into the `API Key` text field.
 4. Navigate back to the main page and initiate a conversation. 
+
+## Ollama
+
+To use the ollama API it is assumed that you have an ollama server setup on your network.
+For help setting ollama up as a server on your local network read the documentation [here](https://github.com/ollama/ollama/blob/main/docs/faq.md)
+
+1. On the main page ensure the Ollama option is selected in the API dropdown.
+2. Press the menu button on the top right and select `Model Settings` option.
+3. Press the `reset URL` button to locate the ollama server on your network.
+4. Navigate back to the main page and initiate a conversation.
+
+## MistralAI
+
+1. On the main page ensure the MistralAI option is selected in the API dropdown.
+2. Press the menu button on the top right and select `Model Settings` option.
+3. Paste your API Key into the `API Key` text field.
+4. Navigate back to the main page and initiate a conversation.
+
+## Gemini
+
+1. On the main page ensure the Gemini option is selected in the API dropdown.
+2. Press the menu button on the top right and select `Model Settings` option.
+3. Paste your API Key into the `API Key` text field.
+4. Navigate back to the main page and initiate a conversation.
