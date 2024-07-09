@@ -55,3 +55,10 @@
 4. Navigate back to the main page and initiate a conversation. 
 
 \* Alternatively you can press the `Huggingface` button to the left of the `Load Model` button to download a model directly from the internet.
+
+## OpenAI
+
+1. On the main page ensure the OpenAI option is selected in the API dropdown.
+2. Press the menu button on the top right and select `Model Settings` option.
+3. Paste your API Key into the `API Key` text field.
+4. Navigate back to the main page and initiate a conversation. 
