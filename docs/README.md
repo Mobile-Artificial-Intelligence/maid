@@ -1,4 +1,6 @@
-# Supported API's
+# Large Language Model API's
+
+## Supported API's
 
 |        Parameter        | Llama.cpp | Ollama | OpenAI | MistralAI | Gemini |
 | ----------------------- | --------- | ------ | ------ | --------- | ------ |
@@ -44,3 +46,12 @@
 | Function Call           | No        | No     | Yes    | No        | No     |
 | User                    | No        | No     | Yes    | No        | No     |
 | Safe Mode               | No        | No     | No     | Yes       | No     |
+
+## Llama.CPP
+
+1. On the main page ensure the LlamaCPP option is selected in the API dropdown.
+2. Press the menu button on the top right and select `Model Settings` option.
+3. Press the `Load Model` button to load a `GGUF` model from local storage. *
+4. Navigate back to the main page and initiate a conversation. 
+
+* Alternatively you can press the `Huggingface` button to the left of the `Load Model` button to download a model directly from the internet.
