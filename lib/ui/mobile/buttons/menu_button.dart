@@ -136,6 +136,7 @@ class _MenuButtonState extends State<MenuButton> {
           title: const Text('App Settings'),
           onTap: () {
             options.clear();
+            Navigator.pop(context); // Close the menu
             Navigator.pushNamed(
               context,
               '/settings'
@@ -149,6 +150,7 @@ class _MenuButtonState extends State<MenuButton> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('About'),
           onTap: () {
+            Navigator.pop(context); // Close the menu
             Navigator.pushNamed(context, '/about');
           },
         ),
