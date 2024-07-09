@@ -54,4 +54,4 @@
 3. Press the `Load Model` button to load a `GGUF` model from local storage. *
 4. Navigate back to the main page and initiate a conversation. 
 
-* Alternatively you can press the `Huggingface` button to the left of the `Load Model` button to download a model directly from the internet.
+\* Alternatively you can press the `Huggingface` button to the left of the `Load Model` button to download a model directly from the internet.
