@@ -24,7 +24,7 @@ jobs:
         run: |
           git fetch --prune --unshallow
           commit_count=$(git rev-list --count HEAD)
-          (Get-Content pubspec.yaml) -replace 'version: (.*)\+.*', 'version: $1+' + $commit_count | Set-Content pubspec.yaml
+          sed -i -e "s/version: \(.*\)+.*/version: \1+$commit_count/" pubspec.yaml
         
       - name: Install dependencies
         run: |
