@@ -27,7 +27,9 @@ jobs:
           flutter-version: '3.22.2'
 
       - name: Update Build Number
-        run: ./scripts/update_build_number.sh
+        run: |
+          commit_count=$(git rev-list --count HEAD)
+          sed -i "s/version: \(.*\)+.*/version: \1+$commit_count/" pubspec.yaml
 
       - name: Decode Keystore File
         env:

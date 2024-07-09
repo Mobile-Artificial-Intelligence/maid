@@ -21,7 +21,10 @@ jobs:
           flutter-version: '3.22.2'
 
       - name: Update Build Number
-        run: ./scripts/update_build_number.bat
+        run: |
+          git fetch --prune --unshallow
+          commit_count=$(git rev-list --count HEAD)
+          (Get-Content pubspec.yaml) -replace 'version: (.*)\+.*', 'version: $1+' + $commit_count | Set-Content pubspec.yaml
         
       - name: Install dependencies
         run: |
