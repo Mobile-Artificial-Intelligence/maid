@@ -24,12 +24,6 @@ jobs:
         with:
           flutter-version: '3.22.2'
 
-      - name: Update Build Number
-        run: |
-          commit_count=$(git rev-list --count HEAD)
-          sed -i '' "s/version: \(.*\)+.*/version: \1+$commit_count/" pubspec.yaml
-          echo "Build Number: $commit_count"
-
       - name: Install Apple Certificate
         uses: apple-actions/import-codesign-certs@v1
         with:
