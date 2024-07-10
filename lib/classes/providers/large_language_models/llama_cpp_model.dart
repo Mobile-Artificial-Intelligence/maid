@@ -162,8 +162,8 @@ class LlamaCppModel extends LargeLanguageModel {
 
       Logger.log("Loading model from $file");
 
-      name = file.path.split('/').last;
       uri = file.path;
+      name = file.path.split('/').last;
       notifyListeners();
     } catch (e) {
       return e.toString();
