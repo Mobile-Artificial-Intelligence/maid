@@ -60,8 +60,26 @@ jobs:
           chmod +x appimagetool-x86_64.AppImage
           sudo mv appimagetool-x86_64.AppImage /usr/local/bin/appimagetool
 
+      - name: Prepare AppDir
+        run: |
+          mkdir AppDir
+          cp -r maid-linux/* AppDir/
+          cp assets/maid.png AppDir/icon.png
+          echo '[Desktop Entry]
+          Name=Maid
+          Exec=maid
+          Icon=icon
+          Type=Application
+          Categories=Utility;' > AppDir/maid.desktop
+          chmod +x AppDir/maid
+          echo '#!/bin/bash
+          HERE="$(dirname "$(readlink -f "${0}")")"
+          exec "$HERE/maid" "$@"' > AppDir/AppRun
+          chmod +x AppDir/AppRun
+
       - name: Create AppImage
-        run: ./scripts/create_appimage.sh
+        run: |
+          appimagetool AppDir maid.AppImage
 
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
