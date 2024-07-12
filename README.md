@@ -9,6 +9,7 @@
 [![Build MacOS](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-macos.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-macos.yml)
 [![Build Windows](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-windows.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-windows.yml)
 
+<div align="center">
 <a href="https://f-droid.org/packages/com.danemadsen.maid/">
   <img 
     src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
@@ -16,7 +17,6 @@
     height="80"
   >
 </a>
-
 <a href='https://play.google.com/store/apps/details?id=com.danemadsen.maid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
   <img 
     src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'
@@ -24,6 +24,7 @@
     height="80"
   />
 </a>
+</div>
 
 Maid is an cross-platform free and open source application for interfacing with llama.cpp models locally, and remotely with Ollama, Mistral, Google Gemini and OpenAI models remotely. Maid supports sillytavern character cards to allow you to interact with all your favorite characters. Maid supports downloading a curated list of Models in-app directly from huggingface.
 
