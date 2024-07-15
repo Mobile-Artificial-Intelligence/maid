@@ -17,6 +17,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OllamaModel extends LargeLanguageModel {
+  static bool _nearbyDevicesPermissionDenied = false;
+
   @override
   LargeLanguageModelType get type => LargeLanguageModelType.ollama;
   
@@ -273,6 +275,10 @@ class OllamaModel extends LargeLanguageModel {
       return true;
     }
 
+    if (_nearbyDevicesPermissionDenied) {
+      return false;
+    }
+
     // Get sdk version
     final sdk = await DeviceInfoPlugin()
         .androidInfo
@@ -294,6 +300,7 @@ class OllamaModel extends LargeLanguageModel {
       return true;
     } else {
       Logger.log("Nearby Devices - permission denied");
+      _nearbyDevicesPermissionDenied = true;
       return false;
     }
   }
