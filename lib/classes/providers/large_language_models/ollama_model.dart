@@ -277,22 +277,19 @@ class OllamaModel extends LargeLanguageModel {
     final sdk = await DeviceInfoPlugin()
         .androidInfo
         .then((value) => value.version.sdkInt);
-    var permissions = <Permission>[]; // List of permissions to request
+
+    var permissionGranted = false;
 
     if (sdk <= 32) {
       // ACCESS_FINE_LOCATION is required
-      permissions.add(Permission.location);
-    } else {
+      permissionGranted = await Permission.location.request().isGranted;
+    } 
+    else {
       // NEARBY_WIFI_DEVICES is required
-      permissions.add(Permission.nearbyWifiDevices);
+      permissionGranted = await Permission.nearbyWifiDevices.request().isGranted;
     }
 
-    // Request permissions and check if all are granted
-    Map<Permission, PermissionStatus> statuses = await permissions.request();
-    bool allPermissionsGranted =
-        statuses.values.every((status) => status.isGranted);
-
-    if (allPermissionsGranted) {
+    if (permissionGranted) {
       Logger.log("Nearby Devices - permission granted");
       return true;
     } else {
