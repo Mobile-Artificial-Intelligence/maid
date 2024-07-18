@@ -2,7 +2,7 @@ name: maid
 description: A cross-platform Flutter app for interfacing with GGUF / Llama models.
 publish_to: 'none'
 
-version: 1.2.9+1726
+version: 1.2.9+1728
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
