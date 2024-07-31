@@ -19,7 +19,7 @@ import 'package:maid/classes/static/utilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
-  LargeLanguageModel model = LlamaCppModel();
+  LargeLanguageModel model = LargeLanguageModel();
   ChatNodeTree chat = ChatNodeTree();
   Key _key = UniqueKey();
 
@@ -75,6 +75,8 @@ class Session extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setString("last_session", json.encode(toMap()));
+
+    model.save();
   }
 
   void newSession(int index) {
@@ -120,6 +122,9 @@ class Session extends ChangeNotifier {
       case LargeLanguageModelType.mistralAI:
         switchMistralAI();
         break;
+      case LargeLanguageModelType.gemini:
+        switchGemini();
+        break;
       default:
         switchLlamaCpp();
         break;
@@ -132,8 +137,7 @@ class Session extends ChangeNotifier {
     return {
       'name': name,
       'chat': chat.root.toMap(),
-      'llm_type': model.type.index,
-      'model': model.toMap(),
+      'llm_type': model.type.index
     };
   }
 
@@ -208,6 +212,10 @@ class Session extends ChangeNotifier {
   /// -------------------------------------- Model Switching --------------------------------------
 
   void switchLlamaCpp() async {
+    if (model.type != LargeLanguageModelType.none) {
+      model.save();
+    }
+
     final prefs = await SharedPreferences.getInstance();
 
     Map<String, dynamic> lastLlamaCpp = json.decode(prefs.getString("llama_cpp_model") ?? "{}");
@@ -225,6 +233,10 @@ class Session extends ChangeNotifier {
   }
 
   void switchOpenAI() async {
+    if (model.type != LargeLanguageModelType.none) {
+      model.save();
+    }
+
     final prefs = await SharedPreferences.getInstance();
 
     Map<String, dynamic> lastOpenAI = json.decode(prefs.getString("open_ai_model") ?? "{}");
@@ -242,6 +254,10 @@ class Session extends ChangeNotifier {
   }
 
   void switchOllama() async {
+    if (model.type != LargeLanguageModelType.none) {
+      model.save();
+    }
+
     final prefs = await SharedPreferences.getInstance();
 
     Map<String, dynamic> lastOllama = json.decode(prefs.getString("ollama_model") ?? "{}");
@@ -260,6 +276,10 @@ class Session extends ChangeNotifier {
   }
 
   void switchMistralAI() async {
+    if (model.type != LargeLanguageModelType.none) {
+      model.save();
+    }
+
     final prefs = await SharedPreferences.getInstance();
 
     Map<String, dynamic> lastMistralAI = json.decode(prefs.getString("mistral_ai_model") ?? "{}");
@@ -277,6 +297,10 @@ class Session extends ChangeNotifier {
   }
 
   void switchGemini() async {
+    if (model.type != LargeLanguageModelType.none) {
+      model.save();
+    }
+    
     final prefs = await SharedPreferences.getInstance();
 
     Map<String, dynamic> lastGemini = json.decode(prefs.getString("google_gemini_model") ?? "{}");
