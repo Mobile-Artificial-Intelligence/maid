@@ -10,11 +10,13 @@ class NewSessionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: AppData.of(context).newSession,
-      child: const Text(
-        "New Chat"
-      ),
+    return IconButton(
+      tooltip: "New Session",
+      onPressed: AppData.of(context).newSession, 
+      icon: const Icon(
+        Icons.border_color_rounded,
+        size: 24,
+      )
     );
   }
 }

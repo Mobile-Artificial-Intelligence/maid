@@ -22,16 +22,8 @@ class SessionsPanel extends StatelessWidget {
   Widget buildColumn() {
     return const Column(
       children: [
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 8.0,
-          runSpacing: 4.0,
-          children: [
-            ClearSessionsButton(),
-            NewSessionButton(),
-          ],
-        ),
-        Expanded(child: SessionsListView())
+        Expanded(child: SessionsListView()),
+        ClearSessionsButton()
       ]
     );
   }

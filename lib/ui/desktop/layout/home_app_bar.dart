@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/dropdowns/remote_model_dropdown.dart';
+import 'package:maid/ui/shared/buttons/new_session_button.dart';
 import 'package:maid/ui/shared/dropdowns/llm_platform_dropdown.dart';
 import 'package:maid/ui/shared/groups/llama_cpp_model_controls.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 const RemoteModelDropdown(),
             ),
             const Spacer(flex: 1),
+            const NewSessionButton(),
+            const SizedBox(width: 8.0),
             IconButton(
               tooltip: 'About',
               icon: const Icon(Icons.info), 

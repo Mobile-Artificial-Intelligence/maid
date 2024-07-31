@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/ui/mobile/buttons/menu_button.dart';
+import 'package:maid/ui/shared/buttons/new_session_button.dart';
 import 'package:maid/ui/shared/dropdowns/llm_platform_dropdown.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -15,6 +16,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: const LlmPlatformDropdown(),
       centerTitle: false,
       actions: const [
+        Padding(
+          padding: EdgeInsets.only(right: 8.0),
+          child: NewSessionButton(),
+        ),
         Padding(
           padding: EdgeInsets.only(right: 8.0),
           child: MenuButton(),

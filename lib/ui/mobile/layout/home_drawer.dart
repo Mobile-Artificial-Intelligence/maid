@@ -59,19 +59,10 @@ class HomeDrawer extends StatelessWidget {
             Divider(
               color: Theme.of(context).colorScheme.primary,
             ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ClearSessionsButton(),
-                NewSessionButton(),
-              ]
-            ),
-            Divider(
-              color: Theme.of(context).colorScheme.primary,
-            ),
             const Expanded(
               child: SessionsListView()
             ),
+            const ClearSessionsButton(),
             Divider(
               height: 0.0,
               color: Theme.of(context).colorScheme.primary,
