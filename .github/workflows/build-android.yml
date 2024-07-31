@@ -45,6 +45,18 @@ jobs:
           flutter config --no-analytics
           flutter pub get
 
+      - name: Setup NDK
+        run: |
+          wget https://dl.google.com/android/repository/android-ndk-r26b-linux.zip
+          unzip android-ndk-r26b-linux.zip
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          echo "ndk.dir=$GITHUB_WORKSPACE/android-ndk-r26b" >> local.properties
+
+      - name: Setup CMake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake=3.26.0-1ubuntu1
+
       - name: Build APK
         run: |
           flutter build apk --split-per-abi
@@ -58,7 +70,7 @@ jobs:
       - name: Build appbundle
         run: |
           flutter build appbundle
-  
+
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
