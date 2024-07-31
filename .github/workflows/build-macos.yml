@@ -38,7 +38,7 @@ jobs:
       - name: Build macOS App
         run: |
           flutter pub get
-          flutter build macos
+          flutter build macos -v
 
       - name: Sign macOS App
         run: |

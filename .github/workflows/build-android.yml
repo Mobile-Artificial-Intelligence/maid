@@ -60,7 +60,7 @@ jobs:
 
       - name: Build APK
         run: |
-          flutter build apk --split-per-abi
+          flutter build apk -v --split-per-abi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
