@@ -21,6 +21,18 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: Setup NDK
+        run: |
+          wget https://dl.google.com/android/repository/android-ndk-r26b-linux.zip
+          unzip android-ndk-r26b-linux.zip
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          echo "ndk.dir=$GITHUB_WORKSPACE/android-ndk-r26b" >> local.properties
+  
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.26.0'
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -44,18 +56,6 @@ jobs:
         run: |
           flutter config --no-analytics
           flutter pub get
-
-      - name: Setup NDK
-        run: |
-          wget https://dl.google.com/android/repository/android-ndk-r26b-linux.zip
-          unzip android-ndk-r26b-linux.zip
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
-          echo "ndk.dir=$GITHUB_WORKSPACE/android-ndk-r26b" >> local.properties
-
-      - name: Setup CMake
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake=3.26.0-1ubuntu1
 
       - name: Build APK
         run: |
