@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:babylon_tts/babylon_tts.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node_tree.dart';
+import 'package:maid/classes/providers/app_preferences.dart';
 import 'package:maid/classes/providers/large_language_models/google_gemini_model.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
@@ -145,6 +147,7 @@ class Session extends ChangeNotifier {
   void prompt(BuildContext context) async {
     final user = User.of(context);
     final character = Character.of(context);
+    final appPreferences = AppPreferences.of(context);
 
     final description = Utilities.formatPlaceholders(character.description, user.name, character.name);
     final personality = Utilities.formatPlaceholders(character.personality, user.name, character.name);
@@ -160,13 +163,21 @@ class Session extends ChangeNotifier {
 
     Logger.log("Prompting with ${model.type.name}");
 
-    final stringStream = model.prompt(messages);
+    final streamController = StreamController<String>.broadcast();
 
-    Babylon.stringStreamToSpeech(stringStream);
+    final promptStream = model.prompt(messages);
 
-    await for (var message in stringStream) {
-      chat.tail.content += message;
+    streamController.stream.listen((event) {
+      chat.tail.content += event;
       notifyListeners();
+    });
+
+    if (appPreferences.autoTextToSpeech) {
+      Babylon.stringStreamToSpeech(streamController.stream);
+    }
+
+    await for (var message in promptStream) {
+      streamController.add(message);
     }
 
     chat.tail.finalised = true;
