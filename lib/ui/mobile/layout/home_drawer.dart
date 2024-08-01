@@ -64,7 +64,6 @@ class HomeDrawer extends StatelessWidget {
             ),
             const ClearSessionsButton(),
             Divider(
-              height: 0.0,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(height: 5.0),

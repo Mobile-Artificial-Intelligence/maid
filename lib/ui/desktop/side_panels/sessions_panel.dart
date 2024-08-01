@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/ui/shared/buttons/clear_sessions_button.dart';
-import 'package:maid/ui/shared/buttons/new_session_button.dart';
 import 'package:maid/ui/shared/views/sessions_list_view.dart';
 
 class SessionsPanel extends StatelessWidget {
@@ -23,7 +22,8 @@ class SessionsPanel extends StatelessWidget {
     return const Column(
       children: [
         Expanded(child: SessionsListView()),
-        ClearSessionsButton()
+        ClearSessionsButton(),
+        SizedBox(height: 10)
       ]
     );
   }
