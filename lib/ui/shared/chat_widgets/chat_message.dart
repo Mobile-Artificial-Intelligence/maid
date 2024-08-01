@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:babylon_tts/babylon_tts.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/session.dart';
@@ -93,6 +94,13 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
 
   List<Widget> assistantOptions() {
     return [
+      IconButton(
+        tooltip: 'Speak Message',
+        onPressed: () {
+          Babylon.tts(node.content);
+        },
+        icon: const Icon(Icons.volume_up),
+      ),
       IconButton(
         tooltip: 'Regenerate Response',
         onPressed: onRegenerate,
