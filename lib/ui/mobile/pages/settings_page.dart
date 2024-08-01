@@ -26,6 +26,13 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: const GenericAppBar(title: "App Settings"),
       body: Column(
         children: [
+          SwitchListTile(
+            title: const Text("Auto Text to Speech"),
+            value: AppPreferences.of(context).autoTextToSpeech,
+            onChanged: (value) {
+              AppPreferences.of(context).autoTextToSpeech = value;
+            },
+          ),
           const Padding(
             padding: EdgeInsets.all(8),
               child: Row(

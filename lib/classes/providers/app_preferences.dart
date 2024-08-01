@@ -6,8 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreferences extends ChangeNotifier {
+  bool _autoTextToSpeech = true;
+
   ThemeMode _themeMode = ThemeMode.dark;
   AppLayout _appLayout = AppLayout.system;
+
+  bool get autoTextToSpeech => _autoTextToSpeech;
 
   ThemeMode get themeMode => _themeMode;
 
@@ -31,17 +35,20 @@ class AppPreferences extends ChangeNotifier {
 
   static AppPreferences of(BuildContext context) => Provider.of<AppPreferences>(context, listen: false);
 
-  AppPreferences(ThemeMode themeMode, AppLayout appLayout) : 
+  AppPreferences(bool autoTextToSpeech, ThemeMode themeMode, AppLayout appLayout) : 
+    _autoTextToSpeech = autoTextToSpeech,
     _themeMode = themeMode, 
     _appLayout = appLayout;
 
   static Future<AppPreferences> get last async {
     final prefs = await SharedPreferences.getInstance();
 
+    bool autoTextToSpeech = prefs.getBool("auto_text_to_speech") ?? true;
     int themeModeIndex = prefs.getInt("theme_mode") ?? ThemeMode.dark.index;
     int appLayoutIndex = prefs.getInt("app_layout") ?? AppLayout.system.index;
 
     return AppPreferences(
+      autoTextToSpeech,
       ThemeMode.values[themeModeIndex], 
       AppLayout.values[appLayoutIndex]
     );
@@ -50,8 +57,15 @@ class AppPreferences extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
+    prefs.setBool("auto_text_to_speech", _autoTextToSpeech);
     prefs.setInt("theme_mode", _themeMode.index);
     prefs.setInt("app_layout", _appLayout.index);
+  }
+
+  set autoTextToSpeech(bool value) {
+    _autoTextToSpeech = value;
+    save();
+    notifyListeners();
   }
 
   set themeMode(ThemeMode value) {

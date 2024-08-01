@@ -15,6 +15,13 @@ class AppSettingsPanel extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
+          SwitchListTile(
+            title: const Text("Auto Text to Speech"),
+            value: AppPreferences.of(context).autoTextToSpeech,
+            onChanged: (value) {
+              AppPreferences.of(context).autoTextToSpeech = value;
+            },
+          ),
           Padding(
             padding: const EdgeInsets.all(8),
               child: Row(
