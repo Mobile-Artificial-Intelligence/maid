@@ -95,17 +95,17 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   List<Widget> assistantOptions() {
     return [
       IconButton(
+        tooltip: 'Regenerate Response',
+        onPressed: onRegenerate,
+        icon: const Icon(Icons.refresh),
+      ),
+      IconButton(
         tooltip: 'Speak Message',
         onPressed: () {
           Babylon.tts(node.content);
         },
         icon: const Icon(Icons.volume_up),
-      ),
-      IconButton(
-        tooltip: 'Regenerate Response',
-        onPressed: onRegenerate,
-        icon: const Icon(Icons.refresh),
-      ),
+      )
     ];
   }
 
