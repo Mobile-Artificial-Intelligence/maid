@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/shared/tiles/character_tile.dart';
 import 'package:maid/ui/shared/buttons/clear_sessions_button.dart';
-import 'package:maid/ui/shared/buttons/new_session_button.dart';
 import 'package:maid/ui/shared/views/sessions_list_view.dart';
 import 'package:maid/ui/mobile/tiles/user_tile.dart';
 import 'package:provider/provider.dart';
