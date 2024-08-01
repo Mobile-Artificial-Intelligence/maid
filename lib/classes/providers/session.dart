@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:babylon_tts/babylon_tts.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node_tree.dart';
 import 'package:maid/classes/providers/large_language_models/google_gemini_model.dart';
@@ -160,6 +161,8 @@ class Session extends ChangeNotifier {
     Logger.log("Prompting with ${model.type.name}");
 
     final stringStream = model.prompt(messages);
+
+    Babylon.stringStreamToSpeech(stringStream);
 
     await for (var message in stringStream) {
       chat.tail.content += message;

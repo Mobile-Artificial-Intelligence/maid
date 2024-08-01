@@ -1,3 +1,4 @@
+import 'package:babylon_tts/babylon_tts.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
@@ -9,6 +10,8 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Babylon.init();
 
   AppPreferences appPreferences = await AppPreferences.last;
   AppData appData = await AppData.last;
