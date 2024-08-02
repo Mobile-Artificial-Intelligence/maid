@@ -86,8 +86,12 @@ IOS Releases not available at this time.
 - [Google Play Testing](https://github.com/Mobile-Artificial-Intelligence/maid/discussions/499)
 
 ## Special Thanks and Related Projects
+- [ggerganov/llama.cpp](https://github.com/ggerganov/llama.cpp)
+- [ollama/ollama](https://github.com/ollama/ollama)
 - [davidmigloz/langchain_dart](https://github.com/davidmigloz/langchain_dart)
 - [Mobile-Artificial-Intelligence/maid_llm](https://github.com/Mobile-Artificial-Intelligence/maid_llm)
+- [Mobile-Artificial-Intelligence/babylon_tts](https://github.com/Mobile-Artificial-Intelligence/babylon_tts)
+- [Mobile-Artificial-Intelligence/babylon.cpp](https://github.com/Mobile-Artificial-Intelligence/babylon.cpp)
 
 ## Star History
 
