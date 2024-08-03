@@ -17,10 +17,10 @@ class _MenuButtonState extends State<MenuButton> {
   static DateTime lastCheck = DateTime.now();
   static List<String> options = [];
 
-  bool canUseCache(Session session) {
-    if (options.isEmpty && session.model.type != LargeLanguageModelType.llamacpp) return false;
+  bool canUseCache(LargeLanguageModel model) {
+    if (options.isEmpty && model.type != LargeLanguageModelType.llamacpp) return false;
 
-    if (session.model.type != lastModelType) return false;
+    if (model.type != lastModelType) return false;
 
     if (DateTime.now().difference(lastCheck).inMinutes > 1) return false;
 
@@ -29,73 +29,76 @@ class _MenuButtonState extends State<MenuButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {   
-        if (canUseCache(appData.currentSession)) {
-          return PopupMenuButton(
-            tooltip: 'Open Menu',
-            icon: const Icon(
-              Icons.account_tree_rounded,
-              size: 24,
-            ),
-            itemBuilder: itemBuilder
-          );
-        } 
-        else {
-          lastModelType = appData.currentSession.model.type;
-          lastCheck = DateTime.now();
-          return FutureBuilder(
-            future: appData.currentSession.model.options,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                options = snapshot.data as List<String>;
-                return PopupMenuButton(
-                  tooltip: 'Open Menu',
-                  icon: const Icon(
-                    Icons.account_tree_rounded,
-                    size: 24,
-                  ),
-                  itemBuilder: itemBuilder
-                );
-              } else {
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),  // Adjust padding to match the visual space of the IconButton
-                  child: SizedBox(
-                    width: 24,  // Width of the CircularProgressIndicator
-                    height: 24,  // Height of the CircularProgressIndicator
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3.0,  // Adjust the thickness of the spinner here
-                      ),
-                    ),
-                  ),
-                );
-              }
-            }
-          );
-        }
-      }
+    return Selector<AppData, LargeLanguageModel>(
+      selector: (context, appData) => appData.model,
+      builder: buildMenuButton,
     );
+  }
+
+  Widget buildMenuButton(BuildContext context, LargeLanguageModel model, Widget? child) {
+    if (canUseCache(model)) {
+      return PopupMenuButton(
+        tooltip: 'Open Menu',
+        icon: const Icon(
+          Icons.account_tree_rounded,
+          size: 24,
+        ),
+        itemBuilder: itemBuilder
+      );
+    } 
+    else {
+      lastModelType = model.type;
+      lastCheck = DateTime.now();
+      return FutureBuilder(
+        future: model.options,
+        builder: buildMenuButtonFuture
+      );
+    }
+  }
+
+  Widget buildMenuButtonFuture(BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+    if (snapshot.connectionState == ConnectionState.done) {
+      options = snapshot.data as List<String>;
+      return PopupMenuButton(
+        tooltip: 'Open Menu',
+        icon: const Icon(
+          Icons.account_tree_rounded,
+          size: 24,
+        ),
+        itemBuilder: itemBuilder
+      );
+    } else {
+      return const Padding(
+        padding: EdgeInsets.all(8.0),  // Adjust padding to match the visual space of the IconButton
+        child: SizedBox(
+          width: 24,  // Width of the CircularProgressIndicator
+          height: 24,  // Height of the CircularProgressIndicator
+          child: Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 3.0,  // Adjust the thickness of the spinner here
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   List<PopupMenuEntry<dynamic>> itemBuilder(BuildContext context) {
     List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
       padding: EdgeInsets.zero,
-      child: Consumer<AppData>(
-          builder: (context, appData, child) {
-            final model = appData.currentSession.model;
-            
-            return ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-              title: Text(modelName),
-              onTap: () {
-                model.name = modelName;
-              },
-              tileColor: model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
-            );
-          }
-        )
-      )
+      child: Selector<AppData, LargeLanguageModel>(
+        selector: (context, appData) => appData.model,
+        builder: (context, model, child) {
+          return ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+            title: Text(modelName),
+            onTap: () {
+              model.name = modelName;
+            },
+            tileColor: model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
+          );
+        }
+      ))
     ).toList();
 
     return [

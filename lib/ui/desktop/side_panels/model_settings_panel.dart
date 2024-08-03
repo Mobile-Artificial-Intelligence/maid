@@ -13,23 +13,26 @@ class ModelSettingsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        switch (appData.currentSession.model.type) {
-          case LargeLanguageModelType.llamacpp:
-            return const LlamaCppPanel();
-          case LargeLanguageModelType.ollama:
-            return const OllamaPanel();
-          case LargeLanguageModelType.openAI:
-            return const OpenAiPanel();
-          case LargeLanguageModelType.mistralAI:
-            return const MistralAiPanel();
-          case LargeLanguageModelType.gemini:
-            return const GoogleGeminiPanel();
-          default:
-            throw Exception('Invalid model type');
-        }
-      }
+    return Selector<AppData, LargeLanguageModelType>(
+      selector: (context, appData) => appData.model.type,
+      builder: modelSettingsBuilder,
     );
+  }
+
+  Widget modelSettingsBuilder(BuildContext context, LargeLanguageModelType type, Widget? child) {
+    switch (type) {
+      case LargeLanguageModelType.llamacpp:
+        return const LlamaCppPanel();
+      case LargeLanguageModelType.ollama:
+        return const OllamaPanel();
+      case LargeLanguageModelType.openAI:
+        return const OpenAiPanel();
+      case LargeLanguageModelType.mistralAI:
+        return const MistralAiPanel();
+      case LargeLanguageModelType.gemini:
+        return const GoogleGeminiPanel();
+      default:
+        throw Exception('Invalid model type');
+    }
   }
 }

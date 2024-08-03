@@ -86,16 +86,15 @@ class LlamaCppPanel extends StatelessWidget {
   }
 
   Widget buildModelName() {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
-
-        if (session.model.name.isEmpty) {
+    return Selector<AppData, String>(
+      selector: (context, appData) => appData.model.name,
+      builder: (context, modelName, child) {
+        if (modelName.isEmpty) {
           return const SizedBox.shrink();
         }
 
         return Text(
-          "Model: ${session.model.name}",
+          "Model: $modelName",
           textAlign: TextAlign.center,
         );
       }

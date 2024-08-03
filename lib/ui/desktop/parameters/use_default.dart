@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/shared/tiles/switch_container.dart';
 import 'package:provider/provider.dart';
 
@@ -8,20 +9,18 @@ class UseDefaultParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
+    return Selector<AppData, bool>(
+      selector: (context, appData) => appData.model.useDefault,
       builder: buildSwitchContainer
     );
   }
 
-  Widget buildSwitchContainer(BuildContext context, AppData appData, Widget? child) {
-    final session = appData.currentSession;
-        
+  Widget buildSwitchContainer(BuildContext context, bool useDefault, Widget? child) {
     return SwitchContainer(
       title: 'Use Default Parameters',
-      initialValue: session.model.useDefault,
+      initialValue: useDefault,
       onChanged: (value) {
-        session.model.useDefault = value;
-        session.notify();
+        LargeLanguageModel.of(context).useDefault = value;
       },
     );
   }

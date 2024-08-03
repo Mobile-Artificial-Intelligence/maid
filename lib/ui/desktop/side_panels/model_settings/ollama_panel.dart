@@ -61,7 +61,8 @@ class OllamaPanel extends StatelessWidget {
             buildDivider(context),
             buildSwitchWrap(),
             buildDivider(context),
-            Consumer<AppData>(
+            Selector<AppData, bool>(
+              selector: (context, appData) => appData.model.useDefault,
               builder: buildGridView
             )
           ]
@@ -103,9 +104,7 @@ class OllamaPanel extends StatelessWidget {
     );
   }
 
-  Widget buildGridView(BuildContext context, AppData appData, Widget? child) {
-    final model = appData.currentSession.model;
-
+  Widget buildGridView(BuildContext context, bool useDefault, Widget? child) {
     return GridView(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 250,
@@ -116,7 +115,7 @@ class OllamaPanel extends StatelessWidget {
       shrinkWrap: true,
       children: [
         const SeedParameter(),
-        if (!model.useDefault) ...[
+        if (!useDefault) ...[
           const NThreadsParameter(),
           const NCtxParameter(),
           const NBatchParameter(),
