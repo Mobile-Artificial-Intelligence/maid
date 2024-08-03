@@ -36,8 +36,8 @@ class ChatBody extends StatelessWidget {
   }
 
   Widget _buildChat() {
-    return Consumer2<AppData, User>(
-      builder: (context, appData, user, child) {
+    return Consumer<AppData>(
+      builder: (context, appData, child) {
         final session = appData.currentSession;
         final character = appData.currentCharacter;
 
@@ -53,7 +53,7 @@ class ChatBody extends StatelessWidget {
           if (character.greetings[index].isNotEmpty) {
             final message = ChatNode(
               role: ChatRole.assistant,
-              content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
+              content: Utilities.formatPlaceholders(character.greetings[index], appData.user.name, character.name),
               finalised: true
             );
 

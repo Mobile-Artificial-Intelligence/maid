@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
-import 'package:maid/classes/providers/user.dart';
 import 'package:maid/classes/static/logger.dart';
 import 'package:maid/ui/shared/dropdowns/app_layout_dropdown.dart';
 import 'package:maid/ui/shared/dropdowns/theme_mode_dropdown.dart';
@@ -61,7 +60,6 @@ class AppSettingsPanel extends StatelessWidget {
               SharedPreferences.getInstance().then((prefs) {
                 prefs.clear();
                 AppPreferences.of(context).reset();
-                User.of(context).reset();
                 AppData.of(context).reset();
                 Logger.clear();
               });

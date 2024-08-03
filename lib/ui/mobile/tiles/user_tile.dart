@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/mobile/dialogs/user_name_dialog.dart';
 import 'package:maid/ui/mobile/dialogs/user_image_dialog.dart';
@@ -15,7 +16,8 @@ class UserTile extends StatefulWidget {
 class _UserTileState extends State<UserTile> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<User>(
+    return Selector<AppData, User>(
+      selector: (context, appData) => appData.user,
       builder: listTileBuilder,
     );
   }

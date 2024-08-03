@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:provider/provider.dart';
 
@@ -7,7 +8,8 @@ class UserNameDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<User>(
+    return Selector<AppData, User>(
+      selector: (context, appData) => appData.user,
       builder: dialogBuilder,
     );
   }

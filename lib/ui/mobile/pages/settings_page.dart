@@ -24,75 +24,79 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const GenericAppBar(title: "App Settings"),
-      body: Column(
-        children: [
-          SwitchListTile(
-            title: const Text("Auto Text to Speech"),
-            value: AppPreferences.of(context).autoTextToSpeech,
-            onChanged: (value) {
-              AppPreferences.of(context).autoTextToSpeech = value;
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8),
-              child: Row(
-                children: [
-                Expanded(
-                  child: Text("Theme Mode"),
-                ),
-                ThemeModeDropdown()
-              ],
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8),
-              child: Row(
-                children: [
-                Expanded(
-                  child: Text("Application Layout"),
-                ),
-                AppLayoutDropdown()
-              ],
-            ),
-          ),
-          FilledButton(
-            onPressed: () {
-              SharedPreferences.getInstance().then((prefs) {
-                prefs.clear();
-                AppPreferences.of(context).reset();
-                User.of(context).reset();
-                AppData.of(context).reset();
-                setState(() {
-                  Logger.clear();
-                });
-              });
-            },
-            child: const Text("Clear Cache"),
-          ),
-          Divider(
-            height: 20,
-            indent: 10,
-            endIndent: 10,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: CodeBox(code: Logger.getLog)
-          ),
-          Text(
-            ram == -1 ? 'RAM: Unknown' : 'RAM: $ram GB',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color.lerp(
-                Colors.red, 
-                Colors.green, 
-                ram.clamp(0, 8) / 8
+      body: buildColumn(),
+    );
+  }
+
+  Widget buildColumn() {
+    return Column(
+      children: [
+        SwitchListTile(
+          title: const Text("Auto Text to Speech"),
+          value: AppPreferences.of(context).autoTextToSpeech,
+          onChanged: (value) {
+            AppPreferences.of(context).autoTextToSpeech = value;
+          },
+        ),
+        const Padding(
+          padding: EdgeInsets.all(8),
+            child: Row(
+              children: [
+              Expanded(
+                child: Text("Theme Mode"),
               ),
-              fontSize: 15,
-            ),
+              ThemeModeDropdown()
+            ],
           ),
-        ],
-      ),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(8),
+            child: Row(
+              children: [
+              Expanded(
+                child: Text("Application Layout"),
+              ),
+              AppLayoutDropdown()
+            ],
+          ),
+        ),
+        FilledButton(
+          onPressed: () {
+            SharedPreferences.getInstance().then((prefs) {
+              prefs.clear();
+              AppPreferences.of(context).reset();
+              User.of(context).reset();
+              AppData.of(context).reset();
+              setState(() {
+                Logger.clear();
+              });
+            });
+          },
+          child: const Text("Clear Cache"),
+        ),
+        Divider(
+          height: 20,
+          indent: 10,
+          endIndent: 10,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: CodeBox(code: Logger.getLog)
+        ),
+        Text(
+          ram == -1 ? 'RAM: Unknown' : 'RAM: $ram GB',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Color.lerp(
+              Colors.red, 
+              Colors.green, 
+              ram.clamp(0, 8) / 8
+            ),
+            fontSize: 15,
+          ),
+        ),
+      ],
     );
   }
 }

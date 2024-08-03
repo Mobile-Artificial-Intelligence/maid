@@ -32,8 +32,9 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppData, User>(
-      builder: (context, appData, user, child) {
+    return Consumer<AppData>(
+      builder: (context, appData, child) {
+        final user = appData.user;
         final session = appData.currentSession;
         final character = appData.currentCharacter;
 

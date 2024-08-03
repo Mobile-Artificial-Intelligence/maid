@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/desktop_navigator.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/shared/utilities/future_avatar.dart';
@@ -9,17 +10,20 @@ class UserButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<User>(
-      builder: (context, user, child) {
-        return FutureAvatar(
-          key: user.key, 
-          image: user.profile, 
-          radius: 16, 
-          onPressed: () {
-            DesktopNavigator.of(context).navigateSettingsPanel("/user-settings");
-          }
-        );
-      },
+    return Selector<AppData, User>(
+      selector: (context, appData) => appData.user,
+      builder: userBuilder,
+    );
+  }
+
+  Widget userBuilder(BuildContext context, User user, Widget? child) {
+    return FutureAvatar(
+      key: user.key, 
+      image: user.profile, 
+      radius: 16, 
+      onPressed: () {
+        DesktopNavigator.of(context).navigateSettingsPanel("/user-settings");
+      }
     );
   }
 }

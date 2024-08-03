@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/character.dart';
 import 'package:maid/classes/providers/session.dart';
+import 'package:maid/classes/providers/user.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +12,8 @@ class AppData extends ChangeNotifier {
   final List<Character> _characters;
   late Session _currentSession;
   late Character _currentCharacter;
+
+  late User _user;
 
   static AppData of(BuildContext context) => Provider.of<AppData>(context, listen: false);
 
@@ -29,6 +32,8 @@ class AppData extends ChangeNotifier {
   Session get currentSession => _currentSession;
 
   Character get currentCharacter => _currentCharacter;
+
+  User get user => _user;
 
   set currentSession(Session session) {
     if (!currentSession.chat.tail.finalised) return;
@@ -50,6 +55,11 @@ class AppData extends ChangeNotifier {
     _currentCharacter.addListener(notify);
 
     save().then((value) => notifyListeners());
+  }
+
+  set user(User user) {
+    _user = user;
+    notifyListeners();
   }
 
   static Future<AppData> get last async {
@@ -79,8 +89,9 @@ class AppData extends ChangeNotifier {
 
     final session = await Session.last;
     final character = await Character.last;
+    final user = await User.last;
 
-    return AppData(sessions, characters, session, character);
+    return AppData(sessions, characters, session, character, user);
   }
 
   Future<void> save() async {
@@ -94,7 +105,10 @@ class AppData extends ChangeNotifier {
 
     final futures = [
       prefs.setString("sessions", json.encode(sessionsMaps)),
-      prefs.setString("characters", json.encode(characterMaps))
+      prefs.setString("characters", json.encode(characterMaps)),
+      _currentSession.save(),
+      _currentCharacter.save(),
+      _user.save()
     ];
 
     await Future.wait(futures);
@@ -165,14 +179,15 @@ class AppData extends ChangeNotifier {
     clearCharacters();
     _currentCharacter = Character(notify);
     _currentSession = Session(notify, 0);
+    _user = User(notify);
     notifyListeners();
   }
-
+  
   void notify() {
     save().then((value) => notifyListeners());
   }
 
-  AppData(this._sessions, this._characters, this._currentSession, this._currentCharacter) {
+  AppData(this._sessions, this._characters, this._currentSession, this._currentCharacter, this._user) {
     _currentSession.addListener(notify);
     _currentCharacter.addListener(notify);
   }
