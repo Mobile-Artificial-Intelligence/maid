@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/shared/tiles/slider_grid_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -8,21 +9,21 @@ class NPredictParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
+    return Selector<AppData, int>(
+      selector: (context, appData) => appData.model.nPredict,
+      builder: nPredictBuilder,
+    );
+  }
 
-        return SliderGridTile(
-          labelText: 'NPredict',
-          inputValue: session.model.nPredict,
-          sliderMin: 1.0,
-          sliderMax: 4096.0,
-          sliderDivisions: 4095,
-          onValueChanged: (value) {
-            session.model.nPredict = value.round();
-            session.notify();
-          }
-        );
+  Widget nPredictBuilder(BuildContext context, int nPredict, Widget? child) {
+    return SliderGridTile(
+      labelText: 'Predict Length',
+      inputValue: nPredict,
+      sliderMin: 1.0,
+      sliderMax: 4096.0,
+      sliderDivisions: 4095,
+      onValueChanged: (value) {
+        LargeLanguageModel.of(context).nPredict = value.round();
       }
     );
   }

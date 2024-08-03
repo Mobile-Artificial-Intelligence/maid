@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/shared/tiles/slider_grid_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -8,21 +9,21 @@ class TfsZParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
-        
-        return SliderGridTile(
-          labelText: 'TfsZ',
-          inputValue: session.model.tfsZ,
-          sliderMin: 0.0,
-          sliderMax: 1.0,
-          sliderDivisions: 100,
-          onValueChanged: (value) {
-            session.model.tfsZ = value;
-            session.notify();
-          }
-        );
+    return Selector<AppData, double>(
+      selector: (context, appData) => appData.model.tfsZ,
+      builder: tfsZBuilder,
+    );
+  }
+
+  Widget tfsZBuilder(BuildContext context, double tfsZ, Widget? child) {
+    return SliderGridTile(
+      labelText: 'TfsZ',
+      inputValue: tfsZ,
+      sliderMin: 0.0,
+      sliderMax: 1.0,
+      sliderDivisions: 100,
+      onValueChanged: (value) {
+        LargeLanguageModel.of(context).tfsZ = value;
       }
     );
   }

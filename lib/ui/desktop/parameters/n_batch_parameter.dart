@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/shared/tiles/slider_grid_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -8,21 +9,21 @@ class NBatchParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
-        
-        return SliderGridTile(
-          labelText: 'NBatch',
-          inputValue: session.model.nBatch,
-          sliderMin: 1.0,
-          sliderMax: 4096.0,
-          sliderDivisions: 4095,
-          onValueChanged: (value) {
-            session.model.nBatch = value.round();
-            session.notify();
-          }
-        );
+    return Selector<AppData, int>(
+      selector: (context, appData) => appData.model.nBatch,
+      builder: nBatchBuilder,
+    );
+  }
+
+  Widget nBatchBuilder(BuildContext context, int nBatch, Widget? child) {
+    return SliderGridTile(
+      labelText: 'Batch Size',
+      inputValue: nBatch,
+      sliderMin: 1.0,
+      sliderMax: 4096.0,
+      sliderDivisions: 4095,
+      onValueChanged: (value) {
+        LargeLanguageModel.of(context).nBatch = value.round();
       }
     );
   }

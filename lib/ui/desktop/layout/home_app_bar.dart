@@ -24,32 +24,33 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget buildRow() {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final model = appData.currentSession.model;
+    return Selector<AppData, LargeLanguageModelType>(
+      selector: (context, appData) => appData.model.type,
+      builder: buildAppBar
+    );
+  }
 
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const LlmPlatformDropdown(),
-            const Spacer(flex: 1),
-            Expanded(
-              flex: 8,
-              child: model.type == LargeLanguageModelType.llamacpp ? 
-                const LlamaCppModelControls() : 
-                const RemoteModelDropdown(),
-            ),
-            const Spacer(flex: 1),
-            const NewSessionButton(),
-            const SizedBox(width: 8.0),
-            IconButton(
-              tooltip: 'About',
-              icon: const Icon(Icons.info), 
-              onPressed: () => openAbout(context)
-            ),
-          ],
-        );
-      }
+  Widget buildAppBar(BuildContext context, LargeLanguageModelType type, Widget? child) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const LlmPlatformDropdown(),
+        const Spacer(flex: 1),
+        Expanded(
+          flex: 8,
+          child: type == LargeLanguageModelType.llamacpp ? 
+            const LlamaCppModelControls() : 
+            const RemoteModelDropdown(),
+        ),
+        const Spacer(flex: 1),
+        const NewSessionButton(),
+        const SizedBox(width: 8.0),
+        IconButton(
+          tooltip: 'About',
+          icon: const Icon(Icons.info), 
+          onPressed: () => openAbout(context)
+        ),
+      ],
     );
   }
 
