@@ -13,7 +13,8 @@ class DesktopApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppPreferences>(
+    return Selector<AppPreferences, ThemeMode>(
+      selector: (context, appPreferences) => appPreferences.themeMode,
       builder: appBuilder
     );
   }
@@ -25,13 +26,13 @@ class DesktopApp extends StatelessWidget {
   /// The [MaterialApp] widget is configured with various properties such as the app title,
   /// theme, initial route, and route mappings.
   /// The [home] property is set to [DesktopHomePage], which serves as the default landing page.
-  Widget appBuilder(BuildContext context, AppPreferences appPreferences, Widget? child) {
+  Widget appBuilder(BuildContext context, ThemeMode themeMode, Widget? child) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Maid',
       theme: Themes.lightTheme(),
       darkTheme: Themes.darkTheme(),
-      themeMode: appPreferences.themeMode,
+      themeMode: themeMode,
       initialRoute: '/',
       routes: {
         '/about': (context) => const AboutPage(),

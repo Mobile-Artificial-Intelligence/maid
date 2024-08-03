@@ -47,9 +47,10 @@ class MaidApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => user),
         ChangeNotifierProvider(create: (context) => HuggingfaceSelection())
       ],
-      child: Consumer<AppPreferences>(
-        builder: (context, appPreferences, child) {
-          if (appPreferences.isDesktop) {
+      child: Selector<AppPreferences, bool>(
+        selector: (context, appPreferences) => appPreferences.isDesktop,
+        builder: (context, isDesktop, child) {
+          if (isDesktop) {
             return const DesktopApp();
           } 
           else {
