@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/shared/tiles/slider_list_tile.dart';
@@ -11,28 +12,30 @@ class NThreadsParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
-      
-        return SliderListTile(
-          labelText: 'NThreads',
-          inputValue: session.model.nThread,
-          sliderMin: 1.0,
-          sliderMax: session.model.type == LargeLanguageModelType.llamacpp
-              ? Platform.numberOfProcessors.toDouble()
-              : 128.0,
-          sliderDivisions: 127,
-          onValueChanged: (value) {
-            if (value.round() > Platform.numberOfProcessors) {
-              session.model.nThread = Platform.numberOfProcessors;
-            } else {
-              session.model.nThread = value.round();
-            }
+    return Selector<AppData, LargeLanguageModel>(
+      selector: (context, appData) => appData.model,
+      builder: nThreadsBuilder,
+    );
+  }
 
-            session.notify();
-          }
-        );
+  Widget nThreadsBuilder(BuildContext context, LargeLanguageModel model, Widget? child) {
+    final max = model.type == LargeLanguageModelType.llamacpp
+    ? Platform.numberOfProcessors.toDouble()
+    : 128.0;
+
+    return SliderListTile(
+      labelText: 'NThreads',
+      inputValue: model.nThread,
+      sliderMin: 1.0,
+      sliderMax: max,
+      sliderDivisions: max.round() - 1,
+      onValueChanged: (value) {
+        if (value.round() > Platform.numberOfProcessors) {
+          LargeLanguageModel.of(context).nThread = Platform.numberOfProcessors;
+        } 
+        else {
+          LargeLanguageModel.of(context).nThread = value.round();
+        }
       }
     );
   }

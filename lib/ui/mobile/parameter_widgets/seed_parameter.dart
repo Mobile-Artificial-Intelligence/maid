@@ -12,52 +12,51 @@ class SeedParameter extends StatelessWidget {
       text: LargeLanguageModel.of(context).seed.toString()
     );
 
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
-        
-        return Column(
-          children: [
-            SwitchListTile(
-              title: const Text('Random Seed'),
-              value: session.model.randomSeed,
-              onChanged: (value) {
-                session.model.randomSeed = value;
-                session.notify();
-              },
-            ),
-            Divider(
-              height: 20,
-              indent: 10,
-              endIndent: 10,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            if (!session.model.randomSeed)
-              ListTile(
-                title: Row(
-                  children: [
-                    const Expanded(
-                      child: Text('seed'),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        controller: controller,
-                        decoration: const InputDecoration(
-                          labelText: 'seed',
-                        ),
-                        onChanged: (value) {
-                          session.model.seed = int.parse(value);
-                          session.notify();
-                        },
-                      ),
-                    ),
-                  ],
+    return Selector<AppData, bool>(
+      selector: (context, appData) => appData.model.randomSeed,
+      builder: (context, randomSeed, child) => buildColumn(context, randomSeed, controller),
+    );
+  }
+
+  Widget buildColumn(BuildContext context, bool randomSeed, TextEditingController controller) {
+    return Column(
+      children: [
+        SwitchListTile(
+          title: const Text('Random Seed'),
+          value: randomSeed,
+          onChanged: (value) {
+            LargeLanguageModel.of(context).randomSeed = value;
+          },
+        ),
+        Divider(
+          height: 20,
+          indent: 10,
+          endIndent: 10,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        if (!randomSeed)
+          ListTile(
+            title: Row(
+              children: [
+                const Expanded(
+                  child: Text('seed'),
                 ),
-              ),
-          ],
-        );
-      }
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: controller,
+                    decoration: const InputDecoration(
+                      labelText: 'seed',
+                    ),
+                    onChanged: (value) {
+                      LargeLanguageModel.of(context).seed = int.parse(value);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

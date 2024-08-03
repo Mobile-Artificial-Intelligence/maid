@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:provider/provider.dart';
 
 class PenalizeNlParameter extends StatelessWidget {
@@ -7,19 +8,19 @@ class PenalizeNlParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final session = appData.currentSession;
-        
-        return SwitchListTile(
-          title: const Text('Penalize New Line'),
-          value: session.model.penalizeNewline,
-          onChanged: (value) {
-            session.model.penalizeNewline = value;
-            session.notify();
-          },
-        );
-      }
+    return Selector<AppData, bool>(
+      selector: (context, appData) => appData.model.penalizeNewline,
+      builder: buildSwitchContainer
+    );
+  }
+
+  Widget buildSwitchContainer(BuildContext context, bool penalizeNewline, Widget? child) {
+    return SwitchListTile(
+      title: const Text('Penalize New Line'),
+      value: penalizeNewline,
+      onChanged: (value) {
+        LargeLanguageModel.of(context).penalizeNewline = value;
+      },
     );
   }
 }

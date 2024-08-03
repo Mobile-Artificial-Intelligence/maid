@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/mobile/layout/model_settings_app_bar.dart';
 import 'package:maid/ui/mobile/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/seed_parameter.dart';
@@ -20,33 +21,34 @@ class MistralAiPage extends StatelessWidget {
     return Scaffold(
       appBar: const ModelSettingsAppBar(title: "MistralAI Parameters"),
       body: SessionBusyOverlay(
-        child: Consumer<AppData>(
-          builder: (context, appData, child) {
-            final session = appData.currentSession;
-            
-            SharedPreferences.getInstance().then((prefs) {
-              prefs.setString("mistral_ai_model", json.encode(session.model.toMap()));
-            });
-
-            return ListView(
-              children: [
-                const ApiKeyParameter(),
-                Divider(
-                  height: 20,
-                  indent: 10,
-                  endIndent: 10,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const UrlParameter(),
-                const SizedBox(height: 20.0),
-                const SeedParameter(),
-                const TopPParameter(),
-                const TemperatureParameter(),
-              ]
-            );
-          },
+        child: Selector<AppData, LargeLanguageModel>(
+          selector: (context, appData) => appData.model,
+          builder: listViewBuilder,
         ),
       )
+    );
+  }
+
+  Widget listViewBuilder(BuildContext context, LargeLanguageModel model, Widget? child) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("mistral_ai_model", json.encode(model.toMap()));
+    });
+
+    return ListView(
+      children: [
+        const ApiKeyParameter(),
+        Divider(
+          height: 20,
+          indent: 10,
+          endIndent: 10,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        const UrlParameter(),
+        const SizedBox(height: 20.0),
+        const SeedParameter(),
+        const TopPParameter(),
+        const TemperatureParameter(),
+      ]
     );
   }
 }
