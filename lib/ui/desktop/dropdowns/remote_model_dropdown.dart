@@ -37,14 +37,12 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
     );
   }
 
-  Widget buildDropdown(BuildContext context, AppData appData, Widget? child) {
-    final session = appData.currentSession;
-        
+  Widget buildDropdown(BuildContext context, AppData appData, Widget? child) { 
     if (canUseCache(context)) {
       return buildRow(context);
     } 
     else {
-      lastModelType = session.model.type;
+      lastModelType = appData.model.type;
       lastCheck = DateTime.now();
       return buildFuture();
     }
@@ -89,8 +87,8 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   Widget buildText() {
     return Consumer<AppData>(
       builder: (context, appData, child) {
-        final text = appData.currentSession.model.name.isNotEmpty ? 
-          appData.currentSession.model.name : 'Select Model';
+        final text = appData.model.name.isNotEmpty ? 
+          appData.model.name : 'Select Model';
 
         return Text(
           text,
@@ -133,9 +131,9 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
             title: Text(modelName),
             onTap: () {
-              appData.currentSession.model.name = modelName;
+              appData.model.name = modelName;
             },
-            tileColor: appData.currentSession.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
+            tileColor: appData.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
           );
         }
       )

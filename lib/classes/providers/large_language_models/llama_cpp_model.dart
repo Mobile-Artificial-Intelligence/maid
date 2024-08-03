@@ -191,10 +191,10 @@ class LlamaCppModel extends LargeLanguageModel {
   }
 
   @override
-  void save() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("llama_cpp_model", json.encode(toMap()));
-    });
+  Future<void> save() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    
+    await prefs.setString("llama_cpp_model", json.encode(toMap()));
   }
 
   void init() {

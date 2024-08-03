@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/classes/providers/app_data.dart';
-import 'package:maid/classes/providers/session.dart';
 import 'package:maid/ui/shared/shaders/blade_runner_gradient_shader.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +29,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              appData.currentSession.model.type.displayName,
+              appData.model.type.displayName,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -63,7 +62,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('LlamaCPP'),
-          onTap: Session.of(context).switchLlamaCpp,
+          onTap: AppData.of(context).switchLlamaCpp,
         ),
       ),
       PopupMenuItem(
@@ -71,7 +70,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('OpenAI'),
-          onTap: Session.of(context).switchOpenAI,
+          onTap: AppData.of(context).switchOpenAI,
         ),
       ),
       PopupMenuItem(
@@ -79,7 +78,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Ollama'),
-          onTap: Session.of(context).switchOllama,
+          onTap: AppData.of(context).switchOllama,
         ),
       ),
       PopupMenuItem(
@@ -87,7 +86,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('MistralAI'),
-          onTap: Session.of(context).switchMistralAI,
+          onTap: AppData.of(context).switchMistralAI,
         ),
       ),
       PopupMenuItem(
@@ -95,7 +94,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Gemini'),
-          onTap: Session.of(context).switchGemini,
+          onTap: AppData.of(context).switchGemini,
         ),
       )
     ];

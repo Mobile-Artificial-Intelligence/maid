@@ -5,14 +5,8 @@ import 'package:babylon_tts/babylon_tts.dart';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node_tree.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
-import 'package:maid/classes/providers/large_language_models/google_gemini_model.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
-import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
-import 'package:maid/classes/providers/large_language_models/mistral_ai_model.dart';
-import 'package:maid/classes/providers/large_language_models/ollama_model.dart';
-import 'package:maid/classes/providers/large_language_models/open_ai_model.dart';
 import 'package:maid/enumerators/chat_role.dart';
-import 'package:maid/enumerators/large_language_model_type.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/character.dart';
 import 'package:maid/classes/providers/user.dart';
@@ -22,7 +16,6 @@ import 'package:maid/classes/static/utilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Session extends ChangeNotifier {
-  LargeLanguageModel model = LargeLanguageModel();
   ChatNodeTree chat = ChatNodeTree();
   Key _key = UniqueKey();
 
@@ -78,15 +71,12 @@ class Session extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     prefs.setString("last_session", json.encode(toMap()));
-
-    model.save();
   }
 
   void newSession(int index) {
     _key = UniqueKey();
     _name = "New Chat${index <= 0 ? "" : " $index"}";
     chat = ChatNodeTree();
-    model = LlamaCppModel(listener: notify);
     notifyListeners();
   }
 
@@ -94,7 +84,6 @@ class Session extends ChangeNotifier {
     _key = session.key;
     _name = session.name;
     chat = session.chat;
-    model = session.model;
     notifyListeners();
   }
 
@@ -109,29 +98,6 @@ class Session extends ChangeNotifier {
     _name = inputJson['name'] ?? "New Chat";
 
     chat.root = ChatNode.fromMap(inputJson['chat'] ?? {});
-
-    final type = LargeLanguageModelType.values[inputJson['llm_type'] ?? LargeLanguageModelType.ollama.index];
-
-    switch (type) {
-      case LargeLanguageModelType.llamacpp:
-        switchLlamaCpp();
-        break;
-      case LargeLanguageModelType.openAI:
-        switchOpenAI();
-        break;
-      case LargeLanguageModelType.ollama:
-        switchOllama();
-        break;
-      case LargeLanguageModelType.mistralAI:
-        switchMistralAI();
-        break;
-      case LargeLanguageModelType.gemini:
-        switchGemini();
-        break;
-      default:
-        switchLlamaCpp();
-        break;
-    }
     
     notifyListeners();
   }
@@ -139,8 +105,7 @@ class Session extends ChangeNotifier {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'chat': chat.root.toMap(),
-      'llm_type': model.type.index
+      'chat': chat.root.toMap()
     };
   }
 
@@ -148,6 +113,7 @@ class Session extends ChangeNotifier {
     final user = User.of(context);
     final character = Character.of(context);
     final appPreferences = AppPreferences.of(context);
+    final model = LargeLanguageModel.of(context);
 
     final description = Utilities.formatPlaceholders(character.description, user.name, character.name);
     final personality = Utilities.formatPlaceholders(character.personality, user.name, character.name);
@@ -214,120 +180,6 @@ class Session extends ChangeNotifier {
     chat.add(role: ChatRole.assistant);
 
     prompt(context);
-    notifyListeners();
-  }
-
-  void stop() {
-    (model as LlamaCppModel).stop();
-    Logger.log('Local generation stopped');
-    notifyListeners();
-  }
-
-  /// -------------------------------------- Model Switching --------------------------------------
-
-  void switchLlamaCpp() async {
-    if (model.type != LargeLanguageModelType.none) {
-      model.save();
-    }
-
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, dynamic> lastLlamaCpp = json.decode(prefs.getString("llama_cpp_model") ?? "{}");
-    Logger.log(lastLlamaCpp.toString());
-    
-    if (lastLlamaCpp.isNotEmpty) {
-      model = LlamaCppModel.fromMap(notify, lastLlamaCpp);
-    } 
-    else {
-      model = LlamaCppModel(listener: notify);
-    }
-
-    prefs.setInt("llm_type", model.type.index);
-    notifyListeners();
-  }
-
-  void switchOpenAI() async {
-    if (model.type != LargeLanguageModelType.none) {
-      model.save();
-    }
-
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, dynamic> lastOpenAI = json.decode(prefs.getString("open_ai_model") ?? "{}");
-    Logger.log(lastOpenAI.toString());
-    
-    if (lastOpenAI.isNotEmpty) {
-      model = OpenAiModel.fromMap(notify, lastOpenAI);
-    } 
-    else {
-      model = OpenAiModel(listener: notify);
-    }
-
-    prefs.setInt("llm_type", model.type.index);
-    notifyListeners();
-  }
-
-  void switchOllama() async {
-    if (model.type != LargeLanguageModelType.none) {
-      model.save();
-    }
-
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, dynamic> lastOllama = json.decode(prefs.getString("ollama_model") ?? "{}");
-    Logger.log(lastOllama.toString());
-    
-    if (lastOllama.isNotEmpty) {
-      model = OllamaModel.fromMap(notify, lastOllama);
-    } 
-    else {
-      model = OllamaModel(listener: notify);
-      model.resetUri();
-    }
-
-    prefs.setInt("llm_type", model.type.index);
-    notifyListeners();
-  }
-
-  void switchMistralAI() async {
-    if (model.type != LargeLanguageModelType.none) {
-      model.save();
-    }
-
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, dynamic> lastMistralAI = json.decode(prefs.getString("mistral_ai_model") ?? "{}");
-    Logger.log(lastMistralAI.toString());
-    
-    if (lastMistralAI.isNotEmpty) {
-      model = MistralAiModel.fromMap(notify, lastMistralAI);
-    } 
-    else {
-      model = MistralAiModel(listener: notify);
-    }
-
-    prefs.setInt("llm_type", model.type.index);
-    notifyListeners();
-  }
-
-  void switchGemini() async {
-    if (model.type != LargeLanguageModelType.none) {
-      model.save();
-    }
-    
-    final prefs = await SharedPreferences.getInstance();
-
-    Map<String, dynamic> lastGemini = json.decode(prefs.getString("google_gemini_model") ?? "{}");
-    Logger.log(lastGemini.toString());
-    
-    if (lastGemini.isNotEmpty) {
-      model = GoogleGeminiModel.fromMap(notify, lastGemini);
-    } 
-    else {
-      model = GoogleGeminiModel(listener: notify);
-    }
-
-    prefs.setInt("llm_type", model.type.index);
     notifyListeners();
   }
 }

@@ -108,7 +108,7 @@ class LoadModelButton extends StatelessWidget {
   }
 
   Widget rowBuilder(BuildContext context, AppData appData, Widget? child) {
-    final modelName = appData.currentSession.model.name;
+    final modelName = appData.model.name;
 
     const textStyle = TextStyle(
       color: Colors.white,

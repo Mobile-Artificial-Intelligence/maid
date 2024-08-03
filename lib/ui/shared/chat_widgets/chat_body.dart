@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/classes/providers/app_data.dart';
-import 'package:maid/classes/providers/user.dart';
 import 'package:maid/classes/static/utilities.dart';
 import 'package:maid/ui/shared/chat_widgets/chat_field.dart';
 import 'package:maid/ui/shared/chat_widgets/chat_message.dart';

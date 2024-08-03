@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/classes/providers/session.dart';
 
 class LargeLanguageModel extends ChangeNotifier {
   LargeLanguageModelType get type => LargeLanguageModelType.none;
@@ -209,7 +209,7 @@ class LargeLanguageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  static LargeLanguageModel of(BuildContext context) => Session.of(context).model;
+  static LargeLanguageModel of(BuildContext context) => AppData.of(context).model;
 
   LargeLanguageModel({
     VoidCallback? listener,
@@ -360,7 +360,7 @@ class LargeLanguageModel extends ChangeNotifier {
     fromMap({});
   }
 
-  void save() {
+  Future<void> save() {
     throw UnimplementedError();
   }
 }

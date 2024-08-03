@@ -118,10 +118,10 @@ class GoogleGeminiModel extends LargeLanguageModel {
   }
 
   @override
-  void save() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("google_gemini_model", json.encode(toMap()));
-    });
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+    
+    await prefs.setString("google_gemini_model", json.encode(toMap()));
   }
 
   @override

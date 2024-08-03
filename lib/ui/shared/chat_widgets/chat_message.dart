@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:babylon_tts/babylon_tts.dart';
+import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/session.dart';
 import 'package:maid/ui/shared/dialogs/missing_requirements_dialog.dart';
 import 'package:maid/ui/shared/shaders/blade_runner_gradient_shader.dart';
 import 'package:maid/classes/chat_node.dart';
-import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/shared/shaders/wave_gradient_shader.dart';
 import 'package:maid/ui/shared/utilities/code_box.dart';
 import 'package:maid/ui/shared/utilities/future_avatar.dart';
@@ -111,11 +111,12 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   }
 
   void onRegenerate() {
+    final model = LargeLanguageModel.of(context);
     final session = Session.of(context);
 
     if (!session.chat.tail.finalised) return;
 
-    if (session.model.missingRequirements.isNotEmpty) {
+    if (model.missingRequirements.isNotEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -300,11 +301,12 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   }
 
   void onEdit() {
+    final model = LargeLanguageModel.of(context);
     final session = Session.of(context);
 
     if (!session.chat.tail.finalised) return;
           
-    if (session.model.missingRequirements.isNotEmpty) {
+    if (model.missingRequirements.isNotEmpty) {
       showDialog(
         context: context,
         builder: (context) {
@@ -320,11 +322,12 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   }
 
   void onEditingDone(String newText) {
+    final model = LargeLanguageModel.of(context);
     final session = Session.of(context);
 
     if (!session.chat.tail.finalised) return;
 
-    if (session.model.missingRequirements.isNotEmpty) {
+    if (model.missingRequirements.isNotEmpty) {
       showDialog(
         context: context,
         builder: (context) {

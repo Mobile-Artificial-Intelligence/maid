@@ -143,10 +143,10 @@ class ClaudeModel extends LargeLanguageModel {
   }
 
   @override
-  void save() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("mistral_ai_model", json.encode(toMap()));
-    });
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString("anthropic_model", json.encode(toMap()));
   }
 
   @override
