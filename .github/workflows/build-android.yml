@@ -22,6 +22,11 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build pkg-config libgtk-3-dev libvulkan-dev
+
       - name: Setup NDK
         run: |
           wget https://dl.google.com/android/repository/android-ndk-r26b-linux.zip

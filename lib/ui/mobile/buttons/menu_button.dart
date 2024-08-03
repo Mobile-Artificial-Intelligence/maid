@@ -26,6 +26,11 @@ class _MenuButtonState extends State<MenuButton> {
     return true;
   }
 
+  void forceRecheck() {
+    options.clear();
+    lastModelType = LargeLanguageModelType.none;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Selector<AppData, LargeLanguageModel>(
@@ -112,8 +117,8 @@ class _MenuButtonState extends State<MenuButton> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Model Settings'),
           onTap: () {
+            forceRecheck();
             Navigator.pop(context); // Close the menu
-            
             switch (LargeLanguageModel.of(context).type) {
               case LargeLanguageModelType.llamacpp:
                 Navigator.pushNamed(context, '/llamacpp');
@@ -137,7 +142,7 @@ class _MenuButtonState extends State<MenuButton> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('App Settings'),
           onTap: () {
-            options.clear();
+            forceRecheck();
             Navigator.pop(context); // Close the menu
             Navigator.pushNamed(
               context,
@@ -152,6 +157,7 @@ class _MenuButtonState extends State<MenuButton> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('About'),
           onTap: () {
+            forceRecheck();
             Navigator.pop(context); // Close the menu
             Navigator.pushNamed(context, '/about');
           },
