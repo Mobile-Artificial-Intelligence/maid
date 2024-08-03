@@ -254,7 +254,7 @@ class AppData extends ChangeNotifier {
     }
 
     prefs.setInt("llm_type", model.type.index);
-    notifyListeners();
+    notify();
   }
 
   void switchOpenAI() async {
@@ -275,7 +275,7 @@ class AppData extends ChangeNotifier {
     }
 
     prefs.setInt("llm_type", model.type.index);
-    notifyListeners();
+    notify();
   }
 
   void switchOllama() async {
@@ -318,7 +318,7 @@ class AppData extends ChangeNotifier {
     }
 
     prefs.setInt("llm_type", model.type.index);
-    notifyListeners();
+    notify();
   }
 
   void switchGemini() async {
@@ -339,6 +339,6 @@ class AppData extends ChangeNotifier {
     }
 
     prefs.setInt("llm_type", model.type.index);
-    notifyListeners();
+    notify();
   }
 }

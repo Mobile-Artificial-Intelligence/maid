@@ -24,19 +24,30 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const GenericAppBar(title: "App Settings"),
-      body: buildColumn(),
+      body: SingleChildScrollView(
+        child: buildColumn(),
+      ),
     );
   }
 
   Widget buildColumn() {
     return Column(
       children: [
-        SwitchListTile(
-          title: const Text("Auto Text to Speech"),
-          value: AppPreferences.of(context).autoTextToSpeech,
-          onChanged: (value) {
-            AppPreferences.of(context).autoTextToSpeech = value;
-          },
+        Padding(
+          padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+              const Expanded(
+                child: Text("Auto Text to Speech"),
+              ),
+              Switch(
+                value: AppPreferences.of(context).autoTextToSpeech,
+                onChanged: (value) {
+                  AppPreferences.of(context).autoTextToSpeech = value;
+                },
+              )
+            ],
+          ),
         ),
         const Padding(
           padding: EdgeInsets.all(8),

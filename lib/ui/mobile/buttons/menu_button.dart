@@ -97,7 +97,7 @@ class _MenuButtonState extends State<MenuButton> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
             title: Text(modelName),
             onTap: () {
-              model.name = modelName;
+              LargeLanguageModel.of(context).name = modelName;
             },
             tileColor: model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
           );
