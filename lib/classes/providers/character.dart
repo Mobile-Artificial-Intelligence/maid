@@ -309,23 +309,21 @@ class Character extends ChangeNotifier {
   String get hash {
     Uint8List bytes;
 
-    if(_profile != null) {
-      bytes = _profile!.readAsBytesSync();
-    } else {
-      List<String> hashList = [
-        _name,
-        _description,
-        _personality,
-        _scenario,
-        _system,
-        _useGreeting.toString(),
-        _greetings.join(),
-        _useExamples.toString(),
-        _examples.join(),
-      ];
-      
-      bytes = utf8.encode(hashList.join());
-    }
+    List<String> hashList = [
+      _name,
+      _description,
+      _personality,
+      _scenario,
+      _system,
+      _useGreeting.toString(),
+      _greetings.join(),
+      _useExamples.toString(),
+      _examples.join(),
+    ];
+     
+    bytes = utf8.encode(hashList.join());
+    
+    bytes.addAll(_profile!.readAsBytesSync());
 
     return sha256.convert(bytes).toString();
   }
