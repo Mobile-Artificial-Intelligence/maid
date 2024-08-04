@@ -101,7 +101,7 @@ class User extends ChangeNotifier {
   Map<String, dynamic> toMap() {
     return {
       "customImage": _customImage?.path,
-      "profile": _profile!.path,
+      "profile": _profile?.path,
       "name": _name,
     };
   }
