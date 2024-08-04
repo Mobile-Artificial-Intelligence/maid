@@ -63,7 +63,7 @@ jobs:
           xcrun stapler staple "build/macos/Build/Products/Release/maid.app"
 
       - name: Create DMG
-        run: ./scripts/create_dmg.sh
+        run: ./scripts/create_dmg.sh ${{ matrix.arch }}
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4

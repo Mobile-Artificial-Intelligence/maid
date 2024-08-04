@@ -65,8 +65,11 @@ jobs:
         run: |
           flutter build appbundle
 
+      - name: Rename AAB
+        run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/maid-android-bundle.aab
+
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: maid-android-aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: build/app/outputs/bundle/release/maid-android-bundle.aab

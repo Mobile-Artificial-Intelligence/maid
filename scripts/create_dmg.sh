@@ -2,8 +2,15 @@
 
 set -e
 
+# Check if ARCH argument is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 <arch>"
+  exit 1
+fi
+
+ARCH="$1"
 APP_NAME="maid"
-APP_DIR="build/macos/Build/Products/Release/${APP_NAME}.app"
+APP_DIR="build/macos/Build/Products/Release/${APP_NAME}-macos-${ARCH}.app"
 DMG_DIR="dmg"
 TMP_MOUNT="/tmp/Maid"
 DMG_BACKGROUND_IMG="./media/feature.png"
