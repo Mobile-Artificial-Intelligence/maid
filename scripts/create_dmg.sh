@@ -10,7 +10,7 @@ fi
 
 ARCH="$1"
 APP_NAME="maid"
-APP_DIR="build/macos/Build/Products/Release/${APP_NAME}-macos-${ARCH}.app"
+APP_DIR="build/macos/Build/Products/Release/${APP_NAME}.app"
 DMG_DIR="dmg"
 TMP_MOUNT="/tmp/Maid"
 DMG_BACKGROUND_IMG="./media/feature.png"
@@ -107,7 +107,7 @@ EOF
 hdiutil detach ${TMP_MOUNT}
 
 # Convert to final DMG
-hdiutil convert ${DMG_DIR}/${APP_NAME}_tmp.dmg -format UDZO -o ${DMG_DIR}/${APP_NAME}.dmg
+hdiutil convert ${DMG_DIR}/${APP_NAME}_tmp.dmg -format UDZO -o ${DMG_DIR}/${APP_NAME}-macos-${ARCH}.dmg
 
 # Remove temporary DMG
 rm ${DMG_DIR}/${APP_NAME}_tmp.dmg
