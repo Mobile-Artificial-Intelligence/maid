@@ -22,19 +22,19 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
 
   Future<Map<String, String>> get previouslyLoadedModels async {
     final prefs = await SharedPreferences.getInstance();
-
     final models = prefs.getString("imported_models") ?? "{}";
-
-    return json.decode(models);
+    return Map<String, String>.from(json.decode(models));
   }
 
   @override
-  void dispose() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    prefs.setString("imported_models", json.encode(importedModels ?? {}));
-
+  void dispose() {
+    saveImportedModels();
     super.dispose();
+  }
+
+  void saveImportedModels() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("imported_models", json.encode(importedModels ?? {}));
   }
 
   @override
@@ -44,63 +44,63 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
         future: loadingFuture!,
         onComplete: (_) {
           importedModels ??= {};
-
           final key = LlamaCppModel.of(context).name;
-
           if (importedModels![key] != null) {
             File(importedModels![key]!).delete();
           }
-
           importedModels![key] = LlamaCppModel.of(context).uri;
+          saveImportedModels();
         },
       );
-    }
-    else {
+    } else {
       return FutureBuilder<Map<String, String>>(
         future: previouslyLoadedModels,
-        builder: buildDialog,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            importedModels = snapshot.data;
+            return buildDialog(context);
+          } else {
+            return const LoadingDialog(title: "Loading Models");
+          }
+        },
       );
     }
   }
 
-  Widget buildDialog(BuildContext context, AsyncSnapshot<Map<String, String>> snapshot) {
-    if (snapshot.connectionState == ConnectionState.done) {
-      importedModels = snapshot.data;
-
-      return AlertDialog(
-        title: const Text(
-          "LlamaCPP Models",
-          textAlign: TextAlign.center
+  Widget buildDialog(BuildContext context) {
+    return AlertDialog(
+      title: const Text(
+        "LlamaCPP Models",
+        textAlign: TextAlign.center,
+      ),
+      content: importedModels!.isNotEmpty ? 
+        buildDropdown() : 
+        const SizedBox(),
+      actionsAlignment: MainAxisAlignment.center,
+      actionsOverflowAlignment: OverflowBarAlignment.center,
+      actionsOverflowButtonSpacing: 8.0,
+      actions: [
+        FilledButton(
+          onPressed: () => setState(() {
+            loadingFuture = LlamaCppModel.of(context).loadModel();
+          }),
+          child: Text(
+            "Import",
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
         ),
-        content: buildDropdown(),
-        actionsAlignment: MainAxisAlignment.center,
-        actions: [
-          FilledButton(
-            onPressed: () {
-              loadingFuture = LlamaCppModel.of(context).loadModel();
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              "Import",
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+        if (selected != null) ...importedOptions,
+        FilledButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            "Close",
+            style: Theme.of(context).textTheme.labelLarge,
           ),
-          if (selected != null) ...importedOptions,
-          FilledButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              "Close",
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-          ),
-        ],
-      );
-    } 
-    else {
-      return const LoadingDialog(title: "Loading Models");
-    }
+        ),
+      ],
+    );
   }
 
   List<Widget> get importedOptions {
@@ -119,7 +119,11 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
       FilledButton(
         onPressed: () {
           File(importedModels![selected!]!).delete();
-          Navigator.of(context).pop();
+          setState(() {
+            importedModels!.remove(selected);
+            selected = null;
+          });
+          saveImportedModels();
         },
         child: Text(
           "Delete",
@@ -131,6 +135,7 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
 
   Widget buildDropdown() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(selected ?? "Select Model"),
         PopupMenuButton(
@@ -144,13 +149,17 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
           itemBuilder: itemBuilder,
           onOpened: () => setState(() => dropdownOpen = true),
           onCanceled: () => setState(() => dropdownOpen = false),
-          onSelected: (_) => setState(() => dropdownOpen = false)
+          onSelected: (_) => setState(() => dropdownOpen = false),
         ),
       ],
     );
   }
 
   List<PopupMenuEntry<dynamic>> itemBuilder(BuildContext context) {
+    if (importedModels == null) {
+      return [];
+    }
+
     return importedModels!.entries.map((entry) {
       return PopupMenuItem(
         value: entry.key,

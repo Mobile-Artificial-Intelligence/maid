@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/huggingface_selection.dart';
-import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/shared/dialogs/load_model_dialog.dart';
 import 'package:provider/provider.dart';
