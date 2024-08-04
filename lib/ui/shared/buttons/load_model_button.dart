@@ -103,14 +103,13 @@ class LoadModelButton extends StatelessWidget {
   }
 
   Widget buildConsumer() {
-    return Consumer<AppData>(
+    return Selector<AppData, String>(
+      selector: (context, appData) => appData.model.name,
       builder: rowBuilder
     );
   }
 
-  Widget rowBuilder(BuildContext context, AppData appData, Widget? child) {
-    final modelName = appData.model.name;
-
+  Widget rowBuilder(BuildContext context, String modelName, Widget? child) {
     const textStyle = TextStyle(
       color: Colors.white,
       fontSize: 14,
