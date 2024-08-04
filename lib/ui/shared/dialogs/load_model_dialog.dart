@@ -131,9 +131,7 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
           children: [
             FilledButton(
               onPressed: () {
-                print("Selected: $selected");
                 LlamaCppModel.of(context).name = selected!;
-                print("Selected: ${importedModels![selected!]}");
                 LlamaCppModel.of(context).uri = importedModels![selected!]!;
                 Navigator.of(context).pop();
               },

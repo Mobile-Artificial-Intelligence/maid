@@ -47,7 +47,7 @@ class _SessionTileState extends State<SessionTile> {
   }
 
   void onTapDown(TapDownDetails details) {
-    longPressTimer = Timer(const Duration(seconds: 1), () {
+    longPressTimer = Timer(const Duration(milliseconds: 500), () {
       showContextMenu(details.globalPosition);
     });
   }
