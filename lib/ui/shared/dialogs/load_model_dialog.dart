@@ -89,7 +89,6 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
             style: Theme.of(context).textTheme.labelLarge,
           ),
         ),
-        if (selected != null) ...importedOptions,
         FilledButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -134,22 +133,31 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
   }
 
   Widget buildDropdown() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
-        Text(selected ?? "Select Model"),
-        PopupMenuButton(
-          tooltip: "Select Model",
-          icon: Icon(
-            dropdownOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-            color: Theme.of(context).colorScheme.onSurface,
-            size: 24,
-          ),
-          offset: const Offset(0, 40),
-          itemBuilder: itemBuilder,
-          onOpened: () => setState(() => dropdownOpen = true),
-          onCanceled: () => setState(() => dropdownOpen = false),
-          onSelected: (_) => setState(() => dropdownOpen = false),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(selected ?? "Select Model"),
+            PopupMenuButton(
+              tooltip: "Select Model",
+              icon: Icon(
+                dropdownOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                color: Theme.of(context).colorScheme.onSurface,
+                size: 24,
+              ),
+              offset: const Offset(0, 40),
+              itemBuilder: itemBuilder,
+              onOpened: () => setState(() => dropdownOpen = true),
+              onCanceled: () => setState(() => dropdownOpen = false),
+              onSelected: (_) => setState(() => dropdownOpen = false),
+            ),
+          ],
+        ),
+        if (selected != null)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: importedOptions,
         ),
       ],
     );
