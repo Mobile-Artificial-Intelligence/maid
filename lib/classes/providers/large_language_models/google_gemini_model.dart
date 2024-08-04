@@ -114,6 +114,7 @@ class GoogleGeminiModel extends LargeLanguageModel {
   @override
   Future<void> resetUri() async {
     uri = ''; // No URI to reset
+    name = '';
     notifyListeners();
   }
 

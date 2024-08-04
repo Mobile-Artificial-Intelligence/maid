@@ -89,7 +89,6 @@ class LargeLanguageModel extends ChangeNotifier {
   }
 
   set uri(String value) {
-    _name = '';
     _uri = value;
     notifyListeners();
   }

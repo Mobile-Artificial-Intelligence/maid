@@ -102,37 +102,6 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
     );
   }
 
-  List<Widget> get importedOptions {
-    return [
-      FilledButton(
-        onPressed: () {
-          LlamaCppModel.of(context).name = selected!;
-          LlamaCppModel.of(context).uri = importedModels![selected!]!;
-          Navigator.of(context).pop();
-        },
-        child: Text(
-          "Select",
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
-      ),
-      const SizedBox(width: 8),
-      FilledButton(
-        onPressed: () {
-          File(importedModels![selected!]!).delete();
-          setState(() {
-            importedModels!.remove(selected);
-            selected = null;
-          });
-          saveImportedModels();
-        },
-        child: Text(
-          "Delete",
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
-      ),
-    ];
-  }
-
   Widget buildDropdown() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -159,7 +128,36 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
         if (selected != null)
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: importedOptions,
+          children: [
+            FilledButton(
+              onPressed: () {
+                print("Selected: $selected");
+                LlamaCppModel.of(context).name = selected!;
+                print("Selected: ${importedModels![selected!]}");
+                LlamaCppModel.of(context).uri = importedModels![selected!]!;
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Select",
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ),
+            const SizedBox(width: 8),
+            FilledButton(
+              onPressed: () {
+                File(importedModels![selected!]!).delete();
+                setState(() {
+                  importedModels!.remove(selected);
+                  selected = null;
+                });
+                saveImportedModels();
+              },
+              child: Text(
+                "Delete",
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ),
+          ],
         ),
       ],
     );

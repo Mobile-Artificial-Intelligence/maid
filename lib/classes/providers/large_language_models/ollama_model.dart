@@ -93,6 +93,8 @@ class OllamaModel extends LargeLanguageModel {
 
   @override
   Future<void> resetUri() async {
+    name = "";
+    
     // Check Localhost
     if ((await _checkIpForOllama('127.0.0.1')).isNotEmpty) {
       uri = 'http://127.0.0.1:11434';

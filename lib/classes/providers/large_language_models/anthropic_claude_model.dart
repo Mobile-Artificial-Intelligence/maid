@@ -139,6 +139,7 @@ class ClaudeModel extends LargeLanguageModel {
   @override
   Future<void> resetUri() async {
     uri = defaultUrl;
+    name = '';
     notifyListeners();
   }
 
