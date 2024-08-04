@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/huggingface_selection.dart';
 import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/ui/shared/dialogs/load_model_dialog.dart';
 import 'package:provider/provider.dart';
 
 class LoadModelButton extends StatelessWidget {
@@ -86,9 +87,10 @@ class LoadModelButton extends StatelessWidget {
 
   Widget buildInkWell(BuildContext context) {
     return InkWell(
-      onTap: () {
-        LlamaCppModel.of(context).loadModel();
-      },
+      onTap: () => showDialog(
+        context: context, 
+        builder: (context) => const LoadModelDialog()
+      ),
       borderRadius: BorderRadius.circular(10),
       child: buildPadding()
     );

@@ -4,8 +4,9 @@ import 'package:maid/ui/shared/dialogs/loading_dialog.dart';
 
 class StorageOperationDialog extends StatelessWidget {
   final Future<String> future;
+  final void Function(String)? onComplete;
 
-  const StorageOperationDialog({super.key, required this.future});
+  const StorageOperationDialog({super.key, required this.future, this.onComplete});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +14,10 @@ class StorageOperationDialog extends StatelessWidget {
       future: future,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          if (onComplete != null) {
+            onComplete!(snapshot.data!);
+          }
+
           return AlertDialog(
             title: Text(
               snapshot.data!,
