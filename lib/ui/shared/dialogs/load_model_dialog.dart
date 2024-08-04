@@ -115,6 +115,7 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
           style: Theme.of(context).textTheme.labelLarge,
         ),
       ),
+      const SizedBox(width: 8),
       FilledButton(
         onPressed: () {
           File(importedModels![selected!]!).delete();
@@ -134,6 +135,7 @@ class _LoadModelDialogState extends State<LoadModelDialog> {
 
   Widget buildDropdown() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
