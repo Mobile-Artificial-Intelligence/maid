@@ -14,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
+  Key _key;
   File? _profile;
 
   bool _useSystem = true;
@@ -33,7 +34,7 @@ class Character extends ChangeNotifier {
 
   static Character of(BuildContext context) => AppData.of(context).currentCharacter;
 
-  Character(VoidCallback? listener) {
+  Character(VoidCallback? listener) : _key = UniqueKey() {
     if (listener != null) {
       addListener(listener);
     }
@@ -41,7 +42,7 @@ class Character extends ChangeNotifier {
     reset();
   }
 
-  Character.fromMap(VoidCallback? listener, Map<String, dynamic> inputJson) {
+  Character.fromMap(VoidCallback? listener, Map<String, dynamic> inputJson) : _key = UniqueKey() {
     if (listener != null) {
       addListener(listener);
     }
@@ -306,29 +307,7 @@ class Character extends ChangeNotifier {
     return _profile ??= await Utilities.fileFromAssetImage("defaultCharacter.png");
   }
 
-  String get hash {
-    Uint8List bytes;
-
-    List<String> hashList = [
-      _name,
-      _description,
-      _personality,
-      _scenario,
-      _system,
-      _useGreeting.toString(),
-      _greetings.join(),
-      _useExamples.toString(),
-      _examples.join(),
-    ];
-     
-    bytes = utf8.encode(hashList.join());
-    
-    bytes.addAll(_profile!.readAsBytesSync());
-
-    return sha256.convert(bytes).toString();
-  }
-
-  Key get key => ValueKey(hash);
+  Key get key => _key;
 
   String get name => _name;
 

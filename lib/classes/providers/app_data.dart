@@ -116,14 +116,6 @@ class AppData extends ChangeNotifier {
       characters = (json.decode(charactersString) as List).map((e) => Character.fromMap(null, e)).toList();
     }
 
-    if (sessions.isEmpty) {
-      sessions.add(Session(null, 0));
-    }
-
-    if (characters.isEmpty) {
-      characters.add(Character(null));
-    }
-
     final session = await Session.last;
     final character = await Character.last;
     final user = await User.last;
