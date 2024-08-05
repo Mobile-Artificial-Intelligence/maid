@@ -1,6 +1,12 @@
 name: Mirror to GitLab
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.gitlab/**'
+      - 'pubspec.yaml'
   workflow_dispatch:
 
 jobs:
