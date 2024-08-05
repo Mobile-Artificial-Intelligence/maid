@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-android.yml'
+      - '.github/workflows/build-linux.yml'
       - 'packages/**'
       - 'linux/**'
       - 'lib/**'
