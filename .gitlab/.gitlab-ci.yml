@@ -18,7 +18,7 @@ build-babylon-arm64-v8a:
     - unzip android-ndk-r27-linux.zip -d /opt
     - export ANDROID_NDK_HOME=/opt/android-ndk-r27
     - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
-    - git clone https://github.com/Mobile-Artificial-Intelligence/babylon.cpp
+    - git clone --recursive https://github.com/Mobile-Artificial-Intelligence/babylon.cpp
   script:
     - export ANDROID_NDK_HOME=/opt/android-ndk-r27
     - cd babylon.cpp
