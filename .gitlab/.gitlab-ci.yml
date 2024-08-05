@@ -63,6 +63,9 @@ build-maid:
     - saas-linux-medium-amd64
   only:
     - main
+  dependencies:
+    - build-babylon-arm64-v8a
+    - build-babylon-x86_64
   variables:
     repo: /home/runner/work/maid
     ANDROID_HOME: /opt/android-sdk
@@ -107,6 +110,3 @@ build-maid:
     paths:
       - build/app/outputs/flutter-apk/maid-android-arm64-v8a.apk
       - build/app/outputs/flutter-apk/maid-android-x86_64.apk
-    dependencies:
-      - build-babylon-arm64-v8a
-      - build-babylon-x86_64
