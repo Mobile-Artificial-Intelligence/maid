@@ -309,6 +309,14 @@ class Character extends ChangeNotifier {
 
   Key get key => _key;
 
+  Key get imageKey {
+    final bytes = _profile!.readAsBytesSync();
+
+    final hash = sha256.convert(bytes).toString();
+    
+    return ValueKey(hash);
+  }
+
   String get name => _name;
 
   bool get useSystem => _useSystem;

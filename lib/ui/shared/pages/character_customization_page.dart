@@ -101,7 +101,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       Padding(
         padding: const EdgeInsets.all(20.0),
         child: FutureTileImage(
-          key: character.key,
+          key: character.imageKey,
           image: character.profile,
           borderRadius: BorderRadius.circular(10.0),
         )
