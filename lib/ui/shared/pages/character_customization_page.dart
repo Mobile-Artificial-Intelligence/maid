@@ -66,15 +66,14 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
           "Character Customization"
         ),
       ),
-      body: Consumer<AppData>(
+      body: Selector<AppData, Character>(
+        selector: (context, appData) => appData.currentCharacter,
         builder: buildBody,
       )
     );
   }
 
-  Widget buildBody(BuildContext context, AppData appData, Widget? child) {
-    final character = appData.currentCharacter;
-
+  Widget buildBody(BuildContext context, Character character, Widget? child) {
     if (regenerate) {
       nameController = TextEditingController(text: character.name);
       descriptionController = TextEditingController(text: character.description);
