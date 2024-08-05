@@ -39,6 +39,11 @@ build-apk:
 
     # Build the APKs split by ABI
     - ./packages/flutter/bin/flutter build apk --split-per-abi
+
+    # Rename the APKs
+    - mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/app/outputs/flutter-apk/maid-android-arm64-v8a.apk
+    - mv build/app/outputs/flutter-apk/app-x86_64-release.apk build/app/outputs/flutter-apk/maid-android-x86_64.apk
   artifacts:
     paths:
-      - build/app/outputs/flutter-apk/*
+      - build/app/outputs/flutter-apk/maid-android-arm64-v8a.apk
+      - build/app/outputs/flutter-apk/maid-android-x86_64.apk
