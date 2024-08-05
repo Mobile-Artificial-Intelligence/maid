@@ -109,10 +109,6 @@ class LlamaCppModel extends LargeLanguageModel {
       throw Exception("Model URI is empty");
     }
 
-    if (useDefault) {
-      return GptParams(uri);
-    }
-
     SamplingParams samplingParams = SamplingParams();
     samplingParams.temp = temperature;
     samplingParams.topK = topK;
