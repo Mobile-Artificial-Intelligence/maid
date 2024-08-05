@@ -310,10 +310,30 @@ class Character extends ChangeNotifier {
   Key get key => _key;
 
   Key get imageKey {
-    final bytes = _profile!.readAsBytesSync();
+    Uint8List bytes;
+
+    if(_profile != null) {
+      bytes = _profile!.readAsBytesSync();
+    } 
+    else {
+      List<String> hashList = [
+        _name,
+        _description,
+        _personality,
+        _scenario,
+        _system,
+        _useGreeting.toString(),
+        _greetings.join(),
+        _useExamples.toString(),
+        _examples.join(),
+        _key.toString(),
+      ];
+      
+      bytes = utf8.encode(hashList.join());
+    }
 
     final hash = sha256.convert(bytes).toString();
-    
+
     return ValueKey(hash);
   }
 
