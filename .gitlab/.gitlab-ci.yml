@@ -2,7 +2,7 @@ stages:
   - build-babylon
   - build-maid
 
-build-babylon:
+build-babylon-arm64-v8a:
   stage: build-babylon
   image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm
   tags:
@@ -22,14 +22,38 @@ build-babylon:
   script:
     - export ANDROID_NDK_HOME=/opt/android-ndk-r27
     - cd babylon.cpp
-    - mkdir -p build/arm64-v8a build/x86_64
+    - mkdir -p build/arm64-v8a
     - cmake -B build/arm64-v8a -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-21
     - cmake --build build/arm64-v8a --config Release -- -j$(nproc)
+  artifacts:
+    paths:
+      - babylon.cpp/build/arm64-v8a/lib/
+
+build-babylon-x86_64:
+  stage: build-babylon
+  image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm
+  tags:
+    - saas-linux-medium-amd64
+  only:
+    - main
+  variables:
+    ANDROID_NDK_HOME: /opt/android-ndk
+  before_script:
+    - apt-get update
+    - apt-get install -y cmake unzip git
+    - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
+    - unzip android-ndk-r27-linux.zip -d /opt
+    - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+    - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
+    - git clone https://github.com/Mobile-Artificial-Intelligence/babylon.cpp
+  script:
+    - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+    - cd babylon.cpp
+    - mkdir -p build/x86_64
     - cmake -B build/x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake -DANDROID_ABI=x86_64 -DANDROID_PLATFORM=android-21
     - cmake --build build/x86_64 --config Release -- -j$(nproc)
   artifacts:
     paths:
-      - babylon.cpp/build/arm64-v8a/lib/
       - babylon.cpp/build/x86_64/lib/
 
 build-maid:
@@ -55,11 +79,11 @@ build-maid:
     - rm -rf ./packages/babylon_tts/android/app/src/main/jniLibs
     - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a
     - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64
-    - cp babylon.cpp/build/arm64-v8a/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a/
-    - cp babylon.cpp/build/x86_64/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64/
   script:
     - export PUB_CACHE=$(pwd)/.pub-cache
-    - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 
+    - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    - cp babylon.cpp/build/arm64-v8a/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a/
+    - cp babylon.cpp/build/x86_64/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64/
 
     # Build and configure Flutter from submodule
     - ./packages/flutter/bin/flutter config --no-analytics
@@ -83,3 +107,6 @@ build-maid:
     paths:
       - build/app/outputs/flutter-apk/maid-android-arm64-v8a.apk
       - build/app/outputs/flutter-apk/maid-android-x86_64.apk
+    dependencies:
+      - build-babylon-arm64-v8a
+      - build-babylon-x86_64
