@@ -58,7 +58,7 @@ class LlamaCppModel extends LargeLanguageModel {
     super.penalizeNewline,
     super.seed,
     super.nKeep,
-    super.nPredict,
+    super.nPredict = 128,
     super.topK,
     super.topP,
     super.minP,
@@ -72,7 +72,7 @@ class LlamaCppModel extends LargeLanguageModel {
     super.mirostat,
     super.mirostatTau,
     super.mirostatEta,
-    super.nCtx,
+    super.nCtx = 0,
     super.nBatch,
     super.nThread,
     String template = '',
@@ -93,6 +93,8 @@ class LlamaCppModel extends LargeLanguageModel {
   void fromMap(Map<String, dynamic> json) {
     super.fromMap(json);
     _template = json['template'] ?? '';
+    nPredict = json['nPredict'] ?? 128;
+    nCtx = json['nCtx'] ?? 0;
     notifyListeners();
   }
 
