@@ -1,8 +1,37 @@
 stages:
-  - build
+  - build-babylon
+  - build-maid
 
-build-apk:
-  stage: build
+build-babylon:
+  stage: build-babylon
+  image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm
+  tags:
+    - saas-linux-medium-amd64
+  only:
+    - main
+  variables:
+    ANDROID_NDK_HOME: /opt/android-ndk
+  before_script:
+    - apt-get update
+    - apt-get install -y cmake unzip
+    - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
+    - unzip android-ndk-r27-linux.zip -d /opt
+    - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+    - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
+  script:
+    - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+    - mkdir -p build/arm64-v8a build/x86_64
+    - cmake -B build/arm64-v8a -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-21
+    - cmake --build build/arm64-v8a --config Release -- -j$(nproc)
+    - cmake -B build/x86_64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake -DANDROID_ABI=x86_64 -DANDROID_PLATFORM=android-21
+    - cmake --build build/x86_64 --config Release -- -j$(nproc)
+  artifacts:
+    paths:
+      - build/arm64-v8a/lib/
+      - build/x86_64/lib/
+
+build-maid:
+  stage: build-maid
   image: registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm
   tags:
     - saas-linux-medium-amd64
@@ -16,11 +45,16 @@ build-apk:
     - rm -rf /home/vagrant/build
     - rm -rf /opt/android-sdk/ndk
     - apt-get update 
-    - apt-get install -y openjdk-17-jdk-headless  # Install OpenJDK 17
-    - rm -rf $ANDROID_HOME/tools  # TODO remove once sdkmanager can upgrade installed packages
+    - apt-get install -y openjdk-17-jdk-headless
+    - rm -rf $ANDROID_HOME/tools
     - sdkmanager "tools" "platform-tools" "build-tools;31.0.0"
     - git submodule sync --recursive
     - git submodule update --init --recursive
+    - rm -rf ./packages/babylon_tts/android/app/src/main/jniLibs
+    - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a
+    - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64
+    - cp build/arm64-v8a/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a/
+    - cp build/x86_64/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64/
   script:
     - export PUB_CACHE=$(pwd)/.pub-cache
     - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 
