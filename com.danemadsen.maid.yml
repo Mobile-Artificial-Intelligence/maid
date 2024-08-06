@@ -429,6 +429,15 @@ Builds:
       - export repo=/builds/mobile-artificial-intelligence
       - mkdir -p $repo
       - cd ..
+      - apt-get update
+      - apt-get install -y wget unzip git build-essential
+      - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
+      - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
+      - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
+      - unzip android-ndk-r27-linux.zip -d /opt
+      - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+      - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
+      - git clone --recursive https://github.com/Mobile-Artificial-Intelligence/babylon.cpp
       - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
       - export PUB_CACHE=$(pwd)/.pub-cache
@@ -444,8 +453,16 @@ Builds:
     build:
       - export repo=/builds/mobile-artificial-intelligence
       - cd ..
+      - cd babylon.cpp
+      - mkdir -p build
+      - cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake -DANDROID_ABI=x86_64 -DANDROID_PLATFORM=android-21
+      - cmake --build build --config Release -- -j$(nproc)
+      - cd ..
+      - export BABYLON_CPP=$(pwd)/babylon.cpp
       - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
+      - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64
+      - cp $BABYLON_CPP/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64/
       - export PUB_CACHE=$(pwd)/.pub-cache
       - packages/flutter/bin/flutter build apk --release --split-per-abi --target-platform="android-x64"
       - popd
@@ -475,6 +492,15 @@ Builds:
       - export repo=/builds/mobile-artificial-intelligence
       - mkdir -p $repo
       - cd ..
+      - apt-get update
+      - apt-get install -y wget unzip git build-essential
+      - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
+      - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
+      - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
+      - unzip android-ndk-r27-linux.zip -d /opt
+      - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+      - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
+      - git clone --recursive https://github.com/Mobile-Artificial-Intelligence/babylon.cpp
       - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
       - export PUB_CACHE=$(pwd)/.pub-cache
@@ -490,8 +516,16 @@ Builds:
     build:
       - export repo=/builds/mobile-artificial-intelligence
       - cd ..
+      - cd babylon.cpp
+      - mkdir build
+      - cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-21
+      - cmake --build build --config Release -- -j$(nproc)
+      - cd ..
+      - export BABYLON_CPP=$(pwd)/babylon.cpp
       - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
+      - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a
+      - cp $BABYLON_CPP/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a/
       - export PUB_CACHE=$(pwd)/.pub-cache
       - packages/flutter/bin/flutter build apk --release --split-per-abi --target-platform="android-arm64"
       - popd
