@@ -33,7 +33,7 @@ build-babylon-arm64-v8a:
     - cp lib/* arm64-v8a/lib/
   artifacts:
     paths:
-      - $BABYLON_CPP_DIR/arm64-v8a/lib/
+      - packages/babylon_tts/src/babylon_cpp/arm64-v8a/lib/
 
 build-babylon-x86_64:
   stage: build-babylon
@@ -66,7 +66,7 @@ build-babylon-x86_64:
     - cp lib/* x86_64/lib/
   artifacts:
     paths:
-      - $BABYLON_CPP_DIR/x86_64/lib/
+      - packages/babylon_tts/src/babylon_cpp/x86_64/lib/
 
 build-maid:
   stage: build-maid
@@ -97,9 +97,8 @@ build-maid:
   script:
     - export PUB_CACHE=$(pwd)/.pub-cache
     - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-    - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon_cpp
-    - cp $BABYLON_CPP_DIR/arm64-v8a/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a/
-    - cp $BABYLON_CPP_DIR/x86_64/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64/
+    - cp packages/babylon_tts/src/babylon_cpp/arm64-v8a/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a/
+    - cp packages/babylon_tts/src/babylon_cpp/x86_64/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64/
     - ./packages/flutter/bin/flutter config --no-analytics
     - ./packages/flutter/bin/flutter packages pub get
     - echo "$KEYSTORE" | base64 --decode > ./android/app/key.jks
