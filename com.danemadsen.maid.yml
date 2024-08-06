@@ -408,7 +408,7 @@ Builds:
   - versionName: 1.3.0
     versionCode: 18061
     disable: https://github.com/Mobile-Artificial-Intelligence/maid/issues/582#issuecomment-2265182231
-    commit: ec577799b3316bd06c4589e993ac676b95acdbdf
+    commit: ad2b8b0c54d8a6c504daba2fdd262834a3051ce7
     submodules: true
     sudo:
       - mkdir -p /builds/mobile-artificial-intelligence
@@ -471,7 +471,7 @@ Builds:
   - versionName: 1.3.0
     versionCode: 18062
     disable: https://github.com/Mobile-Artificial-Intelligence/maid/issues/582#issuecomment-2265182231
-    commit: ec577799b3316bd06c4589e993ac676b95acdbdf
+    commit: ad2b8b0c54d8a6c504daba2fdd262834a3051ce7
     submodules: true
     sudo:
       - mkdir -p /builds/mobile-artificial-intelligence
