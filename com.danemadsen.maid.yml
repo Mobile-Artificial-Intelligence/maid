@@ -407,7 +407,7 @@ Builds:
 
   - versionName: 1.3.0
     versionCode: 18161
-    commit: eb3effa1b3e7a6a26b726cac70781f39ee9fb9c1
+    commit: 5780b95ff2824a2462d883f029c8fd2242c18c89
     submodules: true
     sudo:
       - mkdir -p /builds/mobile-artificial-intelligence
@@ -468,7 +468,7 @@ Builds:
 
   - versionName: 1.3.0
     versionCode: 18162
-    commit: eb3effa1b3e7a6a26b726cac70781f39ee9fb9c1
+    commit: 5780b95ff2824a2462d883f029c8fd2242c18c89
     submodules: true
     sudo:
       - mkdir -p /builds/mobile-artificial-intelligence
