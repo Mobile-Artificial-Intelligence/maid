@@ -24,7 +24,7 @@ build-babylon-arm64-v8a:
     - git submodule update --init --recursive
   script:
     - export ANDROID_NDK_HOME=/opt/android-ndk-r27
-    - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon.cpp
+    - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon_cpp
     - cd $BABYLON_CPP_DIR
     - mkdir build
     - cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-21
@@ -57,7 +57,7 @@ build-babylon-x86_64:
     - git submodule update --init --recursive
   script:
     - export ANDROID_NDK_HOME=/opt/android-ndk-r27
-    - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon.cpp
+    - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon_cpp
     - cd $BABYLON_CPP_DIR
     - mkdir -p build
     - cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake -DANDROID_ABI=x86_64 -DANDROID_PLATFORM=android-21
@@ -97,26 +97,18 @@ build-maid:
   script:
     - export PUB_CACHE=$(pwd)/.pub-cache
     - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-    - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon.cpp
+    - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon_cpp
     - cp $BABYLON_CPP_DIR/arm64-v8a/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a/
     - cp $BABYLON_CPP_DIR/x86_64/lib/* ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64/
-
-    # Build and configure Flutter from submodule
     - ./packages/flutter/bin/flutter config --no-analytics
     - ./packages/flutter/bin/flutter packages pub get
-
-    # Decrypt the keystore
     - echo "$KEYSTORE" | base64 --decode > ./android/app/key.jks
     - |
       echo "storeFile=key.jks" > ./android/key.properties
       echo "storePassword=$STORE_PASSWORD" >> ./android/key.properties
       echo "releasePassword=$KEY_PASSWORD" >> ./android/key.properties
       echo "releaseAlias=$KEY_ALIAS" >> ./android/key.properties
-
-    # Build the APKs split by ABI
     - ./packages/flutter/bin/flutter build apk --split-per-abi
-
-    # Rename the APKs
     - mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/app/outputs/flutter-apk/maid-android-arm64-v8a.apk
     - mv build/app/outputs/flutter-apk/app-x86_64-release.apk build/app/outputs/flutter-apk/maid-android-x86_64.apk
   artifacts:
