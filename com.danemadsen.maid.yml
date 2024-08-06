@@ -412,6 +412,11 @@ Builds:
     sudo:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
+      - apt-get install -y wget unzip git build-essential
+      - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
+      - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
+      - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
+      - unzip android-ndk-r27-linux.zip -d /opt
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
     binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-x86_64.apk
     rm:
@@ -428,12 +433,6 @@ Builds:
       - export repo=/builds/mobile-artificial-intelligence
       - mkdir -p $repo
       - cd ..
-      - apt-get update
-      - apt-get install -y wget unzip git build-essential
-      - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
-      - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
-      - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
-      - unzip android-ndk-r27-linux.zip -d /opt
       - export ANDROID_NDK_HOME=/opt/android-ndk-r27
       - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
       - mv com.danemadsen.maid $repo/maid
@@ -473,6 +472,11 @@ Builds:
     sudo:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
+      - apt-get install -y wget unzip git build-essential
+      - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
+      - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
+      - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
+      - unzip android-ndk-r27-linux.zip -d /opt
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
     binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-arm64-v8a.apk
     rm:
@@ -489,12 +493,6 @@ Builds:
       - export repo=/builds/mobile-artificial-intelligence
       - mkdir -p $repo
       - cd ..
-      - apt-get update
-      - apt-get install -y wget unzip git build-essential
-      - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
-      - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
-      - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
-      - unzip android-ndk-r27-linux.zip -d /opt
       - export ANDROID_NDK_HOME=/opt/android-ndk-r27
       - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
       - mv com.danemadsen.maid $repo/maid
