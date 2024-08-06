@@ -412,11 +412,8 @@ Builds:
     sudo:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
-      - apt-get install -y wget unzip git build-essential
-      - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
-      - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
-      - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
-      - unzip android-ndk-r27-linux.zip -d /opt
+      - apt-get update
+      - apt-get install -y cmake build-essential
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
     binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-x86_64.apk
     rm:
@@ -429,12 +426,13 @@ Builds:
       - packages/babylon_tts/ios
       - packages/babylon_tts/windows
       - packages/babylon_tts/android/src/main/jniLibs
+      - packages/babylon_tts/src/babylon_cpp/onnxruntime/cmake/external/git.*
+      - packages/babylon_tts/src/babylon_cpp/onnxruntime/java
+      - packages/babylon_tts/src/babylon_cpp/onnxruntime/js
     prebuild:
       - export repo=/builds/mobile-artificial-intelligence
       - mkdir -p $repo
       - cd ..
-      - export ANDROID_NDK_HOME=/opt/android-ndk-r27
-      - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
       - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
       - export PUB_CACHE=$(pwd)/.pub-cache
@@ -450,6 +448,7 @@ Builds:
     build:
       - export repo=/builds/mobile-artificial-intelligence
       - cd ..
+      - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
       - export BABYLON_CPP=$(pwd)/packages/babylon_tts/src/babylon_cpp
       - pushd $BABYLON_CPP
@@ -464,6 +463,7 @@ Builds:
       - packages/flutter/bin/flutter build apk --release --split-per-abi --target-platform="android-x64"
       - popd
       - mv $repo/maid com.danemadsen.maid
+    ndk: r26
 
   - versionName: 1.3.0
     versionCode: 18162
@@ -472,11 +472,8 @@ Builds:
     sudo:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
-      - apt-get install -y wget unzip git build-essential
-      - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
-      - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
-      - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
-      - unzip android-ndk-r27-linux.zip -d /opt
+      - apt-get update
+      - apt-get install -y cmake build-essential
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
     binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-arm64-v8a.apk
     rm:
@@ -489,12 +486,13 @@ Builds:
       - packages/babylon_tts/ios
       - packages/babylon_tts/windows
       - packages/babylon_tts/android/src/main/jniLibs
+      - packages/babylon_tts/src/babylon_cpp/onnxruntime/cmake/external/git.*
+      - packages/babylon_tts/src/babylon_cpp/onnxruntime/java
+      - packages/babylon_tts/src/babylon_cpp/onnxruntime/js
     prebuild:
       - export repo=/builds/mobile-artificial-intelligence
       - mkdir -p $repo
       - cd ..
-      - export ANDROID_NDK_HOME=/opt/android-ndk-r27
-      - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
       - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
       - export PUB_CACHE=$(pwd)/.pub-cache
@@ -510,6 +508,7 @@ Builds:
     build:
       - export repo=/builds/mobile-artificial-intelligence
       - cd ..
+      - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
       - export BABYLON_CPP=$(pwd)/packages/babylon_tts/src/babylon_cpp
       - pushd $BABYLON_CPP
@@ -524,6 +523,7 @@ Builds:
       - packages/flutter/bin/flutter build apk --release --split-per-abi --target-platform="android-arm64"
       - popd
       - mv $repo/maid com.danemadsen.maid
+    ndk: r26
 
 AllowedAPKSigningKeys: 835ed22ed895c4c272d698aa6e4e48db0b4e36dccf7010d5de15034ac9e1b96f
 
