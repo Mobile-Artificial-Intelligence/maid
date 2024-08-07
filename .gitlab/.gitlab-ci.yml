@@ -89,12 +89,12 @@ build-maid:
     - sdkmanager "tools" "platform-tools" "build-tools;31.0.0"
     - git submodule sync --recursive
     - git submodule update --init --recursive
-    - rm -rf ./packages/babylon_tts/android/app/src/main/jniLibs
-    - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a
-    - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64
   script:
     - export PUB_CACHE=$(pwd)/.pub-cache
     - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    - rm -rf ./packages/babylon_tts/android/app/src/main/jniLibs
+    - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a
+    - mkdir -p ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64
     - cp arm64-v8a/* ./packages/babylon_tts/android/app/src/main/jniLibs/arm64-v8a/
     - cp x86_64/* ./packages/babylon_tts/android/app/src/main/jniLibs/x86_64/
     - ./packages/flutter/bin/flutter config --no-analytics
