@@ -24,11 +24,11 @@ build-babylon-arm64-v8a:
     - export ANDROID_NDK_HOME=/opt/android-ndk-r26
     - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon_cpp
     - pushd $BABYLON_CPP_DIR
-    - mkdir build
+    - mkdir -p build
     - cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-21
     - cmake --build build --config Release -- -j$(nproc)
     - popd
-    - mkdir arm64-v8a
+    - mkdir -p arm64-v8a
     - cp $BABYLON_CPP_DIR/lib/* arm64-v8a/
   artifacts:
     paths:
@@ -105,7 +105,7 @@ build-maid:
       echo "storePassword=$STORE_PASSWORD" >> ./android/key.properties
       echo "releasePassword=$KEY_PASSWORD" >> ./android/key.properties
       echo "releaseAlias=$KEY_ALIAS" >> ./android/key.properties
-    - ./packages/flutter/bin/flutter build apk --split-per-abi
+    - ./packages/flutter/bin/flutter build apk --split-per-abi --no-cache
     - mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk maid-android-arm64-v8a.apk
     - mv build/app/outputs/flutter-apk/app-x86_64-release.apk maid-android-x86_64.apk
   artifacts:
