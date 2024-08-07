@@ -13,17 +13,15 @@ build-babylon-arm64-v8a:
     ANDROID_NDK_HOME: /opt/android-ndk
   before_script:
     - apt-get update
-    - apt-get install -y wget unzip git build-essential
-    - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
-    - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
-    - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
-    - unzip android-ndk-r27-linux.zip -d /opt
-    - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+    - apt-get install -y -t bookworm-backports cmake wget unzip git build-essential
+    - wget https://dl.google.com/android/repository/android-ndk-r26-linux.zip
+    - unzip android-ndk-r26-linux.zip -d /opt
+    - export ANDROID_NDK_HOME=/opt/android-ndk-r26
     - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
     - git submodule sync --recursive
     - git submodule update --init --recursive
   script:
-    - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+    - export ANDROID_NDK_HOME=/opt/android-ndk-r26
     - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon_cpp
     - pushd $BABYLON_CPP_DIR
     - mkdir build
@@ -47,17 +45,15 @@ build-babylon-x86_64:
     ANDROID_NDK_HOME: /opt/android-ndk
   before_script:
     - apt-get update
-    - apt-get install -y wget unzip git build-essential
-    - wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
-    - tar -xzf cmake-3.26.4-linux-x86_64.tar.gz --strip-components=1 -C /usr/local
-    - wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
-    - unzip android-ndk-r27-linux.zip -d /opt
-    - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+    - apt-get install -y -t bookworm-backports cmake wget unzip git build-essential
+    - wget https://dl.google.com/android/repository/android-ndk-r26-linux.zip
+    - unzip android-ndk-r26-linux.zip -d /opt
+    - export ANDROID_NDK_HOME=/opt/android-ndk-r26
     - echo "ANDROID_NDK_HOME=${ANDROID_NDK_HOME}" >> /etc/environment
     - git submodule sync --recursive
     - git submodule update --init --recursive
   script:
-    - export ANDROID_NDK_HOME=/opt/android-ndk-r27
+    - export ANDROID_NDK_HOME=/opt/android-ndk-r26
     - export BABYLON_CPP_DIR=$(pwd)/packages/babylon_tts/src/babylon_cpp
     - pushd $BABYLON_CPP_DIR
     - mkdir -p build
