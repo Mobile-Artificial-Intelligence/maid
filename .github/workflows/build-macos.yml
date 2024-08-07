@@ -14,10 +14,10 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        arch: [x86_64, arm64]
+        os: [macos-13, macos-14]
 
     steps:
       - name: Checkout code
@@ -69,12 +69,12 @@ jobs:
           xcrun stapler staple "build/macos/Build/Products/Release/maid.app"
 
       - name: Create DMG
-        run: ./scripts/create_dmg.sh ${{ matrix.arch }}
+        run: ./scripts/create_dmg.sh ${{ matrix.os == 'macos-13' && 'x86_64' || 'arm64' }}
 
       - name: Upload macOS Build
         uses: actions/upload-artifact@v4
         with:
-          name: maid-macos-${{ matrix.arch }}
+          name: maid-macos-${{ matrix.os == 'macos-13' && 'x86_64' || 'arm64' }}
           path: dmg
 
     timeout-minutes: 20
