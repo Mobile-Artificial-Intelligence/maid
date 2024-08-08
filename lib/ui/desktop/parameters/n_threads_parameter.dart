@@ -12,20 +12,19 @@ class NThreadsParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<AppData, LargeLanguageModel>(
-      selector: (context, appData) => appData.model,
+    return Consumer<AppData>(
       builder: nThreadsBuilder,
     );
   }
 
-  Widget nThreadsBuilder(BuildContext context, LargeLanguageModel model, Widget? child) {
-    final max = model.type == LargeLanguageModelType.llamacpp
+  Widget nThreadsBuilder(BuildContext context, AppData appData, Widget? child) {
+    final max = appData.model.type == LargeLanguageModelType.llamacpp
     ? Platform.numberOfProcessors.toDouble()
     : 128.0;
 
     return SliderGridTile(
       labelText: 'NThreads',
-      inputValue: model.nThread,
+      inputValue: appData.model.nThread,
       sliderMin: 1.0,
       sliderMax: max,
       sliderDivisions: max.round() - 1,

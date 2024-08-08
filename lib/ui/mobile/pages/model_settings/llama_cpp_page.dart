@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/mobile/layout/model_settings_app_bar.dart';
 import 'package:maid/ui/mobile/parameter_widgets/min_p_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/n_predict_parameter.dart';
@@ -22,6 +25,8 @@ import 'package:maid/ui/mobile/parameter_widgets/top_p_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/typical_p_parameter.dart';
 import 'package:maid/ui/shared/groups/llama_cpp_model_controls.dart';
 import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LlamaCppPage extends StatelessWidget {
   const LlamaCppPage({super.key});
@@ -31,12 +36,18 @@ class LlamaCppPage extends StatelessWidget {
     return Scaffold(
       appBar: const ModelSettingsAppBar(title: "LlamaCPP Parameters"),
       body: SessionBusyOverlay(
-        child: buildListView(context),
+        child: Consumer<AppData>(
+          builder: listViewBuilder
+        ),
       )
     );
   }
 
-  Widget buildListView(BuildContext context) {
+  Widget listViewBuilder(BuildContext context, AppData appData, Widget? child) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("llama_cpp_model", json.encode(appData.model.toMap()));
+    });
+
     return ListView(
       children: [
         const Padding(

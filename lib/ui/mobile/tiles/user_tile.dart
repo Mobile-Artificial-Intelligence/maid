@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
-import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/mobile/dialogs/user_name_dialog.dart';
 import 'package:maid/ui/mobile/dialogs/user_image_dialog.dart';
 import 'package:maid/ui/shared/utilities/future_avatar.dart';
@@ -16,24 +15,23 @@ class UserTile extends StatefulWidget {
 class _UserTileState extends State<UserTile> {
   @override
   Widget build(BuildContext context) {
-    return Selector<AppData, User>(
-      selector: (context, appData) => appData.user,
+    return Consumer<AppData>(
       builder: listTileBuilder,
     );
   }
 
-  Widget listTileBuilder(BuildContext context, User user, Widget? child) {
+  Widget listTileBuilder(BuildContext context, AppData appData, Widget? child) {
     return ListTile(
       title: Text(
-        user.name,
+        appData.user.name,
         style: TextStyle(
           color: Theme.of(context).colorScheme.onPrimary,
           fontSize: 20,
         ),
       ),
       leading: FutureAvatar(
-        key: user.key,
-        image: user.profile,
+        key: appData.user.key,
+        image: appData.user.profile,
         radius: 20,
       ),
       trailing: PopupMenuButton(

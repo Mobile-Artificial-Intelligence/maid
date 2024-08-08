@@ -33,14 +33,13 @@ class _MenuButtonState extends State<MenuButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<AppData, LargeLanguageModel>(
-      selector: (context, appData) => appData.model,
+    return Consumer<AppData>(
       builder: buildMenuButton,
     );
   }
 
-  Widget buildMenuButton(BuildContext context, LargeLanguageModel model, Widget? child) {
-    if (canUseCache(model)) {
+  Widget buildMenuButton(BuildContext context, AppData appData, Widget? child) {
+    if (canUseCache(appData.model)) {
       return PopupMenuButton(
         tooltip: 'Open Menu',
         icon: const Icon(
@@ -51,10 +50,10 @@ class _MenuButtonState extends State<MenuButton> {
       );
     } 
     else {
-      lastModelType = model.type;
+      lastModelType = appData.model.type;
       lastCheck = DateTime.now();
       return FutureBuilder(
-        future: model.options,
+        future: appData.model.options,
         builder: buildMenuButtonFuture
       );
     }
@@ -90,16 +89,15 @@ class _MenuButtonState extends State<MenuButton> {
   List<PopupMenuEntry<dynamic>> itemBuilder(BuildContext context) {
     List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
       padding: EdgeInsets.zero,
-      child: Selector<AppData, LargeLanguageModel>(
-        selector: (context, appData) => appData.model,
-        builder: (context, model, child) {
+      child: Consumer<AppData>(
+        builder: (context, appData, child) {
           return ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
             title: Text(modelName),
             onTap: () {
               LargeLanguageModel.of(context).name = modelName;
             },
-            tileColor: model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
+            tileColor: appData.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
           );
         }
       ))

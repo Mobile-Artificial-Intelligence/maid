@@ -16,15 +16,14 @@ class SeedParameter extends StatelessWidget {
           color: Theme.of(context).colorScheme.surfaceDim,
           borderRadius: BorderRadius.circular(8.0)
         ),
-        child: Selector<AppData, LargeLanguageModel>(
-          selector: (context, appData) => appData.model,
+        child: Consumer<AppData>(
           builder: buildColumn
         ),
       )
     );
   }
 
-  Widget buildColumn(BuildContext context, LargeLanguageModel model, Widget? child) {
+  Widget buildColumn(BuildContext context, AppData appData, Widget? child) {
 
     TextEditingController controller = TextEditingController(
       text: LargeLanguageModel.of(context).seed.toString()
@@ -36,15 +35,15 @@ class SeedParameter extends StatelessWidget {
         const Text('Random Seed'),
         Flexible(
           child: Switch(
-            value: model.randomSeed,
+            value: appData.model.randomSeed,
             onChanged: (value) {
-              model.randomSeed = value;
+              appData.model.randomSeed = value;
             },
           )
         ),
         Flexible(
           child: TextField(
-            enabled: !model.randomSeed,
+            enabled: !appData.model.randomSeed,
             keyboardType: TextInputType.number,
             cursorColor: Theme.of(context).colorScheme.secondary,
             textAlign: TextAlign.center,

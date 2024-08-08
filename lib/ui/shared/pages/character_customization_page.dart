@@ -66,30 +66,29 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
           "Character Customization"
         ),
       ),
-      body: Selector<AppData, Character>(
-        selector: (context, appData) => appData.currentCharacter,
+      body: Consumer<AppData>(
         builder: buildBody,
       )
     );
   }
 
-  Widget buildBody(BuildContext context, Character character, Widget? child) {
+  Widget buildBody(BuildContext context, AppData appData, Widget? child) {
     if (regenerate) {
-      nameController = TextEditingController(text: character.name);
-      descriptionController = TextEditingController(text: character.description);
-      personalityController = TextEditingController(text: character.personality);
-      scenarioController = TextEditingController(text: character.scenario);
-      systemController = TextEditingController(text: character.system);
+      nameController = TextEditingController(text: appData.currentCharacter.name);
+      descriptionController = TextEditingController(text: appData.currentCharacter.description);
+      personalityController = TextEditingController(text: appData.currentCharacter.personality);
+      scenarioController = TextEditingController(text: appData.currentCharacter.scenario);
+      systemController = TextEditingController(text: appData.currentCharacter.system);
 
       greetingControllers = List.generate(
-        character.greetings.length,
-        (index) => TextEditingController(text: character.greetings[index]),
+        appData.currentCharacter.greetings.length,
+        (index) => TextEditingController(text: appData.currentCharacter.greetings[index]),
       );
 
       exampleControllers = List.generate(
-        character.examples.length,
+        appData.currentCharacter.examples.length,
         (index) =>
-            TextEditingController(text: character.examples[index]["content"]),
+            TextEditingController(text: appData.currentCharacter.examples[index]["content"]),
       );
 
       regenerate = false;
@@ -100,19 +99,19 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       Padding(
         padding: const EdgeInsets.all(20.0),
         child: FutureTileImage(
-          key: character.imageKey,
-          image: character.profile,
+          key: appData.currentCharacter.imageKey,
+          image: appData.currentCharacter.profile,
           borderRadius: BorderRadius.circular(10.0),
         )
       ),
       const SizedBox(height: 20.0),
       Text(
-        character.name,
+        appData.currentCharacter.name,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.titleLarge,
       ),
       const SizedBox(height: 20.0),
-      buttonGridView(character),
+      buttonGridView(appData.currentCharacter),
       const SizedBox(height: 20.0),
       Divider(
         indent: 10,
@@ -124,7 +123,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         labelText: 'Name',
         controller: nameController,
         onChanged: (value) {
-          character.name = value;
+          appData.currentCharacter.name = value;
         },
         multiline: false,
       ),
@@ -135,12 +134,12 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       ),
       SwitchListTile(
         title: const Text('Use System'),
-        value: character.useSystem,
+        value: appData.currentCharacter.useSystem,
         onChanged: (value) {
-          character.useSystem = value;
+          appData.currentCharacter.useSystem = value;
         },
       ),
-      if (character.useSystem) ...system(character),
+      if (appData.currentCharacter.useSystem) ...system(appData.currentCharacter),
       Divider(
         indent: 10,
         endIndent: 10,
@@ -148,12 +147,12 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       ),
       SwitchListTile(
         title: const Text('Use Greeting'),
-        value: character.useGreeting,
+        value: appData.currentCharacter.useGreeting,
         onChanged: (value) {
-          character.useGreeting = value;
+          appData.currentCharacter.useGreeting = value;
         },
       ),
-      if (character.useGreeting) ...greetings(character),
+      if (appData.currentCharacter.useGreeting) ...greetings(appData.currentCharacter),
       Divider(
         indent: 10,
         endIndent: 10,
@@ -161,12 +160,12 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       ),
       SwitchListTile(
         title: const Text('Use Examples'),
-        value: character.useExamples,
+        value: appData.currentCharacter.useExamples,
         onChanged: (value) {
-          character.useExamples = value;
+          appData.currentCharacter.useExamples = value;
         },
       ),
-      if (character.useExamples) ...examples(character),
+      if (appData.currentCharacter.useExamples) ...examples(appData.currentCharacter),
     ]);
   }
 

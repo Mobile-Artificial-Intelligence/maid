@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
-import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/mobile/layout/model_settings_app_bar.dart';
 import 'package:maid/ui/mobile/parameter_widgets/api_key_parameter.dart';
 import 'package:maid/ui/mobile/parameter_widgets/n_predict_parameter.dart';
@@ -24,17 +23,16 @@ class OpenAiPage extends StatelessWidget {
     return Scaffold(
       appBar: const ModelSettingsAppBar(title: "OpenAI Parameters"),
       body: SessionBusyOverlay(
-        child: Selector<AppData, LargeLanguageModel>(
-          selector: (context, appData) => appData.model,
+        child: Consumer<AppData>(
           builder: listViewBuilder,
         ),
       )
     );
   }
 
-  Widget listViewBuilder(BuildContext context, LargeLanguageModel model, Widget? child) {
+  Widget listViewBuilder(BuildContext context, AppData appData, Widget? child) {
     SharedPreferences.getInstance().then((prefs) {
-      prefs.setString("open_ai_model", json.encode(model.toMap()));
+      prefs.setString("open_ai_model", json.encode(appData.model.toMap()));
     });
 
     return ListView(
