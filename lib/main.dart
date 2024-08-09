@@ -15,32 +15,23 @@ void main() async {
 
   await Babylon.init();
 
-  AppPreferences appPreferences = await AppPreferences.last;
-  Sessions sessions = await Sessions.last;
-  CharacterCollection characters = await CharacterCollection.last;
-  ArtificialIntelligence ai = await ArtificialIntelligence.last;
-  User user = await User.last;
+  MaidProperties props = await MaidProperties.last;
 
   runApp(
     MaidApp(
-      appPreferences: appPreferences, 
-      sessions: sessions,
-      characters: characters,
-      ai: ai,
-      user: user
+      props: props
     )
   );
 }
 
-class MaidApp extends StatelessWidget {
+class MaidProperties {
   final AppPreferences appPreferences;
   final Sessions sessions;
   final CharacterCollection characters;
   final ArtificialIntelligence ai;
   final User user;
 
-  const MaidApp({
-    super.key, 
+  const MaidProperties({
     required this.appPreferences, 
     required this.sessions,
     required this.characters,
@@ -48,15 +39,40 @@ class MaidApp extends StatelessWidget {
     required this.user,
   });
 
+  static Future<MaidProperties> get last async {
+    final appPreferences = await AppPreferences.last;
+    final sessions = await Sessions.last;
+    final characters = await CharacterCollection.last;
+    final ai = await ArtificialIntelligence.last;
+    final user = await User.last;
+
+    return MaidProperties(
+      appPreferences: appPreferences, 
+      sessions: sessions,
+      characters: characters,
+      ai: ai,
+      user: user
+    );
+  }
+}
+
+class MaidApp extends StatelessWidget {
+  final MaidProperties props;
+
+  const MaidApp({
+    super.key, 
+    required this.props
+  });
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => appPreferences),
-        ChangeNotifierProvider(create: (context) => sessions),
-        ChangeNotifierProvider(create: (context) => characters),
-        ChangeNotifierProvider(create: (context) => ai),
-        ChangeNotifierProvider(create: (context) => user),
+        ChangeNotifierProvider(create: (context) => props.appPreferences),
+        ChangeNotifierProvider(create: (context) => props.sessions),
+        ChangeNotifierProvider(create: (context) => props.characters),
+        ChangeNotifierProvider(create: (context) => props.ai),
+        ChangeNotifierProvider(create: (context) => props.user),
         ChangeNotifierProvider(create: (context) => HuggingfaceSelection())
       ],
       child: Selector<AppPreferences, bool>(
