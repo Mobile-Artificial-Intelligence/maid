@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/user.dart';
 import 'package:provider/provider.dart';
 
 class UserNameDialog extends StatelessWidget {
@@ -7,13 +8,13 @@ class UserNameDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
+    return Consumer<User>(
       builder: dialogBuilder,
     );
   }
 
-  Widget dialogBuilder(BuildContext context, AppData appData, Widget? child) {
-    final controller = TextEditingController(text: appData.user.name);
+  Widget dialogBuilder(BuildContext context, User user, Widget? child) {
+    final controller = TextEditingController(text: user.name);
 
     return AlertDialog(
       title: const Text(
@@ -35,7 +36,7 @@ class UserNameDialog extends StatelessWidget {
         ),
         FilledButton(
           onPressed: () {
-            appData.user.name = controller.text;
+            user.name = controller.text;
             Navigator.of(context).pop();
           },
           child: const Text(

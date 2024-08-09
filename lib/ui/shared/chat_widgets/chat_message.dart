@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:babylon_tts/babylon_tts.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
+import 'package:maid/classes/providers/user.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/session.dart';
@@ -32,9 +33,8 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final user = appData.user;
+    return Consumer2<AppData, User>(
+      builder: (context, appData, user, child) {
         final session = appData.currentSession;
         final character = appData.currentCharacter;
 

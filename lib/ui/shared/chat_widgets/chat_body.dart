@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
+import 'package:maid/classes/providers/user.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/static/utilities.dart';
@@ -35,8 +36,8 @@ class ChatBody extends StatelessWidget {
   }
 
   Widget _buildChat() {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
+    return Consumer2<AppData, User>(
+      builder: (context, appData, user, child) {
         final session = appData.currentSession;
         final character = appData.currentCharacter;
 
@@ -52,7 +53,7 @@ class ChatBody extends StatelessWidget {
           if (character.greetings[index].isNotEmpty) {
             final message = ChatNode(
               role: ChatRole.assistant,
-              content: Utilities.formatPlaceholders(character.greetings[index], appData.user.name, character.name),
+              content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
               finalised: true
             );
 

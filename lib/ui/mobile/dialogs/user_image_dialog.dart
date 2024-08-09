@@ -10,21 +10,21 @@ class UserImageDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
+    return Consumer<User>(
       builder: dialogBuilder,
     );
   }
 
-  Widget dialogBuilder(BuildContext context, AppData appData, Widget? child) {
+  Widget dialogBuilder(BuildContext context, User user, Widget? child) {
     return AlertDialog(
       title: const Text(
         "Change Profile Picture",
         textAlign: TextAlign.center,
       ),
-      content: buildContent(context, appData.user),
+      content: buildContent(context, user),
       actions: [
         FilledButton(
-          onPressed: appData.user.loadImage,
+          onPressed: user.loadImage,
           child: const Text(
             "Load Custom"
           ),

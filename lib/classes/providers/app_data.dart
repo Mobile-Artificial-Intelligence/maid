@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/character.dart';
 import 'package:maid/classes/providers/session.dart';
-import 'package:maid/classes/providers/user.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppData extends ChangeNotifier {
   static AppData of(BuildContext context) => Provider.of<AppData>(context, listen: false);
 
-  AppData(this._sessions, this._characters, this._currentSession, this._currentCharacter, this._user) {
+  AppData(this._sessions, this._characters, this._currentSession, this._currentCharacter) {
     _currentSession.addListener(notify);
     _currentCharacter.addListener(notify);
   }
@@ -19,8 +18,6 @@ class AppData extends ChangeNotifier {
   final List<Character> _characters;
   Session _currentSession;
   Character _currentCharacter;
-  
-  User _user;
 
   List<Session> get sessions {
     _sessions.removeWhere((element) => element == _currentSession);
@@ -37,8 +34,6 @@ class AppData extends ChangeNotifier {
   Session get currentSession => _currentSession;
 
   Character get currentCharacter => _currentCharacter;
-
-  User get user => _user;
 
   set currentSession(Session session) {
     if (!currentSession.chat.tail.finalised) return;
@@ -62,11 +57,6 @@ class AppData extends ChangeNotifier {
     save().then((value) => notifyListeners());
   }
 
-  set user(User user) {
-    _user = user;
-    notifyListeners();
-  }
-
   static Future<AppData> get last async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -86,14 +76,12 @@ class AppData extends ChangeNotifier {
 
     final session = await Session.last;
     final character = await Character.last;
-    final user = await User.last;
 
     return AppData(
       sessions, 
       characters, 
       session, 
-      character, 
-      user
+      character
     );
   }
 
@@ -111,7 +99,6 @@ class AppData extends ChangeNotifier {
       prefs.setString("characters", json.encode(characterMaps)),
       _currentSession.save(),
       _currentCharacter.save(),
-      _user.save()
     ];
 
     await Future.wait(futures);
@@ -182,7 +169,6 @@ class AppData extends ChangeNotifier {
     clearCharacters();
     _currentCharacter = Character(notify);
     _currentSession = Session(notify, 0);
-    _user = User(notify);
     notifyListeners();
   }
   

@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/static/logger.dart';
 import 'package:maid/classes/static/utilities.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class User extends ChangeNotifier {
@@ -19,13 +19,9 @@ class User extends ChangeNotifier {
   File? _profile;
   String _name = "User";
 
-  static User of(BuildContext context) => AppData.of(context).user;
+  static User of(BuildContext context, { bool listen = false }) => Provider.of<User>(context, listen: listen);
 
-  User(VoidCallback? listener) {
-    if (listener != null) {
-      addListener(listener);
-    }
-
+  User() {
     reset();
   }
 
