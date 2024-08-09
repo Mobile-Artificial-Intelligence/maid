@@ -4,9 +4,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
+import 'package:maid/classes/providers/sessions.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/session.dart';
 import 'package:maid/ui/shared/dialogs/missing_requirements_dialog.dart';
 import 'package:maid/classes/static/logger.dart';
@@ -90,13 +90,11 @@ class _ChatFieldState extends State<ChatField> {
   }
 
   Widget _buildRow() {
-    return Consumer2<AppData, ArtificialIntelligence>(
-      builder: (context, appData, ai, child) {
-        final session = appData.currentSession;
-        
+    return Consumer2<Sessions, ArtificialIntelligence>(
+      builder: (context, sessions, ai, child) {
         return Row(
           children: [
-            if (!session.chat.tail.finalised &&
+            if (!sessions.current.chat.tail.finalised &&
                 ai.llm.type == LargeLanguageModelType.llamacpp)
               Semantics(
                 label: 'Stop button',
@@ -144,14 +142,14 @@ class _ChatFieldState extends State<ChatField> {
                       }
                     );
                   }
-                  else if (session.chat.tail.finalised) {
+                  else if (sessions.current.chat.tail.finalised) {
                     send();
                   }
                 },
                 iconSize: 50,
                 icon: Icon(
                   Icons.arrow_circle_right,
-                  color: !session.chat.tail.finalised 
+                  color: !sessions.current.chat.tail.finalised 
                       ? Theme.of(context).colorScheme.onPrimary
                       : Theme.of(context).colorScheme.secondary,
                 )

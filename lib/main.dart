@@ -1,9 +1,10 @@
 import 'package:babylon_tts/babylon_tts.dart';
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
 import 'package:maid/classes/providers/artificial_intelligence.dart';
+import 'package:maid/classes/providers/characters.dart';
 import 'package:maid/classes/providers/huggingface_selection.dart';
+import 'package:maid/classes/providers/sessions.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:maid/ui/desktop/app.dart';
 import 'package:maid/ui/mobile/app.dart';
@@ -15,14 +16,16 @@ void main() async {
   await Babylon.init();
 
   AppPreferences appPreferences = await AppPreferences.last;
-  AppData appData = await AppData.last;
+  Sessions sessions = await Sessions.last;
+  CharacterCollection characters = await CharacterCollection.last;
   ArtificialIntelligence ai = await ArtificialIntelligence.last;
   User user = await User.last;
 
   runApp(
     MaidApp(
       appPreferences: appPreferences, 
-      appData: appData,
+      sessions: sessions,
+      characters: characters,
       ai: ai,
       user: user
     )
@@ -31,14 +34,16 @@ void main() async {
 
 class MaidApp extends StatelessWidget {
   final AppPreferences appPreferences;
-  final AppData appData;
+  final Sessions sessions;
+  final CharacterCollection characters;
   final ArtificialIntelligence ai;
   final User user;
 
   const MaidApp({
     super.key, 
     required this.appPreferences, 
-    required this.appData, 
+    required this.sessions,
+    required this.characters,
     required this.ai, 
     required this.user,
   });
@@ -48,7 +53,8 @@ class MaidApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => appPreferences),
-        ChangeNotifierProvider(create: (context) => appData),
+        ChangeNotifierProvider(create: (context) => sessions),
+        ChangeNotifierProvider(create: (context) => characters),
         ChangeNotifierProvider(create: (context) => ai),
         ChangeNotifierProvider(create: (context) => user),
         ChangeNotifierProvider(create: (context) => HuggingfaceSelection())

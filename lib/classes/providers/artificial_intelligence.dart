@@ -44,6 +44,11 @@ class ArtificialIntelligence extends ChangeNotifier {
     await Future.wait(futures);
   }
 
+  void reset() {
+    llm.reset();
+    notify();
+  }
+
   void notify() {
     save().then((_) => notifyListeners());
   }

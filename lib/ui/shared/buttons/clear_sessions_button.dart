@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/sessions.dart';
 
 /// A button widget that clears all [Session]s.
 /// 
@@ -10,7 +10,7 @@ class ClearSessionsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
-      onPressed: AppData.of(context).clearSessions,
+      onPressed: Sessions.of(context).clearSessions,
       child: const Text(
         "Clear Chats"
       ),

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
 import 'package:maid/classes/providers/character.dart';
+import 'package:maid/classes/providers/characters.dart';
 import 'package:maid/classes/providers/desktop_navigator.dart';
 import 'package:maid/classes/static/logger.dart';
 
@@ -130,7 +130,7 @@ class _CharacterTileState extends State<CharacterTile> {
   void onTapUp(TapUpDetails details) {
     if (longPressTimer?.isActive ?? false) {
       longPressTimer?.cancel();
-      AppData.of(context).currentCharacter = widget.character;
+      CharacterCollection.of(context).current = widget.character;
       
       if (AppPreferences.of(context).isDesktop) {
         DesktopNavigator.of(context).navigateSidePanel('/character');
@@ -155,7 +155,7 @@ class _CharacterTileState extends State<CharacterTile> {
       items: <PopupMenuEntry>[
         PopupMenuItem(
           onTap: () {
-            AppData.of(context).removeCharacter(widget.character);
+            CharacterCollection.of(context).removeCharacter(widget.character);
           },
           child: const Text('Delete'),
         ),

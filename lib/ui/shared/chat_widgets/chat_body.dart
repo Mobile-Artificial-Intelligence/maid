@@ -2,9 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
+import 'package:maid/classes/providers/characters.dart';
+import 'package:maid/classes/providers/sessions.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:maid/enumerators/chat_role.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/static/utilities.dart';
 import 'package:maid/ui/shared/chat_widgets/chat_field.dart';
 import 'package:maid/ui/shared/chat_widgets/chat_message.dart';
@@ -36,28 +37,25 @@ class ChatBody extends StatelessWidget {
   }
 
   Widget _buildChat() {
-    return Consumer2<AppData, User>(
-      builder: (context, appData, user, child) {
-        final session = appData.currentSession;
-        final character = appData.currentCharacter;
-
-        List<ChatNode> chat = session.chat.getChat();
+    return Consumer3<Sessions, CharacterCollection, User>(
+      builder: (context, sessions, characters, user, child) {
+        List<ChatNode> chat = sessions.current.chat.getChat();
 
         if (
           chat.isEmpty && 
-          character.useGreeting && 
-          character.greetings.isNotEmpty
+          characters.current.useGreeting && 
+          characters.current.greetings.isNotEmpty
         ) {
-          final index = Random().nextInt(character.greetings.length);
+          final index = Random().nextInt(characters.current.greetings.length);
 
-          if (character.greetings[index].isNotEmpty) {
+          if (characters.current.greetings[index].isNotEmpty) {
             final message = ChatNode(
               role: ChatRole.assistant,
-              content: Utilities.formatPlaceholders(character.greetings[index], user.name, character.name),
+              content: Utilities.formatPlaceholders(characters.current.greetings[index], user.name, characters.current.name),
               finalised: true
             );
 
-            session.chat.addNode(message);
+            sessions.current.chat.addNode(message);
             chat = [message];
           }
         }

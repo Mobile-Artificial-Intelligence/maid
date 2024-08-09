@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
+import 'package:maid/classes/providers/characters.dart';
+import 'package:maid/classes/providers/sessions.dart';
+import 'package:maid/classes/providers/user.dart';
 import 'package:maid/classes/static/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -11,13 +14,13 @@ class LogPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Consumer2<AppData, AppPreferences>(
+      body: Consumer5<ArtificialIntelligence, CharacterCollection, Sessions, User, AppPreferences>(
         builder: buildLog,
       ),
     );
   }
 
-  Widget buildLog(BuildContext context, AppData appData, AppPreferences appPreferences, Widget? child) {
+  Widget buildLog(BuildContext context, ArtificialIntelligence ai, CharacterCollection characters, Sessions sessions, User user, AppPreferences appPreferences, Widget? child) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       color: Colors.black,

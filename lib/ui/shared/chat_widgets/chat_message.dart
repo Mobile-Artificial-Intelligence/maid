@@ -2,10 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:babylon_tts/babylon_tts.dart';
+import 'package:maid/classes/providers/characters.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
+import 'package:maid/classes/providers/sessions.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:maid/enumerators/chat_role.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/session.dart';
 import 'package:maid/ui/shared/dialogs/missing_requirements_dialog.dart';
 import 'package:maid/ui/shared/shaders/blade_runner_gradient_shader.dart';
@@ -33,12 +34,9 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AppData, User>(
-      builder: (context, appData, user, child) {
-        final session = appData.currentSession;
-        final character = appData.currentCharacter;
-
-        node = session.chat.find(widget.hash)!;
+    return Consumer3<Sessions, CharacterCollection, User>(
+      builder: (context, sessions, characters, user, child) {
+        node = sessions.current.chat.find(widget.hash)!;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start, 
@@ -48,15 +46,15 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
               children: [
                 const SizedBox(width: 10.0),
                 FutureAvatar(
-                  key: node.role == ChatRole.user ? user.key : character.key,
-                  image: node.role == ChatRole.user ? user.profile : character.profile,
+                  key: node.role == ChatRole.user ? user.key : characters.current.key,
+                  image: node.role == ChatRole.user ? user.profile : characters.current.profile,
                   radius: 16,
                 ),
                 const SizedBox(width: 10.0),
                 BladeRunnerGradientShader(
                   stops: const [0.5, 0.85],
                   child: Text(
-                    node.role == ChatRole.user ? user.name : character.name,
+                    node.role == ChatRole.user ? user.name : characters.current.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Colors.white,
@@ -169,12 +167,10 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
   }
 
   Widget branchSwitcher() {
-    return Consumer<AppData>(
-      builder: (BuildContext context, AppData appData, Widget? child) {
-        final session = appData.currentSession;
-        
-        int currentIndex = session.chat.indexOf(widget.hash);
-        int siblingCount = session.chat.siblingCountOf(widget.hash);
+    return Consumer<Sessions>(
+      builder: (BuildContext context, Sessions sessions, Widget? child) {
+        int currentIndex = sessions.current.chat.indexOf(widget.hash);
+        int siblingCount = sessions.current.chat.siblingCountOf(widget.hash);
 
         return Row(
           mainAxisSize: MainAxisSize.max,
@@ -184,9 +180,9 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
               tooltip: 'Previous chat branch',
               padding: const EdgeInsets.all(0),
               onPressed: () {
-                if (!session.chat.tail.finalised) return;
-                session.chat.last(widget.hash);
-                session.notify();
+                if (!sessions.current.chat.tail.finalised) return;
+                sessions.current.chat.last(widget.hash);
+                sessions.current.notify();
               },
               icon: Icon(
                 Icons.arrow_left,
@@ -202,9 +198,9 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> with SingleTicker
               tooltip: 'Next chat branch',
               padding: const EdgeInsets.all(0),
               onPressed: () {
-                if (!session.chat.tail.finalised) return;
-                session.chat.next(widget.hash);
-                session.notify();
+                if (!sessions.current.chat.tail.finalised) return;
+                sessions.current.chat.next(widget.hash);
+                sessions.current.notify();
               },
               icon: Icon(
                 Icons.arrow_right,

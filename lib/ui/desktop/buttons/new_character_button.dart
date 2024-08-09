@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/characters.dart';
 
 class NewCharacterButton extends StatelessWidget {
   const NewCharacterButton({super.key});
@@ -8,7 +8,7 @@ class NewCharacterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: () {
-        AppData.of(context).newCharacter();
+        CharacterCollection.of(context).newCharacter();
       },
       child: const Text(
         "New Character"

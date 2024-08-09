@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
+import 'package:maid/classes/providers/characters.dart';
+import 'package:maid/classes/providers/sessions.dart';
+import 'package:maid/classes/providers/user.dart';
 import 'package:maid/classes/static/logger.dart';
 import 'package:maid/ui/shared/dropdowns/app_layout_dropdown.dart';
 import 'package:maid/ui/shared/dropdowns/theme_mode_dropdown.dart';
@@ -60,7 +63,10 @@ class AppSettingsPanel extends StatelessWidget {
               SharedPreferences.getInstance().then((prefs) {
                 prefs.clear();
                 AppPreferences.of(context).reset();
-                AppData.of(context).reset();
+                CharacterCollection.of(context).reset();
+                Sessions.of(context).reset();
+                ArtificialIntelligence.of(context).reset();
+                User.of(context).reset();
                 Logger.clear();
               });
             },

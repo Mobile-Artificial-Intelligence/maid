@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node_tree.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
+import 'package:maid/classes/providers/sessions.dart';
 import 'package:maid/enumerators/chat_role.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/character.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:maid/classes/static/logger.dart';
@@ -39,7 +39,7 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  static Session of(BuildContext context) => AppData.of(context).currentSession;
+  static Session of(BuildContext context) => Sessions.of(context).current;
 
   Session(VoidCallback? listener, int index) {
     if (listener != null) {

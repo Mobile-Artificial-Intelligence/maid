@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/shared/dialogs/loading_dialog.dart';
 
 class StorageOperationDialog extends StatelessWidget {
@@ -27,7 +26,6 @@ class StorageOperationDialog extends StatelessWidget {
             actions: [
               FilledButton(
                 onPressed: () {
-                  AppData.of(context).notify();
                   Navigator.of(context).pop();
                 },
                 child: Text(

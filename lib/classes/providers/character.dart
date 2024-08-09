@@ -6,7 +6,7 @@ import 'package:crypto/crypto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/characters.dart';
 import 'package:maid/classes/static/logger.dart';
 import 'package:image/image.dart';
 import 'package:maid/classes/static/utilities.dart';
@@ -32,7 +32,7 @@ class Character extends ChangeNotifier {
 
   Map<String, dynamic> _cachedJson = {};
 
-  static Character of(BuildContext context) => AppData.of(context).currentCharacter;
+  static Character of(BuildContext context) => CharacterCollection.of(context).current;
 
   Character(VoidCallback? listener) : _key = UniqueKey() {
     if (listener != null) {

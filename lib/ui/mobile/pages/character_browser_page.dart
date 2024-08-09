@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/characters.dart';
 import 'package:maid/ui/shared/utilities/session_busy_overlay.dart';
 import 'package:maid/ui/shared/views/characters_grid_view.dart';
 
@@ -24,7 +24,7 @@ class CharacterBrowserPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              AppData.of(context).newCharacter();
+              CharacterCollection.of(context).newCharacter();
             },
           ),
         ],

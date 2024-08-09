@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/app_preferences.dart';
 import 'package:maid/classes/providers/character.dart';
+import 'package:maid/classes/providers/characters.dart';
 import 'package:maid/classes/providers/desktop_navigator.dart';
 import 'package:maid/classes/static/utilities.dart';
 import 'package:maid/ui/shared/dialogs/storage_operation_dialog.dart';
@@ -66,29 +66,29 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
           "Character Customization"
         ),
       ),
-      body: Consumer<AppData>(
+      body: Consumer<CharacterCollection>(
         builder: buildBody,
       )
     );
   }
 
-  Widget buildBody(BuildContext context, AppData appData, Widget? child) {
+  Widget buildBody(BuildContext context, CharacterCollection characters, Widget? child) {
     if (regenerate) {
-      nameController = TextEditingController(text: appData.currentCharacter.name);
-      descriptionController = TextEditingController(text: appData.currentCharacter.description);
-      personalityController = TextEditingController(text: appData.currentCharacter.personality);
-      scenarioController = TextEditingController(text: appData.currentCharacter.scenario);
-      systemController = TextEditingController(text: appData.currentCharacter.system);
+      nameController = TextEditingController(text: characters.current.name);
+      descriptionController = TextEditingController(text: characters.current.description);
+      personalityController = TextEditingController(text: characters.current.personality);
+      scenarioController = TextEditingController(text: characters.current.scenario);
+      systemController = TextEditingController(text: characters.current.system);
 
       greetingControllers = List.generate(
-        appData.currentCharacter.greetings.length,
-        (index) => TextEditingController(text: appData.currentCharacter.greetings[index]),
+        characters.current.greetings.length,
+        (index) => TextEditingController(text: characters.current.greetings[index]),
       );
 
       exampleControllers = List.generate(
-        appData.currentCharacter.examples.length,
+        characters.current.examples.length,
         (index) =>
-            TextEditingController(text: appData.currentCharacter.examples[index]["content"]),
+            TextEditingController(text: characters.current.examples[index]["content"]),
       );
 
       regenerate = false;
@@ -99,19 +99,19 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       Padding(
         padding: const EdgeInsets.all(20.0),
         child: FutureTileImage(
-          key: appData.currentCharacter.imageKey,
-          image: appData.currentCharacter.profile,
+          key: characters.current.imageKey,
+          image: characters.current.profile,
           borderRadius: BorderRadius.circular(10.0),
         )
       ),
       const SizedBox(height: 20.0),
       Text(
-        appData.currentCharacter.name,
+        characters.current.name,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.titleLarge,
       ),
       const SizedBox(height: 20.0),
-      buttonGridView(appData.currentCharacter),
+      buttonGridView(characters.current),
       const SizedBox(height: 20.0),
       Divider(
         indent: 10,
@@ -123,7 +123,7 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
         labelText: 'Name',
         controller: nameController,
         onChanged: (value) {
-          appData.currentCharacter.name = value;
+          characters.current.name = value;
         },
         multiline: false,
       ),
@@ -134,12 +134,12 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       ),
       SwitchListTile(
         title: const Text('Use System'),
-        value: appData.currentCharacter.useSystem,
+        value: characters.current.useSystem,
         onChanged: (value) {
-          appData.currentCharacter.useSystem = value;
+          characters.current.useSystem = value;
         },
       ),
-      if (appData.currentCharacter.useSystem) ...system(appData.currentCharacter),
+      if (characters.current.useSystem) ...system(characters.current),
       Divider(
         indent: 10,
         endIndent: 10,
@@ -147,12 +147,12 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       ),
       SwitchListTile(
         title: const Text('Use Greeting'),
-        value: appData.currentCharacter.useGreeting,
+        value: characters.current.useGreeting,
         onChanged: (value) {
-          appData.currentCharacter.useGreeting = value;
+          characters.current.useGreeting = value;
         },
       ),
-      if (appData.currentCharacter.useGreeting) ...greetings(appData.currentCharacter),
+      if (characters.current.useGreeting) ...greetings(characters.current),
       Divider(
         indent: 10,
         endIndent: 10,
@@ -160,12 +160,12 @@ class _CharacterCustomizationPageState extends State<CharacterCustomizationPage>
       ),
       SwitchListTile(
         title: const Text('Use Examples'),
-        value: appData.currentCharacter.useExamples,
+        value: characters.current.useExamples,
         onChanged: (value) {
-          appData.currentCharacter.useExamples = value;
+          characters.current.useExamples = value;
         },
       ),
-      if (appData.currentCharacter.useExamples) ...examples(appData.currentCharacter),
+      if (characters.current.useExamples) ...examples(characters.current),
     ]);
   }
 

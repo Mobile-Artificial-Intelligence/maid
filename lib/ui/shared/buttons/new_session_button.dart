@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/sessions.dart';
 
 /// A button widget that creates a new [Session].
 ///
@@ -12,7 +12,7 @@ class NewSessionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       tooltip: "New Session",
-      onPressed: AppData.of(context).newSession, 
+      onPressed: Sessions.of(context).newSession, 
       icon: const Icon(
         Icons.border_color_rounded,
         size: 24,
