@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/shared/tiles/slider_grid_tile.dart';
 import 'package:provider/provider.dart';
@@ -9,16 +9,15 @@ class NKeepParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<AppData, int>(
-      selector: (context, appData) => appData.model.nKeep,
+    return Consumer<ArtificialIntelligence>(
       builder: nKeepBuilder,
     );
   }
 
-  Widget nKeepBuilder(BuildContext context, int nKeep, Widget? child) {
+  Widget nKeepBuilder(BuildContext context, ArtificialIntelligence ai, Widget? child) {
     return SliderGridTile(
       labelText: 'NKeep',
-      inputValue: nKeep,
+      inputValue: ai.llm.nKeep,
       sliderMin: 1.0,
       sliderMax: 1024.0,
       sliderDivisions: 1023,

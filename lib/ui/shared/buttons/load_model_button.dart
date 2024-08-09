@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/huggingface_selection.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/shared/dialogs/load_model_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -103,13 +103,12 @@ class LoadModelButton extends StatelessWidget {
   }
 
   Widget buildConsumer() {
-    return Selector<AppData, String>(
-      selector: (context, appData) => appData.model.name,
+    return Consumer<ArtificialIntelligence>(
       builder: rowBuilder
     );
   }
 
-  Widget rowBuilder(BuildContext context, String modelName, Widget? child) {
+  Widget rowBuilder(BuildContext context, ArtificialIntelligence ai, Widget? child) {
     const textStyle = TextStyle(
       color: Colors.white,
       fontSize: 14,
@@ -124,7 +123,7 @@ class LoadModelButton extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            modelName.isNotEmpty ? modelName : "Load Model",
+            ai.llm.name.isNotEmpty ? ai.llm.name : "Load Model",
             textAlign: TextAlign.center,
             style: textStyle,
           ),

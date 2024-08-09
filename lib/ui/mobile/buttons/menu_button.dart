@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:provider/provider.dart';
 
 class MenuButton extends StatefulWidget {
@@ -33,13 +33,13 @@ class _MenuButtonState extends State<MenuButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppData>(
+    return Consumer<ArtificialIntelligence>(
       builder: buildMenuButton,
     );
   }
 
-  Widget buildMenuButton(BuildContext context, AppData appData, Widget? child) {
-    if (canUseCache(appData.model)) {
+  Widget buildMenuButton(BuildContext context, ArtificialIntelligence ai, Widget? child) {
+    if (canUseCache(ai.llm)) {
       return PopupMenuButton(
         tooltip: 'Open Menu',
         icon: const Icon(
@@ -50,10 +50,10 @@ class _MenuButtonState extends State<MenuButton> {
       );
     } 
     else {
-      lastModelType = appData.model.type;
+      lastModelType = ai.llm.type;
       lastCheck = DateTime.now();
       return FutureBuilder(
-        future: appData.model.options,
+        future: ai.llm.options,
         builder: buildMenuButtonFuture
       );
     }
@@ -89,15 +89,15 @@ class _MenuButtonState extends State<MenuButton> {
   List<PopupMenuEntry<dynamic>> itemBuilder(BuildContext context) {
     List<PopupMenuEntry<dynamic>> modelOptions = options.map((String modelName) => PopupMenuItem(
       padding: EdgeInsets.zero,
-      child: Consumer<AppData>(
-        builder: (context, appData, child) {
+      child: Consumer<ArtificialIntelligence>(
+        builder: (context, ai, child) {
           return ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
             title: Text(modelName),
             onTap: () {
               LargeLanguageModel.of(context).name = modelName;
             },
-            tileColor: appData.model.name == modelName ? Theme.of(context).colorScheme.secondary : null,
+            tileColor: ai.llm.name == modelName ? Theme.of(context).colorScheme.secondary : null,
           );
         }
       ))

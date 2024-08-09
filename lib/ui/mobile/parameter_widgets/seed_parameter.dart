@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:provider/provider.dart';
 
 class SeedParameter extends StatelessWidget {
@@ -12,18 +12,17 @@ class SeedParameter extends StatelessWidget {
       text: LargeLanguageModel.of(context).seed.toString()
     );
 
-    return Selector<AppData, bool>(
-      selector: (context, appData) => appData.model.randomSeed,
-      builder: (context, randomSeed, child) => buildColumn(context, randomSeed, controller),
+    return Consumer<ArtificialIntelligence>(
+      builder: (context, ai, child) => buildColumn(context, ai, controller),
     );
   }
 
-  Widget buildColumn(BuildContext context, bool randomSeed, TextEditingController controller) {
+  Widget buildColumn(BuildContext context, ArtificialIntelligence ai, TextEditingController controller) {
     return Column(
       children: [
         SwitchListTile(
           title: const Text('Random Seed'),
-          value: randomSeed,
+          value: ai.llm.randomSeed,
           onChanged: (value) {
             LargeLanguageModel.of(context).randomSeed = value;
           },
@@ -34,7 +33,7 @@ class SeedParameter extends StatelessWidget {
           endIndent: 10,
           color: Theme.of(context).colorScheme.primary,
         ),
-        if (!randomSeed)
+        if (!ai.llm.randomSeed)
           ListTile(
             title: Row(
               children: [

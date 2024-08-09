@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/shared/tiles/slider_grid_tile.dart';
 import 'package:provider/provider.dart';
@@ -9,16 +9,15 @@ class NPredictParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<AppData, int>(
-      selector: (context, appData) => appData.model.nPredict,
+    return Consumer<ArtificialIntelligence>(
       builder: nPredictBuilder,
     );
   }
 
-  Widget nPredictBuilder(BuildContext context, int nPredict, Widget? child) {
+  Widget nPredictBuilder(BuildContext context, ArtificialIntelligence ai, Widget? child) {
     return SliderGridTile(
       labelText: 'Predict Length',
-      inputValue: nPredict,
+      inputValue: ai.llm.nPredict,
       sliderMin: 1.0,
       sliderMax: 4096.0,
       sliderDivisions: 4095,

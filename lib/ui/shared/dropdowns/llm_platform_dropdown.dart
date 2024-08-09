@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/shared/shaders/blade_runner_gradient_shader.dart';
 import 'package:provider/provider.dart';
 
@@ -23,13 +23,13 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
   }
 
   Widget dropdownBuilder() {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
+    return Consumer<ArtificialIntelligence>(
+      builder: (context, ai, child) {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              appData.model.type.displayName,
+              ai.llm.type.displayName,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -62,7 +62,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('LlamaCPP'),
-          onTap: AppData.of(context).switchLlamaCpp,
+          onTap: () => ArtificialIntelligence.of(context).switchLargeLanguageModel(LargeLanguageModelType.llamacpp),
         ),
       ),
       PopupMenuItem(
@@ -70,7 +70,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('OpenAI'),
-          onTap: AppData.of(context).switchOpenAI,
+          onTap: () => ArtificialIntelligence.of(context).switchLargeLanguageModel(LargeLanguageModelType.openAI),
         ),
       ),
       PopupMenuItem(
@@ -78,7 +78,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Ollama'),
-          onTap: AppData.of(context).switchOllama,
+          onTap: () => ArtificialIntelligence.of(context).switchLargeLanguageModel(LargeLanguageModelType.ollama),
         ),
       ),
       PopupMenuItem(
@@ -86,7 +86,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('MistralAI'),
-          onTap: AppData.of(context).switchMistralAI,
+          onTap: () => ArtificialIntelligence.of(context).switchLargeLanguageModel(LargeLanguageModelType.mistralAI),
         ),
       ),
       PopupMenuItem(
@@ -94,7 +94,7 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           title: const Text('Gemini'),
-          onTap: AppData.of(context).switchGemini,
+          onTap: () => ArtificialIntelligence.of(context).switchLargeLanguageModel(LargeLanguageModelType.gemini),
         ),
       )
     ];

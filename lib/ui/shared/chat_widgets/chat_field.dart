@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_models/llama_cpp_model.dart';
 import 'package:maid/enumerators/chat_role.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
@@ -89,21 +90,20 @@ class _ChatFieldState extends State<ChatField> {
   }
 
   Widget _buildRow() {
-    return Consumer<AppData>(
-      builder: (context, appData, child) {
-        final model = appData.model;
+    return Consumer2<AppData, ArtificialIntelligence>(
+      builder: (context, appData, ai, child) {
         final session = appData.currentSession;
         
         return Row(
           children: [
             if (!session.chat.tail.finalised &&
-                model.type == LargeLanguageModelType.llamacpp)
+                ai.llm.type == LargeLanguageModelType.llamacpp)
               Semantics(
                 label: 'Stop button',
                 hint: 'Double tap to stop inference.',
                 excludeSemantics: true,
                 child: IconButton(
-                  onPressed: (model as LlamaCppModel).stop,
+                  onPressed: (ai.llm as LlamaCppModel).stop,
                   iconSize: 50,
                   icon: const Icon(
                     Icons.stop_circle_sharp,
@@ -136,7 +136,7 @@ class _ChatFieldState extends State<ChatField> {
               excludeSemantics: true,
               child: IconButton(
                 onPressed: () {
-                  if (model.missingRequirements.isNotEmpty) {
+                  if (ai.llm.missingRequirements.isNotEmpty) {
                     showDialog(
                       context: context,
                       builder: (context) {

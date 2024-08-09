@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:maid/classes/chat_node.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
 
 class LargeLanguageModel extends ChangeNotifier {
@@ -208,7 +208,7 @@ class LargeLanguageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  static LargeLanguageModel of(BuildContext context) => AppData.of(context).model;
+  static LargeLanguageModel of(BuildContext context) => ArtificialIntelligence.of(context).llm;
 
   LargeLanguageModel({
     VoidCallback? listener,

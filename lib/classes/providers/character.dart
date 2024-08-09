@@ -14,7 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Character extends ChangeNotifier {
-  Key _key;
+  final Key _key;
   File? _profile;
 
   bool _useSystem = true;

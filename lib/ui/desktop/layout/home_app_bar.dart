@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/dropdowns/remote_model_dropdown.dart';
 import 'package:maid/ui/shared/buttons/new_session_button.dart';
 import 'package:maid/ui/shared/dropdowns/llm_platform_dropdown.dart';
@@ -24,13 +24,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget buildRow() {
-    return Selector<AppData, LargeLanguageModelType>(
-      selector: (context, appData) => appData.model.type,
+    return Consumer<ArtificialIntelligence>(
       builder: buildAppBar
     );
   }
 
-  Widget buildAppBar(BuildContext context, LargeLanguageModelType type, Widget? child) {
+  Widget buildAppBar(BuildContext context, ArtificialIntelligence ai, Widget? child) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -38,7 +37,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         const Spacer(flex: 1),
         Expanded(
           flex: 8,
-          child: type == LargeLanguageModelType.llamacpp ? 
+          child: ai.llm.type == LargeLanguageModelType.llamacpp ? 
             const LlamaCppModelControls() : 
             const RemoteModelDropdown(),
         ),

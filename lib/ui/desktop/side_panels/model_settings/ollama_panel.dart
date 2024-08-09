@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/parameters/api_key_parameter.dart';
 import 'package:maid/ui/desktop/parameters/n_keep_parameter.dart';
 import 'package:maid/ui/desktop/parameters/penalize_nl_parameter.dart';
@@ -61,8 +61,7 @@ class OllamaPanel extends StatelessWidget {
             buildDivider(context),
             buildSwitchWrap(),
             buildDivider(context),
-            Selector<AppData, bool>(
-              selector: (context, appData) => appData.model.useDefault,
+            Consumer<ArtificialIntelligence>(
               builder: buildGridView
             )
           ]
@@ -104,7 +103,7 @@ class OllamaPanel extends StatelessWidget {
     );
   }
 
-  Widget buildGridView(BuildContext context, bool useDefault, Widget? child) {
+  Widget buildGridView(BuildContext context, ArtificialIntelligence ai, Widget? child) {
     return GridView(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 250,
@@ -115,7 +114,7 @@ class OllamaPanel extends StatelessWidget {
       shrinkWrap: true,
       children: [
         const SeedParameter(),
-        if (!useDefault) ...[
+        if (!ai.llm.useDefault) ...[
           const NThreadsParameter(),
           const NCtxParameter(),
           const NBatchParameter(),

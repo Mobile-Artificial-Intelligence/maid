@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/shared/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
@@ -9,16 +9,15 @@ class LastNPenaltyParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<AppData, int>(
-      selector: (context, appData) => appData.model.penaltyLastN,
+    return Consumer<ArtificialIntelligence>(
       builder: lastNPenaltyBuilder,
     );
   }
 
-  Widget lastNPenaltyBuilder(BuildContext context, int penaltyLastN, Widget? child) {
+  Widget lastNPenaltyBuilder(BuildContext context, ArtificialIntelligence ai, Widget? child) {
     return SliderListTile(
       labelText: 'Last N Penalty',
-      inputValue: penaltyLastN,
+      inputValue: ai.llm.penaltyLastN,
       sliderMin: 0.0,
       sliderMax: 128.0,
       sliderDivisions: 127,

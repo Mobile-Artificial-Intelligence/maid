@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/enumerators/large_language_model_type.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/side_panels/model_settings/google_gemini_panel.dart';
 import 'package:maid/ui/desktop/side_panels/model_settings/llama_cpp_panel.dart';
 import 'package:maid/ui/desktop/side_panels/model_settings/mistral_ai_panel.dart';
@@ -13,14 +13,13 @@ class ModelSettingsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<AppData, LargeLanguageModelType>(
-      selector: (context, appData) => appData.model.type,
+    return Consumer<ArtificialIntelligence>(
       builder: modelSettingsBuilder,
     );
   }
 
-  Widget modelSettingsBuilder(BuildContext context, LargeLanguageModelType type, Widget? child) {
-    switch (type) {
+  Widget modelSettingsBuilder(BuildContext context, ArtificialIntelligence ai, Widget? child) {
+    switch (ai.llm.type) {
       case LargeLanguageModelType.llamacpp:
         return const LlamaCppPanel();
       case LargeLanguageModelType.ollama:

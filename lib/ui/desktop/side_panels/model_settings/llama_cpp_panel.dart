@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/ui/desktop/parameters/penalize_nl_parameter.dart';
 import 'package:maid/ui/desktop/parameters/template_parameter.dart';
 import 'package:maid/ui/desktop/parameters/frequency_penalty_parameter.dart';
@@ -86,15 +86,14 @@ class LlamaCppPanel extends StatelessWidget {
   }
 
   Widget buildModelName() {
-    return Selector<AppData, String>(
-      selector: (context, appData) => appData.model.name,
-      builder: (context, modelName, child) {
-        if (modelName.isEmpty) {
+    return Consumer<ArtificialIntelligence>(
+      builder: (context, ai, child) {
+        if (ai.llm.name.isEmpty) {
           return const SizedBox.shrink();
         }
 
         return Text(
-          "Model: $modelName",
+          "Model: ${ai.llm.name}",
           textAlign: TextAlign.center,
         );
       }

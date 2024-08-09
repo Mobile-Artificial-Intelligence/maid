@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
+import 'package:maid/classes/providers/artificial_intelligence.dart';
 import 'package:maid/classes/providers/large_language_model.dart';
 import 'package:maid/ui/shared/tiles/slider_list_tile.dart';
 import 'package:provider/provider.dart';
@@ -9,16 +9,15 @@ class PresentPenaltyParameter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<AppData, double>(
-      selector: (context, appData) => appData.model.penaltyPresent,
+    return Consumer<ArtificialIntelligence>(
       builder: presentPenaltyBuilder,
     );
   }
 
-  Widget presentPenaltyBuilder(BuildContext context, double penaltyPresent, Widget? child) {
+  Widget presentPenaltyBuilder(BuildContext context, ArtificialIntelligence ai, Widget? child) {
     return SliderListTile(
       labelText: 'Presence Penalty',
-      inputValue: penaltyPresent,
+      inputValue: ai.llm.penaltyPresent,
       sliderMin: 0.0,
       sliderMax: 1.0,
       sliderDivisions: 100,
