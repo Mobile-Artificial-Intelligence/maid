@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_data.dart';
 import 'package:maid/classes/providers/user.dart';
 import 'package:maid/classes/static/utilities.dart';
 import 'package:maid/ui/shared/tiles/image_selector_tile.dart';
