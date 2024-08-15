@@ -76,5 +76,3 @@ jobs:
         with:
           name: maid-macos-${{ matrix.os == 'macos-13' && 'x86_64' || 'arm64' }}
           path: dmg
-
-    timeout-minutes: 20
