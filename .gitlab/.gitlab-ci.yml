@@ -105,7 +105,7 @@ build-maid:
       echo "storePassword=$STORE_PASSWORD" >> ./android/key.properties
       echo "releasePassword=$KEY_PASSWORD" >> ./android/key.properties
       echo "releaseAlias=$KEY_ALIAS" >> ./android/key.properties
-    - ./packages/flutter/bin/flutter build apk --split-per-abi
+    - ./packages/flutter/bin/flutter build apk -v --split-per-abi
     - mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk maid-android-arm64-v8a.apk
     - mv build/app/outputs/flutter-apk/app-x86_64-release.apk maid-android-x86_64.apk
   artifacts:
