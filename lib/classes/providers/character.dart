@@ -18,7 +18,7 @@ class Character extends ChangeNotifier {
   File? _profile;
 
   bool _useSystem = true;
-  String _name = "Maid";
+  String _name = "Assistant";
   String _description = "";
   String _personality = "";
   String _scenario = "";
@@ -89,8 +89,8 @@ class Character extends ChangeNotifier {
     if (inputJson["profile"] != null) {
       _profile = File(inputJson["profile"]);
     }
-    else if (_profile == null || _profile!.path.contains("defaultCharacter")) {
-      _profile = await Utilities.fileFromAssetImage("defaultCharacter.png");
+    else if (_profile == null || _profile!.path.contains("defaultAssistant")) {
+      _profile = await Utilities.fileFromAssetImage("defaultAssistant.png");
     }
 
     if (inputJson["spec"] == "mcf_v1") {
@@ -304,7 +304,7 @@ class Character extends ChangeNotifier {
   }
 
   Future<File> get profile async {
-    return _profile ??= await Utilities.fileFromAssetImage("defaultCharacter.png");
+    return _profile ??= await Utilities.fileFromAssetImage("defaultAssistant.png");
   }
 
   Key get key => _key;
@@ -358,9 +358,9 @@ class Character extends ChangeNotifier {
   List<Map<String, dynamic>> get examples => _examples;
 
   Future<void> reset() async {
-    _profile = await Utilities.fileFromAssetImage("defaultCharacter.png");
+    _profile = await Utilities.fileFromAssetImage("defaultAssistant.png");
 
-    final jsonString = await rootBundle.loadString('assets/default_character.json');
+    final jsonString = await rootBundle.loadString('assets/default_assistant.json');
 
     Map<String, dynamic> jsonCharacter = json.decode(jsonString);
 

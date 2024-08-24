@@ -52,7 +52,7 @@ class User extends ChangeNotifier {
   }
 
   Future<File> get profile async {
-    return _profile ?? await Utilities.fileFromAssetImage("chadUser.png");
+    return _profile ?? await Utilities.fileFromAssetImage("defaultUser.png");
   }
 
   File? get profileFile => _profile;
@@ -87,7 +87,7 @@ class User extends ChangeNotifier {
     if (inputMap["profile"] != null) {
       _profile = File(inputMap["profile"]);
     } else {
-      _profile = await Utilities.fileFromAssetImage("chadUser.png");
+      _profile = await Utilities.fileFromAssetImage("defaultUser.png");
     }
 
     _name = inputMap["name"];
@@ -104,7 +104,7 @@ class User extends ChangeNotifier {
 
   void reset() async {
     _customImage = await Utilities.fileFromAssetImage("blankCustomUser.png");
-    _profile = await Utilities.fileFromAssetImage("chadUser.png");
+    _profile = await Utilities.fileFromAssetImage("defaultUser.png");
     _name = "User";
     notifyListeners();
   }

@@ -60,6 +60,11 @@ class UserPanel extends StatelessWidget {
       children: [
         GridTile(
           child: ImageSelectorTile(
+            image: Utilities.fileFromAssetImage("defaultUser.png"),
+          ),
+        ),
+        GridTile(
+          child: ImageSelectorTile(
             image: Utilities.fileFromAssetImage("chadUser.png"),
           ),
         ),

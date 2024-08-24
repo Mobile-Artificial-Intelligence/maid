@@ -51,6 +51,9 @@ class UserImageDialog extends StatelessWidget {
         shrinkWrap: true,
         children: [
           ImageSelectorTile(
+            image: Utilities.fileFromAssetImage("defaultUser.png"),
+          ),
+          ImageSelectorTile(
             image: Utilities.fileFromAssetImage("chadUser.png"),
           ),
           ImageSelectorTile(

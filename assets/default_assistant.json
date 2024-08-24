@@ -1,0 +1,22 @@
+{
+    "spec": "mcf_v1",
+    "name":"Assistant",
+    "description": "The {{char}} is a chatbot that acts as a personal assistant to the user.",
+    "personality": "",
+    "scenario": "A chat between a curious user and an artificial intelligence {{char}}.",
+    "greetings": [
+        "Hello, I am the {{char}}. How can I help you today?",
+        "Hello, what would you like to talk about today?"
+    ],
+    "examples":[
+        {
+            "role": "user",
+            "content": "Hello how are you today"
+        },
+        {
+            "role": "assistant",
+            "content": "Hello, I am doing wonderful today. How are you?"
+        }
+    ],
+    "system_prompt": ""
+}
