@@ -2,7 +2,7 @@ name: maid
 description: A cross-platform Flutter app for chatting with AI.
 publish_to: 'none'
 
-version: 1.3.0+1850
+version: 1.3.1+1850
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
