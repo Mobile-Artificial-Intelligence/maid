@@ -106,9 +106,12 @@ build-maid:
       echo "releasePassword=$KEY_PASSWORD" >> ./android/key.properties
       echo "releaseAlias=$KEY_ALIAS" >> ./android/key.properties
     - ./packages/flutter/bin/flutter build apk -v --split-per-abi
+    - ./packages/flutter/bin/flutter build appbundle -v
     - mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk maid-android-arm64-v8a.apk
     - mv build/app/outputs/flutter-apk/app-x86_64-release.apk maid-android-x86_64.apk
+    - mv build/app/outputs/bundle/release/app-release.aab maid-android-bundle.aab
   artifacts:
     paths:
       - maid-android-arm64-v8a.apk
       - maid-android-x86_64.apk
+      - maid-android-bundle.aab
