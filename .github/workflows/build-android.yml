@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake libvulkan-dev vulkan-utils
+          sudo apt-get install -y cmake libvulkan-dev
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
