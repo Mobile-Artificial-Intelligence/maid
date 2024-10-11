@@ -114,3 +114,7 @@ Tested with calypso 3b, orcamini 3b, minyllama 1.1b, phi 3, mistral 7b, mixtral 
 ## Disclaimer
 
 Maid is distributed under the MIT licence and is provided without warranty of any kind, express or implied. Maid is not affiliated with Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company providing a model compatible with this application.
+
+
+<p align="right">
+  <a href="#top">Back to top ⬆️</a></p>
