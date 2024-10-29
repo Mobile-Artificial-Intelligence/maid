@@ -16,11 +16,20 @@ void main() async {
   await Babylon.init();
 
   MaidProperties props = await MaidProperties.last;
+  final settingsService = AppSettingsService();
+  await settingsService.init();
 
   runApp(
-    MaidApp(
-      props: props
-    )
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppPreferences()),
+        ChangeNotifierProvider(create: (_) => CharacterProvider()),
+        ChangeNotifierProvider(create: (_) => ModelProvider()),
+      ],
+      child: const MaidApp(
+        props: props
+      ),
+    ),
   );
 }
 
