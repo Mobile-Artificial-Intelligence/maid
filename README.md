@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center" id = "top">
   <img alt="logo" height="200px" src="assets/maid.png">
 </div>
 
@@ -124,7 +124,7 @@ Maid is distributed under the MIT licence and is provided without warranty of an
 
 This project is licensed under the [MIT License](LICENSE).
 
-<div align="center" id="top">
+<div align="center">
 <p align="center">
   <a href="#top">
         <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
