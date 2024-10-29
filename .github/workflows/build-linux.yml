@@ -88,7 +88,10 @@ jobs:
           chmod +x AppDir/maid
           echo '#!/bin/bash
           HERE="$(dirname "$(readlink -f "${0}")")"
-          exec "$HERE/maid" "$@"' > AppDir/AppRun
+          (
+            export LD_LIBRARY_PATH="${HERE}/lib:${LD_LIBRARY_PATH}"
+            exec "${HERE}/maid" "$@"
+          )' > AppDir/AppRun
           chmod +x AppDir/AppRun
 
       - name: Create AppImage
