@@ -17,7 +17,7 @@ class User extends ChangeNotifier {
 
   Key _key = UniqueKey();
   File? _profile;
-  String _name = "User";
+  String _name = "我";
 
   static User of(BuildContext context, { bool listen = false }) => Provider.of<User>(context, listen: listen);
 
@@ -105,7 +105,7 @@ class User extends ChangeNotifier {
   void reset() async {
     _customImage = await Utilities.fileFromAssetImage("blankCustomUser.png");
     _profile = await Utilities.fileFromAssetImage("defaultUser.png");
-    _name = "User";
+    _name = "我";
     notifyListeners();
   }
 

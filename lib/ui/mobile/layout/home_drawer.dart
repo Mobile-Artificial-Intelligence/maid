@@ -37,11 +37,11 @@ class HomeDrawer extends StatelessWidget {
         minimum: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            Expanded(
-              child: CharacterTile(
-                character: characters.current,
-              )
-            ),
+            // Expanded(
+            //   child: CharacterTile(
+            //     character: characters.current,
+            //   )
+            // ),
             const SizedBox(height: 5.0),
             FilledButton(
               onPressed: () {

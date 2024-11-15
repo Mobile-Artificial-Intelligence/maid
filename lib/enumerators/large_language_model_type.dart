@@ -11,7 +11,7 @@ extension LargeLanguageModelTypeExtension on LargeLanguageModelType {
   String get displayName {
     switch (this) {
       case LargeLanguageModelType.llamacpp:
-        return 'Llama CPP';
+        return '毕设-轻量大模型';
       case LargeLanguageModelType.ollama:
         return 'Ollama';
       case LargeLanguageModelType.openAI:

@@ -35,20 +35,21 @@ class _LlmPlatformDropdownState extends State<LlmPlatformDropdown> {
                 fontSize: 16,
                 fontWeight: FontWeight.bold
               )
-            ),
-            PopupMenuButton(
-              tooltip: 'Select Large Language Model API',
-              icon: Icon(
-                open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                color: Colors.white,
-                size: 24,
-              ),
-              offset: const Offset(0, 40),
-              itemBuilder: itemBuilder,
-              onOpened: () => setState(() => open = true),
-              onCanceled: () => setState(() => open = false),
-              onSelected: (_) => setState(() => open = false)
             )
+            // ,
+            // PopupMenuButton(
+            //   tooltip: 'Select Large Language Model API',
+            //   icon: Icon(
+            //     open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+            //     color: Colors.white,
+            //     size: 24,
+            //   ),
+            //   offset: const Offset(0, 40),
+            //   itemBuilder: itemBuilder,
+            //   onOpened: () => setState(() => open = true),
+            //   onCanceled: () => setState(() => open = false),
+            //   onSelected: (_) => setState(() => open = false)
+            // )
           ]
         );
       }

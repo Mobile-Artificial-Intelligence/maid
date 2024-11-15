@@ -18,7 +18,7 @@ class Character extends ChangeNotifier {
   File? _profile;
 
   bool _useSystem = true;
-  String _name = "Assistant";
+  String _name = "大模型助手";
   String _description = "";
   String _personality = "";
   String _scenario = "";
