@@ -26,8 +26,9 @@ part 'pages/about_page/about_page.dart';
 part 'pages/settings_page/settings_page.dart';
 part 'pages/settings_page/widgets/theme_mode_dropdown.dart';
 
-part 'pages/settings_page/widgets/llama_settings.dart';
+part 'pages/settings_page/widgets/llama_cpp_settings.dart';
 part 'pages/settings_page/widgets/llm_ecosystem_dropdown.dart';
+part 'pages/settings_page/widgets/ollama_settings.dart';
 part 'pages/settings_page/widgets/override_type_dropdown.dart';
 part 'pages/settings_page/widgets/override_view.dart';
 part 'pages/settings_page/widgets/override.dart';
@@ -41,10 +42,11 @@ part 'pages/chat_page/widgets/menu_button.dart';
 part 'pages/chat_page/widgets/message_view.dart';
 part 'pages/chat_page/widgets/message.dart';
 part 'pages/chat_page/widgets/prompt_field.dart';
-part 'pages/chat_page/widgets/remote_model_dropdown.dart';
 
 part 'utilities/chat_messages_extension.dart';
 part 'utilities/string_extension.dart';
+
+part 'widgets/remote_model_dropdown.dart';
 
 void main() => runApp(const Maid());
 

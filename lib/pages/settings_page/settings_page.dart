@@ -20,7 +20,9 @@ class SettingsPage extends StatelessWidget {
     children: [
       LlmEcosystemDropdown(),
       Divider(endIndent: 16, indent: 16, height: 32),
-      LlamaSettings(),
+      LlamaCppSettings(),
+      Divider(endIndent: 16, indent: 16, height: 32),
+      OllamaSettings(),
       Divider(endIndent: 16, indent: 16, height: 32),
       OverrideView(),
       Divider(endIndent: 16, indent: 16, height: 32),

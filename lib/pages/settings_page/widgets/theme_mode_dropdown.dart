@@ -11,23 +11,23 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
   bool open = false;
 
   @override
-  Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.max,
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      buildTitle(),
-      buildDropDownRow()
-    ]
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        buildTitle(),
+        buildDropDownRow()
+      ]
+    )
   );
 
-  Widget buildTitle() => Padding(
-    padding: const EdgeInsets.only(left: 8.0),
-    child: Text(
-      'Theme Mode',
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface,
-        fontSize: 16
-      )
+  Widget buildTitle() => Text(
+    'Theme Mode',
+    style: TextStyle(
+      color: Theme.of(context).colorScheme.onSurface,
+      fontSize: 16
     )
   );
 

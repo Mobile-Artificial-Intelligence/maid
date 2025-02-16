@@ -280,7 +280,6 @@ class ArtificialIntelligence extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     _llamaCppModel = prefs.getString('model');
-    notifyListeners();
 
     if (_llamaCppModel != null) {
       _llama = LlamaIsolated(
@@ -291,13 +290,14 @@ class ArtificialIntelligence extends ChangeNotifier {
           seed: math.Random().nextInt(1000000)
         )
       );
-      notifyListeners();
     }
+
+    _ollamaModel = prefs.getString('ollama_model');
+    _searchLocalNetworkForOllama = prefs.getBool('search_local_network_for_ollama') ?? false;
 
     final overridesString = prefs.getString('overrides');
     if (overridesString != null) {
       overrides = jsonDecode(overridesString);
-      notifyListeners();
     }
 
     final chatsStrings = prefs.getStringList('chats') ?? [];
@@ -307,14 +307,14 @@ class ArtificialIntelligence extends ChangeNotifier {
       final chatMap = jsonDecode(chatString);
       final chat = GeneralTreeNode.fromMap(chatMap, ChatMessage.fromMap);
       _chats.add(chat);
-      notifyListeners();
     }
 
     if (_chats.isEmpty) {
       final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
       _chats.add(chat);
-      notifyListeners();
     }
+
+    notifyListeners();
   }
 
   Future<void> save() async {
@@ -327,6 +327,8 @@ class ArtificialIntelligence extends ChangeNotifier {
     if (_ollamaModel != null) {
       prefs.setString('ollama_model', _ollamaModel!);
     }
+
+    prefs.setBool('search_local_network_for_ollama', _searchLocalNetworkForOllama);
 
     if (overrides.isNotEmpty) {
       final overridesString = jsonEncode(overrides);

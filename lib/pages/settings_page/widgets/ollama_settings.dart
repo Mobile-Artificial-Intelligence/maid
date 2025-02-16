@@ -1,13 +1,13 @@
 part of 'package:maid/main.dart';
 
-class LlamaSettings extends StatelessWidget {
-  const LlamaSettings({super.key});
+class OllamaSettings extends StatelessWidget {
+  const OllamaSettings({super.key});
 
   @override
   Widget build(BuildContext context) => Column(
     children: [
       Text(
-        'Llama Settings',
+        'Ollama Settings',
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
@@ -22,19 +22,12 @@ class LlamaSettings extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       buildTitle(),
-      IconButton(onPressed: ArtificialIntelligence.of(context).loadModel, icon: const Icon(Icons.folder)),
+      RemoteModelDropdown(),
     ],
   );
 
-  Widget buildTitle() => Expanded(
-    child: Selector<ArtificialIntelligence, String?>(
-      selector: (context, ai) => ai.llamaCppModel,
-      builder: buildTitleText,
-    ),
-  );
-
-  Widget buildTitleText(BuildContext context, String? model, Widget? child) => Text(
-    model?.split('/').last ?? 'No model loaded',
+  Widget buildTitle() => Text(
+    'Remote Model',
     overflow: TextOverflow.ellipsis,
     maxLines: 1,
   );
