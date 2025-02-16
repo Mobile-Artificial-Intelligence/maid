@@ -13,7 +13,6 @@ APP_NAME="maid"
 APP_DIR="build/macos/Build/Products/Release/${APP_NAME}.app"
 DMG_DIR="dmg"
 TMP_MOUNT="/tmp/Maid"
-DMG_BACKGROUND_IMG="./media/feature.png"
 WINX=0
 WINY=0
 WINW=750
@@ -30,10 +29,6 @@ hdiutil create ${DMG_DIR}/${APP_NAME}_tmp.dmg -volname "${APP_NAME}" -srcfolder 
 
 # Mount the temporary DMG
 hdiutil attach ${DMG_DIR}/${APP_NAME}_tmp.dmg -mountpoint ${TMP_MOUNT}
-
-# Copy background image
-mkdir -p ${TMP_MOUNT}/.background
-cp ${DMG_BACKGROUND_IMG} ${TMP_MOUNT}/.background/feature.png
 
 # Create a symbolic link to the Applications folder
 ln -s /Applications ${TMP_MOUNT}/Applications
@@ -61,7 +56,6 @@ on run
                 set text size to ${TEXT_SIZE}
                 set arrangement to not arranged
             end tell
-            set background picture of opts to file ".background:feature.png"
 
             -- Positioning
             set position of item "${APP_NAME}.app" of container window to {450, 200}
