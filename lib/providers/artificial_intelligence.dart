@@ -103,12 +103,24 @@ class ArtificialIntelligence extends ChangeNotifier {
   }
 
   String? model;
+
   Llama? llama;
+  OllamaClient ollama = OllamaClient();
 
   bool busy = false;
 
   bool get llamaLoaded => llama != null;
   bool get canPrompt => llamaLoaded && !busy;
+
+  String? _url;
+
+  String? get url => _url;
+
+  set url(String? newUrl) {
+    _url = newUrl;
+    save();
+    notifyListeners();
+  }
 
   LlmEcosystem _ecosystem = LlmEcosystem.llama;
 
@@ -116,6 +128,7 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   set ecosystem(LlmEcosystem newEcosystem) {
     _ecosystem = newEcosystem;
+    save();
     notifyListeners();
   }
 
@@ -170,15 +183,49 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
+  Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
+    assert(url != null);
+    assert(model != null);
+
+    final client = OllamaClient(baseUrl: url!);
+
+    final completionStream = client.generateChatCompletionStream(
+      request: GenerateChatCompletionRequest(
+        model: model!, 
+        messages: messages.toOllamaMessages(),
+        options: RequestOptions.fromJson(overrides),
+        stream: true
+      )
+    );
+
+    await for (final completion in completionStream) {
+      yield completion.message.content;
+    }
+  }
+
+  Stream<String> ecosystemPrompt(List<ChatMessage> messages) async* {
+    switch (ecosystem) {
+      case LlmEcosystem.llama:
+        yield* llama!.prompt(messages);
+        break;
+      case LlmEcosystem.ollama:
+        yield* ollamaPrompt(messages);
+        break;
+      default:
+        throw Exception('Invalid ecosystem');
+    }
+  }
+
   void prompt(String message) async {
     assert(llama != null);
+    assert(model != null);
 
     root.chain.last.addChild(UserChatMessage(message));
 
     busy = true;
     notifyListeners();
 
-    Stream<String> stream = llama!.prompt(root.chainData.copy());
+    Stream<String> stream = ecosystemPrompt(root.chainData.copy());
 
     root.chain.last.addChild(AssistantChatMessage(''));
     notifyListeners();
@@ -206,7 +253,7 @@ class ArtificialIntelligence extends ChangeNotifier {
       chainData.removeLast();
     }
 
-    final stream = llama!.prompt(chainData);
+    final stream = ecosystemPrompt(chainData);
 
     assert(node.currentChild == root.chain.last);
 
