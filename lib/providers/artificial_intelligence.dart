@@ -45,43 +45,6 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  Llama? _llama;
-
-  String? _llamaCppModel;
-
-  String? get llamaCppModel => _llamaCppModel;
-
-  set llamaCppModel(String? newModel) {
-    _llamaCppModel = newModel;
-    save();
-    notifyListeners();
-  }
-
-  String? _ollamaModel;
-
-  String? get ollamaModel => _ollamaModel;
-
-  set ollamaModel(String? newModel) {
-    _ollamaModel = newModel;
-    save();
-    notifyListeners();
-  }
-
-  bool busy = false;
-
-  bool get llamaLoaded => _llama != null;
-  bool get canPrompt => llamaLoaded && !busy;
-
-  String? _url;
-
-  String get url => _url ?? 'http://localhost:11434';
-
-  set url(String newUrl) {
-    _url = newUrl;
-    save();
-    notifyListeners();
-  }
-
   LlmEcosystem _ecosystem = LlmEcosystem.llamaCPP;
 
   LlmEcosystem get ecosystem => _ecosystem;
@@ -96,11 +59,28 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   Map<String, dynamic> get overrides => _overrides;
 
-  set overrides(Map<String, dynamic> newOverrides) {
-    _overrides = newOverrides;
+  set overrides(Map<String, dynamic> value) {
+    _overrides = value;
     reloadModel();
     notifyListeners();
   }
+
+  Llama? _llama;
+
+  String? _llamaCppModel;
+
+  String? get llamaCppModel => _llamaCppModel;
+
+  set llamaCppModel(String? value) {
+    _llamaCppModel = value;
+    save();
+    notifyListeners();
+  }
+
+  bool busy = false;
+
+  bool get llamaLoaded => _llama != null;
+  bool get canPrompt => llamaLoaded && !busy;
 
   void loadModel() async {
     final result = await FilePicker.platform.pickFiles(
@@ -140,6 +120,35 @@ class ArtificialIntelligence extends ChangeNotifier {
       contextParams: ContextParams.fromMap(overrides),
       samplingParams: SamplingParams.fromMap({...overrides, 'greedy': true, 'seed': math.Random().nextInt(1000000)})
     );
+    notifyListeners();
+  }
+
+  String? _ollamaModel;
+
+  String? get ollamaModel => _ollamaModel;
+
+  set ollamaModel(String? value) {
+    _ollamaModel = value;
+    save();
+    notifyListeners();
+  }
+
+  String? _url;
+
+  String get url => _url ?? 'http://localhost:11434';
+
+  set url(String value) {
+    _url = value;
+    save();
+    notifyListeners();
+  }
+
+  bool _searchLocalNetworkForOllama = false;
+
+  bool get searchLocalNetworkForOllama => _searchLocalNetworkForOllama;
+
+  set searchLocalNetworkForOllama(bool value) {
+    _searchLocalNetworkForOllama = value;
     notifyListeners();
   }
 
