@@ -31,7 +31,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   void onNext() => setState(() => widget.node.nextChild());
   void onPrevious() => setState(() => widget.node.previousChild());
-  void onDelete() => setState(() => widget.node.removeChildNode(widget.node));
+  void onDelete() => setState(() => widget.node.removeChildNode(widget.node.currentChild!));
 
   void onEdit() {
     controller.text = widget.message.content;
@@ -47,6 +47,8 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onRegenerate() {
+    widget.node.addChild(AssistantChatMessage(''));
+    
     ArtificialIntelligence.of(context).regenerate(widget.node);
   }
 

@@ -201,15 +201,12 @@ class ArtificialIntelligence extends ChangeNotifier {
     llama!.reload();
     assert(llama != null);
 
-    final chainData = node.chainData.copy();
+    final chainData = root.chainData.copy();
     if (chainData.last is AssistantChatMessage) {
       chainData.removeLast();
     }
 
     final stream = llama!.prompt(chainData);
-
-    node.addChild(AssistantChatMessage(''));
-    notifyListeners();
 
     assert(node.currentChild == root.chain.last);
 
