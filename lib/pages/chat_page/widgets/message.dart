@@ -40,6 +40,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   void onSubmitEdit() {
     widget.node.addChild(UserChatMessage(controller.text));
+    widget.node.addChild(AssistantChatMessage(''));
 
     ArtificialIntelligence.of(context).regenerate(widget.node.currentChild!);
 
