@@ -4,7 +4,7 @@ class ArtificialIntelligence extends ChangeNotifier {
   ArtificialIntelligence({
     String? model,
     List<GeneralTreeNode<ChatMessage>>? chats
-  }) : _llamaModel = model, _chats = chats ?? [] {
+  }) : _llamaCppModel = model, _chats = chats ?? [] {
     load();
   }
 
@@ -47,12 +47,12 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   Llama? _llama;
 
-  String? _llamaModel;
+  String? _llamaCppModel;
 
-  String? get llamaModel => _llamaModel;
+  String? get llamaCppModel => _llamaCppModel;
 
-  set llamaModel(String? newModel) {
-    _llamaModel = newModel;
+  set llamaCppModel(String? newModel) {
+    _llamaCppModel = newModel;
     save();
     notifyListeners();
   }
@@ -116,9 +116,9 @@ class ArtificialIntelligence extends ChangeNotifier {
       throw Exception('No file selected');
     }
 
-    _llamaModel = result.files.single.path!;
+    _llamaCppModel = result.files.single.path!;
 
-    final exists = await File(_llamaModel!).exists();
+    final exists = await File(_llamaCppModel!).exists();
     if (!exists) {
       throw Exception('File does not exist');
     }
@@ -127,11 +127,11 @@ class ArtificialIntelligence extends ChangeNotifier {
   }
 
   void reloadModel() {
-    if (_llamaModel == null) return;
+    if (_llamaCppModel == null) return;
 
     _llama = LlamaIsolated(
       modelParams: ModelParams(
-        path: _llamaModel!,
+        path: _llamaCppModel!,
         vocabOnly: overrides['vocab_only'],
         useMmap: overrides['use_mmap'],
         useMlock: overrides['use_mlock'],
@@ -172,7 +172,7 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   Stream<String> llamaPrompt(List<ChatMessage> messages) async* {
     assert(_llama != null);
-    assert(_llamaModel != null);
+    assert(_llamaCppModel != null);
 
     yield* _llama!.prompt(messages);
   }
@@ -270,12 +270,12 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
 
-    _llamaModel = prefs.getString('model');
+    _llamaCppModel = prefs.getString('model');
     notifyListeners();
 
-    if (_llamaModel != null) {
+    if (_llamaCppModel != null) {
       _llama = LlamaIsolated(
-        modelParams: ModelParams(path: _llamaModel!),
+        modelParams: ModelParams(path: _llamaCppModel!),
         contextParams: const ContextParams(nCtx: 0),
         samplingParams: SamplingParams(
           greedy: true,
@@ -311,8 +311,8 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    if (_llamaModel != null) {
-      prefs.setString('llama_model', _llamaModel!);
+    if (_llamaCppModel != null) {
+      prefs.setString('llama_model', _llamaCppModel!);
     }
 
     if (_ollamaModel != null) {

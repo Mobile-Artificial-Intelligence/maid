@@ -28,7 +28,7 @@ class LlamaSettings extends StatelessWidget {
 
   Widget buildTitle() => Expanded(
     child: Selector<ArtificialIntelligence, String?>(
-      selector: (context, ai) => ai.llamaModel,
+      selector: (context, ai) => ai.llamaCppModel,
       builder: buildTitleText,
     ),
   );
