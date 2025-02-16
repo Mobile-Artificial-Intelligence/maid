@@ -27,15 +27,12 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final modelPath = prefs.getString('model');
-    if (modelPath != null) {
-      model = File(modelPath);
-      notifyListeners();
-    }
+    model = prefs.getString('model');
+    notifyListeners();
 
     if (model != null) {
       llama = LlamaIsolated(
-        modelParams: ModelParams(path: model!.path),
+        modelParams: ModelParams(path: model!),
         contextParams: const ContextParams(nCtx: 0),
         samplingParams: SamplingParams(
           greedy: true,
@@ -72,7 +69,7 @@ class ArtificialIntelligence extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     if (model != null) {
-      prefs.setString('model', model!.path);
+      prefs.setString('model', model!);
     }
 
     if (overrides.isNotEmpty) {
@@ -105,7 +102,7 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  File? model;
+  String? model;
   Llama? llama;
 
   bool busy = false;
@@ -146,9 +143,9 @@ class ArtificialIntelligence extends ChangeNotifier {
       throw Exception('No file selected');
     }
 
-    model = File(result.files.single.path!);
+    model = result.files.single.path!;
 
-    final exists = await model!.exists();
+    final exists = await File(model!).exists();
     if (!exists) {
       throw Exception('File does not exist');
     }
@@ -161,7 +158,7 @@ class ArtificialIntelligence extends ChangeNotifier {
 
     llama = LlamaIsolated(
       modelParams: ModelParams(
-        path: model!.path,
+        path: model!,
         vocabOnly: overrides['vocab_only'],
         useMmap: overrides['use_mmap'],
         useMlock: overrides['use_mlock'],

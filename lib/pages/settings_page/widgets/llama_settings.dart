@@ -27,14 +27,14 @@ class LlamaSettings extends StatelessWidget {
   );
 
   Widget buildTitle() => Expanded(
-    child: Selector<ArtificialIntelligence, File?>(
+    child: Selector<ArtificialIntelligence, String?>(
       selector: (context, ai) => ai.model,
       builder: buildTitleText,
     ),
   );
 
-  Widget buildTitleText(BuildContext context, File? model, Widget? child) => Text(
-    model?.path.split('/').last ?? 'No model loaded',
+  Widget buildTitleText(BuildContext context, String? model, Widget? child) => Text(
+    model?.split('/').last ?? 'No model loaded',
     overflow: TextOverflow.ellipsis,
     maxLines: 1,
   );
