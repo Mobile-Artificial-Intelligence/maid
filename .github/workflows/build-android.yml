@@ -6,10 +6,8 @@ on:
       - main
     paths:
       - '.github/workflows/build-android.yml'
-      - 'packages/**'
       - 'android/**'
       - 'lib/**'
-      - 'assets/**'
       - 'pubspec.yaml'
 
 jobs:
@@ -31,12 +29,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake libvulkan-dev
+          sudo apt-get install -y cmake
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.2'
+          flutter-version: '3.29.0'
 
       - name: Decode Keystore File
         env:

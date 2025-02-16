@@ -1,5 +1,5 @@
 <div align="center" id = "top">
-  <img alt="logo" height="200px" src="assets/maid.png">
+  <img alt="logo" height="200px" src="maid.png">
 </div>
 
 # Maid - Mobile Artificial Intelligence Distribution
@@ -7,9 +7,6 @@
 <div align="center">
 
 [![Build Android](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-android.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-android.yml)
-[![Build Linux](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-linux.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-linux.yml)
-[![Build MacOS](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-macos.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-macos.yml)
-[![Build Windows](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-windows.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-windows.yml)
 
 </div>
 
@@ -32,31 +29,11 @@
 
 Maid is a cross-platform free and an open-source application for interfacing with llama.cpp models locally, and remotely with Ollama, Mistral, Google Gemini and OpenAI models remotely. Maid supports sillytavern character cards to allow you to interact with all your favorite characters. Maid supports downloading a curated list of Models in-app directly from huggingface.
 
-[![](https://dcbadge.limes.pink/api/server/https://discord.com/invite/yEQ6SJny)](https://discord.com/invite/yEQ6SJny)
-
-<div align="center">
-  <table>
-    <tr>
-      <td><img src="media/mobile_demo_1.jpg" width="200" /></td>
-      <td><img src="media/mobile_demo_2.jpg" width="200" /></td>
-      <td><img src="media/mobile_demo_3.jpg" width="200" /></td>
-    </tr>
-    <tr>
-      <td><img src="media/mobile_demo_4.jpg" width="200" /></td>
-      <td><img src="media/mobile_demo_5.jpg" width="200" /></td>
-      <td><img src="media/mobile_demo_6.jpg" width="200" /></td>
-    </tr>
-  </table>
-  <img src="media/desktop_demo_1.png" width="800" />
-  <img src="media/desktop_demo_2.png" width="800" />
-  <img src="media/desktop_demo_3.png" width="800" />
-</div>
-
 ## Cloning
 Maid utilises git submodules extensively. To clone the repository, use the following command:
 
 ```bash
-git clone --recursive https://github.com/Mobile-Artificial-Intelligence/maid.git
+git clone https://github.com/Mobile-Artificial-Intelligence/maid.git
 ```
 
 Maids repository has flutter linked as a submodule. This is needed for reproducible fdroid builds.
@@ -93,9 +70,8 @@ IOS Releases not available at this time.
 
 ## Special Thanks and Related Projects
 - [ggerganov/llama.cpp](https://github.com/ggerganov/llama.cpp)
-- [ollama/ollama](https://github.com/ollama/ollama)
 - [davidmigloz/langchain_dart](https://github.com/davidmigloz/langchain_dart)
-- [Mobile-Artificial-Intelligence/maid_llm](https://github.com/Mobile-Artificial-Intelligence/maid_llm)
+- [Mobile-Artificial-Intelligence/lcpp](https://github.com/Mobile-Artificial-Intelligence/lcpp)
 - [Mobile-Artificial-Intelligence/babylon_tts](https://github.com/Mobile-Artificial-Intelligence/babylon_tts)
 - [Mobile-Artificial-Intelligence/babylon.cpp](https://github.com/Mobile-Artificial-Intelligence/babylon.cpp)
 
@@ -123,9 +99,3 @@ Maid is distributed under the MIT licence and is provided without warranty of an
 ## 📜 License
 
 This project is licensed under the [MIT License](LICENSE).
-
-<div align="center">
-<p align="center">
-  <a href="#top">
-        <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
-    </a>

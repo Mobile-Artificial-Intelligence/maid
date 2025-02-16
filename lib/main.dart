@@ -1,91 +1,109 @@
-import 'package:babylon_tts/babylon_tts.dart';
-import 'package:flutter/material.dart';
-import 'package:maid/classes/providers/app_preferences.dart';
-import 'package:maid/classes/providers/artificial_intelligence.dart';
-import 'package:maid/classes/providers/characters.dart';
-import 'package:maid/classes/providers/huggingface_selection.dart';
-import 'package:maid/classes/providers/sessions.dart';
-import 'package:maid/classes/providers/user.dart';
-import 'package:maid/ui/desktop/app.dart';
-import 'package:maid/ui/mobile/app.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:math' as math;
+
+import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:lcpp/lcpp.dart';
+import 'package:tree_structs/tree_structs.dart';
+import 'package:ollama_dart/ollama_dart.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+part 'types/llm_ecosystem.dart';
+part 'types/override_type.dart';
 
-  await Babylon.init();
+part 'providers/app_settings.dart';
+part 'providers/artificial_intelligence.dart';
 
-  MaidProperties props = await MaidProperties.last;
+part 'pages/about_page/about_page.dart';
 
-  runApp(
-    MaidApp(
-      props: props
-    )
-  );
-}
+part 'pages/settings_page/settings_page.dart';
+part 'pages/settings_page/widgets/theme_mode_dropdown.dart';
 
-class MaidProperties {
-  final AppPreferences appPreferences;
-  final Sessions sessions;
-  final CharacterCollection characters;
-  final ArtificialIntelligence ai;
-  final User user;
+part 'pages/settings_page/widgets/llama_settings.dart';
+part 'pages/settings_page/widgets/llm_ecosystem_dropdown.dart';
+part 'pages/settings_page/widgets/override_type_dropdown.dart';
+part 'pages/settings_page/widgets/override_view.dart';
+part 'pages/settings_page/widgets/override.dart';
 
-  const MaidProperties({
-    required this.appPreferences, 
-    required this.sessions,
-    required this.characters,
-    required this.ai, 
-    required this.user,
-  });
+part 'pages/chat_page/chat_page.dart';
+part 'pages/chat_page/widgets/chat_tile.dart';
+part 'pages/chat_page/widgets/chat_view.dart';
+part 'pages/chat_page/widgets/code_box.dart';
+part 'pages/chat_page/widgets/load_model_button.dart';
+part 'pages/chat_page/widgets/menu_button.dart';
+part 'pages/chat_page/widgets/message_view.dart';
+part 'pages/chat_page/widgets/message.dart';
+part 'pages/chat_page/widgets/prompt_field.dart';
 
-  static Future<MaidProperties> get last async {
-    final appPreferences = await AppPreferences.last;
-    final sessions = await Sessions.last;
-    final characters = await CharacterCollection.last;
-    final ai = await ArtificialIntelligence.last;
-    final user = await User.last;
+part 'utilities/chat_messages_extension.dart';
+part 'utilities/string_extension.dart';
 
-    return MaidProperties(
-      appPreferences: appPreferences, 
-      sessions: sessions,
-      characters: characters,
-      ai: ai,
-      user: user
+void main() => runApp(const Maid());
+
+class Maid extends StatelessWidget {
+  const Maid({super.key});
+
+  ThemeData getTheme(ColorScheme colorScheme) {
+    final appBarTheme = AppBarTheme(
+      elevation: 0.0,
+      backgroundColor: colorScheme.surface,
+      surfaceTintColor: Colors.transparent,
     );
-  }
-}
 
-class MaidApp extends StatelessWidget {
-  final MaidProperties props;
-
-  const MaidApp({
-    super.key, 
-    required this.props
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => props.appPreferences),
-        ChangeNotifierProvider(create: (context) => props.sessions),
-        ChangeNotifierProvider(create: (context) => props.characters),
-        ChangeNotifierProvider(create: (context) => props.ai),
-        ChangeNotifierProvider(create: (context) => props.user),
-        ChangeNotifierProvider(create: (context) => HuggingfaceSelection())
-      ],
-      child: Selector<AppPreferences, bool>(
-        selector: (context, appPreferences) => appPreferences.isDesktop,
-        builder: (context, isDesktop, child) {
-          if (isDesktop) {
-            return const DesktopApp();
-          } 
-          else {
-            return const MobileApp();
-          }
-        },
+    final inputDecorationTheme = InputDecorationTheme(
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 20.0, 
+        vertical: 15.0
       ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30.0),
+        borderSide: BorderSide.none,
+      ),
+      filled: true,
+    );
+
+    return ThemeData(
+      colorScheme: colorScheme,
+      useMaterial3: true,
+      appBarTheme: appBarTheme,
+      inputDecorationTheme: inputDecorationTheme
     );
   }
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) => MultiProvider(
+    providers: [
+      ChangeNotifierProvider<AppSettings>(
+        create: (context) => AppSettings(),
+      ),
+      ChangeNotifierProvider<ArtificialIntelligence>(
+        create: (context) => ArtificialIntelligence(),
+      ),
+    ],
+    child: buildConsumer(),
+  );
+
+  Widget buildConsumer() => Consumer<AppSettings>(
+    builder: buildApp
+  );
+
+  Widget buildApp(BuildContext context, AppSettings settings, Widget? child) => MaterialApp(
+    title: 'Maid',
+    theme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.light)),
+    darkTheme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.dark)),
+    themeMode: settings.themeMode,
+    home: const ChatPage(),
+    routes: {
+      '/settings': (context) => const SettingsPage(),
+      '/chat': (context) => const ChatPage(),
+      '/about': (context) => const AboutPage(),
+    },
+    debugShowCheckedModeBanner: false,
+  );
 }
