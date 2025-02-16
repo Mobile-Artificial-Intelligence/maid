@@ -31,70 +31,6 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> load() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    _llamaModel = prefs.getString('model');
-    notifyListeners();
-
-    if (_llamaModel != null) {
-      llama = LlamaIsolated(
-        modelParams: ModelParams(path: _llamaModel!),
-        contextParams: const ContextParams(nCtx: 0),
-        samplingParams: SamplingParams(
-          greedy: true,
-          seed: math.Random().nextInt(1000000)
-        )
-      );
-      notifyListeners();
-    }
-
-    final overridesString = prefs.getString('overrides');
-    if (overridesString != null) {
-      overrides = jsonDecode(overridesString);
-      notifyListeners();
-    }
-
-    final chatsStrings = prefs.getStringList('chats') ?? [];
-
-    _chats.clear();
-    for (final chatString in chatsStrings) {
-      final chatMap = jsonDecode(chatString);
-      final chat = GeneralTreeNode.fromMap(chatMap, ChatMessage.fromMap);
-      _chats.add(chat);
-      notifyListeners();
-    }
-
-    if (_chats.isEmpty) {
-      final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
-      _chats.add(chat);
-      notifyListeners();
-    }
-  }
-
-  Future<void> save() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    if (_llamaModel != null) {
-      prefs.setString('model', _llamaModel!);
-    }
-
-    if (overrides.isNotEmpty) {
-      final overridesString = jsonEncode(overrides);
-      prefs.setString('overrides', overridesString);
-    }
-
-    List<String> chatsStrings = [];
-
-    for (final chat in _chats) {
-      final chatMap = chat.toMap(ChatMessage.messageToMap);
-      final chatString = jsonEncode(chatMap);
-      chatsStrings.add(chatString);
-    }
-
-    prefs.setStringList('chats', chatsStrings);
-  }
-
   void newChat() {
     final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
 
@@ -109,6 +45,8 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
+  Llama? _llama;
+
   String? _llamaModel;
 
   String? get llamaModel => _llamaModel;
@@ -119,12 +57,19 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  Llama? llama;
-  OllamaClient ollama = OllamaClient();
+  String? _ollamaModel;
+
+  String? get ollamaModel => _ollamaModel;
+
+  set ollamaModel(String? newModel) {
+    _ollamaModel = newModel;
+    save();
+    notifyListeners();
+  }
 
   bool busy = false;
 
-  bool get llamaLoaded => llama != null;
+  bool get llamaLoaded => _llama != null;
   bool get canPrompt => llamaLoaded && !busy;
 
   String? _url;
@@ -137,7 +82,7 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  LlmEcosystem _ecosystem = LlmEcosystem.llama;
+  LlmEcosystem _ecosystem = LlmEcosystem.llamaCPP;
 
   LlmEcosystem get ecosystem => _ecosystem;
 
@@ -184,7 +129,7 @@ class ArtificialIntelligence extends ChangeNotifier {
   void reloadModel() {
     if (_llamaModel == null) return;
 
-    llama = LlamaIsolated(
+    _llama = LlamaIsolated(
       modelParams: ModelParams(
         path: _llamaModel!,
         vocabOnly: overrides['vocab_only'],
@@ -225,14 +170,21 @@ class ArtificialIntelligence extends ChangeNotifier {
     }
   }
 
-  Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
+  Stream<String> llamaPrompt(List<ChatMessage> messages) async* {
+    assert(_llama != null);
     assert(_llamaModel != null);
+
+    yield* _llama!.prompt(messages);
+  }
+
+  Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
+    assert(_ollamaModel != null);
 
     final client = OllamaClient(baseUrl: url);
 
     final completionStream = client.generateChatCompletionStream(
       request: GenerateChatCompletionRequest(
-        model: _llamaModel!, 
+        model: _ollamaModel!, 
         messages: messages.toOllamaMessages(),
         options: RequestOptions.fromJson(overrides),
         stream: true
@@ -246,8 +198,8 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   Stream<String> ecosystemPrompt(List<ChatMessage> messages) async* {
     switch (ecosystem) {
-      case LlmEcosystem.llama:
-        yield* llama!.prompt(messages);
+      case LlmEcosystem.llamaCPP:
+        yield* llamaPrompt(messages);
         break;
       case LlmEcosystem.ollama:
         yield* ollamaPrompt(messages);
@@ -258,9 +210,6 @@ class ArtificialIntelligence extends ChangeNotifier {
   }
 
   void prompt(String message) async {
-    assert(llama != null);
-    assert(_llamaModel != null);
-
     root.chain.last.addChild(UserChatMessage(message));
 
     busy = true;
@@ -286,8 +235,10 @@ class ArtificialIntelligence extends ChangeNotifier {
     busy = true;
     notifyListeners();
 
-    llama!.reload();
-    assert(llama != null);
+    if (_ecosystem == LlmEcosystem.llamaCPP) {
+      _llama!.reload();
+      assert(_llama != null);
+    }
 
     final chainData = root.chainData.copy();
     if (chainData.last is AssistantChatMessage) {
@@ -310,9 +261,77 @@ class ArtificialIntelligence extends ChangeNotifier {
   }
 
   void stop() async {
-    llama?.stop();
+    _llama?.stop();
     await save();
     busy = false;
     notifyListeners();
+  }
+
+  Future<void> load() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    _llamaModel = prefs.getString('model');
+    notifyListeners();
+
+    if (_llamaModel != null) {
+      _llama = LlamaIsolated(
+        modelParams: ModelParams(path: _llamaModel!),
+        contextParams: const ContextParams(nCtx: 0),
+        samplingParams: SamplingParams(
+          greedy: true,
+          seed: math.Random().nextInt(1000000)
+        )
+      );
+      notifyListeners();
+    }
+
+    final overridesString = prefs.getString('overrides');
+    if (overridesString != null) {
+      overrides = jsonDecode(overridesString);
+      notifyListeners();
+    }
+
+    final chatsStrings = prefs.getStringList('chats') ?? [];
+
+    _chats.clear();
+    for (final chatString in chatsStrings) {
+      final chatMap = jsonDecode(chatString);
+      final chat = GeneralTreeNode.fromMap(chatMap, ChatMessage.fromMap);
+      _chats.add(chat);
+      notifyListeners();
+    }
+
+    if (_chats.isEmpty) {
+      final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
+      _chats.add(chat);
+      notifyListeners();
+    }
+  }
+
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (_llamaModel != null) {
+      prefs.setString('llama_model', _llamaModel!);
+    }
+
+    if (_ollamaModel != null) {
+      prefs.setString('ollama_model', _ollamaModel!);
+    }
+
+    if (overrides.isNotEmpty) {
+      final overridesString = jsonEncode(overrides);
+      prefs.setString('overrides', overridesString);
+    }
+
+    List<String> chatsStrings = [];
+
+    for (final chat in _chats) {
+      final chatMap = chat.toMap(ChatMessage.messageToMap);
+      final chatString = jsonEncode(chatMap);
+      chatsStrings.add(chatString);
+    }
+
+    prefs.setStringList('chats', chatsStrings);
   }
 }

@@ -29,7 +29,7 @@ class ChatPageState extends State<ChatPage> {
   );
 
   Widget titleBuilder(BuildContext context, LlmEcosystem ecosystem, Widget? child) {
-    if (ecosystem == LlmEcosystem.llama) {
+    if (ecosystem == LlmEcosystem.llamaCPP) {
       return const LoadModelButton();
     }
 

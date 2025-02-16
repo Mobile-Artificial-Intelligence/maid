@@ -23,7 +23,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   }
 
   void onSelected(String model) {
-    ArtificialIntelligence.of(context).llamaModel = model;
+    ArtificialIntelligence.of(context).ollamaModel = model;
     setState(() => open = false);
   }
 
@@ -38,7 +38,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   );
 
   Widget buildModelText() => Selector<ArtificialIntelligence, String?>(
-    selector: (context, ai) => ai.llamaModel,
+    selector: (context, ai) => ai.ollamaModel,
     builder: (context, model, child) => Text(
       model ?? 'No model selected',
       style: TextStyle(

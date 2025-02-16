@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 enum LlmEcosystem {
-  llama,
+  llamaCPP,
   ollama,
   openAI;
 }

@@ -71,7 +71,7 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
   List<PopupMenuEntry<LlmEcosystem>> itemBuilder(BuildContext context) => [
     PopupMenuItem(
       padding: EdgeInsets.all(8),
-      value: LlmEcosystem.llama,
+      value: LlmEcosystem.llamaCPP,
       child: const Text('LlamaCpp')
     ),
     PopupMenuItem(
