@@ -17,11 +17,24 @@ class ChatPageState extends State<ChatPage> {
   );
 
   PreferredSizeWidget buildAppBar() => AppBar(
-    title: const LoadModelButton(),
+    title: buildTitle(),
     actions: const [
       MenuButton()
     ] 
   );
+
+  Widget buildTitle() => Selector<ArtificialIntelligence, LlmEcosystem>(
+    selector: (context, ai) => ai.ecosystem,
+    builder: titleBuilder
+  );
+
+  Widget titleBuilder(BuildContext context, LlmEcosystem ecosystem, Widget? child) {
+    if (ecosystem == LlmEcosystem.llama) {
+      return const LoadModelButton();
+    }
+
+    return RemoteModelDropdown();
+  }
 
   Widget buildDrawer() => const Drawer(
     child: ChatView()

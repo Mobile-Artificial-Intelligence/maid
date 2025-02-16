@@ -2,24 +2,31 @@ part of 'package:maid/main.dart';
 
 class ArtificialIntelligence extends ChangeNotifier {
   ArtificialIntelligence({
-    this.model,
+    String? model,
     List<GeneralTreeNode<ChatMessage>>? chats
-  }) : chats = chats ?? [] {
+  }) : _llamaModel = model, _chats = chats ?? [] {
     load();
   }
 
   static ArtificialIntelligence of(BuildContext context, {bool listen = false}) => 
     Provider.of<ArtificialIntelligence>(context, listen: listen);
 
-  List<GeneralTreeNode<ChatMessage>> chats;
+  List<GeneralTreeNode<ChatMessage>> _chats;
 
-  GeneralTreeNode<ChatMessage> get root => chats.isNotEmpty ? 
-    chats.first : GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
+  List<GeneralTreeNode<ChatMessage>> get chats => _chats;
+
+  set chats(List<GeneralTreeNode<ChatMessage>> newChats) {
+    _chats = newChats;
+    notifyListeners();
+  }
+
+  GeneralTreeNode<ChatMessage> get root => _chats.isNotEmpty ? 
+    _chats.first : GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
 
   set root(GeneralTreeNode<ChatMessage> newRoot){
-    chats.remove(newRoot);
+    _chats.remove(newRoot);
 
-    chats.insert(0, newRoot);
+    _chats.insert(0, newRoot);
 
     notifyListeners();
   }
@@ -27,12 +34,12 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
 
-    model = prefs.getString('model');
+    _llamaModel = prefs.getString('model');
     notifyListeners();
 
-    if (model != null) {
+    if (_llamaModel != null) {
       llama = LlamaIsolated(
-        modelParams: ModelParams(path: model!),
+        modelParams: ModelParams(path: _llamaModel!),
         contextParams: const ContextParams(nCtx: 0),
         samplingParams: SamplingParams(
           greedy: true,
@@ -50,17 +57,17 @@ class ArtificialIntelligence extends ChangeNotifier {
 
     final chatsStrings = prefs.getStringList('chats') ?? [];
 
-    chats.clear();
+    _chats.clear();
     for (final chatString in chatsStrings) {
       final chatMap = jsonDecode(chatString);
       final chat = GeneralTreeNode.fromMap(chatMap, ChatMessage.fromMap);
-      chats.add(chat);
+      _chats.add(chat);
       notifyListeners();
     }
 
-    if (chats.isEmpty) {
+    if (_chats.isEmpty) {
       final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
-      chats.add(chat);
+      _chats.add(chat);
       notifyListeners();
     }
   }
@@ -68,8 +75,8 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    if (model != null) {
-      prefs.setString('model', model!);
+    if (_llamaModel != null) {
+      prefs.setString('model', _llamaModel!);
     }
 
     if (overrides.isNotEmpty) {
@@ -79,7 +86,7 @@ class ArtificialIntelligence extends ChangeNotifier {
 
     List<String> chatsStrings = [];
 
-    for (final chat in chats) {
+    for (final chat in _chats) {
       final chatMap = chat.toMap(ChatMessage.messageToMap);
       final chatString = jsonEncode(chatMap);
       chatsStrings.add(chatString);
@@ -91,18 +98,26 @@ class ArtificialIntelligence extends ChangeNotifier {
   void newChat() {
     final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
 
-    chats.insert(0, chat);
+    _chats.insert(0, chat);
     
     notifyListeners();
   }
 
   void clearChats() {
-    chats.clear();
+    _chats.clear();
     save();
     notifyListeners();
   }
 
-  String? model;
+  String? _llamaModel;
+
+  String? get llamaModel => _llamaModel;
+
+  set llamaModel(String? newModel) {
+    _llamaModel = newModel;
+    save();
+    notifyListeners();
+  }
 
   Llama? llama;
   OllamaClient ollama = OllamaClient();
@@ -114,9 +129,9 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   String? _url;
 
-  String? get url => _url;
+  String get url => _url ?? 'http://localhost:11434';
 
-  set url(String? newUrl) {
+  set url(String newUrl) {
     _url = newUrl;
     save();
     notifyListeners();
@@ -156,9 +171,9 @@ class ArtificialIntelligence extends ChangeNotifier {
       throw Exception('No file selected');
     }
 
-    model = result.files.single.path!;
+    _llamaModel = result.files.single.path!;
 
-    final exists = await File(model!).exists();
+    final exists = await File(_llamaModel!).exists();
     if (!exists) {
       throw Exception('File does not exist');
     }
@@ -167,11 +182,11 @@ class ArtificialIntelligence extends ChangeNotifier {
   }
 
   void reloadModel() {
-    if (model == null) return;
+    if (_llamaModel == null) return;
 
     llama = LlamaIsolated(
       modelParams: ModelParams(
-        path: model!,
+        path: _llamaModel!,
         vocabOnly: overrides['vocab_only'],
         useMmap: overrides['use_mmap'],
         useMlock: overrides['use_mlock'],
@@ -183,15 +198,41 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
-    assert(url != null);
-    assert(model != null);
+  Future<List<String>> getOllamaModels() async {
+    try {
+      final uri = Uri.parse("$url/api/tags");
+      final headers = {
+        "Accept": "application/json",
+      };
 
-    final client = OllamaClient(baseUrl: url!);
+      var request = http.Request("GET", uri)..headers.addAll(headers);
+
+      var response = await request.send();
+      var responseString = await response.stream.bytesToString();
+      var data = json.decode(responseString);
+
+      List<String> newOptions = [];
+      if (data['models'] != null) {
+        for (var option in data['models']) {
+          newOptions.add(option['name']);
+        }
+      }
+
+      return newOptions;
+    } catch (e) {
+      log(e.toString());
+      return [];
+    }
+  }
+
+  Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
+    assert(_llamaModel != null);
+
+    final client = OllamaClient(baseUrl: url);
 
     final completionStream = client.generateChatCompletionStream(
       request: GenerateChatCompletionRequest(
-        model: model!, 
+        model: _llamaModel!, 
         messages: messages.toOllamaMessages(),
         options: RequestOptions.fromJson(overrides),
         stream: true
@@ -218,7 +259,7 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   void prompt(String message) async {
     assert(llama != null);
-    assert(model != null);
+    assert(_llamaModel != null);
 
     root.chain.last.addChild(UserChatMessage(message));
 

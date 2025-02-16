@@ -35,7 +35,7 @@ class LoadModelButton extends StatelessWidget {
         style: buildStyle(context),
       ),
       Expanded(
-        child: Selector<ArtificialIntelligence, String?>(selector: (context, ai) => ai.model, builder: textBuilder),
+        child: Selector<ArtificialIntelligence, String?>(selector: (context, ai) => ai.llamaModel, builder: textBuilder),
       ),
       Text(
         "> > >",

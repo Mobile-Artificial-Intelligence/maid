@@ -17,6 +17,7 @@ dependencies:
   tree_structs: ^1.0.5
   lcpp: ^0.1.5
   ollama_dart: ^0.2.2+1
+  http: ^1.3.0
 
 dev_dependencies:
   flutter_test:

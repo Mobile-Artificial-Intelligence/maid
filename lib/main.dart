@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
@@ -39,6 +41,7 @@ part 'pages/chat_page/widgets/menu_button.dart';
 part 'pages/chat_page/widgets/message_view.dart';
 part 'pages/chat_page/widgets/message.dart';
 part 'pages/chat_page/widgets/prompt_field.dart';
+part 'pages/chat_page/widgets/remote_model_dropdown.dart';
 
 part 'utilities/chat_messages_extension.dart';
 part 'utilities/string_extension.dart';

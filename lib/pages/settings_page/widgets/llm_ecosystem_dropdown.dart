@@ -62,7 +62,8 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
     itemBuilder: itemBuilder,
     onOpened: () => setState(() => open = true),
     onCanceled: () => setState(() => open = false),
-    onSelected: (themeMode) {
+    onSelected: (ecosystem) {
+      ArtificialIntelligence.of(context).ecosystem = ecosystem;
       setState(() => open = false);
     }
   );
