@@ -20,7 +20,7 @@ import 'package:tree_structs/tree_structs.dart';
 import 'package:ollama_dart/ollama_dart.dart';
 
 part 'providers/app_settings.dart';
-part 'providers/artificial_intelligence.dart';
+part 'providers/artificial_intelligence/artificial_intelligence.dart';
 
 part 'types/llm_ecosystem.dart';
 part 'types/override_type.dart';
