@@ -20,7 +20,7 @@ class AboutPage extends StatelessWidget {
     children: [
       const SizedBox(height: 20.0),
       Image.asset(
-        "images/maid.png",
+        "images/logo.png",
         width: 150,
         height: 150,
       ),

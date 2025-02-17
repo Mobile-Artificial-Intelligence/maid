@@ -34,17 +34,17 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - images/maid.png
+    - images/logo.png
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   remove_alpha_ios: true
-  image_path: "images/maid.png"
+  image_path: "images/logo.png"
   windows:
     generate: true
-    image_path: "images/maid.png"
+    image_path: "images/logo.png"
     icon_size: 48
   macos:
     generate: true
-    image_path: "images/maid.png"
+    image_path: "images/logo.png"
