@@ -2,17 +2,21 @@ part of 'package:maid/main.dart';
 
 class OllamaUtilities {
   static Future<bool> checkForOllama(Uri url) async {
-    final request = http.Request("GET", url);
-    final headers = {
-      "Accept": "application/json",
-    };
-
-    request.headers.addAll(headers);
-
-    final response = await request.send();
-    if (response.statusCode == 200) {
-      log('Found Ollama at ${url.host}');
-      return true;
+    try {
+      final request = http.Request("GET", url);
+      final headers = {
+        "Accept": "application/json",
+      };
+  
+      request.headers.addAll(headers);
+  
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        log('Found Ollama at ${url.host}');
+        return true;
+      }
+    } catch (e) {
+      log(e.toString());
     }
 
     return false;
