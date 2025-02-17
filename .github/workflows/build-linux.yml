@@ -1,0 +1,100 @@
+name: Build Linux
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-linux.yml'
+      - 'linux/**'
+      - 'lib/**'
+      - 'pubspec.yaml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.0'
+        
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build pkg-config libgtk-3-dev libvulkan-dev
+          sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio libunwind-dev libomp-dev
+
+      - name: Setup Vulkan SDK
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        with:
+          vulkan-query-version: 1.3.204.0
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
+
+      - name: Build Linux App
+        run: |
+          flutter pub get
+          flutter build linux -v
+
+      - name: Upload Linux Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-linux
+          path: build/linux/x64/release/bundle
+  
+  create-appimage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Linux Build
+        uses: actions/download-artifact@v4
+        with:
+          name: maid-linux
+          path: maid-linux
+
+      - name: Install AppImage tools and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y appstream util-linux libfuse2
+
+      - name: Download and Install AppImageTool
+        run: |
+          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+          sudo mv appimagetool-x86_64.AppImage /usr/local/bin/appimagetool
+
+      - name: Prepare AppDir
+        run: |
+          mkdir AppDir
+          cp -r maid-linux/* AppDir/
+          cp assets/maid.png AppDir/icon.png
+          echo '[Desktop Entry]
+          Name=Maid
+          Exec=maid
+          Icon=icon
+          Type=Application
+          Categories=Utility;' > AppDir/maid.desktop
+          chmod +x AppDir/maid
+          echo '#!/bin/bash
+          HERE="$(dirname "$(readlink -f "${0}")")"
+          exec "$HERE/maid" "$@"' > AppDir/AppRun
+          chmod +x AppDir/AppRun
+
+      - name: Create AppImage
+        run: |
+          appimagetool AppDir maid.AppImage
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-appimage
+          path: ./maid.AppImage
