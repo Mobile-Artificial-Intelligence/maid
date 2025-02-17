@@ -54,6 +54,8 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {
+    if (ArtificialIntelligence.of(context).busy) return;
+
     const threshold = 80;
     
     if (details.primaryVelocity! > threshold) {

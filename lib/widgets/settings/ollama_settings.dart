@@ -67,7 +67,7 @@ class OllamaSettings extends StatelessWidget {
       return;
     }
 
-    ai.searchLocalNetworkForOllama = false;
+    ai.searchLocalNetworkForOllama = value;
   }
 
   Widget buildPermissionsAlert(BuildContext context) => AlertDialog(
