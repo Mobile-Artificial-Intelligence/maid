@@ -78,7 +78,7 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
     ),
     PopupMenuItem(
       padding: EdgeInsets.all(8),
-      value: LlmEcosystem.ollama,
+      value: LlmEcosystem.openAI,
       child: const Text('Open AI')
     )
   ];

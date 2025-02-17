@@ -20,7 +20,7 @@ class AboutPage extends StatelessWidget {
     children: [
       const SizedBox(height: 20.0),
       Image.asset(
-        "maid.png",
+        "images/maid.png",
         width: 150,
         height: 150,
       ),
@@ -41,7 +41,7 @@ class AboutPage extends StatelessWidget {
         'of any kind, express or implied. Maid is not affiliated with Huggingface, '
         'Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company '
         'providing a model compatible with this application.',
-        style: Theme.of(context).textTheme.bodyMedium
+        textAlign: TextAlign.center,
       ),
       const SizedBox(height: 20.0),
       Text(

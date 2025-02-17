@@ -6,8 +6,9 @@ class LlamaCppSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     children: [
+      Divider(endIndent: 0, indent: 0, height: 32),
       Text(
-        'Llama Settings',
+        'Llama CPP Settings',
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
