@@ -30,7 +30,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.danemadsen.maid"
-    compileSdk = 33
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
