@@ -19,6 +19,11 @@ dependencies:
   ollama_dart: ^0.2.2+1
   http: ^1.3.0
 
+  # For searching local network for ollama
+  device_info_plus: ^11.3.0
+  permission_handler: ^11.3.1
+  network_info_plus: ^6.1.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

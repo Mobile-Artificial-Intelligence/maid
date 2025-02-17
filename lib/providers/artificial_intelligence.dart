@@ -143,11 +143,11 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool _searchLocalNetworkForOllama = false;
+  bool? _searchLocalNetworkForOllama;
 
-  bool get searchLocalNetworkForOllama => _searchLocalNetworkForOllama;
+  bool? get searchLocalNetworkForOllama => _searchLocalNetworkForOllama;
 
-  set searchLocalNetworkForOllama(bool value) {
+  set searchLocalNetworkForOllama(bool? value) {
     _searchLocalNetworkForOllama = value;
     notifyListeners();
   }
@@ -266,7 +266,7 @@ class ArtificialIntelligence extends ChangeNotifier {
     }
 
     _ollamaModel = prefs.getString('ollama_model');
-    _searchLocalNetworkForOllama = prefs.getBool('search_local_network_for_ollama') ?? false;
+    _searchLocalNetworkForOllama = prefs.getBool('search_local_network_for_ollama');
 
     final overridesString = prefs.getString('overrides');
     if (overridesString != null) {
@@ -301,7 +301,9 @@ class ArtificialIntelligence extends ChangeNotifier {
       prefs.setString('ollama_model', _ollamaModel!);
     }
 
-    prefs.setBool('search_local_network_for_ollama', _searchLocalNetworkForOllama);
+    if (_searchLocalNetworkForOllama != null) {
+      prefs.setBool('search_local_network_for_ollama', _searchLocalNetworkForOllama!);
+    }
 
     if (overrides.isNotEmpty) {
       final overridesString = jsonEncode(overrides);
