@@ -75,12 +75,26 @@ class ArtificialIntelligence extends ChangeNotifier {
   Llama? _llama;
 
   bool busy = false;
+  
+  bool get canPrompt {
+    if (busy) return false;
 
-  bool get llamaLoaded => _llama != null;
-  bool get canPrompt => (
-      (ecosystem == LlmEcosystem.llamaCPP && llamaLoaded) || 
-      (ecosystem == LlmEcosystem.ollama && _model[LlmEcosystem.ollama] != null && _model[LlmEcosystem.ollama]!.isNotEmpty)
-    ) && !busy;
+    if (
+      ecosystem == LlmEcosystem.llamaCPP && 
+      _llama != null
+    ) {
+      return true;
+    }
+    else if (
+      ecosystem == LlmEcosystem.ollama && 
+      _model[LlmEcosystem.ollama] != null && 
+      _model[LlmEcosystem.ollama]!.isNotEmpty
+    ) {
+      return true;
+    }
+
+    return false;
+  }
 
   void loadModel() async {
     final result = await FilePicker.platform.pickFiles(

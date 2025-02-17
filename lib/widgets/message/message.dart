@@ -249,7 +249,7 @@ class MessageWidgetState extends State<MessageWidget> {
   );
 
   Widget roleSpecificButtonBuilder() => Selector<ArtificialIntelligence, bool>(
-    selector: (context, ai) => ai.llamaLoaded,
+    selector: (context, ai) => ai.canPrompt,
     builder: buildRoleSpecificButton,
   );
 
@@ -257,17 +257,17 @@ class MessageWidgetState extends State<MessageWidget> {
   /// 
   /// If the message is a user message, it will show an edit button.
   /// If the message is an assistant message, it will show a regenerate button.
-  Widget buildRoleSpecificButton(BuildContext context, bool llamaLoaded, Widget? child) {
+  Widget buildRoleSpecificButton(BuildContext context, bool canPrompt, Widget? child) {
     if (widget.message is UserChatMessage) {
       return IconButton(
         icon: const Icon(Icons.edit),
-        onPressed: llamaLoaded ? onEdit : null,
+        onPressed: canPrompt ? onEdit : null,
       );
     } 
     else {
       return IconButton(
         icon: const Icon(Icons.refresh),
-        onPressed: llamaLoaded ? onRegenerate : null,
+        onPressed: canPrompt ? onRegenerate : null,
       );
     }
   }
