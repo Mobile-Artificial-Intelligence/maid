@@ -21,9 +21,11 @@ class PromptFieldState extends State<PromptField> {
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: buildPromptField(),
+  Widget build(BuildContext context) => SafeArea(
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: buildPromptField(),
+    )
   );
 
   /// This is the prompt field that will be used to type a message.
