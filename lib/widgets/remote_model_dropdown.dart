@@ -1,7 +1,9 @@
 part of 'package:maid/main.dart';
 
 class RemoteModelDropdown extends StatefulWidget {
-  const RemoteModelDropdown({super.key});
+  final Future<List<String>> Function() getModelOptions;
+
+  const RemoteModelDropdown({super.key, required this.getModelOptions});
 
   @override
   State<RemoteModelDropdown> createState() => _RemoteModelDropdownState();
@@ -18,7 +20,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   }
 
   void loadModels() async {
-    models = await ArtificialIntelligence.of(context).getModelOptions();
+    models = await widget.getModelOptions();
     setState(() => open = false);
   }
 

@@ -25,7 +25,9 @@ class OllamaSettings extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
-      RemoteModelDropdown(),
+      RemoteModelDropdown(
+        getModelOptions: ArtificialIntelligence.of(context).getOllamaModelOptions,
+      ),
     ],
   );
 

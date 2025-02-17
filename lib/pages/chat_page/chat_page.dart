@@ -33,7 +33,9 @@ class ChatPageState extends State<ChatPage> {
       return const LoadModelButton();
     }
 
-    return RemoteModelDropdown();
+    return RemoteModelDropdown(
+      getModelOptions: ArtificialIntelligence.of(context).getOllamaModelOptions
+    );
   }
 
   Widget buildDrawer() => const Drawer(

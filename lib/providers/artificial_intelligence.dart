@@ -120,6 +120,7 @@ class ArtificialIntelligence extends ChangeNotifier {
       contextParams: ContextParams.fromMap(overrides),
       samplingParams: SamplingParams.fromMap({...overrides, 'greedy': true, 'seed': math.Random().nextInt(1000000)})
     );
+    save();
     notifyListeners();
   }
 
@@ -209,8 +210,13 @@ class ArtificialIntelligence extends ChangeNotifier {
     return false;
   }
 
-  Future<List<String>> getOllamaModels() async {
+  Future<List<String>> getOllamaModelOptions() async {
     try {
+      if (searchLocalNetworkForOllama == true) {
+        final found = await searchForOllama();
+        if (!found) return [];
+      }
+
       final uri = Uri.parse("$ollamaUrl/api/tags");
       final headers = {
         "Accept": "application/json",
@@ -233,21 +239,6 @@ class ArtificialIntelligence extends ChangeNotifier {
     } catch (e) {
       log(e.toString());
       return [];
-    }
-  }
-
-  Future<List<String>> getModelOptions() async {
-    switch (ecosystem) {
-      case LlmEcosystem.llamaCPP:
-        throw Exception('Not implemented');
-      case LlmEcosystem.ollama:
-        if (searchLocalNetworkForOllama == true) {
-          final found = await searchForOllama();
-          if (!found) return [];
-        }
-        return getOllamaModels();
-      default:
-        throw Exception('Invalid ecosystem');
     }
   }
 
@@ -317,7 +308,7 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
 
     if (_ecosystem == LlmEcosystem.llamaCPP) {
-      _llama!.reload();
+      reloadModel();
       assert(_llama != null);
     }
 
