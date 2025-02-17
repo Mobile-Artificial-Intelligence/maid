@@ -18,6 +18,7 @@ class ChatPageState extends State<ChatPage> {
 
   PreferredSizeWidget buildAppBar() => AppBar(
     title: buildTitle(),
+    centerTitle: true,
     actions: const [
       MenuButton()
     ] 
