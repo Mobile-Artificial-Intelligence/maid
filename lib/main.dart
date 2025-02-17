@@ -28,12 +28,12 @@ part 'providers/artificial_intelligence.dart';
 part 'pages/about_page/about_page.dart';
 
 part 'pages/settings_page/settings_page.dart';
-part 'pages/settings_page/widgets/theme_mode_dropdown.dart';
+part 'pages/settings_page/widgets/dropdowns/theme_mode_dropdown.dart';
 
-part 'pages/settings_page/widgets/llama_cpp_settings.dart';
-part 'pages/settings_page/widgets/llm_ecosystem_dropdown.dart';
-part 'pages/settings_page/widgets/ollama_settings.dart';
-part 'pages/settings_page/widgets/override_type_dropdown.dart';
+part 'pages/settings_page/widgets/settings/llama_cpp_settings.dart';
+part 'pages/settings_page/widgets/dropdowns/llm_ecosystem_dropdown.dart';
+part 'pages/settings_page/widgets/settings/ollama_settings.dart';
+part 'pages/settings_page/widgets/dropdowns/override_type_dropdown.dart';
 part 'pages/settings_page/widgets/override_view.dart';
 part 'pages/settings_page/widgets/override.dart';
 
