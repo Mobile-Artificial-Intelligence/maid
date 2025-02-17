@@ -53,6 +53,17 @@ class MessageWidgetState extends State<MessageWidget> {
     ArtificialIntelligence.of(context).regenerate(widget.node);
   }
 
+  void onHorizontalDragEnd(DragEndDetails details) {
+    const threshold = 80;
+    
+    if (details.primaryVelocity! > threshold) {
+      if (widget.onPreviousEnabled) onPrevious();
+    } 
+    else if (details.primaryVelocity! < -threshold) {
+      if (widget.onNextEnabled) onNext();
+    }
+  }
+
   /// The build method will build the padding and the appropriate column based on the editing state.
   @override
   Widget build(BuildContext context) => Column(
@@ -74,7 +85,10 @@ class MessageWidgetState extends State<MessageWidget> {
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
     child: editing && !ArtificialIntelligence.of(context).busy ? 
       buildMessageEditingColumn() : 
-      buildMessageColumn(),
+      GestureDetector(
+        onHorizontalDragEnd: onHorizontalDragEnd,
+        child: buildMessageColumn()
+      ),
   );
 
   // The buildMessageColumn method will build the message column when the message is not being edited.
