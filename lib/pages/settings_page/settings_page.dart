@@ -9,7 +9,7 @@ class SettingsPage extends StatelessWidget {
       title: const Text('Settings'),
     ),
     body: SingleChildScrollView(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(16.0),
       child: buildBody(context),
     )
   );
@@ -19,19 +19,19 @@ class SettingsPage extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
       LlmEcosystemDropdown(),
-      Divider(endIndent: 16, indent: 16, height: 32),
+      Divider(endIndent: 0, indent: 0, height: 32),
       LlamaCppSettings(),
-      Divider(endIndent: 16, indent: 16, height: 32),
+      Divider(endIndent: 0, indent: 0, height: 32),
       OllamaSettings(),
-      Divider(endIndent: 16, indent: 16, height: 32),
+      Divider(endIndent: 0, indent: 0, height: 32),
       OverrideView(),
-      Divider(endIndent: 16, indent: 16, height: 32),
+      Divider(endIndent: 0, indent: 0, height: 32),
       buildUserSettings(context),
-      Divider(endIndent: 16, indent: 16, height: 32),
+      Divider(endIndent: 0, indent: 0, height: 32),
       buildAssistantSettings(context),
-      Divider(endIndent: 16, indent: 16, height: 32),
+      Divider(endIndent: 0, indent: 0, height: 32),
       buildSystemSettings(context),
-      Divider(endIndent: 16, indent: 16, height: 32),
+      Divider(endIndent: 0, indent: 0, height: 32),
       buildResetRow(context)
     ],
   );

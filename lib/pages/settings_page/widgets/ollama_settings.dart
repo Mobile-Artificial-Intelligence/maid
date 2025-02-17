@@ -11,14 +11,11 @@ class OllamaSettings extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: buildModelLoader(context),
-      )
+      buildRemoteModel(context)
     ],
   );
 
-  Widget buildModelLoader(BuildContext context) => Row(
+  Widget buildRemoteModel(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       buildTitle(),

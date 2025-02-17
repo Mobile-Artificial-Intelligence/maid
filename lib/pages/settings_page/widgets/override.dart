@@ -73,12 +73,7 @@ class OverrideState extends State<Override> {
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(8),
-    child: buildRow(),
-  );
-  
-  Widget buildRow() => Row(
+  Widget build(BuildContext context) => Row(
     children: [
       IconButton(
         icon: const Icon(Icons.delete),

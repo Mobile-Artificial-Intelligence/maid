@@ -11,10 +11,7 @@ class LlamaCppSettings extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: buildRow(context),
-      )
+      buildRow(context)
     ],
   );
 

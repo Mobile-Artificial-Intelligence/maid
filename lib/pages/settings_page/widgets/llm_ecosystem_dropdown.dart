@@ -11,16 +11,13 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
   bool open = false;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        buildTitle(),
-        buildDropDownRow()
-      ]
-    )
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.max,
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      buildTitle(),
+      buildDropDownRow()
+    ]
   );
 
   Widget buildTitle() => Text(
