@@ -45,10 +45,21 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
       if (snapshot.connectionState == ConnectionState.done) {
         models = snapshot.data!;
         return buildPopupButton();
-      } else {
-        return const CircularProgressIndicator();
       }
+
+      return buildSpinner();
     },
+  );
+
+  Widget buildSpinner() => const Padding(
+    padding: EdgeInsets.all(8.0),
+    child: SizedBox(
+      width: 24,
+      height: 24,
+      child: Center(
+        child: CircularProgressIndicator(strokeWidth: 3.0),
+      ),
+    ),
   );
 
   Widget buildPopupButton() => PopupMenuButton<String>(
