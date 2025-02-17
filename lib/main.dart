@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import 'package:flutter/services.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:lan_scanner/lan_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
@@ -46,7 +47,6 @@ part 'pages/chat_page/widgets/message_view.dart';
 part 'pages/chat_page/widgets/message.dart';
 part 'pages/chat_page/widgets/prompt_field.dart';
 
-part 'utilities/ollama_utilities.dart';
 part 'utilities/chat_messages_extension.dart';
 part 'utilities/string_extension.dart';
 
