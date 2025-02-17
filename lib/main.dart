@@ -19,38 +19,41 @@ import 'package:lcpp/lcpp.dart';
 import 'package:tree_structs/tree_structs.dart';
 import 'package:ollama_dart/ollama_dart.dart';
 
-part 'types/llm_ecosystem.dart';
-part 'types/override_type.dart';
-
 part 'providers/app_settings.dart';
 part 'providers/artificial_intelligence.dart';
 
-part 'pages/about_page/about_page.dart';
-
-part 'pages/settings_page/settings_page.dart';
-part 'pages/settings_page/widgets/dropdowns/theme_mode_dropdown.dart';
-
-part 'pages/settings_page/widgets/settings/llama_cpp_settings.dart';
-part 'pages/settings_page/widgets/dropdowns/llm_ecosystem_dropdown.dart';
-part 'pages/settings_page/widgets/settings/ollama_settings.dart';
-part 'pages/settings_page/widgets/dropdowns/override_type_dropdown.dart';
-part 'pages/settings_page/widgets/override_view.dart';
-part 'pages/settings_page/widgets/override.dart';
-
-part 'pages/chat_page/chat_page.dart';
-part 'pages/chat_page/widgets/chat_tile.dart';
-part 'pages/chat_page/widgets/chat_view.dart';
-part 'pages/chat_page/widgets/code_box.dart';
-part 'pages/chat_page/widgets/load_model_button.dart';
-part 'pages/chat_page/widgets/menu_button.dart';
-part 'pages/chat_page/widgets/message_view.dart';
-part 'pages/chat_page/widgets/message.dart';
-part 'pages/chat_page/widgets/prompt_field.dart';
+part 'types/llm_ecosystem.dart';
+part 'types/override_type.dart';
 
 part 'utilities/chat_messages_extension.dart';
 part 'utilities/string_extension.dart';
 
-part 'widgets/remote_model_dropdown.dart';
+part 'widgets/buttons/load_model_button.dart';
+part 'widgets/buttons/menu_button.dart';
+
+part 'widgets/chat/chat_tile.dart';
+part 'widgets/chat/chat_view.dart';
+
+part 'widgets/dropdowns/llm_ecosystem_dropdown.dart';
+part 'widgets/dropdowns/override_type_dropdown.dart';
+part 'widgets/dropdowns/remote_model_dropdown.dart';
+part 'widgets/dropdowns/theme_mode_dropdown.dart';
+
+part 'widgets/message/message_view.dart';
+part 'widgets/message/message.dart';
+
+part 'widgets/override/override_view.dart';
+part 'widgets/override/override.dart';
+
+part 'widgets/pages/about_page.dart';
+part 'widgets/pages/chat_page.dart';
+part 'widgets/pages/settings_page.dart';
+
+part 'widgets/settings/llama_cpp_settings.dart';
+part 'widgets/settings/ollama_settings.dart';
+
+part 'widgets/code_box.dart';
+part 'widgets/prompt_field.dart';
 
 void main() => runApp(const Maid());
 
