@@ -18,7 +18,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   }
 
   void loadModels() async {
-    models = await ArtificialIntelligence.of(context).getOllamaModels();
+    models = await OllamaUtilities.getOllamaModels(ArtificialIntelligence.of(context).url);
     setState(() => open = false);
   }
 

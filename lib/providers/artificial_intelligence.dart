@@ -152,33 +152,6 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<String>> getOllamaModels() async {
-    try {
-      final uri = Uri.parse("$url/api/tags");
-      final headers = {
-        "Accept": "application/json",
-      };
-
-      var request = http.Request("GET", uri)..headers.addAll(headers);
-
-      var response = await request.send();
-      var responseString = await response.stream.bytesToString();
-      var data = json.decode(responseString);
-
-      List<String> newOptions = [];
-      if (data['models'] != null) {
-        for (var option in data['models']) {
-          newOptions.add(option['name']);
-        }
-      }
-
-      return newOptions;
-    } catch (e) {
-      log(e.toString());
-      return [];
-    }
-  }
-
   Stream<String> llamaPrompt(List<ChatMessage> messages) async* {
     assert(_llama != null);
     assert(_llamaCppModel != null);
@@ -279,7 +252,7 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
 
-    _llamaCppModel = prefs.getString('model');
+    _llamaCppModel = prefs.getString('llama_model');
 
     if (_llamaCppModel != null) {
       _llama = LlamaIsolated(

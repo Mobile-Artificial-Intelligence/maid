@@ -43,6 +43,7 @@ part 'pages/chat_page/widgets/message_view.dart';
 part 'pages/chat_page/widgets/message.dart';
 part 'pages/chat_page/widgets/prompt_field.dart';
 
+part 'utilities/ollama_utilities.dart';
 part 'utilities/chat_messages_extension.dart';
 part 'utilities/string_extension.dart';
 
