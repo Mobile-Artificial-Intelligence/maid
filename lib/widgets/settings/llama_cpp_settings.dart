@@ -42,7 +42,7 @@ class LlamaCppSettings extends StatelessWidget {
   );
 
   Widget buildModelText() => Selector<ArtificialIntelligence, String?>(
-    selector: (context, ai) => ai.llamaCppModel,
+    selector: (context, ai) => ai.model[LlmEcosystem.llamaCPP],
     builder: modelTextBuilder,
   );
 

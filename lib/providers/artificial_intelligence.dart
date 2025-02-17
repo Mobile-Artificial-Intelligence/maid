@@ -1,17 +1,14 @@
 part of 'package:maid/main.dart';
 
 class ArtificialIntelligence extends ChangeNotifier {
-  ArtificialIntelligence({
-    String? model,
-    List<GeneralTreeNode<ChatMessage>>? chats
-  }) : _llamaCppModel = model, _chats = chats ?? [] {
+  ArtificialIntelligence() {
     load();
   }
 
   static ArtificialIntelligence of(BuildContext context, {bool listen = false}) => 
     Provider.of<ArtificialIntelligence>(context, listen: listen);
 
-  List<GeneralTreeNode<ChatMessage>> _chats;
+  List<GeneralTreeNode<ChatMessage>> _chats = [];
 
   List<GeneralTreeNode<ChatMessage>> get chats => _chats;
 
@@ -55,6 +52,16 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
+  final Map<LlmEcosystem, String?> _model = {};
+
+  Map<LlmEcosystem, String?> get model => _model;
+
+  void setModel(LlmEcosystem ecosystem, String modelPath) {
+    _model[ecosystem] = modelPath;
+    save();
+    notifyListeners();
+  }
+
   Map<String, dynamic> _overrides = {};
 
   Map<String, dynamic> get overrides => _overrides;
@@ -67,20 +74,13 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   Llama? _llama;
 
-  String? _llamaCppModel;
-
-  String? get llamaCppModel => _llamaCppModel;
-
-  set llamaCppModel(String? value) {
-    _llamaCppModel = value;
-    save();
-    notifyListeners();
-  }
-
   bool busy = false;
 
   bool get llamaLoaded => _llama != null;
-  bool get canPrompt => llamaLoaded && !busy;
+  bool get canPrompt => (
+      (ecosystem == LlmEcosystem.llamaCPP && llamaLoaded) || 
+      (ecosystem == LlmEcosystem.ollama && _model[LlmEcosystem.ollama] != null && _model[LlmEcosystem.ollama]!.isNotEmpty)
+    ) && !busy;
 
   void loadModel() async {
     final result = await FilePicker.platform.pickFiles(
@@ -96,9 +96,9 @@ class ArtificialIntelligence extends ChangeNotifier {
       throw Exception('No file selected');
     }
 
-    _llamaCppModel = result.files.single.path!;
+    setModel(LlmEcosystem.llamaCPP, result.files.single.path!);
 
-    final exists = await File(_llamaCppModel!).exists();
+    final exists = await File(_model[LlmEcosystem.llamaCPP]!).exists();
     if (!exists) {
       throw Exception('File does not exist');
     }
@@ -107,11 +107,11 @@ class ArtificialIntelligence extends ChangeNotifier {
   }
 
   void reloadModel() {
-    if (_llamaCppModel == null) return;
+    if (_model[LlmEcosystem.llamaCPP] == null) return;
 
     _llama = LlamaIsolated(
       modelParams: ModelParams(
-        path: _llamaCppModel!,
+        path: _model[LlmEcosystem.llamaCPP]!,
         vocabOnly: overrides['vocab_only'],
         useMmap: overrides['use_mmap'],
         useMlock: overrides['use_mlock'],
@@ -124,15 +124,7 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  String? _ollamaModel;
-
-  String? get ollamaModel => _ollamaModel;
-
-  set ollamaModel(String? value) {
-    _ollamaModel = value;
-    save();
-    notifyListeners();
-  }
+  late OllamaClient _ollamaClient;
 
   String? _ollamaUrl;
 
@@ -192,7 +184,7 @@ class ArtificialIntelligence extends ChangeNotifier {
 
     List<Future<Uri?>> hostFutures = [];
     for (final host in hosts) {
-      final hostUri = Uri.parse('http://$host:11434');
+      final hostUri = Uri.parse('http://${host.internetAddress.address}:11434');
       hostFutures.add(checkForOllama(hostUri));
     }
 
@@ -244,19 +236,19 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   Stream<String> llamaPrompt(List<ChatMessage> messages) async* {
     assert(_llama != null);
-    assert(_llamaCppModel != null);
+    assert(_model[LlmEcosystem.llamaCPP] != null);
 
     yield* _llama!.prompt(messages);
   }
 
   Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
-    assert(_ollamaModel != null);
+    assert(_model[LlmEcosystem.ollama] != null);
 
-    final client = OllamaClient(baseUrl: ollamaUrl);
+    _ollamaClient = OllamaClient(baseUrl: "$ollamaUrl/api");
 
-    final completionStream = client.generateChatCompletionStream(
+    final completionStream = _ollamaClient.generateChatCompletionStream(
       request: GenerateChatCompletionRequest(
-        model: _ollamaModel!, 
+        model: _model[LlmEcosystem.ollama]!, 
         messages: messages.toOllamaMessages(),
         options: RequestOptions.fromJson(overrides),
         stream: true
@@ -333,7 +325,18 @@ class ArtificialIntelligence extends ChangeNotifier {
   }
 
   void stop() async {
-    _llama?.stop();
+    switch (ecosystem) {
+      case LlmEcosystem.llamaCPP:
+        _llama?.stop();
+        break;
+      case LlmEcosystem.ollama:
+        _ollamaClient.endSession();
+        break;
+      default:
+        throw Exception('Invalid ecosystem');
+    }
+
+
     await save();
     busy = false;
     notifyListeners();
@@ -342,11 +345,18 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
 
-    _llamaCppModel = prefs.getString('llama_model');
+    final modelsString = prefs.getString('models');
+    if (modelsString != null) {
+      final modelsMap = jsonDecode(modelsString);
+      
+      for (final entry in modelsMap.entries) {
+        _model[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
+      }
+    }
 
-    if (_llamaCppModel != null) {
+    if (_model[LlmEcosystem.llamaCPP] != null) {
       _llama = LlamaIsolated(
-        modelParams: ModelParams(path: _llamaCppModel!),
+        modelParams: ModelParams(path: _model[LlmEcosystem.llamaCPP]!),
         contextParams: const ContextParams(nCtx: 0),
         samplingParams: SamplingParams(
           greedy: true,
@@ -355,7 +365,6 @@ class ArtificialIntelligence extends ChangeNotifier {
       );
     }
 
-    _ollamaModel = prefs.getString('ollama_model');
     _searchLocalNetworkForOllama = prefs.getBool('search_local_network_for_ollama');
 
     final overridesString = prefs.getString('overrides');
@@ -383,12 +392,15 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    if (_llamaCppModel != null) {
-      prefs.setString('llama_model', _llamaCppModel!);
+    Map<String, String> modelMap = {};
+    for (final entry in _model.entries) {
+      if (entry.value == null) continue;
+      modelMap[entry.key.name] = entry.value!;
     }
 
-    if (_ollamaModel != null) {
-      prefs.setString('ollama_model', _ollamaModel!);
+    if (modelMap.isNotEmpty) {
+      final modelString = jsonEncode(modelMap);
+      prefs.setString('models', modelString);
     }
 
     if (_searchLocalNetworkForOllama != null) {

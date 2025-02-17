@@ -13,19 +13,8 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   List<String> models = [];
   bool open = false;
 
-  @override
-  void initState() {
-    super.initState();
-    loadModels();
-  }
-
-  void loadModels() async {
-    models = await widget.getModelOptions();
-    setState(() => open = false);
-  }
-
   void onSelected(String model) {
-    ArtificialIntelligence.of(context).ollamaModel = model;
+    ArtificialIntelligence.of(context).model[LlmEcosystem.ollama] = model;
     setState(() => open = false);
   }
 
@@ -35,12 +24,12 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
     children: [
       const SizedBox(width: 8),
       buildModelText(),
-      buildPopupButton()
+      buildButtonFuture()
     ]
   );
 
   Widget buildModelText() => Selector<ArtificialIntelligence, String?>(
-    selector: (context, ai) => ai.ollamaModel,
+    selector: (context, ai) => ai.model[LlmEcosystem.ollama],
     builder: (context, model, child) => Text(
       model ?? 'No model selected',
       style: TextStyle(
@@ -48,6 +37,18 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
         fontSize: 16
       )
     ),
+  );
+
+  Widget buildButtonFuture() => FutureBuilder<List<String>>(
+    future: widget.getModelOptions(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.done) {
+        models = snapshot.data!;
+        return buildPopupButton();
+      } else {
+        return const CircularProgressIndicator();
+      }
+    },
   );
 
   Widget buildPopupButton() => PopupMenuButton<String>(

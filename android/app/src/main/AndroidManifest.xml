@@ -4,7 +4,8 @@
     <application
         android:label="maid"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:allowBackup="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"
