@@ -73,7 +73,7 @@ class OllamaSettings extends StatelessWidget {
       textAlign: TextAlign.center,
     ),
     content: Text(
-      'This feature requires additional permissions to search your local network for Ollama instances. - ${Platform.operatingSystemVersion }',
+      'This feature requires additional permissions to search your local network for Ollama instances.',
       textAlign: TextAlign.center,
     ),
     actionsAlignment: MainAxisAlignment.spaceEvenly,
