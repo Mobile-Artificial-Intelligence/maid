@@ -62,15 +62,15 @@ part 'widgets/prompt_field.dart';
 void main() {
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
-    runApp(ErrorApp(errorMessage: details.exceptionAsString()));
+    runApp(ErrorApp(details: details));
   };
 
   runApp(Maid());
 }
 
 class ErrorApp extends StatelessWidget {
-  final String errorMessage;
-  const ErrorApp({super.key, required this.errorMessage});
+  final FlutterErrorDetails details;
+  const ErrorApp({super.key, required this.details});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,16 @@ class ErrorApp extends StatelessWidget {
       theme: getTheme(ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark)),
       home: Scaffold(
         appBar: AppBar(title: Text("An Error Occurred")),
-        body: Center(child: Text(errorMessage)),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("An error occurred:"),
+              Text(details.exceptionAsString()),
+              Text(details.stack.toString()),
+            ]
+          )
+        )
       ),
     );
   }
