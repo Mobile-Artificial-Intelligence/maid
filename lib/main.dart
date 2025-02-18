@@ -17,7 +17,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:lcpp/lcpp.dart';
 import 'package:tree_structs/tree_structs.dart';
-import 'package:ollama_dart/ollama_dart.dart';
+import 'package:ollama_dart/ollama_dart.dart' as ollama;
+import 'package:openai_dart/openai_dart.dart' as openai;
 
 part 'providers/app_settings.dart';
 part 'providers/artificial_intelligence/artificial_intelligence.dart';
@@ -25,6 +26,7 @@ part 'providers/artificial_intelligence/extensions/chat_extension.dart';
 part 'providers/artificial_intelligence/extensions/inference_extension.dart';
 part 'providers/artificial_intelligence/extensions/llama_cpp_extension.dart';
 part 'providers/artificial_intelligence/extensions/ollama_extension.dart';
+part 'providers/artificial_intelligence/extensions/open_ai_extension.dart';
 
 part 'types/llm_ecosystem.dart';
 part 'types/override_type.dart';

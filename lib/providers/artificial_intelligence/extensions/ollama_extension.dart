@@ -4,7 +4,7 @@ extension OllamaExtension on ArtificialIntelligence {
   Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
     assert(model[LlmEcosystem.ollama] != null);
 
-    _ollamaClient = OllamaClient(
+    _ollamaClient = ollama.OllamaClient(
       baseUrl: "${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api",
       headers: {
         'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
@@ -12,10 +12,10 @@ extension OllamaExtension on ArtificialIntelligence {
     );
 
     final completionStream = _ollamaClient.generateChatCompletionStream(
-      request: GenerateChatCompletionRequest(
+      request: ollama.GenerateChatCompletionRequest(
         model: model[LlmEcosystem.ollama]!, 
         messages: messages.toOllamaMessages(),
-        options: RequestOptions.fromJson(overrides),
+        options: ollama.RequestOptions.fromJson(overrides),
         stream: true
       )
     );
