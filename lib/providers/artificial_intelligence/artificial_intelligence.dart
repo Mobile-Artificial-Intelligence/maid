@@ -41,6 +41,12 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteChat(GeneralTreeNode<ChatMessage> chat) {
+    _chats.remove(chat);
+    save();
+    notifyListeners();
+  }
+
   void clearChats() {
     _chats.clear();
     save();
