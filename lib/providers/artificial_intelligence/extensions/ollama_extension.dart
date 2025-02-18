@@ -21,7 +21,9 @@ extension OllamaExtension on ArtificialIntelligence {
       }
     }
     catch (e) {
-      log(e.toString());
+      if (!e.toString().contains('Connection closed')) {
+        log(e.toString());
+      }
     }
   }
   
@@ -40,7 +42,9 @@ extension OllamaExtension on ArtificialIntelligence {
         return url;
       }
     } catch (e) {
-      log(e.toString());
+      if (!e.toString().contains(r'Connection (failed|refused)')) {
+        log(e.toString());
+      }
     }
 
     return null;

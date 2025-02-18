@@ -15,6 +15,8 @@ class OllamaSettings extends StatelessWidget {
       buildRemoteModel(context),
       const SizedBox(height: 8),
       buildLocalSearchSwitch(context),
+      const SizedBox(height: 8),
+      buildBaseUrlTextField(context),
     ],
   );
 
@@ -113,4 +115,14 @@ class OllamaSettings extends StatelessWidget {
 
     ai.searchLocalNetworkForOllama = true;
   }
+
+  Widget buildBaseUrlTextField(BuildContext context) => TextField(
+    decoration: InputDecoration(
+      labelText: 'Base URL',
+    ),
+    controller: TextEditingController(
+      text: ArtificialIntelligence.of(context).baseUrl[LlmEcosystem.ollama] ?? '',
+    ),
+    onChanged: (value) => ArtificialIntelligence.of(context).setBaseUrl(LlmEcosystem.ollama, value),
+  );
 }
