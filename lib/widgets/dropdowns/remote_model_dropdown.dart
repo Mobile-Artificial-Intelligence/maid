@@ -62,28 +62,19 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
     ),
   );
 
-  Widget buildPopupButton() {
-    if (models.isEmpty) {
-      return Icon(
-        Icons.arrow_drop_down,
-        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-        size: 24,
-      );
-    }
-
-    return PopupMenuButton<String>(
-      tooltip: 'Select Remote Model',
-      icon: Icon(
-        open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-        color: Theme.of(context).colorScheme.onSurface,
-        size: 24,
-      ),
-      offset: const Offset(0, 40),
-      itemBuilder: itemBuilder,
-      onOpened: () => setState(() => open = true),
-      onCanceled: () => setState(() => open = false)
-    );
-  }
+  Widget buildPopupButton() => PopupMenuButton<String>(
+    enabled: models.isNotEmpty,
+    tooltip: 'Select Remote Model',
+    icon: Icon(
+      open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+      color: Theme.of(context).colorScheme.onSurface,
+      size: 24,
+    ),
+    offset: const Offset(0, 40),
+    itemBuilder: itemBuilder,
+    onOpened: () => setState(() => open = true),
+    onCanceled: () => setState(() => open = false)
+  );
 
   List<PopupMenuEntry<String>> itemBuilder(BuildContext context) {
     return models.map((model) => PopupMenuItem(
