@@ -31,7 +31,7 @@ class _OverrideTypeDropdownState extends State<OverrideTypeDropdown> {
   );
 
   Widget buildOverrideText() => Text(
-    overrideType.name.firstCapitalized,
+    overrideType.name.titleize,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16

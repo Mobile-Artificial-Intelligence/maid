@@ -16,7 +16,7 @@ extension StringExtension on String {
     return result;
   }
 
-  String get firstCapitalized {
+  String get titleize {
     if (isEmpty) return this;
     return this[0].toUpperCase() + substring(1);
   }

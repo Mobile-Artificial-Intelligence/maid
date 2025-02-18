@@ -41,7 +41,7 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
   );
 
   Widget buildOverrideText(BuildContext context, LlmEcosystem ecosystem, Widget? child) => Text(
-    ecosystem.name.firstCapitalized,
+    ecosystem.name.titleize,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16

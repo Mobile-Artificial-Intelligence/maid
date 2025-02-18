@@ -40,7 +40,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
   );
 
   Widget buildThemeModeText(BuildContext context, ThemeMode themeMode, Widget? child) => Text(
-    themeMode.name.firstCapitalized,
+    themeMode.name.titleize,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
