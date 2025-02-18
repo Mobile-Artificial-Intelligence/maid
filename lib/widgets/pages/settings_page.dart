@@ -44,8 +44,6 @@ class SettingsPage extends StatelessWidget {
         return const OllamaSettings();
       case LlmEcosystem.llamaCPP:
         return const LlamaCppSettings();
-      default:
-        return const SizedBox.shrink();
     }
   }
 

@@ -15,8 +15,6 @@ extension InferenceExtension on ArtificialIntelligence {
       case LlmEcosystem.ollama:
         stream = ollamaPrompt(root.chainData.copy());
         break;
-      default:
-        throw Exception('Invalid ecosystem');
     }
 
     root.chain.last.addChild(AssistantChatMessage(''));
@@ -58,8 +56,6 @@ extension InferenceExtension on ArtificialIntelligence {
       case LlmEcosystem.ollama:
         stream = ollamaPrompt(chainData);
         break;
-      default:
-        throw Exception('Invalid ecosystem');
     }
 
     assert(node.currentChild == root.chain.last);
@@ -83,8 +79,6 @@ extension InferenceExtension on ArtificialIntelligence {
       case LlmEcosystem.ollama:
         _ollamaClient.endSession();
         break;
-      default:
-        throw Exception('Invalid ecosystem');
     }
 
 
