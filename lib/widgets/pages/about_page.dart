@@ -45,34 +45,12 @@ class AboutPage extends StatelessWidget {
       ),
       const SizedBox(height: 20.0),
       Text(
-        'Contributors',
+        'Lead Maintainer',
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      const SizedBox(height: 20.0),
-      Text(
-        'Lead Maintainer',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.titleSmall,
-      ),
       Text(
         'Dane Madsen',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      const SizedBox(height: 20.0),
-      Text(
-        'Maid Contributors',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.titleSmall,
-      ),
-      Text(
-        'sfiannaca',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      Text(
-        'gardner',
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodyMedium,
       ),
