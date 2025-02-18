@@ -41,6 +41,15 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
+  final Map<LlmEcosystem, String?> _baseUrl = {};
+
+  Map<LlmEcosystem, String?> get baseUrl => _baseUrl;
+
+  void setBaseUrl(LlmEcosystem ecosystem, String? url) {
+    _baseUrl[ecosystem] = url;
+    notifyListeners();
+  }
+
   Map<String, dynamic> _overrides = {};
 
   Map<String, dynamic> get overrides => _overrides;
@@ -76,16 +85,6 @@ class ArtificialIntelligence extends ChangeNotifier {
   }
 
   late OllamaClient _ollamaClient;
-
-  String? _ollamaUrl;
-
-  String get ollamaUrl => _ollamaUrl ?? 'http://localhost:11434';
-
-  set ollamaUrl(String value) {
-    _ollamaUrl = value;
-    save();
-    notifyListeners();
-  }
 
   bool? _searchLocalNetworkForOllama;
 

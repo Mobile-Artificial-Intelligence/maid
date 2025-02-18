@@ -14,7 +14,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   bool open = false;
 
   void onSelected(String model) {
-    ArtificialIntelligence.of(context).model[LlmEcosystem.ollama] = model;
+    ArtificialIntelligence.of(context).setModel(LlmEcosystem.ollama, model);
     setState(() => open = false);
   }
 

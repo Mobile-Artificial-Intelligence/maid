@@ -4,7 +4,7 @@ extension OllamaExtension on ArtificialIntelligence {
   Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
     assert(_model[LlmEcosystem.ollama] != null);
 
-    _ollamaClient = OllamaClient(baseUrl: "$ollamaUrl/api");
+    _ollamaClient = OllamaClient(baseUrl: "${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api");
 
     final completionStream = _ollamaClient.generateChatCompletionStream(
       request: GenerateChatCompletionRequest(
@@ -15,8 +15,13 @@ extension OllamaExtension on ArtificialIntelligence {
       )
     );
 
-    await for (final completion in completionStream) {
-      yield completion.message.content;
+    try {
+      await for (final completion in completionStream) {
+        yield completion.message.content;
+      }
+    }
+    catch (e) {
+      log(e.toString());
     }
   }
   
@@ -45,7 +50,7 @@ extension OllamaExtension on ArtificialIntelligence {
     assert(_searchLocalNetworkForOllama == true);
 
     // Check current URL and localhost first
-    if (await checkForOllama(Uri.parse(ollamaUrl)) != null) {
+    if (await checkForOllama(Uri.parse(baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434')) != null) {
       return true;
     }
 
@@ -68,7 +73,7 @@ extension OllamaExtension on ArtificialIntelligence {
     final validUrls = results.where((result) => result != null);
 
     if (validUrls.isNotEmpty) {
-      _ollamaUrl = validUrls.first.toString();
+      setBaseUrl(LlmEcosystem.ollama, validUrls.first.toString());
       await save();
       notify();
       return true;
@@ -84,7 +89,7 @@ extension OllamaExtension on ArtificialIntelligence {
         if (!found) return [];
       }
 
-      final uri = Uri.parse("$ollamaUrl/api/tags");
+      final uri = Uri.parse("${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api/tags");
       final headers = {
         "Accept": "application/json",
       };
