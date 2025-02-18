@@ -17,6 +17,8 @@ class OllamaSettings extends StatelessWidget {
       buildLocalSearchSwitch(context),
       const SizedBox(height: 8),
       BaseUrlTextField(ecosystem: LlmEcosystem.ollama),
+      const SizedBox(height: 8),
+      ApiKeyTextField(ecosystem: LlmEcosystem.ollama),
     ],
   );
 

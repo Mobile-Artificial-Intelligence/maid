@@ -4,7 +4,12 @@ extension OllamaExtension on ArtificialIntelligence {
   Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
     assert(model[LlmEcosystem.ollama] != null);
 
-    _ollamaClient = OllamaClient(baseUrl: "${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api");
+    _ollamaClient = OllamaClient(
+      baseUrl: "${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api",
+      headers: {
+        'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
+      }
+    );
 
     final completionStream = _ollamaClient.generateChatCompletionStream(
       request: GenerateChatCompletionRequest(
@@ -32,6 +37,7 @@ extension OllamaExtension on ArtificialIntelligence {
       final request = http.Request("GET", url);
       final headers = {
         "Accept": "application/json",
+        'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
       };
 
       request.headers.addAll(headers);
@@ -104,6 +110,7 @@ extension OllamaExtension on ArtificialIntelligence {
       final uri = Uri.parse("${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api/tags");
       final headers = {
         "Accept": "application/json",
+        'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
       };
 
       var request = http.Request("GET", uri)..headers.addAll(headers);

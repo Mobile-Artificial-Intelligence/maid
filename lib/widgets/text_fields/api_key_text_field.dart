@@ -1,26 +1,26 @@
 part of 'package:maid/main.dart';
 
-class BaseUrlTextField extends StatelessWidget {
+class ApiKeyTextField extends StatelessWidget {
   final LlmEcosystem ecosystem;
 
-  const BaseUrlTextField({
+  const ApiKeyTextField({
     super.key,
     required this.ecosystem,
   }) : assert(ecosystem != LlmEcosystem.llamaCPP);
 
   @override
   Widget build(BuildContext context) => Selector<ArtificialIntelligence, String?>(
-    selector: (context, ai) => ai.baseUrl[ecosystem],
+    selector: (context, ai) => ai.apiKey[ecosystem],
     builder: buildTextField
   );
 
-  Widget buildTextField(BuildContext context, String? baseUrl, Widget? child) => TextField(
+  Widget buildTextField(BuildContext context, String? apiKey, Widget? child) => TextField(
     decoration: InputDecoration(
-      labelText: 'Base URL',
+      labelText: 'Api Key',
     ),
     controller: TextEditingController(
-      text: baseUrl ?? '',
+      text: apiKey ?? '',
     ),
-    onChanged: (value) => ArtificialIntelligence.of(context).baseUrl[ecosystem] = value,
+    onChanged: (value) => ArtificialIntelligence.of(context).apiKey[ecosystem] = value,
   );
 }

@@ -56,6 +56,7 @@ part 'widgets/pages/settings_page.dart';
 part 'widgets/settings/llama_cpp_settings.dart';
 part 'widgets/settings/ollama_settings.dart';
 
+part 'widgets/text_fields/api_key_text_field.dart';
 part 'widgets/text_fields/base_url_text_field.dart';
 part 'widgets/text_fields/prompt_field.dart';
 
