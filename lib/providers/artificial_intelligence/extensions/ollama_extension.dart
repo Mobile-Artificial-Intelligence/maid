@@ -67,8 +67,7 @@ extension OllamaExtension on ArtificialIntelligence {
     // Check localhost
     if (await checkForOllama(Uri.parse('http://localhost:11434')) != null) {
       setBaseUrl(LlmEcosystem.ollama, 'http://localhost:11434');
-      await save();
-      notify();
+      saveAndNotify();
       return true;
     }
 
@@ -92,8 +91,7 @@ extension OllamaExtension on ArtificialIntelligence {
 
     if (validUrls.isNotEmpty) {
       setBaseUrl(LlmEcosystem.ollama, validUrls.first.toString());
-      await save();
-      notify();
+      saveAndNotify();
       return true;
     }
     notify();

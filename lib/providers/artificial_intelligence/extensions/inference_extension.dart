@@ -25,10 +25,8 @@ extension InferenceExtension on ArtificialIntelligence {
       notify();
     }
 
-    await save();
-
     busy = false;
-    notify();
+    saveAndNotify();
   }
 
   void regenerate(GeneralTreeNode<ChatMessage> node) async {
@@ -65,10 +63,8 @@ extension InferenceExtension on ArtificialIntelligence {
       notify();
     }
 
-    await save();
-
     busy = false;
-    notify();
+    saveAndNotify();
   }
 
   void stop() async {
@@ -82,8 +78,7 @@ extension InferenceExtension on ArtificialIntelligence {
     }
 
 
-    await save();
     busy = false;
-    notify();
+    saveAndNotify();
   }
 }

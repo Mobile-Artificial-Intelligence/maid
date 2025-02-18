@@ -11,7 +11,7 @@ extension ChatExtension on ArtificialIntelligence {
     
     reloadModel();
 
-    notify();
+    saveAndNotify();
   }
 
   void newChat() {
@@ -19,19 +19,16 @@ extension ChatExtension on ArtificialIntelligence {
 
     _chats.insert(0, chat);
     
-    save();
-    notify();
+    saveAndNotify();
   }
 
   void deleteChat(GeneralTreeNode<ChatMessage> chat) {
     _chats.remove(chat);
-    save();
-    notify();
+    saveAndNotify();
   }
 
   void clearChats() {
     _chats.clear();
-    save();
-    notify();
+    saveAndNotify();
   }
 }

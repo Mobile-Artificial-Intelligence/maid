@@ -46,7 +46,6 @@ extension LlamaCppExtension on ArtificialIntelligence {
       contextParams: ContextParams.fromMap(overrides),
       samplingParams: SamplingParams.fromMap({...overrides, 'greedy': true, 'seed': math.Random().nextInt(1000000)})
     );
-    save();
-    notify();
+    saveAndNotify();
   }
 }
