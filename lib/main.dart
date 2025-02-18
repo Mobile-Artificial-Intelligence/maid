@@ -21,6 +21,7 @@ import 'package:ollama_dart/ollama_dart.dart';
 
 part 'providers/app_settings.dart';
 part 'providers/artificial_intelligence/artificial_intelligence.dart';
+part 'providers/artificial_intelligence/extensions/chat_extension.dart';
 part 'providers/artificial_intelligence/extensions/inference_extension.dart';
 part 'providers/artificial_intelligence/extensions/llama_cpp_extension.dart';
 part 'providers/artificial_intelligence/extensions/ollama_extension.dart';

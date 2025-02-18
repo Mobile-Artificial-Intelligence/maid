@@ -21,40 +21,6 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  GeneralTreeNode<ChatMessage> get root => _chats.isNotEmpty ? 
-    _chats.first : GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
-
-  set root(GeneralTreeNode<ChatMessage> newRoot){
-    _chats.remove(newRoot);
-
-    _chats.insert(0, newRoot);
-    
-    reloadModel();
-
-    notifyListeners();
-  }
-
-  void newChat() {
-    final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
-
-    _chats.insert(0, chat);
-    
-    save();
-    notifyListeners();
-  }
-
-  void deleteChat(GeneralTreeNode<ChatMessage> chat) {
-    _chats.remove(chat);
-    save();
-    notifyListeners();
-  }
-
-  void clearChats() {
-    _chats.clear();
-    save();
-    notifyListeners();
-  }
-
   LlmEcosystem _ecosystem = LlmEcosystem.llamaCPP;
 
   LlmEcosystem get ecosystem => _ecosystem;
