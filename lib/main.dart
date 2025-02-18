@@ -59,37 +59,33 @@ part 'widgets/settings/ollama_settings.dart';
 part 'widgets/code_box.dart';
 part 'widgets/prompt_field.dart';
 
-void main() => runApp(const Maid());
+void main() {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    runApp(ErrorApp(errorMessage: details.toString()));
+  };
+
+  runApp(Maid());
+}
+
+class ErrorApp extends StatelessWidget {
+  final String errorMessage;
+  const ErrorApp({super.key, required this.errorMessage});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: getTheme(ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark)),
+      home: Scaffold(
+        appBar: AppBar(title: Text("An Error Occurred")),
+        body: Center(child: Text(errorMessage)),
+      ),
+    );
+  }
+}
 
 class Maid extends StatelessWidget {
   const Maid({super.key});
-
-  ThemeData getTheme(ColorScheme colorScheme) {
-    final appBarTheme = AppBarTheme(
-      elevation: 0.0,
-      backgroundColor: colorScheme.surface,
-      surfaceTintColor: Colors.transparent,
-    );
-
-    final inputDecorationTheme = InputDecorationTheme(
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 20.0, 
-        vertical: 15.0
-      ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30.0),
-        borderSide: BorderSide.none,
-      ),
-      filled: true,
-    );
-
-    return ThemeData(
-      colorScheme: colorScheme,
-      useMaterial3: true,
-      appBarTheme: appBarTheme,
-      inputDecorationTheme: inputDecorationTheme
-    );
-  }
 
   // This widget is the root of your application.
   @override
@@ -121,5 +117,32 @@ class Maid extends StatelessWidget {
       '/about': (context) => const AboutPage(),
     },
     debugShowCheckedModeBanner: false,
+  );
+}
+
+ThemeData getTheme(ColorScheme colorScheme) {
+  final appBarTheme = AppBarTheme(
+    elevation: 0.0,
+    backgroundColor: colorScheme.surface,
+    surfaceTintColor: Colors.transparent,
+  );
+
+  final inputDecorationTheme = InputDecorationTheme(
+    contentPadding: const EdgeInsets.symmetric(
+      horizontal: 20.0, 
+      vertical: 15.0
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: BorderSide.none,
+    ),
+    filled: true,
+  );
+
+  return ThemeData(
+    colorScheme: colorScheme,
+    useMaterial3: true,
+    appBarTheme: appBarTheme,
+    inputDecorationTheme: inputDecorationTheme
   );
 }

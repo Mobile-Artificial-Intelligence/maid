@@ -8,7 +8,6 @@ class ChatPage extends StatefulWidget {
 }
 
 class ChatPageState extends State<ChatPage> {
-
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: buildAppBar(),

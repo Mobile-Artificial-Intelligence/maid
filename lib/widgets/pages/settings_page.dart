@@ -59,6 +59,13 @@ class SettingsPage extends StatelessWidget {
       ElevatedButton(
         onPressed: AppSettings.of(context).clear, 
         child: const Text('Reset Settings')
+      ),
+      ElevatedButton(
+        onPressed: () async {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.clear();
+        }, 
+        child: const Text('Clear Cache')
       )
     ],
   );

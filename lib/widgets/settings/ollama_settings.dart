@@ -49,8 +49,8 @@ class OllamaSettings extends StatelessWidget {
     ],
   );
 
-  Widget buildSwitch(BuildContext context, bool? searchLocalNetwork, Widget? child) => Switch(
-    value: searchLocalNetwork ?? false,
+  Widget buildSwitch(BuildContext context, bool? searchLocalNetworkForOllama, Widget? child) => Switch(
+    value: searchLocalNetworkForOllama ?? false,
     onChanged: (value) => onLocalSearchChanged(context, value),
   );
 
