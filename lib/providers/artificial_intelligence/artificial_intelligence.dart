@@ -28,6 +28,8 @@ class ArtificialIntelligence extends ChangeNotifier {
     _chats.remove(newRoot);
 
     _chats.insert(0, newRoot);
+    
+    reloadModel();
 
     notifyListeners();
   }
