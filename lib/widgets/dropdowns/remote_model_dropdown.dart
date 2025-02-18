@@ -41,7 +41,6 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
 
   Future<void> fetchModels() async {
     models = await widget.getModelOptions();
-    setState(() {});
   }
 
   Widget buildButtonFuture() => FutureBuilder<void>(
