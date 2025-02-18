@@ -29,6 +29,7 @@ class OllamaSettings extends StatelessWidget {
         maxLines: 1,
       ),
       RemoteModelDropdown(
+        ecosystem: LlmEcosystem.ollama,
         getModelOptions: ArtificialIntelligence.of(context).getOllamaModelOptions,
       ),
     ],

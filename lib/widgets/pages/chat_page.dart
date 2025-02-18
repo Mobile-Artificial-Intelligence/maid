@@ -34,6 +34,7 @@ class ChatPageState extends State<ChatPage> {
     }
 
     return RemoteModelDropdown(
+      ecosystem: ecosystem,
       getModelOptions: ArtificialIntelligence.of(context).getOllamaModelOptions
     );
   }

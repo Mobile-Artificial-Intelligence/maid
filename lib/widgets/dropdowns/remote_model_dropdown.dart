@@ -1,9 +1,10 @@
 part of 'package:maid/main.dart';
 
 class RemoteModelDropdown extends StatefulWidget {
+  final LlmEcosystem ecosystem;
   final Future<List<String>> Function() getModelOptions;
 
-  const RemoteModelDropdown({super.key, required this.getModelOptions});
+  const RemoteModelDropdown({super.key, required this.getModelOptions, required this.ecosystem});
 
   @override
   State<RemoteModelDropdown> createState() => _RemoteModelDropdownState();
@@ -14,7 +15,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   bool open = false;
 
   void onSelected(String model) {
-    ArtificialIntelligence.of(context).setModel(LlmEcosystem.ollama, model);
+    ArtificialIntelligence.of(context).setModel(widget.ecosystem, model);
     setState(() => open = false);
   }
 
@@ -29,7 +30,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   );
 
   Widget buildModelText() => Selector<ArtificialIntelligence, String?>(
-    selector: (context, ai) => ai.model[LlmEcosystem.ollama],
+    selector: (context, ai) => ai.model[widget.ecosystem],
     builder: (context, model, child) => Text(
       model ?? 'No model selected',
       style: TextStyle(
