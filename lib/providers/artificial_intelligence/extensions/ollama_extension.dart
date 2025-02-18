@@ -53,8 +53,16 @@ extension OllamaExtension on ArtificialIntelligence {
   Future<bool> searchForOllama() async {
     assert(_searchLocalNetworkForOllama == true);
 
-    // Check current URL and localhost first
-    if (await checkForOllama(Uri.parse(baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434')) != null) {
+    // Check current URL
+    if (baseUrl[LlmEcosystem.ollama] != null && await checkForOllama(Uri.parse(baseUrl[LlmEcosystem.ollama]!)) != null) {
+      return true;
+    }
+
+    // Check localhost
+    if (await checkForOllama(Uri.parse('http://localhost:11434')) != null) {
+      setBaseUrl(LlmEcosystem.ollama, 'http://localhost:11434');
+      await save();
+      notify();
       return true;
     }
 

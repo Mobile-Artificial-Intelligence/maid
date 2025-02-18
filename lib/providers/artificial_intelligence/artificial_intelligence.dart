@@ -41,12 +41,10 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  final Map<LlmEcosystem, String?> _baseUrl = {};
-
-  Map<LlmEcosystem, String?> get baseUrl => _baseUrl;
+  final Map<LlmEcosystem, String?> baseUrl = {};
 
   void setBaseUrl(LlmEcosystem ecosystem, String? url) {
-    _baseUrl[ecosystem] = url;
+    baseUrl[ecosystem] = url;
     notifyListeners();
   }
 
@@ -117,7 +115,7 @@ class ArtificialIntelligence extends ChangeNotifier {
       final baseUrlsMap = jsonDecode(baseUrlsString);
       
       for (final entry in baseUrlsMap.entries) {
-        _baseUrl[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
+        baseUrl[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
       }
     }
 
@@ -173,7 +171,7 @@ class ArtificialIntelligence extends ChangeNotifier {
     }
 
     Map<String, String> baseUrlMap = {};
-    for (final entry in _baseUrl.entries) {
+    for (final entry in baseUrl.entries) {
       if (entry.value == null) continue;
       baseUrlMap[entry.key.name] = entry.value!;
     }
