@@ -71,17 +71,15 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
       size: 24,
     ),
     offset: const Offset(0, 40),
-    itemBuilder: itemBuilder,
+    itemBuilder: (context) => models.map(modelBuilder).toList(),
     onOpened: () => setState(() => open = true),
     onCanceled: () => setState(() => open = false)
   );
 
-  List<PopupMenuEntry<String>> itemBuilder(BuildContext context) {
-    return models.map((model) => PopupMenuItem(
-      padding: EdgeInsets.all(8),
-      value: model,
-      child: Text(model),
-      onTap: () => onSelected(model),
-    )).toList();
-  }
+  PopupMenuEntry<String> modelBuilder(String model)  => PopupMenuItem(
+    padding: EdgeInsets.all(8),
+    value: model,
+    child: Text(model),
+    onTap: () => onSelected(model),
+  );
 }
