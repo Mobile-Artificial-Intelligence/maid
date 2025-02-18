@@ -56,8 +56,10 @@ part 'widgets/pages/settings_page.dart';
 part 'widgets/settings/llama_cpp_settings.dart';
 part 'widgets/settings/ollama_settings.dart';
 
+part 'widgets/text_fields/base_url_text_field.dart';
+part 'widgets/text_fields/prompt_field.dart';
+
 part 'widgets/code_box.dart';
-part 'widgets/prompt_field.dart';
 
 void main() {
   FlutterError.onError = (FlutterErrorDetails details) {
