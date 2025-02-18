@@ -62,7 +62,7 @@ part 'widgets/prompt_field.dart';
 void main() {
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
-    runApp(ErrorApp(errorMessage: details.toString()));
+    runApp(ErrorApp(errorMessage: details.exceptionAsString()));
   };
 
   runApp(Maid());
