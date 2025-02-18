@@ -12,6 +12,11 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
+  void saveAndNotify() {
+    save();
+    notifyListeners();
+  }
+
   List<GeneralTreeNode<ChatMessage>> _chats = [];
 
   List<GeneralTreeNode<ChatMessage>> get chats => _chats;
@@ -27,8 +32,7 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   set ecosystem(LlmEcosystem newEcosystem) {
     _ecosystem = newEcosystem;
-    save();
-    notifyListeners();
+    saveAndNotify();
   }
 
   final Map<LlmEcosystem, String?> _model = {};
@@ -37,15 +41,14 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   void setModel(LlmEcosystem ecosystem, String modelPath) {
     _model[ecosystem] = modelPath;
-    save();
-    notifyListeners();
+    saveAndNotify();
   }
 
   final Map<LlmEcosystem, String?> baseUrl = {};
 
   void setBaseUrl(LlmEcosystem ecosystem, String? url) {
     baseUrl[ecosystem] = url;
-    notifyListeners();
+    saveAndNotify();
   }
 
   Map<String, dynamic> _overrides = {};
@@ -54,8 +57,7 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   set overrides(Map<String, dynamic> value) {
     _overrides = value;
-    reloadModel();
-    notifyListeners();
+    saveAndNotify();
   }
 
   Llama? _llama;
@@ -90,6 +92,19 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   set searchLocalNetworkForOllama(bool? value) {
     _searchLocalNetworkForOllama = value;
+    updateModelOptions();
+    saveAndNotify();
+  }
+
+  final Map<LlmEcosystem, List<String>> _modelOptions = {};
+
+  Map<LlmEcosystem, List<String>> get modelOptions => _modelOptions;
+
+  void updateModelOptions() async {
+    _modelOptions.clear();
+    notifyListeners();
+
+    _modelOptions[LlmEcosystem.ollama] = await getOllamaModelOptions();
     notifyListeners();
   }
 
@@ -150,6 +165,8 @@ class ArtificialIntelligence extends ChangeNotifier {
       final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
       _chats.add(chat);
     }
+
+    updateModelOptions();
 
     notifyListeners();
   }
