@@ -1,26 +1,23 @@
 part of 'package:maid/main.dart';
 
 extension InferenceExtension on ArtificialIntelligence {
-  Stream<String> promptSwitch(List<ChatMessage> messages) async* {
-    switch (ecosystem) {
-      case LlmEcosystem.llamaCPP:
-        yield* llamaPrompt(messages);
-        break;
-      case LlmEcosystem.ollama:
-        yield* ollamaPrompt(messages);
-        break;
-      default:
-        throw Exception('Invalid ecosystem');
-    }
-  }
-  
   void prompt(String message) async {
     root.chain.last.addChild(UserChatMessage(message));
 
     busy = true;
     notify();
 
-    Stream<String> stream = promptSwitch(root.chainData.copy());
+    Stream<String> stream;
+    switch (ecosystem) {
+      case LlmEcosystem.llamaCPP:
+        stream = llamaPrompt(root.chainData.copy());
+        break;
+      case LlmEcosystem.ollama:
+        stream = ollamaPrompt(root.chainData.copy());
+        break;
+      default:
+        throw Exception('Invalid ecosystem');
+    }
 
     root.chain.last.addChild(AssistantChatMessage(''));
     notify();
@@ -45,12 +42,25 @@ extension InferenceExtension on ArtificialIntelligence {
       assert(_llama != null);
     }
 
-    final chainData = root.chainData.copy();
-    if (chainData.last is AssistantChatMessage) {
-      chainData.removeLast();
-    }
+    node.addChild(AssistantChatMessage(''));
+    notify();
 
-    final stream = promptSwitch(chainData);
+    assert(root.chainData.last is AssistantChatMessage);
+
+    final chainData = root.chainData.copy();
+    chainData.removeLast();
+
+    Stream<String> stream;
+    switch (ecosystem) {
+      case LlmEcosystem.llamaCPP:
+        stream = llamaPrompt(chainData);
+        break;
+      case LlmEcosystem.ollama:
+        stream = ollamaPrompt(chainData);
+        break;
+      default:
+        throw Exception('Invalid ecosystem');
+    }
 
     assert(node.currentChild == root.chain.last);
 
