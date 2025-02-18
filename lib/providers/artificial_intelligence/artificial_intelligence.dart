@@ -98,12 +98,26 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
 
+    final ecosystemString = prefs.getString('ecosystem');
+    if (ecosystemString != null) {
+      _ecosystem = LlmEcosystem.values.firstWhere((e) => e.name == ecosystemString);
+    }
+
     final modelsString = prefs.getString('models');
     if (modelsString != null) {
       final modelsMap = jsonDecode(modelsString);
       
       for (final entry in modelsMap.entries) {
         _model[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
+      }
+    }
+
+    final baseUrlsString = prefs.getString('base_urls');
+    if (baseUrlsString != null) {
+      final baseUrlsMap = jsonDecode(baseUrlsString);
+      
+      for (final entry in baseUrlsMap.entries) {
+        _baseUrl[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
       }
     }
 
@@ -145,6 +159,8 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
+    prefs.setString('ecosystem', _ecosystem.name);
+
     Map<String, String> modelMap = {};
     for (final entry in _model.entries) {
       if (entry.value == null) continue;
@@ -154,6 +170,17 @@ class ArtificialIntelligence extends ChangeNotifier {
     if (modelMap.isNotEmpty) {
       final modelString = jsonEncode(modelMap);
       prefs.setString('models', modelString);
+    }
+
+    Map<String, String> baseUrlMap = {};
+    for (final entry in _baseUrl.entries) {
+      if (entry.value == null) continue;
+      baseUrlMap[entry.key.name] = entry.value!;
+    }
+
+    if (baseUrlMap.isNotEmpty) {
+      final baseUrlString = jsonEncode(baseUrlMap);
+      prefs.setString('base_urls', baseUrlString);
     }
 
     if (_searchLocalNetworkForOllama != null) {
