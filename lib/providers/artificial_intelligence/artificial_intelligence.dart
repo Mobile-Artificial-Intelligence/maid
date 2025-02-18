@@ -35,12 +35,10 @@ class ArtificialIntelligence extends ChangeNotifier {
     saveAndNotify();
   }
 
-  final Map<LlmEcosystem, String?> _model = {};
-
-  Map<LlmEcosystem, String?> get model => _model;
+  final Map<LlmEcosystem, String?> model = {};
 
   void setModel(LlmEcosystem ecosystem, String modelPath) {
-    _model[ecosystem] = modelPath;
+    model[ecosystem] = modelPath;
     saveAndNotify();
   }
 
@@ -48,6 +46,13 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   void setBaseUrl(LlmEcosystem ecosystem, String? url) {
     baseUrl[ecosystem] = url;
+    saveAndNotify();
+  }
+
+  final Map<LlmEcosystem, String?> apiKey = {};
+
+  void setApiKey(LlmEcosystem ecosystem, String? key) {
+    apiKey[ecosystem] = key;
     saveAndNotify();
   }
 
@@ -75,8 +80,8 @@ class ArtificialIntelligence extends ChangeNotifier {
     }
     else if (
       ecosystem == LlmEcosystem.ollama && 
-      _model[LlmEcosystem.ollama] != null && 
-      _model[LlmEcosystem.ollama]!.isNotEmpty
+      model[LlmEcosystem.ollama] != null && 
+      model[LlmEcosystem.ollama]!.isNotEmpty
     ) {
       return true;
     }
@@ -96,15 +101,13 @@ class ArtificialIntelligence extends ChangeNotifier {
     saveAndNotify();
   }
 
-  final Map<LlmEcosystem, List<String>> _modelOptions = {};
-
-  Map<LlmEcosystem, List<String>> get modelOptions => _modelOptions;
+  final Map<LlmEcosystem, List<String>> modelOptions = {};
 
   void updateModelOptions() async {
-    _modelOptions.clear();
+    modelOptions.clear();
     notifyListeners();
 
-    _modelOptions[LlmEcosystem.ollama] = await getOllamaModelOptions();
+    modelOptions[LlmEcosystem.ollama] = await getOllamaModelOptions();
     notifyListeners();
   }
 
@@ -121,7 +124,7 @@ class ArtificialIntelligence extends ChangeNotifier {
       final modelsMap = jsonDecode(modelsString);
       
       for (final entry in modelsMap.entries) {
-        _model[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
+        model[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
       }
     }
 
@@ -134,9 +137,9 @@ class ArtificialIntelligence extends ChangeNotifier {
       }
     }
 
-    if (_model[LlmEcosystem.llamaCPP] != null) {
+    if (model[LlmEcosystem.llamaCPP] != null) {
       _llama = LlamaIsolated(
-        modelParams: ModelParams(path: _model[LlmEcosystem.llamaCPP]!),
+        modelParams: ModelParams(path: model[LlmEcosystem.llamaCPP]!),
         contextParams: const ContextParams(nCtx: 0),
         samplingParams: SamplingParams(
           greedy: true,
@@ -177,7 +180,7 @@ class ArtificialIntelligence extends ChangeNotifier {
     prefs.setString('ecosystem', _ecosystem.name);
 
     Map<String, String> modelMap = {};
-    for (final entry in _model.entries) {
+    for (final entry in model.entries) {
       if (entry.value == null) continue;
       modelMap[entry.key.name] = entry.value!;
     }

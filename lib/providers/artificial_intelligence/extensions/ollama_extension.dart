@@ -2,13 +2,13 @@ part of 'package:maid/main.dart';
 
 extension OllamaExtension on ArtificialIntelligence {
   Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
-    assert(_model[LlmEcosystem.ollama] != null);
+    assert(model[LlmEcosystem.ollama] != null);
 
     _ollamaClient = OllamaClient(baseUrl: "${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api");
 
     final completionStream = _ollamaClient.generateChatCompletionStream(
       request: GenerateChatCompletionRequest(
-        model: _model[LlmEcosystem.ollama]!, 
+        model: model[LlmEcosystem.ollama]!, 
         messages: messages.toOllamaMessages(),
         options: RequestOptions.fromJson(overrides),
         stream: true

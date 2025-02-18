@@ -78,7 +78,7 @@ class ErrorApp extends StatelessWidget {
       theme: getTheme(ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark)),
       home: Scaffold(
         appBar: AppBar(title: Text("An Error Occurred")),
-        body: Center(
+        body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

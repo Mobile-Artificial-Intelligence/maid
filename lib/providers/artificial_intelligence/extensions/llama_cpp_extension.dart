@@ -3,7 +3,7 @@ part of 'package:maid/main.dart';
 extension LlamaCppExtension on ArtificialIntelligence {
   Stream<String> llamaPrompt(List<ChatMessage> messages) async* {
     assert(_llama != null);
-    assert(_model[LlmEcosystem.llamaCPP] != null);
+    assert(model[LlmEcosystem.llamaCPP] != null);
 
     yield* _llama!.prompt(messages);
   }
@@ -24,7 +24,7 @@ extension LlamaCppExtension on ArtificialIntelligence {
 
     setModel(LlmEcosystem.llamaCPP, result.files.single.path!);
 
-    final exists = await File(_model[LlmEcosystem.llamaCPP]!).exists();
+    final exists = await File(model[LlmEcosystem.llamaCPP]!).exists();
     if (!exists) {
       throw Exception('File does not exist');
     }
@@ -33,11 +33,11 @@ extension LlamaCppExtension on ArtificialIntelligence {
   }
 
   void reloadModel() {
-    if (_model[LlmEcosystem.llamaCPP] == null) return;
+    if (model[LlmEcosystem.llamaCPP] == null) return;
 
     _llama = LlamaIsolated(
       modelParams: ModelParams(
-        path: _model[LlmEcosystem.llamaCPP]!,
+        path: model[LlmEcosystem.llamaCPP]!,
         vocabOnly: overrides['vocab_only'],
         useMmap: overrides['use_mmap'],
         useMlock: overrides['use_mlock'],
