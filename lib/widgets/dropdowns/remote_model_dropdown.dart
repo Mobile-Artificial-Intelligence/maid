@@ -67,7 +67,6 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   );
 
   Widget buildPopupButton() => PopupMenuButton<String>(
-    enabled: models.isNotEmpty,
     tooltip: 'Select Remote Model',
     icon: Icon(
       open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
