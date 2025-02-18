@@ -39,11 +39,15 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
     ),
   );
 
-  Widget buildButtonFuture() => FutureBuilder<List<String>>(
-    future: widget.getModelOptions(),
+  Future<void> fetchModels() async {
+    models = await widget.getModelOptions();
+    setState(() {});
+  }
+
+  Widget buildButtonFuture() => FutureBuilder<void>(
+    future: fetchModels(),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.done) {
-        models = snapshot.data!;
         return buildPopupButton();
       }
 
@@ -76,7 +80,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
     onCanceled: () => setState(() => open = false)
   );
 
-  PopupMenuEntry<String> modelBuilder(String model)  => PopupMenuItem(
+  PopupMenuEntry<String> modelBuilder(String model) => PopupMenuItem(
     padding: EdgeInsets.all(8),
     value: model,
     child: Text(model),
