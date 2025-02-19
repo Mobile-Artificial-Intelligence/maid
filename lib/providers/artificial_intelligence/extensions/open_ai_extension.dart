@@ -5,15 +5,19 @@ extension OpenAiExtension on ArtificialIntelligence {
     assert(apiKey[LlmEcosystem.openAI] != null);
     assert(model[LlmEcosystem.openAI] != null);
 
-    _openAiClient = openAI.OpenAIClient(
+    if (baseUrl[LlmEcosystem.openAI] == null || baseUrl[LlmEcosystem.openAI]!.isEmpty) {
+      setBaseUrl(LlmEcosystem.openAI, 'https://api.openai.com/v1');
+    }
+
+    _openAiClient = open_ai.OpenAIClient(
       apiKey: apiKey[LlmEcosystem.openAI]!,
       baseUrl: baseUrl[LlmEcosystem.openAI],
     );
 
     final completionStream = _openAiClient.createChatCompletionStream(
-      request: openAI.CreateChatCompletionRequest(
+      request: open_ai.CreateChatCompletionRequest(
         messages: messages.toOpenAiMessages(),
-        model: openAI.ChatCompletionModel.modelId(model[LlmEcosystem.openAI]!),
+        model: open_ai.ChatCompletionModel.modelId(model[LlmEcosystem.openAI]!),
         stream: true,
       )
     );
@@ -29,5 +33,32 @@ extension OpenAiExtension on ArtificialIntelligence {
         log(e.toString());
       }
     }
+  }
+
+  void updateOpenAiModelOptions() async {
+    modelOptions[LlmEcosystem.openAI] = await getOpenAiModelOptions();
+    notify();
+  }
+
+  Future<List<String>> getOpenAiModelOptions() async {
+    if (apiKey[LlmEcosystem.openAI] == null) {
+      log('Open AI API Key is not set');
+      return [];
+    }
+
+    if (baseUrl[LlmEcosystem.openAI] == null || baseUrl[LlmEcosystem.openAI]!.isEmpty) {
+      setBaseUrl(LlmEcosystem.openAI, 'https://api.openai.com/v1');
+    }
+
+    log('Fetching Open AI models');
+
+    _openAiClient = open_ai.OpenAIClient(
+      apiKey: apiKey[LlmEcosystem.openAI]!,
+      baseUrl: baseUrl[LlmEcosystem.openAI],
+    );
+
+    final modelsResponse = await _openAiClient.listModels();
+
+    return modelsResponse.data.map((model) => model.id).toList();
   }
 }

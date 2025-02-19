@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:lcpp/lcpp.dart';
 import 'package:tree_structs/tree_structs.dart';
 import 'package:ollama_dart/ollama_dart.dart' as ollama;
-import 'package:openai_dart/openai_dart.dart' as openAI;
+import 'package:openai_dart/openai_dart.dart' as open_ai;
 
 part 'providers/app_settings.dart';
 part 'providers/artificial_intelligence/artificial_intelligence.dart';
@@ -65,42 +65,37 @@ part 'widgets/text_fields/prompt_field.dart';
 
 part 'widgets/code_box.dart';
 
-void main() {
-  FlutterError.onError = (FlutterErrorDetails details) {
-    FlutterError.presentError(details);
-    runApp(ErrorApp(details: details));
-  };
-
-  runApp(Maid());
-}
-
-class ErrorApp extends StatelessWidget {
-  final FlutterErrorDetails details;
-  const ErrorApp({super.key, required this.details});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: getTheme(ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark)),
-      home: Scaffold(
-        appBar: AppBar(title: Text("An Error Occurred")),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("An error occurred:"),
-              Text(details.exceptionAsString()),
-              Text(details.stack.toString()),
-            ]
-          )
-        )
-      ),
-    );
-  }
-}
+void main() => runApp(Maid());
 
 class Maid extends StatelessWidget {
   const Maid({super.key});
+
+  ThemeData getTheme(ColorScheme colorScheme) {
+    final appBarTheme = AppBarTheme(
+      elevation: 0.0,
+      backgroundColor: colorScheme.surface,
+      surfaceTintColor: Colors.transparent,
+    );
+
+    final inputDecorationTheme = InputDecorationTheme(
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 20.0, 
+        vertical: 15.0
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30.0),
+        borderSide: BorderSide.none,
+      ),
+      filled: true,
+    );
+
+    return ThemeData(
+      colorScheme: colorScheme,
+      useMaterial3: true,
+      appBarTheme: appBarTheme,
+      inputDecorationTheme: inputDecorationTheme
+    );
+  }
 
   // This widget is the root of your application.
   @override
@@ -132,32 +127,5 @@ class Maid extends StatelessWidget {
       '/about': (context) => const AboutPage(),
     },
     debugShowCheckedModeBanner: false,
-  );
-}
-
-ThemeData getTheme(ColorScheme colorScheme) {
-  final appBarTheme = AppBarTheme(
-    elevation: 0.0,
-    backgroundColor: colorScheme.surface,
-    surfaceTintColor: Colors.transparent,
-  );
-
-  final inputDecorationTheme = InputDecorationTheme(
-    contentPadding: const EdgeInsets.symmetric(
-      horizontal: 20.0, 
-      vertical: 15.0
-    ),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(30.0),
-      borderSide: BorderSide.none,
-    ),
-    filled: true,
-  );
-
-  return ThemeData(
-    colorScheme: colorScheme,
-    useMaterial3: true,
-    appBarTheme: appBarTheme,
-    inputDecorationTheme: inputDecorationTheme
   );
 }

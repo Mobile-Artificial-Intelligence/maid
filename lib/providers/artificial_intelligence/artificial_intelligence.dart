@@ -30,29 +30,29 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   LlmEcosystem get ecosystem => _ecosystem;
 
-  set ecosystem(LlmEcosystem newEcosystem) {
-    _ecosystem = newEcosystem;
+  set ecosystem(LlmEcosystem eco) {
+    _ecosystem = eco;
     saveAndNotify();
   }
 
   final Map<LlmEcosystem, String?> model = {};
 
-  void setModel(LlmEcosystem ecosystem, String modelPath) {
-    model[ecosystem] = modelPath;
+  void setModel(LlmEcosystem eco, String modelPath) {
+    model[eco] = modelPath;
     saveAndNotify();
   }
 
   final Map<LlmEcosystem, String?> baseUrl = {};
 
-  void setBaseUrl(LlmEcosystem ecosystem, String? url) {
-    baseUrl[ecosystem] = url;
+  void setBaseUrl(LlmEcosystem eco, String? url) {
+    baseUrl[eco] = url;
     saveAndNotify();
   }
 
   final Map<LlmEcosystem, String?> apiKey = {};
 
-  void setApiKey(LlmEcosystem ecosystem, String? key) {
-    apiKey[ecosystem] = key;
+  void setApiKey(LlmEcosystem eco, String? key) {
+    apiKey[eco] = key;
     saveAndNotify();
   }
 
@@ -85,11 +85,20 @@ class ArtificialIntelligence extends ChangeNotifier {
     ) {
       return true;
     }
+    else if (
+      ecosystem == LlmEcosystem.openAI && 
+      apiKey[LlmEcosystem.openAI] != null && 
+      apiKey[LlmEcosystem.openAI]!.isNotEmpty &&
+      model[LlmEcosystem.openAI] != null && 
+      model[LlmEcosystem.openAI]!.isNotEmpty
+    ) {
+      return true;
+    }
 
     return false;
   }
 
-  late openAI.OpenAIClient _openAiClient;
+  late open_ai.OpenAIClient _openAiClient;
 
   late ollama.OllamaClient _ollamaClient;
 
@@ -109,8 +118,8 @@ class ArtificialIntelligence extends ChangeNotifier {
     modelOptions.clear();
     notifyListeners();
 
-    modelOptions[LlmEcosystem.ollama] = await getOllamaModelOptions();
-    notifyListeners();
+    updateOllamaModelOptions();
+    updateOpenAiModelOptions();
   }
 
   Future<void> load() async {
@@ -136,6 +145,15 @@ class ArtificialIntelligence extends ChangeNotifier {
       
       for (final entry in baseUrlsMap.entries) {
         baseUrl[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
+      }
+    }
+
+    final apiKeysString = prefs.getString('api_keys');
+    if (apiKeysString != null) {
+      final apiKeysMap = jsonDecode(apiKeysString);
+      
+      for (final entry in apiKeysMap.entries) {
+        apiKey[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
       }
     }
 
@@ -201,6 +219,17 @@ class ArtificialIntelligence extends ChangeNotifier {
     if (baseUrlMap.isNotEmpty) {
       final baseUrlString = jsonEncode(baseUrlMap);
       prefs.setString('base_urls', baseUrlString);
+    }
+
+    Map<String, String> apiKeyMap = {};
+    for (final entry in apiKey.entries) {
+      if (entry.value == null) continue;
+      apiKeyMap[entry.key.name] = entry.value!;
+    }
+
+    if (apiKeyMap.isNotEmpty) {
+      final apiKeyString = jsonEncode(apiKeyMap);
+      prefs.setString('api_keys', apiKeyString);
     }
 
     if (_searchLocalNetworkForOllama != null) {
