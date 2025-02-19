@@ -84,7 +84,7 @@ class AppSettings extends ChangeNotifier {
   void loadAssistantImage() async {
     final result = await FilePicker.platform.pickFiles(
       dialogTitle: "Load Model File",
-      type: FileType.image,
+      type: FileType.any,
       allowMultiple: false,
       allowCompression: false
     );
