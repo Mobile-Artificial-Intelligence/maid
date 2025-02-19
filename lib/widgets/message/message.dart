@@ -41,13 +41,24 @@ class MessageWidgetState extends State<MessageWidget> {
   void onSubmitEdit() {
     widget.node.addChild(UserChatMessage(controller.text));
 
-    ArtificialIntelligence.of(context).regenerate(widget.node.currentChild!);
+    tryRegenerate(widget.node.currentChild!);
 
     setState(() => editing = false);
   }
 
-  void onRegenerate() {
-    ArtificialIntelligence.of(context).regenerate(widget.node);
+  void onRegenerate() => tryRegenerate(widget.node);
+
+  void tryRegenerate(GeneralTreeNode<ChatMessage> node) async {
+    try {
+      await ArtificialIntelligence.of(context).regenerate(widget.node);
+    }
+    catch (exception) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => ErrorDialog(exception: exception),
+      );
+    }
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {

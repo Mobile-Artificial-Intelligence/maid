@@ -30,7 +30,7 @@ extension OpenAiExtension on ArtificialIntelligence {
     catch (e) {
       // This is expected when the user presses stop
       if (!e.toString().contains('Connection closed')) {
-        log(e.toString());
+        rethrow;
       }
     }
   }
@@ -57,8 +57,14 @@ extension OpenAiExtension on ArtificialIntelligence {
       baseUrl: baseUrl[LlmEcosystem.openAI],
     );
 
-    final modelsResponse = await _openAiClient.listModels();
+    try {
+      final modelsResponse = await _openAiClient.listModels();
 
-    return modelsResponse.data.map((model) => model.id).toList();
+      return modelsResponse.data.map((model) => model.id).toList();
+    }
+    catch (e) {
+      log(e.toString()); // TODO: Show error to user
+      return [];
+    }
   }
 }

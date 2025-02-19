@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 extension InferenceExtension on ArtificialIntelligence {
-  void prompt(String message) async {
+  Future<void> prompt(String message) async {
     root.chain.last.addChild(UserChatMessage(message));
 
     busy = true;
@@ -23,16 +23,19 @@ extension InferenceExtension on ArtificialIntelligence {
     root.chain.last.addChild(AssistantChatMessage(''));
     notify();
 
-    await for (final response in stream) {
-      root.chain.last.data.content += response;
-      notify();
+    try {
+      await for (final response in stream) {
+        root.chain.last.data.content += response;
+        notify();
+      }
     }
-
-    busy = false;
-    saveAndNotify();
+    finally {
+      busy = false;
+      saveAndNotify();
+    }
   }
 
-  void regenerate(GeneralTreeNode<ChatMessage> node) async {
+  Future<void> regenerate(GeneralTreeNode<ChatMessage> node) async {
     busy = true;
     notify();
 
@@ -64,13 +67,16 @@ extension InferenceExtension on ArtificialIntelligence {
 
     assert(node.currentChild == root.chain.last);
 
-    await for (final response in stream) {
-      root.chain.last.data.content += response;
-      notify();
+    try {
+      await for (final response in stream) {
+        root.chain.last.data.content += response;
+        notify();
+      }
     }
-
-    busy = false;
-    saveAndNotify();
+    finally {
+      busy = false;
+      saveAndNotify();
+    }
   }
 
   void stop() async {

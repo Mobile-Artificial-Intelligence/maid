@@ -15,9 +15,19 @@ class PromptFieldState extends State<PromptField> {
   /// This is the onPressed function that will be used to submit the message.
   /// It will call the onPrompt function with the text from the controller.
   /// It will also clear the controller after the message is submitted.
-  void onSubmit() {
-    ArtificialIntelligence.of(context).prompt(controller.text);
-    controller.clear();
+  void onSubmit() async {
+    try {
+      final prompt = controller.text;
+      controller.clear();
+      await ArtificialIntelligence.of(context).prompt(prompt);
+    }
+    catch (exception) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => ErrorDialog(exception: exception),
+      );
+    }
   }
 
   @override

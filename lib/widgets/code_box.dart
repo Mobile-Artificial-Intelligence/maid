@@ -1,9 +1,10 @@
 part of 'package:maid/main.dart';
 
 class CodeBox extends StatelessWidget {
+  final String label;
   final String code;
 
-  const CodeBox({super.key, required this.code});
+  const CodeBox({super.key, required this.code, this.label = 'Code'});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -39,7 +40,7 @@ class CodeBox extends StatelessWidget {
   );
 
   Widget buildCodeTitle(BuildContext context) => Text(
-    'Code',
+    label,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 12,
@@ -49,7 +50,7 @@ class CodeBox extends StatelessWidget {
   Widget buildCopyCodeButtom(BuildContext context) => TextButton.icon(
     icon: Icon(Icons.content_paste_rounded, color: Theme.of(context).colorScheme.onSurface, size: 15),
     label: Text(
-      'Copy Code',
+      'Copy $label',
       style: TextStyle(
         color: Theme.of(context).colorScheme.onSurface,
         fontSize: 12,
@@ -58,7 +59,7 @@ class CodeBox extends StatelessWidget {
     onPressed: () {
       Clipboard.setData(ClipboardData(text: code));
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Code copied to clipboard!")),
+        SnackBar(content: Text("$label copied to clipboard!")),
       );
     },
     style: TextButton.styleFrom(

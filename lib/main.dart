@@ -40,6 +40,8 @@ part 'widgets/buttons/menu_button.dart';
 part 'widgets/chat/chat_tile.dart';
 part 'widgets/chat/chat_view.dart';
 
+part 'widgets/dialogs/error_dialog.dart';
+
 part 'widgets/dropdowns/llm_ecosystem_dropdown.dart';
 part 'widgets/dropdowns/override_type_dropdown.dart';
 part 'widgets/dropdowns/remote_model_dropdown.dart';

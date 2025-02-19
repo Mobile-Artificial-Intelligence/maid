@@ -28,7 +28,7 @@ extension OllamaExtension on ArtificialIntelligence {
     catch (e) {
       // This is expected when the user presses stop
       if (!e.toString().contains('Connection closed')) {
-        log(e.toString());
+        rethrow;
       }
     }
   }
