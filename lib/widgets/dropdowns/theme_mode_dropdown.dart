@@ -49,11 +49,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
 
   Widget buildPopupButton() => PopupMenuButton<ThemeMode>(
     tooltip: 'Select App Theme Mode',
-    icon: Icon(
-      open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-      color: Theme.of(context).colorScheme.onSurface,
-      size: 24,
-    ),
+    icon: buildPopupButtonIcon(),
     offset: const Offset(0, 40),
     itemBuilder: itemBuilder,
     onOpened: () => setState(() => open = true),
@@ -62,6 +58,12 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
       setState(() => open = false);
       AppSettings.of(context).themeMode = themeMode;
     }
+  );
+
+  Widget buildPopupButtonIcon() => Icon(
+    open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+    color: Theme.of(context).colorScheme.onSurface,
+    size: 24,
   );
 
   List<PopupMenuEntry<ThemeMode>> itemBuilder(BuildContext context) => [

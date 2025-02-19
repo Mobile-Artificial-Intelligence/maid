@@ -40,11 +40,7 @@ class _OverrideTypeDropdownState extends State<OverrideTypeDropdown> {
 
   Widget buildPopupButton() => PopupMenuButton<OverrideType>(
     tooltip: 'Select Override Type',
-    icon: Icon(
-      open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-      color: Theme.of(context).colorScheme.onSurface,
-      size: 24,
-    ),
+    icon: buildPopupButtonIcon(),
     offset: const Offset(0, 40),
     itemBuilder: itemBuilder,
     onOpened: () => setState(() => open = true),
@@ -56,6 +52,12 @@ class _OverrideTypeDropdownState extends State<OverrideTypeDropdown> {
         overrideType = themeMode;
       });
     }
+  );
+
+  Widget buildPopupButtonIcon() => Icon(
+    open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+    color: Theme.of(context).colorScheme.onSurface,
+    size: 24,
   );
 
   List<PopupMenuEntry<OverrideType>> itemBuilder(BuildContext context) => [

@@ -50,11 +50,7 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
 
   Widget buildPopupButton() => PopupMenuButton<LlmEcosystem>(
     tooltip: 'Select Llm Ecosystem',
-    icon: Icon(
-      open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-      color: Theme.of(context).colorScheme.onSurface,
-      size: 24,
-    ),
+    icon: buildPopupButtonIcon(),
     offset: const Offset(0, 40),
     itemBuilder: itemBuilder,
     onOpened: () => setState(() => open = true),
@@ -63,6 +59,12 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
       ArtificialIntelligence.of(context).ecosystem = ecosystem;
       setState(() => open = false);
     }
+  );
+
+  Widget buildPopupButtonIcon() => Icon(
+    open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+    color: Theme.of(context).colorScheme.onSurface,
+    size: 24,
   );
 
   List<PopupMenuEntry<LlmEcosystem>> itemBuilder(BuildContext context) => [
