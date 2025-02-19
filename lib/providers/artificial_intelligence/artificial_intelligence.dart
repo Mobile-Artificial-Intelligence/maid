@@ -116,8 +116,8 @@ class ArtificialIntelligence extends ChangeNotifier {
     return (baseUrl[eco]?.hash ?? '') + (apiKey[eco]?.hash ?? '');
   }
 
-  Future<List<String>> getModelOptions() async {
-    switch (ecosystem) {
+  Future<List<String>> getModelOptions(LlmEcosystem eco) async {
+    switch (eco) {
       case LlmEcosystem.llamaCPP:
         return ['null'];
       case LlmEcosystem.ollama:

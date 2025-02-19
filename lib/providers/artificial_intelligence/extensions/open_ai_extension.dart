@@ -52,14 +52,8 @@ extension OpenAiExtension on ArtificialIntelligence {
       baseUrl: baseUrl[LlmEcosystem.openAI],
     );
 
-    try {
-      final modelsResponse = await _openAiClient.listModels();
+    final modelsResponse = await _openAiClient.listModels();
 
-      return modelsResponse.data.map((model) => model.id).toList();
-    }
-    catch (e) {
-      log(e.toString()); // TODO: Show error to user
-      return [];
-    }
+    return modelsResponse.data.map((model) => model.id).toList();
   }
 }

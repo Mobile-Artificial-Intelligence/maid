@@ -100,35 +100,30 @@ extension OllamaExtension on ArtificialIntelligence {
   }
 
   Future<List<String>> getOllamaModelOptions() async {
-    try {
-      if (searchLocalNetworkForOllama == true) {
-        final found = await searchForOllama();
-        if (!found) return [];
-      }
-
-      final uri = Uri.parse("${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api/tags");
-      final headers = {
-        "Accept": "application/json",
-        'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
-      };
-
-      var request = http.Request("GET", uri)..headers.addAll(headers);
-
-      var response = await request.send();
-      var responseString = await response.stream.bytesToString();
-      var data = json.decode(responseString);
-
-      List<String> newOptions = [];
-      if (data['models'] != null) {
-        for (var option in data['models']) {
-          newOptions.add(option['name']);
-        }
-      }
-
-      return newOptions;
-    } catch (e) {
-      log(e.toString());
-      return [];
+    if (searchLocalNetworkForOllama == true) {
+      final found = await searchForOllama();
+      if (!found) return [];
     }
+
+    final uri = Uri.parse("${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api/tags");
+    final headers = {
+      "Accept": "application/json",
+      'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
+    };
+
+    var request = http.Request("GET", uri)..headers.addAll(headers);
+
+    var response = await request.send();
+    var responseString = await response.stream.bytesToString();
+    var data = json.decode(responseString);
+
+    List<String> newOptions = [];
+    if (data['models'] != null) {
+      for (var option in data['models']) {
+        newOptions.add(option['name']);
+      }
+    }
+
+    return newOptions;
   }
 }

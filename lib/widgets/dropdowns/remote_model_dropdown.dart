@@ -24,6 +24,22 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
     setState(() => open = false);
   }
 
+  Future<List<String>> getModelOptions() async {
+    try {
+      return await ArtificialIntelligence.of(context).getModelOptions(widget.ecosystem);
+    } 
+    catch (exception) {
+      if (!mounted) return [];
+
+      showDialog(
+        context: context,
+        builder: (context) => ErrorDialog(exception: exception),
+      );
+
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Row(
     mainAxisSize: MainAxisSize.min,
@@ -61,7 +77,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   );
 
   Widget buildFutureBuilder(BuildContext context, String? hash, Widget? child) => FutureBuilder<List<String>?>(
-    future: ArtificialIntelligence.of(context).getModelOptions(),
+    future: getModelOptions(),
     builder: buildButtonOrSpinner
   );
 
