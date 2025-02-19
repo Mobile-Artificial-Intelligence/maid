@@ -9,7 +9,6 @@ class ArtificialIntelligence extends ChangeNotifier {
     Provider.of<ArtificialIntelligence>(context, listen: listen);
 
   void notify() {
-    print('Notifying');
     notifyListeners();
   }
 
