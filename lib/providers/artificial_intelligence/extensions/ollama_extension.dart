@@ -49,7 +49,7 @@ extension OllamaExtension on ArtificialIntelligence {
         return url;
       }
     } catch (e) {
-      if (!e.toString().contains(r'Connection (failed|refused)')) {
+      if (!e.toString().contains(RegExp(r'Connection (failed|refused)'))) {
         log(e.toString());
       }
     }
@@ -67,7 +67,7 @@ extension OllamaExtension on ArtificialIntelligence {
 
     // Check localhost
     if (await checkForOllama(Uri.parse('http://localhost:11434')) != null) {
-      setBaseUrl(LlmEcosystem.ollama, 'http://localhost:11434');
+      baseUrl[LlmEcosystem.ollama] = 'http://localhost:11434';
       saveAndNotify();
       return true;
     }
@@ -91,7 +91,7 @@ extension OllamaExtension on ArtificialIntelligence {
     final validUrls = results.where((result) => result != null);
 
     if (validUrls.isNotEmpty) {
-      setBaseUrl(LlmEcosystem.ollama, validUrls.first.toString());
+      baseUrl[LlmEcosystem.ollama] = validUrls.first.toString();
       saveAndNotify();
       return true;
     }
@@ -100,30 +100,41 @@ extension OllamaExtension on ArtificialIntelligence {
   }
 
   Future<List<String>> getOllamaModelOptions() async {
-    if (searchLocalNetworkForOllama == true) {
-      final found = await searchForOllama();
-      if (!found) return [];
-    }
-
-    final uri = Uri.parse("${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api/tags");
-    final headers = {
-      "Accept": "application/json",
-      'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
-    };
-
-    var request = http.Request("GET", uri)..headers.addAll(headers);
-
-    var response = await request.send();
-    var responseString = await response.stream.bytesToString();
-    var data = json.decode(responseString);
-
-    List<String> newOptions = [];
-    if (data['models'] != null) {
-      for (var option in data['models']) {
-        newOptions.add(option['name']);
+    try {
+      if (searchLocalNetworkForOllama == true) {
+        final found = await searchForOllama();
+        if (!found) return [];
       }
-    }
+  
+      final uri = Uri.parse("${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api/tags");
+  
+      final request = http.Request("GET", uri);
+  
+      final headers = {
+        "Accept": "application/json",
+        'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
+      };
+  
+      request.headers.addAll(headers);
 
-    return newOptions;
+      final response = await request.send();
+      final responseString = await response.stream.bytesToString();
+      final data = json.decode(responseString);
+
+      List<String> newOptions = [];
+      if (data['models'] != null) {
+        for (final option in data['models']) {
+          newOptions.add(option['name']);
+        }
+      }
+
+      return newOptions;
+    }
+    catch (e) {
+      if (!e.toString().contains(RegExp(r'Connection (failed|refused)'))) {
+        rethrow;
+      }
+      return [];
+    }
   }
 }

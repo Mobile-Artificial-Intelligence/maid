@@ -42,10 +42,8 @@ extension OpenAiExtension on ArtificialIntelligence {
     }
 
     if (baseUrl[LlmEcosystem.openAI] == null || baseUrl[LlmEcosystem.openAI]!.isEmpty) {
-      setBaseUrl(LlmEcosystem.openAI, 'https://api.openai.com/v1');
+      baseUrl[LlmEcosystem.openAI] = 'https://api.openai.com/v1';
     }
-
-    log('Fetching Open AI models');
 
     _openAiClient = open_ai.OpenAIClient(
       apiKey: apiKey[LlmEcosystem.openAI]!,
