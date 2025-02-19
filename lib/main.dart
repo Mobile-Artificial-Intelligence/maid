@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:crypto/crypto.dart';
+import 'package:image/image.dart' as img;
 import 'package:flutter/services.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -33,6 +34,7 @@ part 'types/llm_ecosystem.dart';
 part 'types/override_type.dart';
 
 part 'utilities/chat_messages_extension.dart';
+part 'utilities/silly_tavern_decoder.dart';
 part 'utilities/string_extension.dart';
 
 part 'widgets/buttons/load_model_button.dart';

@@ -93,10 +93,19 @@ class AppSettings extends ChangeNotifier {
         result.files.isEmpty ||
         result.files.single.path == null) {
       _assistantImage = null;
+      save();
+      notifyListeners();
+      return;
     }
-    else {
-      _assistantImage = File(result.files.single.path!);
-    }
+    
+    _assistantImage = File(result.files.single.path!);
+    notifyListeners();
+
+    final bytes = _assistantImage!.readAsBytesSync();
+
+    final image = img.decodeImage(bytes);
+
+    _systemPrompt = sillyTavernDecoder(image?.textData);
 
     save();
     notifyListeners();
