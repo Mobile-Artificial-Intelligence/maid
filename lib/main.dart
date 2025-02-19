@@ -22,7 +22,7 @@ import 'package:tree_structs/tree_structs.dart';
 import 'package:ollama_dart/ollama_dart.dart' as ollama;
 import 'package:openai_dart/openai_dart.dart' as open_ai;
 
-part 'providers/app_settings.dart';
+part 'providers/app_settings/app_settings.dart';
 part 'providers/artificial_intelligence/artificial_intelligence.dart';
 part 'providers/artificial_intelligence/extensions/chat_extension.dart';
 part 'providers/artificial_intelligence/extensions/inference_extension.dart';
@@ -34,7 +34,7 @@ part 'types/llm_ecosystem.dart';
 part 'types/override_type.dart';
 
 part 'utilities/chat_messages_extension.dart';
-part 'utilities/silly_tavern_decoder.dart';
+part 'providers/app_settings/extensions/silly_tavern_extension.dart';
 part 'utilities/string_extension.dart';
 
 part 'widgets/buttons/load_model_button.dart';

@@ -8,6 +8,15 @@ class AppSettings extends ChangeNotifier {
   static AppSettings of(BuildContext context, {bool listen = false}) => 
     Provider.of<AppSettings>(context, listen: listen);
 
+  void notify() {
+    notifyListeners();
+  }
+
+  void saveAndNotify() {
+    save();
+    notifyListeners();
+  }
+
   File? _userImage;
 
   File? get userImage => _userImage;
@@ -107,10 +116,7 @@ class AppSettings extends ChangeNotifier {
 
     final image = img.decodeImage(bytes);
 
-    _systemPrompt = sillyTavernDecoder(image?.textData);
-
-    save();
-    notifyListeners();
+    sillyTavernDecoder(image?.textData);
   }
 
   String? _assistantName;
