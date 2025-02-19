@@ -1,8 +1,14 @@
 part of 'package:maid/main.dart';
 
 extension ChatExtension on ArtificialIntelligence {
-  GeneralTreeNode<ChatMessage> get root => _chats.isNotEmpty ? 
-    _chats.first : GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
+  GeneralTreeNode<ChatMessage> get root {
+    if (_chats.isEmpty) {
+      final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
+      _chats.add(chat);
+    }
+
+    return _chats.first;
+  }
 
   set root(GeneralTreeNode<ChatMessage> newRoot){
     _chats.remove(newRoot);

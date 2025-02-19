@@ -286,6 +286,7 @@ class MessageWidgetState extends State<MessageWidget> {
     builder: buildDeleteButton,
   );
 
+  /// The delete button will allow the user to delete the message.
   Widget buildDeleteButton(BuildContext context, bool busy, Widget? child) => IconButton(
     icon: const Icon(Icons.delete),
     onPressed: !busy ? onDelete : null,
