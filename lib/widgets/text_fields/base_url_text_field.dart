@@ -22,5 +22,12 @@ class BaseUrlTextField extends StatelessWidget {
       text: baseUrl ?? '',
     ),
     onChanged: (value) => ArtificialIntelligence.of(context).baseUrl[ecosystem] = value,
+    onEditingComplete: () => onDone(context),
+    onTapOutside: (event) => onDone(context),
   );
+
+  void onDone(BuildContext context) {
+    ArtificialIntelligence.of(context).notify();
+    FocusScope.of(context).unfocus();
+  }
 }

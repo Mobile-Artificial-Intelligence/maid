@@ -99,11 +99,6 @@ extension OllamaExtension on ArtificialIntelligence {
     return false;
   }
 
-  void updateOllamaModelOptions() async {
-    modelOptions[LlmEcosystem.ollama] = await getOllamaModelOptions();
-    notify();
-  }
-
   Future<List<String>> getOllamaModelOptions() async {
     try {
       if (searchLocalNetworkForOllama == true) {

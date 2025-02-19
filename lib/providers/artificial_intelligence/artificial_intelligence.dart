@@ -9,6 +9,7 @@ class ArtificialIntelligence extends ChangeNotifier {
     Provider.of<ArtificialIntelligence>(context, listen: listen);
 
   void notify() {
+    print('Notifying');
     notifyListeners();
   }
 
@@ -108,18 +109,22 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   set searchLocalNetworkForOllama(bool? value) {
     _searchLocalNetworkForOllama = value;
-    updateModelOptions();
     saveAndNotify();
   }
 
-  final Map<LlmEcosystem, List<String>> modelOptions = {};
+  String getEcosystemHash(LlmEcosystem eco) {
+    return (baseUrl[eco]?.hash ?? '') + (apiKey[eco]?.hash ?? '');
+  }
 
-  void updateModelOptions() async {
-    modelOptions.clear();
-    notifyListeners();
-
-    updateOllamaModelOptions();
-    updateOpenAiModelOptions();
+  Future<List<String>> getModelOptions() async {
+    switch (ecosystem) {
+      case LlmEcosystem.llamaCPP:
+        return ['null'];
+      case LlmEcosystem.ollama:
+        return getOllamaModelOptions();
+      case LlmEcosystem.openAI:
+        return getOpenAiModelOptions();
+    }
   }
 
   Future<void> load() async {
@@ -188,8 +193,6 @@ class ArtificialIntelligence extends ChangeNotifier {
       final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
       _chats.add(chat);
     }
-
-    updateModelOptions();
 
     notifyListeners();
   }

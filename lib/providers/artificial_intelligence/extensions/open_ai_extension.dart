@@ -35,11 +35,6 @@ extension OpenAiExtension on ArtificialIntelligence {
     }
   }
 
-  void updateOpenAiModelOptions() async {
-    modelOptions[LlmEcosystem.openAI] = await getOpenAiModelOptions();
-    notify();
-  }
-
   Future<List<String>> getOpenAiModelOptions() async {
     if (apiKey[LlmEcosystem.openAI] == null) {
       log('Open AI API Key is not set');

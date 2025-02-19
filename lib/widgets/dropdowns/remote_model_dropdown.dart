@@ -31,7 +31,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
       if (widget.refreshButton) buildRefreshButton(),
       const SizedBox(width: 8),
       buildModelText(),
-      buildModelsSelector()
+      buildHashSelector()
     ]
   );
 
@@ -41,7 +41,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
       color: Theme.of(context).colorScheme.onSurface,
       size: 24
     ),
-    onPressed: () => ArtificialIntelligence.of(context).updateModelOptions()
+    onPressed: () => setState(() {})
   );
 
   Widget buildModelText() => Selector<ArtificialIntelligence, String?>(
@@ -55,21 +55,27 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
     ),
   );
 
-  Widget buildModelsSelector() => Selector<ArtificialIntelligence, List<String>?>(
-    selector: (context, ai) => ai.modelOptions[widget.ecosystem],
+  Widget buildHashSelector() => Selector<ArtificialIntelligence, String?>(
+    selector: (context, ai) => ai.getEcosystemHash(widget.ecosystem),
+    builder: buildFutureBuilder
+  );
+
+  Widget buildFutureBuilder(BuildContext context, String? hash, Widget? child) => FutureBuilder<List<String>?>(
+    future: ArtificialIntelligence.of(context).getModelOptions(),
     builder: buildButtonOrSpinner
   );
 
-  Widget buildButtonOrSpinner(BuildContext context, List<String>? models, Widget? child) {
-    if(models == null) {
-      return SizedBox.shrink();
-    }
-
-    if (models.isEmpty) {
+  Widget buildButtonOrSpinner(BuildContext context, AsyncSnapshot<List<String>?> snapshot) {
+    if (snapshot.connectionState == ConnectionState.done) {
+      if (snapshot.hasData) {
+        return buildPopupButton(snapshot.data!);
+      } 
+      else {
+        return const SizedBox.shrink();
+      }
+    } else {
       return buildSpinner();
     }
-
-    return buildPopupButton(models);
   }
 
   Widget buildSpinner() => const Padding(

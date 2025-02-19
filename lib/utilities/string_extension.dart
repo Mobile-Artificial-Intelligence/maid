@@ -20,4 +20,13 @@ extension StringExtension on String {
     if (isEmpty) return this;
     return this[0].toUpperCase() + substring(1);
   }
+  String get hash {
+    // Convert to bytes
+    final bytes = utf8.encode(this);
+
+    // Compute hash
+    final digest = sha256.convert(bytes);
+
+    return digest.toString();
+  }
 } 

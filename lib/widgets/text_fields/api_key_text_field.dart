@@ -22,5 +22,12 @@ class ApiKeyTextField extends StatelessWidget {
       text: apiKey ?? '',
     ),
     onChanged: (value) => ArtificialIntelligence.of(context).apiKey[ecosystem] = value,
+    onEditingComplete: () => onDone(context),
+    onTapOutside: (event) => onDone(context),
   );
+
+  void onDone(BuildContext context) {
+    ArtificialIntelligence.of(context).notify();
+    FocusScope.of(context).unfocus();
+  }
 }
