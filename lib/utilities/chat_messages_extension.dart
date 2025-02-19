@@ -25,24 +25,24 @@ extension ChatMessagesExtension on List<ChatMessage> {
     return messages;
   }
 
-  List<openai.ChatCompletionMessage> toOpenAiMessages() {
-    final List<openai.ChatCompletionMessage> messages = [];
+  List<openAI.ChatCompletionMessage> toOpenAiMessages() {
+    final List<openAI.ChatCompletionMessage> messages = [];
 
     for (final ChatMessage chatMessage in this) {
       if (chatMessage is UserChatMessage) {
-        final content = openai.ChatCompletionUserMessageContent.string(chatMessage.content);
+        final content = openAI.ChatCompletionUserMessageContent.string(chatMessage.content);
 
-        final message = openai.ChatCompletionMessage.user(content: content);
+        final message = openAI.ChatCompletionMessage.user(content: content);
 
         messages.add(message);
       }
       else if (chatMessage is AssistantChatMessage) {
-        final message = openai.ChatCompletionMessage.assistant(content: chatMessage.content);
+        final message = openAI.ChatCompletionMessage.assistant(content: chatMessage.content);
 
         messages.add(message);
       }
       else {
-        final message = openai.ChatCompletionMessage.system(content: chatMessage.content);
+        final message = openAI.ChatCompletionMessage.system(content: chatMessage.content);
 
         messages.add(message);
       }

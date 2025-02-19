@@ -4,7 +4,8 @@ class RemoteModelDropdown extends StatefulWidget {
   final LlmEcosystem ecosystem;
   final bool refreshButton;
 
-  const RemoteModelDropdown({super.key, required this.ecosystem, this.refreshButton = false});
+  const RemoteModelDropdown({super.key, required this.ecosystem, this.refreshButton = false}) : 
+    assert(ecosystem != LlmEcosystem.llamaCPP);
 
   @override
   State<RemoteModelDropdown> createState() => _RemoteModelDropdownState();

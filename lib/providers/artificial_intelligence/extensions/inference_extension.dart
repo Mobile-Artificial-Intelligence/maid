@@ -15,6 +15,9 @@ extension InferenceExtension on ArtificialIntelligence {
       case LlmEcosystem.ollama:
         stream = ollamaPrompt(root.chainData.copy());
         break;
+      case LlmEcosystem.openAI:
+        stream = openAiPrompt(root.chainData.copy());
+        break;
     }
 
     root.chain.last.addChild(AssistantChatMessage(''));
@@ -54,6 +57,9 @@ extension InferenceExtension on ArtificialIntelligence {
       case LlmEcosystem.ollama:
         stream = ollamaPrompt(chainData);
         break;
+      case LlmEcosystem.openAI:
+        stream = openAiPrompt(chainData);
+        break;
     }
 
     assert(node.currentChild == root.chain.last);
@@ -74,6 +80,9 @@ extension InferenceExtension on ArtificialIntelligence {
         break;
       case LlmEcosystem.ollama:
         _ollamaClient.endSession();
+        break;
+      case LlmEcosystem.openAI:
+        _openAiClient.endSession();
         break;
     }
 

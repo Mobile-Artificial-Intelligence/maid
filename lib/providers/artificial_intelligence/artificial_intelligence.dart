@@ -89,6 +89,8 @@ class ArtificialIntelligence extends ChangeNotifier {
     return false;
   }
 
+  late openAI.OpenAIClient _openAiClient;
+
   late ollama.OllamaClient _ollamaClient;
 
   bool? _searchLocalNetworkForOllama;
