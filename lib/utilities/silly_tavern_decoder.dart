@@ -3,7 +3,11 @@ part of 'package:maid/main.dart';
 String sillyTavernDecoder(Map<String, String>? imageData) {
   if (imageData == null) return '';
 
-  Map<String, dynamic> character = jsonDecode(imageData['chara'] ?? imageData['Chara'] ?? '{}');
+  Uint8List utf8Character = base64.decode(imageData["Chara"] ?? imageData["chara"] ?? '');
+  
+  String stringCharacter = utf8.decode(utf8Character);
+
+  Map<String, dynamic> character = jsonDecode(stringCharacter);
 
   if (character.isEmpty) return '';
 

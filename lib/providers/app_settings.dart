@@ -89,9 +89,11 @@ class AppSettings extends ChangeNotifier {
       allowCompression: false
     );
 
-    if (result == null ||
-        result.files.isEmpty ||
-        result.files.single.path == null) {
+    if (
+      result == null ||
+      result.files.isEmpty ||
+      result.files.single.path == null
+    ) {
       _assistantImage = null;
       save();
       notifyListeners();

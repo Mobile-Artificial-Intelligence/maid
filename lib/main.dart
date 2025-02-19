@@ -70,12 +70,44 @@ part 'widgets/text_fields/prompt_field.dart';
 
 part 'widgets/code_box.dart';
 
-void main() => runApp(Maid());
+void main() {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    runApp(ErrorApp(details: details));
+  };
+
+  runApp(Maid());
+}
+
+class ErrorApp extends StatelessWidget {
+  final FlutterErrorDetails details;
+  const ErrorApp({super.key, required this.details});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: Maid.getTheme(ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark)),
+      home: Scaffold(
+        appBar: AppBar(title: Text("An Error Occurred")),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("An error occurred:"),
+              Text(details.exceptionAsString()),
+              Text(details.stack.toString()),
+            ]
+          )
+        )
+      ),
+    );
+  }
+}
 
 class Maid extends StatelessWidget {
   const Maid({super.key});
 
-  ThemeData getTheme(ColorScheme colorScheme) {
+  static ThemeData getTheme(ColorScheme colorScheme) {
     final appBarTheme = AppBarTheme(
       elevation: 0.0,
       backgroundColor: colorScheme.surface,
