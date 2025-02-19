@@ -83,7 +83,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
 
   Widget buildButtonOrSpinner(BuildContext context, AsyncSnapshot<List<String>?> snapshot) {
     if (snapshot.connectionState == ConnectionState.done) {
-      if (snapshot.hasData) {
+      if (snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty) {
         return buildPopupButton(snapshot.data!);
       } 
       else {
