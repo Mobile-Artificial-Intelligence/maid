@@ -50,7 +50,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   void tryRegenerate(GeneralTreeNode<ChatMessage> node) async {
     try {
-      await ArtificialIntelligence.of(context).regenerate(widget.node);
+      await ArtificialIntelligence.of(context).regenerate(node);
     }
     catch (exception) {
       if (!mounted) return;
