@@ -12,7 +12,7 @@ class MessageWidget extends StatefulWidget {
   int get siblingCount => node.children.length;
   bool get onNextEnabled => (siblingsIndex + 1) < siblingCount;
   bool get onPreviousEnabled => siblingsIndex > 0;
-  bool get buildChild => node.currentChild!.currentChild != null && chainPosition > 0;
+  bool get buildChild => node.currentChild?.currentChild != null && chainPosition > 0;
 
   const MessageWidget({
     required super.key, 
@@ -79,7 +79,7 @@ class MessageWidgetState extends State<MessageWidget> {
   Widget build(BuildContext context) => Column(
     children: [
       // Build the current node
-      buildCurrentMessage(),
+      if (widget.node.currentChild != null) buildCurrentMessage(),
 
       /// Builds the child node/s if it exists.
       if (widget.buildChild) MessageWidget(
