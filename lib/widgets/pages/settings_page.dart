@@ -23,11 +23,11 @@ class SettingsPage extends StatelessWidget {
       Divider(endIndent: 0, indent: 0, height: 32),
       OverrideView(),
       Divider(endIndent: 0, indent: 0, height: 32),
-      buildUserSettings(context),
+      UserSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
-      buildAssistantSettings(context),
+      AssistantSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
-      buildSystemSettings(context),
+      SystemSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
       buildResetRow(context)
     ],
@@ -69,130 +69,4 @@ class SettingsPage extends StatelessWidget {
       )
     ],
   );
-
-  Widget buildSystemSettings(BuildContext context) => Column(
-    children: [
-      Text(
-        'System Settings',
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      const SizedBox(height: 8),
-      TextField(
-        decoration: const InputDecoration(
-          labelText: 'System Prompt',
-        ),
-        controller: TextEditingController(
-          text: AppSettings.of(context).systemPrompt
-        ),
-        onChanged: AppSettings.of(context).setSystemPrompt,
-        keyboardType: TextInputType.multiline,
-        maxLines: null
-      ),
-      const SizedBox(height: 8),
-      ThemeModeDropdown(),
-      const SizedBox(height: 8),
-      Text(
-        'Theme Seed Color',
-        style: Theme.of(context).textTheme.labelLarge,
-      ),
-      const SizedBox(height: 4),
-      buildColorPicker(),
-    ],
-  );
-
-  Widget buildColorPicker() => Selector<AppSettings, Color>(
-    selector: (context, settings) => settings.seedColor,
-    builder: (context, color, child) => ColorPicker(
-      pickerColor: color, 
-      onColorChanged: (newColor) => AppSettings.of(context).seedColor = newColor,
-    ),
-  );
-
-  Widget buildUserSettings(BuildContext context) => Column(
-    children: [
-      Text(
-        'User Settings',
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      const SizedBox(height: 8),
-      Selector<AppSettings, File?>(
-        selector: (context, settings) => settings.userImage,
-        builder: userImageBuilder,
-      ),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: AppSettings.of(context).loadUserImage, 
-        child: const Text('Load User Image')
-      ),
-      const SizedBox(height: 8),
-      TextField(
-        decoration: const InputDecoration(
-          labelText: 'User Name',
-        ),
-        controller: TextEditingController(
-          text: AppSettings.of(context).userName
-        ),
-        onChanged: AppSettings.of(context).setUserName,
-      ),
-    ],
-  );
-
-  Widget buildAssistantSettings(BuildContext context) => Column(
-    children: [
-      Text(
-        'Assistant Settings',
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      const SizedBox(height: 8),
-      Selector<AppSettings, File?>(
-        selector: (context, settings) => settings.assistantImage,
-        builder: assistantImageBuilder,
-      ),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: AppSettings.of(context).loadAssistantImage, 
-        child: const Text('Load Assistant Image'),
-      ),
-      const SizedBox(height: 8),
-      TextField(
-        decoration: const InputDecoration(
-          labelText: 'Assistant Name',
-        ),
-        controller: TextEditingController(
-          text: AppSettings.of(context).assistantName
-        ),
-        onChanged: AppSettings.of(context).setAssistantName,
-      ),
-    ],
-  );
-
-  Widget userImageBuilder(BuildContext context, File? image, Widget? child) {
-    if (image == null) {
-      return Icon(
-        Icons.person, 
-        size: 50,
-        color: Theme.of(context).colorScheme.onSurface
-      );
-    }
-
-    return CircleAvatar(
-      radius: 50,
-      backgroundImage: FileImage(image),
-    );
-  }
-
-  Widget assistantImageBuilder(BuildContext context, File? image, Widget? child) {
-    if (image == null) {
-      return Icon(
-        Icons.assistant, 
-        size: 50,
-        color: Theme.of(context).colorScheme.onSurface
-      );
-    }
-
-    return CircleAvatar(
-      radius: 50,
-      backgroundImage: FileImage(image),
-    );
-  }
 }

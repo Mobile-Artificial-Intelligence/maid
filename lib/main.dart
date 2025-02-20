@@ -60,9 +60,12 @@ part 'widgets/pages/about_page.dart';
 part 'widgets/pages/chat_page.dart';
 part 'widgets/pages/settings_page.dart';
 
+part 'widgets/settings/assistant_settings.dart';
 part 'widgets/settings/llama_cpp_settings.dart';
 part 'widgets/settings/ollama_settings.dart';
 part 'widgets/settings/open_ai_settings.dart';
+part 'widgets/settings/system_settings.dart';
+part 'widgets/settings/user_settings.dart';
 
 part 'widgets/text_fields/api_key_text_field.dart';
 part 'widgets/text_fields/base_url_text_field.dart';
