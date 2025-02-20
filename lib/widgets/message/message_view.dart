@@ -130,7 +130,10 @@ class MessageViewState extends State<MessageView> {
 
   Widget buildMessage(BuildContext context, ArtificialIntelligence ai, AppSettings settings, Widget? child) {
     final currentRoot = ai.root.chain[rootPosition];
-    currentRoot.data.content = settings.systemPrompt ?? 'New Chat';
+    currentRoot.data.content = settings.systemPrompt?.formatPlaceholders(
+      settings.userName ?? 'User', 
+      settings.assistantName ?? 'Assistant'
+    ) ?? 'New Chat';
 
     if (currentRoot.currentChild == null) return const SizedBox.shrink();
 
