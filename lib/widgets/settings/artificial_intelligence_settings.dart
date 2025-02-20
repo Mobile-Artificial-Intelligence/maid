@@ -1,28 +1,40 @@
 part of 'package:maid/main.dart';
 
-class OllamaSettings extends StatelessWidget {
-  const OllamaSettings({super.key});
+class ArtificialIntelligenceSettings extends StatelessWidget {
+  const ArtificialIntelligenceSettings({super.key});
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) => Selector<ArtificialIntelligence, ArtificialIntelligenceContext>(
+    selector: (context, ai) => ai.context,
+    builder: buildColumn,
+  );
+
+  Widget buildColumn(BuildContext context, ArtificialIntelligenceContext aiContext, Widget? child) => Column(
     children: [
       Divider(endIndent: 0, indent: 0, height: 32),
       Text(
-        'Ollama Settings',
+        '${ArtificialIntelligence.of(context).ecosystem.name.pascalToSentence()} Settings',
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
-      buildRemoteModel(context),
-      const SizedBox(height: 8),
-      buildLocalSearchSwitch(context),
-      const SizedBox(height: 8),
-      BaseUrlTextField(ecosystem: LlmEcosystem.ollama),
-      const SizedBox(height: 8),
-      ApiKeyTextField(ecosystem: LlmEcosystem.ollama),
+      aiContext is RemoteArtificialIntelligenceContext
+        ? buildRemoteSettings(context)
+        : buildModelLoaderRow(context),
     ],
   );
 
-  Widget buildRemoteModel(BuildContext context) => Row(
+  Widget buildRemoteSettings(BuildContext context) => Column(
+    children: [
+      buildRemoteModel(),
+      const SizedBox(height: 8),
+      if (ArtificialIntelligence.of(context).ecosystem == ArtificialIntelligenceEcosystem.ollama) buildLocalSearchSwitch(context),
+      BaseUrlTextField(),
+      const SizedBox(height: 8),
+      ApiKeyTextField(),
+    ]
+  );
+
+  Widget buildRemoteModel() => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(
@@ -31,13 +43,55 @@ class OllamaSettings extends StatelessWidget {
         maxLines: 1,
       ),
       RemoteModelDropdown(
-        ecosystem: LlmEcosystem.ollama,
         refreshButton: true,
       ),
     ],
   );
 
-  Widget buildLocalSearchSwitch(BuildContext context) => Row(
+  Widget buildModelLoaderRow(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.max,
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      buildModelLoaderTitle(),
+      buildModelLoader(context),
+    ],
+  );
+
+  Widget buildModelLoader(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      buildModelText(),
+      IconButton(onPressed: ArtificialIntelligence.of(context).loadModel, icon: const Icon(Icons.folder)),
+    ],
+  );
+
+  Widget buildModelLoaderTitle() => Expanded(
+    child: Text(
+      'Llama CPP Model',
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+    )
+  );
+
+  Widget buildModelText() => Selector<ArtificialIntelligence, String?>(
+    selector: (context, ai) => ai.model,
+    builder: modelTextBuilder,
+  );
+
+  Widget modelTextBuilder(BuildContext context, String? model, Widget? child) => Text(
+    model?.split('/').last ?? 'No model loaded',
+    overflow: TextOverflow.ellipsis,
+    maxLines: 1,
+  );
+
+  Widget buildLocalSearchSwitch(BuildContext context) => Column(
+    children: [
+      buildLocalSearchSwitchRow(context),
+      const SizedBox(height: 8),
+    ],
+  );
+
+  Widget buildLocalSearchSwitchRow(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(

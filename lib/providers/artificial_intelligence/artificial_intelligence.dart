@@ -26,42 +26,68 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  LlmEcosystem _ecosystem = LlmEcosystem.llamaCPP;
+  ArtificialIntelligenceEcosystem _ecosystem = ArtificialIntelligenceEcosystem.llamaCPP;
 
-  LlmEcosystem get ecosystem => _ecosystem;
+  ArtificialIntelligenceEcosystem get ecosystem => _ecosystem;
 
-  set ecosystem(LlmEcosystem eco) {
+  set ecosystem(ArtificialIntelligenceEcosystem eco) {
+    final oldEco = _ecosystem;
     _ecosystem = eco;
+    switchContext(oldEco);
     saveAndNotify();
   }
 
-  final Map<LlmEcosystem, String?> model = {};
+  ArtificialIntelligenceContext _context = ArtificialIntelligenceContext();
 
-  void setModel(LlmEcosystem eco, String modelPath) {
-    model[eco] = modelPath;
+  ArtificialIntelligenceContext get context => _context;
+
+  RemoteArtificialIntelligenceContext? get remoteContext => _context is RemoteArtificialIntelligenceContext ? _context as RemoteArtificialIntelligenceContext : null;
+
+  set context(ArtificialIntelligenceContext newContext) {
+    _context = newContext;
     saveAndNotify();
   }
 
-  final Map<LlmEcosystem, String?> baseUrl = {};
+  Future<void> switchContext(ArtificialIntelligenceEcosystem oldEco) async {
+    if (oldEco == _ecosystem) return;
 
-  void setBaseUrl(LlmEcosystem eco, String? url) {
-    baseUrl[eco] = url;
+    await _context.save(oldEco);
+
+    if (_ecosystem == ArtificialIntelligenceEcosystem.llamaCPP) {
+      _context = await ArtificialIntelligenceContext.load(_ecosystem) ?? ArtificialIntelligenceContext();
+    }
+    else {
+      _context = await RemoteArtificialIntelligenceContext.load(_ecosystem) ?? RemoteArtificialIntelligenceContext();
+    }
+
+    notifyListeners();
+  }
+
+  String? get model => _context.model;
+
+  set model(String? newModel) {
+    _context.model = newModel;
     saveAndNotify();
   }
 
-  final Map<LlmEcosystem, String?> apiKey = {};
+  Map<String, dynamic> get overrides => _context.overrides;
 
-  void setApiKey(LlmEcosystem eco, String? key) {
-    apiKey[eco] = key;
+  set overrides(Map<String, dynamic> newOverrides) {
+    _context.overrides = newOverrides;
     saveAndNotify();
   }
 
-  Map<String, dynamic> _overrides = {};
+  String? get baseUrl => remoteContext?.baseUrl;
 
-  Map<String, dynamic> get overrides => _overrides;
+  set baseUrl(String? newBaseUrl) {
+    remoteContext?.baseUrl = newBaseUrl;
+    saveAndNotify();
+  }
 
-  set overrides(Map<String, dynamic> value) {
-    _overrides = value;
+  String? get apiKey => remoteContext?.apiKey;
+
+  set apiKey(String? newApiKey) {
+    remoteContext?.apiKey = newApiKey;
     saveAndNotify();
   }
 
@@ -73,33 +99,22 @@ class ArtificialIntelligence extends ChangeNotifier {
     if (busy) return false;
 
     if (
-      ecosystem == LlmEcosystem.llamaCPP && 
+      ecosystem == ArtificialIntelligenceEcosystem.llamaCPP && 
       _llama != null
     ) {
       return true;
     }
     else if (
-      ecosystem == LlmEcosystem.ollama && 
-      model[LlmEcosystem.ollama] != null && 
-      model[LlmEcosystem.ollama]!.isNotEmpty
+      ecosystem == ArtificialIntelligenceEcosystem.ollama && 
+      context.model != null && context.model!.isNotEmpty
     ) {
       return true;
     }
     else if (
-      ecosystem == LlmEcosystem.openAI && 
-      apiKey[LlmEcosystem.openAI] != null && 
-      apiKey[LlmEcosystem.openAI]!.isNotEmpty &&
-      model[LlmEcosystem.openAI] != null && 
-      model[LlmEcosystem.openAI]!.isNotEmpty
-    ) {
-      return true;
-    }
-    else if (
-      ecosystem == LlmEcosystem.mistral &&
-      apiKey[LlmEcosystem.mistral] != null &&
-      apiKey[LlmEcosystem.mistral]!.isNotEmpty &&
-      model[LlmEcosystem.mistral] != null &&
-      model[LlmEcosystem.mistral]!.isNotEmpty
+      remoteContext?.apiKey != null && 
+      remoteContext!.apiKey!.isNotEmpty &&
+      context.model != null && 
+      context.model!.isNotEmpty
     ) {
       return true;
     }
@@ -122,19 +137,19 @@ class ArtificialIntelligence extends ChangeNotifier {
     saveAndNotify();
   }
 
-  String getEcosystemHash(LlmEcosystem eco) {
-    return (baseUrl[eco]?.hash ?? '') + (apiKey[eco]?.hash ?? '');
+  String getEcosystemHash() {
+    return (remoteContext?.baseUrl?.hash ?? '') + (remoteContext?.apiKey?.hash ?? '');
   }
 
-  Future<List<String>> getModelOptions(LlmEcosystem eco) async {
-    switch (eco) {
-      case LlmEcosystem.llamaCPP:
+  Future<List<String>> getModelOptions() async {
+    switch (ecosystem) {
+      case ArtificialIntelligenceEcosystem.llamaCPP:
         return ['null'];
-      case LlmEcosystem.ollama:
+      case ArtificialIntelligenceEcosystem.ollama:
         return getOllamaModelOptions();
-      case LlmEcosystem.openAI:
+      case ArtificialIntelligenceEcosystem.openAI:
         return getOpenAiModelOptions();
-      case LlmEcosystem.mistral:
+      case ArtificialIntelligenceEcosystem.mistral:
         return getMistralModelOptions();
     }
   }
@@ -144,40 +159,26 @@ class ArtificialIntelligence extends ChangeNotifier {
 
     final ecosystemString = prefs.getString('ecosystem');
     if (ecosystemString != null) {
-      _ecosystem = LlmEcosystem.values.firstWhere((e) => e.name == ecosystemString);
+      _ecosystem = ArtificialIntelligenceEcosystem.values.firstWhere((e) => e.name == ecosystemString);
     }
 
-    final modelsString = prefs.getString('models');
-    if (modelsString != null) {
-      final modelsMap = jsonDecode(modelsString);
-      
-      for (final entry in modelsMap.entries) {
-        model[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
-      }
+    if (_ecosystem == ArtificialIntelligenceEcosystem.llamaCPP) {
+      _context = await ArtificialIntelligenceContext.load(_ecosystem) ?? ArtificialIntelligenceContext();
+    }
+    else {
+      _context = await RemoteArtificialIntelligenceContext.load(_ecosystem) ?? RemoteArtificialIntelligenceContext();
     }
 
-    final baseUrlsString = prefs.getString('base_urls');
-    if (baseUrlsString != null) {
-      final baseUrlsMap = jsonDecode(baseUrlsString);
-      
-      for (final entry in baseUrlsMap.entries) {
-        baseUrl[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
-      }
-    }
-
-    final apiKeysString = prefs.getString('api_keys');
-    if (apiKeysString != null) {
-      final apiKeysMap = jsonDecode(apiKeysString);
-      
-      for (final entry in apiKeysMap.entries) {
-        apiKey[LlmEcosystem.values.firstWhere((e) => e.name == entry.key)] = entry.value;
-      }
-    }
-
-    if (model[LlmEcosystem.llamaCPP] != null) {
+    if (_context.model != null) {
       _llama = LlamaIsolated(
-        modelParams: ModelParams(path: model[LlmEcosystem.llamaCPP]!),
-        contextParams: const ContextParams(nCtx: 0),
+        modelParams: ModelParams(
+          path: model!,
+          vocabOnly: overrides['vocab_only'],
+          useMmap: overrides['use_mmap'],
+          useMlock: overrides['use_mlock'],
+          checkTensors: overrides['check_tensors']
+        ),
+        contextParams: ContextParams.fromMap(overrides),
         samplingParams: SamplingParams(
           greedy: true,
           seed: math.Random().nextInt(1000000)
@@ -186,11 +187,6 @@ class ArtificialIntelligence extends ChangeNotifier {
     }
 
     _searchLocalNetworkForOllama = prefs.getBool('search_local_network_for_ollama');
-
-    final overridesString = prefs.getString('overrides');
-    if (overridesString != null) {
-      overrides = jsonDecode(overridesString);
-    }
 
     final chatsStrings = prefs.getStringList('chats') ?? [];
 
@@ -212,48 +208,12 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    prefs.setString('ecosystem', _ecosystem.name);
+    await prefs.setString('ecosystem', _ecosystem.name);
 
-    Map<String, String> modelMap = {};
-    for (final entry in model.entries) {
-      if (entry.value == null) continue;
-      modelMap[entry.key.name] = entry.value!;
-    }
-
-    if (modelMap.isNotEmpty) {
-      final modelString = jsonEncode(modelMap);
-      prefs.setString('models', modelString);
-    }
-
-    Map<String, String> baseUrlMap = {};
-    for (final entry in baseUrl.entries) {
-      if (entry.value == null) continue;
-      baseUrlMap[entry.key.name] = entry.value!;
-    }
-
-    if (baseUrlMap.isNotEmpty) {
-      final baseUrlString = jsonEncode(baseUrlMap);
-      prefs.setString('base_urls', baseUrlString);
-    }
-
-    Map<String, String> apiKeyMap = {};
-    for (final entry in apiKey.entries) {
-      if (entry.value == null) continue;
-      apiKeyMap[entry.key.name] = entry.value!;
-    }
-
-    if (apiKeyMap.isNotEmpty) {
-      final apiKeyString = jsonEncode(apiKeyMap);
-      prefs.setString('api_keys', apiKeyString);
-    }
+    await _context.save(_ecosystem);
 
     if (_searchLocalNetworkForOllama != null) {
-      prefs.setBool('search_local_network_for_ollama', _searchLocalNetworkForOllama!);
-    }
-
-    if (overrides.isNotEmpty) {
-      final overridesString = jsonEncode(overrides);
-      prefs.setString('overrides', overridesString);
+      await prefs.setBool('search_local_network_for_ollama', _searchLocalNetworkForOllama!);
     }
 
     List<String> chatsStrings = [];
@@ -264,6 +224,6 @@ class ArtificialIntelligence extends ChangeNotifier {
       chatsStrings.add(chatString);
     }
 
-    prefs.setStringList('chats', chatsStrings);
+    await prefs.setStringList('chats', chatsStrings);
   }
 }

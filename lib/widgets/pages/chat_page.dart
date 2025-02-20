@@ -23,19 +23,17 @@ class ChatPageState extends State<ChatPage> {
     ] 
   );
 
-  Widget buildTitle() => Selector<ArtificialIntelligence, LlmEcosystem>(
+  Widget buildTitle() => Selector<ArtificialIntelligence, ArtificialIntelligenceEcosystem>(
     selector: (context, ai) => ai.ecosystem,
     builder: titleBuilder
   );
 
-  Widget titleBuilder(BuildContext context, LlmEcosystem ecosystem, Widget? child) {
-    if (ecosystem == LlmEcosystem.llamaCPP) {
+  Widget titleBuilder(BuildContext context, ArtificialIntelligenceEcosystem ecosystem, Widget? child) {
+    if (ecosystem == ArtificialIntelligenceEcosystem.llamaCPP) {
       return const LoadModelButton();
     }
 
-    return RemoteModelDropdown(
-      ecosystem: ecosystem
-    );
+    return RemoteModelDropdown();
   }
 
   Widget buildDrawer() => const Drawer(

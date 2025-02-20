@@ -1,6 +1,6 @@
 part of 'package:maid/main.dart';
 
-enum LlmEcosystem {
+enum ArtificialIntelligenceEcosystem {
   llamaCPP,
   ollama,
   openAI,

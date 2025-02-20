@@ -1,13 +1,13 @@
 part of 'package:maid/main.dart';
 
-class LlmEcosystemDropdown extends StatefulWidget {
-  const LlmEcosystemDropdown({super.key});
+class ArtificialIntelligenceEcosystemDropdown extends StatefulWidget {
+  const ArtificialIntelligenceEcosystemDropdown({super.key});
 
   @override
-  State<LlmEcosystemDropdown> createState() => _LlmEcosystemDropdownState();
+  State<ArtificialIntelligenceEcosystemDropdown> createState() => _ArtificialIntelligenceEcosystemDropdownState();
 }
 
-class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
+class _ArtificialIntelligenceEcosystemDropdownState extends State<ArtificialIntelligenceEcosystemDropdown> {
   bool open = false;
 
   @override
@@ -21,7 +21,7 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
   );
 
   Widget buildTitle() => Text(
-    'Llm Ecosystem',
+    'AI Ecosystem',
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -32,7 +32,7 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
     mainAxisSize: MainAxisSize.min,
     children: [
       const SizedBox(width: 8),
-      Selector<ArtificialIntelligence, LlmEcosystem>(
+      Selector<ArtificialIntelligence, ArtificialIntelligenceEcosystem>(
         selector: (context, settings) => settings.ecosystem,
         builder: buildOverrideText
       ),
@@ -40,7 +40,7 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
     ]
   );
 
-  Widget buildOverrideText(BuildContext context, LlmEcosystem ecosystem, Widget? child) => Text(
+  Widget buildOverrideText(BuildContext context, ArtificialIntelligenceEcosystem ecosystem, Widget? child) => Text(
     ecosystem.name.pascalToSentence(),
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
@@ -48,7 +48,7 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
     )
   );
 
-  Widget buildPopupButton() => PopupMenuButton<LlmEcosystem>(
+  Widget buildPopupButton() => PopupMenuButton<ArtificialIntelligenceEcosystem>(
     tooltip: 'Select Llm Ecosystem',
     icon: buildPopupButtonIcon(),
     offset: const Offset(0, 40),
@@ -67,11 +67,11 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
     size: 24,
   );
 
-  List<PopupMenuEntry<LlmEcosystem>> itemBuilder(BuildContext context) {
-    List<PopupMenuEntry<LlmEcosystem>> items = [];
+  List<PopupMenuEntry<ArtificialIntelligenceEcosystem>> itemBuilder(BuildContext context) {
+    List<PopupMenuEntry<ArtificialIntelligenceEcosystem>> items = [];
 
-    for (final ecosystem in LlmEcosystem.values) {
-      items.add(PopupMenuItem<LlmEcosystem>(
+    for (final ecosystem in ArtificialIntelligenceEcosystem.values) {
+      items.add(PopupMenuItem<ArtificialIntelligenceEcosystem>(
         value: ecosystem,
         child: Text(ecosystem.name.pascalToSentence())
       ));

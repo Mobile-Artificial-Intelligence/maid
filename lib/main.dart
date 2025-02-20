@@ -23,6 +23,8 @@ import 'package:ollama_dart/ollama_dart.dart' as ollama;
 import 'package:openai_dart/openai_dart.dart' as open_ai;
 import 'package:mistralai_dart/mistralai_dart.dart' as mistral;
 
+part 'classes/artificial_intelligence_context.dart';
+
 part 'providers/app_settings/app_settings.dart';
 part 'providers/artificial_intelligence/artificial_intelligence.dart';
 part 'providers/artificial_intelligence/extensions/chat_extension.dart';
@@ -32,7 +34,7 @@ part 'providers/artificial_intelligence/extensions/mistral_extension.dart';
 part 'providers/artificial_intelligence/extensions/ollama_extension.dart';
 part 'providers/artificial_intelligence/extensions/open_ai_extension.dart';
 
-part 'types/llm_ecosystem.dart';
+part 'types/artificial_inteligence_ecosystem.dart';
 part 'types/override_type.dart';
 
 part 'utilities/chat_messages_extension.dart';
@@ -47,7 +49,7 @@ part 'widgets/chat/chat_view.dart';
 
 part 'widgets/dialogs/error_dialog.dart';
 
-part 'widgets/dropdowns/llm_ecosystem_dropdown.dart';
+part 'widgets/dropdowns/artificial_intelligence_ecosystem_dropdown.dart';
 part 'widgets/dropdowns/override_type_dropdown.dart';
 part 'widgets/dropdowns/remote_model_dropdown.dart';
 part 'widgets/dropdowns/theme_mode_dropdown.dart';
@@ -62,11 +64,8 @@ part 'widgets/pages/about_page.dart';
 part 'widgets/pages/chat_page.dart';
 part 'widgets/pages/settings_page.dart';
 
+part 'widgets/settings/artificial_intelligence_settings.dart';
 part 'widgets/settings/assistant_settings.dart';
-part 'widgets/settings/llama_cpp_settings.dart';
-part 'widgets/settings/mistral_settings.dart';
-part 'widgets/settings/ollama_settings.dart';
-part 'widgets/settings/open_ai_settings.dart';
 part 'widgets/settings/system_settings.dart';
 part 'widgets/settings/user_settings.dart';
 
@@ -77,39 +76,7 @@ part 'widgets/text_fields/selector_text_field.dart';
 
 part 'widgets/code_box.dart';
 
-void main() {
-  FlutterError.onError = (FlutterErrorDetails details) {
-    FlutterError.presentError(details);
-    runApp(ErrorApp(details: details));
-  };
-
-  runApp(Maid());
-}
-
-class ErrorApp extends StatelessWidget {
-  final FlutterErrorDetails details;
-  const ErrorApp({super.key, required this.details});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: Maid.getTheme(ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark)),
-      home: Scaffold(
-        appBar: AppBar(title: Text("An Error Occurred")),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("An error occurred:"),
-              Text(details.exceptionAsString()),
-              Text(details.stack.toString()),
-            ]
-          )
-        )
-      ),
-    );
-  }
-}
+void main() => runApp(Maid());
 
 class Maid extends StatelessWidget {
   const Maid({super.key});

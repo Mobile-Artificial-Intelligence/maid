@@ -2,22 +2,22 @@ part of 'package:maid/main.dart';
 
 extension OpenAiExtension on ArtificialIntelligence {
   Stream<String> openAiPrompt(List<ChatMessage> messages) async* {
-    assert(apiKey[LlmEcosystem.openAI] != null);
-    assert(model[LlmEcosystem.openAI] != null);
+    assert(apiKey != null);
+    assert(model != null);
 
-    if (baseUrl[LlmEcosystem.openAI] == null || baseUrl[LlmEcosystem.openAI]!.isEmpty) {
-      setBaseUrl(LlmEcosystem.openAI, 'https://api.openai.com/v1');
+    if (baseUrl == null || baseUrl!.isEmpty) {
+      baseUrl = 'https://api.openai.com/v1';
     }
 
     _openAiClient = open_ai.OpenAIClient(
-      apiKey: apiKey[LlmEcosystem.openAI]!,
-      baseUrl: baseUrl[LlmEcosystem.openAI],
+      apiKey: apiKey!,
+      baseUrl: baseUrl,
     );
 
     final completionStream = _openAiClient.createChatCompletionStream(
       request: open_ai.CreateChatCompletionRequest(
         messages: messages.toOpenAiMessages(),
-        model: open_ai.ChatCompletionModel.modelId(model[LlmEcosystem.openAI]!),
+        model: open_ai.ChatCompletionModel.modelId(model!),
         stream: true,
         temperature: overrides['temperature'],
         topP: overrides['top_p'],
@@ -41,18 +41,18 @@ extension OpenAiExtension on ArtificialIntelligence {
   }
 
   Future<List<String>> getOpenAiModelOptions() async {
-    if (apiKey[LlmEcosystem.openAI] == null) {
+    if (apiKey == null) {
       log('Open AI API Key is not set');
       return [];
     }
 
-    if (baseUrl[LlmEcosystem.openAI] == null || baseUrl[LlmEcosystem.openAI]!.isEmpty) {
-      baseUrl[LlmEcosystem.openAI] = 'https://api.openai.com/v1';
+    if (baseUrl == null || baseUrl!.isEmpty) {
+      baseUrl = 'https://api.openai.com/v1';
     }
 
     _openAiClient = open_ai.OpenAIClient(
-      apiKey: apiKey[LlmEcosystem.openAI]!,
-      baseUrl: baseUrl[LlmEcosystem.openAI],
+      apiKey: apiKey!,
+      baseUrl: baseUrl,
     );
 
     final modelsResponse = await _openAiClient.listModels();

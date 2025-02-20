@@ -2,31 +2,32 @@ part of 'package:maid/main.dart';
 
 extension MistralExtension on ArtificialIntelligence {
   Stream<String> mistralPrompt(List<ChatMessage> messages) async* {
-    assert(apiKey[LlmEcosystem.mistral] != null);
-    assert(model[LlmEcosystem.mistral] != null);
+    assert(ecosystem == ArtificialIntelligenceEcosystem.mistral);
+    assert(apiKey != null);
+    assert(model != null);
 
-    if (baseUrl[LlmEcosystem.mistral] == null || baseUrl[LlmEcosystem.mistral]!.isEmpty) {
-      setBaseUrl(LlmEcosystem.mistral, 'https://api.mistral.ai/v1');
+    if (baseUrl == null || baseUrl!.isEmpty) {
+      baseUrl = 'https://api.mistral.ai/v1';
     }
 
     _mistralClient = mistral.MistralAIClient(
-      apiKey: apiKey[LlmEcosystem.mistral]!,
-      baseUrl: baseUrl[LlmEcosystem.mistral],
+      apiKey: apiKey!,
+      baseUrl: baseUrl,
     );
 
     mistral.ChatCompletionModels mistralModel;
 
-    if (model[LlmEcosystem.mistral] == 'mistral-medium') {
+    if (model == 'mistral-medium') {
       mistralModel = mistral.ChatCompletionModels.mistralMedium;
     } 
-    else if (model[LlmEcosystem.mistral] == 'mistral-small') {
+    else if (model == 'mistral-small') {
       mistralModel = mistral.ChatCompletionModels.mistralSmall;
     } 
-    else if (model[LlmEcosystem.mistral] == 'mistral-tiny') {
+    else if (model == 'mistral-tiny') {
       mistralModel = mistral.ChatCompletionModels.mistralTiny;
     } 
     else {
-      throw Exception('Unknown Mistral model: ${model[LlmEcosystem.mistral]}');
+      throw Exception('Unknown Mistral model: $model');
     }
 
     final completionStream = _mistralClient.createChatCompletionStream(

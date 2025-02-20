@@ -9,16 +9,16 @@ extension InferenceExtension on ArtificialIntelligence {
 
     Stream<String> stream;
     switch (ecosystem) {
-      case LlmEcosystem.llamaCPP:
+      case ArtificialIntelligenceEcosystem.llamaCPP:
         stream = llamaPrompt(root.chainData.copy());
         break;
-      case LlmEcosystem.ollama:
+      case ArtificialIntelligenceEcosystem.ollama:
         stream = ollamaPrompt(root.chainData.copy());
         break;
-      case LlmEcosystem.openAI:
+      case ArtificialIntelligenceEcosystem.openAI:
         stream = openAiPrompt(root.chainData.copy());
         break;
-      case LlmEcosystem.mistral:
+      case ArtificialIntelligenceEcosystem.mistral:
         stream = mistralPrompt(root.chainData.copy());
         break;
     }
@@ -42,7 +42,7 @@ extension InferenceExtension on ArtificialIntelligence {
     busy = true;
     notify();
 
-    if (_ecosystem == LlmEcosystem.llamaCPP) {
+    if (_ecosystem == ArtificialIntelligenceEcosystem.llamaCPP) {
       reloadModel();
       assert(_llama != null);
     }
@@ -57,16 +57,16 @@ extension InferenceExtension on ArtificialIntelligence {
 
     Stream<String> stream;
     switch (ecosystem) {
-      case LlmEcosystem.llamaCPP:
+      case ArtificialIntelligenceEcosystem.llamaCPP:
         stream = llamaPrompt(chainData);
         break;
-      case LlmEcosystem.ollama:
+      case ArtificialIntelligenceEcosystem.ollama:
         stream = ollamaPrompt(chainData);
         break;
-      case LlmEcosystem.openAI:
+      case ArtificialIntelligenceEcosystem.openAI:
         stream = openAiPrompt(chainData);
         break;
-      case LlmEcosystem.mistral:
+      case ArtificialIntelligenceEcosystem.mistral:
         stream = mistralPrompt(chainData);
         break;
     }
@@ -87,16 +87,16 @@ extension InferenceExtension on ArtificialIntelligence {
 
   void stop() async {
     switch (ecosystem) {
-      case LlmEcosystem.llamaCPP:
+      case ArtificialIntelligenceEcosystem.llamaCPP:
         _llama?.stop();
         break;
-      case LlmEcosystem.ollama:
+      case ArtificialIntelligenceEcosystem.ollama:
         _ollamaClient.endSession();
         break;
-      case LlmEcosystem.openAI:
+      case ArtificialIntelligenceEcosystem.openAI:
         _openAiClient.endSession();
         break;
-      case LlmEcosystem.mistral:
+      case ArtificialIntelligenceEcosystem.mistral:
         _mistralClient.endSession();
         break;
     }

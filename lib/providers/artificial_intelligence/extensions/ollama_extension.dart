@@ -2,18 +2,18 @@ part of 'package:maid/main.dart';
 
 extension OllamaExtension on ArtificialIntelligence {
   Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
-    assert(model[LlmEcosystem.ollama] != null);
+    assert(model != null);
 
     _ollamaClient = ollama.OllamaClient(
-      baseUrl: "${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api",
+      baseUrl: "${baseUrl ?? 'http://localhost:11434'}/api",
       headers: {
-        'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
+        'Authorization': 'Bearer $apiKey'
       }
     );
 
     final completionStream = _ollamaClient.generateChatCompletionStream(
       request: ollama.GenerateChatCompletionRequest(
-        model: model[LlmEcosystem.ollama]!, 
+        model: model!, 
         messages: messages.toOllamaMessages(),
         options: ollama.RequestOptions.fromJson(overrides),
         stream: true
@@ -38,7 +38,7 @@ extension OllamaExtension on ArtificialIntelligence {
       final request = http.Request("GET", url);
       final headers = {
         "Accept": "application/json",
-        'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
+        'Authorization': 'Bearer $apiKey'
       };
 
       request.headers.addAll(headers);
@@ -61,13 +61,13 @@ extension OllamaExtension on ArtificialIntelligence {
     assert(_searchLocalNetworkForOllama == true);
 
     // Check current URL
-    if (baseUrl[LlmEcosystem.ollama] != null && await checkForOllama(Uri.parse(baseUrl[LlmEcosystem.ollama]!)) != null) {
+    if (baseUrl != null && await checkForOllama(Uri.parse(baseUrl!)) != null) {
       return true;
     }
 
     // Check localhost
     if (await checkForOllama(Uri.parse('http://localhost:11434')) != null) {
-      baseUrl[LlmEcosystem.ollama] = 'http://localhost:11434';
+      baseUrl = 'http://localhost:11434';
       saveAndNotify();
       return true;
     }
@@ -91,7 +91,7 @@ extension OllamaExtension on ArtificialIntelligence {
     final validUrls = results.where((result) => result != null);
 
     if (validUrls.isNotEmpty) {
-      baseUrl[LlmEcosystem.ollama] = validUrls.first.toString();
+      baseUrl = validUrls.first.toString();
       saveAndNotify();
       return true;
     }
@@ -106,13 +106,13 @@ extension OllamaExtension on ArtificialIntelligence {
         if (!found) return [];
       }
   
-      final uri = Uri.parse("${baseUrl[LlmEcosystem.ollama] ?? 'http://localhost:11434'}/api/tags");
+      final uri = Uri.parse("${baseUrl ?? 'http://localhost:11434'}/api/tags");
   
       final request = http.Request("GET", uri);
   
       final headers = {
         "Accept": "application/json",
-        'Authorization': 'Bearer ${apiKey[LlmEcosystem.ollama]}'
+        'Authorization': 'Bearer $apiKey'
       };
   
       request.headers.addAll(headers);

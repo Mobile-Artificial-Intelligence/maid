@@ -18,8 +18,8 @@ class SettingsPage extends StatelessWidget {
     mainAxisSize: MainAxisSize.max,
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
-      LlmEcosystemDropdown(),
-      buildEcosystemSettings(),
+      ArtificialIntelligenceEcosystemDropdown(),
+      ArtificialIntelligenceSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
       OverrideView(),
       Divider(endIndent: 0, indent: 0, height: 32),
@@ -32,24 +32,6 @@ class SettingsPage extends StatelessWidget {
       buildResetRow(context)
     ],
   );
-
-  Widget buildEcosystemSettings() => Selector<ArtificialIntelligence, LlmEcosystem>(
-    selector: (context, ai) => ai.ecosystem,
-    builder: ecosystemSettingsBuilder
-  );
-
-  Widget ecosystemSettingsBuilder(BuildContext context, LlmEcosystem ecosystem, Widget? child) {
-    switch (ecosystem) {
-      case LlmEcosystem.ollama:
-        return const OllamaSettings();
-      case LlmEcosystem.llamaCPP:
-        return const LlamaCppSettings();
-      case LlmEcosystem.openAI:
-        return const OpenAiSettings();
-      case LlmEcosystem.mistral:
-        return const MistralSettings();
-    }
-  }
 
   Widget buildResetRow(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

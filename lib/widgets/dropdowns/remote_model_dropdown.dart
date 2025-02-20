@@ -1,18 +1,16 @@
 part of 'package:maid/main.dart';
 
 class RemoteModelDropdown extends StatefulWidget {
-  final LlmEcosystem ecosystem;
   final bool refreshButton;
 
-  const RemoteModelDropdown({super.key, required this.ecosystem, this.refreshButton = false}) : 
-    assert(ecosystem != LlmEcosystem.llamaCPP);
+  const RemoteModelDropdown({super.key, this.refreshButton = false});
 
   @override
   State<RemoteModelDropdown> createState() => _RemoteModelDropdownState();
 }
 
 class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
-  static Map<LlmEcosystem, List<String>> modelOptions = {};
+  static Map<ArtificialIntelligenceEcosystem, List<String>> modelOptions = {};
   bool open = false;
 
   @override
@@ -21,13 +19,13 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   }
 
   void onSelected(String model) {
-    ArtificialIntelligence.of(context).setModel(widget.ecosystem, model);
+    ArtificialIntelligence.of(context).model = model;
     setState(() => open = false);
   }
 
   Future<List<String>> getModelOptions() async {
     try {
-      return await ArtificialIntelligence.of(context).getModelOptions(widget.ecosystem);
+      return await ArtificialIntelligence.of(context).getModelOptions();
     } 
     catch (exception) {
       if (!mounted) return [];
@@ -58,11 +56,11 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
       color: Theme.of(context).colorScheme.onSurface,
       size: 24
     ),
-    onPressed: () => setState(() => modelOptions.remove(widget.ecosystem))
+    onPressed: () => setState(() => modelOptions.remove(ArtificialIntelligence.of(context).ecosystem))
   );
 
   Widget buildModelText() => Selector<ArtificialIntelligence, String?>(
-    selector: (context, ai) => ai.model[widget.ecosystem],
+    selector: (context, ai) => ai.model,
     builder: (context, model, child) => Text(
       model ?? 'No model selected',
       style: TextStyle(
@@ -73,7 +71,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   );
 
   Widget buildHashSelector() => Selector<ArtificialIntelligence, String?>(
-    selector: (context, ai) => ai.getEcosystemHash(widget.ecosystem),
+    selector: (context, ai) => ai.getEcosystemHash(),
     builder: buildFutureBuilder
   );
 
