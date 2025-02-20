@@ -21,12 +21,14 @@ import 'package:lcpp/lcpp.dart';
 import 'package:tree_structs/tree_structs.dart';
 import 'package:ollama_dart/ollama_dart.dart' as ollama;
 import 'package:openai_dart/openai_dart.dart' as open_ai;
+import 'package:mistralai_dart/mistralai_dart.dart' as mistral;
 
 part 'providers/app_settings/app_settings.dart';
 part 'providers/artificial_intelligence/artificial_intelligence.dart';
 part 'providers/artificial_intelligence/extensions/chat_extension.dart';
 part 'providers/artificial_intelligence/extensions/inference_extension.dart';
 part 'providers/artificial_intelligence/extensions/llama_cpp_extension.dart';
+part 'providers/artificial_intelligence/extensions/mistral_extension.dart';
 part 'providers/artificial_intelligence/extensions/ollama_extension.dart';
 part 'providers/artificial_intelligence/extensions/open_ai_extension.dart';
 
@@ -62,6 +64,7 @@ part 'widgets/pages/settings_page.dart';
 
 part 'widgets/settings/assistant_settings.dart';
 part 'widgets/settings/llama_cpp_settings.dart';
+part 'widgets/settings/mistral_settings.dart';
 part 'widgets/settings/ollama_settings.dart';
 part 'widgets/settings/open_ai_settings.dart';
 part 'widgets/settings/system_settings.dart';

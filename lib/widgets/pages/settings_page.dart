@@ -46,6 +46,8 @@ class SettingsPage extends StatelessWidget {
         return const LlamaCppSettings();
       case LlmEcosystem.openAI:
         return const OpenAiSettings();
+      case LlmEcosystem.mistral:
+        return const MistralSettings();
     }
   }
 

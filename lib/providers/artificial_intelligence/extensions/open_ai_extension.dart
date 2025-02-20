@@ -19,6 +19,11 @@ extension OpenAiExtension on ArtificialIntelligence {
         messages: messages.toOpenAiMessages(),
         model: open_ai.ChatCompletionModel.modelId(model[LlmEcosystem.openAI]!),
         stream: true,
+        temperature: overrides['temperature'],
+        topP: overrides['top_p'],
+        maxTokens: overrides['max_tokens'],
+        frequencyPenalty: overrides['frequency_penalty'],
+        presencePenalty: overrides['presence_penalty'],
       )
     );
 

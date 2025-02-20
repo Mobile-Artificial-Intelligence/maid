@@ -50,4 +50,29 @@ extension ChatMessagesExtension on List<ChatMessage> {
 
     return messages;
   }
+
+  List<mistral.ChatCompletionMessage> toMistralMessages() {
+    final List<mistral.ChatCompletionMessage> messages = [];
+
+    for (final ChatMessage chatMessage in this) {
+      mistral.ChatCompletionMessageRole role;
+
+      if (chatMessage is UserChatMessage) {
+        role = mistral.ChatCompletionMessageRole.user;
+      } else if (chatMessage is AssistantChatMessage) {
+        role = mistral.ChatCompletionMessageRole.assistant;
+      } else {
+        role = mistral.ChatCompletionMessageRole.system;
+      }
+
+      final message = mistral.ChatCompletionMessage(
+        role: role,
+        content: chatMessage.content,
+      );
+
+      messages.add(message);
+    }
+
+    return messages;
+  }
 }

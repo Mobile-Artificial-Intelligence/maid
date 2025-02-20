@@ -23,6 +23,7 @@ dependencies:
   lcpp: ^0.1.5
   ollama_dart: ^0.2.2+1
   openai_dart: ^0.4.5
+  mistralai_dart: ^0.0.3+4
 
   # For searching local network for ollama
   device_info_plus: ^11.3.0

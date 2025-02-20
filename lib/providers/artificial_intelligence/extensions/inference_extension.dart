@@ -18,6 +18,9 @@ extension InferenceExtension on ArtificialIntelligence {
       case LlmEcosystem.openAI:
         stream = openAiPrompt(root.chainData.copy());
         break;
+      case LlmEcosystem.mistral:
+        stream = mistralPrompt(root.chainData.copy());
+        break;
     }
 
     root.chain.last.addChild(AssistantChatMessage(''));
@@ -63,6 +66,9 @@ extension InferenceExtension on ArtificialIntelligence {
       case LlmEcosystem.openAI:
         stream = openAiPrompt(chainData);
         break;
+      case LlmEcosystem.mistral:
+        stream = mistralPrompt(chainData);
+        break;
     }
 
     assert(node.currentChild == root.chain.last);
@@ -89,6 +95,9 @@ extension InferenceExtension on ArtificialIntelligence {
         break;
       case LlmEcosystem.openAI:
         _openAiClient.endSession();
+        break;
+      case LlmEcosystem.mistral:
+        _mistralClient.endSession();
         break;
     }
 

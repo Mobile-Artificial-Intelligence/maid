@@ -98,6 +98,8 @@ class ArtificialIntelligence extends ChangeNotifier {
     return false;
   }
 
+  late mistral.MistralAIClient _mistralClient;
+
   late open_ai.OpenAIClient _openAiClient;
 
   late ollama.OllamaClient _ollamaClient;
@@ -123,6 +125,8 @@ class ArtificialIntelligence extends ChangeNotifier {
         return getOllamaModelOptions();
       case LlmEcosystem.openAI:
         return getOpenAiModelOptions();
+      case LlmEcosystem.mistral:
+        return getMistralModelOptions();
     }
   }
 
