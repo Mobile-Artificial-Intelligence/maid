@@ -31,6 +31,11 @@ extension StringExtension on String {
     return digest.toString();
   }
 
+  String pascalToSentence() {
+    return replaceAllMapped(RegExp(r'([a-z])([A-Z])'), (match) => '${match[1]} ${match[2]}')
+      .replaceFirstMapped(RegExp(r'^[a-z]'), (match) => match[0]!.toUpperCase());
+  }
+
   double jaccardSimilarity(String other) {
     Set<String> setA = split('').toSet();
     Set<String> setB = other.split('').toSet();

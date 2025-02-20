@@ -41,7 +41,7 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
   );
 
   Widget buildOverrideText(BuildContext context, LlmEcosystem ecosystem, Widget? child) => Text(
-    ecosystem.name.titleize,
+    ecosystem.name.pascalToSentence(),
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -67,21 +67,16 @@ class _LlmEcosystemDropdownState extends State<LlmEcosystemDropdown> {
     size: 24,
   );
 
-  List<PopupMenuEntry<LlmEcosystem>> itemBuilder(BuildContext context) => [
-    PopupMenuItem(
-      padding: EdgeInsets.all(8),
-      value: LlmEcosystem.llamaCPP,
-      child: const Text('Llama CPP')
-    ),
-    PopupMenuItem(
-      padding: EdgeInsets.all(8),
-      value: LlmEcosystem.ollama,
-      child: const Text('Ollama')
-    ),
-    PopupMenuItem(
-      padding: EdgeInsets.all(8),
-      value: LlmEcosystem.openAI,
-      child: const Text('Open AI')
-    ),
-  ];
+  List<PopupMenuEntry<LlmEcosystem>> itemBuilder(BuildContext context) {
+    List<PopupMenuEntry<LlmEcosystem>> items = [];
+
+    for (final ecosystem in LlmEcosystem.values) {
+      items.add(PopupMenuItem<LlmEcosystem>(
+        value: ecosystem,
+        child: Text(ecosystem.name.pascalToSentence())
+      ));
+    }
+
+    return items;
+  }
 }
