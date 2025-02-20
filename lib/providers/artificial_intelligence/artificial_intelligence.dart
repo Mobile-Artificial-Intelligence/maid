@@ -55,6 +55,7 @@ class ArtificialIntelligence extends ChangeNotifier {
 
     if (_ecosystem == ArtificialIntelligenceEcosystem.llamaCPP) {
       _context = await ArtificialIntelligenceContext.load(_ecosystem) ?? ArtificialIntelligenceContext();
+      reloadModel();
     }
     else {
       _context = await RemoteArtificialIntelligenceContext.load(_ecosystem) ?? RemoteArtificialIntelligenceContext();

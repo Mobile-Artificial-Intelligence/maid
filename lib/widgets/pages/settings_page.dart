@@ -33,8 +33,11 @@ class SettingsPage extends StatelessWidget {
     ],
   );
 
-  Widget buildResetRow(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget buildResetRow(BuildContext context) => Wrap(
+    alignment: WrapAlignment.center,
+    runAlignment: WrapAlignment.center,
+    spacing: 16,
+    runSpacing: 16,
     children: [
       ElevatedButton(
         onPressed: ArtificialIntelligence.of(context).clearChats, 

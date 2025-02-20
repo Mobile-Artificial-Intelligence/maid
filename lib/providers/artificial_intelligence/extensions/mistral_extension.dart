@@ -3,11 +3,12 @@ part of 'package:maid/main.dart';
 extension MistralExtension on ArtificialIntelligence {
   Stream<String> mistralPrompt(List<ChatMessage> messages) async* {
     assert(ecosystem == ArtificialIntelligenceEcosystem.mistral);
+    assert(remoteContext != null);
     assert(apiKey != null);
     assert(model != null);
 
     if (baseUrl == null || baseUrl!.isEmpty) {
-      baseUrl = 'https://api.mistral.ai/v1';
+      remoteContext!.baseUrl = 'https://api.mistral.ai/v1';
     }
 
     _mistralClient = mistral.MistralAIClient(

@@ -2,6 +2,7 @@ part of 'package:maid/main.dart';
 
 extension OllamaExtension on ArtificialIntelligence {
   Stream<String> ollamaPrompt(List<ChatMessage> messages) async* {
+    assert(remoteContext != null);
     assert(model != null);
 
     _ollamaClient = ollama.OllamaClient(
@@ -58,6 +59,7 @@ extension OllamaExtension on ArtificialIntelligence {
   }
 
   Future<bool> searchForOllama() async {
+    assert(remoteContext != null);
     assert(_searchLocalNetworkForOllama == true);
 
     // Check current URL
@@ -67,8 +69,8 @@ extension OllamaExtension on ArtificialIntelligence {
 
     // Check localhost
     if (await checkForOllama(Uri.parse('http://localhost:11434')) != null) {
-      baseUrl = 'http://localhost:11434';
-      saveAndNotify();
+      remoteContext!.baseUrl = 'http://localhost:11434';
+      save();
       return true;
     }
 
@@ -91,11 +93,9 @@ extension OllamaExtension on ArtificialIntelligence {
     final validUrls = results.where((result) => result != null);
 
     if (validUrls.isNotEmpty) {
-      baseUrl = validUrls.first.toString();
-      saveAndNotify();
+      remoteContext!.baseUrl = validUrls.first.toString();
       return true;
     }
-    notify();
     return false;
   }
 

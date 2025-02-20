@@ -2,11 +2,12 @@ part of 'package:maid/main.dart';
 
 extension OpenAiExtension on ArtificialIntelligence {
   Stream<String> openAiPrompt(List<ChatMessage> messages) async* {
+    assert(remoteContext != null);
     assert(apiKey != null);
     assert(model != null);
 
     if (baseUrl == null || baseUrl!.isEmpty) {
-      baseUrl = 'https://api.openai.com/v1';
+      remoteContext!.baseUrl = 'https://api.openai.com/v1';
     }
 
     _openAiClient = open_ai.OpenAIClient(
@@ -41,13 +42,16 @@ extension OpenAiExtension on ArtificialIntelligence {
   }
 
   Future<List<String>> getOpenAiModelOptions() async {
+    assert(ecosystem == ArtificialIntelligenceEcosystem.openAI);
+    assert(remoteContext != null);
+
     if (apiKey == null) {
       log('Open AI API Key is not set');
       return [];
     }
 
     if (baseUrl == null || baseUrl!.isEmpty) {
-      baseUrl = 'https://api.openai.com/v1';
+      remoteContext!.baseUrl = 'https://api.openai.com/v1';
     }
 
     _openAiClient = open_ai.OpenAIClient(
