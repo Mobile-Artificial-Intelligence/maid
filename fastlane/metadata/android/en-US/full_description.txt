@@ -1,0 +1,1 @@
+Maid is an cross-platform free and open source application for interfacing with llama.cpp models locally, and with Ollama, Mistral and OpenAI models remotely.
