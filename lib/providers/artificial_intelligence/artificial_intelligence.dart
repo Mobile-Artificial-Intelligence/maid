@@ -94,6 +94,15 @@ class ArtificialIntelligence extends ChangeNotifier {
     ) {
       return true;
     }
+    else if (
+      ecosystem == LlmEcosystem.mistral &&
+      apiKey[LlmEcosystem.mistral] != null &&
+      apiKey[LlmEcosystem.mistral]!.isNotEmpty &&
+      model[LlmEcosystem.mistral] != null &&
+      model[LlmEcosystem.mistral]!.isNotEmpty
+    ) {
+      return true;
+    }
 
     return false;
   }

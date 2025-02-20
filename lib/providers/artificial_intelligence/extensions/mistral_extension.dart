@@ -6,7 +6,7 @@ extension MistralExtension on ArtificialIntelligence {
     assert(model[LlmEcosystem.mistral] != null);
 
     if (baseUrl[LlmEcosystem.mistral] == null || baseUrl[LlmEcosystem.mistral]!.isEmpty) {
-      setBaseUrl(LlmEcosystem.mistral, 'https://api.mistral.ai');
+      setBaseUrl(LlmEcosystem.mistral, 'https://api.mistral.ai/v1');
     }
 
     _mistralClient = mistral.MistralAIClient(
