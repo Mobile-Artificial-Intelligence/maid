@@ -67,6 +67,7 @@ part 'widgets/settings/open_ai_settings.dart';
 part 'widgets/text_fields/api_key_text_field.dart';
 part 'widgets/text_fields/base_url_text_field.dart';
 part 'widgets/text_fields/prompt_field.dart';
+part 'widgets/text_fields/selector_text_field.dart';
 
 part 'widgets/code_box.dart';
 

@@ -20,6 +20,7 @@ extension StringExtension on String {
     if (isEmpty) return this;
     return this[0].toUpperCase() + substring(1);
   }
+
   String get hash {
     // Convert to bytes
     final bytes = utf8.encode(this);
@@ -28,5 +29,19 @@ extension StringExtension on String {
     final digest = sha256.convert(bytes);
 
     return digest.toString();
+  }
+
+  double jaccardSimilarity(String other) {
+    Set<String> setA = split('').toSet();
+    Set<String> setB = other.split('').toSet();
+
+    int intersection = setA.intersection(setB).length;
+    int union = setA.union(setB).length;
+
+    return union == 0 ? 0.0 : intersection / union;
+  }
+
+  bool isSimilar(String other, {double threshold = 0.8}) {
+    return jaccardSimilarity(other) >= threshold;
   }
 } 

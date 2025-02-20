@@ -9,25 +9,9 @@ class ApiKeyTextField extends StatelessWidget {
   }) : assert(ecosystem != LlmEcosystem.llamaCPP);
 
   @override
-  Widget build(BuildContext context) => Selector<ArtificialIntelligence, String?>(
-    selector: (context, ai) => ai.apiKey[ecosystem],
-    builder: buildTextField
+  Widget build(BuildContext context) => SelectorTextField<ArtificialIntelligence>(
+    selector: (context, ai) => ai.apiKey[ecosystem], 
+    onChanged: (value) => ArtificialIntelligence.of(context).setApiKey(ecosystem, value), 
+    labelText: 'Api Key',
   );
-
-  Widget buildTextField(BuildContext context, String? apiKey, Widget? child) => TextField(
-    decoration: InputDecoration(
-      labelText: 'Api Key',
-    ),
-    controller: TextEditingController(
-      text: apiKey ?? '',
-    ),
-    onChanged: (value) => ArtificialIntelligence.of(context).apiKey[ecosystem] = value,
-    onEditingComplete: () => onDone(context),
-    onTapOutside: (event) => onDone(context),
-  );
-
-  void onDone(BuildContext context) {
-    ArtificialIntelligence.of(context).notify();
-    FocusScope.of(context).unfocus();
-  }
 }
