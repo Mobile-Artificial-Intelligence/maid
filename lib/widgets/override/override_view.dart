@@ -83,8 +83,11 @@ class OverrideViewState extends State<OverrideView> {
     );
   }
 
-  Widget buildActionsRow() => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget buildActionsRow() => Wrap(
+    alignment: WrapAlignment.center,
+    runAlignment: WrapAlignment.center,
+    spacing: 16,
+    runSpacing: 16,
     children: [
       ElevatedButton(
         onPressed: () => setState(() => overrideCount += 1), 

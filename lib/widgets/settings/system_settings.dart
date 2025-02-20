@@ -32,7 +32,9 @@ class SystemSettings extends StatelessWidget {
 
   Widget buildColorPicker() => Selector<AppSettings, Color>(
     selector: (context, settings) => settings.seedColor,
-    builder: (context, color, child) => ColorPicker(
+    builder: (context, color, child) => HueRingPicker(
+      portraitOnly: true,
+      displayThumbColor: false,
       pickerColor: color, 
       onColorChanged: (newColor) => AppSettings.of(context).seedColor = newColor,
     ),
