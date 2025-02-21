@@ -94,7 +94,14 @@ class ArtificialIntelligence extends ChangeNotifier {
 
   bool busy = false;
 
-  bool fileLoading = false;
+  bool _fileLoading = false;
+
+  bool get fileLoading => _fileLoading;
+
+  set fileLoading(bool value) {
+    _fileLoading = value;
+    notifyListeners();
+  }
   
   bool get canPrompt {
     if (busy) return false;

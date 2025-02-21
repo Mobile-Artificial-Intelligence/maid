@@ -15,8 +15,7 @@ extension LlamaCppExtension on ArtificialIntelligence {
   }
   
   void loadModel() async {
-    context.model = null;
-    notify();
+    model = null;
     
     final result = await FilePicker.platform.pickFiles(
       dialogTitle: "Load Model File",
@@ -25,12 +24,10 @@ extension LlamaCppExtension on ArtificialIntelligence {
       allowCompression: false,
       onFileLoading: (status) {
         fileLoading = status == FilePickerStatus.picking;
-        notify();
       } 
     );
 
     fileLoading = false;
-    notify();
 
     if (result == null ||
         result.files.isEmpty ||

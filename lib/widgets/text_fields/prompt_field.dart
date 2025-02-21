@@ -53,6 +53,8 @@ class PromptFieldState extends State<PromptField> {
     if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
       final ai = ArtificialIntelligence.of(context);
 
+      ai.fileLoading = true;
+
       final cacheDirectory = await getApplicationCacheDirectory();
       final bytes = await File(path).readAsBytes();
 
@@ -65,6 +67,7 @@ class PromptFieldState extends State<PromptField> {
         await ai.switchContext(oldEco);
       }
 
+      ai.fileLoading = false;
       ai.model = file.path;
       ai.reloadModel();
     } 
