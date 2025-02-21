@@ -12,6 +12,7 @@ class PromptField extends StatefulWidget {
 class PromptFieldState extends State<PromptField> {
   final TextEditingController controller = TextEditingController();
   StreamSubscription? streamSubscription;
+  bool isNotEmpty = false;
 
   @override
   void initState() {
@@ -62,11 +63,34 @@ class PromptFieldState extends State<PromptField> {
     }
   }
 
+  void onChanged(String value) => setState(() => isNotEmpty = value.isNotEmpty);
+
+  void onClear() {
+    controller.clear();
+    setState(() => isNotEmpty = false);
+  }
+
   @override
   Widget build(BuildContext context) => SafeArea(
     child: Padding(
       padding: const EdgeInsets.all(8.0),
-      child: buildPromptField(),
+      child: buildColumn()
+    )
+  );
+
+  Widget buildColumn() => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      if (isNotEmpty) buildClearButton(),
+      buildPromptField(),
+    ],
+  );
+
+  Widget buildClearButton() => Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: ElevatedButton(
+      onPressed: onClear, 
+      child: const Text('Clear Prompt')
     )
   );
 
@@ -78,6 +102,7 @@ class PromptFieldState extends State<PromptField> {
     enableInteractiveSelection: true,
     controller: controller,
     decoration: buildInputDecoration(),
+    onChanged: onChanged,
   );
 
   /// This is the input decoration for the prompt field. 
