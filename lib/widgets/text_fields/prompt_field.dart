@@ -50,19 +50,19 @@ class PromptFieldState extends State<PromptField> {
   }
 
   void handleFile(String path) async {
-    if (path.endsWith('.gguf')) {
+    if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
       final ai = ArtificialIntelligence.of(context);
-
+  
       if (ai.ecosystem != ArtificialIntelligenceEcosystem.llamaCPP) {
         final oldEco = ai.ecosystem;
         ai.ecosystem = ArtificialIntelligenceEcosystem.llamaCPP;
         await ai.switchContext(oldEco);
       }
-
+  
       ai.model = path;
       ai.reloadModel();
-    }
-    else if (path.endsWith('.txt')) {
+    } 
+    else if (RegExp(r'\.txt$', caseSensitive: false).hasMatch(path)) {
       final text = await File(path).readAsString();
       setState(() {
         controller.text = text;
