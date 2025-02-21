@@ -35,7 +35,7 @@ class LoadModelButton extends StatelessWidget {
         style: buildStyle(context),
       ),
       Expanded(
-        child: Selector<ArtificialIntelligence, String?>(selector: (context, ai) => ai.model, builder: textBuilder),
+        child: Selector<ArtificialIntelligence, ({String? model, bool loading})>(selector: (context, ai) => (model: ai.model, loading: ai.fileLoading), builder: textBuilder),
       ),
       Text(
         "> > >",
@@ -44,10 +44,21 @@ class LoadModelButton extends StatelessWidget {
     ],
   );
 
-  Widget textBuilder(BuildContext context, String? model, Widget? child) => Text(
-    model != null ? model.split('/').last : "Load Model",
-    overflow: TextOverflow.ellipsis,
-    textAlign: TextAlign.center,
-    style: buildStyle(context),
-  );
+  Widget textBuilder(BuildContext context, ({String? model, bool loading}) record, Widget? child) {
+    String text;
+
+    if (record.loading) {
+      text = "Loading...";
+    }
+    else {
+      text = record.model != null ? record.model!.split('/').last : "Load Model";
+    }
+    
+    return Text(
+      text,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      style: buildStyle(context),
+    );
+  }
 }

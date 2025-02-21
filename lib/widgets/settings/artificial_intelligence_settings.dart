@@ -61,8 +61,33 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     mainAxisSize: MainAxisSize.min,
     children: [
       buildModelText(),
-      IconButton(onPressed: ArtificialIntelligence.of(context).loadModel, icon: const Icon(Icons.folder)),
+      buildModelLoaderButtonSelector(),
     ],
+  );
+
+  Widget buildModelLoaderButtonSelector() => Selector<ArtificialIntelligence, bool>(
+    selector: (context, ai) => ai.fileLoading,
+    builder: modelLoaderButtonBuilder,
+  );
+
+  Widget modelLoaderButtonBuilder(BuildContext context, bool loading, Widget? child) => loading
+    ? buildSpinner()
+    : buildModelLoaderButton(context);
+
+  Widget buildSpinner() => const Padding(
+    padding: EdgeInsets.all(8.0),
+    child: SizedBox(
+      width: 24,
+      height: 24,
+      child: Center(
+        child: CircularProgressIndicator(strokeWidth: 3.0),
+      ),
+    ),
+  );
+
+  Widget buildModelLoaderButton(BuildContext context) => IconButton(
+    onPressed: ArtificialIntelligence.of(context).loadModel, 
+    icon: const Icon(Icons.folder)
   );
 
   Widget buildModelLoaderTitle() => Expanded(

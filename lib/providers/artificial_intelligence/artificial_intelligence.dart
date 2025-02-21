@@ -95,6 +95,8 @@ class ArtificialIntelligence extends ChangeNotifier {
   Llama? _llama;
 
   bool busy = false;
+
+  bool fileLoading = false;
   
   bool get canPrompt {
     if (busy) return false;
