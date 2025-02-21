@@ -44,15 +44,17 @@ class PromptFieldState extends State<PromptField> {
         isNotEmpty = first.path.isNotEmpty;
       });
     }
+    else if (first.type == SharedMediaType.image) {
+      print('Image: ${first.path}');
+    }
     else if (first.type == SharedMediaType.file) {
+      print('File: ${first.path}');
       handleFile(first.path);
     }
   }
 
   void handleFile(String path) async {
     final ai = ArtificialIntelligence.of(context);
-    final cacheDirectory = await getApplicationCacheDirectory();
-    final file = File('${cacheDirectory.path}/${path.split('/').last}');
     if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
       if (ai.ecosystem != ArtificialIntelligenceEcosystem.llamaCPP) {
         final oldEco = ai.ecosystem;
@@ -60,7 +62,7 @@ class PromptFieldState extends State<PromptField> {
         await ai.switchContext(oldEco);
       }
 
-      ai.model = file.path;
+      ai.model = path;
       ai.reloadModel();
     } 
   }

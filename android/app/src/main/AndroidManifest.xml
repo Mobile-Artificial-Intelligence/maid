@@ -32,6 +32,12 @@
                    android:mimeType="*/*"
                    android:scheme="content" />
             </intent-filter>
+            <!-- Intent filter to handle image shares -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
             <!-- Intent filter to handle text shares -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
