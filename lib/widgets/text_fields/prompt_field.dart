@@ -63,13 +63,6 @@ class PromptFieldState extends State<PromptField> {
       ai.model = file.path;
       ai.reloadModel();
     } 
-    else if (RegExp(r'\.txt$', caseSensitive: false).hasMatch(path)) {
-      final text = await file.readAsString();
-      setState(() {
-        controller.text = text;
-        isNotEmpty = text.isNotEmpty;
-      });
-    }
   }
 
   /// This is the onPressed function that will be used to submit the message.
