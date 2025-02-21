@@ -19,23 +19,10 @@ class PromptFieldState extends State<PromptField> {
     super.initState();
     if (Platform.isAndroid) {
       // For sharing or opening text coming from outside the app while the app is in the memory
-      streamSubscription =
-          ReceiveSharingIntent.instance.getMediaStream().listen((value) {
-        setState(() {
-          controller.text = value.first.path;
-        });
-      }, onError: (err) {
-        log(err.toString());
-      });
+      streamSubscription = ReceiveSharingIntent.instance.getMediaStream().listen(handleShare, onError: (err) => log(err.toString()));
 
       // For sharing or opening text coming from outside the app while the app is closed
-      ReceiveSharingIntent.instance.getInitialMedia().then((value) {
-        if (value.isNotEmpty) {
-          setState(() {
-            controller.text = value.first.path;
-          });
-        }
-      });
+      ReceiveSharingIntent.instance.getInitialMedia().then(handleShare);
     }
   }
 
@@ -43,6 +30,14 @@ class PromptFieldState extends State<PromptField> {
   void dispose() {
     streamSubscription?.cancel();
     super.dispose();
+  }
+
+  void handleShare(List<SharedMediaFile> value) {
+    if (value.isNotEmpty) {
+      setState(() {
+        controller.text = value.first.path;
+      });
+    }
   }
 
   /// This is the onPressed function that will be used to submit the message.
