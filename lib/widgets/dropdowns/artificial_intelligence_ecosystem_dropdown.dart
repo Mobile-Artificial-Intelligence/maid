@@ -55,8 +55,11 @@ class _ArtificialIntelligenceEcosystemDropdownState extends State<ArtificialInte
     itemBuilder: itemBuilder,
     onOpened: () => setState(() => open = true),
     onCanceled: () => setState(() => open = false),
-    onSelected: (ecosystem) {
+    onSelected: (ecosystem) async {
+      final ai = ArtificialIntelligence.of(context);
+      final oldEcosystem = ai.ecosystem;
       ArtificialIntelligence.of(context).ecosystem = ecosystem;
+      await ai.switchContext(oldEcosystem);
       setState(() => open = false);
     }
   );

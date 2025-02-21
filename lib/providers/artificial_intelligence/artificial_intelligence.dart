@@ -31,9 +31,7 @@ class ArtificialIntelligence extends ChangeNotifier {
   ArtificialIntelligenceEcosystem get ecosystem => _ecosystem;
 
   set ecosystem(ArtificialIntelligenceEcosystem eco) {
-    final oldEco = _ecosystem;
     _ecosystem = eco;
-    switchContext(oldEco);
     saveAndNotify();
   }
 

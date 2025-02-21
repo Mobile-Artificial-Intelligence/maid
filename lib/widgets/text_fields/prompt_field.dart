@@ -44,6 +44,31 @@ class PromptFieldState extends State<PromptField> {
         isNotEmpty = first.path.isNotEmpty;
       });
     }
+    else if (first.type == SharedMediaType.file) {
+      handleFile(first.path);
+    }
+  }
+
+  void handleFile(String path) async {
+    if (path.endsWith('.gguf')) {
+      final ai = ArtificialIntelligence.of(context);
+
+      if (ai.ecosystem != ArtificialIntelligenceEcosystem.llamaCPP) {
+        final oldEco = ai.ecosystem;
+        ai.ecosystem = ArtificialIntelligenceEcosystem.llamaCPP;
+        await ai.switchContext(oldEco);
+      }
+
+      ai.model = path;
+      ai.reloadModel();
+    }
+    else if (path.endsWith('.txt')) {
+      final text = await File(path).readAsString();
+      setState(() {
+        controller.text = text;
+        isNotEmpty = text.isNotEmpty;
+      });
+    }
   }
 
   /// This is the onPressed function that will be used to submit the message.

@@ -24,6 +24,14 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
             />
+            <!-- Intent filter to handle files -->
+            <intent-filter>
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <data
+                   android:mimeType="*/*"
+                   android:scheme="content" />
+            </intent-filter>
             <!-- Intent filter to handle text shares -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>

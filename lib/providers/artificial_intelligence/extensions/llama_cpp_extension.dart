@@ -4,8 +4,12 @@ extension LlamaCppExtension on ArtificialIntelligence {
   Stream<String> llamaPrompt(List<ChatMessage> messages) async* {
     assert(ecosystem == ArtificialIntelligenceEcosystem.llamaCPP);
     assert(remoteContext == null);
-    assert(_llama != null);
     assert(model != null);
+
+    if (_llama == null) {
+      reloadModel();
+      assert(_llama != null);
+    }
 
     yield* _llama!.prompt(messages);
   }
@@ -44,6 +48,7 @@ extension LlamaCppExtension on ArtificialIntelligence {
     }
 
     reloadModel();
+    saveAndNotify();
   }
 
   void reloadModel() {
@@ -62,6 +67,5 @@ extension LlamaCppExtension on ArtificialIntelligence {
       contextParams: ContextParams.fromMap(overrides),
       samplingParams: SamplingParams.fromMap({...overrides, 'greedy': true, 'seed': math.Random().nextInt(1000000)})
     );
-    saveAndNotify();
   }
 }
