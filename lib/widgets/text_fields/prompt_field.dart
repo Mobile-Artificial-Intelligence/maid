@@ -13,6 +13,7 @@ class PromptFieldState extends State<PromptField> {
   final TextEditingController controller = TextEditingController();
   StreamSubscription? streamSubscription;
   bool isNotEmpty = false;
+  bool isAltPressed = false;
 
   @override
   void initState() {
@@ -33,20 +34,22 @@ class PromptFieldState extends State<PromptField> {
   }
 
   void handleShare(List<SharedMediaFile> value) {
-    if (value.isNotEmpty) {
-      setState(() {
-        controller.text = value.first.path;
-      });
-    }
+    if (value.isEmpty) return;
+
+    setState(() {
+      controller.text = value.first.path;
+      isNotEmpty = value.first.path.isNotEmpty;
+    });
   }
 
   /// This is the onPressed function that will be used to submit the message.
   /// It will call the onPrompt function with the text from the controller.
   /// It will also clear the controller after the message is submitted.
   void onSubmit() async {
+    final prompt = controller.text;
+    controller.clear();
+    setState(() => isNotEmpty = controller.text.isNotEmpty);
     try {
-      final prompt = controller.text;
-      controller.clear();
       await ArtificialIntelligence.of(context).prompt(prompt);
     }
     catch (exception) {
@@ -77,7 +80,7 @@ class PromptFieldState extends State<PromptField> {
     mainAxisSize: MainAxisSize.min,
     children: [
       if (isNotEmpty) buildClearButton(),
-      buildPromptField(),
+      buildKeyboardListener(),
     ],
   );
 
@@ -89,15 +92,29 @@ class PromptFieldState extends State<PromptField> {
     )
   );
 
+  Widget buildKeyboardListener() => Flexible(
+    child: KeyboardListener(
+      focusNode: FocusNode(),
+      onKeyEvent:(value) {
+        if (value.logicalKey == LogicalKeyboardKey.altLeft || value.logicalKey == LogicalKeyboardKey.altRight) {
+          setState(() => isAltPressed = value is KeyDownEvent);
+        }
+      },
+      child: buildPromptField(),
+    )
+  );
+
   /// This is the prompt field that will be used to type a message.
   Widget buildPromptField() => TextField(
     keyboardType: TextInputType.multiline,
+    textInputAction: PlatformExtension.isDesktop && !isAltPressed ? TextInputAction.done : TextInputAction.newline,
     minLines: 1,
     maxLines: 9,
     enableInteractiveSelection: true,
     controller: controller,
     decoration: buildInputDecoration(),
     onChanged: onChanged,
+    onSubmitted: (_) => onSubmit(),
   );
 
   /// This is the input decoration for the prompt field. 
@@ -119,7 +136,7 @@ class PromptFieldState extends State<PromptField> {
     selector: (context, ai) => ai.canPrompt,
     builder: (context, canPrompt, child) => IconButton(
       icon: const Icon(Icons.send),
-      onPressed: canPrompt ? onSubmit : null,
+      onPressed: isNotEmpty && canPrompt ? onSubmit : null,
       disabledColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
     ),
   );
