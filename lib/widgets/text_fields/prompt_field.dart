@@ -36,10 +36,14 @@ class PromptFieldState extends State<PromptField> {
   void handleShare(List<SharedMediaFile> value) {
     if (value.isEmpty) return;
 
-    setState(() {
-      controller.text = value.first.path;
-      isNotEmpty = value.first.path.isNotEmpty;
-    });
+    final first = value.first;
+
+    if (first.type == SharedMediaType.text) {
+      setState(() {
+        controller.text = first.path;
+        isNotEmpty = first.path.isNotEmpty;
+      });
+    }
   }
 
   /// This is the onPressed function that will be used to submit the message.
