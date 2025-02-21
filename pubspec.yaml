@@ -20,7 +20,6 @@ dependencies:
 
   # For loading images and GGUF files
   file_picker: 8.1.7
-  path_provider: ^2.1.5
 
   # Supported Ecosystems
   lcpp: ^0.1.5

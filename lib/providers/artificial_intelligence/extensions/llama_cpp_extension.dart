@@ -48,7 +48,23 @@ extension LlamaCppExtension on ArtificialIntelligence {
     saveAndNotify();
   }
 
-  void reloadModel() {
+  void loadModelFile(String path) async {
+    assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
+    
+    if (ecosystem != ArtificialIntelligenceEcosystem.llamaCPP) {
+      final oldEco = ecosystem;
+      ecosystem = ArtificialIntelligenceEcosystem.llamaCPP;
+      await switchContext(oldEco);
+    }
+
+    assert(ecosystem == ArtificialIntelligenceEcosystem.llamaCPP);
+    assert(remoteContext == null);
+
+    model = path;
+    reloadModel();
+  }
+
+  void reloadModel() async {
     if (model == null) return;
     assert(ecosystem == ArtificialIntelligenceEcosystem.llamaCPP);
     assert(remoteContext == null);

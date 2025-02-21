@@ -48,22 +48,13 @@ class PromptFieldState extends State<PromptField> {
       print('Image: ${first.path}');
     }
     else if (first.type == SharedMediaType.file) {
-      print('File: ${first.path}');
       handleFile(first.path);
     }
   }
 
-  void handleFile(String path) async {
-    final ai = ArtificialIntelligence.of(context);
+  void handleFile(String path) {
     if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
-      if (ai.ecosystem != ArtificialIntelligenceEcosystem.llamaCPP) {
-        final oldEco = ai.ecosystem;
-        ai.ecosystem = ArtificialIntelligenceEcosystem.llamaCPP;
-        await ai.switchContext(oldEco);
-      }
-
-      ai.model = path;
-      ai.reloadModel();
+      ArtificialIntelligence.of(context).loadModelFile(path);
     } 
   }
 
