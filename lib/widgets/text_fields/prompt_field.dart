@@ -45,7 +45,10 @@ class PromptFieldState extends State<PromptField> {
       });
     }
     else if (first.type == SharedMediaType.image) {
-      print('Image: ${first.path}');
+      showDialog(
+        context: context,
+        builder: (context) => SharingDialog(file: first),
+      );
     }
     else if (first.type == SharedMediaType.file) {
       handleFile(first.path);

@@ -50,6 +50,7 @@ part 'widgets/chat/chat_tile.dart';
 part 'widgets/chat/chat_view.dart';
 
 part 'widgets/dialogs/error_dialog.dart';
+part 'widgets/dialogs/sharing_dialog.dart';
 
 part 'widgets/dropdowns/artificial_intelligence_ecosystem_dropdown.dart';
 part 'widgets/dropdowns/override_type_dropdown.dart';
