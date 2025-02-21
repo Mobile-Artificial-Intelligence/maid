@@ -50,29 +50,21 @@ class PromptFieldState extends State<PromptField> {
   }
 
   void handleFile(String path) async {
+    final ai = ArtificialIntelligence.of(context);
+    final cacheDirectory = await getApplicationCacheDirectory();
+    final file = File('${cacheDirectory.path}/${path.split('/').last}');
     if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
-      final ai = ArtificialIntelligence.of(context);
-
-      ai.fileLoading = true;
-
-      final cacheDirectory = await getApplicationCacheDirectory();
-      final bytes = await File(path).readAsBytes();
-
-      final file = File('${cacheDirectory.path}/${path.split('/').last}');
-      await file.writeAsBytes(bytes);
-
       if (ai.ecosystem != ArtificialIntelligenceEcosystem.llamaCPP) {
         final oldEco = ai.ecosystem;
         ai.ecosystem = ArtificialIntelligenceEcosystem.llamaCPP;
         await ai.switchContext(oldEco);
       }
 
-      ai.fileLoading = false;
       ai.model = file.path;
       ai.reloadModel();
     } 
     else if (RegExp(r'\.txt$', caseSensitive: false).hasMatch(path)) {
-      final text = await File(path).readAsString();
+      final text = await file.readAsString();
       setState(() {
         controller.text = text;
         isNotEmpty = text.isNotEmpty;
