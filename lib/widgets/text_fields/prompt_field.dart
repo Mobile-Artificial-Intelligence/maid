@@ -11,6 +11,38 @@ class PromptField extends StatefulWidget {
 
 class PromptFieldState extends State<PromptField> {
   final TextEditingController controller = TextEditingController();
+  StreamSubscription? streamSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) {
+      // For sharing or opening text coming from outside the app while the app is in the memory
+      streamSubscription =
+          ReceiveSharingIntent.instance.getMediaStream().listen((value) {
+        setState(() {
+          controller.text = value.first.path;
+        });
+      }, onError: (err) {
+        log(err.toString());
+      });
+
+      // For sharing or opening text coming from outside the app while the app is closed
+      ReceiveSharingIntent.instance.getInitialMedia().then((value) {
+        if (value.isNotEmpty) {
+          setState(() {
+            controller.text = value.first.path;
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    streamSubscription?.cancel();
+    super.dispose();
+  }
 
   /// This is the onPressed function that will be used to submit the message.
   /// It will call the onPrompt function with the text from the controller.
