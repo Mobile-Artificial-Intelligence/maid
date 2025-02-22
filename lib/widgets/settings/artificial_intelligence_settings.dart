@@ -4,7 +4,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   const ArtificialIntelligenceSettings({super.key});
 
   @override
-  Widget build(BuildContext context) => Selector<ArtificialIntelligenceProvider, ArtificialIntelligenceNotifier>(
+  Widget build(BuildContext context) => Selector<MaidContext, ArtificialIntelligenceNotifier>(
     selector: (context, ai) => ai.aiNotifier,
     builder: buildColumn,
   );
@@ -27,7 +27,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     children: [
       buildRemoteModel(),
       const SizedBox(height: 8),
-      if (ArtificialIntelligenceProvider.of(context).ollamaNotifier != null) buildLocalSearchSwitch(context),
+      if (MaidContext.of(context).ollamaNotifier != null) buildLocalSearchSwitch(context),
       BaseUrlTextField(),
       const SizedBox(height: 8),
       ApiKeyTextField(),
@@ -65,7 +65,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     ],
   );
 
-  Widget buildModelLoaderButtonSelector() => Selector<ArtificialIntelligenceProvider, bool>(
+  Widget buildModelLoaderButtonSelector() => Selector<MaidContext, bool>(
     selector: (context, ai) => ai.llamaCppNotifier!.loading,
     builder: modelLoaderButtonBuilder,
   );
@@ -86,7 +86,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   );
 
   Widget buildModelLoaderButton(BuildContext context) => IconButton(
-    onPressed: ArtificialIntelligenceProvider.of(context).llamaCppNotifier!.pickModel, 
+    onPressed: MaidContext.of(context).llamaCppNotifier!.pickModel, 
     icon: const Icon(Icons.folder)
   );
 
@@ -98,7 +98,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     )
   );
 
-  Widget buildModelText() => Selector<ArtificialIntelligenceProvider, String?>(
+  Widget buildModelText() => Selector<MaidContext, String?>(
     selector: (context, ai) => ai.model,
     builder: modelTextBuilder,
   );
@@ -124,7 +124,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
-      Selector<ArtificialIntelligenceProvider, bool?>(
+      Selector<MaidContext, bool?>(
         selector: (context, ai) => ai.ollamaNotifier?.searchLocalNetwork,
         builder: buildSwitch,
       ),
@@ -137,7 +137,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   );
 
   void onLocalSearchChanged(BuildContext context, bool value) {
-    final ai = ArtificialIntelligenceProvider.of(context);
+    final ai = MaidContext.of(context);
     if (
       (Platform.isAndroid || Platform.isIOS) &&
       ai.ollamaNotifier!.searchLocalNetwork == null && 
@@ -177,7 +177,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   );
 
   void closePermissionsAlert(BuildContext context) async {
-    final ai = ArtificialIntelligenceProvider.of(context);
+    final ai = MaidContext.of(context);
     Navigator.of(context).pop();
 
     final androidInfo = await DeviceInfoPlugin().androidInfo;

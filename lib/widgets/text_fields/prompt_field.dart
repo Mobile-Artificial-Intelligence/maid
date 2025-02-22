@@ -57,7 +57,7 @@ class PromptFieldState extends State<PromptField> {
 
   void handleFile(String path) {
     if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
-      ArtificialIntelligenceProvider.of(context).llamaCppNotifier!.loadModelFile(path);
+      MaidContext.of(context).llamaCppNotifier!.loadModelFile(path);
     } 
   }
 
@@ -69,7 +69,7 @@ class PromptFieldState extends State<PromptField> {
     controller.clear();
     setState(() => isNotEmpty = controller.text.isNotEmpty);
     try {
-      await ArtificialIntelligenceProvider.of(context).prompt(prompt);
+      await MaidContext.of(context).prompt(prompt);
     }
     catch (exception) {
       if (!mounted) return;
@@ -144,14 +144,14 @@ class PromptFieldState extends State<PromptField> {
   );
 
   /// This is the submit button that will be used to submit the message.
-  Widget suffixButtonBuilder() => Selector<ArtificialIntelligenceProvider, bool>(
+  Widget suffixButtonBuilder() => Selector<MaidContext, bool>(
     selector: (context, ai) => ai.busy,
     builder: (context, busy, child) => busy ? 
       buildStopButton() : 
       buildSubmitButton(),
   );
 
-  Widget buildSubmitButton() => Selector<ArtificialIntelligenceProvider, bool>(
+  Widget buildSubmitButton() => Selector<MaidContext, bool>(
     selector: (context, ai) => ai.canPrompt,
     builder: (context, canPrompt, child) => IconButton(
       icon: const Icon(Icons.send),
@@ -167,6 +167,6 @@ class PromptFieldState extends State<PromptField> {
       color: Theme.of(context).colorScheme.onError,
     ),
     iconSize: 30,
-    onPressed: ArtificialIntelligenceProvider.of(context).stop,
+    onPressed: MaidContext.of(context).stop,
   );
 }

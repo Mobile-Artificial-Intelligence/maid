@@ -24,13 +24,13 @@ import 'package:ollama_dart/ollama_dart.dart' as ollama;
 import 'package:openai_dart/openai_dart.dart' as open_ai;
 import 'package:mistralai_dart/mistralai_dart.dart' as mistral;
 
-part 'classes/artificial_intelligence_context.dart';
+part 'providers/maid_context/classes/artificial_intelligence_notifier.dart';
 
 part 'providers/app_settings/app_settings.dart';
 part 'providers/app_settings/extensions/silly_tavern_extension.dart';
-part 'providers/artificial_intelligence/artificial_intelligence.dart';
-part 'providers/artificial_intelligence/extensions/chat_extension.dart';
-part 'providers/artificial_intelligence/extensions/inference_extension.dart';
+part 'providers/maid_context/maid_context.dart';
+part 'providers/maid_context/extensions/chat_extension.dart';
+part 'providers/maid_context/extensions/inference_extension.dart';
 
 part 'types/override_type.dart';
 
@@ -113,8 +113,8 @@ class Maid extends StatelessWidget {
       ChangeNotifierProvider<AppSettings>(
         create: (context) => AppSettings(),
       ),
-      ChangeNotifierProvider<ArtificialIntelligenceProvider>(
-        create: (context) => ArtificialIntelligenceProvider(),
+      ChangeNotifierProvider<MaidContext>(
+        create: (context) => MaidContext(),
       ),
     ],
     child: buildConsumer(),

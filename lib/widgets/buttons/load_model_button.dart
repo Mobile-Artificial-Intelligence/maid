@@ -14,7 +14,7 @@ class LoadModelButton extends StatelessWidget {
   );
 
   Widget buildInkWell(BuildContext context) => InkWell(
-    onTap: ArtificialIntelligenceProvider.of(context).llamaCppNotifier!.pickModel,
+    onTap: MaidContext.of(context).llamaCppNotifier!.pickModel,
     borderRadius: BorderRadius.circular(10),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -35,7 +35,7 @@ class LoadModelButton extends StatelessWidget {
         style: buildStyle(context),
       ),
       Expanded(
-        child: Selector<ArtificialIntelligenceProvider, ({String? model, bool loading})>(selector: (context, ai) => (model: ai.model, loading: ai.llamaCppNotifier!.loading), builder: textBuilder),
+        child: Selector<MaidContext, ({String? model, bool loading})>(selector: (context, ai) => (model: ai.model, loading: ai.llamaCppNotifier!.loading), builder: textBuilder),
       ),
       Text(
         "> > >",

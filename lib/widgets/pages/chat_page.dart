@@ -23,7 +23,7 @@ class ChatPageState extends State<ChatPage> {
     ] 
   );
 
-  Widget buildTitle() => Selector<ArtificialIntelligenceProvider, ArtificialIntelligenceNotifier>(
+  Widget buildTitle() => Selector<MaidContext, ArtificialIntelligenceNotifier>(
     selector: (context, ai) => ai.aiNotifier,
     builder: titleBuilder
   );

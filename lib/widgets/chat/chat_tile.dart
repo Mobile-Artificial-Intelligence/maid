@@ -18,7 +18,7 @@ class ChatTileState extends State<ChatTile> {
   final GlobalKey key = GlobalKey();
 
   void onChatChange() {
-    ArtificialIntelligenceProvider.of(context).root = widget.node;
+    MaidContext.of(context).root = widget.node;
   }
 
   @override
@@ -30,7 +30,7 @@ class ChatTileState extends State<ChatTile> {
       maxLines: 1,
     ),
     selected: widget.selected,
-    onTap: !ArtificialIntelligenceProvider.of(context).busy ? onChatChange : null,
+    onTap: !MaidContext.of(context).busy ? onChatChange : null,
     onLongPress: openPopover,
   );
 
@@ -55,6 +55,6 @@ class ChatTileState extends State<ChatTile> {
 
   PopupMenuItem buildDeletePopover() => PopupMenuItem(
     child: const Text('Delete'),
-    onTap:() => ArtificialIntelligenceProvider.of(context).deleteChat(widget.node),
+    onTap:() => MaidContext.of(context).deleteChat(widget.node),
   );
 }

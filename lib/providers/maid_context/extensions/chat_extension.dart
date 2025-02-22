@@ -1,6 +1,6 @@
 part of 'package:maid/main.dart';
 
-extension ChatExtension on ArtificialIntelligenceProvider {
+extension ChatExtension on MaidContext {
   GeneralTreeNode<ChatMessage> get root {
     if (_chats.isEmpty) {
       final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));

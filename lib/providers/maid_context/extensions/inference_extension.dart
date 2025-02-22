@@ -1,6 +1,6 @@
 part of 'package:maid/main.dart';
 
-extension InferenceExtension on ArtificialIntelligenceProvider {
+extension InferenceExtension on MaidContext {
   Future<void> prompt(String message) async {
     root.chain.last.addChild(UserChatMessage(message));
 

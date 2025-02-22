@@ -6,9 +6,9 @@ class BaseUrlTextField extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => SelectorTextField<ArtificialIntelligenceProvider>(
+  Widget build(BuildContext context) => SelectorTextField<MaidContext>(
     selector: (context, ai) => ai.baseUrl, 
-    onChanged: (value) => ArtificialIntelligenceProvider.of(context).baseUrl = value,
+    onChanged: (value) => MaidContext.of(context).baseUrl = value,
     labelText: 'Base Url',
   );
 }

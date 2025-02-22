@@ -1,12 +1,12 @@
 part of 'package:maid/main.dart';
 
-class ArtificialIntelligenceProvider extends ChangeNotifier {
-  ArtificialIntelligenceProvider() {
+class MaidContext extends ChangeNotifier {
+  MaidContext() {
     load();
   }
 
-  static ArtificialIntelligenceProvider of(BuildContext context, {bool listen = false}) => 
-    Provider.of<ArtificialIntelligenceProvider>(context, listen: listen);
+  static MaidContext of(BuildContext context, {bool listen = false}) => 
+    Provider.of<MaidContext>(context, listen: listen);
 
   void notify() {
     notifyListeners();

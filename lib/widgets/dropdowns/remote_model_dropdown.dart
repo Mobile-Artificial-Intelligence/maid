@@ -18,13 +18,13 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   }
 
   void onSelected(String model) {
-    ArtificialIntelligenceProvider.of(context).model = model;
+    MaidContext.of(context).model = model;
     setState(() => open = false);
   }
 
   Future<List<String>> getModelOptions() async {
     try {
-      return await ArtificialIntelligenceProvider.of(context).remoteAiNotifier!.getModelOptions();
+      return await MaidContext.of(context).remoteAiNotifier!.getModelOptions();
     } 
     catch (exception) {
       if (!mounted) return [];
@@ -58,7 +58,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
     onPressed: () => setState(() {})
   );
 
-  Widget buildModelText() => Selector<ArtificialIntelligenceProvider, String?>(
+  Widget buildModelText() => Selector<MaidContext, String?>(
     selector: (context, ai) => ai.model,
     builder: (context, model, child) => Text(
       model ?? 'No model selected',
@@ -69,7 +69,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
     ),
   );
 
-  Widget buildHashSelector() => Selector<ArtificialIntelligenceProvider, String?>(
+  Widget buildHashSelector() => Selector<MaidContext, String?>(
     selector: (context, ai) => ai.getEcosystemHash(),
     builder: buildFutureBuilder
   );

@@ -9,14 +9,14 @@ class OverrideView extends StatefulWidget {
 
 class OverrideViewState extends State<OverrideView> {
   Timer? timer;
-  ArtificialIntelligenceProvider? ai;
+  MaidContext? ai;
   Map<String,dynamic> overrides = {};
   int overrideCount = 0;
 
   @override
   void initState() {
     super.initState();
-    overrides.addAll(ArtificialIntelligenceProvider.of(context).overrides);
+    overrides.addAll(MaidContext.of(context).overrides);
     overrideCount = overrides.length;
     timer = Timer.periodic(const Duration(seconds: 2), (_) => save());
   }
@@ -28,7 +28,7 @@ class OverrideViewState extends State<OverrideView> {
   }
 
   void save() {
-    final ai = ArtificialIntelligenceProvider.of(context);
+    final ai = MaidContext.of(context);
 
     if (ai.overrides.length == overrides.length && ai.overrides.entries.every((entry) => overrides[entry.key] == entry.value)) {
       return;

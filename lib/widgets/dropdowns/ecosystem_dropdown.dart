@@ -32,7 +32,7 @@ class _EcosystemDropdownState extends State<EcosystemDropdown> {
     mainAxisSize: MainAxisSize.min,
     children: [
       const SizedBox(width: 8),
-      Selector<ArtificialIntelligenceProvider, String>(
+      Selector<MaidContext, String>(
         selector: (context, settings) => settings.aiNotifier.type.snakeToSentence(),
         builder: buildOverrideText
       ),
@@ -56,7 +56,7 @@ class _EcosystemDropdownState extends State<EcosystemDropdown> {
     onOpened: () => setState(() => open = true),
     onCanceled: () => setState(() => open = false),
     onSelected: (type) async {
-      ArtificialIntelligenceProvider.of(context).switchAi(type);
+      MaidContext.of(context).switchAi(type);
       setState(() => open = false);
     }
   );
