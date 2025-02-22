@@ -1,6 +1,6 @@
 part of 'package:maid/main.dart';
 
-extension ChatExtension on ArtificialIntelligence {
+extension ChatExtension on ArtificialIntelligenceProvider {
   GeneralTreeNode<ChatMessage> get root {
     if (_chats.isEmpty) {
       final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
@@ -15,7 +15,9 @@ extension ChatExtension on ArtificialIntelligence {
 
     _chats.insert(0, newRoot);
     
-    reloadModel();
+    if (_aiNotifier is LlamaCppNotifier) {
+      (_aiNotifier as LlamaCppNotifier).reloadModel();
+    }
 
     saveAndNotify();
   }

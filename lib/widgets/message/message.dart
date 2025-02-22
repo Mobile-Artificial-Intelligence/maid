@@ -50,7 +50,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   void tryRegenerate(GeneralTreeNode<ChatMessage> node) async {
     try {
-      await ArtificialIntelligence.of(context).regenerate(node);
+      await ArtificialIntelligenceProvider.of(context).regenerate(node);
     }
     catch (exception) {
       if (!mounted) return;
@@ -62,7 +62,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {
-    if (ArtificialIntelligence.of(context).busy) return;
+    if (ArtificialIntelligenceProvider.of(context).busy) return;
 
     const threshold = 80;
     
@@ -93,7 +93,7 @@ class MessageWidgetState extends State<MessageWidget> {
   // The buildCurrentMessage method will build the padding and the appropriate column based on the editing state.
   Widget buildCurrentMessage() => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-    child: editing && !ArtificialIntelligence.of(context).busy ? 
+    child: editing && !ArtificialIntelligenceProvider.of(context).busy ? 
       buildMessageEditingColumn() : 
       GestureDetector(
         onHorizontalDragEnd: onHorizontalDragEnd,
@@ -235,7 +235,7 @@ class MessageWidgetState extends State<MessageWidget> {
     ],
   );
 
-  Widget branchSwitcherBuilder() => Selector<ArtificialIntelligence, bool>(
+  Widget branchSwitcherBuilder() => Selector<ArtificialIntelligenceProvider, bool>(
     selector: (context, ai) => ai.busy,
     builder: buildBranchSwitcher,
   );
@@ -256,7 +256,7 @@ class MessageWidgetState extends State<MessageWidget> {
     ],
   );
 
-  Widget roleSpecificButtonBuilder() => Selector<ArtificialIntelligence, bool>(
+  Widget roleSpecificButtonBuilder() => Selector<ArtificialIntelligenceProvider, bool>(
     selector: (context, ai) => ai.canPrompt,
     builder: buildRoleSpecificButton,
   );
@@ -281,7 +281,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   /// This is the delete button that will be used to delete the message.
-  Widget deleteButtonBuilder() => Selector<ArtificialIntelligence, bool>(
+  Widget deleteButtonBuilder() => Selector<ArtificialIntelligenceProvider, bool>(
     selector: (context, ai) => ai.busy,
     builder: buildDeleteButton,
   );

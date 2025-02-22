@@ -1,12 +1,12 @@
 part of 'package:maid/main.dart';
 
-class ArtificialIntelligence extends ChangeNotifier {
-  ArtificialIntelligence() {
+class ArtificialIntelligenceProvider extends ChangeNotifier {
+  ArtificialIntelligenceProvider() {
     load();
   }
 
-  static ArtificialIntelligence of(BuildContext context, {bool listen = false}) => 
-    Provider.of<ArtificialIntelligence>(context, listen: listen);
+  static ArtificialIntelligenceProvider of(BuildContext context, {bool listen = false}) => 
+    Provider.of<ArtificialIntelligenceProvider>(context, listen: listen);
 
   void notify() {
     notifyListeners();
@@ -26,175 +26,83 @@ class ArtificialIntelligence extends ChangeNotifier {
     notifyListeners();
   }
 
-  ArtificialIntelligenceEcosystem _ecosystem = ArtificialIntelligenceEcosystem.llamaCPP;
+  ArtificialIntelligenceNotifier _aiNotifier = LlamaCppNotifier();
 
-  ArtificialIntelligenceEcosystem get ecosystem => _ecosystem;
+  ArtificialIntelligenceNotifier get aiNotifier => _aiNotifier;
 
-  set ecosystem(ArtificialIntelligenceEcosystem eco) {
-    _ecosystem = eco;
+  RemoteArtificialIntelligenceNotifier? get remoteAiNotifier => _aiNotifier is RemoteArtificialIntelligenceNotifier ? _aiNotifier as RemoteArtificialIntelligenceNotifier : null;
+
+  LlamaCppNotifier? get llamaCppNotifier => _aiNotifier is LlamaCppNotifier ? _aiNotifier as LlamaCppNotifier : null;
+
+  OllamaNotifier? get ollamaNotifier => _aiNotifier is OllamaNotifier ? _aiNotifier as OllamaNotifier : null;
+
+  set aiNotifier(ArtificialIntelligenceNotifier newContext) {
+    _aiNotifier = newContext;
+    _aiNotifier.addListener(notify);
     saveAndNotify();
   }
 
-  ArtificialIntelligenceContext _context = ArtificialIntelligenceContext();
+  Future<void> switchAi(String type) async {
+    await _aiNotifier.save();
 
-  ArtificialIntelligenceContext get context => _context;
+    if (_aiNotifier.type == type) return;
 
-  RemoteArtificialIntelligenceContext? get remoteContext => _context is RemoteArtificialIntelligenceContext ? _context as RemoteArtificialIntelligenceContext : null;
-
-  set context(ArtificialIntelligenceContext newContext) {
-    _context = newContext;
-    saveAndNotify();
-  }
-
-  Future<void> switchContext(ArtificialIntelligenceEcosystem oldEco) async {
-    if (oldEco == _ecosystem) return;
-
-    await _context.save(oldEco);
-
-    if (_ecosystem == ArtificialIntelligenceEcosystem.llamaCPP) {
-      _context = await ArtificialIntelligenceContext.load(_ecosystem) ?? ArtificialIntelligenceContext();
-      reloadModel();
-    }
-    else {
-      _context = await RemoteArtificialIntelligenceContext.load(_ecosystem) ?? RemoteArtificialIntelligenceContext();
-    }
+    _aiNotifier = await ArtificialIntelligenceNotifier.load(type);
+    _aiNotifier.addListener(notify);
 
     notifyListeners();
   }
 
-  String? get model => _context.model;
+  String? get model => _aiNotifier.model;
 
   set model(String? newModel) {
-    _context.model = newModel;
+    _aiNotifier.model = newModel;
     saveAndNotify();
   }
 
-  Map<String, dynamic> get overrides => _context.overrides;
+  Map<String, dynamic> get overrides => _aiNotifier.overrides;
 
   set overrides(Map<String, dynamic> newOverrides) {
-    _context.overrides = newOverrides;
+    _aiNotifier.overrides = newOverrides;
     saveAndNotify();
   }
 
-  String? get baseUrl => remoteContext?.baseUrl;
+  String? get baseUrl => remoteAiNotifier?.baseUrl;
 
   set baseUrl(String? newBaseUrl) {
-    remoteContext?.baseUrl = newBaseUrl;
+    remoteAiNotifier?.baseUrl = newBaseUrl;
     saveAndNotify();
   }
 
-  String? get apiKey => remoteContext?.apiKey;
+  String? get apiKey => remoteAiNotifier?.apiKey;
 
   set apiKey(String? newApiKey) {
-    remoteContext?.apiKey = newApiKey;
+    remoteAiNotifier?.apiKey = newApiKey;
     saveAndNotify();
   }
 
-  Llama? _llama;
-
   bool busy = false;
-
-  bool _fileLoading = false;
-
-  bool get fileLoading => _fileLoading;
-
-  set fileLoading(bool value) {
-    _fileLoading = value;
-    notifyListeners();
-  }
   
   bool get canPrompt {
     if (busy) return false;
 
-    if (
-      ecosystem == ArtificialIntelligenceEcosystem.llamaCPP && 
-      _llama != null
-    ) {
-      return true;
-    }
-    else if (
-      ecosystem == ArtificialIntelligenceEcosystem.ollama && 
-      context.model != null && context.model!.isNotEmpty
-    ) {
-      return true;
-    }
-    else if (
-      remoteContext?.apiKey != null && 
-      remoteContext!.apiKey!.isNotEmpty &&
-      context.model != null && 
-      context.model!.isNotEmpty
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
-  late mistral.MistralAIClient _mistralClient;
-
-  late open_ai.OpenAIClient _openAiClient;
-
-  late ollama.OllamaClient _ollamaClient;
-
-  bool? _searchLocalNetworkForOllama;
-
-  bool? get searchLocalNetworkForOllama => _searchLocalNetworkForOllama;
-
-  set searchLocalNetworkForOllama(bool? value) {
-    _searchLocalNetworkForOllama = value;
-    saveAndNotify();
+    return _aiNotifier.canPrompt;
   }
 
   String getEcosystemHash() {
-    return (remoteContext?.baseUrl?.hash ?? '') + (remoteContext?.apiKey?.hash ?? '');
-  }
-
-  Future<List<String>> getModelOptions() async {
-    switch (ecosystem) {
-      case ArtificialIntelligenceEcosystem.llamaCPP:
-        return ['null'];
-      case ArtificialIntelligenceEcosystem.ollama:
-        return getOllamaModelOptions();
-      case ArtificialIntelligenceEcosystem.openAI:
-        return getOpenAiModelOptions();
-      case ArtificialIntelligenceEcosystem.mistral:
-        return getMistralModelOptions();
-    }
+    return (remoteAiNotifier?.baseUrl?.hash ?? '') + (remoteAiNotifier?.apiKey?.hash ?? '');
   }
 
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final ecosystemString = prefs.getString('ecosystem');
-    if (ecosystemString != null) {
-      _ecosystem = ArtificialIntelligenceEcosystem.values.firstWhere((e) => e.name == ecosystemString);
+    final aiType = prefs.getString('ai_type');
+
+    if (aiType != null) {
+      _aiNotifier = await ArtificialIntelligenceNotifier.load(aiType);
     }
 
-    if (_ecosystem == ArtificialIntelligenceEcosystem.llamaCPP) {
-      _context = await ArtificialIntelligenceContext.load(_ecosystem) ?? ArtificialIntelligenceContext();
-    }
-    else {
-      _context = await RemoteArtificialIntelligenceContext.load(_ecosystem) ?? RemoteArtificialIntelligenceContext();
-    }
-
-    if (_context.model != null) {
-      _llama = LlamaIsolated(
-        modelParams: ModelParams(
-          path: model!,
-          vocabOnly: overrides['vocab_only'],
-          useMmap: overrides['use_mmap'],
-          useMlock: overrides['use_mlock'],
-          checkTensors: overrides['check_tensors']
-        ),
-        contextParams: ContextParams.fromMap(overrides),
-        samplingParams: SamplingParams(
-          greedy: true,
-          seed: math.Random().nextInt(1000000)
-        )
-      );
-    }
-
-    _searchLocalNetworkForOllama = prefs.getBool('search_local_network_for_ollama');
+    _aiNotifier.addListener(notify);
 
     final chatsStrings = prefs.getStringList('chats') ?? [];
 
@@ -216,13 +124,9 @@ class ArtificialIntelligence extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('ecosystem', _ecosystem.name);
+    await prefs.setString('ai_type', _aiNotifier.type);
 
-    await _context.save(_ecosystem);
-
-    if (_searchLocalNetworkForOllama != null) {
-      await prefs.setBool('search_local_network_for_ollama', _searchLocalNetworkForOllama!);
-    }
+    await _aiNotifier.save();
 
     List<String> chatsStrings = [];
 

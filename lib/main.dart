@@ -31,12 +31,7 @@ part 'providers/app_settings/extensions/silly_tavern_extension.dart';
 part 'providers/artificial_intelligence/artificial_intelligence.dart';
 part 'providers/artificial_intelligence/extensions/chat_extension.dart';
 part 'providers/artificial_intelligence/extensions/inference_extension.dart';
-part 'providers/artificial_intelligence/extensions/llama_cpp_extension.dart';
-part 'providers/artificial_intelligence/extensions/mistral_extension.dart';
-part 'providers/artificial_intelligence/extensions/ollama_extension.dart';
-part 'providers/artificial_intelligence/extensions/open_ai_extension.dart';
 
-part 'types/artificial_inteligence_ecosystem.dart';
 part 'types/override_type.dart';
 
 part 'utilities/chat_messages_extension.dart';
@@ -118,8 +113,8 @@ class Maid extends StatelessWidget {
       ChangeNotifierProvider<AppSettings>(
         create: (context) => AppSettings(),
       ),
-      ChangeNotifierProvider<ArtificialIntelligence>(
-        create: (context) => ArtificialIntelligence(),
+      ChangeNotifierProvider<ArtificialIntelligenceProvider>(
+        create: (context) => ArtificialIntelligenceProvider(),
       ),
     ],
     child: buildConsumer(),

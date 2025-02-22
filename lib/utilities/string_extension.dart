@@ -36,6 +36,11 @@ extension StringExtension on String {
       .replaceFirstMapped(RegExp(r'^[a-z]'), (match) => match[0]!.toUpperCase());
   }
 
+  String snakeToSentence() {
+    return replaceAll('_', ' ')
+        .replaceFirstMapped(RegExp(r'^[a-z]'), (match) => match[0]!.toUpperCase());
+  }
+
   double jaccardSimilarity(String other) {
     Set<String> setA = split('').toSet();
     Set<String> setB = other.split('').toSet();

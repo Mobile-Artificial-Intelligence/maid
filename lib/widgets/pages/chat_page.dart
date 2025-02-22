@@ -23,13 +23,13 @@ class ChatPageState extends State<ChatPage> {
     ] 
   );
 
-  Widget buildTitle() => Selector<ArtificialIntelligence, ArtificialIntelligenceEcosystem>(
-    selector: (context, ai) => ai.ecosystem,
+  Widget buildTitle() => Selector<ArtificialIntelligenceProvider, ArtificialIntelligenceNotifier>(
+    selector: (context, ai) => ai.aiNotifier,
     builder: titleBuilder
   );
 
-  Widget titleBuilder(BuildContext context, ArtificialIntelligenceEcosystem ecosystem, Widget? child) {
-    if (ecosystem == ArtificialIntelligenceEcosystem.llamaCPP) {
+  Widget titleBuilder(BuildContext context, ArtificialIntelligenceNotifier aiNotifier, Widget? child) {
+    if (aiNotifier is LlamaCppNotifier) {
       return const LoadModelButton();
     }
 

@@ -12,7 +12,7 @@ class ChatView extends StatelessWidget {
       children: [
         buildHeading(context),
         Divider(endIndent: 16, indent: 16, height: 16),
-        Consumer<ArtificialIntelligence>(builder: buildListView)
+        Consumer<ArtificialIntelligenceProvider>(builder: buildListView)
       ],
     )
   );
@@ -30,13 +30,13 @@ class ChatView extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       IconButton(
-        onPressed: ArtificialIntelligence.of(context).newChat,
+        onPressed: ArtificialIntelligenceProvider.of(context).newChat,
         icon: const Icon(Icons.add),
       )
     ]
   );
   
-  Widget buildListView(BuildContext context, ArtificialIntelligence ai, Widget? child) => Expanded(
+  Widget buildListView(BuildContext context, ArtificialIntelligenceProvider ai, Widget? child) => Expanded(
     child: ListView.builder(
       itemCount: ai.chats.length,
       itemBuilder: (context, index) => ChatTile(

@@ -6,9 +6,9 @@ class ApiKeyTextField extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => SelectorTextField<ArtificialIntelligence>(
+  Widget build(BuildContext context) => SelectorTextField<ArtificialIntelligenceProvider>(
     selector: (context, ai) => ai.apiKey, 
-    onChanged: (value) => ArtificialIntelligence.of(context).apiKey = value,
+    onChanged: (value) => ArtificialIntelligenceProvider.of(context).apiKey = value,
     labelText: 'Api Key',
   );
 }

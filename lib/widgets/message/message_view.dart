@@ -62,7 +62,7 @@ class MessageViewState extends State<MessageView> {
       newRootPosition = rootPosition - (widget.maxMessages ~/ 2);
     } 
     else {
-      final root = ArtificialIntelligence.of(context).root;
+      final root = ArtificialIntelligenceProvider.of(context).root;
       newRootPosition = math.min(
         root.chain.length - widget.maxMessages, 
         rootPosition + (widget.maxMessages ~/ 2)
@@ -78,7 +78,7 @@ class MessageViewState extends State<MessageView> {
     controller.addListener(onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final root = ArtificialIntelligence.of(context).root;
+      final root = ArtificialIntelligenceProvider.of(context).root;
       rootPosition = math.max(0, root.chain.length - widget.maxMessages);
       controller.jumpTo(controller.position.maxScrollExtent);
     });
@@ -124,11 +124,11 @@ class MessageViewState extends State<MessageView> {
     )
   );
 
-  Widget messageBuilder() => Consumer2<ArtificialIntelligence, AppSettings>(
+  Widget messageBuilder() => Consumer2<ArtificialIntelligenceProvider, AppSettings>(
     builder: buildMessage
   );
 
-  Widget buildMessage(BuildContext context, ArtificialIntelligence ai, AppSettings settings, Widget? child) {
+  Widget buildMessage(BuildContext context, ArtificialIntelligenceProvider ai, AppSettings settings, Widget? child) {
     final currentRoot = ai.root.chain[rootPosition];
     currentRoot.data.content = settings.systemPrompt?.formatPlaceholders(
       settings.userName ?? 'User', 

@@ -1,27 +1,13 @@
 part of 'package:maid/main.dart';
 
-extension InferenceExtension on ArtificialIntelligence {
+extension InferenceExtension on ArtificialIntelligenceProvider {
   Future<void> prompt(String message) async {
     root.chain.last.addChild(UserChatMessage(message));
 
     busy = true;
     notify();
 
-    Stream<String> stream;
-    switch (ecosystem) {
-      case ArtificialIntelligenceEcosystem.llamaCPP:
-        stream = llamaPrompt(root.chainData.copy());
-        break;
-      case ArtificialIntelligenceEcosystem.ollama:
-        stream = ollamaPrompt(root.chainData.copy());
-        break;
-      case ArtificialIntelligenceEcosystem.openAI:
-        stream = openAiPrompt(root.chainData.copy());
-        break;
-      case ArtificialIntelligenceEcosystem.mistral:
-        stream = mistralPrompt(root.chainData.copy());
-        break;
-    }
+    Stream<String> stream = _aiNotifier.prompt(root.chainData.copy());
 
     root.chain.last.addChild(AssistantChatMessage(''));
     notify();
@@ -40,36 +26,19 @@ extension InferenceExtension on ArtificialIntelligence {
 
   Future<void> regenerate(GeneralTreeNode<ChatMessage> node) async {
     busy = true;
-    notify();
-
-    if (_ecosystem == ArtificialIntelligenceEcosystem.llamaCPP) {
-      reloadModel();
-      assert(_llama != null);
-    }
-
     node.addChild(AssistantChatMessage(''));
     notify();
+
+    if (llamaCppNotifier != null) {
+      llamaCppNotifier!.reloadModel(true);
+    }
 
     assert(root.chainData.last is AssistantChatMessage);
 
     final chainData = root.chainData.copy();
     chainData.removeLast();
 
-    Stream<String> stream;
-    switch (ecosystem) {
-      case ArtificialIntelligenceEcosystem.llamaCPP:
-        stream = llamaPrompt(chainData);
-        break;
-      case ArtificialIntelligenceEcosystem.ollama:
-        stream = ollamaPrompt(chainData);
-        break;
-      case ArtificialIntelligenceEcosystem.openAI:
-        stream = openAiPrompt(chainData);
-        break;
-      case ArtificialIntelligenceEcosystem.mistral:
-        stream = mistralPrompt(chainData);
-        break;
-    }
+    Stream<String> stream = _aiNotifier.prompt(chainData);
 
     assert(node.currentChild == root.chain.last);
 
@@ -85,23 +54,8 @@ extension InferenceExtension on ArtificialIntelligence {
     }
   }
 
-  void stop() async {
-    switch (ecosystem) {
-      case ArtificialIntelligenceEcosystem.llamaCPP:
-        _llama?.stop();
-        break;
-      case ArtificialIntelligenceEcosystem.ollama:
-        _ollamaClient.endSession();
-        break;
-      case ArtificialIntelligenceEcosystem.openAI:
-        _openAiClient.endSession();
-        break;
-      case ArtificialIntelligenceEcosystem.mistral:
-        _mistralClient.endSession();
-        break;
-    }
-
-
+  void stop() {
+    _aiNotifier.stop();
     busy = false;
     saveAndNotify();
   }

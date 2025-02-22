@@ -40,7 +40,7 @@ class SettingsPage extends StatelessWidget {
     runSpacing: 16,
     children: [
       ElevatedButton(
-        onPressed: ArtificialIntelligence.of(context).clearChats, 
+        onPressed: ArtificialIntelligenceProvider.of(context).clearChats, 
         child: const Text('Clear Chats')
       ),
       ElevatedButton(
