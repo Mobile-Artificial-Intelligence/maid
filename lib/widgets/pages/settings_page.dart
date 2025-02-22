@@ -18,7 +18,7 @@ class SettingsPage extends StatelessWidget {
     mainAxisSize: MainAxisSize.max,
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
-      ArtificialIntelligenceEcosystemDropdown(),
+      EcosystemDropdown(),
       ArtificialIntelligenceSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
       OverrideView(),

@@ -1,13 +1,13 @@
 part of 'package:maid/main.dart';
 
-class ArtificialIntelligenceEcosystemDropdown extends StatefulWidget {
-  const ArtificialIntelligenceEcosystemDropdown({super.key});
+class EcosystemDropdown extends StatefulWidget {
+  const EcosystemDropdown({super.key});
 
   @override
-  State<ArtificialIntelligenceEcosystemDropdown> createState() => _ArtificialIntelligenceEcosystemDropdownState();
+  State<EcosystemDropdown> createState() => _EcosystemDropdownState();
 }
 
-class _ArtificialIntelligenceEcosystemDropdownState extends State<ArtificialIntelligenceEcosystemDropdown> {
+class _EcosystemDropdownState extends State<EcosystemDropdown> {
   bool open = false;
 
   @override
