@@ -14,10 +14,6 @@ extension ChatExtension on MaidContext {
     _chats.remove(newRoot);
 
     _chats.insert(0, newRoot);
-    
-    if (_aiNotifier is LlamaCppNotifier) {
-      (_aiNotifier as LlamaCppNotifier).reloadModel();
-    }
 
     saveAndNotify();
   }

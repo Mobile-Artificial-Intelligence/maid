@@ -1,12 +1,14 @@
 part of 'package:maid/main.dart';
 
 class ChatTile extends StatefulWidget {
+  final MaidContext chatController;
   final GeneralTreeNode<ChatMessage> node;
   final bool selected;
   final bool disabled;
 
   const ChatTile({
     super.key,
+    required this.chatController,
     required this.node,
     required this.selected,
     required this.disabled,
@@ -20,7 +22,7 @@ class ChatTileState extends State<ChatTile> {
   final GlobalKey key = GlobalKey();
 
   void onChatChange() {
-    MaidContext.of(context).root = widget.node;
+    widget.chatController.root = widget.node;
   }
 
   @override

@@ -1,7 +1,9 @@
 part of 'package:maid/main.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  final ArtificialIntelligenceNotifier aiController;
+  
+  const SettingsPage({super.key, required this.aiController});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -19,7 +21,7 @@ class SettingsPage extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
       EcosystemDropdown(),
-      ArtificialIntelligenceSettings(),
+      ArtificialIntelligenceSettings(aiController: aiController),
       Divider(endIndent: 0, indent: 0, height: 32),
       OverrideView(),
       Divider(endIndent: 0, indent: 0, height: 32),

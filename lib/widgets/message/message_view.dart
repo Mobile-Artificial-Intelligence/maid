@@ -2,14 +2,14 @@ part of 'package:maid/main.dart';
 
 class MessageView extends StatefulWidget {
   final ArtificialIntelligenceNotifier ai;
-  final MaidContext chat;
+  final MaidContext chatController;
   final AppSettings settings;
   final int maxMessages;
 
   const MessageView({
     super.key, 
     required this.ai,
-    required this.chat,
+    required this.chatController,
     required this.settings,
     required this.maxMessages,
   });
@@ -136,7 +136,7 @@ class MessageViewState extends State<MessageView> {
   );
 
   Widget buildMessage(BuildContext context, Widget? child) {
-    final currentRoot = widget.chat.root.chain[rootPosition];
+    final currentRoot = widget.chatController.root.chain[rootPosition];
     currentRoot.data.content = widget.settings.systemPrompt?.formatPlaceholders(
       widget.settings.userName ?? 'User', 
       widget.settings.assistantName ?? 'Assistant'
@@ -147,7 +147,7 @@ class MessageViewState extends State<MessageView> {
     return MessageWidget(
       key: rootKey,
       ai: widget.ai,
-      chat: widget.chat,
+      chatController: widget.chatController,
       settings: widget.settings,
       node: currentRoot,
       chainPosition: widget.maxMessages - 1,

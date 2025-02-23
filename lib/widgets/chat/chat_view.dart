@@ -1,10 +1,12 @@
 part of 'package:maid/main.dart';
 
 class ChatView extends StatelessWidget {
+  final MaidContext chatController;
   final bool disabled;
 
   const ChatView({
     super.key,
+    required this.chatController,
     required this.disabled,
   });
 
@@ -15,7 +17,10 @@ class ChatView extends StatelessWidget {
       children: [
         buildHeading(context),
         Divider(endIndent: 16, indent: 16, height: 16),
-        Consumer<MaidContext>(builder: buildListView)
+        ListenableBuilder(
+          listenable: chatController,
+          builder: buildListView
+        )
       ],
     )
   );
@@ -39,11 +44,12 @@ class ChatView extends StatelessWidget {
     ]
   );
   
-  Widget buildListView(BuildContext context, MaidContext ai, Widget? child) => Expanded(
+  Widget buildListView(BuildContext context, Widget? child) => Expanded(
     child: ListView.builder(
-      itemCount: ai.chats.length,
+      itemCount: chatController.chats.length,
       itemBuilder: (context, index) => ChatTile(
-        node: ai.chats[index], 
+        chatController: chatController,
+        node: chatController.chats[index], 
         selected: index == 0,
         disabled: disabled,
       ),

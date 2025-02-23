@@ -2,12 +2,12 @@ part of 'package:maid/main.dart';
 
 class PromptField extends StatefulWidget {
   final ArtificialIntelligenceNotifier ai;
-  final MaidContext chat;
+  final MaidContext chatController;
 
   const PromptField({
     super.key, 
     required this.ai,
-    required this.chat,
+    required this.chatController,
   });
 
   @override
@@ -74,11 +74,11 @@ class PromptFieldState extends State<PromptField> {
     controller.clear();
     setState(() => isNotEmpty = controller.text.isNotEmpty);
     try {
-      widget.chat.addToEnd(UserChatMessage(prompt));
+      widget.chatController.addToEnd(UserChatMessage(prompt));
 
-      Stream<String> stream = widget.ai.prompt(widget.chat.root.chainData.copy());
+      Stream<String> stream = widget.ai.prompt(widget.chatController.root.chainData.copy());
 
-      await widget.chat.streamToEnd(stream);
+      await widget.chatController.streamToEnd(stream);
     }
     catch (exception) {
       if (!mounted) return;

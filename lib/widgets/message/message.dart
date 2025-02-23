@@ -2,7 +2,7 @@ part of 'package:maid/main.dart';
 
 class MessageWidget extends StatefulWidget {
   final ArtificialIntelligenceNotifier ai;
-  final MaidContext chat;
+  final MaidContext chatController;
   final AppSettings settings;
   final GeneralTreeNode<ChatMessage> node;
 
@@ -20,7 +20,7 @@ class MessageWidget extends StatefulWidget {
   const MessageWidget({
     required super.key, 
     required this.ai,
-    required this.chat,
+    required this.chatController,
     required this.settings,
     required this.node,
     required this.chainPosition,
@@ -67,7 +67,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
       Stream<String> stream = widget.ai.prompt(chainData);
 
-      await widget.chat.streamToChild(node, stream);
+      await widget.chatController.streamToChild(node, stream);
     }
     catch (exception) {
       if (!mounted) return;
@@ -102,7 +102,7 @@ class MessageWidgetState extends State<MessageWidget> {
       if (widget.buildChild) MessageWidget(
         key: childKey,
         ai: widget.ai,
-        chat: widget.chat,
+        chatController: widget.chatController,
         settings: widget.settings,
         node: widget.node.currentChild!,
         chainPosition: widget.chainPosition - 1,
@@ -113,7 +113,7 @@ class MessageWidgetState extends State<MessageWidget> {
   // The buildCurrentMessage method will build the padding and the appropriate column based on the editing state.
   Widget buildCurrentMessage() => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-    child: editing && !MaidContext.of(context).aiNotifier.busy ? 
+    child: editing && !widget.ai.busy ? 
       buildMessageEditingColumn() : 
       GestureDetector(
         onHorizontalDragEnd: onHorizontalDragEnd,

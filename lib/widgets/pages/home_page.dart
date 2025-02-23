@@ -1,14 +1,14 @@
 part of 'package:maid/main.dart';
 
 class HomePage extends StatefulWidget {
-  final ArtificialIntelligenceNotifier ai;
-  final MaidContext chat;
+  final ArtificialIntelligenceNotifier aiController;
+  final MaidContext chatController;
   final AppSettings settings;
 
   const HomePage({
     super.key, 
-    required this.ai,
-    required this.chat,
+    required this.aiController,
+    required this.chatController,
     required this.settings,
   });
 
@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.ai, 
+    listenable: widget.aiController, 
     builder: scaffoldBuilder
   );
 
@@ -38,18 +38,21 @@ class HomePageState extends State<HomePage> {
   );
 
   Widget buildTitle() {
-    if (widget.ai is LlamaCppNotifier) {
+    if (widget.aiController is LlamaCppNotifier) {
       return LoadModelButton(
-        llama: widget.ai as LlamaCppNotifier
+        llama: widget.aiController as LlamaCppNotifier
       );
     }
 
-    return RemoteModelDropdown();
+    return RemoteModelDropdown(
+      aiController: widget.aiController as RemoteArtificialIntelligenceNotifier,
+    );
   }
 
   Widget buildDrawer() => Drawer(
     child: ChatView(
-      disabled: widget.ai.busy,
+      chatController: widget.chatController,
+      disabled: widget.aiController.busy,
     )
   );
 
@@ -57,13 +60,13 @@ class HomePageState extends State<HomePage> {
     children: [
       MessageView(
         maxMessages: 50,
-        ai: widget.ai,
-        chat: widget.chat,
+        ai: widget.aiController,
+        chatController: widget.chatController,
         settings: widget.settings,
       ),
       PromptField(
-        ai: widget.ai,
-        chat: widget.chat,
+        ai: widget.aiController,
+        chatController: widget.chatController,
       ),
     ],
   );

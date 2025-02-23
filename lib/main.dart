@@ -128,10 +128,10 @@ class Maid extends StatelessWidget {
     theme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.light)),
     darkTheme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.dark)),
     themeMode: settings.themeMode,
-    home: HomePage(ai: maid.aiNotifier, chat: maid, settings: settings),
+    home: HomePage(aiController: maid.aiNotifier, chatController: maid, settings: settings),
     routes: {
-      '/settings': (context) => const SettingsPage(),
-      '/chat': (context) => HomePage(ai: maid.aiNotifier, chat: maid, settings: settings),
+      '/settings': (context) => SettingsPage(aiController: maid.aiNotifier),
+      '/chat': (context) => HomePage(aiController: maid.aiNotifier, chatController: maid, settings: settings),
       '/about': (context) => const AboutPage(),
     },
     debugShowCheckedModeBanner: false,

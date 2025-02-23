@@ -1,9 +1,10 @@
 part of 'package:maid/main.dart';
 
 class RemoteModelDropdown extends StatefulWidget {
+  final RemoteArtificialIntelligenceNotifier aiController;
   final bool refreshButton;
 
-  const RemoteModelDropdown({super.key, this.refreshButton = false});
+  const RemoteModelDropdown({super.key, this.refreshButton = false, required this.aiController});
 
   @override
   State<RemoteModelDropdown> createState() => _RemoteModelDropdownState();
@@ -18,13 +19,13 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   }
 
   void onSelected(String model) {
-    MaidContext.of(context).model = model;
+    widget.aiController.model = model;
     setState(() => open = false);
   }
 
   Future<List<String>> getModelOptions() async {
     try {
-      return await MaidContext.of(context).remoteAiNotifier!.getModelOptions();
+      return await widget.aiController.getModelOptions();
     } 
     catch (exception) {
       if (!mounted) return [];
@@ -39,13 +40,27 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   }
 
   @override
-  Widget build(BuildContext context) => Row(
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: widget.aiController, 
+    builder: buildRow
+  );
+
+  Widget buildRow(BuildContext context, Widget? child) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [
       if (widget.refreshButton) buildRefreshButton(),
       const SizedBox(width: 8),
-      buildModelText(),
-      buildHashSelector()
+      Text(
+        widget.aiController.model ?? 'No model selected',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurface,
+          fontSize: 16
+        )
+      ),
+      FutureBuilder<List<String>?>(
+        future: getModelOptions(),
+        builder: buildPopupButton
+      )
     ]
   );
 
@@ -56,27 +71,6 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
       size: 24
     ),
     onPressed: () => setState(() {})
-  );
-
-  Widget buildModelText() => Selector<MaidContext, String?>(
-    selector: (context, ai) => ai.model,
-    builder: (context, model, child) => Text(
-      model ?? 'No model selected',
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface,
-        fontSize: 16
-      )
-    ),
-  );
-
-  Widget buildHashSelector() => Selector<MaidContext, String?>(
-    selector: (context, ai) => ai.getEcosystemHash(),
-    builder: buildFutureBuilder
-  );
-
-  Widget buildFutureBuilder(BuildContext context, String? hash, Widget? child) => FutureBuilder<List<String>?>(
-    future: getModelOptions(),
-    builder: buildPopupButton
   );
 
   Widget buildPopupButton(BuildContext context, AsyncSnapshot<List<String>?> snapshot) {
