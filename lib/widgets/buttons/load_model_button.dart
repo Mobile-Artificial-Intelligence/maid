@@ -14,6 +14,7 @@ class LoadModelButton extends StatelessWidget {
   );
 
   Widget buildInkWell(BuildContext context) => InkWell(
+    key: ValueKey("load_model"),
     onTap: MaidContext.of(context).llamaCppNotifier!.pickModel,
     borderRadius: BorderRadius.circular(10),
     child: Padding(

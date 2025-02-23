@@ -106,6 +106,7 @@ class PromptFieldState extends State<PromptField> {
   Widget buildClearButton() => Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
     child: ElevatedButton(
+      key: ValueKey('clear_prompt_button'),
       onPressed: onClear, 
       child: const Text('Clear Prompt')
     )
@@ -125,6 +126,7 @@ class PromptFieldState extends State<PromptField> {
 
   /// This is the prompt field that will be used to type a message.
   Widget buildPromptField() => TextField(
+    key: ValueKey('prompt_field'),
     keyboardType: TextInputType.multiline,
     textInputAction: PlatformExtension.isDesktop && !isAltPressed ? TextInputAction.done : TextInputAction.newline,
     minLines: 1,
@@ -148,12 +150,13 @@ class PromptFieldState extends State<PromptField> {
     selector: (context, ai) => ai.busy,
     builder: (context, busy, child) => busy ? 
       buildStopButton() : 
-      buildSubmitButton(),
+      buildPromptButton(),
   );
 
-  Widget buildSubmitButton() => Selector<MaidContext, bool>(
+  Widget buildPromptButton() => Selector<MaidContext, bool>(
     selector: (context, ai) => ai.canPrompt,
     builder: (context, canPrompt, child) => IconButton(
+      key: ValueKey('submit_prompt_button'),
       icon: const Icon(Icons.send),
       onPressed: isNotEmpty && canPrompt ? onSubmit : null,
       disabledColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
@@ -162,6 +165,7 @@ class PromptFieldState extends State<PromptField> {
 
   /// This is the stop button that will be used to stop the message.
   Widget buildStopButton() => IconButton(
+    key: ValueKey('stop_prompt_button'),
     icon: Icon(
       Icons.stop_circle_sharp,
       color: Theme.of(context).colorScheme.onError,
