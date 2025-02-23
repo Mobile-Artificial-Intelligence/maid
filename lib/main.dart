@@ -76,7 +76,7 @@ void main() {
 }
 
 class Maid extends StatefulWidget {
-  final AppSettings settings = AppSettings();
+  final AppSettings settings = AppSettings.load();
   final ChatController chatController = ChatController();
 
   Maid({super.key});

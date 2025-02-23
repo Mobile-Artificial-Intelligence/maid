@@ -1,7 +1,23 @@
 part of 'package:maid/main.dart';
 
 class AppSettings extends ChangeNotifier {
-  AppSettings() {
+  AppSettings({
+    File? userImage,
+    String? userName,
+    File? assistantImage,
+    String? assistantName,
+    Color seedColor = Colors.blue,
+    ThemeMode themeMode = ThemeMode.system,
+    String? systemPrompt,
+  }) : _userImage = userImage,
+       _userName = userName,
+       _assistantImage = assistantImage,
+       _assistantName = assistantName,
+       _seedColor = seedColor,
+       _themeMode = themeMode,
+       _systemPrompt = systemPrompt;
+  
+  AppSettings.load() {
     load();
   }
 
