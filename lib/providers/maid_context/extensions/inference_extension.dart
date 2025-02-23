@@ -3,8 +3,6 @@ part of 'package:maid/main.dart';
 extension InferenceExtension on MaidContext {
   Future<void> prompt(String message) async {
     root.chain.last.addChild(UserChatMessage(message));
-
-    busy = true;
     notify();
 
     Stream<String> stream = _aiNotifier.prompt(root.chainData.copy());
@@ -19,13 +17,11 @@ extension InferenceExtension on MaidContext {
       }
     }
     finally {
-      busy = false;
       saveAndNotify();
     }
   }
 
   Future<void> regenerate(GeneralTreeNode<ChatMessage> node) async {
-    busy = true;
     node.addChild(AssistantChatMessage(''));
     notify();
 
@@ -49,14 +45,12 @@ extension InferenceExtension on MaidContext {
       }
     }
     finally {
-      busy = false;
       saveAndNotify();
     }
   }
 
   void stop() {
     _aiNotifier.stop();
-    busy = false;
     saveAndNotify();
   }
 }

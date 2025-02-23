@@ -8,6 +8,15 @@ abstract class ArtificialIntelligenceNotifier extends ChangeNotifier {
     'mistral',
   ];
 
+  bool _busy = false;
+
+  bool get busy => _busy;
+
+  set busy(bool newBusy) {
+    _busy = newBusy;
+    notifyListeners();
+  }
+
   String? _model;
 
   String? get model => _model;
@@ -146,7 +155,7 @@ class LlamaCppNotifier extends ArtificialIntelligenceNotifier {
   String get type => 'llama_cpp';
 
   @override
-  bool get canPrompt => _llama != null;
+  bool get canPrompt => _llama != null && !busy;
 
   LlamaCppNotifier({
     super.model, 
@@ -156,11 +165,13 @@ class LlamaCppNotifier extends ArtificialIntelligenceNotifier {
   @override
   Stream<String> prompt(List<ChatMessage> messages) async* {
     assert(_model != null);
+    busy = true;
 
     reloadModel();
     assert(_llama != null);
 
     yield* _llama!.prompt(messages);
+    busy = false;
   }
 
   void reloadModel([bool force = false]) async {
@@ -247,7 +258,7 @@ class OllamaNotifier extends RemoteArtificialIntelligenceNotifier {
   String get type => 'ollama';
 
   @override
-  bool get canPrompt => _model != null && _model!.isNotEmpty;
+  bool get canPrompt => _model != null && _model!.isNotEmpty && !busy;
 
   OllamaNotifier({
     super.model, 
@@ -259,6 +270,7 @@ class OllamaNotifier extends RemoteArtificialIntelligenceNotifier {
   @override
   Stream<String> prompt(List<ChatMessage> messages) async* {
     assert(_model != null);
+    busy = true;
 
     _ollamaClient = ollama.OllamaClient(
       baseUrl: "${_baseUrl ?? 'http://localhost:11434'}/api",
@@ -286,6 +298,9 @@ class OllamaNotifier extends RemoteArtificialIntelligenceNotifier {
       if (!e.toString().contains('Connection closed')) {
         rethrow;
       }
+    }
+    finally {
+      busy = false;
     }
   }
 
@@ -424,7 +439,7 @@ class OpenAINotifier extends RemoteArtificialIntelligenceNotifier {
   String get type => 'open_ai';
 
   @override
-  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty;
+  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty && !busy;
 
   OpenAINotifier({
     super.model,
@@ -437,6 +452,7 @@ class OpenAINotifier extends RemoteArtificialIntelligenceNotifier {
   Stream<String> prompt(List<ChatMessage> messages) async* {
     assert(_apiKey != null, 'API Key is required');
     assert(_model != null, 'Model is required');
+    busy = true;
 
     if (_baseUrl == null || _baseUrl!.isEmpty) {
       _baseUrl = 'https://api.openai.com/v1';
@@ -471,6 +487,9 @@ class OpenAINotifier extends RemoteArtificialIntelligenceNotifier {
         rethrow;
       }
     }
+    finally {
+      busy = false;
+    }
   }
 
   @override
@@ -502,7 +521,7 @@ class MistralNotifier extends RemoteArtificialIntelligenceNotifier {
   String get type => 'mistral';
 
   @override
-  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty;
+  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty && !busy;
 
   MistralNotifier({
     super.model, 
@@ -515,6 +534,7 @@ class MistralNotifier extends RemoteArtificialIntelligenceNotifier {
   Stream<String> prompt(List<ChatMessage> messages) async* {
     assert(_apiKey != null, 'API Key is required');
     assert(_model != null, 'Model is required');
+    busy = true;
 
     if (_baseUrl == null || _baseUrl!.isEmpty) {
       _baseUrl = 'https://api.mistral.ai/v1';
@@ -562,6 +582,9 @@ class MistralNotifier extends RemoteArtificialIntelligenceNotifier {
       if (!e.toString().contains('Connection closed')) {
         rethrow;
       }
+    }
+    finally {
+      busy = false;
     }
   }
   

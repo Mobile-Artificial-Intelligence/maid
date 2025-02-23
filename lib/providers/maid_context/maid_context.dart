@@ -81,14 +81,6 @@ class MaidContext extends ChangeNotifier {
     saveAndNotify();
   }
 
-  bool busy = false;
-  
-  bool get canPrompt {
-    if (busy) return false;
-
-    return _aiNotifier.canPrompt;
-  }
-
   String getEcosystemHash() {
     return (remoteAiNotifier?.baseUrl?.hash ?? '') + (remoteAiNotifier?.apiKey?.hash ?? '');
   }

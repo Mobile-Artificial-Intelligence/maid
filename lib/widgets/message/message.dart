@@ -62,7 +62,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {
-    if (MaidContext.of(context).busy) return;
+    if (MaidContext.of(context).aiNotifier.busy) return;
 
     const threshold = 80;
     
@@ -93,7 +93,7 @@ class MessageWidgetState extends State<MessageWidget> {
   // The buildCurrentMessage method will build the padding and the appropriate column based on the editing state.
   Widget buildCurrentMessage() => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-    child: editing && !MaidContext.of(context).busy ? 
+    child: editing && !MaidContext.of(context).aiNotifier.busy ? 
       buildMessageEditingColumn() : 
       GestureDetector(
         onHorizontalDragEnd: onHorizontalDragEnd,
@@ -236,7 +236,7 @@ class MessageWidgetState extends State<MessageWidget> {
   );
 
   Widget branchSwitcherBuilder() => Selector<MaidContext, bool>(
-    selector: (context, ai) => ai.busy,
+    selector: (context, ai) => ai.aiNotifier.busy,
     builder: buildBranchSwitcher,
   );
 
@@ -257,7 +257,7 @@ class MessageWidgetState extends State<MessageWidget> {
   );
 
   Widget roleSpecificButtonBuilder() => Selector<MaidContext, bool>(
-    selector: (context, ai) => ai.canPrompt,
+    selector: (context, ai) => ai.aiNotifier.canPrompt,
     builder: buildRoleSpecificButton,
   );
 
@@ -282,7 +282,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   /// This is the delete button that will be used to delete the message.
   Widget deleteButtonBuilder() => Selector<MaidContext, bool>(
-    selector: (context, ai) => ai.busy,
+    selector: (context, ai) => ai.aiNotifier.busy,
     builder: buildDeleteButton,
   );
 

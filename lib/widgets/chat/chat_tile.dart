@@ -30,7 +30,7 @@ class ChatTileState extends State<ChatTile> {
       maxLines: 1,
     ),
     selected: widget.selected,
-    onTap: !MaidContext.of(context).busy ? onChatChange : null,
+    onTap: !MaidContext.of(context).aiNotifier.busy ? onChatChange : null,
     onLongPress: openPopover,
   );
 

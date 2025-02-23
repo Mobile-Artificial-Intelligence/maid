@@ -147,14 +147,14 @@ class PromptFieldState extends State<PromptField> {
 
   /// This is the submit button that will be used to submit the message.
   Widget suffixButtonBuilder() => Selector<MaidContext, bool>(
-    selector: (context, ai) => ai.busy,
+    selector: (context, ai) => ai.aiNotifier.busy,
     builder: (context, busy, child) => busy ? 
       buildStopButton() : 
       buildPromptButton(),
   );
 
   Widget buildPromptButton() => Selector<MaidContext, bool>(
-    selector: (context, ai) => ai.canPrompt,
+    selector: (context, ai) => ai.aiNotifier.canPrompt,
     builder: (context, canPrompt, child) => IconButton(
       key: ValueKey('submit_prompt_button'),
       icon: const Icon(Icons.send),
