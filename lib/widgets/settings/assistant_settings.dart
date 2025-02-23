@@ -1,7 +1,12 @@
 part of 'package:maid/main.dart';
 
 class AssistantSettings extends StatelessWidget {
-  const AssistantSettings({super.key});
+  final AppSettings settings;
+  
+  const AssistantSettings({
+    super.key, 
+    required this.settings
+  });
 
   @override
   Widget build(BuildContext context) => Column(
@@ -11,26 +16,27 @@ class AssistantSettings extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
-      Selector<AppSettings, File?>(
-        selector: (context, settings) => settings.assistantImage,
+      ListenableBuilder(
+        listenable: settings,
         builder: assistantImageBuilder,
       ),
       const SizedBox(height: 8),
       ElevatedButton(
-        onPressed: AppSettings.of(context).loadAssistantImage, 
+        onPressed: settings.loadAssistantImage, 
         child: const Text('Load Assistant Image'),
       ),
       const SizedBox(height: 8),
-      SelectorTextField<AppSettings>(
-        selector: (context, settings) => settings.assistantName,
-        onChanged: AppSettings.of(context).setAssistantName,
+      ListenableTextField<AppSettings>(
+        listenable: settings,
+        selector: () => settings.assistantName,
+        onChanged: settings.setAssistantName,
         labelText: 'Assistant Name',
       ),
     ],
   );
 
-  Widget assistantImageBuilder(BuildContext context, File? image, Widget? child) {
-    if (image == null) {
+  Widget assistantImageBuilder(BuildContext context, Widget? child) {
+    if (settings.assistantImage == null) {
       return Icon(
         Icons.assistant, 
         size: 50,
@@ -40,7 +46,7 @@ class AssistantSettings extends StatelessWidget {
 
     return CircleAvatar(
       radius: 50,
-      backgroundImage: FileImage(image),
+      backgroundImage: FileImage(settings.assistantImage!),
     );
   }
 }

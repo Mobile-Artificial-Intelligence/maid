@@ -2,8 +2,13 @@ part of 'package:maid/main.dart';
 
 class SettingsPage extends StatelessWidget {
   final ArtificialIntelligenceNotifier aiController;
+  final AppSettings settings;
   
-  const SettingsPage({super.key, required this.aiController});
+  const SettingsPage({
+    super.key, 
+    required this.aiController, 
+    required this.settings
+  });
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -25,11 +30,11 @@ class SettingsPage extends StatelessWidget {
       Divider(endIndent: 0, indent: 0, height: 32),
       OverrideView(aiController: aiController),
       Divider(endIndent: 0, indent: 0, height: 32),
-      UserSettings(),
+      UserSettings(settings: settings),
       Divider(endIndent: 0, indent: 0, height: 32),
-      AssistantSettings(),
+      AssistantSettings(settings: settings),
       Divider(endIndent: 0, indent: 0, height: 32),
-      SystemSettings(),
+      SystemSettings(settings: settings),
       Divider(endIndent: 0, indent: 0, height: 32),
       buildResetRow(context)
     ],

@@ -1,7 +1,12 @@
 part of 'package:maid/main.dart';
 
 class SystemSettings extends StatelessWidget {
-  const SystemSettings({super.key});
+  final AppSettings settings;
+  
+  const SystemSettings({
+    super.key, 
+    required this.settings
+  });
 
   @override
   Widget build(BuildContext context) => Column(
@@ -11,9 +16,10 @@ class SystemSettings extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
-      SelectorTextField<AppSettings>(
-        selector: (context, settings) => settings.systemPrompt,
-        onChanged: AppSettings.of(context).setSystemPrompt,
+      ListenableTextField<AppSettings>(
+        listenable: settings,
+        selector: () => settings.systemPrompt,
+        onChanged: settings.setSystemPrompt,
         labelText: 'System Prompt',
         keyboardType: TextInputType.multiline,
         maxLines: null
@@ -30,12 +36,12 @@ class SystemSettings extends StatelessWidget {
     ],
   );
 
-  Widget buildColorPicker() => Selector<AppSettings, Color>(
-    selector: (context, settings) => settings.seedColor,
-    builder: (context, color, child) => HueRingPicker(
+  Widget buildColorPicker() => ListenableBuilder(
+    listenable: settings,
+    builder: (context, child) => HueRingPicker(
       portraitOnly: true,
       displayThumbColor: false,
-      pickerColor: color, 
+      pickerColor: settings.seedColor, 
       onColorChanged: (newColor) => AppSettings.of(context).seedColor = newColor,
     ),
   );

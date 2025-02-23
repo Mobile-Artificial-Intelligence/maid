@@ -33,9 +33,9 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
       buildRemoteModel(),
       const SizedBox(height: 8),
       if (aiController is OllamaNotifier) buildLocalSearchSwitch(context),
-      BaseUrlTextField(),
+      BaseUrlTextField(aiController: aiController as RemoteArtificialIntelligenceNotifier),
       const SizedBox(height: 8),
-      ApiKeyTextField(),
+      ApiKeyTextField(aiController: aiController as RemoteArtificialIntelligenceNotifier),
     ]
   );
 

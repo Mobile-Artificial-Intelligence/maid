@@ -69,7 +69,7 @@ part 'widgets/settings/user_settings.dart';
 part 'widgets/text_fields/api_key_text_field.dart';
 part 'widgets/text_fields/base_url_text_field.dart';
 part 'widgets/text_fields/prompt_field.dart';
-part 'widgets/text_fields/selector_text_field.dart';
+part 'widgets/text_fields/listenable_text_field.dart';
 
 part 'widgets/code_box.dart';
 
@@ -130,7 +130,7 @@ class Maid extends StatelessWidget {
     themeMode: settings.themeMode,
     home: HomePage(aiController: maid.aiNotifier, chatController: maid, settings: settings),
     routes: {
-      '/settings': (context) => SettingsPage(aiController: maid.aiNotifier),
+      '/settings': (context) => SettingsPage(aiController: maid.aiNotifier, settings: settings),
       '/chat': (context) => HomePage(aiController: maid.aiNotifier, chatController: maid, settings: settings),
       '/about': (context) => const AboutPage(),
     },

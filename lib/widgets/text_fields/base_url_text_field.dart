@@ -1,14 +1,18 @@
 part of 'package:maid/main.dart';
 
 class BaseUrlTextField extends StatelessWidget {
+  final RemoteArtificialIntelligenceNotifier aiController;
+
   const BaseUrlTextField({
-    super.key,
+    super.key, 
+    required this.aiController,
   });
 
   @override
-  Widget build(BuildContext context) => SelectorTextField<MaidContext>(
-    selector: (context, ai) => ai.baseUrl, 
-    onChanged: (value) => MaidContext.of(context).baseUrl = value,
+  Widget build(BuildContext context) => ListenableTextField(
+    listenable: aiController,
+    selector: () => aiController.baseUrl, 
+    onChanged: (value) => aiController.baseUrl = value,
     labelText: 'Base Url',
   );
 }
