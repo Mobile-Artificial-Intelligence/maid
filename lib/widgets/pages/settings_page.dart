@@ -49,7 +49,7 @@ class SettingsPage extends StatelessWidget {
     runSpacing: 16,
     children: [
       ElevatedButton(
-        onPressed: chatController.clearChats, 
+        onPressed: chatController.clear, 
         child: const Text('Clear Chats')
       ),
       ElevatedButton(
@@ -57,9 +57,10 @@ class SettingsPage extends StatelessWidget {
         child: const Text('Reset Settings')
       ),
       ElevatedButton(
-        onPressed: () async {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.clear();
+        onPressed: () {
+          settings.clear();
+          chatController.clear();
+          aiController.clear();
         }, 
         child: const Text('Clear Cache')
       )

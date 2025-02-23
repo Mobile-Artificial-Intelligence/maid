@@ -69,7 +69,11 @@ part 'widgets/text_fields/listenable_text_field.dart';
 
 part 'widgets/code_box.dart';
 
-void main() => runApp(Maid());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(Maid());
+}
 
 class Maid extends StatefulWidget {
   final AppSettings settings = AppSettings();
@@ -85,6 +89,14 @@ class MaidState extends State<Maid> {
   ArtificialIntelligenceController aiController = LlamaCppController();
 
   static MaidState of(BuildContext context) => context.findAncestorStateOfType<MaidState>()!;
+
+  @override
+  void initState() {
+    super.initState();
+    ArtificialIntelligenceController.load().then(
+      (newController) => setState(() => aiController = newController)
+    );
+  }
 
   Future<void> switchAi(String type) async {
     await aiController.save();

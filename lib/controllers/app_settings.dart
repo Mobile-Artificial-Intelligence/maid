@@ -5,15 +5,6 @@ class AppSettings extends ChangeNotifier {
     load();
   }
 
-  void notify() {
-    notifyListeners();
-  }
-
-  void saveAndNotify() {
-    save();
-    notifyListeners();
-  }
-
   File? _userImage;
 
   File? get userImage => _userImage;

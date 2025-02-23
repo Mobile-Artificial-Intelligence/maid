@@ -65,7 +65,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     await prefs.setString(type, contextString);
   }
 
-  static Future<ArtificialIntelligenceController> load(String? type) async {
+  static Future<ArtificialIntelligenceController> load([String? type]) async {
     final prefs = await SharedPreferences.getInstance();
 
     type ??= prefs.getString('ai_type') ?? 'llama_cpp';
@@ -95,6 +95,16 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
   Stream<String> prompt(List<ChatMessage> messages);
 
   void stop();
+
+  void clear() async {
+    _model = null;
+    _overrides = {};
+    notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(type);
+    await prefs.remove('ai_type');
+  }
 }
 
 abstract class RemoteArtificialIntelligenceController extends ArtificialIntelligenceController {
@@ -149,6 +159,19 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
   }
 
   Future<List<String>> getModelOptions();
+
+  @override
+  void clear() async {
+    _model = null;
+    _overrides = {};
+    _baseUrl = null;
+    _apiKey = null;
+    notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(type);
+    await prefs.remove('ai_type');
+  }
 }
 
 class LlamaCppController extends ArtificialIntelligenceController {
@@ -238,13 +261,24 @@ class LlamaCppController extends ArtificialIntelligenceController {
   }
 
   @override
-  void stop() => _llama?.stop();
+  void stop() {
+    _llama?.stop();
+    busy = false;
+  }
 
   @override
   void notifyListeners() {
     super.notifyListeners();
     reloadModel();
     save();
+  }
+
+  @override
+  void clear() {
+    super.clear();
+    _llama = null;
+    _loadedHash = '';
+    loading = false;
   }
 }
 
@@ -311,7 +345,16 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   }
 
   @override
-  void stop() => _ollamaClient.endSession();
+  void stop() {
+    _ollamaClient.endSession();
+    busy = false;
+  }
+
+  @override
+  void clear() {
+    super.clear();
+    _searchLocalNetwork = null;
+  }
 
   Future<Uri?> checkForOllama(Uri url) async {
     try {
@@ -499,7 +542,10 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
   }
 
   @override
-  void stop() => _openAiClient.endSession();
+  void stop() {
+    _openAiClient.endSession();
+    busy = false;
+  }
   
   @override
   Future<List<String>> getModelOptions() async {
@@ -595,7 +641,10 @@ class MistralController extends RemoteArtificialIntelligenceController {
   }
   
   @override
-  void stop() => _mistralClient.endSession();
+  void stop() {
+    _mistralClient.endSession();
+    busy = false;
+  }
 
   @override
   Future<List<String>> getModelOptions() async => [

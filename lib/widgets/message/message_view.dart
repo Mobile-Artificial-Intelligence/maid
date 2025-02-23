@@ -126,11 +126,16 @@ class MessageViewState extends State<MessageView> {
   Widget build(BuildContext context) => Expanded(
     child: SingleChildScrollView(
       controller: controller,
-      child: messageBuilder(),
+      child: buildChatListener(),
     )
   );
 
-  Widget messageBuilder() => ListenableBuilder(
+  Widget buildChatListener() => ListenableBuilder(
+    listenable: widget.chatController,
+    builder: buildSettingsListener
+  );
+
+  Widget buildSettingsListener(BuildContext context, Widget? child) => ListenableBuilder(
     listenable: widget.settings,
     builder: buildMessage
   );

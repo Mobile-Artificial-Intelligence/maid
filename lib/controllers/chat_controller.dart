@@ -5,15 +5,6 @@ class ChatController extends ChangeNotifier {
     load();
   }
 
-  void notify() {
-    notifyListeners();
-  }
-
-  void saveAndNotify() {
-    save();
-    notifyListeners();
-  }
-
   List<GeneralTreeNode<ChatMessage>> _chats = [];
 
   List<GeneralTreeNode<ChatMessage>> get chats => _chats;
@@ -37,7 +28,8 @@ class ChatController extends ChangeNotifier {
 
     _chats.insert(0, newRoot);
 
-    saveAndNotify();
+    save();
+    notifyListeners();
   }
 
   void newChat() {
@@ -45,45 +37,51 @@ class ChatController extends ChangeNotifier {
 
     _chats.insert(0, chat);
     
-    saveAndNotify();
+    save();
+    notifyListeners();
   }
 
   void deleteChat(GeneralTreeNode<ChatMessage> chat) {
     _chats.remove(chat);
-    saveAndNotify();
+    save();
+    notifyListeners();
   }
 
-  void clearChats() {
+  void clear() {
     _chats.clear();
-    saveAndNotify();
+    save();
+    notifyListeners();
   }
 
   void addToEnd(ChatMessage message) {
     root.chain.last.addChild(message);
-    saveAndNotify();
+    save();
+    notifyListeners();
   }
 
   Future<void> streamToEnd(Stream<String> stream) async {
     root.chain.last.addChild(AssistantChatMessage(''));
-    notify();
+    notifyListeners();
 
     await for (final response in stream) {
       root.chain.last.data.content += response;
-      notify();
+      notifyListeners();
     }
 
-    saveAndNotify();
+    save();
+    notifyListeners();
   }
 
   Future<void> streamToChild(GeneralTreeNode<ChatMessage> node, Stream<String> stream) async {
-    notify();
+    notifyListeners();
     
     await for (final response in stream) {
       node.currentChild!.data.content += response;
-      notify();
+      notifyListeners();
     }
 
-    saveAndNotify();
+    save();
+    notifyListeners();
   }
 
   Future<void> load() async {

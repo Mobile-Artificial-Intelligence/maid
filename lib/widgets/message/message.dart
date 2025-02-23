@@ -117,12 +117,17 @@ class MessageWidgetState extends State<MessageWidget> {
       buildMessageEditingColumn() : 
       GestureDetector(
         onHorizontalDragEnd: onHorizontalDragEnd,
-        child: buildMessageColumn()
+        child: buildChatListener()
       ),
   );
 
+  Widget buildChatListener() => ListenableBuilder(
+    listenable: widget.chatController, 
+    builder: buildMessageColumn
+  );
+
   // The buildMessageColumn method will build the message column when the message is not being edited.
-  Widget buildMessageColumn() {
+  Widget buildMessageColumn(BuildContext context, Widget? child) {
     List<Widget> children = [
       buildTopRow(),
     ];

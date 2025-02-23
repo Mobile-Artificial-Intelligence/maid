@@ -40,6 +40,9 @@ class ListenableTextFieldState<T> extends State<ListenableTextField<T>> {
     ) {
       controller.text = value;
     }
+    else if (value == null || value.isEmpty) {
+      controller.clear();
+    }
     
     return TextField(
       decoration: InputDecoration(
