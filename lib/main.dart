@@ -30,7 +30,6 @@ part 'providers/app_settings/app_settings.dart';
 part 'providers/app_settings/extensions/silly_tavern_extension.dart';
 part 'providers/maid_context/maid_context.dart';
 part 'providers/maid_context/extensions/chat_extension.dart';
-part 'providers/maid_context/extensions/inference_extension.dart';
 
 part 'types/override_type.dart';
 
@@ -129,10 +128,10 @@ class Maid extends StatelessWidget {
     theme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.light)),
     darkTheme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.dark)),
     themeMode: settings.themeMode,
-    home: HomePage(ai: maid.aiNotifier, chat: maid),
+    home: HomePage(ai: maid.aiNotifier, chat: maid, settings: settings),
     routes: {
       '/settings': (context) => const SettingsPage(),
-      '/chat': (context) => HomePage(ai: maid.aiNotifier, chat: maid),
+      '/chat': (context) => HomePage(ai: maid.aiNotifier, chat: maid, settings: settings),
       '/about': (context) => const AboutPage(),
     },
     debugShowCheckedModeBanner: false,

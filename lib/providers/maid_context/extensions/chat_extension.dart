@@ -56,4 +56,15 @@ extension ChatExtension on MaidContext {
 
     saveAndNotify();
   }
+
+  Future<void> streamToChild(GeneralTreeNode<ChatMessage> node, Stream<String> stream) async {
+    notify();
+    
+    await for (final response in stream) {
+      node.currentChild!.data.content += response;
+      notify();
+    }
+
+    saveAndNotify();
+  }
 }
