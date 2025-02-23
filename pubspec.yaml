@@ -40,6 +40,8 @@ dependencies:
       ref: 2cea396843cd3ab1b5ec4334be4233864637874e
 
 dev_dependencies:
+  integration_test:
+    sdk: flutter
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0

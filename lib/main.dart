@@ -76,10 +76,17 @@ void main() {
 }
 
 class Maid extends StatefulWidget {
-  final AppSettings settings = AppSettings.load();
-  final ChatController chatController = ChatController();
+  final AppSettings settings;
+  final ChatController chatController;
+  final ArtificialIntelligenceController? aiController;
 
-  Maid({super.key});
+  Maid({
+    super.key,
+    AppSettings? settings,
+    ChatController? chatController,
+    this.aiController
+  }) : settings = settings ?? AppSettings.load(),
+       chatController = chatController ?? ChatController.load();
 
   @override
   State<Maid> createState() => MaidState();
@@ -93,9 +100,15 @@ class MaidState extends State<Maid> {
   @override
   void initState() {
     super.initState();
-    ArtificialIntelligenceController.load().then(
-      (newController) => setState(() => aiController = newController)
-    );
+    
+    if (widget.aiController != null) {
+      aiController = widget.aiController!;
+    }
+    else {
+      ArtificialIntelligenceController.load().then(
+        (newController) => setState(() => aiController = newController)
+      );
+    }
   }
 
   Future<void> switchAi(String type) async {
