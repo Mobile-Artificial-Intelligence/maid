@@ -118,6 +118,8 @@ abstract class RemoteArtificialIntelligenceNotifier extends ArtificialIntelligen
     notifyListeners();
   }
 
+  String get connectionHash => (_baseUrl ?? '').hash + (_apiKey ?? '').hash;
+
   RemoteArtificialIntelligenceNotifier({
     super.model, 
     super.overrides,

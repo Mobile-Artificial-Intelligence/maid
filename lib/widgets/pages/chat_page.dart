@@ -30,7 +30,9 @@ class ChatPageState extends State<ChatPage> {
 
   Widget titleBuilder(BuildContext context, ArtificialIntelligenceNotifier aiNotifier, Widget? child) {
     if (aiNotifier is LlamaCppNotifier) {
-      return const LoadModelButton();
+      return LoadModelButton(
+        llama: aiNotifier
+      );
     }
 
     return RemoteModelDropdown();

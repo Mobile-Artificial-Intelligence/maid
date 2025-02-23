@@ -1,7 +1,9 @@
 part of 'package:maid/main.dart';
 
 class LoadModelButton extends StatelessWidget {
-  const LoadModelButton({super.key});
+  final LlamaCppNotifier llama;
+  
+  const LoadModelButton({super.key, required this.llama});
 
   @override
   Widget build(BuildContext context) => ConstrainedBox(
@@ -15,7 +17,7 @@ class LoadModelButton extends StatelessWidget {
 
   Widget buildInkWell(BuildContext context) => InkWell(
     key: ValueKey("load_model"),
-    onTap: MaidContext.of(context).llamaCppNotifier!.pickModel,
+    onTap: llama.pickModel,
     borderRadius: BorderRadius.circular(10),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -36,7 +38,10 @@ class LoadModelButton extends StatelessWidget {
         style: buildStyle(context),
       ),
       Expanded(
-        child: Selector<MaidContext, ({String? model, bool loading})>(selector: (context, ai) => (model: ai.model, loading: ai.llamaCppNotifier!.loading), builder: textBuilder),
+        child: ListenableBuilder(
+          listenable: llama, 
+          builder: textBuilder
+        )
       ),
       Text(
         "> > >",
@@ -45,14 +50,14 @@ class LoadModelButton extends StatelessWidget {
     ],
   );
 
-  Widget textBuilder(BuildContext context, ({String? model, bool loading}) record, Widget? child) {
+  Widget textBuilder(BuildContext context, Widget? child) {
     String text;
 
-    if (record.loading) {
+    if (llama.loading) {
       text = "Loading...";
     }
     else {
-      text = record.model != null ? record.model!.split('/').last : "Load Model";
+      text = llama.model != null ? llama.model!.split('/').last : "Load Model";
     }
     
     return Text(
