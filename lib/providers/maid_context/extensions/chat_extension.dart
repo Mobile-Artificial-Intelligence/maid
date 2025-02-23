@@ -39,4 +39,21 @@ extension ChatExtension on MaidContext {
     _chats.clear();
     saveAndNotify();
   }
+
+  void addToEnd(ChatMessage message) {
+    root.chain.last.addChild(message);
+    saveAndNotify();
+  }
+
+  Future<void> streamToEnd(Stream<String> stream) async {
+    root.chain.last.addChild(AssistantChatMessage(''));
+    notify();
+
+    await for (final response in stream) {
+      root.chain.last.data.content += response;
+      notify();
+    }
+
+    saveAndNotify();
+  }
 }

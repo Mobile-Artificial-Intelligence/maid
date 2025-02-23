@@ -10,11 +10,13 @@ extension InferenceExtension on MaidContext {
     root.chain.last.addChild(AssistantChatMessage(''));
     notify();
 
+    await for (final response in stream) {
+      root.chain.last.data.content += response;
+      notify();
+    }
+
     try {
-      await for (final response in stream) {
-        root.chain.last.data.content += response;
-        notify();
-      }
+      
     }
     finally {
       saveAndNotify();
@@ -47,10 +49,5 @@ extension InferenceExtension on MaidContext {
     finally {
       saveAndNotify();
     }
-  }
-
-  void stop() {
-    _aiNotifier.stop();
-    saveAndNotify();
   }
 }

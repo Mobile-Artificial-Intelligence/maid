@@ -1,8 +1,13 @@
 part of 'package:maid/main.dart';
 
 class PromptField extends StatefulWidget {
+  final ArtificialIntelligenceNotifier ai;
+  final MaidContext chat;
+
   const PromptField({
     super.key, 
+    required this.ai,
+    required this.chat,
   });
 
   @override
@@ -57,7 +62,7 @@ class PromptFieldState extends State<PromptField> {
 
   void handleFile(String path) {
     if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
-      MaidContext.of(context).llamaCppNotifier!.loadModelFile(path);
+      (widget.ai as LlamaCppNotifier).loadModelFile(path);
     } 
   }
 
@@ -69,7 +74,11 @@ class PromptFieldState extends State<PromptField> {
     controller.clear();
     setState(() => isNotEmpty = controller.text.isNotEmpty);
     try {
-      await MaidContext.of(context).prompt(prompt);
+      widget.chat.addToEnd(UserChatMessage(prompt));
+
+      Stream<String> stream = widget.ai.prompt(widget.chat.root.chainData.copy());
+
+      await widget.chat.streamToEnd(stream);
     }
     catch (exception) {
       if (!mounted) return;
@@ -146,21 +155,18 @@ class PromptFieldState extends State<PromptField> {
   );
 
   /// This is the submit button that will be used to submit the message.
-  Widget suffixButtonBuilder() => Selector<MaidContext, bool>(
-    selector: (context, ai) => ai.aiNotifier.busy,
-    builder: (context, busy, child) => busy ? 
+  Widget suffixButtonBuilder() => ListenableBuilder(
+    listenable: widget.ai,
+    builder: (context, child) => widget.ai.busy ? 
       buildStopButton() : 
       buildPromptButton(),
   );
 
-  Widget buildPromptButton() => Selector<MaidContext, bool>(
-    selector: (context, ai) => ai.aiNotifier.canPrompt,
-    builder: (context, canPrompt, child) => IconButton(
-      key: ValueKey('submit_prompt_button'),
-      icon: const Icon(Icons.send),
-      onPressed: isNotEmpty && canPrompt ? onSubmit : null,
-      disabledColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-    ),
+  Widget buildPromptButton() => IconButton(
+    key: ValueKey('submit_prompt_button'),
+    icon: const Icon(Icons.send),
+    onPressed: isNotEmpty && widget.ai.canPrompt ? onSubmit : null,
+    disabledColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
   );
 
   /// This is the stop button that will be used to stop the message.
@@ -171,6 +177,6 @@ class PromptFieldState extends State<PromptField> {
       color: Theme.of(context).colorScheme.onError,
     ),
     iconSize: 30,
-    onPressed: MaidContext.of(context).stop,
+    onPressed: widget.ai.stop,
   );
 }
