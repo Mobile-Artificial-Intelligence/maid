@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 class ApiKeyTextField extends StatelessWidget {
-  final RemoteArtificialIntelligenceNotifier aiController;
+  final RemoteArtificialIntelligenceController aiController;
 
   const ApiKeyTextField({
     super.key, 

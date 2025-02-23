@@ -1,6 +1,28 @@
 part of 'package:maid/main.dart';
 
-extension ChatExtension on MaidContext {
+class ChatController extends ChangeNotifier {
+  ChatController() {
+    load();
+  }
+
+  void notify() {
+    notifyListeners();
+  }
+
+  void saveAndNotify() {
+    save();
+    notifyListeners();
+  }
+
+  List<GeneralTreeNode<ChatMessage>> _chats = [];
+
+  List<GeneralTreeNode<ChatMessage>> get chats => _chats;
+
+  set chats(List<GeneralTreeNode<ChatMessage>> newChats) {
+    _chats = newChats;
+    notifyListeners();
+  }
+
   GeneralTreeNode<ChatMessage> get root {
     if (_chats.isEmpty) {
       final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
@@ -62,5 +84,39 @@ extension ChatExtension on MaidContext {
     }
 
     saveAndNotify();
+  }
+
+  Future<void> load() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final chatsStrings = prefs.getStringList('chats') ?? [];
+
+    _chats.clear();
+    for (final chatString in chatsStrings) {
+      final chatMap = jsonDecode(chatString);
+      final chat = GeneralTreeNode.fromMap(chatMap, ChatMessage.fromMap);
+      _chats.add(chat);
+    }
+
+    if (_chats.isEmpty) {
+      final chat = GeneralTreeNode<ChatMessage>(SystemChatMessage('New Chat'));
+      _chats.add(chat);
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> save() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    List<String> chatsStrings = [];
+
+    for (final chat in _chats) {
+      final chatMap = chat.toMap(ChatMessage.messageToMap);
+      final chatString = jsonEncode(chatMap);
+      chatsStrings.add(chatString);
+    }
+
+    await prefs.setStringList('chats', chatsStrings);
   }
 }

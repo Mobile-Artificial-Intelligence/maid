@@ -1,6 +1,6 @@
 part of 'package:maid/main.dart';
 
-abstract class ArtificialIntelligenceNotifier extends ChangeNotifier {
+abstract class ArtificialIntelligenceController extends ChangeNotifier {
   static List<String> get types => [
     'llama_cpp',
     'ollama',
@@ -39,7 +39,7 @@ abstract class ArtificialIntelligenceNotifier extends ChangeNotifier {
   bool get canPrompt;
   String get hash => jsonEncode(toMap()).hash;
 
-  ArtificialIntelligenceNotifier({
+  ArtificialIntelligenceController({
     String? model, 
     Map<String, dynamic>? overrides
   }) : _model = model , _overrides = overrides ?? {};
@@ -58,13 +58,17 @@ abstract class ArtificialIntelligenceNotifier extends ChangeNotifier {
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
+    await prefs.setString('ai_type', type);
+
     final contextString = jsonEncode(toMap());
 
-    prefs.setString(type, contextString);
+    await prefs.setString(type, contextString);
   }
 
-  static Future<ArtificialIntelligenceNotifier> load(String type) async {
+  static Future<ArtificialIntelligenceController> load(String? type) async {
     final prefs = await SharedPreferences.getInstance();
+
+    type ??= prefs.getString('ai_type') ?? 'llama_cpp';
 
     final contextString = prefs.getString(type);
 
@@ -72,19 +76,19 @@ abstract class ArtificialIntelligenceNotifier extends ChangeNotifier {
 
     switch (type) {
       case 'llama_cpp':
-        return LlamaCppNotifier()
+        return LlamaCppController()
           ..fromMap(contextMap);
       case 'ollama':
-        return OllamaNotifier()
+        return OllamaController()
           ..fromMap(contextMap);
       case 'open_ai':
-        return OpenAINotifier()
+        return OpenAIController()
           ..fromMap(contextMap);
       case 'mistral':
-        return MistralNotifier()
+        return MistralController()
           ..fromMap(contextMap);
       default:
-        return LlamaCppNotifier();
+        return LlamaCppController();
     }
   }
 
@@ -93,7 +97,7 @@ abstract class ArtificialIntelligenceNotifier extends ChangeNotifier {
   void stop();
 }
 
-abstract class RemoteArtificialIntelligenceNotifier extends ArtificialIntelligenceNotifier {
+abstract class RemoteArtificialIntelligenceController extends ArtificialIntelligenceController {
   static List<String> get types => [
     'ollama',
     'open_ai',
@@ -120,7 +124,7 @@ abstract class RemoteArtificialIntelligenceNotifier extends ArtificialIntelligen
 
   String get connectionHash => (_baseUrl ?? '').hash + (_apiKey ?? '').hash;
 
-  RemoteArtificialIntelligenceNotifier({
+  RemoteArtificialIntelligenceController({
     super.model, 
     super.overrides,
     String? baseUrl, 
@@ -147,7 +151,7 @@ abstract class RemoteArtificialIntelligenceNotifier extends ArtificialIntelligen
   Future<List<String>> getModelOptions();
 }
 
-class LlamaCppNotifier extends ArtificialIntelligenceNotifier {
+class LlamaCppController extends ArtificialIntelligenceController {
   Llama? _llama;
   String _loadedHash = '';
 
@@ -159,7 +163,7 @@ class LlamaCppNotifier extends ArtificialIntelligenceNotifier {
   @override
   bool get canPrompt => _llama != null && !busy;
 
-  LlamaCppNotifier({
+  LlamaCppController({
     super.model, 
     super.overrides
   });
@@ -244,7 +248,7 @@ class LlamaCppNotifier extends ArtificialIntelligenceNotifier {
   }
 }
 
-class OllamaNotifier extends RemoteArtificialIntelligenceNotifier {
+class OllamaController extends RemoteArtificialIntelligenceController {
   late ollama.OllamaClient _ollamaClient;
 
   bool? _searchLocalNetwork;
@@ -262,7 +266,7 @@ class OllamaNotifier extends RemoteArtificialIntelligenceNotifier {
   @override
   bool get canPrompt => _model != null && _model!.isNotEmpty && !busy;
 
-  OllamaNotifier({
+  OllamaController({
     super.model, 
     super.overrides,
     super.baseUrl, 
@@ -434,7 +438,7 @@ class OllamaNotifier extends RemoteArtificialIntelligenceNotifier {
   }
 }
 
-class OpenAINotifier extends RemoteArtificialIntelligenceNotifier {
+class OpenAIController extends RemoteArtificialIntelligenceController {
   late open_ai.OpenAIClient _openAiClient;
 
   @override
@@ -443,7 +447,7 @@ class OpenAINotifier extends RemoteArtificialIntelligenceNotifier {
   @override
   bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty && !busy;
 
-  OpenAINotifier({
+  OpenAIController({
     super.model,
     super.overrides,
     super.baseUrl, 
@@ -516,7 +520,7 @@ class OpenAINotifier extends RemoteArtificialIntelligenceNotifier {
   }
 }
 
-class MistralNotifier extends RemoteArtificialIntelligenceNotifier {
+class MistralController extends RemoteArtificialIntelligenceController {
   late mistral.MistralAIClient _mistralClient;
 
   @override
@@ -525,7 +529,7 @@ class MistralNotifier extends RemoteArtificialIntelligenceNotifier {
   @override
   bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty && !busy;
 
-  MistralNotifier({
+  MistralController({
     super.model, 
     super.overrides,
     super.baseUrl, 

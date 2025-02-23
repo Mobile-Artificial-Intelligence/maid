@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 class LoadModelButton extends StatelessWidget {
-  final LlamaCppNotifier llama;
+  final LlamaCppController llama;
   
   const LoadModelButton({super.key, required this.llama});
 

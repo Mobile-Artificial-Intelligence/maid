@@ -1,13 +1,15 @@
 part of 'package:maid/main.dart';
 
 class PromptField extends StatefulWidget {
-  final ArtificialIntelligenceNotifier ai;
-  final MaidContext chatController;
+  final ArtificialIntelligenceController aiController;
+  final ChatController chatController;
+  final AppSettings settings;
 
   const PromptField({
     super.key, 
-    required this.ai,
+    required this.aiController,
     required this.chatController,
+    required this.settings,
   });
 
   @override
@@ -52,7 +54,7 @@ class PromptFieldState extends State<PromptField> {
     else if (first.type == SharedMediaType.image) {
       showDialog(
         context: context,
-        builder: (context) => SharingDialog(file: first),
+        builder: (context) => SharingDialog(file: first, settings: widget.settings),
       );
     }
     else if (first.type == SharedMediaType.file) {
@@ -62,7 +64,7 @@ class PromptFieldState extends State<PromptField> {
 
   void handleFile(String path) {
     if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
-      (widget.ai as LlamaCppNotifier).loadModelFile(path);
+      (widget.aiController as LlamaCppController).loadModelFile(path);
     } 
   }
 
@@ -76,7 +78,7 @@ class PromptFieldState extends State<PromptField> {
     try {
       widget.chatController.addToEnd(UserChatMessage(prompt));
 
-      Stream<String> stream = widget.ai.prompt(widget.chatController.root.chainData.copy());
+      Stream<String> stream = widget.aiController.prompt(widget.chatController.root.chainData.copy());
 
       await widget.chatController.streamToEnd(stream);
     }
@@ -156,8 +158,8 @@ class PromptFieldState extends State<PromptField> {
 
   /// This is the submit button that will be used to submit the message.
   Widget suffixButtonBuilder() => ListenableBuilder(
-    listenable: widget.ai,
-    builder: (context, child) => widget.ai.busy ? 
+    listenable: widget.aiController,
+    builder: (context, child) => widget.aiController.busy ? 
       buildStopButton() : 
       buildPromptButton(),
   );
@@ -165,7 +167,7 @@ class PromptFieldState extends State<PromptField> {
   Widget buildPromptButton() => IconButton(
     key: ValueKey('submit_prompt_button'),
     icon: const Icon(Icons.send),
-    onPressed: isNotEmpty && widget.ai.canPrompt ? onSubmit : null,
+    onPressed: isNotEmpty && widget.aiController.canPrompt ? onSubmit : null,
     disabledColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
   );
 
@@ -177,6 +179,6 @@ class PromptFieldState extends State<PromptField> {
       color: Theme.of(context).colorScheme.onError,
     ),
     iconSize: 30,
-    onPressed: widget.ai.stop,
+    onPressed: widget.aiController.stop,
   );
 }

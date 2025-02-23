@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 class ChatTile extends StatefulWidget {
-  final MaidContext chatController;
+  final ChatController chatController;
   final GeneralTreeNode<ChatMessage> node;
   final bool selected;
   final bool disabled;
@@ -59,6 +59,6 @@ class ChatTileState extends State<ChatTile> {
 
   PopupMenuItem buildDeletePopover() => PopupMenuItem(
     child: const Text('Delete'),
-    onTap:() => MaidContext.of(context).deleteChat(widget.node),
+    onTap:() => widget.chatController.deleteChat(widget.node),
   );
 }

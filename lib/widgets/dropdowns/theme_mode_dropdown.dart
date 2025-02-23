@@ -1,7 +1,12 @@
 part of 'package:maid/main.dart';
 
 class ThemeModeDropdown extends StatefulWidget {
-  const ThemeModeDropdown({super.key});
+  final AppSettings settings;
+  
+  const ThemeModeDropdown({
+    super.key, 
+    required this.settings
+  });
 
   @override
   State<ThemeModeDropdown> createState() => _ThemeModeDropdownState();
@@ -31,16 +36,16 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
   Widget buildDropDownRow() => Row(
     mainAxisSize: MainAxisSize.min,
     children: [
-      Selector<AppSettings, ThemeMode>(
-        selector: (context, settings) => settings.themeMode,
+      ListenableBuilder(
+        listenable: widget.settings,
         builder: buildThemeModeText
       ),
       buildPopupButton()
     ]
   );
 
-  Widget buildThemeModeText(BuildContext context, ThemeMode themeMode, Widget? child) => Text(
-    themeMode.name.titleize,
+  Widget buildThemeModeText(BuildContext context, Widget? child) => Text(
+    widget.settings.themeMode.name.titleize,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -56,7 +61,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
     onCanceled: () => setState(() => open = false),
     onSelected: (themeMode) {
       setState(() => open = false);
-      AppSettings.of(context).themeMode = themeMode;
+      widget.settings.themeMode = themeMode;
     }
   );
 

@@ -13,7 +13,6 @@ import 'package:lan_scanner/lan_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
@@ -24,12 +23,9 @@ import 'package:ollama_dart/ollama_dart.dart' as ollama;
 import 'package:openai_dart/openai_dart.dart' as open_ai;
 import 'package:mistralai_dart/mistralai_dart.dart' as mistral;
 
-part 'providers/maid_context/classes/artificial_intelligence_notifier.dart';
-
-part 'providers/app_settings/app_settings.dart';
-part 'providers/app_settings/extensions/silly_tavern_extension.dart';
-part 'providers/maid_context/maid_context.dart';
-part 'providers/maid_context/extensions/chat_extension.dart';
+part 'controllers/app_settings.dart';
+part 'controllers/artificial_intelligence_controller.dart';
+part 'controllers/chat_controller.dart';
 
 part 'types/override_type.dart';
 
@@ -75,8 +71,30 @@ part 'widgets/code_box.dart';
 
 void main() => runApp(Maid());
 
-class Maid extends StatelessWidget {
-  const Maid({super.key});
+class Maid extends StatefulWidget {
+  final AppSettings settings = AppSettings();
+  final ChatController chatController = ChatController();
+
+  Maid({super.key});
+
+  @override
+  State<Maid> createState() => MaidState();
+}
+
+class MaidState extends State<Maid> {
+  ArtificialIntelligenceController aiController = LlamaCppController();
+
+  static MaidState of(BuildContext context) => context.findAncestorStateOfType<MaidState>()!;
+
+  Future<void> switchAi(String type) async {
+    await aiController.save();
+
+    if (aiController.type == type) return;
+
+    aiController = await ArtificialIntelligenceController.load(type);
+
+    setState(() => log('AI switched to $type'));
+  }
 
   static ThemeData getTheme(ColorScheme colorScheme) {
     final appBarTheme = AppBarTheme(
@@ -107,33 +125,34 @@ class Maid extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) => MultiProvider(
-    providers: [
-      ChangeNotifierProvider<AppSettings>(
-        create: (context) => AppSettings(),
-      ),
-      ChangeNotifierProvider<MaidContext>(
-        create: (context) => MaidContext(),
-      ),
-    ],
-    child: buildConsumer(),
-  );
-
-  Widget buildConsumer() => Consumer2<AppSettings, MaidContext>(
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: widget.settings,
     builder: buildApp
   );
 
-  Widget buildApp(BuildContext context, AppSettings settings, MaidContext maid, Widget? child) => MaterialApp(
+  Widget buildApp(BuildContext context, Widget? child) => MaterialApp(
     title: 'Maid',
-    theme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.light)),
-    darkTheme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.dark)),
-    themeMode: settings.themeMode,
-    home: HomePage(aiController: maid.aiNotifier, chatController: maid, settings: settings),
+    theme: getTheme(ColorScheme.fromSeed(seedColor: widget.settings.seedColor, brightness: Brightness.light)),
+    darkTheme: getTheme(ColorScheme.fromSeed(seedColor: widget.settings.seedColor, brightness: Brightness.dark)),
+    themeMode: widget.settings.themeMode,
+    home: buildHomePage(),
     routes: {
-      '/settings': (context) => SettingsPage(aiController: maid.aiNotifier, settings: settings),
-      '/chat': (context) => HomePage(aiController: maid.aiNotifier, chatController: maid, settings: settings),
+      '/settings': (context) => buildSettingsPage(),
+      '/chat': (context) => buildHomePage(),
       '/about': (context) => const AboutPage(),
     },
     debugShowCheckedModeBanner: false,
+  );
+
+  Widget buildHomePage() => HomePage(
+    aiController: aiController, 
+    chatController: widget.chatController, 
+    settings: widget.settings
+  );
+
+  Widget buildSettingsPage() => SettingsPage(
+    aiController: aiController, 
+    chatController: widget.chatController,
+    settings: widget.settings
   );
 }

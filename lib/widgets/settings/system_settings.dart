@@ -25,7 +25,7 @@ class SystemSettings extends StatelessWidget {
         maxLines: null
       ),
       const SizedBox(height: 8),
-      ThemeModeDropdown(),
+      ThemeModeDropdown(settings: settings),
       const SizedBox(height: 8),
       Text(
         'Theme Seed Color',
@@ -42,7 +42,7 @@ class SystemSettings extends StatelessWidget {
       portraitOnly: true,
       displayThumbColor: false,
       pickerColor: settings.seedColor, 
-      onColorChanged: (newColor) => AppSettings.of(context).seedColor = newColor,
+      onColorChanged: (newColor) => settings.seedColor = newColor,
     ),
   );
 }

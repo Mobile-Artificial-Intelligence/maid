@@ -1,8 +1,8 @@
 part of 'package:maid/main.dart';
 
 class HomePage extends StatefulWidget {
-  final ArtificialIntelligenceNotifier aiController;
-  final MaidContext chatController;
+  final ArtificialIntelligenceController aiController;
+  final ChatController chatController;
   final AppSettings settings;
 
   const HomePage({
@@ -38,14 +38,14 @@ class HomePageState extends State<HomePage> {
   );
 
   Widget buildTitle() {
-    if (widget.aiController is LlamaCppNotifier) {
+    if (widget.aiController is LlamaCppController) {
       return LoadModelButton(
-        llama: widget.aiController as LlamaCppNotifier
+        llama: widget.aiController as LlamaCppController
       );
     }
 
     return RemoteModelDropdown(
-      aiController: widget.aiController as RemoteArtificialIntelligenceNotifier,
+      aiController: widget.aiController as RemoteArtificialIntelligenceController,
     );
   }
 
@@ -60,13 +60,14 @@ class HomePageState extends State<HomePage> {
     children: [
       MessageView(
         maxMessages: 50,
-        ai: widget.aiController,
+        aiController: widget.aiController,
         chatController: widget.chatController,
         settings: widget.settings,
       ),
       PromptField(
-        ai: widget.aiController,
+        aiController: widget.aiController,
         chatController: widget.chatController,
+        settings: widget.settings,
       ),
     ],
   );

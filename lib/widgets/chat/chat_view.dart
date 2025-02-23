@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 class ChatView extends StatelessWidget {
-  final MaidContext chatController;
+  final ChatController chatController;
   final bool disabled;
 
   const ChatView({
@@ -38,7 +38,7 @@ class ChatView extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       IconButton(
-        onPressed: MaidContext.of(context).newChat,
+        onPressed: chatController.newChat,
         icon: const Icon(Icons.add),
       )
     ]

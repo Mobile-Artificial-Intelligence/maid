@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 class OverrideView extends StatefulWidget {
-  final ArtificialIntelligenceNotifier aiController;
+  final ArtificialIntelligenceController aiController;
   
   const OverrideView({
     super.key, 

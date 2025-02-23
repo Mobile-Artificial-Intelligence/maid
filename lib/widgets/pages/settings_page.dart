@@ -1,12 +1,14 @@
 part of 'package:maid/main.dart';
 
 class SettingsPage extends StatelessWidget {
-  final ArtificialIntelligenceNotifier aiController;
+  final ArtificialIntelligenceController aiController;
+  final ChatController chatController;
   final AppSettings settings;
   
   const SettingsPage({
     super.key, 
     required this.aiController, 
+    required this.chatController,
     required this.settings
   });
 
@@ -25,7 +27,7 @@ class SettingsPage extends StatelessWidget {
     mainAxisSize: MainAxisSize.max,
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
-      EcosystemDropdown(),
+      ArtificialIntelligenceDropdown(aiController: aiController),
       ArtificialIntelligenceSettings(aiController: aiController),
       Divider(endIndent: 0, indent: 0, height: 32),
       OverrideView(aiController: aiController),
@@ -47,11 +49,11 @@ class SettingsPage extends StatelessWidget {
     runSpacing: 16,
     children: [
       ElevatedButton(
-        onPressed: MaidContext.of(context).clearChats, 
+        onPressed: chatController.clearChats, 
         child: const Text('Clear Chats')
       ),
       ElevatedButton(
-        onPressed: AppSettings.of(context).clear, 
+        onPressed: settings.clear, 
         child: const Text('Reset Settings')
       ),
       ElevatedButton(

@@ -1,8 +1,8 @@
 part of 'package:maid/main.dart';
 
 class MessageWidget extends StatefulWidget {
-  final ArtificialIntelligenceNotifier ai;
-  final MaidContext chatController;
+  final ArtificialIntelligenceController ai;
+  final ChatController chatController;
   final AppSettings settings;
   final GeneralTreeNode<ChatMessage> node;
 
@@ -58,8 +58,8 @@ class MessageWidgetState extends State<MessageWidget> {
     try {
       node.addChild(AssistantChatMessage(''));
 
-      if (widget.ai is LlamaCppNotifier) {
-        (widget.ai as LlamaCppNotifier).reloadModel(true);
+      if (widget.ai is LlamaCppController) {
+        (widget.ai as LlamaCppController).reloadModel(true);
       }
 
       final chainData = node.reverseChain.last.chainData.copy();

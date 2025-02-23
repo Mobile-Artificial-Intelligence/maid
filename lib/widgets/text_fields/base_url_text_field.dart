@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 class BaseUrlTextField extends StatelessWidget {
-  final RemoteArtificialIntelligenceNotifier aiController;
+  final RemoteArtificialIntelligenceController aiController;
 
   const BaseUrlTextField({
     super.key, 

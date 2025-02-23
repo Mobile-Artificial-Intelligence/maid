@@ -1,14 +1,14 @@
 part of 'package:maid/main.dart';
 
 class MessageView extends StatefulWidget {
-  final ArtificialIntelligenceNotifier ai;
-  final MaidContext chatController;
+  final ArtificialIntelligenceController aiController;
+  final ChatController chatController;
   final AppSettings settings;
   final int maxMessages;
 
   const MessageView({
     super.key, 
-    required this.ai,
+    required this.aiController,
     required this.chatController,
     required this.settings,
     required this.maxMessages,
@@ -68,7 +68,7 @@ class MessageViewState extends State<MessageView> {
       newRootPosition = rootPosition - (widget.maxMessages ~/ 2);
     } 
     else {
-      final root = MaidContext.of(context).root;
+      final root = widget.chatController.root;
       newRootPosition = math.min(
         root.chain.length - widget.maxMessages, 
         rootPosition + (widget.maxMessages ~/ 2)
@@ -84,7 +84,7 @@ class MessageViewState extends State<MessageView> {
     controller.addListener(onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final root = MaidContext.of(context).root;
+      final root = widget.chatController.root;
       rootPosition = math.max(0, root.chain.length - widget.maxMessages);
       controller.jumpTo(controller.position.maxScrollExtent);
     });
@@ -146,7 +146,7 @@ class MessageViewState extends State<MessageView> {
 
     return MessageWidget(
       key: rootKey,
-      ai: widget.ai,
+      ai: widget.aiController,
       chatController: widget.chatController,
       settings: widget.settings,
       node: currentRoot,

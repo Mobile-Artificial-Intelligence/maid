@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 class RemoteModelDropdown extends StatefulWidget {
-  final RemoteArtificialIntelligenceNotifier aiController;
+  final RemoteArtificialIntelligenceController aiController;
   final bool refreshButton;
 
   const RemoteModelDropdown({super.key, this.refreshButton = false, required this.aiController});

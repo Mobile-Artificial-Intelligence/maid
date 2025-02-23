@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 class ArtificialIntelligenceSettings extends StatelessWidget {
-  final ArtificialIntelligenceNotifier aiController;
+  final ArtificialIntelligenceController aiController;
   
   const ArtificialIntelligenceSettings({
     super.key, 
@@ -22,7 +22,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
-      aiController is RemoteArtificialIntelligenceNotifier
+      aiController is RemoteArtificialIntelligenceController
         ? buildRemoteSettings(context)
         : buildModelLoaderRow(context),
     ],
@@ -32,10 +32,10 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     children: [
       buildRemoteModel(),
       const SizedBox(height: 8),
-      if (aiController is OllamaNotifier) buildLocalSearchSwitch(context),
-      BaseUrlTextField(aiController: aiController as RemoteArtificialIntelligenceNotifier),
+      if (aiController is OllamaController) buildLocalSearchSwitch(context),
+      BaseUrlTextField(aiController: aiController as RemoteArtificialIntelligenceController),
       const SizedBox(height: 8),
-      ApiKeyTextField(aiController: aiController as RemoteArtificialIntelligenceNotifier),
+      ApiKeyTextField(aiController: aiController as RemoteArtificialIntelligenceController),
     ]
   );
 
@@ -49,7 +49,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
       ),
       RemoteModelDropdown(
         refreshButton: true,
-        aiController: aiController as RemoteArtificialIntelligenceNotifier,
+        aiController: aiController as RemoteArtificialIntelligenceController,
       ),
     ],
   );
@@ -71,7 +71,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     ],
   );
 
-  Widget buildModelLoaderButtonSelector(BuildContext context) => (aiController as LlamaCppNotifier).loading
+  Widget buildModelLoaderButtonSelector(BuildContext context) => (aiController as LlamaCppController).loading
     ? buildSpinner()
     : buildModelLoaderButton(context);
 
@@ -87,7 +87,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   );
 
   Widget buildModelLoaderButton(BuildContext context) => IconButton(
-    onPressed: (aiController as LlamaCppNotifier).pickModel, 
+    onPressed: (aiController as LlamaCppController).pickModel, 
     icon: const Icon(Icons.folder)
   );
 
@@ -121,7 +121,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
         maxLines: 1,
       ),
       Switch(
-        value: (aiController as OllamaNotifier).searchLocalNetwork ?? false,
+        value: (aiController as OllamaController).searchLocalNetwork ?? false,
         onChanged: (value) => onLocalSearchChanged(context, value),
       ),
     ],
@@ -130,7 +130,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   void onLocalSearchChanged(BuildContext context, bool value) {
     if (
       (Platform.isAndroid || Platform.isIOS) &&
-      (aiController as OllamaNotifier).searchLocalNetwork == null && 
+      (aiController as OllamaController).searchLocalNetwork == null && 
       value
     ) {
       // Show alert dialog informing the user of the permissions required
@@ -141,7 +141,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
       return;
     }
 
-    (aiController as OllamaNotifier).searchLocalNetwork = value;
+    (aiController as OllamaController).searchLocalNetwork = value;
   }
 
   Widget buildPermissionsAlert(BuildContext context) => AlertDialog(
@@ -184,6 +184,6 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
 
     if (!granted) return;
 
-    (aiController as OllamaNotifier).searchLocalNetwork = true;
+    (aiController as OllamaController).searchLocalNetwork = true;
   }
 }

@@ -1,13 +1,18 @@
 part of 'package:maid/main.dart';
 
-class EcosystemDropdown extends StatefulWidget {
-  const EcosystemDropdown({super.key});
+class ArtificialIntelligenceDropdown extends StatefulWidget {
+  final ArtificialIntelligenceController aiController;
+
+  const ArtificialIntelligenceDropdown({
+    super.key, 
+    required this.aiController
+  });
 
   @override
-  State<EcosystemDropdown> createState() => _EcosystemDropdownState();
+  State<ArtificialIntelligenceDropdown> createState() => _ArtificialIntelligenceDropdownState();
 }
 
-class _EcosystemDropdownState extends State<EcosystemDropdown> {
+class _ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDropdown> {
   bool open = false;
 
   @override
@@ -32,16 +37,16 @@ class _EcosystemDropdownState extends State<EcosystemDropdown> {
     mainAxisSize: MainAxisSize.min,
     children: [
       const SizedBox(width: 8),
-      Selector<MaidContext, String>(
-        selector: (context, settings) => settings.aiNotifier.type.snakeToSentence(),
+      ListenableBuilder(
+        listenable: widget.aiController,
         builder: buildOverrideText
       ),
       buildPopupButton()
     ]
   );
 
-  Widget buildOverrideText(BuildContext context, String type, Widget? child) => Text(
-    type,
+  Widget buildOverrideText(BuildContext context, Widget? child) => Text(
+    widget.aiController.type.snakeToSentence(),
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -55,8 +60,8 @@ class _EcosystemDropdownState extends State<EcosystemDropdown> {
     itemBuilder: itemBuilder,
     onOpened: () => setState(() => open = true),
     onCanceled: () => setState(() => open = false),
-    onSelected: (type) async {
-      MaidContext.of(context).switchAi(type);
+    onSelected: (type) {
+      MaidState.of(context).switchAi(type);
       setState(() => open = false);
     }
   );
@@ -70,7 +75,7 @@ class _EcosystemDropdownState extends State<EcosystemDropdown> {
   List<PopupMenuEntry<String>> itemBuilder(BuildContext context) {
     List<PopupMenuEntry<String>> items = [];
 
-    for (final type in ArtificialIntelligenceNotifier.types) {
+    for (final type in ArtificialIntelligenceController.types) {
       items.add(PopupMenuItem<String>(
         value: type,
         child: Text(type.snakeToSentence())
