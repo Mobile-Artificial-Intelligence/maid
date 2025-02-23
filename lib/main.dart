@@ -59,7 +59,7 @@ part 'widgets/override/override_view.dart';
 part 'widgets/override/override.dart';
 
 part 'widgets/pages/about_page.dart';
-part 'widgets/pages/chat_page.dart';
+part 'widgets/pages/home_page.dart';
 part 'widgets/pages/settings_page.dart';
 
 part 'widgets/settings/artificial_intelligence_settings.dart';
@@ -120,19 +120,19 @@ class Maid extends StatelessWidget {
     child: buildConsumer(),
   );
 
-  Widget buildConsumer() => Consumer<AppSettings>(
+  Widget buildConsumer() => Consumer2<AppSettings, MaidContext>(
     builder: buildApp
   );
 
-  Widget buildApp(BuildContext context, AppSettings settings, Widget? child) => MaterialApp(
+  Widget buildApp(BuildContext context, AppSettings settings, MaidContext maid, Widget? child) => MaterialApp(
     title: 'Maid',
     theme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.light)),
     darkTheme: getTheme(ColorScheme.fromSeed(seedColor: settings.seedColor, brightness: Brightness.dark)),
     themeMode: settings.themeMode,
-    home: const ChatPage(),
+    home: HomePage(ai: maid.aiNotifier),
     routes: {
       '/settings': (context) => const SettingsPage(),
-      '/chat': (context) => const ChatPage(),
+      '/chat': (context) => HomePage(ai: maid.aiNotifier),
       '/about': (context) => const AboutPage(),
     },
     debugShowCheckedModeBanner: false,

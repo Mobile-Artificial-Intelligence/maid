@@ -3,11 +3,13 @@ part of 'package:maid/main.dart';
 class ChatTile extends StatefulWidget {
   final GeneralTreeNode<ChatMessage> node;
   final bool selected;
+  final bool disabled;
 
   const ChatTile({
     super.key,
     required this.node,
     required this.selected,
+    required this.disabled,
   });
 
   @override
@@ -30,7 +32,7 @@ class ChatTileState extends State<ChatTile> {
       maxLines: 1,
     ),
     selected: widget.selected,
-    onTap: !MaidContext.of(context).aiNotifier.busy ? onChatChange : null,
+    onTap: !widget.disabled ? onChatChange : null,
     onLongPress: openPopover,
   );
 

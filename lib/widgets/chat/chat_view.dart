@@ -1,8 +1,11 @@
 part of 'package:maid/main.dart';
 
 class ChatView extends StatelessWidget {
+  final bool disabled;
+
   const ChatView({
     super.key,
+    required this.disabled,
   });
 
   @override
@@ -41,7 +44,8 @@ class ChatView extends StatelessWidget {
       itemCount: ai.chats.length,
       itemBuilder: (context, index) => ChatTile(
         node: ai.chats[index], 
-        selected: index == 0
+        selected: index == 0,
+        disabled: disabled,
       ),
     )
   );
