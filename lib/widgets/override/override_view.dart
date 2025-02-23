@@ -1,7 +1,12 @@
 part of 'package:maid/main.dart';
 
 class OverrideView extends StatefulWidget {
-  const OverrideView({super.key});
+  final ArtificialIntelligenceNotifier aiController;
+  
+  const OverrideView({
+    super.key, 
+    required this.aiController
+  });
 
   @override
   State<OverrideView> createState() => OverrideViewState();
@@ -9,14 +14,13 @@ class OverrideView extends StatefulWidget {
 
 class OverrideViewState extends State<OverrideView> {
   Timer? timer;
-  MaidContext? ai;
   Map<String,dynamic> overrides = {};
   int overrideCount = 0;
 
   @override
   void initState() {
     super.initState();
-    overrides.addAll(MaidContext.of(context).overrides);
+    overrides.addAll(widget.aiController.overrides);
     overrideCount = overrides.length;
     timer = Timer.periodic(const Duration(seconds: 2), (_) => save());
   }
@@ -28,13 +32,11 @@ class OverrideViewState extends State<OverrideView> {
   }
 
   void save() {
-    final ai = MaidContext.of(context);
-
-    if (ai.overrides.length == overrides.length && ai.overrides.entries.every((entry) => overrides[entry.key] == entry.value)) {
+    if (widget.aiController.overrides.length == overrides.length && widget.aiController.overrides.entries.every((entry) => overrides[entry.key] == entry.value)) {
       return;
     }
 
-    ai.overrides = Map.from(overrides);
+    widget.aiController.overrides = Map.from(overrides);
   }
 
   void onChange(String oldKey, [String? newKey, dynamic newValue]) {

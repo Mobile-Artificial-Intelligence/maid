@@ -23,7 +23,7 @@ class SettingsPage extends StatelessWidget {
       EcosystemDropdown(),
       ArtificialIntelligenceSettings(aiController: aiController),
       Divider(endIndent: 0, indent: 0, height: 32),
-      OverrideView(),
+      OverrideView(aiController: aiController),
       Divider(endIndent: 0, indent: 0, height: 32),
       UserSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
