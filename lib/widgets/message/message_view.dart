@@ -143,9 +143,9 @@ class MessageViewState extends State<MessageView> {
   Widget buildMessage(BuildContext context, Widget? child) {
     final currentRoot = widget.chatController.root.chain[rootPosition];
     currentRoot.data.content = widget.settings.systemPrompt?.formatPlaceholders(
-      widget.settings.userName ?? 'User', 
-      widget.settings.assistantName ?? 'Assistant'
-    ) ?? 'New Chat';
+      widget.settings.userName ?? AppLocalizations.of(context)!.user, 
+      widget.settings.assistantName ?? AppLocalizations.of(context)!.assistant
+    ) ?? AppLocalizations.of(context)!.newChat;
 
     if (currentRoot.currentChild == null) return const SizedBox.shrink();
 

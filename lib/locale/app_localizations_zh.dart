@@ -27,6 +27,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatsTitle => '聊天';
 
   @override
+  String get newChat => '新聊天';
+
+  @override
   String get anErrorOccurred => '发生了一个错误';
 
   @override
@@ -43,6 +46,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get setAssistantImage => '设置助手图像';
+
+  @override
+  String get user => '用户';
+
+  @override
+  String get assistant => '助手';
 
   @override
   String get cancel => '取消';

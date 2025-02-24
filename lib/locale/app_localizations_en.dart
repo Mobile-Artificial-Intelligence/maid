@@ -27,6 +27,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatsTitle => 'Chats';
 
   @override
+  String get newChat => 'New Chat';
+
+  @override
   String get anErrorOccurred => 'An error occurred';
 
   @override
@@ -43,6 +46,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setAssistantImage => 'Set Assistant Image';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get assistant => 'Assistant';
 
   @override
   String get cancel => 'Cancel';

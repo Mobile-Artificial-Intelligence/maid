@@ -131,6 +131,12 @@ abstract class AppLocalizations {
   /// **'Chats'**
   String get chatsTitle;
 
+  /// No description provided for @newChat.
+  ///
+  /// In en, this message translates to:
+  /// **'New Chat'**
+  String get newChat;
+
   /// No description provided for @anErrorOccurred.
   ///
   /// In en, this message translates to:
@@ -166,6 +172,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Set Assistant Image'**
   String get setAssistantImage;
+
+  /// No description provided for @user.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
+
+  /// No description provided for @assistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant'**
+  String get assistant;
 
   /// No description provided for @cancel.
   ///
