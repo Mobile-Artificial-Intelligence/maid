@@ -161,6 +161,18 @@ abstract class AppLocalizations {
   /// **'Error'**
   String get errorTitle;
 
+  /// No description provided for @key.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get key;
+
+  /// No description provided for @value.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get value;
+
   /// No description provided for @ok.
   ///
   /// In en, this message translates to:
@@ -304,6 +316,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bool'**
   String get overrideTypeBoolean;
+
+  /// No description provided for @inferanceOverrides.
+  ///
+  /// In en, this message translates to:
+  /// **'Inference Overrides'**
+  String get inferanceOverrides;
+
+  /// No description provided for @addOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Override'**
+  String get addOverride;
+
+  /// No description provided for @saveOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Override'**
+  String get saveOverride;
+
+  /// No description provided for @deleteOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Override'**
+  String get deleteOverride;
 
   /// No description provided for @themeMode.
   ///

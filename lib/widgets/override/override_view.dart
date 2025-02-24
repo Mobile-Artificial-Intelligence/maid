@@ -63,7 +63,7 @@ class OverrideViewState extends State<OverrideView> {
   Widget build(BuildContext context) {
     List<Widget> children = [
       Text(
-        'Inference Overrides',
+        AppLocalizations.of(context)!.inferanceOverrides,
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
@@ -93,11 +93,11 @@ class OverrideViewState extends State<OverrideView> {
     children: [
       ElevatedButton(
         onPressed: () => setState(() => overrideCount += 1), 
-        child: const Text('Add Override')
+        child: Text(AppLocalizations.of(context)!.addOverride)
       ),
       ElevatedButton(
         onPressed: save, 
-        child: const Text('Save Overrides')
+        child: Text(AppLocalizations.of(context)!.saveOverride)
       ),
     ]
   ); 

@@ -42,6 +42,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get errorTitle => '错误';
 
   @override
+  String get key => '键';
+
+  @override
+  String get value => '值';
+
+  @override
   String get ok => '确定';
 
   @override
@@ -112,6 +118,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get overrideTypeBoolean => '布尔值';
+
+  @override
+  String get inferanceOverrides => '推理覆盖';
+
+  @override
+  String get addOverride => '添加覆盖';
+
+  @override
+  String get saveOverride => '保存覆盖';
+
+  @override
+  String get deleteOverride => '删除覆盖';
 
   @override
   String get themeMode => '主题模式';

@@ -76,6 +76,7 @@ class OverrideState extends State<Override> {
   Widget build(BuildContext context) => Row(
     children: [
       IconButton(
+        tooltip: AppLocalizations.of(context)!.deleteOverride,
         icon: const Icon(Icons.delete),
         onPressed: onDelete,
       ),
@@ -96,8 +97,8 @@ class OverrideState extends State<Override> {
   Widget buildKeyTextField() => Expanded(
     child: TextField(
       controller: keyController,
-      decoration: const InputDecoration(
-        labelText: 'Key',
+      decoration: InputDecoration(
+        labelText: AppLocalizations.of(context)!.key,
       ),
       onChanged: (_) => onChange(),
     )
@@ -106,8 +107,8 @@ class OverrideState extends State<Override> {
   Widget buildValueTextField() => Expanded(
     child: TextField(
       controller: valueController,
-      decoration: const InputDecoration(
-        labelText: 'Value',
+      decoration: InputDecoration(
+        labelText: AppLocalizations.of(context)!.value,
       ),
       onChanged: (_) => onChange(),
     )

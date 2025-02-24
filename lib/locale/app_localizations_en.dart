@@ -42,6 +42,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorTitle => 'Error';
 
   @override
+  String get key => 'Key';
+
+  @override
+  String get value => 'Value';
+
+  @override
   String get ok => 'OK';
 
   @override
@@ -112,6 +118,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get overrideTypeBoolean => 'Bool';
+
+  @override
+  String get inferanceOverrides => 'Inference Overrides';
+
+  @override
+  String get addOverride => 'Add Override';
+
+  @override
+  String get saveOverride => 'Save Override';
+
+  @override
+  String get deleteOverride => 'Delete Override';
 
   @override
   String get themeMode => 'Theme Mode';
