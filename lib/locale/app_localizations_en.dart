@@ -51,6 +51,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectAiEcosystem => 'Select AI Ecosystem';
 
   @override
+  String get selectOverrideType => 'Select Override Type';
+
+  @override
+  String get overrideTypeString => 'String';
+
+  @override
+  String get overrideTypeInteger => 'Integer';
+
+  @override
+  String get overrideTypeDouble => 'Double';
+
+  @override
+  String get overrideTypeBoolean => 'Bool';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

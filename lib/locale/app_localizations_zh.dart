@@ -51,6 +51,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectAiEcosystem => '选择AI生态系统';
 
   @override
+  String get selectOverrideType => '选择覆盖类型';
+
+  @override
+  String get overrideTypeString => '字符串';
+
+  @override
+  String get overrideTypeInteger => '整数';
+
+  @override
+  String get overrideTypeDouble => '双精度';
+
+  @override
+  String get overrideTypeBoolean => '布尔值';
+
+  @override
   String get settingsTitle => '设置';
 
   @override

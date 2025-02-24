@@ -31,7 +31,7 @@ class _OverrideTypeDropdownState extends State<OverrideTypeDropdown> {
   );
 
   Widget buildOverrideText() => Text(
-    overrideType.name.titleize,
+    overrideType.getLocale(context),
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -39,7 +39,7 @@ class _OverrideTypeDropdownState extends State<OverrideTypeDropdown> {
   );
 
   Widget buildPopupButton() => PopupMenuButton<OverrideType>(
-    tooltip: 'Select Override Type',
+    tooltip: AppLocalizations.of(context)!.selectOverrideType,
     icon: buildPopupButtonIcon(),
     offset: const Offset(0, 40),
     itemBuilder: itemBuilder,
@@ -64,22 +64,22 @@ class _OverrideTypeDropdownState extends State<OverrideTypeDropdown> {
     PopupMenuItem(
       padding: EdgeInsets.all(8),
       value: OverrideType.string,
-      child: const Text('String')
+      child: Text(AppLocalizations.of(context)!.overrideTypeString)
     ),
     PopupMenuItem(
       padding: EdgeInsets.all(8),
       value: OverrideType.int,
-      child: const Text('Int')
+      child: Text(AppLocalizations.of(context)!.overrideTypeInteger)
     ),
     PopupMenuItem(
       padding: EdgeInsets.all(8),
       value: OverrideType.double,
-      child: const Text('Double')
+      child: Text(AppLocalizations.of(context)!.overrideTypeDouble)
     ),
     PopupMenuItem(
       padding: EdgeInsets.all(8),
       value: OverrideType.bool,
-      child: const Text('Bool')
+      child: Text(AppLocalizations.of(context)!.overrideTypeBoolean)
     ),
     PopupMenuItem(
       padding: EdgeInsets.all(8),
