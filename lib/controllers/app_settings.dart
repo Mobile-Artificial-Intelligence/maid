@@ -92,6 +92,13 @@ class AppSettings extends ChangeNotifier {
 
     save();
     notifyListeners();
+    if (_assistantImage == null) return;
+
+    final bytes = _assistantImage!.readAsBytesSync();
+
+    final image = img.decodeImage(bytes);
+  
+    sillyTavernDecoder(image?.textData);
   }
 
   void sillyTavernDecoder(Map<String, String>? imageData) {
