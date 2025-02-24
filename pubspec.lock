@@ -296,10 +296,10 @@ packages:
     dependency: "direct main"
     description:
       name: lcpp
-      sha256: "8f0aa71964c7692957e0eac5fd91bdcd1e00f20daa1f17185730235f7f368063"
+      sha256: b4d9b8d4aba627216849c1b3d7a179919b8e760fa9b6d7dc1e2da71270d322ce
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.6"
   leak_tracker:
     dependency: transitive
     description:

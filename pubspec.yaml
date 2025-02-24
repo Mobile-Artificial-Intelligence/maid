@@ -24,7 +24,7 @@ dependencies:
   file_picker: 8.1.7
 
   # Supported Ecosystems
-  lcpp: ^0.1.5
+  lcpp: ^0.1.6
   ollama_dart: ^0.2.2+1
   openai_dart: ^0.4.5
   mistralai_dart: ^0.0.3+4
