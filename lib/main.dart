@@ -179,6 +179,7 @@ class MaidState extends State<Maid> {
       Locale('ru'), // Russian
       Locale('zh'), // Chinese
     ],
+    locale: Locale('zh'),
     debugShowCheckedModeBanner: false,
   );
 
