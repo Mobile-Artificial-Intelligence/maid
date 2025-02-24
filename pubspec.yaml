@@ -51,6 +51,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.3
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - images/logo.png

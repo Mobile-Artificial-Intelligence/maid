@@ -8,6 +8,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:image/image.dart' as img;
 import 'package:flutter/services.dart';
+import 'package:maid/locale/app_localizations.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:lan_scanner/lan_scanner.dart';
@@ -163,6 +164,7 @@ class MaidState extends State<Maid> {
     themeMode: widget.settings.themeMode,
     home: buildHomePage(),
     localizationsDelegates: [
+      AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,

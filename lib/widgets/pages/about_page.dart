@@ -6,7 +6,9 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text("About"),
+      title: Text(
+        AppLocalizations.of(context)!.aboutTitle
+      ),
     ),
     body: buildBody(context),
   );
@@ -26,7 +28,7 @@ class AboutPage extends StatelessWidget {
       ),
       const SizedBox(height: 30.0),
       Text(
-        'Maid',
+        AppLocalizations.of(context)!.appTitle,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.titleLarge,
       ),
@@ -45,7 +47,7 @@ class AboutPage extends StatelessWidget {
       ),
       const SizedBox(height: 20.0),
       Text(
-        'Lead Maintainer',
+        AppLocalizations.of(context)!.leadMaintainer,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.titleMedium,
       ),
