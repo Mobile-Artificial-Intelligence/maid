@@ -45,6 +45,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get aiEcosystem => 'AI Ecosystem';
+
+  @override
+  String get selectAiEcosystem => 'Select AI Ecosystem';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

@@ -167,6 +167,18 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancel;
 
+  /// No description provided for @aiEcosystem.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Ecosystem'**
+  String get aiEcosystem;
+
+  /// No description provided for @selectAiEcosystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Select AI Ecosystem'**
+  String get selectAiEcosystem;
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:

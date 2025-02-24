@@ -26,7 +26,7 @@ class _ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceD
   );
 
   Widget buildTitle() => Text(
-    'AI Ecosystem',
+    AppLocalizations.of(context)!.aiEcosystem,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -54,7 +54,7 @@ class _ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceD
   );
 
   Widget buildPopupButton() => PopupMenuButton<String>(
-    tooltip: 'Select Llm Ecosystem',
+    tooltip: AppLocalizations.of(context)!.selectAiEcosystem,
     icon: buildPopupButtonIcon(),
     offset: const Offset(0, 40),
     itemBuilder: itemBuilder,

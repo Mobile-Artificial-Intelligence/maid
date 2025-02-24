@@ -45,6 +45,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cancel => '取消';
 
   @override
+  String get aiEcosystem => 'AI生态系统';
+
+  @override
+  String get selectAiEcosystem => '选择AI生态系统';
+
+  @override
   String get settingsTitle => '设置';
 
   @override
