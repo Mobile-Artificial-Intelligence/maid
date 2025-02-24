@@ -136,6 +136,8 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 
   String get connectionHash => (_baseUrl ?? '').hash + (_apiKey ?? '').hash;
 
+  bool get canGetRemoteModels;
+
   RemoteArtificialIntelligenceController({
     super.model, 
     super.overrides,
@@ -487,6 +489,9 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   
   @override
   String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.ollama;
+  
+  @override
+  bool get canGetRemoteModels => baseUrl != null || searchLocalNetwork == true;
 }
 
 class OpenAIController extends RemoteArtificialIntelligenceController {
@@ -575,6 +580,9 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
   
   @override
   String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.openAI;
+  
+  @override
+  bool get canGetRemoteModels => apiKey != null && apiKey!.isNotEmpty;
 }
 
 class MistralController extends RemoteArtificialIntelligenceController {
@@ -666,4 +674,7 @@ class MistralController extends RemoteArtificialIntelligenceController {
   
   @override
   String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.mistral;
+  
+  @override
+  bool get canGetRemoteModels => true;
 }

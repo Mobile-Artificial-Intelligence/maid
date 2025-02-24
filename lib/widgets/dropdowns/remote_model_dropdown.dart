@@ -13,11 +13,6 @@ class RemoteModelDropdown extends StatefulWidget {
 class RemoteModelDropdownState extends State<RemoteModelDropdown> {
   bool open = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   void onSelected(String model) {
     widget.aiController.model = model;
     setState(() => open = false);
@@ -57,12 +52,14 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
           fontSize: 16
         )
       ),
-      FutureBuilder<List<String>?>(
-        future: getModelOptions(),
-        builder: buildPopupButton
-      )
+      
     ]
   );
+
+  Widget buildFutureBuilder() => widget.aiController.canGetRemoteModels ? FutureBuilder<List<String>?>(
+    future: getModelOptions(),
+    builder: buildPopupButton
+  ) : const SizedBox.shrink();
 
   Widget buildRefreshButton() => IconButton(
     tooltip: AppLocalizations.of(context)!.refreshRemoteModels,
