@@ -1,0 +1,108 @@
+{
+    "@@locale": "ru",
+    "loading": "Загрузка...",
+    "loadModel": "Загрузить модель",
+    "noModelSelected": "Модель не выбрана",
+    "noModelLoaded": "Модель не загружена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "regenerate": "Перегенерировать",
+    "chatsTitle": "Чаты",
+    "newChat": "Новый чат",
+    "anErrorOccurred": "Произошла ошибка",
+    "errorTitle": "Ошибка",
+    "key": "Ключ",
+    "value": "Значение",
+    "ok": "OK",
+    "done": "Готово",
+    "close": "Закрыть",
+    "next": "Далее",
+    "previous": "Назад",
+    "contentShared": "Контент отправлен",
+    "setUserImage": "Установить изображение пользователя",
+    "setAssistantImage": "Установить изображение ассистента",
+    "loadUserImage": "Загрузить изображение пользователя",
+    "loadAssistantImage": "Загрузить изображение ассистента",
+    "userName": "Имя пользователя",
+    "assistantName": "Имя ассистента",
+    "user": "Пользователь",
+    "assistant": "Ассистент",
+    "cancel": "Отмена",
+    "aiEcosystem": "Экосистема ИИ",
+    "llamaCpp": "Llama CPP",
+    "llamaCppModel": "Модель Llama CPP",
+    "remoteModel": "Удаленная модель",
+    "refreshRemoteModels": "Обновить удаленные модели",
+    "ollama": "Ollama",
+    "searchLocalNetwork": "Поиск в локальной сети",
+    "localNetworkSearchTitle": "Поиск в локальной сети",
+    "localNetworkSearchContent": "Эта функция требует дополнительных разрешений для поиска Ollama в вашей локальной сети.",
+    "openAI": "OpenAI",
+    "mistral": "Mistral",
+    "selectAiEcosystem": "Выберите экосистему ИИ",
+    "selectOverrideType": "Выберите тип переопределения",
+    "selectRemoteModel": "Выберите удаленную модель",
+    "selectThemeMode": "Выберите тему приложения",
+    "overrideTypeString": "Строка",
+    "overrideTypeInteger": "Целое число",
+    "overrideTypeDouble": "Дробное число",
+    "overrideTypeBoolean": "Логическое значение",
+    "inferanceOverrides": "Переопределения инференса",
+    "addOverride": "Добавить переопределение",
+    "saveOverride": "Сохранить переопределение",
+    "deleteOverride": "Удалить переопределение",
+    "themeMode": "Тема",
+    "themeModeSystem": "Системная",
+    "themeModeLight": "Светлая",
+    "themeModeDark": "Темная",
+    "themeSeedColor": "Основной цвет темы",
+    "editMessage": "Редактировать сообщение",
+    "settingsTitle": "Настройки",
+    "aiSettings": "Настройки {aiControllerType}",
+    "@aiSettings": {
+        "description": "Настройки для {aiControllerType}",
+        "placeholders": {
+            "aiControllerType": {
+                "type": "String",
+                "example": "Llama CPP"
+            }
+        }
+    },
+    "userSettings": "Настройки пользователя",
+    "assistantSettings": "Настройки ассистента",
+    "systemSettings": "Системные настройки",
+    "systemPrompt": "Системный промпт",
+    "clearChats": "Очистить чаты",
+    "resetSettings": "Сбросить настройки",
+    "clearCache": "Очистить кэш",
+    "aboutTitle": "О программе",
+    "aboutContent": "Maid — это кроссплатформенное бесплатное и открытое приложение для работы с моделями llama.cpp локально, а также с моделями Ollama, Mistral, Google Gemini и OpenAI удаленно. Maid поддерживает карточки персонажей Sillytavern, позволяя взаимодействовать со всеми вашими любимыми персонажами. В приложении можно загружать модели из Hugging Face. Maid распространяется под лицензией MIT и предоставляется без каких-либо гарантий, явных или подразумеваемых. Maid не связан с Hugging Face, Meta (Facebook), MistralAI, OpenAI, Google, Microsoft или другими компаниями, предоставляющими совместимые модели.",
+    "leadMaintainer": "Ведущий разработчик",
+    "apiKey": "API-ключ",
+    "baseUrl": "Базовый URL",
+    "clearPrompt": "Очистить промпт",
+    "submitPrompt": "Отправить промпт",
+    "stopPrompt": "Остановить промпт",
+    "typeMessage": "Введите сообщение...",
+    "code": "Код",
+    "copyLabel": "Копировать {label}",
+    "@copyLabel": {
+        "description": "Копировать {label} в буфер обмена",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Код"
+            }
+        }
+    },
+    "labelCopied": "{label} скопирован в буфер обмена!",
+    "@labelCopied": {
+        "description": "{label} скопирован в буфер обмена!",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Код"
+            }
+        }
+    }
+}
