@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   shared_preferences: ^2.5.2
   flutter_colorpicker: ^1.1.0
   tree_structs: ^1.0.5

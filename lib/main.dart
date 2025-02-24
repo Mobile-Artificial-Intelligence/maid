@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:image/image.dart' as img;
 import 'package:flutter/services.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -161,11 +162,21 @@ class MaidState extends State<Maid> {
     darkTheme: getTheme(ColorScheme.fromSeed(seedColor: widget.settings.seedColor, brightness: Brightness.dark)),
     themeMode: widget.settings.themeMode,
     home: buildHomePage(),
+    localizationsDelegates: [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
     routes: {
       '/settings': (context) => buildSettingsPage(),
       '/chat': (context) => buildHomePage(),
       '/about': (context) => const AboutPage(),
     },
+    supportedLocales: [
+      Locale('en'), // English
+      Locale('ru'), // Russian
+      Locale('zh'), // Chinese
+    ],
     debugShowCheckedModeBanner: false,
   );
 
