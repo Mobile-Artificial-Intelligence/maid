@@ -24,6 +24,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get delete => '删除';
 
   @override
+  String get edit => '编辑';
+
+  @override
+  String get regenerate => '重新生成';
+
+  @override
   String get chatsTitle => '聊天';
 
   @override
@@ -37,6 +43,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get ok => '确定';
+
+  @override
+  String get done => '完成';
+
+  @override
+  String get close => '关闭';
+
+  @override
+  String get next => '下一个';
+
+  @override
+  String get previous => '上一个';
 
   @override
   String get contentShared => '内容已分享';
@@ -94,6 +112,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get themeModeDark => '暗色';
+
+  @override
+  String get editMessage => '编辑消息';
 
   @override
   String get settingsTitle => '设置';

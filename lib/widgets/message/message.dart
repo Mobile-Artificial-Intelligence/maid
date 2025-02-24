@@ -161,7 +161,7 @@ class MessageWidgetState extends State<MessageWidget> {
         autofocus: true,
         style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
-          hintText: "Edit Message",
+          hintText: AppLocalizations.of(context)!.editMessage,
           fillColor: Theme.of(context).colorScheme.surface,
         ),
         maxLines: null,
@@ -207,7 +207,7 @@ class MessageWidgetState extends State<MessageWidget> {
       ),
       const SizedBox(width: 10.0),
       Text(
-        widget.settings.userName ?? 'User',
+        widget.settings.userName ?? AppLocalizations.of(context)!.user,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -228,7 +228,7 @@ class MessageWidgetState extends State<MessageWidget> {
       ),
       const SizedBox(width: 10.0),
       Text(
-        widget.settings.assistantName ?? 'Assistant',
+        widget.settings.assistantName ?? AppLocalizations.of(context)!.assistant,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -256,10 +256,12 @@ class MessageWidgetState extends State<MessageWidget> {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       IconButton(
+        tooltip: AppLocalizations.of(context)!.done,
         icon: const Icon(Icons.done),
         onPressed: onSubmitEdit,
       ),
       IconButton(
+        tooltip: AppLocalizations.of(context)!.cancel,
         icon: const Icon(Icons.close),
         onPressed: () => setState(() => editing = false),
       ),
@@ -271,11 +273,13 @@ class MessageWidgetState extends State<MessageWidget> {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       IconButton(
+        tooltip: AppLocalizations.of(context)!.previous,
         icon: const Icon(Icons.arrow_left),
         onPressed: !widget.ai.busy && widget.onPreviousEnabled ? onPrevious : null,
       ),
       Text('${widget.siblingsIndex + 1} / ${widget.siblingCount}'),
       IconButton(
+        tooltip: AppLocalizations.of(context)!.next,
         icon: const Icon(Icons.arrow_right),
         onPressed: !widget.ai.busy && widget.onNextEnabled ? onNext : null,
       ),
@@ -289,12 +293,14 @@ class MessageWidgetState extends State<MessageWidget> {
   Widget buildRoleSpecificButton() {
     if (widget.message is UserChatMessage) {
       return IconButton(
+        tooltip: AppLocalizations.of(context)!.edit,
         icon: const Icon(Icons.edit),
         onPressed: widget.ai.canPrompt ? onEdit : null,
       );
     } 
     else {
       return IconButton(
+        tooltip: AppLocalizations.of(context)!.regenerate,
         icon: const Icon(Icons.refresh),
         onPressed: widget.ai.canPrompt ? onRegenerate : null,
       );
@@ -303,6 +309,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   /// The delete button will allow the user to delete the message.
   Widget buildDeleteButton() => IconButton(
+    tooltip: AppLocalizations.of(context)!.delete,
     icon: const Icon(Icons.delete),
     onPressed: !widget.ai.busy ? onDelete : null,
   );

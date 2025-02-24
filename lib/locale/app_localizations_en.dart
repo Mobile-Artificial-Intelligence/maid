@@ -24,6 +24,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
+  String get edit => 'Edit';
+
+  @override
+  String get regenerate => 'Regenerate';
+
+  @override
   String get chatsTitle => 'Chats';
 
   @override
@@ -37,6 +43,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get previous => 'Previous';
 
   @override
   String get contentShared => 'Content Shared';
@@ -94,6 +112,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeModeDark => 'Dark';
+
+  @override
+  String get editMessage => 'Edit Message';
 
   @override
   String get settingsTitle => 'Settings';
