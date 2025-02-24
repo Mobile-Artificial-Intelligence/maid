@@ -293,6 +293,12 @@ abstract class AppLocalizations {
   /// **'Remote Model'**
   String get remoteModel;
 
+  /// No description provided for @refreshRemoteModels.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Remote Models'**
+  String get refreshRemoteModels;
+
   /// No description provided for @ollama.
   ///
   /// In en, this message translates to:

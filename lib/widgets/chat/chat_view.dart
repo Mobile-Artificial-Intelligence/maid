@@ -38,6 +38,7 @@ class ChatView extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium,
       ),
       IconButton(
+        tooltip: AppLocalizations.of(context)!.newChat,
         onPressed: chatController.newChat,
         icon: const Icon(Icons.add),
       )

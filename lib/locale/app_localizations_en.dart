@@ -108,6 +108,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remoteModel => 'Remote Model';
 
   @override
+  String get refreshRemoteModels => 'Refresh Remote Models';
+
+  @override
   String get ollama => 'Ollama';
 
   @override

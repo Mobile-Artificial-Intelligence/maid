@@ -65,6 +65,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
   );
 
   Widget buildRefreshButton() => IconButton(
+    tooltip: AppLocalizations.of(context)!.refreshRemoteModels,
     icon: Icon(
       Icons.refresh,
       color: Theme.of(context).colorScheme.onSurface,

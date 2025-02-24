@@ -108,6 +108,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get remoteModel => '远程模型';
 
   @override
+  String get refreshRemoteModels => '刷新远程模型';
+
+  @override
   String get ollama => '哦，羊驼';
 
   @override

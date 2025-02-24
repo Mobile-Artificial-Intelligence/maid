@@ -33,6 +33,7 @@
     "llamaCpp": "调用 CPP",
     "llamaCppModel": "调用 CPP 模型",
     "remoteModel": "远程模型",
+    "refreshRemoteModels": "刷新远程模型",
     "ollama": "哦，羊驼",
     "searchLocalNetwork": "搜索本地网络",
     "localNetworkSearchTitle": "本地网络搜索",

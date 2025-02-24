@@ -33,6 +33,7 @@
     "llamaCpp": "Llama CPP",
     "llamaCppModel": "Llama CPP Model",
     "remoteModel": "Remote Model",
+    "refreshRemoteModels": "Refresh Remote Models",
     "ollama": "Ollama",
     "searchLocalNetwork": "Search Local Network",
     "localNetworkSearchTitle": "Local Network Search",
