@@ -18,6 +18,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loadModel => '加载模型';
 
   @override
+  String get noModelSelected => '未选择模型';
+
+  @override
   String get delete => '删除';
 
   @override
@@ -52,6 +55,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get selectOverrideType => '选择覆盖类型';
+
+  @override
+  String get selectRemoteModel => '选择远程模型';
 
   @override
   String get overrideTypeString => '字符串';

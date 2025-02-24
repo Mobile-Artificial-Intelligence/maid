@@ -51,7 +51,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
       if (widget.refreshButton) buildRefreshButton(),
       const SizedBox(width: 8),
       Text(
-        widget.aiController.model ?? 'No model selected',
+        widget.aiController.model ?? AppLocalizations.of(context)!.noModelSelected,
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSurface,
           fontSize: 16
@@ -78,7 +78,7 @@ class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
 
     return PopupMenuButton<String>(
       enabled: enabled,
-      tooltip: 'Select Remote Model',
+      tooltip: AppLocalizations.of(context)!.selectRemoteModel,
       icon: enabled ? buildPopupButtonIcon() : buildSpinner(),
       offset: const Offset(0, 40),
       itemBuilder: (context) => snapshot.data!.map(modelBuilder).toList(),

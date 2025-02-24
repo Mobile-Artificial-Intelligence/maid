@@ -113,6 +113,12 @@ abstract class AppLocalizations {
   /// **'Load Model'**
   String get loadModel;
 
+  /// No description provided for @noModelSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No Model Selected'**
+  String get noModelSelected;
+
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:
@@ -184,6 +190,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Override Type'**
   String get selectOverrideType;
+
+  /// No description provided for @selectRemoteModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Remote Model'**
+  String get selectRemoteModel;
 
   /// No description provided for @overrideTypeString.
   ///

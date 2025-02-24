@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadModel => 'Load Model';
 
   @override
+  String get noModelSelected => 'No Model Selected';
+
+  @override
   String get delete => 'Delete';
 
   @override
@@ -52,6 +55,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectOverrideType => 'Select Override Type';
+
+  @override
+  String get selectRemoteModel => 'Select Remote Model';
 
   @override
   String get overrideTypeString => 'String';
