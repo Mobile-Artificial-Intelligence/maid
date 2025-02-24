@@ -119,6 +119,12 @@ abstract class AppLocalizations {
   /// **'No Model Selected'**
   String get noModelSelected;
 
+  /// No description provided for @noModelLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'No Model Loaded'**
+  String get noModelLoaded;
+
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:
@@ -251,11 +257,41 @@ abstract class AppLocalizations {
   /// **'Llama CPP'**
   String get llamaCpp;
 
+  /// No description provided for @llamaCppModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Llama CPP Model'**
+  String get llamaCppModel;
+
+  /// No description provided for @remoteModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote Model'**
+  String get remoteModel;
+
   /// No description provided for @ollama.
   ///
   /// In en, this message translates to:
   /// **'Ollama'**
   String get ollama;
+
+  /// No description provided for @searchLocalNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Local Network'**
+  String get searchLocalNetwork;
+
+  /// No description provided for @localNetworkSearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Network Search'**
+  String get localNetworkSearchTitle;
+
+  /// No description provided for @localNetworkSearchContent.
+  ///
+  /// In en, this message translates to:
+  /// **'\'This feature requires additional permissions to search your local network for Ollama instances.'**
+  String get localNetworkSearchContent;
 
   /// No description provided for @openAI.
   ///
@@ -376,6 +412,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settingsTitle;
+
+  /// Settings for {ai_controller_type}
+  ///
+  /// In en, this message translates to:
+  /// **'{aiControllerType} Settings'**
+  String aiSettings(String aiControllerType);
 
   /// No description provided for @clearChats.
   ///

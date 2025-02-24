@@ -18,7 +18,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     children: [
       Divider(endIndent: 0, indent: 0, height: 32),
       Text(
-        '${aiController.type.snakeToSentence()} Settings',
+        AppLocalizations.of(context)!.aiSettings(aiController.getTypeLocale(context)),
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
@@ -30,7 +30,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
 
   Widget buildRemoteSettings(BuildContext context) => Column(
     children: [
-      buildRemoteModel(),
+      buildRemoteModel(context),
       const SizedBox(height: 8),
       if (aiController is OllamaController) buildLocalSearchSwitch(context),
       BaseUrlTextField(aiController: aiController as RemoteArtificialIntelligenceController),
@@ -39,11 +39,11 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     ]
   );
 
-  Widget buildRemoteModel() => Row(
+  Widget buildRemoteModel(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(
-        'Remote Model',
+        AppLocalizations.of(context)!.remoteModel,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
@@ -58,7 +58,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     mainAxisSize: MainAxisSize.max,
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      buildModelLoaderTitle(),
+      buildModelLoaderTitle(context),
       buildModelLoader(context),
     ],
   );
@@ -66,7 +66,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   Widget buildModelLoader(BuildContext context) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [
-      buildModelText(),
+      buildModelText(context),
       buildModelLoaderButtonSelector(context),
     ],
   );
@@ -91,16 +91,16 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     icon: const Icon(Icons.folder)
   );
 
-  Widget buildModelLoaderTitle() => Expanded(
+  Widget buildModelLoaderTitle(BuildContext context) => Expanded(
     child: Text(
-      'Llama CPP Model',
+      AppLocalizations.of(context)!.llamaCppModel,
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
     )
   );
 
-  Widget buildModelText() => Text(
-    aiController.model?.split('/').last ?? 'No model loaded',
+  Widget buildModelText(BuildContext context) => Text(
+    aiController.model?.split('/').last ?? AppLocalizations.of(context)!.noModelLoaded,
     overflow: TextOverflow.ellipsis,
     maxLines: 1,
   );
@@ -116,7 +116,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(
-        'Search Local Network',
+        AppLocalizations.of(context)!.searchLocalNetwork,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
@@ -145,23 +145,23 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   }
 
   Widget buildPermissionsAlert(BuildContext context) => AlertDialog(
-    title: const Text(
-      'Local Network Search',
+    title: Text(
+      AppLocalizations.of(context)!.localNetworkSearchTitle,
       textAlign: TextAlign.center,
     ),
     content: Text(
-      'This feature requires additional permissions to search your local network for Ollama instances.',
+      AppLocalizations.of(context)!.localNetworkSearchContent,
       textAlign: TextAlign.center,
     ),
     actionsAlignment: MainAxisAlignment.spaceEvenly,
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context).pop(),
-        child: const Text('Cancel'),
+        child: Text(AppLocalizations.of(context)!.cancel),
       ),
       TextButton(
         onPressed: () => closePermissionsAlert(context),
-        child: const Text('OK'),
+        child: Text(AppLocalizations.of(context)!.ok),
       ),
     ],
   );

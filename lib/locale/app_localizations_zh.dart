@@ -21,6 +21,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noModelSelected => '未选择模型';
 
   @override
+  String get noModelLoaded => '未加载模型';
+
+  @override
   String get delete => '删除';
 
   @override
@@ -87,7 +90,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get llamaCpp => '调用 CPP';
 
   @override
+  String get llamaCppModel => '调用 CPP 模型';
+
+  @override
+  String get remoteModel => '远程模型';
+
+  @override
   String get ollama => '哦，羊驼';
+
+  @override
+  String get searchLocalNetwork => '搜索本地网络';
+
+  @override
+  String get localNetworkSearchTitle => '本地网络搜索';
+
+  @override
+  String get localNetworkSearchContent => '此功能需要额外的权限来搜索您的本地网络中的 Ollama 实例。';
 
   @override
   String get openAI => '开放 AI';
@@ -148,6 +166,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settingsTitle => '设置';
+
+  @override
+  String aiSettings(String aiControllerType) {
+    return '$aiControllerType 设置';
+  }
 
   @override
   String get clearChats => '清除聊天';

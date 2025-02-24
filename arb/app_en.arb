@@ -4,6 +4,7 @@
     "loading": "Loading...",
     "loadModel": "Load Model",
     "noModelSelected": "No Model Selected",
+    "noModelLoaded": "No Model Loaded",
     "delete": "Delete",
     "edit": "Edit",
     "regenerate": "Regenerate",
@@ -26,7 +27,12 @@
     "cancel": "Cancel",
     "aiEcosystem": "AI Ecosystem",
     "llamaCpp": "Llama CPP",
+    "llamaCppModel": "Llama CPP Model",
+    "remoteModel": "Remote Model",
     "ollama": "Ollama",
+    "searchLocalNetwork": "Search Local Network",
+    "localNetworkSearchTitle": "Local Network Search",
+    "localNetworkSearchContent": "'This feature requires additional permissions to search your local network for Ollama instances.",
     "openAI": "OpenAI",
     "mistral": "Mistral",
     "selectAiEcosystem": "Select AI Ecosystem",
@@ -47,6 +53,16 @@
     "themeModeDark": "Dark",
     "editMessage": "Edit Message",
     "settingsTitle": "Settings",
+    "aiSettings": "{aiControllerType} Settings",
+    "@aiSettings": {
+        "description": "Settings for {ai_controller_type}",
+        "placeholders": {
+            "aiControllerType": {
+                "type": "String",
+                "example": "Llama CPP"
+            }
+        }
+    },
     "clearChats": "Clear Chats",
     "resetSettings": "Reset Settings",
     "clearCache": "Clear Cache",

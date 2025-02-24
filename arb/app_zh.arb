@@ -4,6 +4,7 @@
     "loading": "加载中...",
     "loadModel": "加载模型",
     "noModelSelected": "未选择模型",
+    "noModelLoaded": "未加载模型",
     "delete": "删除",
     "edit": "编辑",
     "regenerate": "重新生成",
@@ -26,7 +27,12 @@
     "cancel": "取消",
     "aiEcosystem": "AI生态系统",
     "llamaCpp": "调用 CPP",
+    "llamaCppModel": "调用 CPP 模型",
+    "remoteModel": "远程模型",
     "ollama": "哦，羊驼",
+    "searchLocalNetwork": "搜索本地网络",
+    "localNetworkSearchTitle": "本地网络搜索",
+    "localNetworkSearchContent": "此功能需要额外的权限来搜索您的本地网络中的 Ollama 实例。",
     "openAI": "开放 AI",
     "mistral": "米斯特拉尔",
     "selectAiEcosystem": "选择AI生态系统",
@@ -47,6 +53,16 @@
     "themeModeDark": "暗色",
     "editMessage": "编辑消息",
     "settingsTitle": "设置",
+    "aiSettings": "{aiControllerType} 设置",
+    "@aiSettings": {
+        "description": "{ai_controller_type} 的设置",
+        "placeholders": {
+            "aiControllerType": {
+                "type": "String",
+                "example": "调用 CPP"
+            }
+        }
+    },
     "clearChats": "清除聊天",
     "resetSettings": "重置设置",
     "clearCache": "清除缓存",

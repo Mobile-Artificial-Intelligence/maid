@@ -21,6 +21,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noModelSelected => 'No Model Selected';
 
   @override
+  String get noModelLoaded => 'No Model Loaded';
+
+  @override
   String get delete => 'Delete';
 
   @override
@@ -87,7 +90,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get llamaCpp => 'Llama CPP';
 
   @override
+  String get llamaCppModel => 'Llama CPP Model';
+
+  @override
+  String get remoteModel => 'Remote Model';
+
+  @override
   String get ollama => 'Ollama';
+
+  @override
+  String get searchLocalNetwork => 'Search Local Network';
+
+  @override
+  String get localNetworkSearchTitle => 'Local Network Search';
+
+  @override
+  String get localNetworkSearchContent => '\'This feature requires additional permissions to search your local network for Ollama instances.';
 
   @override
   String get openAI => 'OpenAI';
@@ -148,6 +166,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsTitle => 'Settings';
+
+  @override
+  String aiSettings(String aiControllerType) {
+    return '$aiControllerType Settings';
+  }
 
   @override
   String get clearChats => 'Clear Chats';
