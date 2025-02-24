@@ -63,6 +63,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get close => '关闭';
 
   @override
+  String get save => '保存';
+
+  @override
   String get next => '下一步';
 
   @override

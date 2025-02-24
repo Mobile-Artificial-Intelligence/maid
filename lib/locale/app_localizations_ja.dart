@@ -63,6 +63,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get close => '閉じる';
 
   @override
+  String get save => '保存';
+
+  @override
   String get next => '次へ';
 
   @override

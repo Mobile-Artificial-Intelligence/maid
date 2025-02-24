@@ -63,6 +63,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get close => 'Fermer';
 
   @override
+  String get save => 'Enregistrer';
+
+  @override
   String get next => 'Suivant';
 
   @override
