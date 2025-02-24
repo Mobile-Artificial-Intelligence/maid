@@ -18,6 +18,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadModel => 'Load Model';
 
   @override
+  String get delete => 'Delete';
+
+  @override
+  String get chatsTitle => 'Chats';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

@@ -58,7 +58,7 @@ class ChatTileState extends State<ChatTile> {
   }
 
   PopupMenuItem buildDeletePopover() => PopupMenuItem(
-    child: const Text('Delete'),
+    child: Text(AppLocalizations.of(context)!.delete),
     onTap:() => widget.chatController.deleteChat(widget.node),
   );
 }

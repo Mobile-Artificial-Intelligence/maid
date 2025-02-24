@@ -34,7 +34,7 @@ class ChatView extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(
-        'Chats',
+        AppLocalizations.of(context)!.chatsTitle,
         style: Theme.of(context).textTheme.titleMedium,
       ),
       IconButton(

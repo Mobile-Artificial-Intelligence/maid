@@ -113,6 +113,18 @@ abstract class AppLocalizations {
   /// **'Load Model'**
   String get loadModel;
 
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @chatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Chats'**
+  String get chatsTitle;
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:

@@ -18,6 +18,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loadModel => '加载模型';
 
   @override
+  String get delete => '删除';
+
+  @override
+  String get chatsTitle => '聊天';
+
+  @override
   String get settingsTitle => '设置';
 
   @override
