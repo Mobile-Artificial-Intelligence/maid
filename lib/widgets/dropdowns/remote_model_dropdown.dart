@@ -18,19 +18,19 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
     setState(() => open = false);
   }
 
-  Future<List<String>> getModelOptions() async {
+  Future<bool> getModelOptions() async {
     try {
       return await widget.aiController.getModelOptions();
     } 
     catch (exception) {
-      if (!mounted) return [];
+      if (!mounted) return false;
 
       showDialog(
         context: context,
         builder: (context) => ErrorDialog(exception: exception),
       );
 
-      return ["none"];
+      return false;
     }
   }
 
@@ -56,7 +56,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
     ]
   );
 
-  Widget buildFutureBuilder() => widget.aiController.canGetRemoteModels ? FutureBuilder<List<String>?>(
+  Widget buildFutureBuilder() => widget.aiController.canGetRemoteModels ? FutureBuilder<bool>(
     future: getModelOptions(),
     builder: buildPopupButton
   ) : const SizedBox.shrink();
@@ -68,18 +68,18 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
       color: Theme.of(context).colorScheme.onSurface,
       size: 24
     ),
-    onPressed: () => setState(() {})
+    onPressed: () => setState(() => open = false)
   );
 
-  Widget buildPopupButton(BuildContext context, AsyncSnapshot<List<String>?> snapshot) {
-    final enabled = snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty;
+  Widget buildPopupButton(BuildContext context, AsyncSnapshot<bool> snapshot) {
+    final enabled = snapshot.hasData && snapshot.data != null && snapshot.data!;
 
     return PopupMenuButton<String>(
       enabled: enabled,
       tooltip: AppLocalizations.of(context)!.selectRemoteModel,
       icon: enabled ? buildPopupButtonIcon() : buildSpinner(),
       offset: const Offset(0, 40),
-      itemBuilder: (context) => snapshot.data!.map(modelBuilder).toList(),
+      itemBuilder: (context) => widget.aiController.modelOptions.map(modelBuilder).toList(),
       onOpened: () => setState(() => open = true),
       onCanceled: () => setState(() => open = false)
     );

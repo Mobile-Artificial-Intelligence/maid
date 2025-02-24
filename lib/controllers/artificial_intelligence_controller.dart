@@ -140,6 +140,10 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 
   bool get canGetRemoteModels;
 
+  List<String> _modelOptions = [];
+
+  List<String> get modelOptions => _modelOptions;
+
   RemoteArtificialIntelligenceController({
     super.model, 
     super.overrides,
@@ -164,7 +168,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
     notifyListeners();
   }
 
-  Future<List<String>> getModelOptions();
+  Future<bool> getModelOptions();
 
   @override
   void clear() async {
@@ -431,11 +435,11 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   }
 
   @override
-  Future<List<String>> getModelOptions() async {
+  Future<bool> getModelOptions() async {
     try {
       if (searchLocalNetwork == true) {
         final found = await searchForOllama();
-        if (!found) return [];
+        if (!found) return false;
       }
   
       final uri = Uri.parse("${_baseUrl ?? 'http://localhost:11434'}/api/tags");
@@ -460,13 +464,14 @@ class OllamaController extends RemoteArtificialIntelligenceController {
         }
       }
 
-      return newOptions;
+      _modelOptions = newOptions;
+      return true;
     }
     catch (e) {
       if (!e.toString().contains(RegExp(r'Connection (failed|refused)'))) {
         rethrow;
       }
-      return [];
+      return false;
     }
   }
 
@@ -563,7 +568,7 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
   }
   
   @override
-  Future<List<String>> getModelOptions() async {
+  Future<bool> getModelOptions() async {
     assert(_apiKey != null && _apiKey!.isNotEmpty, 'API Key is required');
 
     if (_baseUrl == null || _baseUrl!.isEmpty) {
@@ -577,7 +582,8 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
 
     final modelsResponse = await _openAiClient.listModels();
 
-    return modelsResponse.data.map((model) => model.id).toList();
+    _modelOptions = modelsResponse.data.map((model) => model.id).toList();
+    return true;
   }
   
   @override
@@ -668,11 +674,14 @@ class MistralController extends RemoteArtificialIntelligenceController {
   }
 
   @override
-  Future<List<String>> getModelOptions() async => [
-    'mistral-medium',
-    'mistral-small',
-    'mistral-tiny',
-  ];
+  Future<bool> getModelOptions() async {
+    _modelOptions = [
+      'mistral-medium',
+      'mistral-small',
+      'mistral-tiny',
+    ];
+    return true;
+  }
   
   @override
   String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.mistral;
