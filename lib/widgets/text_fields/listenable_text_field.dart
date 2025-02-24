@@ -46,27 +46,21 @@ class ListenableTextFieldState<T> extends State<ListenableTextField<T>> {
       controller.clear();
     }
     
-    return widget.requireSave ? buildWithSave() : buildWithoutSave();
+    return TextField(
+      decoration: InputDecoration(
+        labelText: widget.labelText,
+        suffixIcon: widget.requireSave ? buildSaveButton() : null
+      ),
+      controller: controller,
+      onChanged: !widget.requireSave ? widget.onChanged : null,
+      keyboardType: widget.keyboardType,
+      maxLines: widget.maxLines,
+    );
   }
 
-  Widget buildWithoutSave() => TextField(
-    decoration: InputDecoration(
-      labelText: widget.labelText,
-    ),
-    controller: controller,
-    onChanged: !widget.requireSave ? widget.onChanged : null,
-    keyboardType: widget.keyboardType,
-    maxLines: widget.maxLines,
-  );
-
-  Widget buildWithSave() => Row(
-    children: [
-      Expanded(child: buildWithoutSave()),
-      IconButton(
-        tooltip: AppLocalizations.of(context)!.save,
-        icon: const Icon(Icons.save),
-        onPressed: () => widget.onChanged(controller.text)
-      )
-    ]
+  Widget buildSaveButton() => IconButton(
+    tooltip: AppLocalizations.of(context)!.save,
+    icon: const Icon(Icons.save),
+    onPressed: () => widget.onChanged(controller.text)
   );
 }
