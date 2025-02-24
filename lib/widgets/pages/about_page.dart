@@ -28,7 +28,7 @@ class AboutPage extends StatelessWidget {
       ),
       const SizedBox(height: 30.0),
       Text(
-        AppLocalizations.of(context)!.appTitle,
+        "Maid",
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.titleLarge,
       ),

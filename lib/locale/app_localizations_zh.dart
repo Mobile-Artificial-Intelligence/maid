@@ -9,9 +9,6 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appTitle => '女仆';
-
-  @override
   String get loading => '加载中...';
 
   @override
@@ -39,7 +36,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newChat => '新聊天';
 
   @override
-  String get anErrorOccurred => '发生了一个错误';
+  String get anErrorOccurred => '发生错误';
 
   @override
   String get errorTitle => '错误';
@@ -60,31 +57,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get close => '关闭';
 
   @override
-  String get next => '下一个';
+  String get next => '下一步';
 
   @override
-  String get previous => '上一个';
+  String get previous => '上一步';
 
   @override
   String get contentShared => '内容已分享';
 
   @override
-  String get setUserImage => '设置用户图像';
+  String get setUserImage => '设置用户头像';
 
   @override
-  String get setAssistantImage => '设置助手图像';
+  String get setAssistantImage => '设置助手头像';
 
   @override
-  String get loadUserImage => '加载用户图像';
+  String get loadUserImage => '加载用户头像';
 
   @override
-  String get loadAssistantImage => '加载助手图像';
+  String get loadAssistantImage => '加载助手头像';
 
   @override
   String get userName => '用户名';
 
   @override
-  String get assistantName => '助手名';
+  String get assistantName => '助手名称';
 
   @override
   String get user => '用户';
@@ -96,13 +93,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cancel => '取消';
 
   @override
-  String get aiEcosystem => 'AI生态系统';
+  String get aiEcosystem => 'AI 生态系统';
 
   @override
-  String get llamaCpp => '调用 CPP';
+  String get llamaCpp => 'Llama CPP';
 
   @override
-  String get llamaCppModel => '调用 CPP 模型';
+  String get llamaCppModel => 'Llama CPP 模型';
 
   @override
   String get remoteModel => '远程模型';
@@ -111,7 +108,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get refreshRemoteModels => '刷新远程模型';
 
   @override
-  String get ollama => '哦，羊驼';
+  String get ollama => 'Ollama';
 
   @override
   String get searchLocalNetwork => '搜索本地网络';
@@ -120,16 +117,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get localNetworkSearchTitle => '本地网络搜索';
 
   @override
-  String get localNetworkSearchContent => '此功能需要额外的权限来搜索您的本地网络中的 Ollama 实例。';
+  String get localNetworkSearchContent => '此功能需要额外的权限来搜索本地网络中的 Ollama 实例。';
 
   @override
-  String get openAI => '开放 AI';
+  String get openAI => 'OpenAI';
 
   @override
-  String get mistral => '米斯特拉尔';
+  String get mistral => 'Mistral';
 
   @override
-  String get selectAiEcosystem => '选择AI生态系统';
+  String get selectAiEcosystem => '选择 AI 生态系统';
 
   @override
   String get selectOverrideType => '选择覆盖类型';
@@ -147,7 +144,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overrideTypeInteger => '整数';
 
   @override
-  String get overrideTypeDouble => '双精度';
+  String get overrideTypeDouble => '双精度数';
 
   @override
   String get overrideTypeBoolean => '布尔值';
@@ -171,10 +168,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get themeModeSystem => '系统';
 
   @override
-  String get themeModeLight => '亮色';
+  String get themeModeLight => '浅色';
 
   @override
-  String get themeModeDark => '暗色';
+  String get themeModeDark => '深色';
 
   @override
   String get themeSeedColor => '主题种子颜色';
@@ -200,10 +197,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get systemSettings => '系统设置';
 
   @override
-  String get systemPrompt => '系统提示';
+  String get systemPrompt => '系统提示词';
 
   @override
-  String get clearChats => '清除聊天';
+  String get clearChats => '清空聊天';
 
   @override
   String get resetSettings => '重置设置';
@@ -215,25 +212,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aboutTitle => '关于';
 
   @override
-  String get aboutContent => '女仆是一个跨平台的免费开源应用程序，用于本地与llama.cpp模型进行交互，远程与Ollama、Mistral、Google Gemini和OpenAI模型进行交互。女仆支持sillytavern角色卡，让您与所有喜欢的角色互动。女仆支持直接从huggingface下载应用内的精选模型列表。女仆根据MIT许可证分发，不提供任何明示或暗示的任何形式的保证。女仆与Huggingface、Meta（Facebook）、MistralAi、OpenAI、Google、Microsoft或任何其他提供与此应用程序兼容的模型的公司无关。';
+  String get aboutContent => 'Maid 是一款跨平台、开源免费应用，可本地运行 llama.cpp 模型，并支持远程连接 Ollama、Mistral、Google Gemini 和 OpenAI 模型。Maid 兼容 Sillytavern 角色卡，让您能与喜爱的角色互动。Maid 可直接从 Hugging Face 下载精选模型。Maid 遵循 MIT 许可证分发，并不提供任何明示或暗示的担保。Maid 与 Hugging Face、Meta (Facebook)、MistralAI、OpenAI、Google、Microsoft 或其他提供兼容模型的公司无关。';
 
   @override
   String get leadMaintainer => '主要维护者';
 
   @override
-  String get apiKey => 'API密钥';
+  String get apiKey => 'API 密钥';
 
   @override
-  String get baseUrl => '基础URL';
+  String get baseUrl => '基础 URL';
 
   @override
-  String get clearPrompt => '清除提示';
+  String get clearPrompt => '清除提示词';
 
   @override
-  String get submitPrompt => '提交提示';
+  String get submitPrompt => '提交提示词';
 
   @override
-  String get stopPrompt => '停止提示';
+  String get stopPrompt => '停止提示词';
 
   @override
   String get typeMessage => '输入消息...';
