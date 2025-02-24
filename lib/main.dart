@@ -44,7 +44,7 @@ part 'widgets/chat/chat_view.dart';
 part 'widgets/dialogs/error_dialog.dart';
 part 'widgets/dialogs/sharing_dialog.dart';
 
-part 'widgets/dropdowns/ecosystem_dropdown.dart';
+part 'widgets/dropdowns/artificial_intelligence_dropdown.dart';
 part 'widgets/dropdowns/override_type_dropdown.dart';
 part 'widgets/dropdowns/remote_model_dropdown.dart';
 part 'widgets/dropdowns/theme_mode_dropdown.dart';
