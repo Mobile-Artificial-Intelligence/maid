@@ -11,12 +11,12 @@ class ErrorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
     title: Text(
-      'An error occurred',
+      AppLocalizations.of(context)!.anErrorOccurred,
       textAlign: TextAlign.center,
     ),
     content: SingleChildScrollView(
       child: CodeBox(
-        label: 'Error',
+        label: AppLocalizations.of(context)!.errorTitle,
         code: exception.toString()
       )
     ),
@@ -24,7 +24,7 @@ class ErrorDialog extends StatelessWidget {
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context).pop(),
-        child: Text('OK'),
+        child: Text(AppLocalizations.of(context)!.ok),
       ),
     ],
   );

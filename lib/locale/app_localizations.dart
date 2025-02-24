@@ -125,6 +125,48 @@ abstract class AppLocalizations {
   /// **'Chats'**
   String get chatsTitle;
 
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get anErrorOccurred;
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorTitle;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @contentShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Content Shared'**
+  String get contentShared;
+
+  /// No description provided for @setUserImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Set User Image'**
+  String get setUserImage;
+
+  /// No description provided for @setAssistantImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Assistant Image'**
+  String get setAssistantImage;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:

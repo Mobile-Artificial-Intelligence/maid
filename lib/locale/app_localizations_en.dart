@@ -24,6 +24,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatsTitle => 'Chats';
 
   @override
+  String get anErrorOccurred => 'An error occurred';
+
+  @override
+  String get errorTitle => 'Error';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get contentShared => 'Content Shared';
+
+  @override
+  String get setUserImage => 'Set User Image';
+
+  @override
+  String get setAssistantImage => 'Set Assistant Image';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

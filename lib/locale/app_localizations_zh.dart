@@ -24,6 +24,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatsTitle => '聊天';
 
   @override
+  String get anErrorOccurred => '发生了一个错误';
+
+  @override
+  String get errorTitle => '错误';
+
+  @override
+  String get ok => '确定';
+
+  @override
+  String get contentShared => '内容已分享';
+
+  @override
+  String get setUserImage => '设置用户图像';
+
+  @override
+  String get setAssistantImage => '设置助手图像';
+
+  @override
+  String get cancel => '取消';
+
+  @override
   String get settingsTitle => '设置';
 
   @override

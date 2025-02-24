@@ -13,7 +13,7 @@ class SharingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
     title: Text(
-      'Content Shared',
+      AppLocalizations.of(context)!.contentShared,
       textAlign: TextAlign.center,
     ),
     content: buildImageShare(),
@@ -37,18 +37,24 @@ class SharingDialog extends StatelessWidget {
         settings.userImage = File(file.path);
         Navigator.of(context).pop();
       }, 
-      child: Text('Set User Image')
+      child: Text(
+        AppLocalizations.of(context)!.setUserImage
+      )
     ),
     TextButton(
       onPressed: () {
         settings.assistantImage = File(file.path);
         Navigator.of(context).pop();
       }, 
-      child: Text('Set Assistant Image')
+      child: Text(
+        AppLocalizations.of(context)!.setAssistantImage
+      )
     ),
     TextButton(
       onPressed: () => Navigator.of(context).pop(),
-      child: Text('Cancel'),
+      child: Text(
+        AppLocalizations.of(context)!.cancel
+      ),
     ),
   ];
 }
