@@ -18,7 +18,7 @@
     "ok": "OK",
     "done": "Hecho",
     "close": "Cerrar",
-    "save": "Guardar",
+    "save": "Guardar {label}",
     "next": "Siguiente",
     "previous": "Anterior",
     "contentShared": "Contenido compartido",

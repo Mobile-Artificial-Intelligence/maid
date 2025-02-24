@@ -18,7 +18,16 @@
     "ok": "OK",
     "done": "Done",
     "close": "Close",
-    "save": "Save",
+    "save": "Save {label}",
+    "@save": {
+        "description": "Save the {label}",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Message"
+            }
+        }
+    },
     "next": "Next",
     "previous": "Previous",
     "contentShared": "Content Shared",

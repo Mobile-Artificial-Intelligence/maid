@@ -18,7 +18,7 @@
     "ok": "OK",
     "done": "Terminé",
     "close": "Fermer",
-    "save": "Enregistrer",
+    "save": "Enregistrer {label}",
     "next": "Suivant",
     "previous": "Précédent",
     "contentShared": "Contenu partagé",

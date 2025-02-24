@@ -63,7 +63,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get close => 'Закрыть';
 
   @override
-  String get save => 'Сохранить';
+  String save(String label) {
+    return 'Сохранить $label';
+  }
 
   @override
   String get next => 'Далее';

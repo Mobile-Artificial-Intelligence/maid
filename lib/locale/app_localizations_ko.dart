@@ -63,7 +63,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get close => '닫기';
 
   @override
-  String get save => '저장';
+  String save(String label) {
+    return '$label 저장';
+  }
 
   @override
   String get next => '다음';

@@ -213,11 +213,11 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get close;
 
-  /// No description provided for @save.
+  /// Save the {label}
   ///
   /// In en, this message translates to:
-  /// **'Save'**
-  String get save;
+  /// **'Save {label}'**
+  String save(String label);
 
   /// No description provided for @next.
   ///

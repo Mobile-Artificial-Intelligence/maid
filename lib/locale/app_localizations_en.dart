@@ -63,7 +63,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'Close';
 
   @override
-  String get save => 'Save';
+  String save(String label) {
+    return 'Save $label';
+  }
 
   @override
   String get next => 'Next';

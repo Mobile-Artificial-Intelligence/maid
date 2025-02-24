@@ -59,7 +59,7 @@ class ListenableTextFieldState<T> extends State<ListenableTextField<T>> {
   }
 
   Widget buildSaveButton() => IconButton(
-    tooltip: AppLocalizations.of(context)!.save,
+    tooltip: AppLocalizations.of(context)!.save(widget.labelText),
     icon: const Icon(Icons.save),
     onPressed: () => widget.onChanged(controller.text)
   );

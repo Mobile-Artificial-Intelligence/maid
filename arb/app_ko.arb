@@ -18,7 +18,7 @@
     "ok": "확인",
     "done": "완료",
     "close": "닫기",
-    "save": "저장",
+    "save": "{label} 저장",
     "next": "다음",
     "previous": "이전",
     "contentShared": "콘텐츠 공유됨",
