@@ -405,39 +405,37 @@ Builds:
       - popd
       - mv $repo/maid com.danemadsen.maid
 
-  - versionName: 2.0.0
-    versionCode: 19931
-    commit: 19aef7b5ccfe6271691fd7b278d3199c18bd2865
+  - versionName: 2.0.1
+    versionCode: 20681
+    commit: 8f3fc7c03ee1fe4d4f75c03409ff03718c73b217
+    submodules: true
     sudo:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
     binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
-    srclibs:
-      - flutter@stable
     rm:
       - linux
       - macos
       - windows
     prebuild:
-      - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/build-android.yml)
-      - '[[ $flutterVersion ]] || exit 1'
-      - git -C $$flutter$$ checkout -f $flutterVersion
-      - rm $$flutter$$/engine/src/.gn
+      - rm packages/flutter/engine/src/.gn
       - export repo=/home/runner/work/maid
       - mkdir -p $repo
       - cd ..
       - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
       - export PUB_CACHE=/home/runner/.pub-cache
-      - $$flutter$$/bin/flutter config --no-analytics
-      - $$flutter$$/bin/flutter packages pub get
+      - packages/flutter/bin/flutter config --no-analytics
+      - packages/flutter/bin/flutter packages pub get
       - mv $PUB_CACHE .
-      - sed -i -e '1a add_link_options("LINKER:--hash-style=gnu")' .pub-cache/hosted/pub.dev/lcpp-*/android/CMakeLists.txt
       - popd
       - mv $repo/maid com.danemadsen.maid
+    scanignore:
+      - packages/flutter/bin/cache
     scandelete:
       - .pub-cache
+      - packages/flutter
     build:
       - export repo=/home/runner/work/maid
       - cd ..
@@ -445,13 +443,14 @@ Builds:
       - pushd $repo/maid
       - export PUB_CACHE=/home/runner/.pub-cache
       - mv .pub-cache $PUB_CACHE
-      - $$flutter$$/bin/flutter build apk --release --split-per-abi --target-platform="android-x64"
+      - packages/flutter/bin/flutter build apk --release --split-per-abi --target-platform="android-x64"
       - popd
       - mv $repo/maid com.danemadsen.maid
 
-  - versionName: 2.0.0
-    versionCode: 19932
-    commit: 19aef7b5ccfe6271691fd7b278d3199c18bd2865
+  - versionName: 2.0.1
+    versionCode: 20682
+    commit: 8f3fc7c03ee1fe4d4f75c03409ff03718c73b217
+    submodules: true
     sudo:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
@@ -462,23 +461,22 @@ Builds:
       - macos
       - windows
     prebuild:
-      - flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/build-android.yml)
-      - '[[ $flutterVersion ]] || exit 1'
-      - git -C $$flutter$$ checkout -f $flutterVersion
-      - rm $$flutter$$/engine/src/.gn
+      - rm packages/flutter/engine/src/.gn
       - export repo=/home/runner/work/maid
       - mkdir -p $repo
       - cd ..
       - mv com.danemadsen.maid $repo/maid
       - pushd $repo/maid
       - export PUB_CACHE=/home/runner/.pub-cache
-      - $$flutter$$/bin/flutter config --no-analytics
-      - $$flutter$$/bin/flutter packages pub get
+      - packages/flutter/bin/flutter config --no-analytics
+      - packages/flutter/bin/flutter packages pub get
       - mv $PUB_CACHE .
-      - sed -i -e '1a add_link_options("LINKER:--hash-style=gnu")' .pub-cache/hosted/pub.dev/lcpp-*/android/CMakeLists.txt
       - popd
       - mv $repo/maid com.danemadsen.maid
+    scanignore:
+      - packages/flutter/bin/cache
     scandelete:
+      - packages/flutter
       - .pub-cache
     build:
       - export repo=/home/runner/work/maid
@@ -487,7 +485,7 @@ Builds:
       - pushd $repo/maid
       - export PUB_CACHE=/home/runner/.pub-cache
       - mv .pub-cache $PUB_CACHE
-      - $$flutter$$/bin/flutter build apk --release --split-per-abi --target-platform="android-arm64"
+      - packages/flutter/bin/flutter build apk --release --split-per-abi --target-platform="android-arm64"
       - popd
       - mv $repo/maid com.danemadsen.maid
 
@@ -499,5 +497,5 @@ VercodeOperation:
   - '%c * 10 + 1'
   - '%c * 10 + 2'
 UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
-CurrentVersion: 2.0.0
-CurrentVersionCode: 19932
+CurrentVersion: 2.0.1
+CurrentVersionCode: 20682
