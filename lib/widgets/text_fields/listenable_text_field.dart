@@ -7,6 +7,7 @@ class ListenableTextField<T> extends StatefulWidget {
   final TextInputType? keyboardType;
   final int? maxLines;
   final String labelText;
+  final bool requireSave;
 
   const ListenableTextField({
     super.key,
@@ -16,6 +17,7 @@ class ListenableTextField<T> extends StatefulWidget {
     required this.labelText, 
     this.keyboardType, 
     this.maxLines = 1,
+    this.requireSave = false
   });
 
   @override
@@ -44,14 +46,26 @@ class ListenableTextFieldState<T> extends State<ListenableTextField<T>> {
       controller.clear();
     }
     
-    return TextField(
-      decoration: InputDecoration(
-        labelText: widget.labelText,
-      ),
-      controller: controller,
-      onChanged: widget.onChanged,
-      keyboardType: widget.keyboardType,
-      maxLines: widget.maxLines,
-    );
+    return widget.requireSave ? buildWithSave() : buildWithoutSave();
   }
+
+  Widget buildWithoutSave() => TextField(
+    decoration: InputDecoration(
+      labelText: widget.labelText,
+    ),
+    controller: controller,
+    onChanged: !widget.requireSave ? widget.onChanged : null,
+    keyboardType: widget.keyboardType,
+    maxLines: widget.maxLines,
+  );
+
+  Widget buildWithSave() => Row(
+    children: [
+      Expanded(child: buildWithoutSave()),
+      IconButton(
+        icon: const Icon(Icons.save),
+        onPressed: () => widget.onChanged(controller.text)
+      )
+    ]
+  );
 }

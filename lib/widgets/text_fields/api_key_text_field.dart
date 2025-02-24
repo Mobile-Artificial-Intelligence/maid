@@ -14,5 +14,6 @@ class ApiKeyTextField extends StatelessWidget {
     selector: () => aiController.apiKey, 
     onChanged: (value) => aiController.apiKey = value,
     labelText: AppLocalizations.of(context)!.apiKey,
+    requireSave: true,
   );
 }

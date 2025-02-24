@@ -14,5 +14,6 @@ class BaseUrlTextField extends StatelessWidget {
     selector: () => aiController.baseUrl, 
     onChanged: (value) => aiController.baseUrl = value,
     labelText: AppLocalizations.of(context)!.baseUrl,
+    requireSave: true,
   );
 }
