@@ -60,6 +60,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectRemoteModel => 'Select Remote Model';
 
   @override
+  String get selectThemeMode => 'Select App Theme Mode';
+
+  @override
   String get overrideTypeString => 'String';
 
   @override
@@ -70,6 +73,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get overrideTypeBoolean => 'Bool';
+
+  @override
+  String get themeMode => 'Theme Mode';
+
+  @override
+  String get themeModeSystem => 'System';
+
+  @override
+  String get themeModeLight => 'Light';
+
+  @override
+  String get themeModeDark => 'Dark';
 
   @override
   String get settingsTitle => 'Settings';

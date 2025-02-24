@@ -60,6 +60,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectRemoteModel => '选择远程模型';
 
   @override
+  String get selectThemeMode => '选择应用主题模式';
+
+  @override
   String get overrideTypeString => '字符串';
 
   @override
@@ -70,6 +73,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get overrideTypeBoolean => '布尔值';
+
+  @override
+  String get themeMode => '主题模式';
+
+  @override
+  String get themeModeSystem => '系统';
+
+  @override
+  String get themeModeLight => '亮色';
+
+  @override
+  String get themeModeDark => '暗色';
 
   @override
   String get settingsTitle => '设置';

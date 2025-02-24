@@ -34,6 +34,7 @@ part 'types/override_type.dart';
 part 'utilities/chat_messages_extension.dart';
 part 'utilities/platform_extension.dart';
 part 'utilities/string_extension.dart';
+part 'utilities/theme_mode_extension.dart';
 
 part 'widgets/buttons/load_model_button.dart';
 part 'widgets/buttons/menu_button.dart';

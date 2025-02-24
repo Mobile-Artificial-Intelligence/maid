@@ -197,6 +197,12 @@ abstract class AppLocalizations {
   /// **'Select Remote Model'**
   String get selectRemoteModel;
 
+  /// No description provided for @selectThemeMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Select App Theme Mode'**
+  String get selectThemeMode;
+
   /// No description provided for @overrideTypeString.
   ///
   /// In en, this message translates to:
@@ -220,6 +226,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bool'**
   String get overrideTypeBoolean;
+
+  /// No description provided for @themeMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Mode'**
+  String get themeMode;
+
+  /// No description provided for @themeModeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeModeSystem;
+
+  /// No description provided for @themeModeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeModeLight;
+
+  /// No description provided for @themeModeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeModeDark;
 
   /// No description provided for @settingsTitle.
   ///

@@ -26,7 +26,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
   );
 
   Widget buildTitle() => Text(
-    'Theme Mode',
+    AppLocalizations.of(context)!.themeMode,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -45,7 +45,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
   );
 
   Widget buildThemeModeText(BuildContext context, Widget? child) => Text(
-    widget.settings.themeMode.name.titleize,
+    widget.settings.themeMode.getLocale(context),
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -53,7 +53,7 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
   );
 
   Widget buildPopupButton() => PopupMenuButton<ThemeMode>(
-    tooltip: 'Select App Theme Mode',
+    tooltip: AppLocalizations.of(context)!.selectThemeMode,
     icon: buildPopupButtonIcon(),
     offset: const Offset(0, 40),
     itemBuilder: itemBuilder,
@@ -75,17 +75,17 @@ class _ThemeModeDropdownState extends State<ThemeModeDropdown> {
     PopupMenuItem(
       padding: EdgeInsets.all(8),
       value: ThemeMode.system,
-      child: const Text('System')
+      child: Text(AppLocalizations.of(context)!.themeModeSystem)
     ),
     PopupMenuItem(
       padding: EdgeInsets.all(8),
       value: ThemeMode.light,
-      child: const Text('Light')
+      child: Text(AppLocalizations.of(context)!.themeModeLight)
     ),
     PopupMenuItem(
       padding: EdgeInsets.all(8),
       value: ThemeMode.dark,
-      child: const Text('Dark')
+      child: Text(AppLocalizations.of(context)!.themeModeDark)
     )
   ];
 }
