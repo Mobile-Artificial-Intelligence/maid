@@ -233,6 +233,30 @@ abstract class AppLocalizations {
   /// **'AI Ecosystem'**
   String get aiEcosystem;
 
+  /// No description provided for @llamaCpp.
+  ///
+  /// In en, this message translates to:
+  /// **'Llama CPP'**
+  String get llamaCpp;
+
+  /// No description provided for @ollama.
+  ///
+  /// In en, this message translates to:
+  /// **'Ollama'**
+  String get ollama;
+
+  /// No description provided for @openAI.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenAI'**
+  String get openAI;
+
+  /// No description provided for @mistral.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistral'**
+  String get mistral;
+
   /// No description provided for @selectAiEcosystem.
   ///
   /// In en, this message translates to:

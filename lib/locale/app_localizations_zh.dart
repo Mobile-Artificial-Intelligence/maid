@@ -78,6 +78,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aiEcosystem => 'AI生态系统';
 
   @override
+  String get llamaCpp => '调用 CPP';
+
+  @override
+  String get ollama => '哦，羊驼';
+
+  @override
+  String get openAI => '开放 AI';
+
+  @override
+  String get mistral => '米斯特拉尔';
+
+  @override
   String get selectAiEcosystem => '选择AI生态系统';
 
   @override

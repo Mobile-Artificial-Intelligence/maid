@@ -1,12 +1,12 @@
 part of 'package:maid/main.dart';
 
 abstract class ArtificialIntelligenceController extends ChangeNotifier {
-  static List<String> get types => [
-    'llama_cpp',
-    'ollama',
-    'open_ai',
-    'mistral',
-  ];
+  static Map<String, String> getTypes(BuildContext context) => {
+    'llama_cpp': AppLocalizations.of(context)!.llamaCpp,
+    'ollama': AppLocalizations.of(context)!.ollama,
+    'open_ai': AppLocalizations.of(context)!.openAI,
+    'mistral': AppLocalizations.of(context)!.mistral,
+  };
 
   bool _busy = false;
 
@@ -105,6 +105,8 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     await prefs.remove(type);
     await prefs.remove('ai_type');
   }
+
+  String getTypeLocale(BuildContext context);
 }
 
 abstract class RemoteArtificialIntelligenceController extends ArtificialIntelligenceController {
@@ -280,6 +282,9 @@ class LlamaCppController extends ArtificialIntelligenceController {
     _loadedHash = '';
     loading = false;
   }
+  
+  @override
+  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.llamaCpp;
 }
 
 class OllamaController extends RemoteArtificialIntelligenceController {
@@ -479,6 +484,9 @@ class OllamaController extends RemoteArtificialIntelligenceController {
     _searchLocalNetwork = map['search_local_network'];
     notifyListeners();
   }
+  
+  @override
+  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.ollama;
 }
 
 class OpenAIController extends RemoteArtificialIntelligenceController {
@@ -564,6 +572,9 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
 
     return modelsResponse.data.map((model) => model.id).toList();
   }
+  
+  @override
+  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.openAI;
 }
 
 class MistralController extends RemoteArtificialIntelligenceController {
@@ -652,4 +663,7 @@ class MistralController extends RemoteArtificialIntelligenceController {
     'mistral-small',
     'mistral-tiny',
   ];
+  
+  @override
+  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.mistral;
 }

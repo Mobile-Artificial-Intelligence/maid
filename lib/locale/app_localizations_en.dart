@@ -78,6 +78,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiEcosystem => 'AI Ecosystem';
 
   @override
+  String get llamaCpp => 'Llama CPP';
+
+  @override
+  String get ollama => 'Ollama';
+
+  @override
+  String get openAI => 'OpenAI';
+
+  @override
+  String get mistral => 'Mistral';
+
+  @override
   String get selectAiEcosystem => 'Select AI Ecosystem';
 
   @override

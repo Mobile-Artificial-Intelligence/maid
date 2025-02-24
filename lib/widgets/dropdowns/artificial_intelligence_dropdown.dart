@@ -46,7 +46,7 @@ class _ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceD
   );
 
   Widget buildOverrideText(BuildContext context, Widget? child) => Text(
-    widget.aiController.type.snakeToSentence(),
+    widget.aiController.getTypeLocale(context),
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -75,10 +75,10 @@ class _ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceD
   List<PopupMenuEntry<String>> itemBuilder(BuildContext context) {
     List<PopupMenuEntry<String>> items = [];
 
-    for (final type in ArtificialIntelligenceController.types) {
+    for (final type in ArtificialIntelligenceController.getTypes(context).entries) {
       items.add(PopupMenuItem<String>(
-        value: type,
-        child: Text(type.snakeToSentence())
+        value: type.key,
+        child: Text(type.value)
       ));
     }
 
