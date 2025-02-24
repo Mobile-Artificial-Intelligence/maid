@@ -12,6 +12,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appTitle => '女仆';
 
   @override
+  String get loading => '加载中...';
+
+  @override
+  String get loadModel => '加载模型';
+
+  @override
   String get settingsTitle => '设置';
 
   @override

@@ -54,10 +54,10 @@ class LoadModelButton extends StatelessWidget {
     String text;
 
     if (llama.loading) {
-      text = "Loading...";
+      text = AppLocalizations.of(context)!.loading;
     }
     else {
-      text = llama.model != null ? llama.model!.split('/').last : "Load Model";
+      text = llama.model != null ? llama.model!.split('/').last : AppLocalizations.of(context)!.loadModel;
     }
     
     return Text(

@@ -101,6 +101,18 @@ abstract class AppLocalizations {
   /// **'Maid'**
   String get appTitle;
 
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @loadModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Load Model'**
+  String get loadModel;
+
   /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:

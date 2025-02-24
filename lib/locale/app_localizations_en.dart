@@ -12,6 +12,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Maid';
 
   @override
+  String get loading => 'Loading...';
+
+  @override
+  String get loadModel => 'Load Model';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override

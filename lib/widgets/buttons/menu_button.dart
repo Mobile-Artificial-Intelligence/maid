@@ -15,11 +15,15 @@ class MenuButton extends StatelessWidget {
   List<PopupMenuEntry<String>> itemBuilder(BuildContext context) => [
     PopupMenuItem(
       value: '/settings',
-      child: Text('Settings'),
+      child: Text(
+        AppLocalizations.of(context)!.settingsTitle
+      ),
     ),
     PopupMenuItem(
       value: '/about',
-      child: Text('About'),
+      child: Text(
+        AppLocalizations.of(context)!.aboutTitle
+      ),
     ),
   ];
 }
