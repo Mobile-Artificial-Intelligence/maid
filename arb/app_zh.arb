@@ -83,5 +83,26 @@
     "clearPrompt": "清除提示",
     "submitPrompt": "提交提示",
     "stopPrompt": "停止提示",
-    "typeMessage": "输入消息..."
+    "typeMessage": "输入消息...",
+    "code": "代码",
+    "copyLabel": "复制 {label}",
+    "@copyLabel": {
+        "description": "复制 {label}",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "代码"
+            }
+        }
+    },
+    "labelCopied": "{label} 已复制到剪贴板！",
+    "@labelCopied": {
+        "description": "{label} 已复制到剪贴板！",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "代码"
+            }
+        }
+    }
 }

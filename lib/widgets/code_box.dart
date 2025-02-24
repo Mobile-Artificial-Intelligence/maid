@@ -4,7 +4,7 @@ class CodeBox extends StatelessWidget {
   final String label;
   final String code;
 
-  const CodeBox({super.key, required this.code, this.label = 'Code'});
+  const CodeBox({super.key, required this.code, required this.label});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -50,7 +50,7 @@ class CodeBox extends StatelessWidget {
   Widget buildCopyCodeButtom(BuildContext context) => TextButton.icon(
     icon: Icon(Icons.content_paste_rounded, color: Theme.of(context).colorScheme.onSurface, size: 15),
     label: Text(
-      'Copy $label',
+      AppLocalizations.of(context)!.copyLabel(label),
       style: TextStyle(
         color: Theme.of(context).colorScheme.onSurface,
         fontSize: 12,
@@ -59,7 +59,7 @@ class CodeBox extends StatelessWidget {
     onPressed: () {
       Clipboard.setData(ClipboardData(text: code));
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("$label copied to clipboard!")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.labelCopied(label))),
       );
     },
     style: TextButton.styleFrom(

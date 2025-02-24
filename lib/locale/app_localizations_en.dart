@@ -234,4 +234,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get typeMessage => 'Type a message...';
+
+  @override
+  String get code => 'Code';
+
+  @override
+  String copyLabel(String label) {
+    return 'Copy $label';
+  }
+
+  @override
+  String labelCopied(String label) {
+    return '$label copied to clipboard!';
+  }
 }

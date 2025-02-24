@@ -83,5 +83,26 @@
     "clearPrompt": "Clear Prompt",
     "submitPrompt": "Submit Prompt",
     "stopPrompt": "Stop Prompt",
-    "typeMessage": "Type a message..."
+    "typeMessage": "Type a message...",
+    "code": "Code",
+    "copyLabel": "Copy {label}",
+    "@copyLabel": {
+        "description": "Copy the {label} to the clipboard",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Code"
+            }
+        }
+    },
+    "labelCopied": "{label} copied to clipboard!",
+    "@labelCopied": {
+        "description": "{label} copied to clipboard!",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Code"
+            }
+        }
+    }
 }

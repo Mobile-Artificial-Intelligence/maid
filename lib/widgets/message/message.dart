@@ -141,7 +141,7 @@ class MessageWidgetState extends State<MessageWidget> {
       if (i % 2 == 0) {
         children.add(SelectableText(part));
       } else {
-        children.add(CodeBox(code: part));
+        children.add(CodeBox(code: part, label: AppLocalizations.of(context)!.code));
       }
     }
 

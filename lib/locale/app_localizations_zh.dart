@@ -234,4 +234,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get typeMessage => '输入消息...';
+
+  @override
+  String get code => '代码';
+
+  @override
+  String copyLabel(String label) {
+    return '复制 $label';
+  }
+
+  @override
+  String labelCopied(String label) {
+    return '$label 已复制到剪贴板！';
+  }
 }

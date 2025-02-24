@@ -544,6 +544,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Type a message...'**
   String get typeMessage;
+
+  /// No description provided for @code.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get code;
+
+  /// Copy the {label} to the clipboard
+  ///
+  /// In en, this message translates to:
+  /// **'Copy {label}'**
+  String copyLabel(String label);
+
+  /// {label} copied to clipboard!
+  ///
+  /// In en, this message translates to:
+  /// **'{label} copied to clipboard!'**
+  String labelCopied(String label);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
