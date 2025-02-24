@@ -177,6 +177,8 @@ class MaidState extends State<Maid> {
     },
     supportedLocales: [
       Locale('en'), // English
+      Locale('es'), // Spanish
+      Locale('fr'), // French
       Locale('ru'), // Russian
       Locale('zh'), // Chinese
     ],

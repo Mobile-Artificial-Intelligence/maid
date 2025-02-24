@@ -59,15 +59,6 @@
     "editMessage": "编辑消息",
     "settingsTitle": "设置",
     "aiSettings": "{aiControllerType} 设置",
-    "@aiSettings": {
-        "description": "{aiControllerType} 的设置",
-        "placeholders": {
-            "aiControllerType": {
-                "type": "String",
-                "example": "Llama CPP"
-            }
-        }
-    },
     "userSettings": "用户设置",
     "assistantSettings": "助手设置",
     "systemSettings": "系统设置",
@@ -86,23 +77,5 @@
     "typeMessage": "输入消息...",
     "code": "代码",
     "copyLabel": "复制 {label}",
-    "@copyLabel": {
-        "description": "复制 {label} 到剪贴板",
-        "placeholders": {
-            "label": {
-                "type": "String",
-                "example": "代码"
-            }
-        }
-    },
-    "labelCopied": "{label} 已复制到剪贴板！",
-    "@labelCopied": {
-        "description": "{label} 已复制到剪贴板！",
-        "placeholders": {
-            "label": {
-                "type": "String",
-                "example": "代码"
-            }
-        }
-    }
+    "labelCopied": "{label} 已复制到剪贴板！"
 }

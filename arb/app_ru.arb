@@ -59,15 +59,6 @@
     "editMessage": "Редактировать сообщение",
     "settingsTitle": "Настройки",
     "aiSettings": "Настройки {aiControllerType}",
-    "@aiSettings": {
-        "description": "Настройки для {aiControllerType}",
-        "placeholders": {
-            "aiControllerType": {
-                "type": "String",
-                "example": "Llama CPP"
-            }
-        }
-    },
     "userSettings": "Настройки пользователя",
     "assistantSettings": "Настройки ассистента",
     "systemSettings": "Системные настройки",
@@ -86,23 +77,5 @@
     "typeMessage": "Введите сообщение...",
     "code": "Код",
     "copyLabel": "Копировать {label}",
-    "@copyLabel": {
-        "description": "Копировать {label} в буфер обмена",
-        "placeholders": {
-            "label": {
-                "type": "String",
-                "example": "Код"
-            }
-        }
-    },
-    "labelCopied": "{label} скопирован в буфер обмена!",
-    "@labelCopied": {
-        "description": "{label} скопирован в буфер обмена!",
-        "placeholders": {
-            "label": {
-                "type": "String",
-                "example": "Код"
-            }
-        }
-    }
+    "labelCopied": "{label} скопирован в буфер обмена!"
 }
