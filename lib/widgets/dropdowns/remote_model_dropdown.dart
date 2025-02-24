@@ -13,7 +13,7 @@ class RemoteModelDropdown extends StatefulWidget {
 class RemoteModelDropdownState extends State<RemoteModelDropdown> {
   bool open = false;
 
-  void onSelected(String model) {
+  void onSelected(String? model) {
     widget.aiController.model = model;
     setState(() => open = false);
   }
@@ -30,7 +30,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
         builder: (context) => ErrorDialog(exception: exception),
       );
 
-      return [];
+      return ["none"];
     }
   }
 
@@ -104,8 +104,8 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
 
   PopupMenuEntry<String> modelBuilder(String model) => PopupMenuItem(
     padding: EdgeInsets.all(8),
-    value: model,
+    value: model == "none" ? null : model,
     child: Text(model),
-    onTap: () => onSelected(model),
+    onTap: () => onSelected(model == "none" ? null : model),
   );
 }
