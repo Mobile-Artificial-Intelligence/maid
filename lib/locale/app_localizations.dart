@@ -227,6 +227,30 @@ abstract class AppLocalizations {
   /// **'Set Assistant Image'**
   String get setAssistantImage;
 
+  /// No description provided for @loadUserImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Load User Image'**
+  String get loadUserImage;
+
+  /// No description provided for @loadAssistantImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Load Assistant Image'**
+  String get loadAssistantImage;
+
+  /// No description provided for @userName.
+  ///
+  /// In en, this message translates to:
+  /// **'User Name'**
+  String get userName;
+
+  /// No description provided for @assistantName.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant Name'**
+  String get assistantName;
+
   /// No description provided for @user.
   ///
   /// In en, this message translates to:
@@ -401,6 +425,12 @@ abstract class AppLocalizations {
   /// **'Dark'**
   String get themeModeDark;
 
+  /// No description provided for @themeSeedColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Seed Color'**
+  String get themeSeedColor;
+
   /// No description provided for @editMessage.
   ///
   /// In en, this message translates to:
@@ -418,6 +448,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{aiControllerType} Settings'**
   String aiSettings(String aiControllerType);
+
+  /// No description provided for @userSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'User Settings'**
+  String get userSettings;
+
+  /// No description provided for @assistantSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant Settings'**
+  String get assistantSettings;
+
+  /// No description provided for @systemSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'System Settings'**
+  String get systemSettings;
+
+  /// No description provided for @systemPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'System Prompt'**
+  String get systemPrompt;
 
   /// No description provided for @clearChats.
   ///

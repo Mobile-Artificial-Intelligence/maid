@@ -75,6 +75,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setAssistantImage => 'Set Assistant Image';
 
   @override
+  String get loadUserImage => 'Load User Image';
+
+  @override
+  String get loadAssistantImage => 'Load Assistant Image';
+
+  @override
+  String get userName => 'User Name';
+
+  @override
+  String get assistantName => 'Assistant Name';
+
+  @override
   String get user => 'User';
 
   @override
@@ -162,6 +174,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeModeDark => 'Dark';
 
   @override
+  String get themeSeedColor => 'Theme Seed Color';
+
+  @override
   String get editMessage => 'Edit Message';
 
   @override
@@ -171,6 +186,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String aiSettings(String aiControllerType) {
     return '$aiControllerType Settings';
   }
+
+  @override
+  String get userSettings => 'User Settings';
+
+  @override
+  String get assistantSettings => 'Assistant Settings';
+
+  @override
+  String get systemSettings => 'System Settings';
+
+  @override
+  String get systemPrompt => 'System Prompt';
 
   @override
   String get clearChats => 'Clear Chats';

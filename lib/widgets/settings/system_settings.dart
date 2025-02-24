@@ -12,7 +12,7 @@ class SystemSettings extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     children: [
       Text(
-        'System Settings',
+        AppLocalizations.of(context)!.systemSettings,
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
@@ -20,7 +20,7 @@ class SystemSettings extends StatelessWidget {
         listenable: settings,
         selector: () => settings.systemPrompt,
         onChanged: settings.setSystemPrompt,
-        labelText: 'System Prompt',
+        labelText: AppLocalizations.of(context)!.systemPrompt,
         keyboardType: TextInputType.multiline,
         maxLines: null
       ),
@@ -28,7 +28,7 @@ class SystemSettings extends StatelessWidget {
       ThemeModeDropdown(settings: settings),
       const SizedBox(height: 8),
       Text(
-        'Theme Seed Color',
+        AppLocalizations.of(context)!.themeSeedColor,
         style: Theme.of(context).textTheme.labelLarge,
       ),
       const SizedBox(height: 4),

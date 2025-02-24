@@ -12,7 +12,7 @@ class AssistantSettings extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     children: [
       Text(
-        'Assistant Settings',
+        AppLocalizations.of(context)!.assistantSettings,
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
@@ -23,14 +23,14 @@ class AssistantSettings extends StatelessWidget {
       const SizedBox(height: 8),
       ElevatedButton(
         onPressed: settings.loadAssistantImage, 
-        child: const Text('Load Assistant Image'),
+        child: Text(AppLocalizations.of(context)!.loadAssistantImage),
       ),
       const SizedBox(height: 8),
       ListenableTextField<AppSettings>(
         listenable: settings,
         selector: () => settings.assistantName,
         onChanged: settings.setAssistantName,
-        labelText: 'Assistant Name',
+        labelText: AppLocalizations.of(context)!.assistantName,
       ),
     ],
   );

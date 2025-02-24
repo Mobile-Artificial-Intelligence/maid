@@ -12,7 +12,7 @@ class UserSettings extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     children: [
       Text(
-        'User Settings',
+        AppLocalizations.of(context)!.userSettings,
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
@@ -23,14 +23,14 @@ class UserSettings extends StatelessWidget {
       const SizedBox(height: 8),
       ElevatedButton(
         onPressed: settings.loadUserImage, 
-        child: const Text('Load User Image')
+        child: Text(AppLocalizations.of(context)!.loadUserImage),
       ),
       const SizedBox(height: 8),
       ListenableTextField<AppSettings>(
         listenable: settings,
         selector: () => settings.userName,
         onChanged: settings.setUserName,
-        labelText: 'User Name',
+        labelText: AppLocalizations.of(context)!.userName,
       ),
     ],
   );

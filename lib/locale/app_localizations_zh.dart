@@ -75,6 +75,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get setAssistantImage => '设置助手图像';
 
   @override
+  String get loadUserImage => '加载用户图像';
+
+  @override
+  String get loadAssistantImage => '加载助手图像';
+
+  @override
+  String get userName => '用户名';
+
+  @override
+  String get assistantName => '助手名';
+
+  @override
   String get user => '用户';
 
   @override
@@ -162,6 +174,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get themeModeDark => '暗色';
 
   @override
+  String get themeSeedColor => '主题种子颜色';
+
+  @override
   String get editMessage => '编辑消息';
 
   @override
@@ -171,6 +186,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String aiSettings(String aiControllerType) {
     return '$aiControllerType 设置';
   }
+
+  @override
+  String get userSettings => '用户设置';
+
+  @override
+  String get assistantSettings => '助手设置';
+
+  @override
+  String get systemSettings => '系统设置';
+
+  @override
+  String get systemPrompt => '系统提示';
 
   @override
   String get clearChats => '清除聊天';
