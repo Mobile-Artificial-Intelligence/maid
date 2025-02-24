@@ -107,6 +107,8 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
   }
 
   String getTypeLocale(BuildContext context);
+
+  void notify() => notifyListeners();
 }
 
 abstract class RemoteArtificialIntelligenceController extends ArtificialIntelligenceController {
