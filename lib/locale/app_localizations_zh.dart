@@ -150,6 +150,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsTitle => '设置';
 
   @override
+  String get clearChats => '清除聊天';
+
+  @override
+  String get resetSettings => '重置设置';
+
+  @override
+  String get clearCache => '清除缓存';
+
+  @override
   String get aboutTitle => '关于';
 
   @override

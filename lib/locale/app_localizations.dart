@@ -377,6 +377,24 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
+  /// No description provided for @clearChats.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Chats'**
+  String get clearChats;
+
+  /// No description provided for @resetSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Settings'**
+  String get resetSettings;
+
+  /// No description provided for @clearCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Cache'**
+  String get clearCache;
+
   /// No description provided for @aboutTitle.
   ///
   /// In en, this message translates to:

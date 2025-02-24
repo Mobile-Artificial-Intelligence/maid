@@ -150,6 +150,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
+  String get clearChats => 'Clear Chats';
+
+  @override
+  String get resetSettings => 'Reset Settings';
+
+  @override
+  String get clearCache => 'Clear Cache';
+
+  @override
   String get aboutTitle => 'About';
 
   @override

@@ -15,7 +15,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('Settings'),
+      title: Text(AppLocalizations.of(context)!.settingsTitle),
     ),
     body: SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
@@ -50,11 +50,11 @@ class SettingsPage extends StatelessWidget {
     children: [
       ElevatedButton(
         onPressed: chatController.clear, 
-        child: const Text('Clear Chats')
+        child: Text(AppLocalizations.of(context)!.clearChats)
       ),
       ElevatedButton(
         onPressed: settings.clear, 
-        child: const Text('Reset Settings')
+        child: Text(AppLocalizations.of(context)!.resetSettings)
       ),
       ElevatedButton(
         onPressed: () {
@@ -62,7 +62,7 @@ class SettingsPage extends StatelessWidget {
           chatController.clear();
           aiController.clear();
         }, 
-        child: const Text('Clear Cache')
+        child: Text(AppLocalizations.of(context)!.clearCache)
       )
     ],
   );
