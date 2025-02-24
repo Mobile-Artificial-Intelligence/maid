@@ -13,6 +13,6 @@ class BaseUrlTextField extends StatelessWidget {
     listenable: aiController,
     selector: () => aiController.baseUrl, 
     onChanged: (value) => aiController.baseUrl = value,
-    labelText: 'Base Url',
+    labelText: AppLocalizations.of(context)!.baseUrl,
   );
 }

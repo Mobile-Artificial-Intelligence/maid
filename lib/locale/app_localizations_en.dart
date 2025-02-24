@@ -216,4 +216,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get leadMaintainer => 'Lead Maintainer';
+
+  @override
+  String get apiKey => 'API Key';
+
+  @override
+  String get baseUrl => 'Base URL';
+
+  @override
+  String get clearPrompt => 'Clear Prompt';
+
+  @override
+  String get submitPrompt => 'Submit Prompt';
+
+  @override
+  String get stopPrompt => 'Stop Prompt';
+
+  @override
+  String get typeMessage => 'Type a message...';
 }

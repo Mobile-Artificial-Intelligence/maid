@@ -13,6 +13,6 @@ class ApiKeyTextField extends StatelessWidget {
     listenable: aiController,
     selector: () => aiController.apiKey, 
     onChanged: (value) => aiController.apiKey = value,
-    labelText: 'Api Key',
+    labelText: AppLocalizations.of(context)!.apiKey,
   );
 }

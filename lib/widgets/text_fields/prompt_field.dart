@@ -119,7 +119,7 @@ class PromptFieldState extends State<PromptField> {
     child: ElevatedButton(
       key: ValueKey('clear_prompt_button'),
       onPressed: onClear, 
-      child: const Text('Clear Prompt')
+      child: Text(AppLocalizations.of(context)!.clearPrompt),
     )
   );
 
@@ -152,7 +152,7 @@ class PromptFieldState extends State<PromptField> {
   /// This is the input decoration for the prompt field. 
   /// It will have a hint text and a submit button at the end of the field.
   InputDecoration buildInputDecoration() => InputDecoration(
-    hintText: 'Type a message...',
+    hintText: AppLocalizations.of(context)!.typeMessage,
     suffixIcon: suffixButtonBuilder()
   );
 
@@ -166,6 +166,7 @@ class PromptFieldState extends State<PromptField> {
 
   Widget buildPromptButton() => IconButton(
     key: ValueKey('submit_prompt_button'),
+    tooltip: AppLocalizations.of(context)!.submitPrompt,
     icon: const Icon(Icons.send),
     onPressed: isNotEmpty && widget.aiController.canPrompt ? onSubmit : null,
     disabledColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
@@ -174,6 +175,7 @@ class PromptFieldState extends State<PromptField> {
   /// This is the stop button that will be used to stop the message.
   Widget buildStopButton() => IconButton(
     key: ValueKey('stop_prompt_button'),
+    tooltip: AppLocalizations.of(context)!.stopPrompt,
     icon: Icon(
       Icons.stop_circle_sharp,
       color: Theme.of(context).colorScheme.onError,

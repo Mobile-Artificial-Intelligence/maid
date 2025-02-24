@@ -216,4 +216,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get leadMaintainer => '主要维护者';
+
+  @override
+  String get apiKey => 'API密钥';
+
+  @override
+  String get baseUrl => '基础URL';
+
+  @override
+  String get clearPrompt => '清除提示';
+
+  @override
+  String get submitPrompt => '提交提示';
+
+  @override
+  String get stopPrompt => '停止提示';
+
+  @override
+  String get typeMessage => '输入消息...';
 }

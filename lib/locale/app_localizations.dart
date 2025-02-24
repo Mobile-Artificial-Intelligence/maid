@@ -443,7 +443,7 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
-  /// Settings for {ai_controller_type}
+  /// Settings for {aiControllerType}
   ///
   /// In en, this message translates to:
   /// **'{aiControllerType} Settings'**
@@ -508,6 +508,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lead Maintainer'**
   String get leadMaintainer;
+
+  /// No description provided for @apiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'API Key'**
+  String get apiKey;
+
+  /// No description provided for @baseUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Base URL'**
+  String get baseUrl;
+
+  /// No description provided for @clearPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Prompt'**
+  String get clearPrompt;
+
+  /// No description provided for @submitPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Prompt'**
+  String get submitPrompt;
+
+  /// No description provided for @stopPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Prompt'**
+  String get stopPrompt;
+
+  /// No description provided for @typeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
