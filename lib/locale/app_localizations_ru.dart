@@ -9,6 +9,12 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get localeTitle => 'Локаль';
+
+  @override
+  String get defaultLocale => 'Локаль по умолчанию';
+
+  @override
   String get loading => 'Загрузка...';
 
   @override

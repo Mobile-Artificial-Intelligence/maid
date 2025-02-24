@@ -209,6 +209,15 @@ class AppSettings extends ChangeNotifier {
     notifyListeners();
   }
 
+  Locale? _locale;
+
+  Locale? get locale => _locale;
+
+  set locale(Locale? newLocale) {
+    _locale = newLocale;
+    notifyListeners();
+  }
+
   String? _systemPrompt;
 
   String? get systemPrompt => _systemPrompt;
@@ -266,6 +275,11 @@ class AppSettings extends ChangeNotifier {
 
     systemPrompt = prefs.getString('systemPrompt');
 
+    final localeLanguageCode = prefs.getString('localeLanguageCode');
+    if (localeLanguageCode != null) {
+      locale = Locale(localeLanguageCode);
+    }
+
     notifyListeners();
   }
 
@@ -290,6 +304,10 @@ class AppSettings extends ChangeNotifier {
 
     if (systemPrompt != null && systemPrompt!.isNotEmpty) {
       prefs.setString('systemPrompt', systemPrompt!);
+    }
+
+    if (locale != null) {
+      prefs.setString('localeLanguageCode', locale!.languageCode);
     }
 
     prefs.setInt('seedColorR', (seedColor.r *  255).toInt());
@@ -317,6 +335,9 @@ class AppSettings extends ChangeNotifier {
 
     prefs.remove('systemPrompt');
     systemPrompt = null;
+
+    prefs.remove('localeLanguageCode');
+    locale = null;
 
     prefs.remove('seedColorR');
     prefs.remove('seedColorG');

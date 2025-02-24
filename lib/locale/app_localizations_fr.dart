@@ -9,6 +9,12 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
+  String get localeTitle => 'Langue';
+
+  @override
+  String get defaultLocale => 'Langue par défaut';
+
+  @override
   String get loading => 'Chargement...';
 
   @override

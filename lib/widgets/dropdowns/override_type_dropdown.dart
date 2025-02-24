@@ -7,10 +7,10 @@ class OverrideTypeDropdown extends StatefulWidget {
   const OverrideTypeDropdown({super.key, required this.onChanged, required this.initialValue});
 
   @override
-  State<OverrideTypeDropdown> createState() => _OverrideTypeDropdownState();
+  State<OverrideTypeDropdown> createState() => OverrideTypeDropdownState();
 }
 
-class _OverrideTypeDropdownState extends State<OverrideTypeDropdown> {
+class OverrideTypeDropdownState extends State<OverrideTypeDropdown> {
   OverrideType overrideType = OverrideType.string;
   bool open = false;
 

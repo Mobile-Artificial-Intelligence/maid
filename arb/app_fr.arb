@@ -1,5 +1,7 @@
 {
     "@@locale": "fr",
+    "localeTitle": "Langue",
+    "defaultLocale": "Langue par défaut",
     "loading": "Chargement...",
     "loadModel": "Charger le modèle",
     "noModelSelected": "Aucun modèle sélectionné",

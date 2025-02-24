@@ -25,6 +25,8 @@ class SystemSettings extends StatelessWidget {
         maxLines: null
       ),
       const SizedBox(height: 8),
+      LocaleDropdown(settings: settings),
+      const SizedBox(height: 8),
       ThemeModeDropdown(settings: settings),
       const SizedBox(height: 8),
       Text(

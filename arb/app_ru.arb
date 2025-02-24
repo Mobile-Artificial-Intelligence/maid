@@ -1,5 +1,7 @@
 {
     "@@locale": "ru",
+    "localeTitle": "Локаль",
+    "defaultLocale": "Локаль по умолчанию",
     "loading": "Загрузка...",
     "loadModel": "Загрузить модель",
     "noModelSelected": "Модель не выбрана",

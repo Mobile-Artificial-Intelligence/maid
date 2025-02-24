@@ -1,18 +1,18 @@
 part of 'package:maid/main.dart';
 
-class ThemeModeDropdown extends StatefulWidget {
+class LocaleDropdown extends StatefulWidget {
   final AppSettings settings;
   
-  const ThemeModeDropdown({
+  const LocaleDropdown({
     super.key, 
     required this.settings
   });
 
   @override
-  State<ThemeModeDropdown> createState() => ThemeModeDropdownState();
+  State<LocaleDropdown> createState() => LocaleDropdownState();
 }
 
-class ThemeModeDropdownState extends State<ThemeModeDropdown> {
+class LocaleDropdownState extends State<LocaleDropdown> {
   bool open = false;
 
   @override
@@ -26,7 +26,7 @@ class ThemeModeDropdownState extends State<ThemeModeDropdown> {
   );
 
   Widget buildTitle() => Text(
-    AppLocalizations.of(context)!.themeMode,
+    AppLocalizations.of(context)!.localeTitle,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -38,30 +38,36 @@ class ThemeModeDropdownState extends State<ThemeModeDropdown> {
     children: [
       ListenableBuilder(
         listenable: widget.settings,
-        builder: buildThemeModeText
+        builder: buildLocaleText
       ),
       buildPopupButton()
     ]
   );
 
-  Widget buildThemeModeText(BuildContext context, Widget? child) => Text(
-    widget.settings.themeMode.getLocale(context),
+  Widget buildLocaleText(BuildContext context, Widget? child) => Text(
+    widget.settings.locale?.languageCode ?? AppLocalizations.of(context)!.defaultLocale,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
     )
   );
 
-  Widget buildPopupButton() => PopupMenuButton<ThemeMode>(
+  Widget buildPopupButton() => PopupMenuButton<Locale>(
     tooltip: AppLocalizations.of(context)!.selectThemeMode,
     icon: buildPopupButtonIcon(),
     offset: const Offset(0, 40),
     itemBuilder: itemBuilder,
     onOpened: () => setState(() => open = true),
     onCanceled: () => setState(() => open = false),
-    onSelected: (themeMode) {
+    onSelected: (locale) {
       setState(() => open = false);
-      widget.settings.themeMode = themeMode;
+
+      if (locale.languageCode == 'null') {
+        widget.settings.locale = null;
+      }
+      else {
+        widget.settings.locale = locale;
+      }
     }
   );
 
@@ -71,21 +77,26 @@ class ThemeModeDropdownState extends State<ThemeModeDropdown> {
     size: 24,
   );
 
-  List<PopupMenuEntry<ThemeMode>> itemBuilder(BuildContext context) => [
-    PopupMenuItem(
-      padding: EdgeInsets.all(8),
-      value: ThemeMode.system,
-      child: Text(AppLocalizations.of(context)!.themeModeSystem)
-    ),
-    PopupMenuItem(
-      padding: EdgeInsets.all(8),
-      value: ThemeMode.light,
-      child: Text(AppLocalizations.of(context)!.themeModeLight)
-    ),
-    PopupMenuItem(
-      padding: EdgeInsets.all(8),
-      value: ThemeMode.dark,
-      child: Text(AppLocalizations.of(context)!.themeModeDark)
-    )
-  ];
+  List<PopupMenuEntry<Locale>> itemBuilder(BuildContext context) {
+    final locales = AppLocalizations.supportedLocales;
+    List<PopupMenuEntry<Locale>> items = [
+      PopupMenuItem(
+        padding: EdgeInsets.all(8),
+        value: Locale('null'),
+        child: Text(AppLocalizations.of(context)!.defaultLocale)
+      )
+    ];
+    
+    for (final locale in locales) {
+      items.add(
+        PopupMenuItem(
+          padding: EdgeInsets.all(8),
+          value: locale,
+          child: Text(locale.languageCode)
+        )
+      );
+    }
+
+    return items;
+  }
 }

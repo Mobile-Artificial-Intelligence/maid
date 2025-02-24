@@ -9,10 +9,10 @@ class ArtificialIntelligenceDropdown extends StatefulWidget {
   });
 
   @override
-  State<ArtificialIntelligenceDropdown> createState() => _ArtificialIntelligenceDropdownState();
+  State<ArtificialIntelligenceDropdown> createState() => ArtificialIntelligenceDropdownState();
 }
 
-class _ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDropdown> {
+class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDropdown> {
   bool open = false;
 
   @override
@@ -77,6 +77,7 @@ class _ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceD
 
     for (final type in ArtificialIntelligenceController.getTypes(context).entries) {
       items.add(PopupMenuItem<String>(
+        padding: EdgeInsets.all(8),
         value: type.key,
         child: Text(type.value)
       ));

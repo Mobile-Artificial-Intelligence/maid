@@ -9,6 +9,12 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
+  String get localeTitle => '区域';
+
+  @override
+  String get defaultLocale => '默认区域';
+
+  @override
   String get loading => '加载中...';
 
   @override

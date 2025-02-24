@@ -46,6 +46,7 @@ part 'widgets/dialogs/error_dialog.dart';
 part 'widgets/dialogs/sharing_dialog.dart';
 
 part 'widgets/dropdowns/artificial_intelligence_dropdown.dart';
+part 'widgets/dropdowns/locale_dropdown.dart';
 part 'widgets/dropdowns/override_type_dropdown.dart';
 part 'widgets/dropdowns/remote_model_dropdown.dart';
 part 'widgets/dropdowns/theme_mode_dropdown.dart';
@@ -175,15 +176,8 @@ class MaidState extends State<Maid> {
       '/chat': (context) => buildHomePage(),
       '/about': (context) => const AboutPage(),
     },
-    supportedLocales: [
-      Locale('en'), // English
-      Locale('es'), // Spanish
-      Locale('fr'), // French
-      Locale('jp'), // Japanese
-      Locale('ko'), // Korean
-      Locale('ru'), // Russian
-      Locale('zh'), // Chinese
-    ],
+    supportedLocales: AppLocalizations.supportedLocales,
+    locale: widget.settings.locale,
     debugShowCheckedModeBanner: false,
   );
 

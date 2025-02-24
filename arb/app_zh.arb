@@ -1,5 +1,7 @@
 {
     "@@locale": "zh",
+    "localeTitle": "区域",
+    "defaultLocale": "默认区域",
     "loading": "加载中...",
     "loadModel": "加载模型",
     "noModelSelected": "未选择模型",

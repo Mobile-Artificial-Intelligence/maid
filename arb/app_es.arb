@@ -1,5 +1,7 @@
 {
     "@@locale": "es",
+    "localeTitle": "Idioma",
+    "defaultLocale": "Idioma predeterminado",
     "loading": "Cargando...",
     "loadModel": "Cargar modelo",
     "noModelSelected": "Ningún modelo seleccionado",

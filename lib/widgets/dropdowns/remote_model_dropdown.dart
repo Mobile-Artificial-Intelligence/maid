@@ -7,10 +7,10 @@ class RemoteModelDropdown extends StatefulWidget {
   const RemoteModelDropdown({super.key, this.refreshButton = false, required this.aiController});
 
   @override
-  State<RemoteModelDropdown> createState() => _RemoteModelDropdownState();
+  State<RemoteModelDropdown> createState() => RemoteModelDropdownState();
 }
 
-class _RemoteModelDropdownState extends State<RemoteModelDropdown> {
+class RemoteModelDropdownState extends State<RemoteModelDropdown> {
   bool open = false;
 
   @override

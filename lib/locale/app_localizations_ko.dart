@@ -9,6 +9,12 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get localeTitle => '로케일';
+
+  @override
+  String get defaultLocale => '기본 로케일';
+
+  @override
   String get loading => '로딩 중...';
 
   @override

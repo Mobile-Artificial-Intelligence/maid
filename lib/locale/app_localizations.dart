@@ -105,6 +105,18 @@ abstract class AppLocalizations {
     Locale('zh')
   ];
 
+  /// No description provided for @localeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Locale'**
+  String get localeTitle;
+
+  /// No description provided for @defaultLocale.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Locale'**
+  String get defaultLocale;
+
   /// No description provided for @loading.
   ///
   /// In en, this message translates to:

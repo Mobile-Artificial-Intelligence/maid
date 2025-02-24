@@ -9,6 +9,12 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get localeTitle => 'ロケール';
+
+  @override
+  String get defaultLocale => 'デフォルトロケール';
+
+  @override
   String get loading => '読み込み中...';
 
   @override

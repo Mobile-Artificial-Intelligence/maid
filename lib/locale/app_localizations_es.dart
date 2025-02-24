@@ -9,6 +9,12 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get localeTitle => 'Idioma';
+
+  @override
+  String get defaultLocale => 'Idioma predeterminado';
+
+  @override
   String get loading => 'Cargando...';
 
   @override
