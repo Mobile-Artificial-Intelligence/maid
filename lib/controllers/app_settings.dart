@@ -316,6 +316,9 @@ class AppSettings extends ChangeNotifier {
     if (locale != null) {
       prefs.setString('localeLanguageCode', locale!.languageCode);
     }
+    else {
+      prefs.remove('localeLanguageCode');
+    }
 
     prefs.setInt('seedColorR', (seedColor.r *  255).toInt());
     prefs.setInt('seedColorG', (seedColor.g *  255).toInt());
