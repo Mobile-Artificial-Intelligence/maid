@@ -222,6 +222,7 @@ class AppSettings extends ChangeNotifier {
 
   set locale(Locale? newLocale) {
     _locale = newLocale;
+    save();
     notifyListeners();
   }
 
