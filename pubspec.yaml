@@ -1,5 +1,5 @@
 name: maid
-description: A cross-platform Flutter app for chatting with AI.
+description: 'A cross-platform Flutter app for chatting with AI.'
 publish_to: 'none'
 
 version: 2.0.1+2068
