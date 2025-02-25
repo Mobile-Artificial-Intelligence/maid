@@ -33,7 +33,7 @@
 Maid is a cross-platform free and an open-source application for interfacing with llama.cpp models locally, and remotely with Ollama, Mistral, Google Gemini and OpenAI models remotely. Maid supports sillytavern character cards to allow you to interact with all your favorite characters. Maid supports downloading a curated list of Models in-app directly from huggingface.
 
 ## Cloning
-Maid utilises git submodules extensively. To clone the repository, use the following command:
+To clone the repository, use the following command:
 
 ```bash
 git clone https://github.com/Mobile-Artificial-Intelligence/maid.git
