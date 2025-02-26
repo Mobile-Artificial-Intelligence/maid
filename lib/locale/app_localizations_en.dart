@@ -128,7 +128,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get localNetworkSearchTitle => 'Local Network Search';
 
   @override
-  String get localNetworkSearchContent => '\'This feature requires additional permissions to search your local network for Ollama instances.';
+  String get localNetworkSearchContent => 'This feature requires additional permissions to search your local network for Ollama instances.';
 
   @override
   String get openAI => 'OpenAI';

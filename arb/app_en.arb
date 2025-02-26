@@ -48,7 +48,7 @@
     "ollama": "Ollama",
     "searchLocalNetwork": "Search Local Network",
     "localNetworkSearchTitle": "Local Network Search",
-    "localNetworkSearchContent": "'This feature requires additional permissions to search your local network for Ollama instances.",
+    "localNetworkSearchContent": "This feature requires additional permissions to search your local network for Ollama instances.",
     "openAI": "OpenAI",
     "mistral": "Mistral",
     "selectAiEcosystem": "Select AI Ecosystem",
