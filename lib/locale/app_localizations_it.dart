@@ -68,7 +68,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get next => 'Avanti';
+  String get next => 'Prossimo';
 
   @override
   String get previous => 'Precedente';
@@ -116,7 +116,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get remoteModel => 'Modello remoto';
 
   @override
-  String get refreshRemoteModels => 'Aggiorna modelli remoti';
+  String get refreshRemoteModels => 'Ricarica modelli remoti';
 
   @override
   String get ollama => 'Ollama';
@@ -125,7 +125,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get searchLocalNetwork => 'Cerca nella rete locale';
 
   @override
-  String get localNetworkSearchTitle => 'Ricerca in rete locale';
+  String get localNetworkSearchTitle => 'Cerca nella rete locale';
 
   @override
   String get localNetworkSearchContent => 'Questa funzionalità richiede permessi aggiuntivi per cercare le istanze di Ollama nella rete locale.';
@@ -185,7 +185,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get themeModeDark => 'Scuro';
 
   @override
-  String get themeSeedColor => 'Colore di base del tema';
+  String get themeSeedColor => '\'Colore di base del tema';
 
   @override
   String get editMessage => 'Modifica messaggio';
@@ -195,7 +195,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String aiSettings(String aiControllerType) {
-    return '$aiControllerType Impostazioni';
+    return 'Impostazioni $aiControllerType';
   }
 
   @override
@@ -211,13 +211,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get systemPrompt => 'Prompt di sistema';
 
   @override
-  String get clearChats => 'Svuota chat';
+  String get clearChats => 'Svuota le chat';
 
   @override
   String get resetSettings => 'Ripristina impostazioni';
 
   @override
-  String get clearCache => 'Svuota cache';
+  String get clearCache => 'Svuota la cache';
 
   @override
   String get aboutTitle => 'Informazioni';
@@ -232,16 +232,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get apiKey => 'Chiave API';
 
   @override
-  String get baseUrl => 'URL base';
+  String get baseUrl => 'Base URL';
 
   @override
-  String get clearPrompt => 'Pulisci prompt';
+  String get clearPrompt => 'Pulisci il prompt';
 
   @override
-  String get submitPrompt => 'Invia prompt';
+  String get submitPrompt => 'Invia il prompt';
 
   @override
-  String get stopPrompt => 'Ferma prompt';
+  String get stopPrompt => 'Ferma il prompt';
 
   @override
   String get typeMessage => 'Scrivi un messaggio...';
@@ -256,6 +256,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String labelCopied(String label) {
-    return '$label copiato negli appunti!';
+    return '$label copiati negli appunti!';
   }
 }
