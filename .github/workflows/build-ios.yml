@@ -32,7 +32,7 @@ jobs:
       - name: Install the provisioning profile
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "${{ secrets.APPLE_PROVISION_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/Github_Actions.mobileprovision
+          echo "${{ secrets.APPLE_IOS_PROVISION_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/Github_Actions.mobileprovision
 
       - name: Set up keychain for signing
         run: |
