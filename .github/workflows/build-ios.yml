@@ -40,6 +40,10 @@ jobs:
           security default-keychain -s build.keychain
           security unlock-keychain -p "" build.keychain
           security set-keychain-settings -lut 3600 build.keychain
+    
+      - name: Verify Certificate Installation
+        run: |
+          security find-identity -v -p codesigning
 
       - name: Build iOS App
         run: |
