@@ -44,7 +44,7 @@ jobs:
       - name: Build iOS App
         run: |
           flutter pub get
-          flutter build ipa --release
+          flutter build ipa --release --xcargs "-allowProvisioningUpdates CODE_SIGN_STYLE=Automatic"
 
       - name: Upload iOS Build
         uses: actions/upload-artifact@v4
