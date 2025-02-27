@@ -1,0 +1,120 @@
+{
+    "@@locale": "it",
+    "localeTitle": "Lingua",
+    "defaultLocale": "Lingua predefinita",
+    "loading": "Caricamento...",
+    "loadModel": "Carica modello",
+    "noModelSelected": "Nessun modello selezionato",
+    "noModelLoaded": "Nessun modello caricato",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "regenerate": "Rigenera",
+    "chatsTitle": "Chat",
+    "newChat": "Nuova chat",
+    "anErrorOccurred": "Si è verificato un errore",
+    "errorTitle": "Errore",
+    "key": "Chiave",
+    "value": "Valore",
+    "ok": "OK",
+    "done": "Fatto",
+    "close": "Chiudi",
+    "save": "Salva {label}",
+    "@save": {
+        "description": "Salva {label}",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Messaggio"
+            }
+        }
+    },
+    "next": "Prossimo",
+    "previous": "Precedente",
+    "contentShared": "Contenuto condiviso",
+    "setUserImage": "Imposta immagine utente",
+    "setAssistantImage": "Imposta immagine assistente",
+    "loadUserImage": "Carica immagine utente",
+    "loadAssistantImage": "Carica immagine assistente",
+    "userName": "Nome utente",
+    "assistantName": "Nome assistente",
+    "user": "Utente",
+    "assistant": "Assistente",
+    "cancel": "Annulla",
+    "aiEcosystem": "Ecosistema IA",
+    "llamaCpp": "Llama CPP",
+    "llamaCppModel": "Modello Llama CPP",
+    "remoteModel": "Modello remoto",
+    "refreshRemoteModels": "Ricarica modelli remoti",
+    "ollama": "Ollama",
+    "searchLocalNetwork": "Cerca nella rete locale",
+    "localNetworkSearchTitle": "Cerca nella rete locale",
+    "localNetworkSearchContent": "Questa funzionalità richiede permessi aggiuntivi per cercare le istanze di Ollama nella rete locale.",
+    "openAI": "OpenAI",
+    "mistral": "Mistral",
+    "selectAiEcosystem": "Seleziona ecosistema IA",
+    "selectOverrideType": "Seleziona tipo di override",
+    "selectRemoteModel": "Seleziona modello remoto",
+    "selectThemeMode": "Seleziona modalità tema dell'app",
+    "overrideTypeString": "Stringa",
+    "overrideTypeInteger": "Intero",
+    "overrideTypeDouble": "Decimale",
+    "overrideTypeBoolean": "Booleano",
+    "inferanceOverrides": "Override di inferenza",
+    "addOverride": "Aggiungi override",
+    "saveOverride": "Salva override",
+    "deleteOverride": "Elimina override",
+    "themeMode": "Modalità tema",
+    "themeModeSystem": "Sistema",
+    "themeModeLight": "Chiaro",
+    "themeModeDark": "Scuro",
+    "themeSeedColor": "'Colore di base del tema",
+    "editMessage": "Modifica messaggio",
+    "settingsTitle": "Impostazioni",
+    "aiSettings": "Impostazioni {aiControllerType}",
+    "@aiSettings": {
+        "description": "Impostazioni per {aiControllerType}",
+        "placeholders": {
+            "aiControllerType": {
+                "type": "String",
+                "example": "Llama CPP"
+            }
+        }
+    },
+    "userSettings": "Impostazioni utente",
+    "assistantSettings": "Impostazioni assistente",
+    "systemSettings": "Impostazioni di sistema",
+    "systemPrompt": "Prompt di sistema",
+    "clearChats": "Svuota le chat",
+    "resetSettings": "Ripristina impostazioni",
+    "clearCache": "Svuota la cache",
+    "aboutTitle": "Informazioni",
+    "aboutContent": "Maid è un'applicazione multipiattaforma gratuita e open source per interfacciarsi localmente con i modelli di llama.cpp, e da remoto con i modelli di Ollama, Mistral e OpenAI. Maid supporta le schede dei personaggi di sillytavern per permetterti di interagire con tutti i tuoi personaggi preferiti. Maid consente di scaricare, direttamente dall'app, una lista curata di modelli da huggingface. Maid è distribuito sotto la licenza MIT ed è fornito senza alcuna garanzia, esplicita o implicita. Maid non è affiliato con Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft o con qualsiasi altra azienda che fornisce un modello compatibile con questa applicazione.",
+    "leadMaintainer": "Manutentore principale",
+    "apiKey": "Chiave API",
+    "baseUrl": "Base URL",
+    "clearPrompt": "Pulisci il prompt",
+    "submitPrompt": "Invia il prompt",
+    "stopPrompt": "Ferma il prompt",
+    "typeMessage": "Scrivi un messaggio...",
+    "code": "Codice",
+    "copyLabel": "Copia {label}",
+    "@copyLabel": {
+        "description": "Copia {label} negli appunti",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Codice"
+            }
+        }
+    },
+    "labelCopied": "{label} copiati negli appunti!",
+    "@labelCopied": {
+        "description": "{label} copiati negli appunti!",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Codice"
+            }
+        }
+    }
+}
