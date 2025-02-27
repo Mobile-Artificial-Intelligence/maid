@@ -43,11 +43,6 @@ jobs:
           security unlock-keychain -p "" build.keychain
           security set-keychain-settings -lut 3600 build.keychain
 
-      - name: Install CocoaPods
-        run: |
-          cd ios
-          pod install
-
       - name: Build iOS App
         run: |
           flutter pub get
