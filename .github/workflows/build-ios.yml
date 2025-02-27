@@ -53,7 +53,8 @@ jobs:
             -sdk iphoneos \
             -configuration Release \
             -archivePath build/ios/Runner.xcarchive \
-            archive -allowProvisioningUpdates
+            archive CODE_SIGN_IDENTITY="${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" \
+            PROVISIONING_PROFILE_SPECIFIER="Github_Actions.mobileprovision"
 
       - name: Create ExportOptions.plist
         run: |
@@ -82,8 +83,8 @@ jobs:
             -exportOptionsPlist ios/exportOptions.plist \
             -exportPath build/ios/output \
             -allowProvisioningUpdates \
-            -verbose
-        
+            CODE_SIGN_IDENTITY="${{ secrets.APPLE_DEVELOPER_ID_APPLICATION }}" \
+            PROVISIONING_PROFILE_SPECIFIER="Github_Actions.mobileprovision"
 
       - name: Upload iOS Build
         uses: actions/upload-artifact@v4
