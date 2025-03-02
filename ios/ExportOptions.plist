@@ -7,7 +7,7 @@
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.danemadsen.maid</key>
-		<string>IOS Distribution</string>
+		<string>App-Store Distribution</string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>Apple Distribution</string>
