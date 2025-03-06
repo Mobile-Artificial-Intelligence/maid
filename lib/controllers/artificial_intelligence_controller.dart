@@ -14,6 +14,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
 
   set busy(bool newBusy) {
     _busy = newBusy;
+    save();
     notifyListeners();
   }
 
@@ -23,6 +24,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
 
   set model(String? newModel) {
     _model = newModel;
+    save();
     notifyListeners();
   }
 
@@ -32,6 +34,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
 
   set overrides(Map<String, dynamic> newOverrides) {
     _overrides = newOverrides;
+    save();
     notifyListeners();
   }
 
@@ -52,6 +55,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
   void fromMap(Map<String, dynamic> map) {
     _model = map['model'];
     _overrides = map['overrides'] ?? {};
+    save();
     notifyListeners();
   }
 
@@ -124,6 +128,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 
   set baseUrl(String? newBaseUrl) {
     _baseUrl = newBaseUrl;
+    save();
     notifyListeners();
   }
 
@@ -133,6 +138,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 
   set apiKey(String? newApiKey) {
     _apiKey = newApiKey;
+    save();
     notifyListeners();
   }
 
@@ -165,6 +171,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
     _overrides = map['overrides'] ?? {};
     _baseUrl = map['base_url'];
     _apiKey = map['api_key'];
+    save();
     notifyListeners();
   }
 
@@ -304,6 +311,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
 
   set searchLocalNetwork(bool? value) {
     _searchLocalNetwork = value;
+    save();
     notifyListeners();
   }
 
@@ -491,6 +499,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
     _baseUrl = map['base_url'];
     _apiKey = map['api_key'];
     _searchLocalNetwork = map['search_local_network'];
+    save();
     notifyListeners();
   }
   
