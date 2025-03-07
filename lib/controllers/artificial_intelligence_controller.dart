@@ -192,7 +192,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 }
 
 class LlamaCppController extends ArtificialIntelligenceController {
-  Llama? _llama;
+  LlamaIsolated? _llama;
   String _loadedHash = '';
 
   bool loading = false;
@@ -224,15 +224,12 @@ class LlamaCppController extends ArtificialIntelligenceController {
     if ((hash == _loadedHash && !force) || _model == null) return;
 
     _llama = LlamaIsolated(
-      modelParams: ModelParams(
-        path: _model!,
-        vocabOnly: _overrides['vocab_only'],
-        useMmap: _overrides['use_mmap'],
-        useMlock: _overrides['use_mlock'],
-        checkTensors: _overrides['check_tensors']
-      ),
-      contextParams: ContextParams.fromMap(_overrides),
-      samplingParams: SamplingParams.fromMap({..._overrides, 'greedy': true, 'seed': math.Random().nextInt(1000000)})
+      LlamaParams.fromMap({
+        'model_path': _model,
+        'seed': math.Random().nextInt(1000000),
+        'greedy': true,
+        ..._overrides
+      })
     );
 
     _loadedHash = hash;
