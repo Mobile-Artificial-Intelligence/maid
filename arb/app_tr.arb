@@ -1,0 +1,120 @@
+{
+    "@@locale": "tr",
+    "localeTitle": "Yerel Ayar",
+    "defaultLocale": "Varsayılan Yerel Ayar",
+    "loading": "Yükleniyor...",
+    "loadModel": "Modeli Yükle",
+    "noModelSelected": "Model Seçilmedi",
+    "noModelLoaded": "Model Yüklenmedi",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "regenerate": "Yeniden Oluştur",
+    "chatsTitle": "Sohbetler",
+    "newChat": "Yeni Sohbet",
+    "anErrorOccurred": "Bir hata oluştu",
+    "errorTitle": "Hata",
+    "key": "Anahtar",
+    "value": "Değer",
+    "ok": "Tamam",
+    "done": "Bitti",
+    "close": "Kapat",
+    "save": "{label} Kaydet",
+    "@save": {
+        "description": "{label} öğesini kaydet",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Mesaj"
+            }
+        }
+    },
+    "next": "Sonraki",
+    "previous": "Önceki",
+    "contentShared": "İçerik Paylaşıldı",
+    "setUserImage": "Kullanıcı Resmini Ayarla",
+    "setAssistantImage": "Asistan Resmini Ayarla",
+    "loadUserImage": "Kullanıcı Resmini Yükle",
+    "loadAssistantImage": "Asistan Resmini Yükle",
+    "userName": "Kullanıcı Adı",
+    "assistantName": "Asistan Adı",
+    "user": "Kullanıcı",
+    "assistant": "Asistan",
+    "cancel": "İptal",
+    "aiEcosystem": "Yapay Zeka Ekosistemi",
+    "llamaCpp": "Llama CPP",
+    "llamaCppModel": "Llama CPP Modeli",
+    "remoteModel": "Uzak Model",
+    "refreshRemoteModels": "Uzak Modelleri Yenile",
+    "ollama": "Ollama",
+    "searchLocalNetwork": "Yerel Ağı Ara",
+    "localNetworkSearchTitle": "Yerel Ağ Arama",
+    "localNetworkSearchContent": "Bu özellik, yerel ağınızda Ollama örneklerini aramak için ek izinler gerektirir.",
+    "openAI": "OpenAI",
+    "mistral": "Mistral",
+    "selectAiEcosystem": "Yapay Zeka Ekosistemini Seç",
+    "selectOverrideType": "Geçersiz Kılma Türünü Seç",
+    "selectRemoteModel": "Uzak Modeli Seç",
+    "selectThemeMode": "Uygulama Tema Modunu Seç",
+    "overrideTypeString": "Dize",
+    "overrideTypeInteger": "Tamsayı",
+    "overrideTypeDouble": "Ondalık",
+    "overrideTypeBoolean": "Bool",
+    "inferanceOverrides": "Çıkarım Geçersiz Kılmaları",
+    "addOverride": "Geçersiz Kılma Ekle",
+    "saveOverride": "Geçersiz Kılmayı Kaydet",
+    "deleteOverride": "Geçersiz Kılmayı Sil",
+    "themeMode": "Tema Modu",
+    "themeModeSystem": "Sistem",
+    "themeModeLight": "Açık",
+    "themeModeDark": "Koyu",
+    "themeSeedColor": "Tema Tohum Rengi",
+    "editMessage": "Mesajı Düzenle",
+    "settingsTitle": "Ayarlar",
+    "aiSettings": "{aiControllerType} Ayarları",
+    "@aiSettings": {
+        "description": "{aiControllerType} için ayarlar",
+        "placeholders": {
+            "aiControllerType": {
+                "type": "String",
+                "example": "Llama CPP"
+            }
+        }
+    },
+    "userSettings": "Kullanıcı Ayarları",
+    "assistantSettings": "Asistan Ayarları",
+    "systemSettings": "Sistem Ayarları",
+    "systemPrompt": "Sistem İstemi",
+    "clearChats": "Sohbetleri Temizle",
+    "resetSettings": "Ayarları Sıfırla",
+    "clearCache": "Önbelleği Temizle",
+    "aboutTitle": "Hakkında",
+    "aboutContent": "Maid, llama.cpp modelleriyle yerel olarak ve Ollama, Mistral ve OpenAI modelleriyle uzaktan etkileşim kurmak için çapraz platformlu, ücretsiz ve açık kaynaklı bir uygulamadır. Maid, sillytavern karakter kartlarını destekleyerek favori karakterlerinizle etkileşim kurmanızı sağlar. Maid, huggingface’ten doğrudan uygulama içinde küratörlü bir model listesini indirmeyi destekler. Maid, MIT lisansı altında dağıtılır ve herhangi bir garanti olmaksızın, açık veya zımni olarak sunulur. Maid, Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft veya bu uygulama ile uyumlu bir model sağlayan herhangi bir şirketle bağlantılı değildir.",
+    "leadMaintainer": "Baş Sorumlu",
+    "apiKey": "API Anahtarı",
+    "baseUrl": "Temel URL",
+    "clearPrompt": "İstemi Temizle",
+    "submitPrompt": "İstemi Gönder",
+    "stopPrompt": "İstemi Durdur",
+    "typeMessage": "Bir mesaj yazın...",
+    "code": "Kod",
+    "copyLabel": "{label} Kopyala",
+    "@copyLabel": {
+        "description": "{label} öğesini panoya kopyala",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Kod"
+            }
+        }
+    },
+    "labelCopied": "{label} panoya kopyalandı!",
+    "@labelCopied": {
+        "description": "{label} panoya kopyalandı!",
+        "placeholders": {
+            "label": {
+                "type": "String",
+                "example": "Kod"
+            }
+        }
+    }
+}
