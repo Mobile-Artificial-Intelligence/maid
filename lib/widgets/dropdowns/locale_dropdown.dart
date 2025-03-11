@@ -45,7 +45,9 @@ class LocaleDropdownState extends State<LocaleDropdown> {
   );
 
   Widget buildLocaleText(BuildContext context, Widget? child) => Text(
-    widget.settings.locale?.languageCode ?? AppLocalizations.of(context)!.defaultLocale,
+    widget.settings.locale != null ? 
+      lookupAppLocalizations(widget.settings.locale!).friendlyName : 
+      AppLocalizations.of(context)!.defaultLocale,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -88,11 +90,13 @@ class LocaleDropdownState extends State<LocaleDropdown> {
     ];
     
     for (final locale in locales) {
+      final appLocalization = lookupAppLocalizations(locale);
+
       items.add(
         PopupMenuItem(
           padding: EdgeInsets.all(8),
           value: locale,
-          child: Text(locale.languageCode)
+          child: Text(appLocalization.friendlyName)
         )
       );
     }

@@ -1,5 +1,6 @@
 {
     "@@locale": "zh",
+    "friendlyName": "中文",
     "localeTitle": "区域",
     "defaultLocale": "默认区域",
     "loading": "加载中...",

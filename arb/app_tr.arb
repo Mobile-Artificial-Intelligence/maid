@@ -1,5 +1,6 @@
 {
     "@@locale": "tr",
+    "friendlyName": "Türkçe",
     "localeTitle": "Yerel Ayar",
     "defaultLocale": "Varsayılan Yerel Ayar",
     "loading": "Yükleniyor...",

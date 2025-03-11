@@ -9,6 +9,9 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get friendlyName => '日本語';
+
+  @override
   String get localeTitle => 'ロケール';
 
   @override

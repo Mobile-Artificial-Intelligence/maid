@@ -9,6 +9,9 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
+  String get friendlyName => 'हिंदी';
+
+  @override
   String get localeTitle => 'स्थान';
 
   @override

@@ -1,5 +1,6 @@
 {
     "@@locale": "ru",
+    "friendlyName": "Русский",
     "localeTitle": "Локаль",
     "defaultLocale": "Локаль по умолчанию",
     "loading": "Загрузка...",

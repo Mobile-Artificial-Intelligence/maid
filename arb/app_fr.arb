@@ -1,5 +1,6 @@
 {
     "@@locale": "fr",
+    "friendlyName": "Français",
     "localeTitle": "Langue",
     "defaultLocale": "Langue par défaut",
     "loading": "Chargement...",

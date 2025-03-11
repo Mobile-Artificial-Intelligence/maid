@@ -9,6 +9,9 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get friendlyName => 'Türkçe';
+
+  @override
   String get localeTitle => 'Yerel Ayar';
 
   @override
@@ -64,7 +67,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String save(String label) {
-    return 'Kaydet $label';
+    return '$label Kaydet';
   }
 
   @override
@@ -251,7 +254,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String copyLabel(String label) {
-    return 'Kopyala $label';
+    return '$label Kopyala';
   }
 
   @override

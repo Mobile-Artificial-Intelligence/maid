@@ -1,5 +1,6 @@
 {
     "@@locale": "ko",
+    "friendlyName": "한국어",
     "localeTitle": "로케일",
     "defaultLocale": "기본 로케일",
     "loading": "로딩 중...",
