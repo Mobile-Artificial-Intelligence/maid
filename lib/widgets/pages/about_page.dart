@@ -22,7 +22,7 @@ class AboutPage extends StatelessWidget {
     children: [
       const SizedBox(height: 20.0),
       Image.asset(
-        "images/logo.png",
+        Theme.of(context).brightness == Brightness.dark ? "images/logo.png" : "images/logo-dark.png",
         width: 150,
         height: 150,
       ),
