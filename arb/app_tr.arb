@@ -8,6 +8,7 @@
     "noModelSelected": "Model Seçilmedi",
     "noModelLoaded": "Model Yüklenmedi",
     "delete": "Sil",
+    "export": "Dışa Aktar",
     "edit": "Düzenle",
     "regenerate": "Yeniden Oluştur",
     "chatsTitle": "Sohbetler",

@@ -8,6 +8,7 @@
     "noModelSelected": "Aucun modèle sélectionné",
     "noModelLoaded": "Aucun modèle chargé",
     "delete": "Supprimer",
+    "export": "Exporter",
     "edit": "Modifier",
     "regenerate": "Régénérer",
     "chatsTitle": "Discussions",

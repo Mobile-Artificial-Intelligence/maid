@@ -8,6 +8,7 @@
     "noModelSelected": "Модель не выбрана",
     "noModelLoaded": "Модель не загружена",
     "delete": "Удалить",
+    "export": "Экспорт",
     "edit": "Редактировать",
     "regenerate": "Перегенерировать",
     "chatsTitle": "Чаты",

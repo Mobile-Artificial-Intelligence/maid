@@ -51,6 +51,22 @@ class ChatController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void exportChat(GeneralTreeNode<ChatMessage> chat) async {
+    final chatMap = chat.toMap(ChatMessage.messageToMap);
+    final chatString = jsonEncode(chatMap);
+
+    final outputFile = await FilePicker.platform.saveFile(
+      dialogTitle: 'Export Chat',
+      fileName: 'chat.json',
+      type: FileType.custom,
+      allowedExtensions: ['json']
+    );
+
+    if (outputFile != null) {
+      await File(outputFile).writeAsString(chatString);
+    }
+  }
+
   void clear() {
     _chats.clear();
     save();

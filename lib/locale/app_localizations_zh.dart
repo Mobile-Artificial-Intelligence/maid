@@ -33,6 +33,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get delete => '删除';
 
   @override
+  String get export => '导出';
+
+  @override
   String get edit => '编辑';
 
   @override

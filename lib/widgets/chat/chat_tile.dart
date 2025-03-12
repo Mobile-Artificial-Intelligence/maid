@@ -62,6 +62,7 @@ class ChatTileState extends State<ChatTile> {
       ),
       items: [
         buildDeletePopover(),
+        buildExportPopover(),
       ],
     );
   }
@@ -69,5 +70,10 @@ class ChatTileState extends State<ChatTile> {
   PopupMenuItem buildDeletePopover() => PopupMenuItem(
     child: Text(AppLocalizations.of(context)!.delete),
     onTap:() => widget.chatController.deleteChat(widget.node),
+  );
+
+  PopupMenuItem buildExportPopover() => PopupMenuItem(
+    child: Text(AppLocalizations.of(context)!.export),
+    onTap:() => widget.chatController.exportChat(widget.node),
   );
 }

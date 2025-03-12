@@ -161,6 +161,12 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get delete;
 
+  /// No description provided for @export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
+
   /// No description provided for @edit.
   ///
   /// In en, this message translates to:

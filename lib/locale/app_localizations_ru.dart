@@ -33,6 +33,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get delete => 'Удалить';
 
   @override
+  String get export => 'Экспорт';
+
+  @override
   String get edit => 'Редактировать';
 
   @override

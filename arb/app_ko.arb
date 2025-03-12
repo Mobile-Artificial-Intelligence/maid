@@ -8,6 +8,7 @@
     "noModelSelected": "선택된 모델 없음",
     "noModelLoaded": "로드된 모델 없음",
     "delete": "삭제",
+    "export": "내보내기",
     "edit": "편집",
     "regenerate": "재생성",
     "chatsTitle": "채팅",
