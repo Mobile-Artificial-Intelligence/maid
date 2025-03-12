@@ -33,6 +33,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get delete => 'Sil';
 
   @override
+  String get import => 'İçe Aktar';
+
+  @override
   String get export => 'Dışa Aktar';
 
   @override

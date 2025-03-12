@@ -37,11 +37,28 @@ class ChatView extends StatelessWidget {
         AppLocalizations.of(context)!.chatsTitle,
         style: Theme.of(context).textTheme.titleMedium,
       ),
+      buildActions(context)
+    ]
+  );
+
+  Widget buildActions(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      IconButton(
+        tooltip: AppLocalizations.of(context)!.import,
+        onPressed: chatController.importChat,
+        icon: const Icon(Icons.folder_open),
+      ),
+      IconButton(
+        tooltip: AppLocalizations.of(context)!.clearChats,
+        onPressed: chatController.clear,
+        icon: const Icon(Icons.delete),
+      ),
       IconButton(
         tooltip: AppLocalizations.of(context)!.newChat,
         onPressed: chatController.newChat,
         icon: const Icon(Icons.add),
-      )
+      ),
     ]
   );
   

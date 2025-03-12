@@ -51,6 +51,23 @@ class ChatController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void importChat() async {
+    final inputFile = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json']
+    );
+
+    if (inputFile != null) {
+      final chatString = await File(inputFile.files.single.path!).readAsString();
+      final chatMap = jsonDecode(chatString);
+      final chat = GeneralTreeNode.fromMap(chatMap, ChatMessage.fromMap);
+
+      _chats.insert(0, chat);
+      save();
+      notifyListeners();
+    }
+  }
+
   void exportChat(GeneralTreeNode<ChatMessage> chat) async {
     final chatMap = chat.toMap(ChatMessage.messageToMap);
     final chatString = jsonEncode(chatMap);

@@ -8,6 +8,7 @@
     "noModelSelected": "モデルが選択されていません",
     "noModelLoaded": "モデルが読み込まれていません",
     "delete": "削除",
+    "import": "インポート",
     "export": "エクスポート",
     "edit": "編集",
     "regenerate": "再生成",

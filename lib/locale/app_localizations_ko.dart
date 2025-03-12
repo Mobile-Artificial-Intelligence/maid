@@ -33,6 +33,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get delete => '삭제';
 
   @override
+  String get import => '가져오기';
+
+  @override
   String get export => '내보내기';
 
   @override

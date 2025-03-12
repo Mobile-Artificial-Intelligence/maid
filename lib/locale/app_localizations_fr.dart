@@ -33,6 +33,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get delete => 'Supprimer';
 
   @override
+  String get import => 'Importer';
+
+  @override
   String get export => 'Exporter';
 
   @override

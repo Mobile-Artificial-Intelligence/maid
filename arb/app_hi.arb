@@ -8,6 +8,7 @@
     "noModelSelected": "कोई मॉडल चयनित नहीं",
     "noModelLoaded": "कोई मॉडल लोड नहीं हुआ",
     "delete": "हटाएं",
+    "import": "आयात करें",
     "export": "निर्यात करें",
     "edit": "संपादित करें",
     "regenerate": "पुनः उत्पन्न करें",

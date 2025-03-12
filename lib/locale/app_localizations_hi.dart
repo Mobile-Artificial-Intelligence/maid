@@ -33,6 +33,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get delete => 'हटाएं';
 
   @override
+  String get import => 'आयात करें';
+
+  @override
   String get export => 'निर्यात करें';
 
   @override

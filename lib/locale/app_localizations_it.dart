@@ -33,6 +33,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get delete => 'Elimina';
 
   @override
+  String get import => 'Importa';
+
+  @override
   String get export => 'Esporta';
 
   @override

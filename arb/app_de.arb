@@ -8,6 +8,7 @@
     "noModelSelected": "Kein Modell ausgewählt",
     "noModelLoaded": "Kein Modell geladen",
     "delete": "Löschen",
+    "import": "Importieren",
     "export": "Exportieren",
     "edit": "Bearbeiten",
     "regenerate": "Neu generieren",
