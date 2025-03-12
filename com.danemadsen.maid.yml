@@ -489,6 +489,90 @@ Builds:
       - popd
       - mv $repo/maid com.danemadsen.maid
 
+  - versionName: 2.0.2
+    versionCode: 21221
+    commit: 7f20f59d861e72f6c50a9d7fdffacff3c7f84c3e
+    submodules: true
+    sudo:
+      - mkdir -p /home/runner
+      - chown vagrant /home/runner
+    output: build/app/outputs/flutter-apk/app-x86_64-release.apk
+    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
+    rm:
+      - linux
+      - macos
+      - windows
+    prebuild:
+      - rm packages/flutter/engine/src/.gn
+      - export repo=/home/runner/work/maid
+      - mkdir -p $repo
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
+      - export PUB_CACHE=/home/runner/.pub-cache
+      - packages/flutter/bin/flutter config --no-analytics
+      - packages/flutter/bin/flutter packages pub get
+      - mv $PUB_CACHE .
+      - popd
+      - mv $repo/maid com.danemadsen.maid
+    scanignore:
+      - packages/flutter/bin/cache
+    scandelete:
+      - .pub-cache
+      - packages/flutter
+    build:
+      - export repo=/home/runner/work/maid
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
+      - export PUB_CACHE=/home/runner/.pub-cache
+      - mv .pub-cache $PUB_CACHE
+      - packages/flutter/bin/flutter build apk --release --split-per-abi --target-platform="android-x64"
+      - popd
+      - mv $repo/maid com.danemadsen.maid
+
+  - versionName: 2.0.2
+    versionCode: 21222
+    commit: 7f20f59d861e72f6c50a9d7fdffacff3c7f84c3e
+    submodules: true
+    sudo:
+      - mkdir -p /home/runner
+      - chown vagrant /home/runner
+    output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
+    rm:
+      - linux
+      - macos
+      - windows
+    prebuild:
+      - rm packages/flutter/engine/src/.gn
+      - export repo=/home/runner/work/maid
+      - mkdir -p $repo
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
+      - export PUB_CACHE=/home/runner/.pub-cache
+      - packages/flutter/bin/flutter config --no-analytics
+      - packages/flutter/bin/flutter packages pub get
+      - mv $PUB_CACHE .
+      - popd
+      - mv $repo/maid com.danemadsen.maid
+    scanignore:
+      - packages/flutter/bin/cache
+    scandelete:
+      - packages/flutter
+      - .pub-cache
+    build:
+      - export repo=/home/runner/work/maid
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
+      - export PUB_CACHE=/home/runner/.pub-cache
+      - mv .pub-cache $PUB_CACHE
+      - packages/flutter/bin/flutter build apk --release --split-per-abi --target-platform="android-arm64"
+      - popd
+      - mv $repo/maid com.danemadsen.maid
+
 AllowedAPKSigningKeys: 835ed22ed895c4c272d698aa6e4e48db0b4e36dccf7010d5de15034ac9e1b96f
 
 AutoUpdateMode: Version
@@ -497,5 +581,5 @@ VercodeOperation:
   - '%c * 10 + 1'
   - '%c * 10 + 2'
 UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
-CurrentVersion: 2.0.1
-CurrentVersionCode: 20682
+CurrentVersion: 2.0.2
+CurrentVersionCode: 21222
