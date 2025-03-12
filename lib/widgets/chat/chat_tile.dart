@@ -26,16 +26,25 @@ class ChatTileState extends State<ChatTile> {
   }
 
   @override
-  Widget build(BuildContext context) => ListTile(
+  Widget build(BuildContext context) => InkWell(
     key: key,
-    title: Text(
+    onTap: !widget.disabled ? onChatChange : null,
+    onSecondaryTap: openPopover, 
+    onLongPress: openPopover,
+    child: buildTile(),
+  );
+  
+  Widget buildTile() => Container(
+    padding: const EdgeInsets.all(16),
+    child: Text(
       widget.node.currentChild?.data.content ?? widget.node.data.content,
+      style: TextStyle(
+        color: widget.selected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
+        fontSize: 16,
+      ),
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
     ),
-    selected: widget.selected,
-    onTap: !widget.disabled ? onChatChange : null,
-    onLongPress: openPopover,
   );
 
   void openPopover() {
