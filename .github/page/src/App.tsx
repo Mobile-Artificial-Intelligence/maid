@@ -4,8 +4,6 @@ import maidLogoDark from '/logo-dark.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <div>
@@ -13,18 +11,7 @@ function App() {
           <img src={maidLogoDark} className="logo" alt="Maid logo" />
         </a>
       </div>
-      <h1>Maid</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1 className='title'>MAID</h1>
     </>
   )
 }
