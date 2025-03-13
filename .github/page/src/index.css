@@ -1,6 +1,11 @@
 :root {
   font-family: 'PPNeueMachina-Inktrap', system-ui, Helvetica, Arial, sans-serif;
   line-height: 1;
+  
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 
   color-scheme: light dark;
   color: white;
