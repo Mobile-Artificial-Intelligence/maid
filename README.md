@@ -84,14 +84,11 @@ IOS Releases not available at this time.
 - Documentation
 - Testing and Building on IOS
 - Spreading the word
-- [Google Play Testing](https://github.com/Mobile-Artificial-Intelligence/maid/discussions/499)
 
 ## Special Thanks and Related Projects
 - [ggerganov/llama.cpp](https://github.com/ggerganov/llama.cpp)
 - [davidmigloz/langchain_dart](https://github.com/davidmigloz/langchain_dart)
 - [Mobile-Artificial-Intelligence/lcpp](https://github.com/Mobile-Artificial-Intelligence/lcpp)
-- [Mobile-Artificial-Intelligence/babylon_tts](https://github.com/Mobile-Artificial-Intelligence/babylon_tts)
-- [Mobile-Artificial-Intelligence/babylon.cpp](https://github.com/Mobile-Artificial-Intelligence/babylon.cpp)
 
 ## Star History
 
@@ -114,6 +111,6 @@ Tested with calypso 3b, orcamini 3b, minyllama 1.1b, phi 3, mistral 7b, mixtral 
 Maid is distributed under the MIT licence and is provided without warranty of any kind, express or implied. Maid is not affiliated with Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company providing a model compatible with this application.
 
 
-## 📜 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).
