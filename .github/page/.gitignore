@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Images are pulled from project root
+*.svg
+*.png
+*.jpg

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import maidLogoLight from '/logo.svg'
+import maidLogoDark from '/logo-dark.svg'
 import './App.css'
 
 function App() {
@@ -9,14 +9,11 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
+        <a href="https://github.com/Mobile-Artificial-Intelligence/maid" target="_blank">
+          <img src={maidLogoDark} className="logo" alt="Maid logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Maid</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
