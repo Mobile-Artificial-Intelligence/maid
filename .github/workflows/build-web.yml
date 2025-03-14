@@ -33,7 +33,7 @@ jobs:
           flutter pub get
           flutter build web -v
 
-      - name: Upload Linux Build
+      - name: Upload Web Build
         uses: actions/upload-artifact@v4
         with:
           name: maid-web
