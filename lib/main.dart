@@ -19,7 +19,8 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:lcpp/lcpp.dart' if (dart.library.http) 'package:lcpp/lcpp.web.dart';
+import 'package:lcpp/lcpp.dart'
+    if (dart.library.html) 'package:lcpp/lcpp.web.dart';
 import 'package:tree_structs/tree_structs.dart';
 import 'package:ollama_dart/ollama_dart.dart' as ollama;
 import 'package:openai_dart/openai_dart.dart' as open_ai;
