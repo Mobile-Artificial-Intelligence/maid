@@ -32,7 +32,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     children: [
       buildRemoteModel(context),
       const SizedBox(height: 8),
-      if (aiController is OllamaController) buildLocalSearchSwitch(context),
+      if (aiController is OllamaController && !kIsWeb) buildLocalSearchSwitch(context),
       BaseUrlTextField(aiController: aiController as RemoteArtificialIntelligenceController),
       const SizedBox(height: 8),
       ApiKeyTextField(aiController: aiController as RemoteArtificialIntelligenceController),
