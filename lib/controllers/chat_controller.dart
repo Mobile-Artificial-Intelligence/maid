@@ -58,7 +58,7 @@ class ChatController extends ChangeNotifier {
     );
 
     if (inputFile != null) {
-      final chatString = await File(inputFile.files.single.path!).readAsString();
+      final chatString = utf8.decode(inputFile.files.single.bytes!);
       final chatMap = jsonDecode(chatString);
       final chat = GeneralTreeNode.fromMap(chatMap, ChatMessage.fromMap);
 
