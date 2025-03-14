@@ -1,12 +1,19 @@
 part of 'package:maid/main.dart';
 
 abstract class ArtificialIntelligenceController extends ChangeNotifier {
-  static Map<String, String> getTypes(BuildContext context) => {
-    'llama_cpp': AppLocalizations.of(context)!.llamaCpp,
-    'ollama': AppLocalizations.of(context)!.ollama,
-    'open_ai': AppLocalizations.of(context)!.openAI,
-    'mistral': AppLocalizations.of(context)!.mistral,
-  };
+  static Map<String, String> getTypes(BuildContext context) {
+    Map<String, String> types = {};
+
+    if (!kIsWeb) {
+      types['llama_cpp'] = AppLocalizations.of(context)!.llamaCpp;
+    }
+
+    types['ollama'] = AppLocalizations.of(context)!.ollama;
+    types['open_ai'] = AppLocalizations.of(context)!.openAI;
+    types['mistral'] = AppLocalizations.of(context)!.mistral;
+
+    return types;
+  }
 
   bool _busy = false;
 
@@ -72,7 +79,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
   static Future<ArtificialIntelligenceController> load([String? type]) async {
     final prefs = await SharedPreferences.getInstance();
 
-    type ??= prefs.getString('ai_type') ?? 'llama_cpp';
+    type ??= prefs.getString('ai_type') ?? (kIsWeb ? 'ollama' : 'llama_cpp');
 
     final contextString = prefs.getString(type);
 
