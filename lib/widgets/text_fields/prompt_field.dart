@@ -25,7 +25,7 @@ class PromptFieldState extends State<PromptField> {
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       // For sharing or opening text coming from outside the app while the app is in the memory
       streamSubscription = ReceiveSharingIntent.instance.getMediaStream().listen(handleShare, onError: (err) => log(err.toString()));
 
@@ -139,7 +139,7 @@ class PromptFieldState extends State<PromptField> {
   Widget buildPromptField() => TextField(
     key: ValueKey('prompt_field'),
     keyboardType: TextInputType.multiline,
-    textInputAction: PlatformExtension.isDesktop && !isAltPressed ? TextInputAction.done : TextInputAction.newline,
+    textInputAction: TargetPlatformExtension.isDesktop && !isAltPressed ? TextInputAction.done : TextInputAction.newline,
     minLines: 1,
     maxLines: 9,
     enableInteractiveSelection: true,

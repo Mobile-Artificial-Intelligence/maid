@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
-extension PlatformExtension on Platform {
-  static bool get isMobile => Platform.isAndroid || Platform.isIOS;
+extension TargetPlatformExtension on TargetPlatform {
+  static bool get isMobile => defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS;
 
-  static bool get isDesktop => Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+  static bool get isDesktop => defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.windows || defaultTargetPlatform == TargetPlatform.linux;
 }

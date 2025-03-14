@@ -129,7 +129,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
 
   void onLocalSearchChanged(BuildContext context, bool value) {
     if (
-      (Platform.isAndroid || Platform.isIOS) &&
+      TargetPlatformExtension.isMobile &&
       (aiController as OllamaController).searchLocalNetwork == null && 
       value
     ) {
