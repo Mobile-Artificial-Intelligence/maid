@@ -76,10 +76,11 @@ class ChatController extends ChangeNotifier {
       dialogTitle: 'Export Chat',
       fileName: 'chat.json',
       type: FileType.custom,
-      allowedExtensions: ['json']
+      allowedExtensions: ['json'],
+      bytes: utf8.encode(chatString)
     );
 
-    if (outputFile != null) {
+    if (outputFile != null && !File(outputFile).existsSync()) {
       await File(outputFile).writeAsString(chatString);
     }
   }
