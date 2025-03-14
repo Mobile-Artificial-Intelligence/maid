@@ -41,7 +41,7 @@
   <img
     src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/refs/heads/main/badge_github.png"
     alt="Get it on GitHub"
-    width="80" 
+    width="210" 
   />
 </a>
 <a href='https://play.google.com/store/apps/details?id=com.danemadsen.maid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
