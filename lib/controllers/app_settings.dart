@@ -2,9 +2,9 @@ part of 'package:maid/main.dart';
 
 class AppSettings extends ChangeNotifier {
   AppSettings({
-    File? userImage,
+    Uint8List? userImage,
     String? userName,
-    File? assistantImage,
+    Uint8List? assistantImage,
     String? assistantName,
     Color seedColor = Colors.blue,
     ThemeMode themeMode = ThemeMode.system,
@@ -21,17 +21,12 @@ class AppSettings extends ChangeNotifier {
     load();
   }
 
-  File? _userImage;
+  Uint8List? _userImage;
 
-  File? get userImage => _userImage;
+  Uint8List? get userImage => _userImage;
 
-  set userImage(File? newUserImage) {
-    if (newUserImage == null || newUserImage.path.isEmpty) {
-      _userImage = null;
-    }
-    else {
-      _userImage = newUserImage;
-    }
+  set userImage(Uint8List? newUserImage) {
+    _userImage = newUserImage;
 
     save();
     notifyListeners();
@@ -47,11 +42,11 @@ class AppSettings extends ChangeNotifier {
 
     if (result == null ||
         result.files.isEmpty ||
-        result.files.single.path == null) {
+        result.files.single.bytes == null) {
       _userImage = null;
     }
     else {
-      _userImage = File(result.files.single.path!);
+      _userImage = result.files.single.bytes;
     }
 
     save();
@@ -78,25 +73,18 @@ class AppSettings extends ChangeNotifier {
     userName = newUserName;
   }
 
-  File? _assistantImage;
+  Uint8List? _assistantImage;
 
-  File? get assistantImage => _assistantImage;
+  Uint8List? get assistantImage => _assistantImage;
 
-  set assistantImage(File? newAssistantImage) {
-    if (newAssistantImage == null || newAssistantImage.path.isEmpty) {
-      _assistantImage = null;
-    }
-    else {
-      _assistantImage = newAssistantImage;
-    }
+  set assistantImage(Uint8List? newAssistantImage) {
+    _assistantImage = newAssistantImage;
 
     save();
     notifyListeners();
     if (_assistantImage == null) return;
 
-    final bytes = _assistantImage!.readAsBytesSync();
-
-    final image = img.decodeImage(bytes);
+    final image = img.decodeImage(_assistantImage!);
   
     sillyTavernDecoder(image?.textData);
   }
@@ -158,7 +146,7 @@ class AppSettings extends ChangeNotifier {
     if (
       result == null ||
       result.files.isEmpty ||
-      result.files.single.path == null
+      result.files.single.bytes == null
     ) {
       _assistantImage = null;
       save();
@@ -166,12 +154,10 @@ class AppSettings extends ChangeNotifier {
       return;
     }
     
-    _assistantImage = File(result.files.single.path!);
+    _assistantImage = result.files.single.bytes;
     notifyListeners();
 
-    final bytes = _assistantImage!.readAsBytesSync();
-
-    final image = img.decodeImage(bytes);
+    final image = img.decodeImage(_assistantImage!);
 
     sillyTavernDecoder(image?.textData);
   }
@@ -249,16 +235,16 @@ class AppSettings extends ChangeNotifier {
   void load() async {
     final prefs = await SharedPreferences.getInstance();
     
-    final userImagePath = prefs.getString('userImage');
-    if (userImagePath != null && userImagePath.isNotEmpty) {
-      userImage = File(userImagePath);
+    final userImageBytes = prefs.getString('userImage');
+    if (userImageBytes != null) {
+      userImage = base64.decode(userImageBytes);
     }
 
     userName = prefs.getString('userName');
     
     final assistantImagePath = prefs.getString('assistantImage');
-    if (assistantImagePath != null && assistantImagePath.isNotEmpty) {
-      assistantImage = File(assistantImagePath);
+    if (assistantImagePath != null) {
+      assistantImage = base64.decode(assistantImagePath);
     }
 
     assistantName = prefs.getString('assistantName');
@@ -294,16 +280,16 @@ class AppSettings extends ChangeNotifier {
   void save() async {
     final prefs = await SharedPreferences.getInstance();
     
-    if (userImage != null && userImage!.path.isNotEmpty) {
-      prefs.setString('userImage', userImage!.path);
+    if (userImage != null) {
+      prefs.setString('userImage', base64.encode(userImage!));
     }
 
     if (userName != null && userName!.isNotEmpty) {
       prefs.setString('userName', userName!);
     }
 
-    if (assistantImage != null && assistantImage!.path.isNotEmpty) {
-      prefs.setString('assistantImage', assistantImage!.path);
+    if (assistantImage != null) {
+      prefs.setString('assistantImage', base64.encode(assistantImage!));
     }
 
     if (assistantName != null && assistantName!.isNotEmpty) {

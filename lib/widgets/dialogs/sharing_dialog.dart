@@ -34,7 +34,7 @@ class SharingDialog extends StatelessWidget {
   List<Widget> buildActions(BuildContext context) => [
     TextButton(
       onPressed: () {
-        settings.userImage = File(file.path);
+        settings.userImage = File(file.path).readAsBytesSync();
         Navigator.of(context).pop();
       }, 
       child: Text(
@@ -43,7 +43,7 @@ class SharingDialog extends StatelessWidget {
     ),
     TextButton(
       onPressed: () {
-        settings.assistantImage = File(file.path);
+        settings.assistantImage = File(file.path).readAsBytesSync();
         Navigator.of(context).pop();
       }, 
       child: Text(

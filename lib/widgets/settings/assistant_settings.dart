@@ -46,7 +46,7 @@ class AssistantSettings extends StatelessWidget {
 
     return CircleAvatar(
       radius: 50,
-      backgroundImage: FileImage(settings.assistantImage!),
+      backgroundImage: MemoryImage(settings.assistantImage!),
     );
   }
 }

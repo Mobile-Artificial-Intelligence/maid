@@ -203,7 +203,7 @@ class MessageWidgetState extends State<MessageWidget> {
         color: Theme.of(context).colorScheme.onSurface
       ) : CircleAvatar(
         radius: 14,
-        backgroundImage: FileImage(widget.settings.userImage!),
+        backgroundImage: MemoryImage(widget.settings.userImage!),
       ),
       const SizedBox(width: 10.0),
       Text(
@@ -224,7 +224,7 @@ class MessageWidgetState extends State<MessageWidget> {
         color: Theme.of(context).colorScheme.onSurface
       ) : CircleAvatar(
         radius: 14,
-        backgroundImage: FileImage(widget.settings.assistantImage!),
+        backgroundImage: MemoryImage(widget.settings.assistantImage!),
       ),
       const SizedBox(width: 10.0),
       Text(
