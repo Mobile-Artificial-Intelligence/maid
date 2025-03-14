@@ -37,6 +37,13 @@
     height="80"
   >
 </a>
+<a href="https://github.com/Mobile-Artificial-Intelligence/maid/releases/latest">
+  <img
+    src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/refs/heads/main/badge_github.png"
+    alt="Get it on GitHub"
+    width="200" 
+  />
+</a>
 <a href='https://play.google.com/store/apps/details?id=com.danemadsen.maid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
   <img 
     src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'
