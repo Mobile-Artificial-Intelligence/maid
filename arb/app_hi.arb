@@ -45,6 +45,7 @@
     "localNetworkSearchContent": "इस सुविधा को आपके स्थानीय नेटवर्क में ओल्लामा इंस्टेंस खोजने के लिए अतिरिक्त अनुमतियों की आवश्यकता है।",
     "openAI": "ओपनएआई",
     "mistral": "मिस्ट्रल",
+    "anthropic": "एंथ्रोपिक",
     "selectAiEcosystem": "एआई इकोसिस्टम चुनें",
     "selectOverrideType": "ओवरराइड प्रकार चुनें",
     "selectRemoteModel": "रिमोट मॉडल चुनें",

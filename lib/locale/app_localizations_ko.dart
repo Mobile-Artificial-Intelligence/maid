@@ -146,6 +146,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get mistral => 'Mistral';
 
   @override
+  String get anthropic => 'Anthropic';
+
+  @override
   String get selectAiEcosystem => 'AI 생태계 선택';
 
   @override

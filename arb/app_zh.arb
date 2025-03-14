@@ -45,6 +45,7 @@
     "localNetworkSearchContent": "此功能需要额外的权限来搜索本地网络中的 Ollama 实例。",
     "openAI": "OpenAI",
     "mistral": "Mistral",
+    "anthropic": "Anthropic",
     "selectAiEcosystem": "选择 AI 生态系统",
     "selectOverrideType": "选择覆盖类型",
     "selectRemoteModel": "选择远程模型",

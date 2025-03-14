@@ -11,6 +11,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     types['ollama'] = AppLocalizations.of(context)!.ollama;
     types['open_ai'] = AppLocalizations.of(context)!.openAI;
     types['mistral'] = AppLocalizations.of(context)!.mistral;
+    types['anthropic'] = AppLocalizations.of(context)!.anthropic;
 
     return types;
   }
@@ -98,6 +99,9 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
       case 'mistral':
         return MistralController()
           ..fromMap(contextMap);
+      case 'anthropic':
+        return AnthropicController()
+          ..fromMap(contextMap);
       default:
         return LlamaCppController();
     }
@@ -127,6 +131,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
     'ollama',
     'open_ai',
     'mistral',
+    'anthropic',
   ];
 
   String? _baseUrl;
@@ -701,4 +706,86 @@ class MistralController extends RemoteArtificialIntelligenceController {
   
   @override
   bool get canGetRemoteModels => true;
+}
+
+class AnthropicController extends RemoteArtificialIntelligenceController {
+  late anthropic.AnthropicClient _anthropicClient;
+
+  @override
+  String get type => 'anthropic';
+
+  @override
+  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty && !busy;
+
+  AnthropicController({
+    super.model, 
+    super.overrides,
+    super.baseUrl, 
+    super.apiKey
+  });
+
+  @override
+  Stream<String> prompt(List<ChatMessage> messages) async* {
+    assert(_apiKey != null, 'API Key is required');
+    assert(_model != null, 'Model is required');
+    busy = true;
+
+    if (_baseUrl == null || _baseUrl!.isEmpty) {
+      _baseUrl = 'https://api.anthropic.com/v1';
+    }
+
+    _anthropicClient = anthropic.AnthropicClient(
+      apiKey: _apiKey!,
+      baseUrl: _baseUrl,
+    );
+
+    final completionStream = _anthropicClient.createMessageStream(
+      request: anthropic.CreateMessageRequest(
+        model: anthropic.Model.model(anthropic.Models.values.firstWhere((model) => model.name == _model)),
+        maxTokens: _overrides['max_tokens'] ?? 1024,
+        messages: messages.toAnthropicMessages(),
+        stopSequences: _overrides['stop_sequences'],
+        temperature: _overrides['temperature'],
+        topK: _overrides['top_k'],
+        topP: _overrides['top_p'],
+        stream: true,
+      )
+    );
+
+    try {
+      await for (final completion in completionStream) {
+        if (completion is! anthropic.ContentBlockDeltaEvent) continue;
+
+        yield completion.delta.text;
+      }
+    }
+    catch (e) {
+      // This is expected when the user presses stop
+      if (!e.toString().contains('Connection closed')) {
+        rethrow;
+      }
+    }
+    finally {
+      busy = false;
+    }
+  }
+
+  @override
+  void stop() {
+    _anthropicClient.endSession();
+    busy = false;
+  }
+
+  @override
+  Future<bool> getModelOptions() async {
+    _modelOptions = anthropic.Models.values.map((model) => model.name).toList();
+
+    return true;
+  }
+  
+  @override
+  bool get canGetRemoteModels => true;
+  
+  @override
+  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.anthropic;
 }

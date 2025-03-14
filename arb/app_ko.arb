@@ -45,6 +45,7 @@
     "localNetworkSearchContent": "이 기능을 사용하려면 Ollama 인스턴스를 검색하기 위한 추가 권한이 필요합니다.",
     "openAI": "OpenAI",
     "mistral": "Mistral",
+    "anthropic": "Anthropic",
     "selectAiEcosystem": "AI 생태계 선택",
     "selectOverrideType": "재정의 유형 선택",
     "selectRemoteModel": "원격 모델 선택",

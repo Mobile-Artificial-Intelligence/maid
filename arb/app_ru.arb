@@ -45,6 +45,7 @@
     "localNetworkSearchContent": "Эта функция требует дополнительных разрешений для поиска Ollama в вашей локальной сети.",
     "openAI": "OpenAI",
     "mistral": "Mistral",
+    "anthropic": "Anthropic",
     "selectAiEcosystem": "Выберите экосистему ИИ",
     "selectOverrideType": "Выберите тип переопределения",
     "selectRemoteModel": "Выберите удаленную модель",

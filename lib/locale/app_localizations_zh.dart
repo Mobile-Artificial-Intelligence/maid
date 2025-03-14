@@ -146,6 +146,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mistral => 'Mistral';
 
   @override
+  String get anthropic => 'Anthropic';
+
+  @override
   String get selectAiEcosystem => '选择 AI 生态系统';
 
   @override

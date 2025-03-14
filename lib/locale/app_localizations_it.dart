@@ -146,6 +146,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get mistral => 'Mistral';
 
   @override
+  String get anthropic => 'Anthropic';
+
+  @override
   String get selectAiEcosystem => 'Seleziona ecosistema IA';
 
   @override

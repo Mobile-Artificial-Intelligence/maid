@@ -45,6 +45,7 @@
     "localNetworkSearchContent": "Diese Funktion benötigt zusätzliche Berechtigungen, um Ihr lokales Netzwerk nach Ollama-Instanzen zu durchsuchen.",
     "openAI": "OpenAI",
     "mistral": "Mistral",
+    "anthropic": "Anthropic",
     "selectAiEcosystem": "KI-Ökosystem auswählen",
     "selectOverrideType": "Überschreibungstyp auswählen",
     "selectRemoteModel": "Remote-Modell auswählen",

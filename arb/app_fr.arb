@@ -45,6 +45,7 @@
     "localNetworkSearchContent": "Cette fonctionnalité nécessite des permissions supplémentaires pour rechercher des instances Ollama sur votre réseau local.",
     "openAI": "OpenAI",
     "mistral": "Mistral",
+    "anthropic": "Anthropic",
     "selectAiEcosystem": "Sélectionner l'écosystème IA",
     "selectOverrideType": "Sélectionner le type d'écrasement",
     "selectRemoteModel": "Sélectionner un modèle distant",

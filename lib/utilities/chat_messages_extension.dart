@@ -75,4 +75,27 @@ extension ChatMessagesExtension on List<ChatMessage> {
 
     return messages;
   }
+
+  List<anthropic.Message> toAnthropicMessages() {
+    final List<anthropic.Message> messages = [];
+
+    for (final ChatMessage chatMessage in this) {
+      anthropic.MessageRole role;
+
+      if (chatMessage is UserChatMessage) {
+        role = anthropic.MessageRole.user;
+      } else {
+        role = anthropic.MessageRole.assistant;
+      }
+
+      final message = anthropic.Message(
+        role: role,
+        content: anthropic.MessageContent.text(chatMessage.content),
+      );
+
+      messages.add(message);
+    }
+
+    return messages;
+  }
 }

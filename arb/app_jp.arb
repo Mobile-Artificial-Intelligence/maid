@@ -45,6 +45,7 @@
     "localNetworkSearchContent": "この機能は、ローカルネットワーク上のOllamaインスタンスを検索するための追加の権限を必要とします。",
     "openAI": "OpenAI",
     "mistral": "Mistral",
+    "anthropic": "Anthropic",
     "selectAiEcosystem": "AIエコシステムを選択",
     "selectOverrideType": "オーバーライドの種類を選択",
     "selectRemoteModel": "リモートモデルを選択",

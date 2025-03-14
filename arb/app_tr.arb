@@ -54,6 +54,7 @@
     "localNetworkSearchContent": "Bu özellik, yerel ağınızda Ollama örneklerini aramak için ek izinler gerektirir.",
     "openAI": "OpenAI",
     "mistral": "Mistral",
+    "anthropic": "Anthropic",
     "selectAiEcosystem": "Yapay Zeka Ekosistemini Seç",
     "selectOverrideType": "Geçersiz Kılma Türünü Seç",
     "selectRemoteModel": "Uzak Modeli Seç",

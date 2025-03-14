@@ -383,6 +383,12 @@ abstract class AppLocalizations {
   /// **'Mistral'**
   String get mistral;
 
+  /// No description provided for @anthropic.
+  ///
+  /// In en, this message translates to:
+  /// **'Anthropic'**
+  String get anthropic;
+
   /// No description provided for @selectAiEcosystem.
   ///
   /// In en, this message translates to:
