@@ -12,56 +12,39 @@ class Override extends StatefulWidget {
 }
 
 class OverrideState extends State<Override> {
-  OverrideType overrideType = OverrideType.string;
   TextEditingController keyController = TextEditingController();
   TextEditingController valueController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    if (widget.overrideValue is int) {
-      overrideType = OverrideType.int;
-    } 
-    else if (widget.overrideValue is double) {
-      overrideType = OverrideType.double;
-    } 
-    else if (widget.overrideValue is bool) {
-      overrideType = OverrideType.bool;
-    } 
-    else if (widget.overrideValue is Map<String, dynamic>) {
-      overrideType = OverrideType.json;
-    }
-
     keyController.text = widget.overrideKey ?? '';
     valueController.text = widget.overrideValue != null ? widget.overrideValue.toString() : '';
   }
 
   void onChange() {
     final key = keyController.text;
-    dynamic value = valueController.text;
+    final value = valueController.text;
 
     if (key.isEmpty) {
       return;
     }
 
-    switch (overrideType) {
-      case OverrideType.int:
-        value = int.tryParse(value);
-        break;
-      case OverrideType.double:
-        value = double.tryParse(value);
-        break;
-      case OverrideType.bool:
-        value = value.toLowerCase() == 'true';
-        break;
-      case OverrideType.json:
-        value = jsonDecode(value);
-        break;
-      default:
-        break;
+    final num = int.tryParse(value) ?? double.tryParse(value);
+    if (num != null) {
+      widget.onChange(widget.overrideKey ?? '', key, num);
+      return;
     }
 
-    if (value == null || (value is String && value.isEmpty)) {
+    if (value.contains(RegExp(r'^(true|false)$', caseSensitive: false))) {
+      final boolean = value.contains(RegExp(r'^true$', caseSensitive: false));
+      widget.onChange(widget.overrideKey ?? '', key, boolean);
+      return;
+    }
+
+    final map = jsonDecode(value);
+    if (map is Map<String, dynamic> || map is List<dynamic>) {
+      widget.onChange(widget.overrideKey ?? '', key, map);
       return;
     }
 
@@ -81,17 +64,8 @@ class OverrideState extends State<Override> {
         onPressed: onDelete,
       ),
       buildKeyTextField(),
-      OverrideTypeDropdown(
-        onChanged: (type) => setState(() => overrideType = type), 
-        initialValue: overrideType
-      ),
-      overrideType == OverrideType.bool ? buildBoolSwitch() : buildValueTextField(),
+      buildValueTextField(),
     ],
-  );
-
-  Widget buildBoolSwitch() => Switch(
-    value: widget.overrideValue as bool? ?? false,
-    onChanged: (value) => widget.onChange(widget.overrideKey ?? '', keyController.text, value),
   );
 
   Widget buildKeyTextField() => Expanded(

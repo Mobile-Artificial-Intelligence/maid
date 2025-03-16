@@ -32,8 +32,6 @@ part 'controllers/app_settings.dart';
 part 'controllers/artificial_intelligence_controller.dart';
 part 'controllers/chat_controller.dart';
 
-part 'types/override_type.dart';
-
 part 'utilities/chat_messages_extension.dart';
 part 'utilities/platform_extension.dart';
 part 'utilities/string_extension.dart';
@@ -50,7 +48,6 @@ part 'widgets/dialogs/sharing_dialog.dart';
 
 part 'widgets/dropdowns/artificial_intelligence_dropdown.dart';
 part 'widgets/dropdowns/locale_dropdown.dart';
-part 'widgets/dropdowns/override_type_dropdown.dart';
 part 'widgets/dropdowns/remote_model_dropdown.dart';
 part 'widgets/dropdowns/theme_mode_dropdown.dart';
 
