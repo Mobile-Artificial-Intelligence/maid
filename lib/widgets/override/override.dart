@@ -64,6 +64,7 @@ class OverrideState extends State<Override> {
         onPressed: onDelete,
       ),
       buildKeyTextField(),
+      const SizedBox(width: 8),
       buildValueTextField(),
     ],
   );
