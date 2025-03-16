@@ -172,9 +172,9 @@ class MaidState extends State<Maid> {
       GlobalCupertinoLocalizations.delegate,
     ],
     routes: {
-      '/settings': (context) => buildSettingsPage(),
-      '/chat': (context) => buildHomePage(),
-      '/about': (context) => const AboutPage(),
+      'settings': (context) => buildSettingsPage(),
+      'chat': (context) => buildHomePage(),
+      'about': (context) => const AboutPage(),
     },
     supportedLocales: AppLocalizations.supportedLocales,
     locale: widget.settings.locale,
