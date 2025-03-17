@@ -12,6 +12,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     types['open_ai'] = AppLocalizations.of(context)!.openAI;
     types['mistral'] = AppLocalizations.of(context)!.mistral;
     types['anthropic'] = AppLocalizations.of(context)!.anthropic;
+    types['google_gemini'] = AppLocalizations.of(context)!.googleGemini;
 
     return types;
   }
@@ -102,6 +103,9 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
       case 'anthropic':
         return AnthropicController()
           ..fromMap(contextMap);
+      case 'google_gemini':
+        return GoogleGeminiController()
+          ..fromMap(contextMap);
       default:
         return LlamaCppController();
     }
@@ -132,6 +136,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
     'open_ai',
     'mistral',
     'anthropic',
+    'google_gemini',
   ];
 
   String? _baseUrl;
@@ -788,4 +793,94 @@ class AnthropicController extends RemoteArtificialIntelligenceController {
   
   @override
   String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.anthropic;
+}
+////
+
+//Google gemini
+class GoogleGeminiController extends RemoteArtificialIntelligenceController {
+  late http.Client _httpClient;
+
+  @override
+  String get type => 'google_gemini';
+
+  @override
+  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && !busy;
+
+  GoogleGeminiController({
+    super.model,
+    super.overrides,
+    super.baseUrl,
+    super.apiKey,
+  }) {
+    _httpClient = http.Client();
+  }
+
+  @override
+  Stream<String> prompt(List<ChatMessage> messages) async* {
+    assert(apiKey != null, 'API Key is required');
+    assert(apiKey != null, 'API Key is required');
+    assert(model != null && model!.isNotEmpty, 'Model name is required');
+    busy = true;
+
+    final url = Uri.parse(
+      '${baseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"}?key=$apiKey',
+    );
+
+    // Construct the request body
+    final requestBody = jsonEncode({
+      "contents": messages.map((message) {
+        return {
+          "parts": [
+            {"text": message.content}
+          ]
+        };
+      }).toList(),
+    });
+
+    try {
+      // Send HTTP POST request
+      final response = await _httpClient.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: requestBody,
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        if (responseData['contents'] != null && responseData['contents'] is List) {
+          for (final content in responseData['contents']) {
+            if (content['parts'] != null && content['parts'] is List) {
+              for (final part in content['parts']) {
+                yield part['text'];
+              }
+            }
+          }
+        }
+      } else {
+        throw Exception('Google Gemini API Error: ${response.body}');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      busy = false;
+    }
+  }
+
+  @override
+  void stop() {
+    // For REST APIs, stopping may involve ensuring no further requests are made.
+    busy = false;
+  }
+
+  @override
+  Future<bool> getModelOptions() async {
+    // Google Gemini model listing
+    _modelOptions = ["gemini-2.0-flash","gemini-2.0-pro-exp-02-05","gemini-1.5-pro","imagen-3.0-generate-002","gemini-2.0-flash-lite","gemini-1.5-flash"];
+    return true;
+  }
+
+  @override
+  String getTypeLocale(BuildContext context) =>
+      AppLocalizations.of(context)!.googleGemini;
 }
