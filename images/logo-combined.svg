@@ -2,14 +2,14 @@
     <style>
         #frame {
             display: inline;
-            fill: #fcfcfc;
+            fill: #0e0e0e;
             fill-opacity: 1;
             stroke-width: .231068;
         }
         #accent-lettering {
             display: inline;
             fill: none;
-            stroke: #0069b1;
+            stroke: #18a0ff;
             stroke-width: 8.16302;
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -19,7 +19,7 @@
         #black-lettering {
             display: inline;
             fill: none;
-            stroke: #000;
+            stroke: #fff;
             stroke-width: 8.16302;
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -31,14 +31,14 @@
         @media (prefers-color-scheme: dark) {
             #frame {
                 display: inline;
-                fill: #0e0e0e;
+                fill: #fcfcfc;
                 fill-opacity: 1;
                 stroke-width: .231068;
             }
             #accent-lettering {
                 display: inline;
                 fill: none;
-                stroke: #18a0ff;
+                stroke: #0069b1;
                 stroke-width: 8.16302;
                 stroke-linecap: round;
                 stroke-linejoin: round;
@@ -48,7 +48,7 @@
             #black-lettering {
                 display: inline;
                 fill: none;
-                stroke: #fff;
+                stroke: #000;
                 stroke-width: 8.16302;
                 stroke-linecap: round;
                 stroke-linejoin: round;
