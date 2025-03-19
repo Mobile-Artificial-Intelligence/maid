@@ -40,6 +40,7 @@
     "remoteModel": "Modelo remoto",
     "refreshRemoteModels": "Actualizar modelos remotos",
     "ollama": "Ollama",
+    "googleGemini": "Google Gemini",
     "searchLocalNetwork": "Buscar en la red local",
     "localNetworkSearchTitle": "Búsqueda en la red local",
     "localNetworkSearchContent": "Esta función requiere permisos adicionales para buscar instancias de Ollama en su red local.",

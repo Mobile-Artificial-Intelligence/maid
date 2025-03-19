@@ -149,6 +149,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get anthropic => 'Anthropic';
 
   @override
+  String get googleGemini => 'Google Gemini';
+
+  @override
   String get selectAiEcosystem => 'Seleziona ecosistema IA';
 
   @override

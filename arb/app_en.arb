@@ -55,6 +55,7 @@
     "openAI": "OpenAI",
     "mistral": "Mistral",
     "anthropic": "Anthropic",
+    "googleGemini": "Google Gemini",
     "selectAiEcosystem": "Select AI Ecosystem",
     "selectOverrideType": "Select Override Type",
     "selectRemoteModel": "Select Remote Model",

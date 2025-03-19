@@ -805,6 +805,9 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
 
   @override
   bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && !busy;
+  
+  @override
+  bool get canGetRemoteModels => true;
 
   GoogleGeminiController({
     super.model,
@@ -815,61 +818,79 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
     _httpClient = http.Client();
   }
 
-  @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
-    assert(apiKey != null, 'API Key is required');
-    assert(apiKey != null, 'API Key is required');
-    assert(model != null && model!.isNotEmpty, 'Model name is required');
-    busy = true;
+@override
+Stream<String> prompt(List<ChatMessage> messages) async* {
+  assert(apiKey != null, 'API Key is required');
+  assert(model != null && model!.isNotEmpty, 'Model name is required');
+  busy = true;
 
-    final url = Uri.parse(
-      '${baseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"}?key=$apiKey',
+  final url = Uri.parse(
+    '${baseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"}?key=$apiKey',
+  );
+
+  // Construct the request body, filtering out invalid or empty messages
+  final requestBody = jsonEncode({
+    "contents": messages
+        .where((message) =>
+            message.role != 'system' && // Exclude system messages
+            message.content.isNotEmpty) 
+        .map((message) {
+      return {
+        "role": message.role, 
+        "parts": [
+          {"text": message.content}
+        ]
+      };
+    }).toList(),
+  });
+
+  try {
+    // Send HTTP POST request
+    final response = await _httpClient.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: requestBody,
     );
 
-    // Construct the request body
-    final requestBody = jsonEncode({
-      "contents": messages.map((message) {
-        return {
-          "parts": [
-            {"text": message.content}
-          ]
-        };
-      }).toList(),
-    });
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
 
-    try {
-      // Send HTTP POST request
-      final response = await _httpClient.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: requestBody,
-      );
+      // Navigate to the candidates array
+      if (responseData['candidates'] != null && responseData['candidates'] is List) {
+        for (final candidate in responseData['candidates']) {
+          if (candidate['content'] != null &&
+              candidate['content']['parts'] != null &&
+              candidate['content']['parts'] is List) {
+            for (final part in candidate['content']['parts']) {
+              if (part['text'] != null) {
 
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-
-        if (responseData['contents'] != null && responseData['contents'] is List) {
-          for (final content in responseData['contents']) {
-            if (content['parts'] != null && content['parts'] is List) {
-              for (final part in content['parts']) {
-                yield part['text'];
+                yield part['text']; // Yield the part text for display
+              } else {
+                throw Exception('Part text is null or missing!');
               }
             }
+          } else {
+            throw Exception('Content parts are null or not a list!');
           }
         }
       } else {
-        throw Exception('Google Gemini API Error: ${response.body}');
+        throw Exception('Candidates are null or not a list!');
       }
-    } catch (e) {
-      rethrow;
-    } finally {
-      busy = false;
+    } else {
+      throw Exception('Google Gemini API Error: ${response.body}');
     }
+  } catch (e) {
+    rethrow;
+  } finally {
+    busy = false;
   }
+}
+
+
 
   @override
   void stop() {
-    // For REST APIs, stopping may involve ensuring no further requests are made.
+
     busy = false;
   }
 
