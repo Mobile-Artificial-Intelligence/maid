@@ -27,7 +27,7 @@ class CodeBox extends StatelessWidget {
   Widget buildTopBar(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10),
     decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surfaceBright,
+      color: Theme.of(context).colorScheme.secondaryContainer,
     ),
     height: 25,
     child: Row(
