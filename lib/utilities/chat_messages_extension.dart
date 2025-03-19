@@ -98,4 +98,25 @@ extension ChatMessagesExtension on List<ChatMessage> {
 
     return messages;
   }
+
+  List<gemini.Content> toGeminiMessages() {
+    final List<gemini.Content> messages = [];
+
+    for (final ChatMessage chatMessage in this) {
+      final textPart = gemini.TextPart(chatMessage.content);
+
+      String role = 'system';
+
+      if (chatMessage is UserChatMessage) {
+        role = 'user';
+      } 
+      else if (chatMessage is AssistantChatMessage) {
+        role = 'model';
+      }
+
+      messages.add(gemini.Content(role, [textPart]));
+    }
+
+    return messages;
+  }
 }

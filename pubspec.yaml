@@ -43,6 +43,7 @@ dependencies:
       url: https://github.com/KasemJaffer/receive_sharing_intent
       ref: 2cea396843cd3ab1b5ec4334be4233864637874e
   web: ^1.1.1
+  google_generative_ai: ^0.4.6
 
 dev_dependencies:
   integration_test:
