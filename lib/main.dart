@@ -68,8 +68,9 @@ part 'widgets/settings/user_settings.dart';
 
 part 'widgets/text_fields/api_key_text_field.dart';
 part 'widgets/text_fields/base_url_text_field.dart';
-part 'widgets/text_fields/prompt_field.dart';
 part 'widgets/text_fields/listenable_text_field.dart';
+part 'widgets/text_fields/prompt_field.dart';
+part 'widgets/text_fields/remote_model_text_field.dart';
 
 part 'widgets/code_box.dart';
 

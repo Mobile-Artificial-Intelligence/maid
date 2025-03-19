@@ -30,28 +30,14 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
 
   Widget buildRemoteSettings(BuildContext context) => Column(
     children: [
-      buildRemoteModel(context),
+      if (aiController is OllamaController && !kIsWeb) buildLocalSearchSwitchRow(context),
       const SizedBox(height: 8),
-      if (aiController is OllamaController && !kIsWeb) buildLocalSearchSwitch(context),
+      RemoteModelTextField(aiController: aiController as RemoteArtificialIntelligenceController),
+      const SizedBox(height: 8),
       BaseUrlTextField(aiController: aiController as RemoteArtificialIntelligenceController),
       const SizedBox(height: 8),
       ApiKeyTextField(aiController: aiController as RemoteArtificialIntelligenceController),
     ]
-  );
-
-  Widget buildRemoteModel(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Text(
-        AppLocalizations.of(context)!.remoteModel,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-      ),
-      RemoteModelDropdown(
-        refreshButton: true,
-        aiController: aiController as RemoteArtificialIntelligenceController,
-      ),
-    ],
   );
 
   Widget buildModelLoaderRow(BuildContext context) => Row(
@@ -103,13 +89,6 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     aiController.model?.split('/').last ?? AppLocalizations.of(context)!.noModelLoaded,
     overflow: TextOverflow.ellipsis,
     maxLines: 1,
-  );
-
-  Widget buildLocalSearchSwitch(BuildContext context) => Column(
-    children: [
-      buildLocalSearchSwitchRow(context),
-      const SizedBox(height: 8),
-    ],
   );
 
   Widget buildLocalSearchSwitchRow(BuildContext context) => Row(
