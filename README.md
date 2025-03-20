@@ -1,5 +1,5 @@
 <div align="center" id = "top">
-  <img alt="logo" height="200px" src="images/logo.png">
+  <img alt="logo" height="200px" src="images/logo-combined.svg">
 </div>
 
 # Maid - Mobile Artificial Intelligence Distribution

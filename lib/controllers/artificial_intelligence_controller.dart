@@ -159,6 +159,16 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
     notifyListeners();
   }
 
+  bool _customModel;
+
+  bool get customModel => _customModel;
+
+  set customModel(bool newCustomModel) {
+    _customModel = newCustomModel;
+    save();
+    notifyListeners();
+  }
+
   String get connectionHash => (_baseUrl ?? '').hash + (_apiKey ?? '').hash;
 
   bool get canGetRemoteModels;
@@ -171,8 +181,9 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
     super.model, 
     super.overrides,
     String? baseUrl, 
-    String? apiKey
-  }) : _baseUrl = baseUrl, _apiKey = apiKey;
+    String? apiKey,
+    bool customModel = false
+  }) : _baseUrl = baseUrl, _apiKey = apiKey, _customModel = customModel;
 
   @override
   Map<String, dynamic> toMap() => {
@@ -180,6 +191,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
     'overrides': _overrides,
     'base_url': _baseUrl,
     'api_key': _apiKey,
+    'custom_model': _customModel,
   };
 
   @override
@@ -188,6 +200,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
     _overrides = map['overrides'] ?? {};
     _baseUrl = map['base_url'];
     _apiKey = map['api_key'];
+    _customModel = map['custom_model'] ?? false;
     save();
     notifyListeners();
   }
@@ -200,6 +213,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
     _overrides = {};
     _baseUrl = null;
     _apiKey = null;
+    _customModel = false;
     notifyListeners();
 
     final prefs = await SharedPreferences.getInstance();

@@ -277,18 +277,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: "8d938fd5c11dc81bf1acd4f7f0486c683fe9e79a0b13419e27730f9ce4d8a25b"
+      sha256: c904b4ab56d53385563c7c39d8e9fa9af086f91495dfc48717ad84a42c3cf204
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.1"
-  fixnum:
-    dependency: transitive
-    description:
-      name: fixnum
-      sha256: b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
+    version: "8.1.7"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -464,10 +456,10 @@ packages:
     dependency: "direct main"
     description:
       name: lcpp
-      sha256: c5579d72e2d3be619403ae458273d6f75710aa907ca605c21fa20ea29f668d82
+      sha256: "13ea3a383ae8098477bc06bad01db726cb12c9473d593352581b8a526112aef7"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.3"
   leak_tracker:
     dependency: transitive
     description:

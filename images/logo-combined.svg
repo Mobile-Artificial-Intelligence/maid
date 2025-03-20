@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svg1" width="108mm" height="408.189" version="1.1" viewBox="0 0 108 108" xml:space="preserve">
+    <style>
+        #frame {
+            display: inline;
+            fill: #0e0e0e;
+            fill-opacity: 1;
+            stroke-width: .231068;
+        }
+        #accent-lettering {
+            display: inline;
+            fill: none;
+            stroke: #18a0ff;
+            stroke-width: 8.16302;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: none;
+            stroke-opacity: 1;
+        }
+        #black-lettering {
+            display: inline;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 8.16302;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: none;
+            stroke-opacity: 1;
+        }
+      
+
+        @media (prefers-color-scheme: dark) {
+            #frame {
+                display: inline;
+                fill: #fcfcfc;
+                fill-opacity: 1;
+                stroke-width: .231068;
+            }
+            #accent-lettering {
+                display: inline;
+                fill: none;
+                stroke: #0069b1;
+                stroke-width: 8.16302;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-dasharray: none;
+                stroke-opacity: 1;
+            }
+            #black-lettering {
+                display: inline;
+                fill: none;
+                stroke: #000;
+                stroke-width: 8.16302;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-dasharray: none;
+                stroke-opacity: 1;
+            }
+        }
+    </style>
+    <g id="layer1" transform="translate(-33.596461,-77.096454)">
+        <path id="frame" width="142.807" height="142.807" x="33.596" y="65.727" d="m 53.605972,77.096454 h 67.980978 a 20.009512,20.009512 0 0 1 20.00951,20.009512 v 67.980974 a 20.009512,20.009512 0 0 1 -20.00951,20.00951 H 53.605972 A 20.009512,20.009512 0 0 1 33.596461,165.08694 V 97.105966 A 20.009512,20.009512 0 0 1 53.605972,77.096454 Z"/>
+        <path id="accent-lettering" d="M 89.617574,159.77455 111.55955,118.3974 m 1e-5,-15.97934 v 0"/>
+        <path id="black-lettering" d="m 57.340998,159.77455 17.272038,-57.35729 15.004538,57.35729 M 111.55955,118.3974 v 41.37715"/>
+    </g>
+</svg>
