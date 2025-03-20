@@ -97,6 +97,7 @@ class Maid extends StatefulWidget {
   State<Maid> createState() => MaidState();
 }
 
+
 class MaidState extends State<Maid> {
   ArtificialIntelligenceController aiController = LlamaCppController();
 
@@ -130,7 +131,7 @@ class MaidState extends State<Maid> {
     final appBarTheme = AppBarTheme(
       elevation: 0.0,
       backgroundColor: colorScheme.surface,
-      surfaceTintColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent, 
     );
 
     final inputDecorationTheme = InputDecorationTheme(
