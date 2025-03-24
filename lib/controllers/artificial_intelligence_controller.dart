@@ -267,6 +267,10 @@ class LlamaCppController extends ArtificialIntelligenceController {
   }
 
   void pickModel() async {
+    if (TargetPlatformExtension.isMobile && _model != null && File(_model!).existsSync()) {
+      await File(_model!).delete();
+    }
+
     _model = null;
     
     final result = await FilePicker.platform.pickFiles(
