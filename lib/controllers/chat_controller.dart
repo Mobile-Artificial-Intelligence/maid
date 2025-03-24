@@ -53,6 +53,7 @@ class ChatController extends ChangeNotifier {
 
   void importChat() async {
     final inputFile = await FilePicker.platform.pickFiles(
+      dialogTitle: 'Import Chat',
       type: FileType.custom,
       allowedExtensions: ['json']
     );

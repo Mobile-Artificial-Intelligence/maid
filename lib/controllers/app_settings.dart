@@ -34,7 +34,7 @@ class AppSettings extends ChangeNotifier {
 
    void loadUserImage() async {
     final result = await FilePicker.platform.pickFiles(
-      dialogTitle: "Load Model File",
+      dialogTitle: "Pick User Image",
       type: FileType.image,
       allowMultiple: false,
       allowCompression: false
@@ -137,7 +137,7 @@ class AppSettings extends ChangeNotifier {
 
   void loadAssistantImage() async {
     final result = await FilePicker.platform.pickFiles(
-      dialogTitle: "Load Model File",
+      dialogTitle: "Pick Assistant Image",
       type: FileType.any,
       allowMultiple: false,
       allowCompression: false
