@@ -164,18 +164,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get selectThemeMode => 'Выберите тему приложения';
 
   @override
-  String get overrideTypeString => 'Строка';
-
-  @override
-  String get overrideTypeInteger => 'Целое число';
-
-  @override
-  String get overrideTypeDouble => 'Дробное число';
-
-  @override
-  String get overrideTypeBoolean => 'Логическое значение';
-
-  @override
   String get inferanceOverrides => 'Переопределения инференса';
 
   @override

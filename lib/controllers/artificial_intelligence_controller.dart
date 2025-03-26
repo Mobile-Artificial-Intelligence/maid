@@ -277,7 +277,7 @@ class LlamaCppController extends ArtificialIntelligenceController {
       onFileLoading: (status) {
         loading = status == FilePickerStatus.picking;
         super.notifyListeners();
-      } 
+      }
     );
 
     loading = false;

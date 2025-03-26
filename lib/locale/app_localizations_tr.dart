@@ -164,18 +164,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get selectThemeMode => 'Uygulama Tema Modunu Seç';
 
   @override
-  String get overrideTypeString => 'Dize';
-
-  @override
-  String get overrideTypeInteger => 'Tamsayı';
-
-  @override
-  String get overrideTypeDouble => 'Ondalık';
-
-  @override
-  String get overrideTypeBoolean => 'Bool';
-
-  @override
   String get inferanceOverrides => 'Çıkarım Geçersiz Kılmaları';
 
   @override

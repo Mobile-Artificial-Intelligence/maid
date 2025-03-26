@@ -30,7 +30,7 @@ class SettingsPage extends StatelessWidget {
       ArtificialIntelligenceDropdown(aiController: aiController),
       ArtificialIntelligenceSettings(aiController: aiController),
       Divider(endIndent: 0, indent: 0, height: 32),
-      OverrideView(aiController: aiController),
+      ParameterView(aiController: aiController),
       Divider(endIndent: 0, indent: 0, height: 32),
       UserSettings(settings: settings),
       Divider(endIndent: 0, indent: 0, height: 32),

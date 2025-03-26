@@ -164,18 +164,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectThemeMode => '选择应用主题模式';
 
   @override
-  String get overrideTypeString => '字符串';
-
-  @override
-  String get overrideTypeInteger => '整数';
-
-  @override
-  String get overrideTypeDouble => '双精度数';
-
-  @override
-  String get overrideTypeBoolean => '布尔值';
-
-  @override
   String get inferanceOverrides => '推理覆盖';
 
   @override

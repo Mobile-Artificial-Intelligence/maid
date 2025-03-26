@@ -164,18 +164,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectThemeMode => 'Seleziona modalità tema dell\'app';
 
   @override
-  String get overrideTypeString => 'Stringa';
-
-  @override
-  String get overrideTypeInteger => 'Intero';
-
-  @override
-  String get overrideTypeDouble => 'Decimale';
-
-  @override
-  String get overrideTypeBoolean => 'Booleano';
-
-  @override
   String get inferanceOverrides => 'Override di inferenza';
 
   @override

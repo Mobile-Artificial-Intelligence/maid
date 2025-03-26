@@ -164,18 +164,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get selectThemeMode => 'App-Designmodus auswählen';
 
   @override
-  String get overrideTypeString => 'Zeichenkette';
-
-  @override
-  String get overrideTypeInteger => 'Ganzzahl';
-
-  @override
-  String get overrideTypeDouble => 'Dezimalzahl';
-
-  @override
-  String get overrideTypeBoolean => 'Boolesch';
-
-  @override
   String get inferanceOverrides => 'Inferenz-Überschreibungen';
 
   @override

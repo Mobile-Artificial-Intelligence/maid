@@ -164,18 +164,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selectThemeMode => 'Sélectionner le mode du thème';
 
   @override
-  String get overrideTypeString => 'Chaîne';
-
-  @override
-  String get overrideTypeInteger => 'Entier';
-
-  @override
-  String get overrideTypeDouble => 'Double';
-
-  @override
-  String get overrideTypeBoolean => 'Booléen';
-
-  @override
   String get inferanceOverrides => 'Remplacements d\'inférence';
 
   @override

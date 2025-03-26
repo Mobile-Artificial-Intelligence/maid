@@ -54,8 +54,8 @@ part 'widgets/dropdowns/theme_mode_dropdown.dart';
 part 'widgets/message/message_view.dart';
 part 'widgets/message/message.dart';
 
-part 'widgets/override/override_view.dart';
-part 'widgets/override/override.dart';
+part 'widgets/parameter/parameter_view.dart';
+part 'widgets/parameter/parameter.dart';
 
 part 'widgets/pages/about_page.dart';
 part 'widgets/pages/home_page.dart';

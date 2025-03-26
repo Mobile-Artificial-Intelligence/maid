@@ -164,18 +164,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get selectThemeMode => '앱 테마 모드 선택';
 
   @override
-  String get overrideTypeString => '문자열';
-
-  @override
-  String get overrideTypeInteger => '정수';
-
-  @override
-  String get overrideTypeDouble => '더블';
-
-  @override
-  String get overrideTypeBoolean => '불리언';
-
-  @override
   String get inferanceOverrides => '추론 재정의';
 
   @override

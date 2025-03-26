@@ -419,30 +419,6 @@ abstract class AppLocalizations {
   /// **'Select App Theme Mode'**
   String get selectThemeMode;
 
-  /// No description provided for @overrideTypeString.
-  ///
-  /// In en, this message translates to:
-  /// **'String'**
-  String get overrideTypeString;
-
-  /// No description provided for @overrideTypeInteger.
-  ///
-  /// In en, this message translates to:
-  /// **'Integer'**
-  String get overrideTypeInteger;
-
-  /// No description provided for @overrideTypeDouble.
-  ///
-  /// In en, this message translates to:
-  /// **'Double'**
-  String get overrideTypeDouble;
-
-  /// No description provided for @overrideTypeBoolean.
-  ///
-  /// In en, this message translates to:
-  /// **'Bool'**
-  String get overrideTypeBoolean;
-
   /// No description provided for @inferanceOverrides.
   ///
   /// In en, this message translates to:

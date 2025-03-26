@@ -164,18 +164,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get selectThemeMode => 'アプリのテーマモードを選択';
 
   @override
-  String get overrideTypeString => '文字列';
-
-  @override
-  String get overrideTypeInteger => '整数';
-
-  @override
-  String get overrideTypeDouble => '小数';
-
-  @override
-  String get overrideTypeBoolean => 'ブール';
-
-  @override
   String get inferanceOverrides => '推論オーバーライド';
 
   @override

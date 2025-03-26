@@ -164,18 +164,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get selectThemeMode => 'ऐप थीम मोड चुनें';
 
   @override
-  String get overrideTypeString => 'स्ट्रिंग';
-
-  @override
-  String get overrideTypeInteger => 'पूर्णांक';
-
-  @override
-  String get overrideTypeDouble => 'डबल';
-
-  @override
-  String get overrideTypeBoolean => 'बूल';
-
-  @override
   String get inferanceOverrides => 'अनुमान ओवरराइड्स';
 
   @override

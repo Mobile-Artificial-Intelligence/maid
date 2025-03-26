@@ -1,18 +1,18 @@
 part of 'package:maid/main.dart';
 
-class OverrideView extends StatefulWidget {
+class ParameterView extends StatefulWidget {
   final ArtificialIntelligenceController aiController;
   
-  const OverrideView({
+  const ParameterView({
     super.key, 
     required this.aiController
   });
 
   @override
-  State<OverrideView> createState() => OverrideViewState();
+  State<ParameterView> createState() => ParameterViewState();
 }
 
-class OverrideViewState extends State<OverrideView> {
+class ParameterViewState extends State<ParameterView> {
   Timer? timer;
   Map<String,dynamic> overrides = {};
   int overrideCount = 0;
@@ -72,7 +72,7 @@ class OverrideViewState extends State<OverrideView> {
     ];
 
     for (int i = 0; i < overrideCount; i++) {
-      children.add(Override(
+      children.add(Parameter(
         overrideKey: overrides.keys.length > i ? overrides.keys.elementAt(i) : null,
         overrideValue: overrides.values.length > i ? overrides.values.elementAt(i) : null,
         onChange: onChange,
