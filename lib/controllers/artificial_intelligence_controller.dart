@@ -12,7 +12,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     types['open_ai'] = AppLocalizations.of(context)!.openAI;
     types['mistral'] = AppLocalizations.of(context)!.mistral;
     types['anthropic'] = AppLocalizations.of(context)!.anthropic;
-    types['google_gemini'] = AppLocalizations.of(context)!.googleGemini;
+    types['google_gemini'] = AppLocalizations.of(context)!.gemini;
 
     return types;
   }
@@ -917,5 +917,5 @@ Stream<String> prompt(List<ChatMessage> messages) async* {
 
   @override
   String getTypeLocale(BuildContext context) =>
-      AppLocalizations.of(context)!.googleGemini;
+      AppLocalizations.of(context)!.gemini;
 }

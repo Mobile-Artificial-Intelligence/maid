@@ -46,6 +46,7 @@
     "openAI": "OpenAI",
     "mistral": "Mistral",
     "anthropic": "Anthropic",
+    "gemini": "Gemini",
     "selectAiEcosystem": "Выберите экосистему ИИ",
     "selectOverrideType": "Выберите тип переопределения",
     "selectRemoteModel": "Выберите удаленную модель",

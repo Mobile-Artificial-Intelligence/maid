@@ -149,7 +149,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get anthropic => 'Anthropic';
 
   @override
-  String get googleGemini => 'Google Gemini';
+  String get gemini => 'Gemini';
 
   @override
   String get selectAiEcosystem => 'Yapay Zeka Ekosistemini Seç';

@@ -46,6 +46,7 @@
     "openAI": "ओपनएआई",
     "mistral": "मिस्ट्रल",
     "anthropic": "एंथ्रोपिक",
+    "gemini": "जेमिनी",
     "selectAiEcosystem": "एआई इकोसिस्टम चुनें",
     "selectOverrideType": "ओवरराइड प्रकार चुनें",
     "selectRemoteModel": "रिमोट मॉडल चुनें",

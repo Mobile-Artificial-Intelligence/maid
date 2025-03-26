@@ -46,6 +46,7 @@
     "openAI": "OpenAI",
     "mistral": "Mistral",
     "anthropic": "Anthropic",
+    "gemini": "Gemini",
     "selectAiEcosystem": "选择 AI 生态系统",
     "selectOverrideType": "选择覆盖类型",
     "selectRemoteModel": "选择远程模型",

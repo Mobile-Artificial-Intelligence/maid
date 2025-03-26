@@ -149,7 +149,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get anthropic => 'Anthropic';
 
   @override
-  String get googleGemini => 'Google Gemini';
+  String get gemini => 'Gemini';
 
   @override
   String get selectAiEcosystem => '选择 AI 生态系统';

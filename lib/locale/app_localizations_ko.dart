@@ -149,7 +149,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get anthropic => 'Anthropic';
 
   @override
-  String get googleGemini => 'Google Gemini';
+  String get gemini => 'Gemini';
 
   @override
   String get selectAiEcosystem => 'AI 생태계 선택';

@@ -149,7 +149,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get anthropic => 'एंथ्रोपिक';
 
   @override
-  String get googleGemini => 'Google Gemini';
+  String get gemini => 'जेमिनी';
 
   @override
   String get selectAiEcosystem => 'एआई इकोसिस्टम चुनें';

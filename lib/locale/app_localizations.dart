@@ -389,11 +389,11 @@ abstract class AppLocalizations {
   /// **'Anthropic'**
   String get anthropic;
 
-  /// No description provided for @googleGemini.
+  /// No description provided for @gemini.
   ///
   /// In en, this message translates to:
-  /// **'Google Gemini'**
-  String get googleGemini;
+  /// **'Gemini'**
+  String get gemini;
 
   /// No description provided for @selectAiEcosystem.
   ///
