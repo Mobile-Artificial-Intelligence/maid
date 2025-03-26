@@ -63,7 +63,7 @@ class ParameterViewState extends State<ParameterView> {
   Widget build(BuildContext context) {
     List<Widget> children = [
       Text(
-        AppLocalizations.of(context)!.inferanceOverrides,
+        AppLocalizations.of(context)!.modelParameters,
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
@@ -93,11 +93,11 @@ class ParameterViewState extends State<ParameterView> {
     children: [
       ElevatedButton(
         onPressed: () => setState(() => overrideCount += 1), 
-        child: Text(AppLocalizations.of(context)!.addOverride)
+        child: Text(AppLocalizations.of(context)!.addParameter)
       ),
       ElevatedButton(
         onPressed: save, 
-        child: Text(AppLocalizations.of(context)!.saveOverride)
+        child: Text(AppLocalizations.of(context)!.saveParameters)
       ),
     ]
   ); 

@@ -152,28 +152,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get gemini => 'Gemini';
 
   @override
-  String get selectAiEcosystem => 'AI 생태계 선택';
+  String get modelParameters => '모델 매개변수';
 
   @override
-  String get selectOverrideType => '재정의 유형 선택';
+  String get addParameter => '매개변수 추가';
+
+  @override
+  String get removeParameter => '매개변수 제거';
+
+  @override
+  String get saveParameters => '매개변수 저장';
+
+  @override
+  String get importParameters => '매개변수 가져오기';
+
+  @override
+  String get exportParameters => '매개변수 내보내기';
+
+  @override
+  String get selectAiEcosystem => 'AI 생태계 선택';
 
   @override
   String get selectRemoteModel => '원격 모델 선택';
 
   @override
   String get selectThemeMode => '앱 테마 모드 선택';
-
-  @override
-  String get inferanceOverrides => '추론 재정의';
-
-  @override
-  String get addOverride => '재정의 추가';
-
-  @override
-  String get saveOverride => '재정의 저장';
-
-  @override
-  String get deleteOverride => '재정의 삭제';
 
   @override
   String get themeMode => '테마 모드';

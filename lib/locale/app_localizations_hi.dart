@@ -152,28 +152,31 @@ class AppLocalizationsHi extends AppLocalizations {
   String get gemini => 'जेमिनी';
 
   @override
-  String get selectAiEcosystem => 'एआई इकोसिस्टम चुनें';
+  String get modelParameters => 'मॉडल पैरामीटर';
 
   @override
-  String get selectOverrideType => 'ओवरराइड प्रकार चुनें';
+  String get addParameter => 'पैरामीटर जोड़ें';
+
+  @override
+  String get removeParameter => 'पैरामीटर हटाएं';
+
+  @override
+  String get saveParameters => 'पैरामीटर सहेजें';
+
+  @override
+  String get importParameters => 'पैरामीटर आयात करें';
+
+  @override
+  String get exportParameters => 'पैरामीटर निर्यात करें';
+
+  @override
+  String get selectAiEcosystem => 'एआई इकोसिस्टम चुनें';
 
   @override
   String get selectRemoteModel => 'रिमोट मॉडल चुनें';
 
   @override
   String get selectThemeMode => 'ऐप थीम मोड चुनें';
-
-  @override
-  String get inferanceOverrides => 'अनुमान ओवरराइड्स';
-
-  @override
-  String get addOverride => 'ओवरराइड जोड़ें';
-
-  @override
-  String get saveOverride => 'ओवरराइड सहेजें';
-
-  @override
-  String get deleteOverride => 'ओवरराइड हटाएं';
 
   @override
   String get themeMode => 'थीम मोड';

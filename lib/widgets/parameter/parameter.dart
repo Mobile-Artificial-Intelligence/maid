@@ -62,7 +62,7 @@ class ParameterState extends State<Parameter> {
       const SizedBox(width: 8),
       buildValueTextField(),
       IconButton(
-        tooltip: AppLocalizations.of(context)!.deleteOverride,
+        tooltip: AppLocalizations.of(context)!.removeParameter,
         icon: const Icon(Icons.delete),
         onPressed: onDelete,
       ),

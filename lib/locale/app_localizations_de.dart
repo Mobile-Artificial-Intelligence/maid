@@ -152,28 +152,31 @@ class AppLocalizationsDe extends AppLocalizations {
   String get gemini => 'Gemini';
 
   @override
-  String get selectAiEcosystem => 'KI-Ökosystem auswählen';
+  String get modelParameters => 'Modellparameter';
 
   @override
-  String get selectOverrideType => 'Überschreibungstyp auswählen';
+  String get addParameter => 'Parameter hinzufügen';
+
+  @override
+  String get removeParameter => 'Parameter entfernen';
+
+  @override
+  String get saveParameters => 'Parameter speichern';
+
+  @override
+  String get importParameters => 'Parameter importieren';
+
+  @override
+  String get exportParameters => 'Parameter exportieren';
+
+  @override
+  String get selectAiEcosystem => 'KI-Ökosystem auswählen';
 
   @override
   String get selectRemoteModel => 'Remote-Modell auswählen';
 
   @override
   String get selectThemeMode => 'App-Designmodus auswählen';
-
-  @override
-  String get inferanceOverrides => 'Inferenz-Überschreibungen';
-
-  @override
-  String get addOverride => 'Überschreibung hinzufügen';
-
-  @override
-  String get saveOverride => 'Überschreibung speichern';
-
-  @override
-  String get deleteOverride => 'Überschreibung löschen';
 
   @override
   String get themeMode => 'Designmodus';

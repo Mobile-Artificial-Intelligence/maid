@@ -152,28 +152,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gemini => 'Gemini';
 
   @override
-  String get selectAiEcosystem => 'Select AI Ecosystem';
+  String get modelParameters => 'Model Parameters';
 
   @override
-  String get selectOverrideType => 'Select Override Type';
+  String get addParameter => 'Add Parameter';
+
+  @override
+  String get removeParameter => 'Remove Parameter';
+
+  @override
+  String get saveParameters => 'Save Parameters';
+
+  @override
+  String get importParameters => 'Import Parameters';
+
+  @override
+  String get exportParameters => 'Export Parameters';
+
+  @override
+  String get selectAiEcosystem => 'Select AI Ecosystem';
 
   @override
   String get selectRemoteModel => 'Select Remote Model';
 
   @override
   String get selectThemeMode => 'Select App Theme Mode';
-
-  @override
-  String get inferanceOverrides => 'Inference Overrides';
-
-  @override
-  String get addOverride => 'Add Override';
-
-  @override
-  String get saveOverride => 'Save Override';
-
-  @override
-  String get deleteOverride => 'Delete Override';
 
   @override
   String get themeMode => 'Theme Mode';

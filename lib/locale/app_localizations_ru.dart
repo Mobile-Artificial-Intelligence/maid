@@ -152,28 +152,31 @@ class AppLocalizationsRu extends AppLocalizations {
   String get gemini => 'Gemini';
 
   @override
-  String get selectAiEcosystem => 'Выберите экосистему ИИ';
+  String get modelParameters => 'Параметры модели';
 
   @override
-  String get selectOverrideType => 'Выберите тип переопределения';
+  String get addParameter => 'Добавить параметр';
+
+  @override
+  String get removeParameter => 'Удалить параметр';
+
+  @override
+  String get saveParameters => 'Сохранить параметры';
+
+  @override
+  String get importParameters => 'Импорт параметров';
+
+  @override
+  String get exportParameters => 'Экспорт параметров';
+
+  @override
+  String get selectAiEcosystem => 'Выберите экосистему ИИ';
 
   @override
   String get selectRemoteModel => 'Выберите удаленную модель';
 
   @override
   String get selectThemeMode => 'Выберите тему приложения';
-
-  @override
-  String get inferanceOverrides => 'Переопределения инференса';
-
-  @override
-  String get addOverride => 'Добавить переопределение';
-
-  @override
-  String get saveOverride => 'Сохранить переопределение';
-
-  @override
-  String get deleteOverride => 'Удалить переопределение';
 
   @override
   String get themeMode => 'Тема';

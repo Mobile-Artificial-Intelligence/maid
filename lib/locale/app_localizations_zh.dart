@@ -152,28 +152,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get gemini => 'Gemini';
 
   @override
-  String get selectAiEcosystem => '选择 AI 生态系统';
+  String get modelParameters => '模型参数';
 
   @override
-  String get selectOverrideType => '选择覆盖类型';
+  String get addParameter => '添加参数';
+
+  @override
+  String get removeParameter => '删除参数';
+
+  @override
+  String get saveParameters => '保存参数';
+
+  @override
+  String get importParameters => '导入参数';
+
+  @override
+  String get exportParameters => '导出参数';
+
+  @override
+  String get selectAiEcosystem => '选择 AI 生态系统';
 
   @override
   String get selectRemoteModel => '选择远程模型';
 
   @override
   String get selectThemeMode => '选择应用主题模式';
-
-  @override
-  String get inferanceOverrides => '推理覆盖';
-
-  @override
-  String get addOverride => '添加覆盖';
-
-  @override
-  String get saveOverride => '保存覆盖';
-
-  @override
-  String get deleteOverride => '删除覆盖';
 
   @override
   String get themeMode => '主题模式';
