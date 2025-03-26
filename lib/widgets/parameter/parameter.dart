@@ -26,7 +26,7 @@ class ParameterState extends State<Parameter> {
     final key = keyController.text;
     final value = valueController.text;
 
-    if (key.isEmpty) {
+    if (key.isEmpty || value.isEmpty) {
       return;
     }
 

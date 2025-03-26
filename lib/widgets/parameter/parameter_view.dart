@@ -14,14 +14,14 @@ class ParameterView extends StatefulWidget {
 
 class ParameterViewState extends State<ParameterView> {
   Timer? timer;
-  Map<String,dynamic> overrides = {};
-  int overrideCount = 0;
+  Map<String,dynamic> parameters = {};
+  int count = 0;
 
   @override
   void initState() {
     super.initState();
-    overrides.addAll(widget.aiController.overrides);
-    overrideCount = overrides.length;
+    parameters.addAll(widget.aiController.overrides);
+    count = parameters.length;
     timer = Timer.periodic(const Duration(seconds: 2), (_) => save());
   }
 
@@ -32,11 +32,46 @@ class ParameterViewState extends State<ParameterView> {
   }
 
   void save() {
-    if (widget.aiController.overrides.length == overrides.length && widget.aiController.overrides.entries.every((entry) => overrides[entry.key] == entry.value)) {
+    if (widget.aiController.overrides.length == parameters.length && widget.aiController.overrides.entries.every((entry) => parameters[entry.key] == entry.value)) {
       return;
     }
 
-    widget.aiController.overrides = Map.from(overrides);
+    widget.aiController.overrides = Map.from(parameters);
+  }
+
+  void import() async {
+    final inputFile = await FilePicker.platform.pickFiles(
+      dialogTitle: 'Import Parameters',
+      type: FileType.custom,
+      allowedExtensions: ['json']
+    );
+
+    if (inputFile != null) {
+      final bytes = inputFile.files.single.bytes ?? File(inputFile.files.single.path!).readAsBytesSync();
+      final parameterString = utf8.decode(bytes);
+
+      parameters = jsonDecode(parameterString);
+      count = parameters.length;
+      
+      setState(() {});
+      save();
+    }
+  }
+
+  void export() async {
+    final parameterString = jsonEncode(parameters);
+
+    final outputFile = await FilePicker.platform.saveFile(
+      dialogTitle: 'Export Parameters',
+      fileName: 'parameters.json',
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+      bytes: utf8.encode(parameterString)
+    );
+
+    if (outputFile != null && !File(outputFile).existsSync()) {
+      await File(outputFile).writeAsString(parameterString);
+    }
   }
 
   void onChange(String oldKey, [String? newKey, dynamic newValue]) {
@@ -45,15 +80,15 @@ class ParameterViewState extends State<ParameterView> {
     timer = Timer.periodic(const Duration(seconds: 2), (_) => save());
 
     if (newKey == null) {
-      overrideCount -= 1;
+      count -= 1;
     }
 
     if (oldKey.isNotEmpty) {
-      overrides.remove(oldKey);
+      parameters.remove(oldKey);
     }
 
     if (newKey != null && newKey.isNotEmpty && newValue != null) {
-      overrides[newKey] = newValue;
+      parameters[newKey] = newValue;
     }
 
     setState(() {});
@@ -71,10 +106,10 @@ class ParameterViewState extends State<ParameterView> {
       const SizedBox(height: 8),
     ];
 
-    for (int i = 0; i < overrideCount; i++) {
+    for (int i = 0; i < count; i++) {
       children.add(Parameter(
-        overrideKey: overrides.keys.length > i ? overrides.keys.elementAt(i) : null,
-        overrideValue: overrides.values.length > i ? overrides.values.elementAt(i) : null,
+        overrideKey: parameters.keys.length > i ? parameters.keys.elementAt(i) : null,
+        overrideValue: parameters.values.length > i ? parameters.values.elementAt(i) : null,
         onChange: onChange,
       ));
     }
@@ -92,12 +127,20 @@ class ParameterViewState extends State<ParameterView> {
     runSpacing: 16,
     children: [
       ElevatedButton(
-        onPressed: () => setState(() => overrideCount += 1), 
+        onPressed: () => setState(() => count += 1), 
         child: Text(AppLocalizations.of(context)!.addParameter)
       ),
       ElevatedButton(
         onPressed: save, 
         child: Text(AppLocalizations.of(context)!.saveParameters)
+      ),
+      ElevatedButton(
+        onPressed: import, 
+        child: Text(AppLocalizations.of(context)!.importParameters)
+      ),
+      ElevatedButton(
+        onPressed: export, 
+        child: Text(AppLocalizations.of(context)!.exportParameters)
       ),
     ]
   ); 
