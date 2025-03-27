@@ -134,3 +134,8 @@ app.*.symbols
 .vscode/
 docs/.~lock.API-Compatability.ods#
 dmg/maid_tmp.dmg
+docs/manual.aux
+docs/manual.fdb_latexmk
+docs/manual.out
+docs/manual.fls
+docs/manual.toc
