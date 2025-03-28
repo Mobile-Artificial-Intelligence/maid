@@ -7,6 +7,10 @@ String _generateID([int length = 32]) {
 }
 
 class Chat {
+  static List<Chat> instances = [];
+
+  static Chat get current => instances.first;
+
   final String id;
 
   String _title;
@@ -70,7 +74,9 @@ class Chat {
        _createdAt = createdAt ?? DateTime.now(),
        _updatedAt = updatedAt ?? DateTime.now(),
        _currentNode = currentNode,
-       _properties = properties ?? {};
+       _properties = properties ?? {} {
+        instances.insert(0, this);
+       }
 
   factory Chat.fromMap(Map<String, dynamic> map) {
     final String id = map['id'];
@@ -115,5 +121,121 @@ class Chat {
     }
 
     return mappings[currentNode]!.history.reversed.toList();
+  }
+
+  List<ollama.Message> toOllamaMessages() {
+    final List<ollama.Message> messages = [];
+
+    for (final chatNode in chain) {
+      ollama.MessageRole role;
+      if (chatNode is UserChatNode) {
+        role = ollama.MessageRole.user;
+      } else if (chatNode is AssistantChatNode) {
+        role = ollama.MessageRole.assistant;
+      } else {
+        role = ollama.MessageRole.system;
+      }
+
+      final ollama.Message message = ollama.Message(
+        role: role,
+        content: chatNode.content,
+      );
+
+      messages.add(message);
+    }
+
+    return messages;
+  }
+
+  List<open_ai.ChatCompletionMessage> toOpenAiMessages() {
+    final List<open_ai.ChatCompletionMessage> messages = [];
+
+    for (final chatNode in chain) {
+      if (chatNode is UserChatNode) {
+        final content = open_ai.ChatCompletionUserMessageContent.string(chatNode.content);
+
+        final message = open_ai.ChatCompletionMessage.user(content: content);
+
+        messages.add(message);
+      }
+      else if (chatNode is AssistantChatNode) {
+        final message = open_ai.ChatCompletionMessage.assistant(content: chatNode.content);
+
+        messages.add(message);
+      }
+      else {
+        final message = open_ai.ChatCompletionMessage.system(content: chatNode.content);
+
+        messages.add(message);
+      }
+    }
+
+    return messages;
+  }
+
+  List<mistral.ChatCompletionMessage> toMistralMessages() {
+    final List<mistral.ChatCompletionMessage> messages = [];
+
+    for (final chatNode in chain) {
+      mistral.ChatCompletionMessageRole role;
+
+      if (chatNode is UserChatNode) {
+        role = mistral.ChatCompletionMessageRole.user;
+      } else if (chatNode is AssistantChatNode) {
+        role = mistral.ChatCompletionMessageRole.assistant;
+      } else {
+        role = mistral.ChatCompletionMessageRole.system;
+      }
+
+      final message = mistral.ChatCompletionMessage(
+        role: role,
+        content: chatNode.content,
+      );
+
+      messages.add(message);
+    }
+
+    return messages;
+  }
+
+  List<anthropic.Message> toAnthropicMessages() {
+    final List<anthropic.Message> messages = [];
+
+    for (final chatNode in chain) {
+      anthropic.MessageRole role;
+
+      if (chatNode is UserChatNode) {
+        role = anthropic.MessageRole.user;
+      } else {
+        role = anthropic.MessageRole.assistant;
+      }
+
+      final message = anthropic.Message(
+        role: role,
+        content: anthropic.MessageContent.text(chatNode.content),
+      );
+
+      messages.add(message);
+    }
+
+    return messages;
+  }
+
+  List<llama.ChatMessage> toLlamaMessages() {
+    final List<llama.ChatMessage> messages = [];
+
+    for (final chatNode in chain) {
+      if (chatNode is UserChatNode) {
+        messages.add(llama.UserChatMessage(chatNode.content));
+      }
+      else if (chatNode is AssistantChatNode) {
+        messages.add(llama.AssistantChatMessage(chatNode.content));
+      }
+      else {
+        messages.add(llama.SystemChatMessage(chatNode.content));
+      }
+    }
+
+    return messages;
   }
 }

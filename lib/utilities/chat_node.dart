@@ -1,17 +1,14 @@
 part of 'package:maid/main.dart';
 
-class ChatNode {
+abstract class ChatNode {
+  String get role;
   final String id;
-  final Chat chat;
   final String? parent;
   final List<String> children;
-  String role;
   String content;
 
   ChatNode({
-    required this.role,
     required this.content,
-    required this.chat,
     this.parent,
     String? id,
     List<String>? children
@@ -22,14 +19,31 @@ class ChatNode {
     String role = map['role'] ?? map['message']['author']['role'];
     String content = map['content'] ?? (map['message']['content']['parts'] as List).cast<String>().join(' ');
 
-    return ChatNode(
-      chat: chat,
-      parent: map['parent'],
-      id: map['id'],
-      children: (map['children'] as List).cast<String>(),
-      role: role,
-      content: content
-    );
+    switch (role) {
+      case 'user':
+        return UserChatNode(
+          parent: map['parent'],
+          id: map['id'],
+          children: (map['children'] as List).cast<String>(),
+          content: content
+        );
+      case 'assistant':
+        return AssistantChatNode(
+          parent: map['parent'],
+          id: map['id'],
+          children: (map['children'] as List).cast<String>(),
+          content: content
+        );
+      case 'system':
+        return SystemChatNode(
+          parent: map['parent'],
+          id: map['id'],
+          children: (map['children'] as List).cast<String>(),
+          content: content
+        );
+      default:
+        throw Exception('Invalid role');
+    }
   }
 
   List<ChatNode> get history {
@@ -38,7 +52,7 @@ class ChatNode {
     var current = this;
     while (current.parent != null) {
       history.add(current);
-      current = chat.mappings[current.parent]!;
+      current = Chat.current.mappings[current.parent]!;
     }
 
     return history;
@@ -49,9 +63,9 @@ class ChatNode {
       return [];
     }
 
-    final siblingKeys = chat.mappings[parent]!.children.where((element) => element != id).toList();
+    final siblingKeys = Chat.current.mappings[parent]!.children.where((element) => element != id).toList();
 
-    return siblingKeys.map((key) => chat.mappings[key]!).toList();
+    return siblingKeys.map((key) => Chat.current.mappings[key]!).toList();
   }
 
   void next() {
@@ -59,12 +73,12 @@ class ChatNode {
       return;
     }
 
-    final index = chat.mappings[parent]!.children.indexOf(this.id);
-    if (index == chat.mappings[parent]!.children.length - 1) {
+    final index = Chat.current.mappings[parent]!.children.indexOf(id);
+    if (index == Chat.current.mappings[parent]!.children.length - 1) {
       return;
     }
 
-    chat._currentNode = chat.mappings[parent]!.children[index + 1];
+    Chat.current.currentNode = Chat.current.mappings[parent]!.children[index + 1];
   }
 
   void last() {
@@ -72,16 +86,52 @@ class ChatNode {
       return;
     }
 
-    final index = chat.mappings[parent]!.children.indexOf(this.id);
+    final index = Chat.current.mappings[parent]!.children.indexOf(id);
     if (index == 0) {
       return;
     }
 
-    chat._currentNode = chat.mappings[parent]!.children[index - 1];
+    Chat.current.currentNode = Chat.current.mappings[parent]!.children[index - 1];
   }
 
   void addChild(ChatNode node) {
-    chat.addMapping(node);
+    Chat.current.addMapping(node);
     children.add(node.id);
   }
+}
+
+class UserChatNode extends ChatNode {
+  UserChatNode({
+    required super.content, 
+    super.parent, 
+    super.id, 
+    super.children
+  });
+
+  @override
+  String get role => 'user';
+}
+
+class AssistantChatNode extends ChatNode {
+  AssistantChatNode({
+    required super.content, 
+    super.parent, 
+    super.id, 
+    super.children
+  });
+
+  @override
+  String get role => 'assistant';
+}
+
+class SystemChatNode extends ChatNode {
+  SystemChatNode({
+    required super.content, 
+    super.parent, 
+    super.id, 
+    super.children
+  });
+
+  @override
+  String get role => 'system';
 }

@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:anthropic_sdk_dart/anthropic_sdk_dart.dart' as anthropic;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -22,11 +21,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:lcpp/lcpp.dart'
-    if (dart.library.html) 'package:lcpp/lcpp.web.dart';
+    if (dart.library.html) 'package:lcpp/lcpp.web.dart' as llama;
 import 'package:tree_structs/tree_structs.dart';
 import 'package:ollama_dart/ollama_dart.dart' as ollama;
 import 'package:openai_dart/openai_dart.dart' as open_ai;
 import 'package:mistralai_dart/mistralai_dart.dart' as mistral;
+import 'package:anthropic_sdk_dart/anthropic_sdk_dart.dart' as anthropic;
 
 part 'controllers/app_settings.dart';
 part 'controllers/artificial_intelligence_controller.dart';

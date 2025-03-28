@@ -111,7 +111,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     }
   }
 
-  Stream<String> prompt(List<ChatMessage> messages);
+  Stream<String> prompt(Chat chat);
 
   void stop();
 
@@ -223,7 +223,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 }
 
 class LlamaCppController extends ArtificialIntelligenceController {
-  Llama? _llama;
+  llama.Llama? _llama;
   String _loadedHash = '';
 
   bool loading = false;
@@ -240,22 +240,22 @@ class LlamaCppController extends ArtificialIntelligenceController {
   });
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(Chat chat) async* {
     assert(_model != null);
     busy = true;
 
     reloadModel();
     assert(_llama != null);
 
-    yield* _llama!.prompt(messages);
+    yield* _llama!.prompt(chat.toLlamaMessages());
     busy = false;
   }
 
   void reloadModel([bool force = false]) async {
     if ((hash == _loadedHash && !force) || _model == null) return;
 
-    _llama = Llama(
-      LlamaController.fromMap({
+    _llama = llama.Llama(
+      llama.LlamaController.fromMap({
         'model_path': _model,
         'seed': math.Random().nextInt(1000000),
         'greedy': true,
@@ -357,7 +357,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   });
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(Chat chat) async* {
     assert(_model != null);
     busy = true;
 
@@ -371,7 +371,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
     final completionStream = _ollamaClient.generateChatCompletionStream(
       request: ollama.GenerateChatCompletionRequest(
         model: _model!, 
-        messages: messages.toOllamaMessages(),
+        messages: chat.toOllamaMessages(),
         options: ollama.RequestOptions.fromJson(_overrides),
         stream: true
       )
@@ -555,7 +555,7 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
   });
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(Chat chat) async* {
     assert(_apiKey != null, 'API Key is required');
     assert(_model != null, 'Model is required');
     busy = true;
@@ -571,7 +571,7 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
 
     final completionStream = _openAiClient.createChatCompletionStream(
       request: open_ai.CreateChatCompletionRequest(
-        messages: messages.toOpenAiMessages(),
+        messages: chat.toOpenAiMessages(),
         model: open_ai.ChatCompletionModel.modelId(_model!),
         stream: true,
         temperature: _overrides['temperature'],
@@ -647,7 +647,7 @@ class MistralController extends RemoteArtificialIntelligenceController {
   });
   
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(Chat chat) async* {
     assert(_apiKey != null, 'API Key is required');
     assert(_model != null, 'Model is required');
     busy = true;
@@ -678,7 +678,7 @@ class MistralController extends RemoteArtificialIntelligenceController {
 
     final completionStream = _mistralClient.createChatCompletionStream(
       request: mistral.ChatCompletionRequest(
-        messages: messages.toMistralMessages(),
+        messages: chat.toMistralMessages(),
         model: mistral.ChatCompletionModel.model(mistralModel),
         stream: true,
         temperature: _overrides['temperature'],
@@ -744,7 +744,7 @@ class AnthropicController extends RemoteArtificialIntelligenceController {
   });
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(Chat chat) async* {
     assert(_apiKey != null, 'API Key is required');
     assert(_model != null, 'Model is required');
     busy = true;
@@ -762,7 +762,7 @@ class AnthropicController extends RemoteArtificialIntelligenceController {
       request: anthropic.CreateMessageRequest(
         model: anthropic.Model.model(anthropic.Models.values.firstWhere((model) => model.name == _model)),
         maxTokens: _overrides['max_tokens'] ?? 1024,
-        messages: messages.toAnthropicMessages(),
+        messages: chat.toAnthropicMessages(),
         stopSequences: _overrides['stop_sequences'],
         temperature: _overrides['temperature'],
         topK: _overrides['top_k'],
@@ -833,7 +833,7 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
   }
 
 @override
-Stream<String> prompt(List<ChatMessage> messages) async* {
+Stream<String> prompt(Chat chat) async* {
   assert(apiKey != null, 'API Key is required');
   assert(model != null && model!.isNotEmpty, 'Model name is required');
   busy = true;
@@ -844,7 +844,7 @@ Stream<String> prompt(List<ChatMessage> messages) async* {
 
   // Construct the request body, filtering out invalid or empty messages
   final requestBody = jsonEncode({
-    "contents": messages
+    "contents": chat.chain
         .where((message) =>
             message.role != 'system' && // Exclude system messages
             message.content.isNotEmpty) 
