@@ -48,6 +48,13 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+
+        // Conditionally apply ABI filters for App Bundle builds
+        if (project.gradle.startParameter.taskNames.any { it.contains("bundle") }) {
+            ndk {
+                abiFilters 'x86_64', 'arm64-v8a'
+            }
+        }
     }
 
     signingConfigs {
