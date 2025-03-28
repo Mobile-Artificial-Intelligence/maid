@@ -56,21 +56,22 @@ jobs:
         run: |
           flutter build apk -v
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: maid-android-apk
-          path: build/app/outputs/apk/release
+      - name: Rename APK
+        run: |
+          mkdir -p release
+          mv build/app/outputs/apk/release/app-release.apk release/maid-android-universal.apk
+          mv build/app/outputs/apk/release/app-arm64-v8a-release.apk release/maid-android-arm64-v8a.apk
+          mv build/app/outputs/apk/release/app-x86_64-release.apk release/maid-android-x86_64.apk
 
       - name: Build appbundle
         run: |
           flutter build appbundle
 
       - name: Rename AAB
-        run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/maid-android-bundle.aab
+        run: mv build/app/outputs/bundle/release/app-release.aab release/maid-android-bundle.aab
 
-      - name: Upload AAB
+      - name: Upload Android Builds
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-aab
-          path: build/app/outputs/bundle/release/maid-android-bundle.aab
+          name: maid-android
+          path: release
