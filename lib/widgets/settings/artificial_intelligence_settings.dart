@@ -24,7 +24,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
       const SizedBox(height: 8),
       aiController is RemoteArtificialIntelligenceController
         ? buildRemoteSettings(context)
-        : buildModelLoaderRow(context),
+        : LoadModelButton(llama: aiController as LlamaCppController),
     ],
   );
 
@@ -38,57 +38,6 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
       const SizedBox(height: 8),
       ApiKeyTextField(aiController: aiController as RemoteArtificialIntelligenceController),
     ]
-  );
-
-  Widget buildModelLoaderRow(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.max,
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      buildModelLoaderTitle(context),
-      buildModelLoader(context),
-    ],
-  );
-
-  Widget buildModelLoader(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      buildModelText(context),
-      buildModelLoaderButtonSelector(context),
-    ],
-  );
-
-  Widget buildModelLoaderButtonSelector(BuildContext context) => (aiController as LlamaCppController).loading
-    ? buildSpinner()
-    : buildModelLoaderButton(context);
-
-  Widget buildSpinner() => const Padding(
-    padding: EdgeInsets.all(8.0),
-    child: SizedBox(
-      width: 24,
-      height: 24,
-      child: Center(
-        child: CircularProgressIndicator(strokeWidth: 3.0),
-      ),
-    ),
-  );
-
-  Widget buildModelLoaderButton(BuildContext context) => IconButton(
-    onPressed: (aiController as LlamaCppController).pickModel, 
-    icon: const Icon(Icons.folder)
-  );
-
-  Widget buildModelLoaderTitle(BuildContext context) => Expanded(
-    child: Text(
-      AppLocalizations.of(context)!.llamaCppModel,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
-    )
-  );
-
-  Widget buildModelText(BuildContext context) => Text(
-    aiController.model?.split('/').last ?? AppLocalizations.of(context)!.noModelLoaded,
-    overflow: TextOverflow.ellipsis,
-    maxLines: 1,
   );
 
   Widget buildLocalSearchSwitchRow(BuildContext context) => Row(
