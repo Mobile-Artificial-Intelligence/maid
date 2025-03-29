@@ -406,16 +406,16 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   }
 
   Future<Uri?> checkForOllama(Uri url) async {
+    final dio = Dio();
+  
+    dio.options.headers.addAll({
+      "Accept": "application/json",
+      'Authorization': 'Bearer $_apiKey',
+    });
+  
     try {
-      final request = http.Request("GET", url);
-      final headers = {
-        "Accept": "application/json",
-        'Authorization': 'Bearer $_apiKey'
-      };
-
-      request.headers.addAll(headers);
-
-      final response = await request.send();
+      final response = await dio.getUri(url);
+  
       if (response.statusCode == 200) {
         log('Found Ollama at ${url.host}');
         return url;
@@ -425,7 +425,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
         log(e.toString());
       }
     }
-
+  
     return null;
   }
 

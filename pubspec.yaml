@@ -43,6 +43,8 @@ dependencies:
       url: https://github.com/KasemJaffer/receive_sharing_intent
       ref: 2cea396843cd3ab1b5ec4334be4233864637874e
   web: ^1.1.1
+  dio: ^5.8.0+1
+  path_provider: ^2.1.5
 
 dev_dependencies:
   integration_test:
