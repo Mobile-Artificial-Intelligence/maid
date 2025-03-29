@@ -9,10 +9,11 @@ class LoadModelButton extends StatelessWidget {
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Size size = renderBox.size;
+    const double popoverWidth = 150;
     final RelativeRect position = RelativeRect.fromLTRB(
-      offset.dx,
+      offset.dx + (size.width / 2) - (popoverWidth / 2),
       offset.dy + size.height,
-      offset.dx + size.width,
+      offset.dx + (size.width / 2) - (popoverWidth / 2),
       offset.dy,
     );
 
@@ -29,6 +30,10 @@ class LoadModelButton extends StatelessWidget {
           child: Text(AppLocalizations.of(context)!.downloadModel),
         ),
       ],
+      constraints: BoxConstraints(
+        maxWidth: popoverWidth,
+        minWidth: popoverWidth,
+      ),
     );
 
     if (selection == 'load') {
