@@ -73,7 +73,8 @@ part 'widgets/text_fields/listenable_text_field.dart';
 part 'widgets/text_fields/prompt_field.dart';
 part 'widgets/text_fields/remote_model_text_field.dart';
 
-part 'widgets/code_box.dart';
+part 'widgets/utilities/code_box.dart';
+part 'widgets/utilities/huggingface_model.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

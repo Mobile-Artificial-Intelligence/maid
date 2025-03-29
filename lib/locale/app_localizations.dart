@@ -161,6 +161,24 @@ abstract class AppLocalizations {
   /// **'No Model Loaded'**
   String get noModelLoaded;
 
+  /// No description provided for @huggingface.
+  ///
+  /// In en, this message translates to:
+  /// **'Huggingface'**
+  String get huggingface;
+
+  /// No description provided for @size.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get size;
+
+  /// No description provided for @parameters.
+  ///
+  /// In en, this message translates to:
+  /// **'Parameters'**
+  String get parameters;
+
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:

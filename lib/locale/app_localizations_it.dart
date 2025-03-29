@@ -33,6 +33,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noModelLoaded => 'Nessun modello caricato';
 
   @override
+  String get huggingface => 'Huggingface';
+
+  @override
+  String get size => 'Dimensione';
+
+  @override
+  String get parameters => 'Parametri';
+
+  @override
   String get delete => 'Elimina';
 
   @override

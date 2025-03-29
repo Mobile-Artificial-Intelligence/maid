@@ -9,7 +9,7 @@ class HuggingFacePage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       title: Text(
-        'Huggingface' // TODO: Localize
+        AppLocalizations.of(context)!.huggingface
       ),
     ),
     body: buildBody(context),
@@ -17,12 +17,8 @@ class HuggingFacePage extends StatelessWidget {
 
   Widget buildBody(BuildContext context) => ListView(
     children: [
-      ListTile(
-        title: Text(
-          'Huggingface', // TODO: Localize
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-      ),
+      HuggingfaceModel(name: 'llama-2-7b-chat-hf', size: 7.0, parameters: 7.0),
+      HuggingfaceModel(name: 'llama-2-13b-chat-hf', size: 13.0, parameters: 13.0),
     ]
   );
 }

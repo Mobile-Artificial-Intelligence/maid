@@ -33,6 +33,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noModelLoaded => 'Модель не загружена';
 
   @override
+  String get huggingface => 'Huggingface';
+
+  @override
+  String get size => 'Размер';
+
+  @override
+  String get parameters => 'Параметры';
+
+  @override
   String get delete => 'Удалить';
 
   @override

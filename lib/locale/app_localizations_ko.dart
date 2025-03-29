@@ -33,6 +33,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noModelLoaded => '로드된 모델 없음';
 
   @override
+  String get huggingface => 'Huggingface';
+
+  @override
+  String get size => '크기';
+
+  @override
+  String get parameters => '매개변수';
+
+  @override
   String get delete => '삭제';
 
   @override
