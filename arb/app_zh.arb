@@ -5,6 +5,7 @@
     "defaultLocale": "默认区域",
     "loading": "加载中...",
     "loadModel": "加载模型",
+    "downloadModel": "下载模型",
     "noModelSelected": "未选择模型",
     "noModelLoaded": "未加载模型",
     "delete": "删除",

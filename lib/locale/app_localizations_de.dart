@@ -24,6 +24,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loadModel => 'Modell laden';
 
   @override
+  String get downloadModel => 'Modell herunterladen';
+
+  @override
   String get noModelSelected => 'Kein Modell ausgewählt';
 
   @override

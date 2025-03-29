@@ -5,6 +5,7 @@
     "defaultLocale": "Локаль по умолчанию",
     "loading": "Загрузка...",
     "loadModel": "Загрузить модель",
+    "downloadModel": "Скачать модель",
     "noModelSelected": "Модель не выбрана",
     "noModelLoaded": "Модель не загружена",
     "delete": "Удалить",

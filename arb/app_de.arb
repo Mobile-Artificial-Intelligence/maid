@@ -5,6 +5,7 @@
     "defaultLocale": "Standardsprache",
     "loading": "Laden...",
     "loadModel": "Modell laden",
+    "downloadModel": "Modell herunterladen",
     "noModelSelected": "Kein Modell ausgewählt",
     "noModelLoaded": "Kein Modell geladen",
     "delete": "Löschen",

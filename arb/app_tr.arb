@@ -5,6 +5,7 @@
     "defaultLocale": "Varsayılan Yerel Ayar",
     "loading": "Yükleniyor...",
     "loadModel": "Modeli Yükle",
+    "downloadModel": "Modeli İndir",
     "noModelSelected": "Model Seçilmedi",
     "noModelLoaded": "Model Yüklenmedi",
     "delete": "Sil",

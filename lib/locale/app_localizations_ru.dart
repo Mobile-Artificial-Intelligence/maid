@@ -24,6 +24,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loadModel => 'Загрузить модель';
 
   @override
+  String get downloadModel => 'Скачать модель';
+
+  @override
   String get noModelSelected => 'Модель не выбрана';
 
   @override

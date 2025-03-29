@@ -24,6 +24,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loadModel => '加载模型';
 
   @override
+  String get downloadModel => '下载模型';
+
+  @override
   String get noModelSelected => '未选择模型';
 
   @override

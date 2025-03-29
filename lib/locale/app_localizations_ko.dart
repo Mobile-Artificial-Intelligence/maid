@@ -24,6 +24,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get loadModel => '모델 불러오기';
 
   @override
+  String get downloadModel => '모델 다운로드';
+
+  @override
   String get noModelSelected => '선택된 모델 없음';
 
   @override

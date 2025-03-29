@@ -5,6 +5,7 @@
     "defaultLocale": "डिफ़ॉल्ट स्थान",
     "loading": "लोड हो रहा है...",
     "loadModel": "मॉडल लोड करें",
+    "downloadModel": "मॉडल डाउनलोड करें",
     "noModelSelected": "कोई मॉडल चयनित नहीं",
     "noModelLoaded": "कोई मॉडल लोड नहीं हुआ",
     "delete": "हटाएं",

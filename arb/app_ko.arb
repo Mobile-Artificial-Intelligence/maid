@@ -5,6 +5,7 @@
     "defaultLocale": "기본 로케일",
     "loading": "로딩 중...",
     "loadModel": "모델 불러오기",
+    "downloadModel": "모델 다운로드",
     "noModelSelected": "선택된 모델 없음",
     "noModelLoaded": "로드된 모델 없음",
     "delete": "삭제",

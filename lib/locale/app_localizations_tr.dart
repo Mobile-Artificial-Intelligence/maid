@@ -24,6 +24,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get loadModel => 'Modeli Yükle';
 
   @override
+  String get downloadModel => 'Modeli İndir';
+
+  @override
   String get noModelSelected => 'Model Seçilmedi';
 
   @override

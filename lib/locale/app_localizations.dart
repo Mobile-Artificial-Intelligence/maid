@@ -143,6 +143,12 @@ abstract class AppLocalizations {
   /// **'Load Model'**
   String get loadModel;
 
+  /// No description provided for @downloadModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Model'**
+  String get downloadModel;
+
   /// No description provided for @noModelSelected.
   ///
   /// In en, this message translates to:

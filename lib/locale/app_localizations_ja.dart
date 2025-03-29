@@ -24,6 +24,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get loadModel => 'モデルを読み込む';
 
   @override
+  String get downloadModel => 'モデルをダウンロード';
+
+  @override
   String get noModelSelected => 'モデルが選択されていません';
 
   @override

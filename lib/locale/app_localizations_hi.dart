@@ -24,6 +24,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get loadModel => 'मॉडल लोड करें';
 
   @override
+  String get downloadModel => 'मॉडल डाउनलोड करें';
+
+  @override
   String get noModelSelected => 'कोई मॉडल चयनित नहीं';
 
   @override

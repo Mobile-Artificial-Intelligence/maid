@@ -24,6 +24,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadModel => 'Load Model';
 
   @override
+  String get downloadModel => 'Download Model';
+
+  @override
   String get noModelSelected => 'No Model Selected';
 
   @override
