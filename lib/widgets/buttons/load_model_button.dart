@@ -1,25 +1,16 @@
 part of 'package:maid/main.dart';
 
 class LoadModelButton extends StatelessWidget {
+  final double popoverWidth = 150;
   final LlamaCppController llama;
+  final GlobalKey buttonKey = GlobalKey();
   
-  const LoadModelButton({super.key, required this.llama});
+  LoadModelButton({super.key, required this.llama});
 
   void onTap(BuildContext context) async {
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final Offset offset = renderBox.localToGlobal(Offset.zero);
-    final Size size = renderBox.size;
-    const double popoverWidth = 150;
-    final RelativeRect position = RelativeRect.fromLTRB(
-      offset.dx + (size.width / 2) - (popoverWidth / 2),
-      offset.dy + size.height,
-      offset.dx + (size.width / 2) - (popoverWidth / 2),
-      offset.dy,
-    );
-
     final selection = await showMenu(
       context: context,
-      position: position,
+      positionBuilder: popoverPositionBuilder,
       items: [
         PopupMenuItem(
           value: 'load',
@@ -44,6 +35,20 @@ class LoadModelButton extends StatelessWidget {
     }
   }
 
+  RelativeRect popoverPositionBuilder(BuildContext context, BoxConstraints constraints) {
+    // get the inkwell size using the key
+    final RenderBox renderBox = buttonKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    final Size size = renderBox.size;
+
+    return RelativeRect.fromLTRB(
+      offset.dx + (size.width / 2) - (popoverWidth / 2),
+      offset.dy + size.height,
+      offset.dx + (size.width / 2) + (popoverWidth / 2),
+      offset.dy,
+    );
+  }
+
   @override
   Widget build(BuildContext context) => ConstrainedBox(
     constraints: const BoxConstraints(maxWidth: 400),
@@ -55,7 +60,7 @@ class LoadModelButton extends StatelessWidget {
   );
 
   Widget buildInkWell(BuildContext context) => InkWell(
-    key: ValueKey("load_model"),
+    key: buttonKey,
     onTap: () => onTap(context),
     borderRadius: BorderRadius.circular(10),
     child: Padding(
