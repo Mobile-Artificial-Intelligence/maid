@@ -22,6 +22,7 @@ dependencies:
 
   # For loading images and GGUF files
   file_picker: ^9.2.1
+  url_launcher: ^6.3.1
 
   # Supported Ecosystems
   lcpp: ^0.2.3

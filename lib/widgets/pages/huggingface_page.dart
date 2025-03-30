@@ -17,8 +17,13 @@ class HuggingFacePage extends StatelessWidget {
 
   Widget buildBody(BuildContext context) => ListView(
     children: [
-      HuggingfaceModel(name: 'llama-2-7b-chat-hf', size: 7.0, parameters: 7.0),
-      HuggingfaceModel(name: 'llama-2-13b-chat-hf', size: 13.0, parameters: 13.0),
+      HuggingfaceModel(
+        name: 'Phi 3 Mini 4K Instruct Q4', 
+        repo: 'microsoft/Phi-3-mini-4k-instruct-gguf',
+        fileName: 'Phi-3-mini-4k-instruct-q4.gguf',
+        size: 1.2, 
+        parameters: 7.0
+      ),
     ]
   );
 }

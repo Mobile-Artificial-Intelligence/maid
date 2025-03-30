@@ -28,6 +28,7 @@ import 'package:tree_structs/tree_structs.dart';
 import 'package:ollama_dart/ollama_dart.dart' as ollama;
 import 'package:openai_dart/openai_dart.dart' as open_ai;
 import 'package:mistralai_dart/mistralai_dart.dart' as mistral;
+import 'package:url_launcher/url_launcher.dart';
 
 part 'controllers/app_settings.dart';
 part 'controllers/artificial_intelligence_controller.dart';
