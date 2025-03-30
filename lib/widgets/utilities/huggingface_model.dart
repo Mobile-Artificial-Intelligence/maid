@@ -96,7 +96,6 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   void exportModel() async {
     final filePath = await HuggingfaceManager.getFilePath(tag!.value);
     final file = File(filePath);
-    if (!(await file.exists())) return;
 
     final outputPath = await FilePicker.platform.saveFile(
       dialogTitle: 'Export Model',
@@ -105,7 +104,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
       allowedExtensions: ['gguf']
     );
 
-    if (outputPath != null && !File(outputPath).existsSync()) {
+    if (outputPath != null) {
       await file.copy(outputPath);
     }
   }
