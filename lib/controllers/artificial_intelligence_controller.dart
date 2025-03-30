@@ -827,75 +827,70 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
     super.apiKey,
   });
 
-@override
-Stream<String> prompt(List<ChatMessage> messages) async* {
-  assert(apiKey != null, 'API Key is required');
-  assert(model != null && model!.isNotEmpty, 'Model name is required');
-  busy = true;
-
-  final url = Uri.parse(
-    '${baseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"}?key=$apiKey',
-  );
-
-  // Construct the request body, filtering out invalid or empty messages
-  final requestBody = jsonEncode({
-    "contents": messages
-        .where((message) =>
-            message.role != 'system' && // Exclude system messages
-            message.content.isNotEmpty) 
-        .map((message) {
-      return {
-        "role": message.role, 
-        "parts": [
-          {"text": message.content}
-        ]
-      };
-    }).toList(),
-  });
-
-  try {
-    // Send HTTP POST request
-    final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: requestBody,
-    );
-
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-
-      // Navigate to the candidates array
-      if (responseData['candidates'] != null && responseData['candidates'] is List) {
-        for (final candidate in responseData['candidates']) {
-          if (candidate['content'] != null &&
-              candidate['content']['parts'] != null &&
-              candidate['content']['parts'] is List) {
-            for (final part in candidate['content']['parts']) {
-              if (part['text'] != null) {
-
-                yield part['text']; // Yield the part text for display
-              } else {
-                throw Exception('Part text is null or missing!');
+  @override
+  Stream<String> prompt(List<ChatMessage> messages) async* {
+    assert(apiKey != null, 'API Key is required');
+    assert(model != null && model!.isNotEmpty, 'Model name is required');
+    busy = true;
+  
+    final dio = Dio();
+  
+    final url =
+        '${baseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"}?key=$apiKey';
+  
+    final requestBody = {
+      "contents": messages
+          .where((message) =>
+              message.role != 'system' && message.content.isNotEmpty)
+          .map((message) => {
+                "role": message.role,
+                "parts": [
+                  {"text": message.content}
+                ]
+              })
+          .toList(),
+    };
+  
+    try {
+      final response = await dio.post(
+        url,
+        options: Options(headers: {"Content-Type": "application/json"}),
+        data: requestBody,
+      );
+  
+      if (response.statusCode == 200) {
+        final responseData = response.data;
+  
+        if (responseData['candidates'] != null &&
+            responseData['candidates'] is List) {
+          for (final candidate in responseData['candidates']) {
+            if (candidate['content'] != null &&
+                candidate['content']['parts'] != null &&
+                candidate['content']['parts'] is List) {
+              for (final part in candidate['content']['parts']) {
+                if (part['text'] != null) {
+                  yield part['text'];
+                } else {
+                  throw Exception('Part text is null or missing!');
+                }
               }
+            } else {
+              throw Exception('Content parts are null or not a list!');
             }
-          } else {
-            throw Exception('Content parts are null or not a list!');
           }
+        } else {
+          throw Exception('Candidates are null or not a list!');
         }
       } else {
-        throw Exception('Candidates are null or not a list!');
+        throw Exception(
+            'Google Gemini API Error: ${response.statusCode} ${response.statusMessage}');
       }
-    } else {
-      throw Exception('Google Gemini API Error: ${response.body}');
+    } catch (e) {
+      rethrow;
+    } finally {
+      busy = false;
     }
-  } catch (e) {
-    rethrow;
-  } finally {
-    busy = false;
   }
-}
-
-
 
   @override
   void stop() {

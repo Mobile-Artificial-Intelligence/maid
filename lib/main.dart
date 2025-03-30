@@ -16,7 +16,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:lan_scanner/lan_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:http/http.dart' as http; // TODO: Remove this, use DIO
 import 'package:dio/dio.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
