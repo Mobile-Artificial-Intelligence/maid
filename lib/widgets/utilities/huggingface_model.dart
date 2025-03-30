@@ -45,6 +45,15 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
     );
   }
 
+  void deleteModel() async {
+    final filePath = await getFilePath();
+    final file = File(filePath);
+    if (await file.exists()) {
+      await file.delete();
+      setState(() => progress = 0);
+    }
+  }
+
   void navigateRepo() async {
     final url = Uri.parse('https://huggingface.co/${widget.repo}');
     if (!await launchUrl(url)) {
@@ -75,34 +84,61 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
         '${AppLocalizations.of(context)!.parameters}: ${widget.parameters.toString()} B',
         style: Theme.of(context).textTheme.bodyMedium,
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        child: buildProgressIndicator(context),
+      buildProgressIndicator(context),
+      progress == 1
+        ? buildActionsRow(context)
+        : buildDownloadButton(context),
+    ],
+  );
+
+  Widget buildDownloadButton(BuildContext context) => Center(
+    child: TextButton.icon(
+      onPressed: progress == 0 ? downloadModel : null,
+      label: Text(
+        AppLocalizations.of(context)!.downloadModel,
+        style: progress == 0
+          ? Theme.of(context).textTheme.labelMedium
+          : Theme.of(context).textTheme.labelMedium?.copyWith(
+            color: Theme.of(context).colorScheme.outline,
+          ),
       ),
-      Center(
-        child: buildDownloadButton(context)
+      icon: Icon(
+        Icons.download,
+        color: progress == 0
+          ? Theme.of(context).colorScheme.onSurface
+          : Theme.of(context).colorScheme.outline,
+      ),
+    )
+  );
+
+  Widget buildActionsRow(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      TextButton.icon(
+        onPressed: deleteModel,
+        label: Text(
+          AppLocalizations.of(context)!.delete,
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            color: Theme.of(context).colorScheme.error,
+          ),
+        ),
+        icon: Icon(
+          Icons.delete,
+          color: Theme.of(context).colorScheme.error,
+        ),
       )
     ],
   );
 
-  Widget buildDownloadButton(BuildContext context) => TextButton.icon(
-    onPressed: downloadModel,
-    label: Text(
-      AppLocalizations.of(context)!.downloadModel,
-      style: Theme.of(context).textTheme.labelMedium,
-    ),
-    icon: Icon(
-      Icons.download,
-      color: Theme.of(context).colorScheme.onSurface,
-    ),
-  );
-
-  Widget buildProgressIndicator(BuildContext context) => LinearProgressIndicator(
-    value: progress,
-    minHeight: 5,
-    borderRadius: BorderRadius.circular(5),
-    color: Theme.of(context).colorScheme.primary,
-    backgroundColor: Theme.of(context).colorScheme.outline,
+  Widget buildProgressIndicator(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 5),
+    child: LinearProgressIndicator(
+      value: progress,
+      minHeight: 5,
+      borderRadius: BorderRadius.circular(5),
+      color: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.outline,
+    )
   );
 
   Widget buildTitle(BuildContext context) => SingleChildScrollView(
