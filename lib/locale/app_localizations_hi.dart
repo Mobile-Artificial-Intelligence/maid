@@ -33,7 +33,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get noModelLoaded => 'कोई मॉडल लोड नहीं हुआ';
 
   @override
-  String get huggingface => 'हगिंगफेस';
+  String get localModels => 'स्थानीय मॉडल';
 
   @override
   String get size => 'आकार';

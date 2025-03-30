@@ -33,7 +33,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noModelLoaded => 'Kein Modell geladen';
 
   @override
-  String get huggingface => 'Huggingface';
+  String get localModels => 'Lokale Modelle';
 
   @override
   String get size => 'Größe';

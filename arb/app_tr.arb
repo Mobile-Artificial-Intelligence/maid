@@ -8,7 +8,7 @@
     "downloadModel": "Modeli İndir",
     "noModelSelected": "Model Seçilmedi",
     "noModelLoaded": "Model Yüklenmedi",
-    "huggingface": "Huggingface",
+    "localModels": "Yerel Modeller",
     "size": "Boyut",
     "parameters": "Parametreler",
     "delete": "Sil",

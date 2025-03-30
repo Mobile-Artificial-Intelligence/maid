@@ -33,7 +33,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noModelLoaded => '未加载模型';
 
   @override
-  String get huggingface => 'Huggingface';
+  String get localModels => '本地模型';
 
   @override
   String get size => '大小';

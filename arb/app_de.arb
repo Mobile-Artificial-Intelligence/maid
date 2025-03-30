@@ -8,7 +8,7 @@
     "downloadModel": "Modell herunterladen",
     "noModelSelected": "Kein Modell ausgewählt",
     "noModelLoaded": "Kein Modell geladen",
-    "huggingface": "Huggingface",
+    "localModels": "Lokale Modelle",
     "size": "Größe",
     "parameters": "Parameter",
     "delete": "Löschen",

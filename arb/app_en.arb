@@ -8,7 +8,7 @@
     "downloadModel": "Download Model",
     "noModelSelected": "No Model Selected",
     "noModelLoaded": "No Model Loaded",
-    "huggingface": "Huggingface",
+    "localModels": "Local Models",
     "size": "Size",
     "parameters": "Parameters",
     "delete": "Delete",

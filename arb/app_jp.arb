@@ -8,7 +8,7 @@
     "downloadModel": "モデルをダウンロード",
     "noModelSelected": "モデルが選択されていません",
     "noModelLoaded": "モデルが読み込まれていません",
-    "huggingface": "Huggingface",
+    "localModels": "ローカルモデル",
     "size": "サイズ",
     "parameters": "パラメータ",
     "delete": "削除",

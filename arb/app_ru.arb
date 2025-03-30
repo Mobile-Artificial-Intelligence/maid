@@ -8,7 +8,7 @@
     "downloadModel": "Скачать модель",
     "noModelSelected": "Модель не выбрана",
     "noModelLoaded": "Модель не загружена",
-    "huggingface": "Huggingface",
+    "localModels": "Локальные модели",
     "size": "Размер",
     "parameters": "Параметры",
     "delete": "Удалить",

@@ -8,7 +8,7 @@
     "downloadModel": "모델 다운로드",
     "noModelSelected": "선택된 모델 없음",
     "noModelLoaded": "로드된 모델 없음",
-    "huggingface": "Huggingface",
+    "localModels": "로컬 모델",
     "size": "크기",
     "parameters": "매개변수",
     "delete": "삭제",

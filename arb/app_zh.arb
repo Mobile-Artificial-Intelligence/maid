@@ -8,7 +8,7 @@
     "downloadModel": "下载模型",
     "noModelSelected": "未选择模型",
     "noModelLoaded": "未加载模型",
-    "huggingface": "Huggingface",
+    "localModels": "本地模型",
     "size": "大小",
     "parameters": "参数",
     "delete": "删除",

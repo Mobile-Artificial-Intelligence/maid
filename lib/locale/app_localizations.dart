@@ -161,11 +161,11 @@ abstract class AppLocalizations {
   /// **'No Model Loaded'**
   String get noModelLoaded;
 
-  /// No description provided for @huggingface.
+  /// No description provided for @localModels.
   ///
   /// In en, this message translates to:
-  /// **'Huggingface'**
-  String get huggingface;
+  /// **'Local Models'**
+  String get localModels;
 
   /// No description provided for @size.
   ///

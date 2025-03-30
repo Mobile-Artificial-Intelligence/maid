@@ -12,7 +12,7 @@ class HuggingFacePage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       title: Text(
-        AppLocalizations.of(context)!.huggingface
+        AppLocalizations.of(context)!.localModels
       ),
     ),
     body: buildBody(context),

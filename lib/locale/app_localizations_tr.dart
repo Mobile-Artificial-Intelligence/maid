@@ -33,7 +33,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noModelLoaded => 'Model Yüklenmedi';
 
   @override
-  String get huggingface => 'Huggingface';
+  String get localModels => 'Yerel Modeller';
 
   @override
   String get size => 'Boyut';

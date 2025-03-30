@@ -33,7 +33,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get noModelLoaded => 'モデルが読み込まれていません';
 
   @override
-  String get huggingface => 'Huggingface';
+  String get localModels => 'ローカルモデル';
 
   @override
   String get size => 'サイズ';

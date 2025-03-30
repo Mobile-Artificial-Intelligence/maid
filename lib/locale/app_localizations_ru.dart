@@ -33,7 +33,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noModelLoaded => 'Модель не загружена';
 
   @override
-  String get huggingface => 'Huggingface';
+  String get localModels => 'Локальные модели';
 
   @override
   String get size => 'Размер';

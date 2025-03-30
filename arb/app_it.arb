@@ -8,7 +8,7 @@
     "downloadModel": "Scarica modello",
     "noModelSelected": "Nessun modello selezionato",
     "noModelLoaded": "Nessun modello caricato",
-    "huggingface": "Huggingface",
+    "localModels": "Modelli locali",
     "size": "Dimensione",
     "parameters": "Parametri",
     "delete": "Elimina",

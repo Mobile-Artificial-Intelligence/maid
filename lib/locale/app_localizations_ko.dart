@@ -33,7 +33,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noModelLoaded => '로드된 모델 없음';
 
   @override
-  String get huggingface => 'Huggingface';
+  String get localModels => '로컬 모델';
 
   @override
   String get size => '크기';
