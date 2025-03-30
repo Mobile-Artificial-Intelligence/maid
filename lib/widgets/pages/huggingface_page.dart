@@ -23,6 +23,9 @@ class HuggingFacePage extends StatelessWidget {
     List<dynamic> modelList;
 
     try {
+      // If debug is enabled, load JSON from assets
+      if (kDebugMode) throw Exception('Debug mode is enabled, loading from assets');
+
       // Try to fetch JSON from the web
       final response = await Dio().get(
         'https://raw.githubusercontent.com/Mobile-Artificial-Intelligence/maid/refs/heads/main/huggingface_models.json'
