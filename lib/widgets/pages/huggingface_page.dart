@@ -1,8 +1,11 @@
 part of 'package:maid/main.dart';
 
 class HuggingFacePage extends StatelessWidget {
+  final ArtificialIntelligenceController aiController;
+
   const HuggingFacePage({
     super.key, 
+    required this.aiController,
   });
 
   @override
@@ -21,7 +24,8 @@ class HuggingFacePage extends StatelessWidget {
         name: 'Phi 3 Mini 4K Instruct Q4', 
         repo: 'microsoft/Phi-3-mini-4k-instruct-gguf',
         fileName: 'Phi-3-mini-4k-instruct-q4.gguf',
-        parameters: 3.82
+        parameters: 3.82,
+        llama: aiController as LlamaCppController,
       ),
     ]
   );

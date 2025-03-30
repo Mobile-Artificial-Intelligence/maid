@@ -185,6 +185,12 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get delete;
 
+  /// No description provided for @select.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get select;
+
   /// No description provided for @import.
   ///
   /// In en, this message translates to:
@@ -263,11 +269,17 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get close;
 
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
   /// Save the {label}
   ///
   /// In en, this message translates to:
   /// **'Save {label}'**
-  String save(String label);
+  String saveLabel(String label);
 
   /// No description provided for @next.
   ///

@@ -45,6 +45,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get delete => 'Supprimer';
 
   @override
+  String get select => 'Sélectionner';
+
+  @override
   String get import => 'Importer';
 
   @override
@@ -84,7 +87,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get close => 'Fermer';
 
   @override
-  String save(String label) {
+  String get save => 'Enregistrer';
+
+  @override
+  String saveLabel(String label) {
     return 'Enregistrer $label';
   }
 

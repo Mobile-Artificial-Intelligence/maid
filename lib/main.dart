@@ -181,7 +181,7 @@ class MaidState extends State<Maid> {
       '/settings': (context) => buildSettingsPage(),
       '/chat': (context) => buildHomePage(),
       '/about': (context) => const AboutPage(),
-      '/huggingface': (context) => const HuggingFacePage(),
+      '/huggingface': (context) => HuggingFacePage(aiController: aiController),
     },
     supportedLocales: AppLocalizations.supportedLocales,
     locale: widget.settings.locale,

@@ -45,6 +45,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get delete => 'Sil';
 
   @override
+  String get select => 'Seç';
+
+  @override
   String get import => 'İçe Aktar';
 
   @override
@@ -84,7 +87,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get close => 'Kapat';
 
   @override
-  String save(String label) {
+  String get save => 'Kaydet';
+
+  @override
+  String saveLabel(String label) {
     return '$label Kaydet';
   }
 

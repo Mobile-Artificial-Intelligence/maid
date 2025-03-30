@@ -12,6 +12,7 @@
     "size": "Size",
     "parameters": "Parameters",
     "delete": "Delete",
+    "select": "Select",
     "import": "Import",
     "export": "Export",
     "edit": "Edit",
@@ -25,8 +26,9 @@
     "ok": "OK",
     "done": "Done",
     "close": "Close",
-    "save": "Save {label}",
-    "@save": {
+    "save": "Save",
+    "saveLabel": "Save {label}",
+    "@saveLabel": {
         "description": "Save the {label}",
         "placeholders": {
             "label": {

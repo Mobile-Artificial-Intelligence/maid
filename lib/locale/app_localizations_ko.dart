@@ -45,6 +45,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get delete => '삭제';
 
   @override
+  String get select => '선택';
+
+  @override
   String get import => '가져오기';
 
   @override
@@ -84,7 +87,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get close => '닫기';
 
   @override
-  String save(String label) {
+  String get save => '저장';
+
+  @override
+  String saveLabel(String label) {
     return '$label 저장';
   }
 

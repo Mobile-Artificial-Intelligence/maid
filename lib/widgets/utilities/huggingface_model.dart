@@ -6,6 +6,7 @@ class HuggingfaceModel extends StatefulWidget {
   final String branch;
   final String fileName;
   final double parameters; // Billions of parameters
+  final LlamaCppController llama;
 
   const HuggingfaceModel({
     super.key, 
@@ -13,7 +14,8 @@ class HuggingfaceModel extends StatefulWidget {
     required this.repo,
     this.branch = 'main',
     required this.fileName,
-    required this.parameters
+    required this.parameters,
+    required this.llama,
   });
 
   @override
@@ -62,15 +64,24 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
         setState(() => progress = received / total);
       },
     );
+
+    assert(File(filePath).existsSync(), "File not downloaded");
+    widget.llama.addModelFile(filePath);
   }
 
   void deleteModel() async {
     final filePath = await getFilePath();
+    widget.llama.removeLoadedModel(filePath);
     final file = File(filePath);
     if (await file.exists()) {
       await file.delete();
       setState(() => progress = 0);
     }
+  }
+
+  void selectModel() async {
+    final filePath = await getFilePath();
+    widget.llama.loadModelFile(filePath);
   }
 
   void navigateRepo() async {
@@ -90,7 +101,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
     final filePath = await getFilePath();
     if (File(filePath).existsSync()) {
       final file = File(filePath);
-      size = await file.length() / (1024 * 1024 * 1024); // Convert to GB
+      size = (await file.length()) / (1024 * 1024 * 1024); // Convert to GB
       progress = 1.0;
     }
     else {
@@ -164,6 +175,17 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
         icon: Icon(
           Icons.delete,
           color: Theme.of(context).colorScheme.error,
+        ),
+      ),
+      TextButton.icon(
+        onPressed: selectModel,
+        label: Text(
+          AppLocalizations.of(context)!.select,
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+        icon: Icon(
+          Icons.delete,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       )
     ],

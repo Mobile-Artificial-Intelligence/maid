@@ -47,6 +47,10 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<String> _modelOptions = [];
+
+  List<String> get modelOptions => _modelOptions;
+
   String get type;
   bool get canPrompt;
   String get hash => jsonEncode(toMap()).hash;
@@ -173,10 +177,6 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 
   bool get canGetRemoteModels;
 
-  List<String> _modelOptions = [];
-
-  List<String> get modelOptions => _modelOptions;
-
   RemoteArtificialIntelligenceController({
     super.model, 
     super.overrides,
@@ -290,6 +290,8 @@ class LlamaCppController extends ArtificialIntelligenceController {
     }
 
     _model = result.files.single.path!;
+    _modelOptions.removeWhere((model) => model == _model);
+    _modelOptions.add(_model!);
 
     final exists = await File(_model!).exists();
     if (!exists) {
@@ -303,6 +305,41 @@ class LlamaCppController extends ArtificialIntelligenceController {
     assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
     _model = path;
     reloadModel();
+  }
+
+  void getLoadedModels() async {
+    final prefs = await SharedPreferences.getInstance();
+    final loadedModels = prefs.getString('loaded_models');
+
+    if (loadedModels != null) {
+      _modelOptions = List<String>.from(jsonDecode(loadedModels));
+      notifyListeners();
+    }
+  }
+
+  void addModelFile(String path) async {
+    assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
+    _modelOptions.removeWhere((model) => model == path);
+    _modelOptions.add(path);
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('loaded_models', jsonEncode(_modelOptions));
+
+    reloadModel();
+  }
+
+  void removeLoadedModel(String path) async {
+    assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
+    _modelOptions.removeWhere((model) => model == path);
+
+    if (_model == path) {
+      _model = null;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('loaded_models', jsonEncode(_modelOptions));
+
+    notifyListeners();
   }
 
   @override
@@ -832,12 +869,12 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
     assert(apiKey != null, 'API Key is required');
     assert(model != null && model!.isNotEmpty, 'Model name is required');
     busy = true;
-  
+
     final dio = Dio();
-  
+
     final url =
         '${baseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"}?key=$apiKey';
-  
+
     final requestBody = {
       "contents": messages
           .where((message) =>
@@ -850,17 +887,17 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
               })
           .toList(),
     };
-  
+
     try {
       final response = await dio.post(
         url,
         options: Options(headers: {"Content-Type": "application/json"}),
         data: requestBody,
       );
-  
+
       if (response.statusCode == 200) {
         final responseData = response.data;
-  
+
         if (responseData['candidates'] != null &&
             responseData['candidates'] is List) {
           for (final candidate in responseData['candidates']) {

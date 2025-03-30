@@ -45,6 +45,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get delete => '删除';
 
   @override
+  String get select => '选择';
+
+  @override
   String get import => '导入';
 
   @override
@@ -84,7 +87,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get close => '关闭';
 
   @override
-  String save(String label) {
+  String get save => '保存';
+
+  @override
+  String saveLabel(String label) {
     return '保存 $label';
   }
 
