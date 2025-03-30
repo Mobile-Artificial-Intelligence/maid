@@ -237,7 +237,9 @@ class LlamaCppController extends ArtificialIntelligenceController {
   LlamaCppController({
     super.model, 
     super.overrides
-  });
+  }) {
+    getLoadedModels();
+  }
 
   @override
   Stream<String> prompt(List<ChatMessage> messages) async* {
@@ -311,12 +313,8 @@ class LlamaCppController extends ArtificialIntelligenceController {
 
   void getLoadedModels() async {
     final prefs = await SharedPreferences.getInstance();
-    final loadedModels = prefs.getString('loaded_models');
-
-    if (loadedModels != null) {
-      _modelOptions = List<String>.from(jsonDecode(loadedModels));
-      notifyListeners();
-    }
+    _modelOptions = prefs.getStringList('loaded_models') ?? [];
+    notifyListeners();
   }
 
   void addModelFile( path) async {
@@ -325,7 +323,7 @@ class LlamaCppController extends ArtificialIntelligenceController {
     _modelOptions.add(path);
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('loaded_models', jsonEncode(_modelOptions));
+    await prefs.setStringList('loaded_models', _modelOptions);
 
     reloadModel();
   }
@@ -339,7 +337,7 @@ class LlamaCppController extends ArtificialIntelligenceController {
     }
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('loaded_models', jsonEncode(_modelOptions));
+    await prefs.setStringList('loaded_models', _modelOptions);
 
     notifyListeners();
   }

@@ -68,6 +68,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
         setState(() => progress = 1);
       },
       onError: (error) {
+        debugPrint("Error downloading model: $error");
         if (!mounted) return;
         setState(() => progress = 0);
       }
