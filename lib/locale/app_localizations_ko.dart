@@ -24,13 +24,28 @@ class AppLocalizationsKo extends AppLocalizations {
   String get loadModel => '모델 불러오기';
 
   @override
+  String get downloadModel => '모델 다운로드';
+
+  @override
   String get noModelSelected => '선택된 모델 없음';
 
   @override
   String get noModelLoaded => '로드된 모델 없음';
 
   @override
+  String get localModels => '로컬 모델';
+
+  @override
+  String get size => '크기';
+
+  @override
+  String get parameters => '매개변수';
+
+  @override
   String get delete => '삭제';
+
+  @override
+  String get select => '선택';
 
   @override
   String get import => '가져오기';
@@ -72,7 +87,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get close => '닫기';
 
   @override
-  String save(String label) {
+  String get save => '저장';
+
+  @override
+  String saveLabel(String label) {
     return '$label 저장';
   }
 

@@ -47,6 +47,10 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<String> _modelOptions = [];
+
+  List<String> get modelOptions => _modelOptions;
+
   String get type;
   bool get canPrompt;
   String get hash => jsonEncode(toMap()).hash;
@@ -173,10 +177,6 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 
   bool get canGetRemoteModels;
 
-  List<String> _modelOptions = [];
-
-  List<String> get modelOptions => _modelOptions;
-
   RemoteArtificialIntelligenceController({
     super.model, 
     super.overrides,
@@ -237,7 +237,9 @@ class LlamaCppController extends ArtificialIntelligenceController {
   LlamaCppController({
     super.model, 
     super.overrides
-  });
+  }) {
+    getLoadedModels();
+  }
 
   @override
   Stream<String> prompt(List<ChatMessage> messages) async* {
@@ -290,6 +292,8 @@ class LlamaCppController extends ArtificialIntelligenceController {
     }
 
     _model = result.files.single.path!;
+    _modelOptions.removeWhere((model) => model == _model);
+    _modelOptions.add(_model!);
 
     final exists = await File(_model!).exists();
     if (!exists) {
@@ -299,10 +303,43 @@ class LlamaCppController extends ArtificialIntelligenceController {
     notifyListeners();
   }
 
-  void loadModelFile(String path) async {
+  void loadModelFile(String path, [bool notify = false]) async {
     assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
     _model = path;
     reloadModel();
+
+    if (notify) notifyListeners();
+  }
+
+  void getLoadedModels() async {
+    final prefs = await SharedPreferences.getInstance();
+    _modelOptions = prefs.getStringList('loaded_models') ?? [];
+    notifyListeners();
+  }
+
+  void addModelFile( path) async {
+    assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
+    _modelOptions.removeWhere((model) => model == path);
+    _modelOptions.add(path);
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('loaded_models', _modelOptions);
+
+    reloadModel();
+  }
+
+  void removeLoadedModel(String path) async {
+    assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
+    _modelOptions.removeWhere((model) => model == path);
+
+    if (_model == path) {
+      _model = null;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('loaded_models', _modelOptions);
+
+    notifyListeners();
   }
 
   @override
@@ -406,16 +443,16 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   }
 
   Future<Uri?> checkForOllama(Uri url) async {
+    final dio = Dio();
+  
+    dio.options.headers.addAll({
+      "Accept": "application/json",
+      'Authorization': 'Bearer $_apiKey',
+    });
+  
     try {
-      final request = http.Request("GET", url);
-      final headers = {
-        "Accept": "application/json",
-        'Authorization': 'Bearer $_apiKey'
-      };
-
-      request.headers.addAll(headers);
-
-      final response = await request.send();
+      final response = await dio.getUri(url);
+  
       if (response.statusCode == 200) {
         log('Found Ollama at ${url.host}');
         return url;
@@ -425,7 +462,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
         log(e.toString());
       }
     }
-
+  
     return null;
   }
 
@@ -477,21 +514,21 @@ class OllamaController extends RemoteArtificialIntelligenceController {
         final found = await searchForOllama();
         if (!found) return false;
       }
-  
-      final uri = Uri.parse("${_baseUrl ?? 'http://localhost:11434'}/api/tags");
-  
-      final request = http.Request("GET", uri);
-  
-      final headers = {
-        "Accept": "application/json",
-        'Authorization': 'Bearer $_apiKey'
-      };
-  
-      request.headers.addAll(headers);
 
-      final response = await request.send();
-      final responseString = await response.stream.bytesToString();
-      final data = json.decode(responseString);
+      final dio = Dio();
+      final url = "${_baseUrl ?? 'http://localhost:11434'}/api/tags";
+
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            "Accept": "application/json",
+            "Authorization": "Bearer $_apiKey",
+          },
+        ),
+      );
+
+      final data = response.data;
 
       List<String> newOptions = [];
       if (data['models'] != null) {
@@ -502,8 +539,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
 
       _modelOptions = newOptions;
       return true;
-    }
-    catch (e) {
+    } catch (e) {
       if (!e.toString().contains(RegExp(r'Connection (failed|refused)'))) {
         rethrow;
       }
@@ -812,8 +848,6 @@ class AnthropicController extends RemoteArtificialIntelligenceController {
 
 //Google gemini
 class GoogleGeminiController extends RemoteArtificialIntelligenceController {
-  late http.Client _httpClient;
-
   @override
   String get type => 'google_gemini';
 
@@ -828,79 +862,72 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
     super.overrides,
     super.baseUrl,
     super.apiKey,
-  }) {
-    _httpClient = http.Client();
-  }
-
-@override
-Stream<String> prompt(List<ChatMessage> messages) async* {
-  assert(apiKey != null, 'API Key is required');
-  assert(model != null && model!.isNotEmpty, 'Model name is required');
-  busy = true;
-
-  final url = Uri.parse(
-    '${baseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"}?key=$apiKey',
-  );
-
-  // Construct the request body, filtering out invalid or empty messages
-  final requestBody = jsonEncode({
-    "contents": messages
-        .where((message) =>
-            message.role != 'system' && // Exclude system messages
-            message.content.isNotEmpty) 
-        .map((message) {
-      return {
-        "role": message.role, 
-        "parts": [
-          {"text": message.content}
-        ]
-      };
-    }).toList(),
   });
 
-  try {
-    // Send HTTP POST request
-    final response = await _httpClient.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: requestBody,
-    );
+  @override
+  Stream<String> prompt(List<ChatMessage> messages) async* {
+    assert(apiKey != null, 'API Key is required');
+    assert(model != null && model!.isNotEmpty, 'Model name is required');
+    busy = true;
 
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
+    final dio = Dio();
 
-      // Navigate to the candidates array
-      if (responseData['candidates'] != null && responseData['candidates'] is List) {
-        for (final candidate in responseData['candidates']) {
-          if (candidate['content'] != null &&
-              candidate['content']['parts'] != null &&
-              candidate['content']['parts'] is List) {
-            for (final part in candidate['content']['parts']) {
-              if (part['text'] != null) {
+    final url =
+        '${baseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"}?key=$apiKey';
 
-                yield part['text']; // Yield the part text for display
-              } else {
-                throw Exception('Part text is null or missing!');
+    final requestBody = {
+      "contents": messages
+          .where((message) =>
+              message.role != 'system' && message.content.isNotEmpty)
+          .map((message) => {
+                "role": message.role,
+                "parts": [
+                  {"text": message.content}
+                ]
+              })
+          .toList(),
+    };
+
+    try {
+      final response = await dio.post(
+        url,
+        options: Options(headers: {"Content-Type": "application/json"}),
+        data: requestBody,
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = response.data;
+
+        if (responseData['candidates'] != null &&
+            responseData['candidates'] is List) {
+          for (final candidate in responseData['candidates']) {
+            if (candidate['content'] != null &&
+                candidate['content']['parts'] != null &&
+                candidate['content']['parts'] is List) {
+              for (final part in candidate['content']['parts']) {
+                if (part['text'] != null) {
+                  yield part['text'];
+                } else {
+                  throw Exception('Part text is null or missing!');
+                }
               }
+            } else {
+              throw Exception('Content parts are null or not a list!');
             }
-          } else {
-            throw Exception('Content parts are null or not a list!');
           }
+        } else {
+          throw Exception('Candidates are null or not a list!');
         }
       } else {
-        throw Exception('Candidates are null or not a list!');
+        throw Exception(
+            'Google Gemini API Error: ${response.statusCode} ${response.statusMessage}');
       }
-    } else {
-      throw Exception('Google Gemini API Error: ${response.body}');
+    } catch (e) {
+      rethrow;
+    } finally {
+      busy = false;
     }
-  } catch (e) {
-    rethrow;
-  } finally {
-    busy = false;
   }
-}
-
-
 
   @override
   void stop() {

@@ -5,9 +5,14 @@
     "defaultLocale": "Default Locale",
     "loading": "Loading...",
     "loadModel": "Load Model",
+    "downloadModel": "Download Model",
     "noModelSelected": "No Model Selected",
     "noModelLoaded": "No Model Loaded",
+    "localModels": "Local Models",
+    "size": "Size",
+    "parameters": "Parameters",
     "delete": "Delete",
+    "select": "Select",
     "import": "Import",
     "export": "Export",
     "edit": "Edit",
@@ -21,8 +26,9 @@
     "ok": "OK",
     "done": "Done",
     "close": "Close",
-    "save": "Save {label}",
-    "@save": {
+    "save": "Save",
+    "saveLabel": "Save {label}",
+    "@saveLabel": {
         "description": "Save the {label}",
         "placeholders": {
             "label": {

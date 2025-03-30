@@ -24,13 +24,28 @@ class AppLocalizationsHi extends AppLocalizations {
   String get loadModel => 'मॉडल लोड करें';
 
   @override
+  String get downloadModel => 'मॉडल डाउनलोड करें';
+
+  @override
   String get noModelSelected => 'कोई मॉडल चयनित नहीं';
 
   @override
   String get noModelLoaded => 'कोई मॉडल लोड नहीं हुआ';
 
   @override
+  String get localModels => 'स्थानीय मॉडल';
+
+  @override
+  String get size => 'आकार';
+
+  @override
+  String get parameters => 'पैरामीटर';
+
+  @override
   String get delete => 'हटाएं';
+
+  @override
+  String get select => 'चुनें';
 
   @override
   String get import => 'आयात करें';
@@ -72,7 +87,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get close => 'बंद करें';
 
   @override
-  String save(String label) {
+  String get save => 'सहेजें';
+
+  @override
+  String saveLabel(String label) {
     return '$label सहेजें';
   }
 

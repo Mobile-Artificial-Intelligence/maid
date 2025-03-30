@@ -24,13 +24,28 @@ class AppLocalizationsJa extends AppLocalizations {
   String get loadModel => 'モデルを読み込む';
 
   @override
+  String get downloadModel => 'モデルをダウンロード';
+
+  @override
   String get noModelSelected => 'モデルが選択されていません';
 
   @override
   String get noModelLoaded => 'モデルが読み込まれていません';
 
   @override
+  String get localModels => 'ローカルモデル';
+
+  @override
+  String get size => 'サイズ';
+
+  @override
+  String get parameters => 'パラメータ';
+
+  @override
   String get delete => '削除';
+
+  @override
+  String get select => '選択';
 
   @override
   String get import => 'インポート';
@@ -72,7 +87,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get close => '閉じる';
 
   @override
-  String save(String label) {
+  String get save => '保存';
+
+  @override
+  String saveLabel(String label) {
     return '$label を保存';
   }
 

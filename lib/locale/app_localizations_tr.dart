@@ -24,13 +24,28 @@ class AppLocalizationsTr extends AppLocalizations {
   String get loadModel => 'Modeli Yükle';
 
   @override
+  String get downloadModel => 'Modeli İndir';
+
+  @override
   String get noModelSelected => 'Model Seçilmedi';
 
   @override
   String get noModelLoaded => 'Model Yüklenmedi';
 
   @override
+  String get localModels => 'Yerel Modeller';
+
+  @override
+  String get size => 'Boyut';
+
+  @override
+  String get parameters => 'Parametreler';
+
+  @override
   String get delete => 'Sil';
+
+  @override
+  String get select => 'Seç';
 
   @override
   String get import => 'İçe Aktar';
@@ -72,7 +87,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get close => 'Kapat';
 
   @override
-  String save(String label) {
+  String get save => 'Kaydet';
+
+  @override
+  String saveLabel(String label) {
     return '$label Kaydet';
   }
 

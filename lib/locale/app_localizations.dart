@@ -143,6 +143,12 @@ abstract class AppLocalizations {
   /// **'Load Model'**
   String get loadModel;
 
+  /// No description provided for @downloadModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Model'**
+  String get downloadModel;
+
   /// No description provided for @noModelSelected.
   ///
   /// In en, this message translates to:
@@ -155,11 +161,35 @@ abstract class AppLocalizations {
   /// **'No Model Loaded'**
   String get noModelLoaded;
 
+  /// No description provided for @localModels.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Models'**
+  String get localModels;
+
+  /// No description provided for @size.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get size;
+
+  /// No description provided for @parameters.
+  ///
+  /// In en, this message translates to:
+  /// **'Parameters'**
+  String get parameters;
+
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
+
+  /// No description provided for @select.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get select;
 
   /// No description provided for @import.
   ///
@@ -239,11 +269,17 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get close;
 
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
   /// Save the {label}
   ///
   /// In en, this message translates to:
   /// **'Save {label}'**
-  String save(String label);
+  String saveLabel(String label);
 
   /// No description provided for @next.
   ///

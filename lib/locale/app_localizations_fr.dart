@@ -24,13 +24,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loadModel => 'Charger le modèle';
 
   @override
+  String get downloadModel => 'Télécharger le modèle';
+
+  @override
   String get noModelSelected => 'Aucun modèle sélectionné';
 
   @override
   String get noModelLoaded => 'Aucun modèle chargé';
 
   @override
+  String get localModels => 'Modèles locaux';
+
+  @override
+  String get size => 'Taille';
+
+  @override
+  String get parameters => 'Paramètres';
+
+  @override
   String get delete => 'Supprimer';
+
+  @override
+  String get select => 'Sélectionner';
 
   @override
   String get import => 'Importer';
@@ -72,7 +87,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get close => 'Fermer';
 
   @override
-  String save(String label) {
+  String get save => 'Enregistrer';
+
+  @override
+  String saveLabel(String label) {
     return 'Enregistrer $label';
   }
 

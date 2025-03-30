@@ -24,13 +24,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loadModel => 'Загрузить модель';
 
   @override
+  String get downloadModel => 'Скачать модель';
+
+  @override
   String get noModelSelected => 'Модель не выбрана';
 
   @override
   String get noModelLoaded => 'Модель не загружена';
 
   @override
+  String get localModels => 'Локальные модели';
+
+  @override
+  String get size => 'Размер';
+
+  @override
+  String get parameters => 'Параметры';
+
+  @override
   String get delete => 'Удалить';
+
+  @override
+  String get select => 'Выбрать';
 
   @override
   String get import => 'Импорт';
@@ -72,7 +87,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get close => 'Закрыть';
 
   @override
-  String save(String label) {
+  String get save => 'Сохранить';
+
+  @override
+  String saveLabel(String label) {
     return 'Сохранить $label';
   }
 

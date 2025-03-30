@@ -24,13 +24,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get loadModel => '加载模型';
 
   @override
+  String get downloadModel => '下载模型';
+
+  @override
   String get noModelSelected => '未选择模型';
 
   @override
   String get noModelLoaded => '未加载模型';
 
   @override
+  String get localModels => '本地模型';
+
+  @override
+  String get size => '大小';
+
+  @override
+  String get parameters => '参数';
+
+  @override
   String get delete => '删除';
+
+  @override
+  String get select => '选择';
 
   @override
   String get import => '导入';
@@ -72,7 +87,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get close => '关闭';
 
   @override
-  String save(String label) {
+  String get save => '保存';
+
+  @override
+  String saveLabel(String label) {
     return '保存 $label';
   }
 

@@ -5,9 +5,14 @@
     "defaultLocale": "Varsayılan Yerel Ayar",
     "loading": "Yükleniyor...",
     "loadModel": "Modeli Yükle",
+    "downloadModel": "Modeli İndir",
     "noModelSelected": "Model Seçilmedi",
     "noModelLoaded": "Model Yüklenmedi",
+    "localModels": "Yerel Modeller",
+    "size": "Boyut",
+    "parameters": "Parametreler",
     "delete": "Sil",
+    "select": "Seç",
     "import": "İçe Aktar",
     "export": "Dışa Aktar",
     "edit": "Düzenle",
@@ -21,16 +26,8 @@
     "ok": "Tamam",
     "done": "Bitti",
     "close": "Kapat",
-    "save": "{label} Kaydet",
-    "@save": {
-        "description": "{label} öğesini kaydet",
-        "placeholders": {
-            "label": {
-                "type": "String",
-                "example": "Mesaj"
-            }
-        }
-    },
+    "save": "Kaydet",
+    "saveLabel": "{label} Kaydet",
     "next": "Sonraki",
     "previous": "Önceki",
     "contentShared": "İçerik Paylaşıldı",
@@ -73,15 +70,6 @@
     "editMessage": "Mesajı Düzenle",
     "settingsTitle": "Ayarlar",
     "aiSettings": "{aiControllerType} Ayarları",
-    "@aiSettings": {
-        "description": "{aiControllerType} için ayarlar",
-        "placeholders": {
-            "aiControllerType": {
-                "type": "String",
-                "example": "Llama CPP"
-            }
-        }
-    },
     "userSettings": "Kullanıcı Ayarları",
     "assistantSettings": "Asistan Ayarları",
     "systemSettings": "Sistem Ayarları",
@@ -100,23 +88,5 @@
     "typeMessage": "Bir mesaj yazın...",
     "code": "Kod",
     "copyLabel": "{label} Kopyala",
-    "@copyLabel": {
-        "description": "{label} öğesini panoya kopyala",
-        "placeholders": {
-            "label": {
-                "type": "String",
-                "example": "Kod"
-            }
-        }
-    },
-    "labelCopied": "{label} panoya kopyalandı!",
-    "@labelCopied": {
-        "description": "{label} panoya kopyalandı!",
-        "placeholders": {
-            "label": {
-                "type": "String",
-                "example": "Kod"
-            }
-        }
-    }
+    "labelCopied": "{label} panoya kopyalandı!"
 }
