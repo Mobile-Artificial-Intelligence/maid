@@ -118,6 +118,13 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    tag = widget.tags.entries.first;
+    handleTagChange(tag!);
+  }
+
+  @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
     margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -284,6 +291,8 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
       handleProgressStream(HuggingfaceManager.downloadProgress[entry.value]!.stream);
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 }

@@ -105,5 +105,57 @@
             "q6_k": "qwen2.5-1.5b-instruct-q6_k.gguf",
             "q8_0": "qwen2.5-1.5b-instruct-q8_0.gguf"
         }
-    }
+    },
+    {
+        "name": "Llama 3.2 1B Instruct",
+        "repo": "bartowski/Llama-3.2-1B-Instruct-GGUF",
+        "branch": "main",
+        "parameters": 1.0,
+        "tags": {
+            "IQ3_M": "Llama-3.2-1B-Instruct-IQ3_M.gguf",
+            "IQ4_XS": "Llama-3.2-1B-Instruct-IQ4_XS.gguf",
+            "Q3_K_L": "Llama-3.2-1B-Instruct-Q3_K_L.gguf",
+            "Q3_K_XL": "Llama-3.2-1B-Instruct-Q3_K_XL.gguf",
+            "Q4_0": "Llama-3.2-1B-Instruct-Q4_0.gguf",
+            "Q4_0_4_4": "Llama-3.2-1B-Instruct-Q4_0_4_4.gguf",
+            "Q4_0_4_8": "Llama-3.2-1B-Instruct-Q4_0_4_8.gguf",
+            "Q4_0_8_8": "Llama-3.2-1B-Instruct-Q4_0_8_8.gguf",
+            "Q4_K_L": "Llama-3.2-1B-Instruct-Q4_K_L.gguf",
+            "Q4_K_M": "Llama-3.2-1B-Instruct-Q4_K_M.gguf",
+            "Q4_K_S": "Llama-3.2-1B-Instruct-Q4_K_S.gguf",
+            "Q5_K_L": "Llama-3.2-1B-Instruct-Q5_K_L.gguf",
+            "Q5_K_M": "Llama-3.2-1B-Instruct-Q5_K_M.gguf",
+            "Q5_K_S": "Llama-3.2-1B-Instruct-Q5_K_S.gguf",
+            "Q6_K": "Llama-3.2-1B-Instruct-Q6_K.gguf",
+            "Q6_K_L": "Llama-3.2-1B-Instruct-Q6_K_L.gguf",
+            "Q8_0": "Llama-3.2-1B-Instruct-Q8_0.gguf",
+            "f16": "Llama-3.2-1B-Instruct-f16.gguf"
+        }
+    },
+    {
+        "name": "Llama 3.2 3B Instruct",
+        "repo": "bartowski/Llama-3.2-3B-Instruct-GGUF",
+        "branch": "main",
+        "parameters": 3.0,
+        "tags": {
+            "IQ3_M": "Llama-3.2-3B-Instruct-IQ3_M.gguf",
+            "IQ4_XS": "Llama-3.2-3B-Instruct-IQ4_XS.gguf",
+            "Q3_K_L": "Llama-3.2-3B-Instruct-Q3_K_L.gguf",
+            "Q3_K_XL": "Llama-3.2-3B-Instruct-Q3_K_XL.gguf",
+            "Q4_0": "Llama-3.2-3B-Instruct-Q4_0.gguf",
+            "Q4_0_4_4": "Llama-3.2-3B-Instruct-Q4_0_4_4.gguf",
+            "Q4_0_4_8": "Llama-3.2-3B-Instruct-Q4_0_4_8.gguf",
+            "Q4_0_8_8": "Llama-3.2-3B-Instruct-Q4_0_8_8.gguf",
+            "Q4_K_L": "Llama-3.2-3B-Instruct-Q4_K_L.gguf",
+            "Q4_K_M": "Llama-3.2-3B-Instruct-Q4_K_M.gguf",
+            "Q4_K_S": "Llama-3.2-3B-Instruct-Q4_K_S.gguf",
+            "Q5_K_L": "Llama-3.2-3B-Instruct-Q5_K_L.gguf",
+            "Q5_K_M": "Llama-3.2-3B-Instruct-Q5_K_M.gguf",
+            "Q5_K_S": "Llama-3.2-3B-Instruct-Q5_K_S.gguf",
+            "Q6_K": "Llama-3.2-3B-Instruct-Q6_K.gguf",
+            "Q6_K_L": "Llama-3.2-3B-Instruct-Q6_K_L.gguf",
+            "Q8_0": "Llama-3.2-3B-Instruct-Q8_0.gguf",
+            "f16": "Llama-3.2-3B-Instruct-f16.gguf"
+        }
+    }    
 ]
