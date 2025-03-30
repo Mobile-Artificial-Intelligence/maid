@@ -56,14 +56,17 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
 
     final filePath = await getFilePath();
 
-    await Dio().download(
-      "https://huggingface.co/${widget.repo}/resolve/${widget.branch}/${widget.fileName}?download=true",
+    final progressStream = widget.llama.download(
+      widget.repo,
+      widget.branch,
+      widget.fileName,
       filePath,
-      onReceiveProgress: (received, total) {
-        if (total == -1 || !context.mounted) return;
-        setState(() => progress = received / total);
-      },
     );
+
+    await for (final newProgress in progressStream) {
+      if (!mounted) return;
+      setState(() => progress = newProgress);
+    }
 
     assert(File(filePath).existsSync(), "File not downloaded");
     widget.llama.addModelFile(filePath);
@@ -108,7 +111,9 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
       size = (await fetchRemoteFileSize() ?? 0) / (1024 * 1024 * 1024); // Convert to GB
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
