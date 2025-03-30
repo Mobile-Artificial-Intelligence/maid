@@ -28,6 +28,7 @@
     "close": "닫기",
     "save": "저장",
     "saveLabel": "{label} 저장",
+    "selectTag": "태그 선택",
     "next": "다음",
     "previous": "이전",
     "contentShared": "콘텐츠 공유됨",

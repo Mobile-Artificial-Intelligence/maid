@@ -37,6 +37,7 @@
             }
         }
     },
+    "selectTag": "Select Tag",
     "next": "Next",
     "previous": "Previous",
     "contentShared": "Content Shared",

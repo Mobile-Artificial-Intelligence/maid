@@ -95,6 +95,9 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get selectTag => 'タグを選択';
+
+  @override
   String get next => '次へ';
 
   @override

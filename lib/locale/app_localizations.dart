@@ -281,6 +281,12 @@ abstract class AppLocalizations {
   /// **'Save {label}'**
   String saveLabel(String label);
 
+  /// No description provided for @selectTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Tag'**
+  String get selectTag;
+
   /// No description provided for @next.
   ///
   /// In en, this message translates to:

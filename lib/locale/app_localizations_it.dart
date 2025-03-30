@@ -95,6 +95,9 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get selectTag => 'Seleziona tag';
+
+  @override
   String get next => 'Prossimo';
 
   @override

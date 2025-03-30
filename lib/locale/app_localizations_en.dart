@@ -95,6 +95,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get selectTag => 'Select Tag';
+
+  @override
   String get next => 'Next';
 
   @override

@@ -95,6 +95,9 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get selectTag => '选择标签';
+
+  @override
   String get next => '下一步';
 
   @override

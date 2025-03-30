@@ -4,8 +4,8 @@ class HuggingfaceModel extends StatefulWidget {
   final String name;
   final String repo;
   final String branch;
-  final String fileName;
   final double parameters; // Billions of parameters
+  final Map<String, String> tags;
   final LlamaCppController llama;
 
   const HuggingfaceModel({
@@ -13,8 +13,8 @@ class HuggingfaceModel extends StatefulWidget {
     required this.name, 
     required this.repo,
     this.branch = 'main',
-    required this.fileName,
     required this.parameters,
+    required this.tags,
     required this.llama,
   });
 
@@ -24,11 +24,13 @@ class HuggingfaceModel extends StatefulWidget {
 
 class HuggingfaceModelState extends State<HuggingfaceModel> {
   static final Map<String, double> sizeCache = {};
+  bool tagDropdownOpen = false;
+  MapEntry<String, String>? tag;
   double size = 0;
   double progress = 0;
 
   Future<int?> fetchRemoteFileSize() async {
-    final url = "https://huggingface.co/${widget.repo}/resolve/${widget.branch}/${widget.fileName}";
+    final url = "https://huggingface.co/${widget.repo}/resolve/${widget.branch}/${tag!.value}";
 
     try {
       final response = await Dio().head(url, options: Options(
@@ -53,7 +55,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
     handleProgressStream(HuggingfaceManager.download(
       widget.repo,
       widget.branch,
-      widget.fileName,
+      tag!.value,
       widget.llama
     ));
   }
@@ -77,7 +79,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   }
 
   void deleteModel() async {
-    final filePath = await HuggingfaceManager.getFilePath(widget.fileName);
+    final filePath = await HuggingfaceManager.getFilePath(tag!.value);
     widget.llama.removeLoadedModel(filePath);
     final file = File(filePath);
     if (await file.exists()) {
@@ -87,18 +89,18 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   }
 
   void selectModel() async {
-    final filePath = await HuggingfaceManager.getFilePath(widget.fileName);
+    final filePath = await HuggingfaceManager.getFilePath(tag!.value);
     widget.llama.loadModelFile(filePath, true);
   }
 
   void exportModel() async {
-    final filePath = await HuggingfaceManager.getFilePath(widget.fileName);
+    final filePath = await HuggingfaceManager.getFilePath(tag!.value);
     final file = File(filePath);
     if (!(await file.exists())) return;
 
     final outputPath = await FilePicker.platform.saveFile(
       dialogTitle: 'Export Model',
-      fileName: widget.fileName,
+      fileName: tag!.value,
       type: FileType.custom,
       allowedExtensions: ['gguf']
     );
@@ -112,36 +114,6 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
     final url = Uri.parse('https://huggingface.co/${widget.repo}');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initAsync();
-  }
-
-  void initAsync() async {
-    final filePath = await HuggingfaceManager.getFilePath(widget.fileName);
-    if (File(filePath).existsSync()) {
-      final file = File(filePath);
-      size = (await file.length()) / (1024 * 1024 * 1024); // Convert to GB
-      progress = 1.0;
-    }
-    else if (sizeCache[widget.fileName] != null) {
-      size = sizeCache[widget.fileName]!;
-    } 
-    else {
-      size = (await fetchRemoteFileSize() ?? 0) / (1024 * 1024 * 1024); // Convert to GB
-    }
-    sizeCache[widget.fileName] = size;
-
-    if (HuggingfaceManager.downloadProgress[widget.fileName] != null) {
-      handleProgressStream(HuggingfaceManager.downloadProgress[widget.fileName]!.stream);
-    }
-
-    if (mounted) {
-      setState(() {});
     }
   }
 
@@ -247,24 +219,71 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
     )
   );
 
-  Widget buildTitle(BuildContext context) => SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(
-          widget.name,
-          style: Theme.of(context).textTheme.titleMedium,
+  Widget buildTitle(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      Text(
+        widget.name,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      IconButton(
+        onPressed: navigateRepo,
+        iconSize: 20,
+        icon: Icon(
+          Icons.launch,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
-        IconButton(
-          onPressed: navigateRepo,
-          iconSize: 20,
-          icon: Icon(
-            Icons.launch,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        )
-      ],
-    )
+      ),
+      const Spacer(),
+      Text(
+        tag?.key ?? AppLocalizations.of(context)!.selectTag,
+        style: Theme.of(context).textTheme.labelMedium,
+      ),
+      PopupMenuButton<MapEntry<String, String>>(
+        tooltip: AppLocalizations.of(context)!.selectTag,
+        icon: Icon(
+          tagDropdownOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+        offset: const Offset(0, 40),
+        itemBuilder: (context) => widget.tags.entries.map((entry) {
+          return PopupMenuItem<MapEntry<String, String>>(
+            value: entry,
+            child: Text(entry.key),
+          );
+        }).toList(),
+        onOpened: () => setState(() => tagDropdownOpen = true),
+        onCanceled: () => setState(() => tagDropdownOpen = false),
+        onSelected: handleTagChange
+      )
+    ],
   );
+
+  void handleTagChange(MapEntry<String, String> entry) async {
+    setState(() {
+      progress = 0;
+      tag = entry;
+      tagDropdownOpen = false;
+    });
+
+    final filePath = await HuggingfaceManager.getFilePath(entry.value);
+    if (File(filePath).existsSync()) {
+      final file = File(filePath);
+      size = (await file.length()) / (1024 * 1024 * 1024); // Convert to GB
+      progress = 1.0;
+    }
+    else if (sizeCache[entry.value] != null) {
+      size = sizeCache[entry.value]!;
+    } 
+    else {
+      size = (await fetchRemoteFileSize() ?? 0) / (1024 * 1024 * 1024); // Convert to GB
+    }
+    sizeCache[entry.value] = size;
+
+    if (HuggingfaceManager.downloadProgress[entry.value] != null) {
+      handleProgressStream(HuggingfaceManager.downloadProgress[entry.value]!.stream);
+    }
+
+    setState(() {});
+  }
 }

@@ -21,13 +21,13 @@ class HuggingFacePage extends StatelessWidget {
   Future<List<Widget>> getModelList() async {
     List<Widget> widgets = [];
     List<dynamic> modelList;
-  
+
     try {
       // Try to fetch JSON from the web
       final response = await Dio().get(
         'https://raw.githubusercontent.com/Mobile-Artificial-Intelligence/maid/refs/heads/main/huggingface_models.json'
       );
-  
+
       // Decode the web JSON response
       modelList = jsonDecode(response.data) as List;
     } catch (e) {
@@ -35,24 +35,23 @@ class HuggingFacePage extends StatelessWidget {
       final modelListString = await rootBundle.loadString('huggingface_models.json');
       modelList = jsonDecode(modelListString) as List;
     }
-  
+
     for (final model in modelList) {
       final modelMap = model as Map<String, dynamic>;
-      final tags = modelMap['tags'] as Map<String, dynamic>;
-  
-      for (final tag in tags.entries) {
-        widgets.add(
-          HuggingfaceModel(
-            name: '${modelMap['name']} ${tag.key}',
-            repo: modelMap['repo'],
-            fileName: tag.value,
-            parameters: modelMap['parameters'],
-            llama: aiController as LlamaCppController,
-          )
-        );
-      }
+
+      widgets.add(
+        HuggingfaceModel(
+          name: modelMap['name'],
+          repo: modelMap['repo'],
+          parameters: modelMap['parameters'],
+          tags: (modelMap['tags'] as Map<String, dynamic>).map(
+            (key, value) => MapEntry(key, value.toString())
+          ),
+          llama: aiController as LlamaCppController,
+        )
+      );
     }
-  
+
     return widgets;
   }
 

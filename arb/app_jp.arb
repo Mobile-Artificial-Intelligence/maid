@@ -28,6 +28,7 @@
     "close": "閉じる",
     "save": "保存",
     "saveLabel": "{label} を保存",
+    "selectTag": "タグを選択",
     "next": "次へ",
     "previous": "前へ",
     "contentShared": "コンテンツが共有されました",

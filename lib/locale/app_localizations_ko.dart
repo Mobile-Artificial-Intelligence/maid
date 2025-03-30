@@ -95,6 +95,9 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get selectTag => '태그 선택';
+
+  @override
   String get next => '다음';
 
   @override

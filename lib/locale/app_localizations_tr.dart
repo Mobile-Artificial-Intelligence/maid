@@ -95,6 +95,9 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get selectTag => 'Etiket Seç';
+
+  @override
   String get next => 'Sonraki';
 
   @override

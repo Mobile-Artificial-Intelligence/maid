@@ -28,6 +28,7 @@
     "close": "Schließen",
     "save": "Speichern",
     "saveLabel": "Speichern {label}",
+    "selectTag": "Tag auswählen",
     "next": "Weiter",
     "previous": "Zurück",
     "contentShared": "Inhalt geteilt",

@@ -95,6 +95,9 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get selectTag => 'Tag auswählen';
+
+  @override
   String get next => 'Weiter';
 
   @override

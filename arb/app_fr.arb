@@ -28,6 +28,7 @@
     "close": "Fermer",
     "save": "Enregistrer",
     "saveLabel": "Enregistrer {label}",
+    "selectTag": "Choisir une étiquette",
     "next": "Suivant",
     "previous": "Précédent",
     "contentShared": "Contenu partagé",

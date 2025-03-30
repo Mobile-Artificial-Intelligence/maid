@@ -95,6 +95,9 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get selectTag => 'Выбрать тег';
+
+  @override
   String get next => 'Далее';
 
   @override

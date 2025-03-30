@@ -28,6 +28,7 @@
     "close": "Закрыть",
     "save": "Сохранить",
     "saveLabel": "Сохранить {label}",
+    "selectTag": "Выбрать тег",
     "next": "Далее",
     "previous": "Назад",
     "contentShared": "Контент отправлен",
