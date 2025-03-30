@@ -27,6 +27,13 @@ class HuggingFacePage extends StatelessWidget {
         parameters: 3.82,
         llama: aiController as LlamaCppController,
       ),
+      HuggingfaceModel(
+        name: 'Phi 3 Mini 4K Instruct FP16', 
+        repo: 'microsoft/Phi-3-mini-4k-instruct-gguf',
+        fileName: 'Phi-3-mini-4k-instruct-fp16.gguf',
+        parameters: 3.82,
+        llama: aiController as LlamaCppController,
+      ),
     ]
   );
 }

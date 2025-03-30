@@ -301,10 +301,12 @@ class LlamaCppController extends ArtificialIntelligenceController {
     notifyListeners();
   }
 
-  void loadModelFile(String path) async {
+  void loadModelFile(String path, [bool notify = false]) async {
     assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
     _model = path;
     reloadModel();
+
+    if (notify) notifyListeners();
   }
 
   void getLoadedModels() async {

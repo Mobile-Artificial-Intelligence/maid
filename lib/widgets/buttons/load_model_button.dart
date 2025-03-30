@@ -8,19 +8,36 @@ class LoadModelButton extends StatelessWidget {
   LoadModelButton({super.key, required this.llama});
 
   void onTap(BuildContext context) async {
+    final List<PopupMenuEntry> popoverItems = [
+      PopupMenuItem(
+        value: 'load',
+        child: Text(AppLocalizations.of(context)!.loadModel),
+      ),
+      PopupMenuItem(
+        value: 'download',
+        child: Text(AppLocalizations.of(context)!.downloadModel),
+      ),
+    ];
+
+    if (llama.modelOptions.isNotEmpty) {
+      popoverItems.add(
+        const PopupMenuDivider(),
+      );
+
+      for (final option in llama.modelOptions) {
+        popoverItems.add(
+          PopupMenuItem(
+            value: option,
+            child: Text(option.split('/').last),
+          ),
+        );
+      }
+    }
+
     final selection = await showMenu(
       context: context,
       positionBuilder: popoverPositionBuilder,
-      items: [
-        PopupMenuItem(
-          value: 'load',
-          child: Text(AppLocalizations.of(context)!.loadModel),
-        ),
-        PopupMenuItem(
-          value: 'download',
-          child: Text(AppLocalizations.of(context)!.downloadModel),
-        ),
-      ],
+      items: popoverItems,
       constraints: BoxConstraints(
         maxWidth: popoverWidth,
         minWidth: popoverWidth,
@@ -32,6 +49,9 @@ class LoadModelButton extends StatelessWidget {
     } 
     else if (selection == 'download' && context.mounted) {
       Navigator.of(context).pushNamed('/huggingface');
+    }
+    else if (selection != null && llama.modelOptions.isNotEmpty) {
+      llama.loadModelFile(selection, true);
     }
   }
 
