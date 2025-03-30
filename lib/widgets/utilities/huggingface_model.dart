@@ -5,7 +5,6 @@ class HuggingfaceModel extends StatefulWidget {
   final String repo;
   final String branch;
   final String fileName;
-  final double size;
   final double parameters; // Billions of parameters
 
   const HuggingfaceModel({
@@ -14,7 +13,6 @@ class HuggingfaceModel extends StatefulWidget {
     required this.repo,
     this.branch = 'main',
     required this.fileName,
-    required this.size, 
     required this.parameters
   });
 
@@ -23,11 +21,32 @@ class HuggingfaceModel extends StatefulWidget {
 }
 
 class HuggingfaceModelState extends State<HuggingfaceModel> {
+  double size = 0;
   double progress = 0;
 
   Future<String> getFilePath() async {
     final cache = await getApplicationCacheDirectory();
     return '${cache.path}/${widget.fileName}';
+  }
+
+  Future<int?> fetchRemoteFileSize() async {
+    final url = "https://huggingface.co/${widget.repo}/resolve/${widget.branch}/${widget.fileName}";
+
+    try {
+      final response = await Dio().head(url, options: Options(
+        followRedirects: true,
+        validateStatus: (status) => status! < 500,
+      ));
+
+      final contentLength = response.headers.value(HttpHeaders.contentLengthHeader);
+      if (contentLength != null) {
+        return int.tryParse(contentLength);
+      }
+    } catch (e) {
+      debugPrint("Failed to fetch file size: $e");
+    }
+
+    return null;
   }
 
   void downloadModel() async {
@@ -39,7 +58,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
       "https://huggingface.co/${widget.repo}/resolve/${widget.branch}/${widget.fileName}?download=true",
       filePath,
       onReceiveProgress: (received, total) {
-        if (total == -1) return;
+        if (total == -1 || !context.mounted) return;
         setState(() => progress = received / total);
       },
     );
@@ -62,6 +81,26 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    initAsync();
+  }
+
+  void initAsync() async {
+    final filePath = await getFilePath();
+    if (File(filePath).existsSync()) {
+      final file = File(filePath);
+      size = await file.length() / (1024 * 1024 * 1024); // Convert to GB
+      progress = 1.0;
+    }
+    else {
+      size = (await fetchRemoteFileSize() ?? 0) / (1024 * 1024 * 1024); // Convert to GB
+    }
+
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
     margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -77,7 +116,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
     children: [
       buildTitle(context),
       Text(
-        '${AppLocalizations.of(context)!.size}: ${widget.size.toString()} GB',
+        '${AppLocalizations.of(context)!.size}: ${size.toStringAsFixed(2)} GB',
         style: Theme.of(context).textTheme.bodyMedium,
       ),
       Text(

@@ -21,7 +21,6 @@ class HuggingFacePage extends StatelessWidget {
         name: 'Phi 3 Mini 4K Instruct Q4', 
         repo: 'microsoft/Phi-3-mini-4k-instruct-gguf',
         fileName: 'Phi-3-mini-4k-instruct-q4.gguf',
-        size: 1.2, 
         parameters: 7.0
       ),
     ]
