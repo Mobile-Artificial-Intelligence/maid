@@ -88,7 +88,24 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
 
   void selectModel() async {
     final filePath = await HuggingfaceManager.getFilePath(widget.fileName);
-    widget.llama.loadModelFile(filePath);
+    widget.llama.loadModelFile(filePath, true);
+  }
+
+  void exportModel() async {
+    final filePath = await HuggingfaceManager.getFilePath(widget.fileName);
+    final file = File(filePath);
+    if (!(await file.exists())) return;
+
+    final outputPath = await FilePicker.platform.saveFile(
+      dialogTitle: 'Export Model',
+      fileName: widget.fileName,
+      type: FileType.custom,
+      allowedExtensions: ['gguf']
+    );
+
+    if (outputPath != null && !File(outputPath).existsSync()) {
+      await file.copy(outputPath);
+    }
   }
 
   void navigateRepo() async {
@@ -192,6 +209,17 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
         icon: Icon(
           Icons.delete,
           color: Theme.of(context).colorScheme.error,
+        ),
+      ),
+      TextButton.icon(
+        onPressed: exportModel,
+        label: Text(
+          AppLocalizations.of(context)!.export,
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+        icon: Icon(
+          Icons.save,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
       TextButton.icon(
