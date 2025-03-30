@@ -74,5 +74,36 @@
             "f16": "Gemmasutra-Mini-2B-v1-f16.gguf",
             "f32": "Gemmasutra-Mini-2B-v1-f32.gguf"
         }
-    }    
+    },
+    {
+        "name": "Gemmasutra Small 4B v1a",
+        "repo": "TheDrummer/Gemmasutra-Small-4B-v1-GGUF",
+        "branch": "main",
+        "parameters": 4.0,
+        "tags": {
+            "Q2_K": "Gemmasutra-Small-4B-v1a-Q2_K.gguf",
+            "Q3_K_M": "Gemmasutra-Small-4B-v1a-Q3_K_M.gguf",
+            "Q4_K_M": "Gemmasutra-Small-4B-v1a-Q4_K_M.gguf",
+            "Q5_K_M": "Gemmasutra-Small-4B-v1a-Q5_K_M.gguf",
+            "Q6_K": "Gemmasutra-Small-4B-v1a-Q6_K.gguf",
+            "Q8_0": "Gemmasutra-Small-4B-v1a-Q8_0.gguf"
+        }
+    },
+    {
+        "name": "Qwen2.5 1.5B Instruct",
+        "repo": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+        "branch": "main",
+        "parameters": 1.5,
+        "tags": {
+            "fp16": "qwen2.5-1.5b-instruct-fp16.gguf",
+            "q2_k": "qwen2.5-1.5b-instruct-q2_k.gguf",
+            "q3_k_m": "qwen2.5-1.5b-instruct-q3_k_m.gguf",
+            "q4_0": "qwen2.5-1.5b-instruct-q4_0.gguf",
+            "q4_k_m": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+            "q5_0": "qwen2.5-1.5b-instruct-q5_0.gguf",
+            "q5_k_m": "qwen2.5-1.5b-instruct-q5_k_m.gguf",
+            "q6_k": "qwen2.5-1.5b-instruct-q6_k.gguf",
+            "q8_0": "qwen2.5-1.5b-instruct-q8_0.gguf"
+        }
+    }
 ]
