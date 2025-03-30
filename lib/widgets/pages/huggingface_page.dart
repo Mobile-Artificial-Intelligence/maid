@@ -15,25 +15,63 @@ class HuggingFacePage extends StatelessWidget {
         AppLocalizations.of(context)!.localModels
       ),
     ),
-    body: buildBody(context),
+    body: buildFutureBuilder(context),
   );
 
-  Widget buildBody(BuildContext context) => ListView(
-    children: [
-      HuggingfaceModel(
-        name: 'Phi 3 Mini 4K Instruct Q4', 
-        repo: 'microsoft/Phi-3-mini-4k-instruct-gguf',
-        fileName: 'Phi-3-mini-4k-instruct-q4.gguf',
-        parameters: 3.82,
-        llama: aiController as LlamaCppController,
-      ),
-      HuggingfaceModel(
-        name: 'Phi 3 Mini 4K Instruct FP16', 
-        repo: 'microsoft/Phi-3-mini-4k-instruct-gguf',
-        fileName: 'Phi-3-mini-4k-instruct-fp16.gguf',
-        parameters: 3.82,
-        llama: aiController as LlamaCppController,
-      ),
-    ]
+  Future<List<Widget>> getModelList() async {
+    List<Widget>  widgets = [];
+
+    // Get huggingface models from assets bundle
+    final modelListString = await rootBundle.loadString(
+      'huggingface_models.json'
+    );
+
+    // Decode the json string
+    final modelList = jsonDecode(modelListString) as List;
+
+    for (final model in modelList) {
+      final modelMap = model as Map<String, dynamic>;
+      final tags = modelMap['tags'] as Map<String, dynamic>;
+
+      for (final tag in tags.entries) {
+        widgets.add(
+          HuggingfaceModel(
+            name: '${modelMap['name']} ${tag.key}',
+            repo: modelMap['repo'],
+            fileName: tag.value,
+            parameters: modelMap['parameters'],
+            llama: aiController as LlamaCppController,
+          )
+        );
+      }
+    }
+
+    return widgets;
+  }
+
+  Widget buildFutureBuilder(BuildContext context) => FutureBuilder(
+    future: getModelList(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+      else if (snapshot.hasError) {
+        return Center(
+          child: Text(
+            snapshot.error.toString(),
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        );
+      }
+      else if (snapshot.hasData) {
+        return ListView(
+          children: snapshot.data!,
+        );
+      }
+
+      return const SizedBox();
+    },
   );
 }

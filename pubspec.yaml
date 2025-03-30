@@ -61,6 +61,7 @@ flutter:
   assets:
     - images/logo.png
     - images/logo-dark.png
+    - huggingface_models.json
 
 flutter_launcher_icons:
   android: "launcher_icon"

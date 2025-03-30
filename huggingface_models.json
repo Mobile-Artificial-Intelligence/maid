@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Phi 3 Mini 4K Instruct",
+        "repo": "microsoft/Phi-3-mini-4k-instruct-gguf",
+        "branch": "main",
+        "parameters": 3.82,
+        "tags": {
+            "Q4": "Phi-3-mini-4k-instruct-q4.gguf",
+            "FP16": "Phi-3-mini-4k-instruct-fp16.gguf"
+        }
+    },
+    {
+        "name": "TinyLlama 1.1B Chat",
+        "repo": "TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF",
+        "branch": "main",
+        "parameters": 1.1,
+        "tags": {
+            "Q2_K": "tinyllama-1.1b-chat-v1.0.Q2_K.gguf",
+            "Q3_K_L": "tinyllama-1.1b-chat-v1.0.Q3_K_L.gguf",
+            "Q3_K_M": "tinyllama-1.1b-chat-v1.0.Q3_K_M.gguf",
+            "Q3_K_S": "tinyllama-1.1b-chat-v1.0.Q3_K_S.gguf",
+            "Q4_0": "tinyllama-1.1b-chat-v1.0.Q4_0.gguf",
+            "Q4_K_M": "tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+            "Q4_K_S": "tinyllama-1.1b-chat-v1.0.Q4_K_S.gguf",
+            "Q5_0": "tinyllama-1.1b-chat-v1.0.Q5_0.gguf",
+            "Q5_K_M": "tinyllama-1.1b-chat-v1.0.Q5_K_M.gguf",
+            "Q5_K_S": "tinyllama-1.1b-chat-v1.0.Q5_K_S.gguf",
+            "Q6_K": "tinyllama-1.1b-chat-v1.0.Q6_K.gguf",
+            "Q8_0": "tinyllama-1.1b-chat-v1.0.Q8_0.gguf"
+        }
+    }
+]
