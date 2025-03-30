@@ -47,5 +47,32 @@
             "Q8_0": "gemma-2-2b-it-Q8_0.gguf",
             "f32": "gemma-2-2b-it-f32.gguf"
         }
-    }
+    },
+    {
+        "name": "Gemmasutra Mini 2B v1",
+        "repo": "TheDrummer/Gemmasutra-Mini-2B-v1-GGUF",
+        "branch": "main",
+        "parameters": 2.0,
+        "tags": {
+            "BF16": "Gemmasutra-Mini-2B-v1-BF16.gguf",
+            "Q2_K": "Gemmasutra-Mini-2B-v1-Q2_K.gguf",
+            "Q3_K": "Gemmasutra-Mini-2B-v1-Q3_K.gguf",
+            "Q3_K_L": "Gemmasutra-Mini-2B-v1-Q3_K_L.gguf",
+            "Q3_K_M": "Gemmasutra-Mini-2B-v1-Q3_K_M.gguf",
+            "Q3_K_S": "Gemmasutra-Mini-2B-v1-Q3_K_S.gguf",
+            "Q4_0_4_4": "Gemmasutra-Mini-2B-v1-Q4_0_4_4.gguf",
+            "Q4_0_4_8": "Gemmasutra-Mini-2B-v1-Q4_0_4_8.gguf",
+            "Q4_0_8_8": "Gemmasutra-Mini-2B-v1-Q4_0_8_8.gguf",
+            "Q4_K": "Gemmasutra-Mini-2B-v1-Q4_K.gguf",
+            "Q4_K_M": "Gemmasutra-Mini-2B-v1-Q4_K_M.gguf",
+            "Q4_K_S": "Gemmasutra-Mini-2B-v1-Q4_K_S.gguf",
+            "Q5_K": "Gemmasutra-Mini-2B-v1-Q5_K.gguf",
+            "Q5_K_M": "Gemmasutra-Mini-2B-v1-Q5_K_M.gguf",
+            "Q5_K_S": "Gemmasutra-Mini-2B-v1-Q5_K_S.gguf",
+            "Q6_K": "Gemmasutra-Mini-2B-v1-Q6_K.gguf",
+            "Q8_0": "Gemmasutra-Mini-2B-v1-Q8_0.gguf",
+            "f16": "Gemmasutra-Mini-2B-v1-f16.gguf",
+            "f32": "Gemmasutra-Mini-2B-v1-f32.gguf"
+        }
+    }    
 ]
