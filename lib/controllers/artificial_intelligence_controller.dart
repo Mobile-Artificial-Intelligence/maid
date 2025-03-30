@@ -477,21 +477,21 @@ class OllamaController extends RemoteArtificialIntelligenceController {
         final found = await searchForOllama();
         if (!found) return false;
       }
-  
-      final uri = Uri.parse("${_baseUrl ?? 'http://localhost:11434'}/api/tags");
-  
-      final request = http.Request("GET", uri);
-  
-      final headers = {
-        "Accept": "application/json",
-        'Authorization': 'Bearer $_apiKey'
-      };
-  
-      request.headers.addAll(headers);
 
-      final response = await request.send();
-      final responseString = await response.stream.bytesToString();
-      final data = json.decode(responseString);
+      final dio = Dio();
+      final url = "${_baseUrl ?? 'http://localhost:11434'}/api/tags";
+
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            "Accept": "application/json",
+            "Authorization": "Bearer $_apiKey",
+          },
+        ),
+      );
+
+      final data = response.data;
 
       List<String> newOptions = [];
       if (data['models'] != null) {
@@ -502,8 +502,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
 
       _modelOptions = newOptions;
       return true;
-    }
-    catch (e) {
+    } catch (e) {
       if (!e.toString().contains(RegExp(r'Connection (failed|refused)'))) {
         rethrow;
       }
@@ -812,8 +811,6 @@ class AnthropicController extends RemoteArtificialIntelligenceController {
 
 //Google gemini
 class GoogleGeminiController extends RemoteArtificialIntelligenceController {
-  late http.Client _httpClient;
-
   @override
   String get type => 'google_gemini';
 
@@ -828,9 +825,7 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
     super.overrides,
     super.baseUrl,
     super.apiKey,
-  }) {
-    _httpClient = http.Client();
-  }
+  });
 
 @override
 Stream<String> prompt(List<ChatMessage> messages) async* {
@@ -860,7 +855,7 @@ Stream<String> prompt(List<ChatMessage> messages) async* {
 
   try {
     // Send HTTP POST request
-    final response = await _httpClient.post(
+    final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
       body: requestBody,
