@@ -23,6 +23,7 @@ class HuggingfaceModel extends StatefulWidget {
 }
 
 class HuggingfaceModelState extends State<HuggingfaceModel> {
+  static final Map<String, double> sizeCache = {};
   double size = 0;
   double progress = 0;
 
@@ -110,9 +111,13 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
       size = (await file.length()) / (1024 * 1024 * 1024); // Convert to GB
       progress = 1.0;
     }
+    else if (sizeCache[widget.fileName] != null) {
+      size = sizeCache[widget.fileName]!;
+    } 
     else {
       size = (await fetchRemoteFileSize() ?? 0) / (1024 * 1024 * 1024); // Convert to GB
     }
+    sizeCache[widget.fileName] = size;
 
     if (HuggingfaceManager.downloadProgress[widget.fileName] != null) {
       handleProgressStream(HuggingfaceManager.downloadProgress[widget.fileName]!.stream);
