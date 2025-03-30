@@ -26,11 +26,6 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   double size = 0;
   double progress = 0;
 
-  Future<String> getFilePath() async {
-    final cache = await getApplicationCacheDirectory();
-    return '${cache.path}/${widget.fileName}';
-  }
-
   Future<int?> fetchRemoteFileSize() async {
     final url = "https://huggingface.co/${widget.repo}/resolve/${widget.branch}/${widget.fileName}";
 
@@ -54,26 +49,33 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   void downloadModel() async {
     setState(() => progress = 0);
 
-    final filePath = await getFilePath();
-
-    final progressStream = widget.llama.download(
+    handleProgressStream(HuggingfaceManager.download(
       widget.repo,
       widget.branch,
       widget.fileName,
-      filePath,
+      widget.llama
+    ));
+  }
+
+  void handleProgressStream(Stream<double> stream) {
+    stream.listen(
+      (event) {
+        if (!mounted) return;
+        setState(() => progress = event);
+      },
+      onDone: () {
+        if (!mounted) return;
+        setState(() => progress = 1);
+      },
+      onError: (error) {
+        if (!mounted) return;
+        setState(() => progress = 0);
+      }
     );
-
-    await for (final newProgress in progressStream) {
-      if (!mounted) return;
-      setState(() => progress = newProgress);
-    }
-
-    assert(File(filePath).existsSync(), "File not downloaded");
-    widget.llama.addModelFile(filePath);
   }
 
   void deleteModel() async {
-    final filePath = await getFilePath();
+    final filePath = await HuggingfaceManager.getFilePath(widget.fileName);
     widget.llama.removeLoadedModel(filePath);
     final file = File(filePath);
     if (await file.exists()) {
@@ -83,7 +85,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   }
 
   void selectModel() async {
-    final filePath = await getFilePath();
+    final filePath = await HuggingfaceManager.getFilePath(widget.fileName);
     widget.llama.loadModelFile(filePath);
   }
 
@@ -101,7 +103,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   }
 
   void initAsync() async {
-    final filePath = await getFilePath();
+    final filePath = await HuggingfaceManager.getFilePath(widget.fileName);
     if (File(filePath).existsSync()) {
       final file = File(filePath);
       size = (await file.length()) / (1024 * 1024 * 1024); // Convert to GB
@@ -109,6 +111,10 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
     }
     else {
       size = (await fetchRemoteFileSize() ?? 0) / (1024 * 1024 * 1024); // Convert to GB
+    }
+
+    if (HuggingfaceManager.downloadProgress[widget.fileName] != null) {
+      handleProgressStream(HuggingfaceManager.downloadProgress[widget.fileName]!.stream);
     }
 
     if (mounted) {

@@ -301,32 +301,6 @@ class LlamaCppController extends ArtificialIntelligenceController {
     notifyListeners();
   }
 
-  Stream<double> download(String repo, String branch, String fileName, String filePath) async* {
-    final streamController = StreamController<double>();
-
-    final dl = Dio().download(
-      "https://huggingface.co/$repo/resolve/$branch/$fileName?download=true",
-      filePath,
-      onReceiveProgress: (received, total) {
-        if (total == -1) return;
-        final progress = received / total;
-        streamController.add(progress);
-
-        if (progress == 1.0) {
-          streamController.close();
-        }
-      },
-    );
-    
-    yield* streamController.stream;
-
-    await dl;
-
-    assert(File(filePath).existsSync(), "File not downloaded");
-    _model = filePath;
-    addModelFile(filePath);
-  }
-
   void loadModelFile(String path, [bool notify = false]) async {
     assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
     _model = path;
@@ -345,7 +319,7 @@ class LlamaCppController extends ArtificialIntelligenceController {
     }
   }
 
-  void addModelFile(String path) async {
+  void addModelFile( path) async {
     assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
     _modelOptions.removeWhere((model) => model == path);
     _modelOptions.add(path);
