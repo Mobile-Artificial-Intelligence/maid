@@ -2,7 +2,7 @@ name: maid
 description: 'A cross-platform Flutter app for chatting with AI.'
 publish_to: 'none'
 
-version: 2.0.4+2240
+version: 2.0.4+2246
 
 environment:
   sdk: ^3.6.1
@@ -25,7 +25,7 @@ dependencies:
   url_launcher: ^6.3.1
 
   # Supported Ecosystems
-  lcpp: ^0.2.3
+  lcpp: ^0.2.5
   ollama_dart: ^0.2.2+1
   openai_dart: ^0.4.5
   mistralai_dart: ^0.0.3+4
