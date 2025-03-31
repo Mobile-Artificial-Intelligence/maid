@@ -98,7 +98,14 @@ end run
 EOF
 
 # Unmount the temporary DMG
-hdiutil detach ${TMP_MOUNT}
+diskutil unmountDisk force "${TMP_MOUNT}" || hdiutil detach "${TMP_MOUNT}" || {
+  echo "Failed to unmount DMG. Waiting and retrying..."
+  sleep 5
+  hdiutil detach "${TMP_MOUNT}" || {
+    echo "Still failed to detach. Aborting."
+    exit 1
+  }
+}
 
 # Convert to final DMG
 hdiutil convert ${DMG_DIR}/${APP_NAME}_tmp.dmg -format UDZO -o ${DMG_DIR}/${APP_NAME}-macos-${ARCH}.dmg
