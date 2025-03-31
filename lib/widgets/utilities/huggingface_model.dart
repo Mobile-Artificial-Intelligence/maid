@@ -267,17 +267,19 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
           color: Theme.of(context).colorScheme.onSurface,
         ),
         offset: const Offset(0, 40),
-        itemBuilder: (context) => widget.tags.entries.map((entry) {
-          return PopupMenuItem<MapEntry<String, String>>(
-            value: entry,
-            child: Text(entry.key),
-          );
-        }).toList(),
+        itemBuilder: tagMenuItemBuilder,
         onOpened: () => setState(() => tagDropdownOpen = true),
         onCanceled: () => setState(() => tagDropdownOpen = false),
         onSelected: handleTagChange
       )
     ],
+  );
+
+  List<PopupMenuEntry<MapEntry<String, String>>> tagMenuItemBuilder(BuildContext context) => widget.tags.entries.map(tagMenuMapper).toList();
+
+  PopupMenuItem<MapEntry<String, String>> tagMenuMapper(MapEntry<String, String> entry) => PopupMenuItem<MapEntry<String, String>>(
+    value: entry,
+    child: Text(entry.key),
   );
 
   void handleTagChange(MapEntry<String, String> entry) async {
