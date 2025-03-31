@@ -89,5 +89,6 @@
     "typeMessage": "输入消息...",
     "code": "代码",
     "copyLabel": "复制 {label}",
-    "labelCopied": "{label} 已复制到剪贴板！"
+    "labelCopied": "{label} 已复制到剪贴板！",
+    "debugTitle": "调试"
 }

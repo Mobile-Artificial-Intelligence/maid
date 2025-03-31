@@ -285,4 +285,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String labelCopied(String label) {
     return '$label скопирован в буфер обмена!';
   }
+
+  @override
+  String get debugTitle => 'Отладка';
 }

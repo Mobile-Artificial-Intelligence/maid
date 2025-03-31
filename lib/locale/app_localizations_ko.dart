@@ -285,4 +285,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String labelCopied(String label) {
     return '$label이(가) 클립보드에 복사되었습니다!';
   }
+
+  @override
+  String get debugTitle => '디버그';
 }

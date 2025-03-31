@@ -89,5 +89,6 @@
     "typeMessage": "Tapez un message...",
     "code": "Code",
     "copyLabel": "Copier {label}",
-    "labelCopied": "{label} copié dans le presse-papiers!"
+    "labelCopied": "{label} copié dans le presse-papiers!",
+    "debugTitle": "Débogage"
 }

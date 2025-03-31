@@ -285,4 +285,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String labelCopied(String label) {
     return '¡$label copiado al portapapeles!';
   }
+
+  @override
+  String get debugTitle => 'Depuración';
 }

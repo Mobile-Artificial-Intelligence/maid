@@ -285,4 +285,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String labelCopied(String label) {
     return '$label in die Zwischenablage kopiert!';
   }
+
+  @override
+  String get debugTitle => 'Debugging';
 }

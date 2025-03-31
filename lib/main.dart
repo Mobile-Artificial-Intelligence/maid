@@ -61,6 +61,7 @@ part 'widgets/parameter/parameter_view.dart';
 part 'widgets/parameter/parameter.dart';
 
 part 'widgets/pages/about_page.dart';
+part 'widgets/pages/debug_page.dart';
 part 'widgets/pages/home_page.dart';
 part 'widgets/pages/huggingface_page.dart';
 part 'widgets/pages/settings_page.dart';
@@ -183,6 +184,7 @@ class MaidState extends State<Maid> {
       '/chat': (context) => buildHomePage(),
       '/about': (context) => const AboutPage(),
       '/huggingface': (context) => HuggingFacePage(aiController: aiController),
+      if (kDebugMode) '/debug': (context) => DebugPage(),
     },
     supportedLocales: AppLocalizations.supportedLocales,
     locale: widget.settings.locale,

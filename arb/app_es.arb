@@ -89,5 +89,6 @@
     "typeMessage": "Escribe un mensaje...",
     "code": "Código",
     "copyLabel": "Copiar {label}",
-    "labelCopied": "¡{label} copiado al portapapeles!"
+    "labelCopied": "¡{label} copiado al portapapeles!",
+    "debugTitle": "Depuración"
 }

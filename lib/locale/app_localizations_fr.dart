@@ -285,4 +285,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String labelCopied(String label) {
     return '$label copié dans le presse-papiers!';
   }
+
+  @override
+  String get debugTitle => 'Débogage';
 }

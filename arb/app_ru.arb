@@ -89,5 +89,6 @@
     "typeMessage": "Введите сообщение...",
     "code": "Код",
     "copyLabel": "Копировать {label}",
-    "labelCopied": "{label} скопирован в буфер обмена!"
+    "labelCopied": "{label} скопирован в буфер обмена!",
+    "debugTitle": "Отладка"
 }

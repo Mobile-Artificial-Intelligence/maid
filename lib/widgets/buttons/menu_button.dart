@@ -25,5 +25,12 @@ class MenuButton extends StatelessWidget {
         AppLocalizations.of(context)!.aboutTitle
       ),
     ),
+    if (kDebugMode) 
+      PopupMenuItem(
+        value: '/debug',
+        child: Text(
+          AppLocalizations.of(context)!.debugTitle
+        ),
+      ),
   ];
 }

@@ -89,5 +89,6 @@
     "typeMessage": "메시지를 입력하세요...",
     "code": "코드",
     "copyLabel": "{label} 복사",
-    "labelCopied": "{label}이(가) 클립보드에 복사되었습니다!"
+    "labelCopied": "{label}이(가) 클립보드에 복사되었습니다!",
+    "debugTitle": "디버그"
 }

@@ -285,4 +285,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String labelCopied(String label) {
     return '$label copied to clipboard!';
   }
+
+  @override
+  String get debugTitle => 'Debug';
 }

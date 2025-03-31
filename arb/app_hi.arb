@@ -89,5 +89,6 @@
     "typeMessage": "एक संदेश टाइप करें...",
     "code": "कोड",
     "copyLabel": "{label} कॉपी करें",
-    "labelCopied": "{label} क्लिपबोर्ड पर कॉपी किया गया!"
+    "labelCopied": "{label} क्लिपबोर्ड पर कॉपी किया गया!",
+    "debugTitle": "डीबगिंग"
 }

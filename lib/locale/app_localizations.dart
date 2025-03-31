@@ -652,6 +652,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{label} copied to clipboard!'**
   String labelCopied(String label);
+
+  /// No description provided for @debugTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug'**
+  String get debugTitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

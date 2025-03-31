@@ -285,4 +285,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String labelCopied(String label) {
     return '$label क्लिपबोर्ड पर कॉपी किया गया!';
   }
+
+  @override
+  String get debugTitle => 'डीबगिंग';
 }

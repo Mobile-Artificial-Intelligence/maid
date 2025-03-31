@@ -89,5 +89,6 @@
     "typeMessage": "Scrivi un messaggio...",
     "code": "Codice",
     "copyLabel": "Copia {label}",
-    "labelCopied": "{label} copiati negli appunti!"
+    "labelCopied": "{label} copiati negli appunti!",
+    "debugTitle": "Debug"
 }

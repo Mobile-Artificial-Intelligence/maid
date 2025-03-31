@@ -285,4 +285,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String labelCopied(String label) {
     return '$label 已复制到剪贴板！';
   }
+
+  @override
+  String get debugTitle => '调试';
 }

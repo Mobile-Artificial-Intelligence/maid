@@ -89,5 +89,6 @@
     "typeMessage": "Nachricht eingeben...",
     "code": "Code",
     "copyLabel": "{label} kopieren",
-    "labelCopied": "{label} in die Zwischenablage kopiert!"
+    "labelCopied": "{label} in die Zwischenablage kopiert!",
+    "debugTitle": "Debugging"
 }

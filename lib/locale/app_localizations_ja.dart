@@ -285,4 +285,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String labelCopied(String label) {
     return '$label をクリップボードにコピーしました！';
   }
+
+  @override
+  String get debugTitle => 'デバッグ';
 }

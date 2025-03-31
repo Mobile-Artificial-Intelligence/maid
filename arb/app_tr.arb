@@ -89,5 +89,6 @@
     "typeMessage": "Bir mesaj yazın...",
     "code": "Kod",
     "copyLabel": "{label} Kopyala",
-    "labelCopied": "{label} panoya kopyalandı!"
+    "labelCopied": "{label} panoya kopyalandı!",
+    "debugTitle": "Debug"
 }

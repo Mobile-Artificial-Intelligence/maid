@@ -89,5 +89,6 @@
     "typeMessage": "メッセージを入力...",
     "code": "コード",
     "copyLabel": "{label} をコピー",
-    "labelCopied": "{label} をクリップボードにコピーしました！"
+    "labelCopied": "{label} をクリップボードにコピーしました！",
+    "debugTitle": "デバッグ"
 }

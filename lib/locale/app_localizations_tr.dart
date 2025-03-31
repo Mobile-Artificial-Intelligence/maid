@@ -285,4 +285,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String labelCopied(String label) {
     return '$label panoya kopyalandı!';
   }
+
+  @override
+  String get debugTitle => 'Debug';
 }

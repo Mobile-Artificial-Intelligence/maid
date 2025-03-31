@@ -285,4 +285,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String labelCopied(String label) {
     return '$label copiati negli appunti!';
   }
+
+  @override
+  String get debugTitle => 'Debug';
 }
