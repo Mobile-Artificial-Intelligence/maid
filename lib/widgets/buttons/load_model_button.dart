@@ -1,7 +1,8 @@
 part of 'package:maid/main.dart';
 
 class LoadModelButton extends StatelessWidget {
-  final double popoverWidth = 150;
+  final double popoverMinWidth = 150;
+  final double popoverMaxWidth = 300;
   final LlamaCppController llama;
   final GlobalKey buttonKey = GlobalKey();
   
@@ -11,11 +12,15 @@ class LoadModelButton extends StatelessWidget {
     final List<PopupMenuEntry> popoverItems = [
       PopupMenuItem(
         value: 'load',
-        child: Text(AppLocalizations.of(context)!.loadModel),
+        child: Center(
+          child: Text(AppLocalizations.of(context)!.loadModel),
+        )
       ),
       PopupMenuItem(
         value: 'download',
-        child: Text(AppLocalizations.of(context)!.downloadModel),
+        child: Center(
+          child: Text(AppLocalizations.of(context)!.downloadModel),
+        )
       ),
     ];
 
@@ -28,7 +33,9 @@ class LoadModelButton extends StatelessWidget {
         popoverItems.add(
           PopupMenuItem(
             value: option,
-            child: Text(option.split('/').last),
+            child: Center(
+              child: Text(option.split('/').last),
+            )
           ),
         );
       }
@@ -39,8 +46,8 @@ class LoadModelButton extends StatelessWidget {
       positionBuilder: popoverPositionBuilder,
       items: popoverItems,
       constraints: BoxConstraints(
-        maxWidth: popoverWidth,
-        minWidth: popoverWidth,
+        maxWidth: popoverMaxWidth,
+        minWidth: popoverMinWidth,
       ),
     );
 
@@ -61,10 +68,14 @@ class LoadModelButton extends StatelessWidget {
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Size size = renderBox.size;
 
+    final width = llama.modelOptions.isNotEmpty
+      ? popoverMaxWidth
+      : popoverMinWidth;
+
     return RelativeRect.fromLTRB(
-      offset.dx + (size.width / 2) - (popoverWidth / 2),
+      offset.dx + (size.width / 2) - (width / 2),
       offset.dy + size.height,
-      offset.dx + (size.width / 2) + (popoverWidth / 2),
+      offset.dx + (size.width / 2) + (width / 2),
       offset.dy,
     );
   }
