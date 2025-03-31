@@ -97,6 +97,9 @@ on run
 end run
 EOF
 
+# small wait
+sleep 2
+
 # Unmount the temporary DMG
 hdiutil detach "${TMP_MOUNT}"
 
