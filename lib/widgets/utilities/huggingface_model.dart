@@ -119,8 +119,23 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   @override
   void initState() {
     super.initState();
-    tag = widget.tags.entries.first;
-    handleTagChange(tag!);
+    SharedPreferences.getInstance().then((prefs) {
+      final key = prefs.getString(widget.repo);
+
+      if (key != null) {
+        tag = widget.tags.entries.firstWhere(
+          (entry) => entry.key == key,
+          orElse: () => widget.tags.entries.first
+        );
+      } 
+      else {
+        tag = widget.tags.entries.first;
+      }
+
+      handleTagChange(tag!);
+
+      if (mounted) setState(() {});
+    });
   }
 
   @override
@@ -272,6 +287,9 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
       tagDropdownOpen = false;
     });
 
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(widget.repo, entry.key);
+
     final filePath = await HuggingfaceManager.getFilePath(entry.value);
     if (File(filePath).existsSync()) {
       final file = File(filePath);
@@ -290,8 +308,6 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
       handleProgressStream(HuggingfaceManager.downloadProgress[entry.value]!.stream);
     }
 
-    if (mounted) {
-      setState(() {});
-    }
+    if (mounted) setState(() {});
   }
 }
