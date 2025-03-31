@@ -142,7 +142,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
   Widget build(BuildContext context) => Container(
     margin: const EdgeInsets.all(4.0),
     decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surfaceBright,
+      color: Theme.of(context).colorScheme.surfaceContainerHigh,
       borderRadius: BorderRadius.circular(8.0),
     ),
     child: FittedBox(
@@ -255,7 +255,10 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
     children: [
       Text(
         widget.name,
-        style: Theme.of(context).textTheme.titleMedium,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
       IconButton(
         onPressed: navigateRepo,
@@ -268,7 +271,9 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
       const Spacer(),
       Text(
         tag?.key ?? AppLocalizations.of(context)!.selectTag,
-        style: Theme.of(context).textTheme.labelMedium,
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
       PopupMenuButton<MapEntry<String, String>>(
         tooltip: AppLocalizations.of(context)!.selectTag,
