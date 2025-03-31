@@ -1,6 +1,7 @@
 name: Build Windows
 
 on:
+  workflow_call:
   push:
     branches:
       - main

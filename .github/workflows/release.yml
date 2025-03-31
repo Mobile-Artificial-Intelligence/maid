@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  build-android:
+    uses: ./.github/workflows/build-android.yml
+    secrets: inherit
+
+  build-ios:
+    uses: ./.github/workflows/build-ios.yml
+    secrets: inherit
+
+  build-linux:
+    uses: ./.github/workflows/build-linux.yml
+    secrets: inherit
+
+  build-macos:
+    uses: ./.github/workflows/build-macos.yml
+    secrets: inherit
+
+  build-web:
+    uses: ./.github/workflows/build-web.yml
+    secrets: inherit
+
+  build-windows:
+    uses: ./.github/workflows/build-windows.yml
+    secrets: inherit
+
+  upload-artifacts:
+    runs-on: ubuntu-latest
+    needs:
+      - build-android
+      - build-ios
+      - build-linux
+      - build-macos
+      - build-web
+      - build-windows
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts
+      - name: List artifacts
+        run: ls -lh all-artifacts
+
+      - name: Prepare upload folder
+        run: mkdir upload
+      - name: Unzip maid-android
+        run: |
+          unzip -o all-artifacts/maid-android.zip -d upload
+          rm all-artifacts/maid-android.zip
+      - name: Unzip maid-ios
+        run: |
+          unzip -o all-artifacts/maid-ios.zip -d upload
+          rm all-artifacts/maid-ios.zip
+      - name: Unzip maid-appimage
+        run: |
+          unzip -o all-artifacts/maid-appimage.zip -d upload
+          rm all-artifacts/maid-appimage.zip
+      - name: Unzip maid-macos-arm64
+        run: |
+          unzip -o all-artifacts/maid-macos-arm64.zip -d upload
+          rm all-artifacts/maid-macos-arm64.zip
+      - name: Unzip maid-macos-x86_64
+        run: |
+          unzip -o all-artifacts/maid-macos-x86_64.zip -d upload
+          rm all-artifacts/maid-macos-x86_64.zip
+      - name: Copy remaining zip files
+        run: |
+          cp all-artifacts/maid-linux.zip upload/
+          cp all-artifacts/maid-windows.zip upload/
+          cp all-artifacts/maid-web.zip upload/
+          rm all-artifacts/*.zip
+
+      - name: List files for upload
+        run: ls -lh upload
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: upload/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    
+

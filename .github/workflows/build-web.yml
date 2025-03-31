@@ -1,6 +1,7 @@
 name: Build Web
 
 on:
+  workflow_call:
   push:
     branches:
       - main

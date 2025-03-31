@@ -1,6 +1,7 @@
 name: Build iOS
 
 on:
+  workflow_call:
   push:
     branches:
       - main
@@ -54,4 +55,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: maid-ios
-          path: build/ios/ipa
+          path: build/ios/ipa/maid.ipa
