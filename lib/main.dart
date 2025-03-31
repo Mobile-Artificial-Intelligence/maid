@@ -36,7 +36,7 @@ part 'controllers/chat_controller.dart';
 
 part 'utilities/chat_messages_extension.dart';
 part 'utilities/huggingface_manager.dart';
-part 'utilities/platform_extension.dart';
+part 'utilities/target_platform_extension.dart';
 part 'utilities/string_extension.dart';
 part 'utilities/theme_mode_extension.dart';
 

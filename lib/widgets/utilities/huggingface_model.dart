@@ -204,7 +204,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
           color: Theme.of(context).colorScheme.error,
         ),
       ),
-      TextButton.icon(
+      if (TargetPlatformExtension.isDesktop) TextButton.icon(
         onPressed: exportModel,
         label: Text(
           AppLocalizations.of(context)!.export,
