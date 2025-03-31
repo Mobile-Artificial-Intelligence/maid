@@ -48,37 +48,37 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: all-artifacts
+
       - name: List artifacts
-        run: ls -lh all-artifacts
+        run: ls -R all-artifacts
 
       - name: Prepare upload folder
         run: mkdir upload
-      - name: Unzip maid-android
+
+      - name: Copy Android release files
+        run: cp all-artifacts/maid-android/* upload/
+
+      - name: Copy iOS release files
+        run: cp all-artifacts/maid-ios/* upload/
+
+      - name: Copy AppImage file
+        run: cp all-artifacts/maid-appimage/* upload/
+
+      - name: Copy macOS release files
         run: |
-          unzip -o all-artifacts/maid-android.zip -d upload
-          rm all-artifacts/maid-android.zip
-      - name: Unzip maid-ios
+          cp all-artifacts/maid-macos-arm64/* upload/
+          cp all-artifacts/maid-macos-x86_64/* upload/
+
+      - name: Zip Linux, Windows, and Web builds
         run: |
-          unzip -o all-artifacts/maid-ios.zip -d upload
-          rm all-artifacts/maid-ios.zip
-      - name: Unzip maid-appimage
-        run: |
-          unzip -o all-artifacts/maid-appimage.zip -d upload
-          rm all-artifacts/maid-appimage.zip
-      - name: Unzip maid-macos-arm64
-        run: |
-          unzip -o all-artifacts/maid-macos-arm64.zip -d upload
-          rm all-artifacts/maid-macos-arm64.zip
-      - name: Unzip maid-macos-x86_64
-        run: |
-          unzip -o all-artifacts/maid-macos-x86_64.zip -d upload
-          rm all-artifacts/maid-macos-x86_64.zip
-      - name: Copy remaining zip files
-        run: |
-          cp all-artifacts/maid-linux.zip upload/
-          cp all-artifacts/maid-windows.zip upload/
-          cp all-artifacts/maid-web.zip upload/
-          rm all-artifacts/*.zip
+          cd all-artifacts
+
+          # Create zipped artifacts
+          zip -r ../upload/maid-linux.zip maid-linux
+          zip -r ../upload/maid-windows.zip maid-windows
+          zip -r ../upload/maid-web.zip maid-web
+
+          cd ..
 
       - name: List files for upload
         run: ls -lh upload
