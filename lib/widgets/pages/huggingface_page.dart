@@ -75,7 +75,10 @@ class HuggingFacePage extends StatelessWidget {
         );
       }
       else if (snapshot.hasData) {
-        return ListView(
+        return GridView.extent(
+          maxCrossAxisExtent: 600,
+          childAspectRatio: 3,
+          shrinkWrap: true,
           children: snapshot.data!,
         );
       }
