@@ -71,14 +71,9 @@ jobs:
 
       - name: Zip Linux, Windows, and Web builds
         run: |
-          cd all-artifacts
-
-          # Create zipped artifacts
-          zip -r ../upload/maid-linux.zip maid-linux
-          zip -r ../upload/maid-windows.zip maid-windows
-          zip -r ../upload/maid-web.zip maid-web
-
-          cd ..
+          zip -r upload/maid-linux.zip all-artifacts/maid-linux/*
+          zip -r upload/maid-windows.zip all-artifacts/maid-windows/*
+          zip -r upload/maid-web.zip all-artifacts/maid-web/*
 
       - name: List files for upload
         run: ls -lh upload
@@ -90,5 +85,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
-    
-
