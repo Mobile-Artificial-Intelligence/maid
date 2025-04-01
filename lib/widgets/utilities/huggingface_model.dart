@@ -140,14 +140,14 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(4.0),
+    padding: const EdgeInsets.all(8.0),
     margin: const EdgeInsets.all(4.0),
     decoration: BoxDecoration(
       color: Theme.of(context).colorScheme.surfaceContainerHigh,
       borderRadius: BorderRadius.circular(8.0),
     ),
     child: FittedBox(
-      fit: BoxFit.contain,
+      fit: BoxFit.cover,
       alignment: Alignment.center,
       child: ConstrainedBox(
         constraints: const BoxConstraints(

@@ -76,7 +76,7 @@ class HuggingFacePage extends StatelessWidget {
       }
       else if (snapshot.hasData) {
         return GridView.extent(
-          maxCrossAxisExtent: 600,
+          maxCrossAxisExtent: 500,
           childAspectRatio: 3,
           shrinkWrap: true,
           children: snapshot.data!,
