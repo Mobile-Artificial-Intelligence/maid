@@ -1,9 +1,3 @@
-[submodule "packages/maid_llm"]
-	path = packages/maid_llm
-	url = https://github.com/Mobile-Artificial-Intelligence/maid_llm.git
 [submodule "packages/flutter"]
 	path = packages/flutter
 	url = https://github.com/flutter/flutter.git
-[submodule "packages/babylon_tts"]
-	path = packages/babylon_tts
-	url = https://github.com/Mobile-Artificial-Intelligence/babylon_tts.git
