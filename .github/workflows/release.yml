@@ -69,11 +69,24 @@ jobs:
           cp all-artifacts/maid-macos-arm64/* upload/
           cp all-artifacts/maid-macos-x86_64/* upload/
 
-      - name: Zip Linux, Windows, and Web builds
+      - name: Zip Linux, Windows, and Web builds (contents only)
         run: |
-          zip -r upload/maid-linux.zip all-artifacts/maid-linux/*
-          zip -r upload/maid-windows.zip all-artifacts/maid-windows/*
-          zip -r upload/maid-web.zip all-artifacts/maid-web/*
+          cd all-artifacts
+    
+          # Zip contents of maid-linux
+          cd maid-linux
+          zip -r ../../upload/maid-linux.zip .
+          cd ..
+    
+          # Zip contents of maid-windows
+          cd maid-windows
+          zip -r ../../upload/maid-windows.zip .
+          cd ..
+    
+          # Zip contents of maid-web
+          cd maid-web
+          zip -r ../../upload/maid-web.zip .
+          cd ..
 
       - name: List files for upload
         run: ls -lh upload

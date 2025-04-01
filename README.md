@@ -12,6 +12,7 @@
 [![Build MacOS](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-macos.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-macos.yml)
 [![Build Windows](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-windows.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-windows.yml)
 [![Build Web](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-web.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-web.yml)
+[![Release](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/release.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/release.yml)
 
 </div>
 
