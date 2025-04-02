@@ -123,7 +123,7 @@ class MaidState extends State<Maid> {
     }
   }
 
-  Future<void> switchAi(String type) async {
+  Future<void> switchBackend(String type) async {
     await aiController.save();
 
     if (aiController.type == type) return;

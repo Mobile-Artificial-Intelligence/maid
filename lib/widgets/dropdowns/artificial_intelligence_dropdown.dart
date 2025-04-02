@@ -61,7 +61,7 @@ class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDr
     onOpened: () => setState(() => open = true),
     onCanceled: () => setState(() => open = false),
     onSelected: (type) {
-      MaidState.of(context).switchAi(type);
+      MaidState.of(context).switchBackend(type);
       setState(() => open = false);
     }
   );
