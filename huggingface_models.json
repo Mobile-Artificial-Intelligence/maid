@@ -45,7 +45,7 @@
             "Q6_K": "gemma-2-2b-it-Q6_K.gguf",
             "Q6_K_L": "gemma-2-2b-it-Q6_K_L.gguf",
             "Q8_0": "gemma-2-2b-it-Q8_0.gguf",
-            "f32": "gemma-2-2b-it-f32.gguf"
+            "F32": "gemma-2-2b-it-f32.gguf"
         }
     },
     {
@@ -71,8 +71,8 @@
             "Q5_K_S": "Gemmasutra-Mini-2B-v1-Q5_K_S.gguf",
             "Q6_K": "Gemmasutra-Mini-2B-v1-Q6_K.gguf",
             "Q8_0": "Gemmasutra-Mini-2B-v1-Q8_0.gguf",
-            "f16": "Gemmasutra-Mini-2B-v1-f16.gguf",
-            "f32": "Gemmasutra-Mini-2B-v1-f32.gguf"
+            "F16": "Gemmasutra-Mini-2B-v1-f16.gguf",
+            "F32": "Gemmasutra-Mini-2B-v1-f32.gguf"
         }
     },
     {
@@ -129,7 +129,7 @@
             "Q6_K": "Llama-3.2-1B-Instruct-Q6_K.gguf",
             "Q6_K_L": "Llama-3.2-1B-Instruct-Q6_K_L.gguf",
             "Q8_0": "Llama-3.2-1B-Instruct-Q8_0.gguf",
-            "f16": "Llama-3.2-1B-Instruct-f16.gguf"
+            "F16": "Llama-3.2-1B-Instruct-f16.gguf"
         }
     },
     {
@@ -155,7 +155,7 @@
             "Q6_K": "Llama-3.2-3B-Instruct-Q6_K.gguf",
             "Q6_K_L": "Llama-3.2-3B-Instruct-Q6_K_L.gguf",
             "Q8_0": "Llama-3.2-3B-Instruct-Q8_0.gguf",
-            "f16": "Llama-3.2-3B-Instruct-f16.gguf"
+            "F16": "Llama-3.2-3B-Instruct-f16.gguf"
         }
     }    
 ]
