@@ -69,7 +69,7 @@
 - name: Gemmasutra Small 4B v1a
   repo: TheDrummer/Gemmasutra-Small-4B-v1-GGUF
   branch: main
-  parameters: 4
+  parameters: 4.0
   tags:
     Q2_K: Gemmasutra-Small-4B-v1a-Q2_K.gguf
     Q3_K_M: Gemmasutra-Small-4B-v1a-Q3_K_M.gguf
@@ -140,3 +140,41 @@
     Q6_K_L: Llama-3.2-3B-Instruct-Q6_K_L.gguf
     Q8_0: Llama-3.2-3B-Instruct-Q8_0.gguf
     F16: Llama-3.2-3B-Instruct-f16.gguf
+
+- name: Tesslate Tessa T1 3B
+  repo: bartowski/Tesslate_Tessa-T1-3B-GGUF
+  branch: main
+  parameters: 3.0
+  tags:
+    IQ2_M: Tesslate_Tessa-T1-3B-IQ2_M.gguf
+    IQ3_M: Tesslate_Tessa-T1-3B-IQ3_M.gguf
+    IQ3_XS: Tesslate_Tessa-T1-3B-IQ3_XS.gguf
+    IQ3_XXS: Tesslate_Tessa-T1-3B-IQ3_XXS.gguf
+    IQ4_NL: Tesslate_Tessa-T1-3B-IQ4_NL.gguf
+    IQ4_XS: Tesslate_Tessa-T1-3B-IQ4_XS.gguf
+    Q2_K: Tesslate_Tessa-T1-3B-Q2_K.gguf
+    Q2_K_L: Tesslate_Tessa-T1-3B-Q2_K_L.gguf
+    Q3_K_L: Tesslate_Tessa-T1-3B-Q3_K_L.gguf
+    Q3_K_M: Tesslate_Tessa-T1-3B-Q3_K_M.gguf
+    Q3_K_S: Tesslate_Tessa-T1-3B-Q3_K_S.gguf
+    Q3_K_XL: Tesslate_Tessa-T1-3B-Q3_K_XL.gguf
+    Q4_0: Tesslate_Tessa-T1-3B-Q4_0.gguf
+    Q4_1: Tesslate_Tessa-T1-3B-Q4_1.gguf
+    Q4_K_L: Tesslate_Tessa-T1-3B-Q4_K_L.gguf
+    Q4_K_M: Tesslate_Tessa-T1-3B-Q4_K_M.gguf
+    Q4_K_S: Tesslate_Tessa-T1-3B-Q4_K_S.gguf
+    Q5_K_L: Tesslate_Tessa-T1-3B-Q5_K_L.gguf
+    Q5_K_M: Tesslate_Tessa-T1-3B-Q5_K_M.gguf
+    Q5_K_S: Tesslate_Tessa-T1-3B-Q5_K_S.gguf
+    Q6_K: Tesslate_Tessa-T1-3B-Q6_K.gguf
+    Q6_K_L: Tesslate_Tessa-T1-3B-Q6_K_L.gguf
+    Q8_0: Tesslate_Tessa-T1-3B-Q8_0.gguf
+    BF16: Tesslate_Tessa-T1-3B-bf16.gguf
+
+- name: NSFW 3B
+  repo: UnfilteredAI/NSFW-3B
+  branch: main
+  parameters: 3.0
+  tags:
+    IQ4_XS: nsfw-3b-iq4_xs-imat.gguf
+    Q4_K_M: nsfw-3b-q4_k_m.gguf
