@@ -41,6 +41,20 @@
     Q8_0: gemma-2-2b-it-Q8_0.gguf
     F32: gemma-2-2b-it-f32.gguf
 
+- name: Gemma 3 1B IT
+  repo: unsloth/gemma-3-1b-it-GGUF
+  branch: main
+  parameters: 1.0
+  tags:
+    Q2_K: gemma-3-1b-it-Q2_K.gguf
+    Q2_K_L: gemma-3-1b-it-Q2_K_L.gguf
+    Q3_K_M: gemma-3-1b-it-Q3_K_M.gguf
+    Q4_K_M: gemma-3-1b-it-Q4_K_M.gguf
+    Q5_K_M: gemma-3-1b-it-Q5_K_M.gguf
+    Q6_K: gemma-3-1b-it-Q6_K.gguf
+    Q8_0: gemma-3-1b-it-Q8_0.gguf
+    BF16: gemma-3-1b-it-BF16.gguf
+
 - name: Gemmasutra Mini 2B v1
   repo: TheDrummer/Gemmasutra-Mini-2B-v1-GGUF
   branch: main
