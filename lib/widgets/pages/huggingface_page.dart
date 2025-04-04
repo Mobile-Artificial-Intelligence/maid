@@ -20,7 +20,7 @@ class HuggingFacePage extends StatelessWidget {
 
   Future<List<Widget>> getModelList() async {
     List<Widget> widgets = [];
-    List<dynamic> modelList;
+    YamlList modelList;
 
     try {
       // If debug is enabled, load JSON from assets
@@ -28,26 +28,26 @@ class HuggingFacePage extends StatelessWidget {
 
       // Try to fetch JSON from the web
       final response = await Dio().get(
-        'https://raw.githubusercontent.com/Mobile-Artificial-Intelligence/maid/refs/heads/main/huggingface_models.json'
+        'https://raw.githubusercontent.com/Mobile-Artificial-Intelligence/maid/refs/heads/main/huggingface.yaml'
       );
 
-      // Decode the web JSON response
-      modelList = jsonDecode(response.data) as List;
+      // Decode the web YAML response
+      modelList = loadYaml(response.data) as YamlList;
     } catch (e) {
       // If web fetch fails, load JSON from assets
-      final modelListString = await rootBundle.loadString('huggingface_models.json');
-      modelList = jsonDecode(modelListString) as List;
+      final modelListString = await rootBundle.loadString('huggingface.yaml');
+      modelList = loadYaml(modelListString) as YamlList;
     }
 
     for (final model in modelList) {
-      final modelMap = model as Map<String, dynamic>;
+      final modelMap = model as YamlMap;
 
       widgets.add(
         HuggingfaceModel(
           name: modelMap['name'],
           repo: modelMap['repo'],
-          parameters: modelMap['parameters'],
-          tags: (modelMap['tags'] as Map<String, dynamic>).map(
+          parameters: modelMap['parameters'].toDouble(),
+          tags: (modelMap['tags'] as YamlMap).map(
             (key, value) => MapEntry(key, value.toString())
           ),
           llama: aiController as LlamaCppController,
