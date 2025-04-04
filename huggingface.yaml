@@ -97,15 +97,15 @@
   branch: main
   parameters: 1.5
   tags:
-    fp16: qwen2.5-1.5b-instruct-fp16.gguf
-    q2_k: qwen2.5-1.5b-instruct-q2_k.gguf
-    q3_k_m: qwen2.5-1.5b-instruct-q3_k_m.gguf
-    q4_0: qwen2.5-1.5b-instruct-q4_0.gguf
-    q4_k_m: qwen2.5-1.5b-instruct-q4_k_m.gguf
-    q5_0: qwen2.5-1.5b-instruct-q5_0.gguf
-    q5_k_m: qwen2.5-1.5b-instruct-q5_k_m.gguf
-    q6_k: qwen2.5-1.5b-instruct-q6_k.gguf
-    q8_0: qwen2.5-1.5b-instruct-q8_0.gguf
+    Q2_K: qwen2.5-1.5b-instruct-q2_k.gguf
+    Q3_K_M: qwen2.5-1.5b-instruct-q3_k_m.gguf
+    Q4_0: qwen2.5-1.5b-instruct-q4_0.gguf
+    Q4_K_M: qwen2.5-1.5b-instruct-q4_k_m.gguf
+    Q5_0: qwen2.5-1.5b-instruct-q5_0.gguf
+    Q5_K_M: qwen2.5-1.5b-instruct-q5_k_m.gguf
+    Q6_K: qwen2.5-1.5b-instruct-q6_k.gguf
+    Q8_0: qwen2.5-1.5b-instruct-q8_0.gguf
+    FP16: qwen2.5-1.5b-instruct-fp16.gguf
 
 - name: Llama 3.2 1B Instruct
   repo: bartowski/Llama-3.2-1B-Instruct-GGUF
