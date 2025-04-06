@@ -2,16 +2,16 @@ part of 'package:maid/main.dart';
 
 class ChatTile extends StatefulWidget {
   final ChatController chatController;
+  final ArtificialIntelligenceController aiController;
   final GeneralTreeNode<ChatMessage> node;
   final bool selected;
-  final bool disabled;
 
   const ChatTile({
     super.key,
     required this.chatController,
     required this.node,
     required this.selected,
-    required this.disabled,
+    required this.aiController,
   });
 
   @override
@@ -23,12 +23,16 @@ class ChatTileState extends State<ChatTile> {
 
   void onChatChange() {
     widget.chatController.root = widget.node;
+
+    if (widget.aiController is LlamaCppController) {
+      (widget.aiController as LlamaCppController).reloadModel(true);
+    }
   }
 
   @override
   Widget build(BuildContext context) => InkWell(
     key: key,
-    onTap: !widget.disabled ? onChatChange : null,
+    onTap: !widget.aiController.busy ? onChatChange : null,
     onSecondaryTap: openPopover, 
     onLongPress: openPopover,
     child: buildTile(),

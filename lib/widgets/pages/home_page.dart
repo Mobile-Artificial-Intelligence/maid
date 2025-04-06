@@ -52,7 +52,7 @@ class HomePageState extends State<HomePage> {
   Widget buildDrawer() => Drawer(
     child: ChatView(
       chatController: widget.chatController,
-      disabled: widget.aiController.busy,
+      aiController: widget.aiController,
     )
   );
 

@@ -2,12 +2,12 @@ part of 'package:maid/main.dart';
 
 class ChatView extends StatelessWidget {
   final ChatController chatController;
-  final bool disabled;
+  final ArtificialIntelligenceController aiController;
 
   const ChatView({
     super.key,
     required this.chatController,
-    required this.disabled,
+    required this.aiController,
   });
 
   @override
@@ -69,7 +69,7 @@ class ChatView extends StatelessWidget {
         chatController: chatController,
         node: chatController.chats[index], 
         selected: index == 0,
-        disabled: disabled,
+        aiController: aiController,
       ),
     )
   );
