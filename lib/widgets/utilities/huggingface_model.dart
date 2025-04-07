@@ -164,11 +164,11 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
       borderRadius: BorderRadius.circular(8.0),
     ),
     child: FittedBox(
-      fit: BoxFit.cover,
+      fit: BoxFit.contain,
       alignment: Alignment.center,
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxWidth: 400
+          maxWidth: 500
         ),
         child: buildColumn(context),
       ),
