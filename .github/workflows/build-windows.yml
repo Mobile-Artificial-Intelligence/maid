@@ -9,7 +9,7 @@ on:
       - '.github/workflows/build-windows.yml'
       - 'windows/**'
       - 'lib/**'
-      - 'pubspec.yaml'
+      - '*.yaml'
 
 jobs:        
   build:

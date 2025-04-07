@@ -9,7 +9,7 @@ on:
       - '.github/workflows/build-macos.yml'
       - 'macos/**'
       - 'lib/**'
-      - 'pubspec.yaml'
+      - '*.yaml'
 
 jobs:
   build:

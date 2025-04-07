@@ -9,7 +9,7 @@ on:
       - '.github/workflows/build-android.yml'
       - 'android/**'
       - 'lib/**'
-      - 'pubspec.yaml'
+      - '*.yaml'
 
 jobs:
   build:

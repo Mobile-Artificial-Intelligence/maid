@@ -9,7 +9,7 @@ on:
       - '.github/workflows/build-web.yml'
       - 'web/**'
       - 'lib/**'
-      - 'pubspec.yaml'
+      - '*.yaml'
 
 permissions:
   contents: write 

@@ -9,7 +9,7 @@ on:
       - '.github/workflows/build-ios.yml'
       - 'ios/**'
       - 'lib/**'
-      - 'pubspec.yaml'
+      - '*.yaml'
 
 jobs:
   build:

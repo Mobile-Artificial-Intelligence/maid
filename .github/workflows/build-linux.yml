@@ -9,7 +9,7 @@ on:
       - '.github/workflows/build-linux.yml'
       - 'linux/**'
       - 'lib/**'
-      - 'pubspec.yaml'
+      - '*.yaml'
 
 jobs:
   build:
