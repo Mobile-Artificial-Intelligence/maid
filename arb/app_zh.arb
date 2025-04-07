@@ -90,5 +90,7 @@
     "code": "代码",
     "copyLabel": "复制 {label}",
     "labelCopied": "{label} 已复制到剪贴板！",
-    "debugTitle": "调试"
+    "debugTitle": "调试",
+    "warning": "警告",
+    "nsfwWarning": "该模型被有意设计用于生成NSFW（不适宜公开）的内容。这可能包括涉及酷刑、强奸、谋杀和/或性变态行为的露骨性或暴力内容。如果您对这些话题较为敏感，或这些话题的讨论违反了当地法律，请不要继续。"
 }

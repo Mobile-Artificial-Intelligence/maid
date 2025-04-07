@@ -288,4 +288,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get debugTitle => 'Debug';
+
+  @override
+  String get warning => 'Uyarı';
+
+  @override
+  String get nsfwWarning => 'Bu model, NSFW (uygunsuz) içerik üretmek üzere kasıtlı olarak tasarlanmıştır. Bu, işkence, tecavüz, cinayet ve/veya cinsel sapkın davranışlar içeren açık cinsel veya şiddet içeriğini kapsayabilir. Bu tür konulara karşı hassassanız veya bu konuların tartışılması yerel yasalara aykırıysa, DEVAM ETMEYİN.';
 }

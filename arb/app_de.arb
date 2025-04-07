@@ -90,5 +90,7 @@
     "code": "Code",
     "copyLabel": "{label} kopieren",
     "labelCopied": "{label} in die Zwischenablage kopiert!",
-    "debugTitle": "Debugging"
+    "debugTitle": "Debugging",
+    "warning": "Achtung",
+    "nsfwWarning": "Dieses Modell wurde absichtlich so konzipiert, dass es nicht jugendfreier (NSFW) Inhalte erzeugt. Dazu können explizite sexuelle oder gewalttätige Inhalte gehören, einschließlich Folter, Vergewaltigung, Mord und/oder sexuell abweichendes Verhalten. Wenn Sie gegenüber solchen Themen sensibel sind oder deren Diskussion gegen lokale Gesetze verstößt, BRECHEN SIE JETZT AB."
 }

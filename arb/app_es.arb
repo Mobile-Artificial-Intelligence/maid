@@ -90,5 +90,7 @@
     "code": "Código",
     "copyLabel": "Copiar {label}",
     "labelCopied": "¡{label} copiado al portapapeles!",
-    "debugTitle": "Depuración"
+    "debugTitle": "Depuración",
+    "warning": "Advertencia",
+    "nsfwWarning": "Este modelo ha sido diseñado intencionadamente para generar contenido NSFW. Esto puede incluir contenido sexual explícito o violento que involucre tortura, violación, asesinato y/o comportamientos sexualmente desviados. Si eres sensible a estos temas o su discusión infringe las leyes locales, NO CONTINÚES."
 }

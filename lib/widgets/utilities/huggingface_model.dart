@@ -92,7 +92,22 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
 
   void selectModel() async {
     final filePath = await HuggingfaceManager.getFilePath(tag!.value);
-    widget.llama.loadModelFile(filePath, true);
+    
+    if (!widget.nsfw) {
+      widget.llama.loadModelFile(filePath, true);
+      return;
+    }
+
+    if (!mounted) return;
+
+    final proceed = await showDialog<bool>(
+      context: context,
+      builder: (context) => NsfwWarningDialog()
+    );
+
+    if (proceed == true) {
+      widget.llama.loadModelFile(filePath, true);
+    } 
   }
 
   void exportModel() async {

@@ -90,5 +90,7 @@
     "code": "Kod",
     "copyLabel": "Kopiuj {label}",
     "labelCopied": "{label} skopiowano do schowka!",
-    "debugTitle": "Debugowanie"
+    "debugTitle": "Debugowanie",
+    "warning": "Ostrzeżenie",
+    "nsfwWarning": "Ten model został celowo zaprojektowany do generowania treści NSFW. Może to obejmować wyraźne treści seksualne lub brutalne, w tym tortury, gwałt, morderstwo i/lub zachowania seksualnie dewiacyjne. Jeśli jesteś wrażliwy na takie tematy lub ich omawianie narusza lokalne prawo, NIE KONTYNUUJ."
 }

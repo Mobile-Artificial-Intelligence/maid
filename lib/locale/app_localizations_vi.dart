@@ -288,4 +288,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get debugTitle => 'Gỡ lỗi';
+
+  @override
+  String get warning => 'Cảnh báo';
+
+  @override
+  String get nsfwWarning => 'Mô hình này được thiết kế có chủ đích để tạo ra nội dung NSFW. Điều này có thể bao gồm nội dung tình dục hoặc bạo lực rõ ràng liên quan đến tra tấn, hiếp dâm, giết người và/hoặc hành vi lệch lạc tình dục. Nếu bạn nhạy cảm với những chủ đề như vậy hoặc việc thảo luận những chủ đề này vi phạm pháp luật địa phương, VUI LÒNG KHÔNG TIẾP TỤC.';
 }

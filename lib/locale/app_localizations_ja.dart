@@ -288,4 +288,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get debugTitle => 'デバッグ';
+
+  @override
+  String get warning => '警告';
+
+  @override
+  String get nsfwWarning => 'このモデルは、意図的にNSFW（閲覧注意）コンテンツを生成するように設計されています。これには、拷問、レイプ、殺人、および／または性的に逸脱した行為を含む、露骨な性的または暴力的なコンテンツが含まれる場合があります。こうした内容に敏感な方、またはその議論が現地の法律に違反する場合は、先に進まないでください。';
 }

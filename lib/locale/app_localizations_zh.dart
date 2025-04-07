@@ -288,4 +288,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get debugTitle => '调试';
+
+  @override
+  String get warning => '警告';
+
+  @override
+  String get nsfwWarning => '该模型被有意设计用于生成NSFW（不适宜公开）的内容。这可能包括涉及酷刑、强奸、谋杀和/或性变态行为的露骨性或暴力内容。如果您对这些话题较为敏感，或这些话题的讨论违反了当地法律，请不要继续。';
 }

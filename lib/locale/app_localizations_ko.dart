@@ -288,4 +288,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get debugTitle => '디버그';
+
+  @override
+  String get warning => '경고';
+
+  @override
+  String get nsfwWarning => '이 모델은 NSFW(부적절한 콘텐츠)를 생성하도록 의도적으로 설계되었습니다. 여기에는 고문, 강간, 살인 및/또는 성적으로 일탈된 행동과 관련된 노골적인 성적 또는 폭력적인 콘텐츠가 포함될 수 있습니다. 이러한 주제에 민감하시거나 해당 주제에 대한 논의가 현지 법률을 위반하는 경우, 진행하지 마십시오.';
 }

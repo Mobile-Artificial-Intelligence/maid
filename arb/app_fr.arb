@@ -90,5 +90,7 @@
     "code": "Code",
     "copyLabel": "Copier {label}",
     "labelCopied": "{label} copié dans le presse-papiers!",
-    "debugTitle": "Débogage"
+    "debugTitle": "Débogage",
+    "warning": "Avertissement",
+    "nsfwWarning": "Ce modèle a été intentionnellement conçu pour produire du contenu NSFW. Cela peut inclure du contenu sexuel explicite ou violent impliquant de la torture, du viol, du meurtre et/ou des comportements sexuellement déviants. Si vous êtes sensible à ces sujets, ou si leur discussion enfreint les lois locales, NE CONTINUEZ PAS."
 }

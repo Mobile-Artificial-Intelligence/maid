@@ -288,4 +288,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get debugTitle => 'Debugging';
+
+  @override
+  String get warning => 'Achtung';
+
+  @override
+  String get nsfwWarning => 'Dieses Modell wurde absichtlich so konzipiert, dass es nicht jugendfreier (NSFW) Inhalte erzeugt. Dazu können explizite sexuelle oder gewalttätige Inhalte gehören, einschließlich Folter, Vergewaltigung, Mord und/oder sexuell abweichendes Verhalten. Wenn Sie gegenüber solchen Themen sensibel sind oder deren Diskussion gegen lokale Gesetze verstößt, BRECHEN SIE JETZT AB.';
 }

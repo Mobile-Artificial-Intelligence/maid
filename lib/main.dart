@@ -48,6 +48,7 @@ part 'widgets/chat/chat_tile.dart';
 part 'widgets/chat/chat_view.dart';
 
 part 'widgets/dialogs/error_dialog.dart';
+part 'widgets/dialogs/nsfw_warning_dialog.dart';
 part 'widgets/dialogs/sharing_dialog.dart';
 
 part 'widgets/dropdowns/artificial_intelligence_dropdown.dart';
