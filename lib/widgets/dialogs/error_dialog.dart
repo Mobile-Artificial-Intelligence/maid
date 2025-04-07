@@ -10,6 +10,7 @@ class ErrorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
+    backgroundColor: Theme.of(context).colorScheme.onError,
     title: Text(
       AppLocalizations.of(context)!.anErrorOccurred,
       textAlign: TextAlign.center,

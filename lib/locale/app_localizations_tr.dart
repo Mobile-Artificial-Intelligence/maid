@@ -81,6 +81,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ok => 'Tamam';
 
   @override
+  String get proceed => 'Devam Et';
+
+  @override
   String get done => 'Bitti';
 
   @override

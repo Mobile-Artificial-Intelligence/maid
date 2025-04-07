@@ -81,6 +81,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get ok => '확인';
 
   @override
+  String get proceed => '계속 진행';
+
+  @override
   String get done => '완료';
 
   @override

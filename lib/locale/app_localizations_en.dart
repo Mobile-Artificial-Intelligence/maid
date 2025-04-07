@@ -81,6 +81,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ok => 'OK';
 
   @override
+  String get proceed => 'Proceed';
+
+  @override
   String get done => 'Done';
 
   @override

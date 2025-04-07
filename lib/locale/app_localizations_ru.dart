@@ -81,6 +81,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ok => 'OK';
 
   @override
+  String get proceed => 'Продолжить';
+
+  @override
   String get done => 'Готово';
 
   @override

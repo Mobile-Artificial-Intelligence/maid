@@ -261,6 +261,12 @@ abstract class AppLocalizations {
   /// **'OK'**
   String get ok;
 
+  /// No description provided for @proceed.
+  ///
+  /// In en, this message translates to:
+  /// **'Proceed'**
+  String get proceed;
+
   /// No description provided for @done.
   ///
   /// In en, this message translates to:

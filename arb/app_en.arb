@@ -24,6 +24,7 @@
     "key": "Key",
     "value": "Value",
     "ok": "OK",
+    "proceed": "Proceed",
     "done": "Done",
     "close": "Close",
     "save": "Save",

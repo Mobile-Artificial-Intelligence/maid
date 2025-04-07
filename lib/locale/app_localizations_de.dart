@@ -81,6 +81,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ok => 'OK';
 
   @override
+  String get proceed => 'Fortfahren';
+
+  @override
   String get done => 'Fertig';
 
   @override

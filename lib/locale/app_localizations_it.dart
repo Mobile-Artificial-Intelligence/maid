@@ -81,6 +81,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ok => 'OK';
 
   @override
+  String get proceed => 'Procedi';
+
+  @override
   String get done => 'Fatto';
 
   @override

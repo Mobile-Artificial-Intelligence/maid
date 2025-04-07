@@ -5,6 +5,7 @@ class NsfwWarningDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
+    backgroundColor: Theme.of(context).colorScheme.onError,
     title: Text(
       AppLocalizations.of(context)!.warning,
       textAlign: TextAlign.center,
@@ -23,7 +24,7 @@ class NsfwWarningDialog extends StatelessWidget {
       ),
       TextButton(
         onPressed: () => Navigator.of(context).pop(true),
-        child: Text(AppLocalizations.of(context)!.ok),
+        child: Text(AppLocalizations.of(context)!.proceed),
       ),
     ],
   );

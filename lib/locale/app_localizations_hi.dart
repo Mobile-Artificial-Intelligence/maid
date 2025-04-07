@@ -81,6 +81,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get ok => 'ठीक है';
 
   @override
+  String get proceed => 'जारी रखें';
+
+  @override
   String get done => 'समाप्त';
 
   @override

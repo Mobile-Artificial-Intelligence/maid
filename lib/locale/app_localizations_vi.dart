@@ -81,6 +81,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get ok => 'OK';
 
   @override
+  String get proceed => 'Tiếp tục';
+
+  @override
   String get done => 'Hoàn tất';
 
   @override
