@@ -1,13 +1,13 @@
 part of 'package:maid/main.dart';
 
 class HomePage extends StatefulWidget {
-  final ArtificialIntelligenceController aiController;
+  final ArtificialIntelligenceController ai;
   final ChatController chatController;
   final AppSettings settings;
 
   const HomePage({
     super.key, 
-    required this.aiController,
+    required this.ai,
     required this.chatController,
     required this.settings,
   });
@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.aiController, 
+    listenable: widget.ai, 
     builder: scaffoldBuilder
   );
 
@@ -38,21 +38,21 @@ class HomePageState extends State<HomePage> {
   );
 
   Widget buildTitle() {
-    if (widget.aiController is LlamaCppController) {
+    if (widget.ai is LlamaCppController) {
       return LoadModelButton(
-        llama: widget.aiController as LlamaCppController
+        llama: widget.ai as LlamaCppController
       );
     }
 
     return RemoteModelDropdown(
-      aiController: widget.aiController as RemoteArtificialIntelligenceController,
+      ai: widget.ai as RemoteArtificialIntelligenceController,
     );
   }
 
   Widget buildDrawer() => Drawer(
     child: ChatView(
       chatController: widget.chatController,
-      aiController: widget.aiController,
+      ai: widget.ai,
     )
   );
 
@@ -60,12 +60,12 @@ class HomePageState extends State<HomePage> {
     children: [
       MessageView(
         maxMessages: 50,
-        aiController: widget.aiController,
+        ai: widget.ai,
         chatController: widget.chatController,
         settings: widget.settings,
       ),
       PromptField(
-        aiController: widget.aiController,
+        ai: widget.ai,
         chatController: widget.chatController,
         settings: widget.settings,
       ),

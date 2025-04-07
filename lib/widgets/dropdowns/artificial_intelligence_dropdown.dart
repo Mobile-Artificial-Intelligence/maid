@@ -1,11 +1,11 @@
 part of 'package:maid/main.dart';
 
 class ArtificialIntelligenceDropdown extends StatefulWidget {
-  final ArtificialIntelligenceController aiController;
+  final ArtificialIntelligenceController ai;
 
   const ArtificialIntelligenceDropdown({
     super.key, 
-    required this.aiController
+    required this.ai
   });
 
   @override
@@ -38,7 +38,7 @@ class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDr
     children: [
       const SizedBox(width: 8),
       ListenableBuilder(
-        listenable: widget.aiController,
+        listenable: widget.ai,
         builder: buildOverrideText
       ),
       buildPopupButton()
@@ -46,7 +46,7 @@ class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDr
   );
 
   Widget buildOverrideText(BuildContext context, Widget? child) => Text(
-    widget.aiController.getTypeLocale(context),
+    widget.ai.getTypeLocale(context),
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16

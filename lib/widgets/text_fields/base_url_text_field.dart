@@ -1,11 +1,11 @@
 part of 'package:maid/main.dart';
 
 class BaseUrlTextField extends StatelessWidget {
-  final RemoteArtificialIntelligenceController aiController;
+  final RemoteArtificialIntelligenceController ai;
 
   const BaseUrlTextField({
     super.key, 
-    required this.aiController,
+    required this.ai,
   });
 
   void onChanged(BuildContext context, String value) {
@@ -16,7 +16,7 @@ class BaseUrlTextField extends StatelessWidget {
       );
     }
 
-    aiController.baseUrl = value;
+    ai.baseUrl = value;
   }
 
   Widget exceptionBuilder(BuildContext context) => ErrorDialog(
@@ -28,8 +28,8 @@ class BaseUrlTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListenableTextField(
-    listenable: aiController,
-    selector: () => aiController.baseUrl, 
+    listenable: ai,
+    selector: () => ai.baseUrl, 
     onChanged: (value) => onChanged(context, value),
     labelText: AppLocalizations.of(context)!.baseUrl,
     requireSave: true,

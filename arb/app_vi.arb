@@ -70,7 +70,7 @@
     "themeSeedColor": "Màu chủ đạo",
     "editMessage": "Chỉnh sửa tin nhắn",
     "settingsTitle": "Cài đặt",
-    "aiSettings": "Cài đặt {aiControllerType}",
+    "aiSettings": "Cài đặt {aiType}",
     "userSettings": "Cài đặt người dùng",
     "assistantSettings": "Cài đặt trợ lý",
     "systemSettings": "Cài đặt hệ thống",

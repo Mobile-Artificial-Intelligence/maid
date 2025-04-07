@@ -70,7 +70,7 @@
     "themeSeedColor": "थीम सीड रंग",
     "editMessage": "संदेश संपादित करें",
     "settingsTitle": "सेटिंग्स",
-    "aiSettings": "{aiControllerType} सेटिंग्स",
+    "aiSettings": "{aiType} सेटिंग्स",
     "userSettings": "उपयोगकर्ता सेटिंग्स",
     "assistantSettings": "सहायक सेटिंग्स",
     "systemSettings": "सिस्टम सेटिंग्स",

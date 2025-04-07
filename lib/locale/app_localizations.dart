@@ -16,6 +16,7 @@ import 'app_localizations_ko.dart';
 import 'app_localizations_pl.dart';
 import 'app_localizations_ru.dart';
 import 'app_localizations_tr.dart';
+import 'app_localizations_vi.dart';
 import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
@@ -112,6 +113,7 @@ abstract class AppLocalizations {
     Locale('pl'),
     Locale('ru'),
     Locale('tr'),
+    Locale('vi'),
     Locale('zh')
   ];
 
@@ -535,11 +537,11 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
-  /// Settings for {aiControllerType}
+  /// Settings for {aiType}
   ///
   /// In en, this message translates to:
-  /// **'{aiControllerType} Settings'**
-  String aiSettings(String aiControllerType);
+  /// **'{aiType} Settings'**
+  String aiSettings(String aiType);
 
   /// No description provided for @userSettings.
   ///
@@ -671,7 +673,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'pl', 'ru', 'tr', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'pl', 'ru', 'tr', 'vi', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -693,6 +695,7 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     case 'pl': return AppLocalizationsPl();
     case 'ru': return AppLocalizationsRu();
     case 'tr': return AppLocalizationsTr();
+    case 'vi': return AppLocalizationsVi();
     case 'zh': return AppLocalizationsZh();
   }
 

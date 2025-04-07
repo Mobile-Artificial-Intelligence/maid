@@ -70,7 +70,7 @@
     "themeSeedColor": "Design-Farbton",
     "editMessage": "Nachricht bearbeiten",
     "settingsTitle": "Einstellungen",
-    "aiSettings": "{aiControllerType} Einstellungen",
+    "aiSettings": "{aiType} Einstellungen",
     "userSettings": "Benutzereinstellungen",
     "assistantSettings": "Assistenteneinstellungen",
     "systemSettings": "Systemeinstellungen",

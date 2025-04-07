@@ -221,8 +221,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsTitle => 'Einstellungen';
 
   @override
-  String aiSettings(String aiControllerType) {
-    return '$aiControllerType Einstellungen';
+  String aiSettings(String aiType) {
+    return '$aiType Einstellungen';
   }
 
   @override

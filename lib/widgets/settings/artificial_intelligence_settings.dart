@@ -1,16 +1,16 @@
 part of 'package:maid/main.dart';
 
 class ArtificialIntelligenceSettings extends StatelessWidget {
-  final ArtificialIntelligenceController aiController;
+  final ArtificialIntelligenceController ai;
   
   const ArtificialIntelligenceSettings({
     super.key, 
-    required this.aiController
+    required this.ai
   });
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: aiController,
+    listenable: ai,
     builder: buildColumn,
   );
 
@@ -18,25 +18,25 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     children: [
       Divider(endIndent: 0, indent: 0, height: 32),
       Text(
-        AppLocalizations.of(context)!.aiSettings(aiController.getTypeLocale(context)),
+        AppLocalizations.of(context)!.aiSettings(ai.getTypeLocale(context)),
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
-      aiController is RemoteArtificialIntelligenceController
+      ai is RemoteArtificialIntelligenceController
         ? buildRemoteSettings(context)
-        : LoadModelButton(llama: aiController as LlamaCppController),
+        : LoadModelButton(llama: ai as LlamaCppController),
     ],
   );
 
   Widget buildRemoteSettings(BuildContext context) => Column(
     children: [
-      if (aiController is OllamaController && !kIsWeb) buildLocalSearchSwitchRow(context),
+      if (ai is OllamaController && !kIsWeb) buildLocalSearchSwitchRow(context),
       const SizedBox(height: 8),
-      RemoteModelTextField(aiController: aiController as RemoteArtificialIntelligenceController),
+      RemoteModelTextField(ai: ai as RemoteArtificialIntelligenceController),
       const SizedBox(height: 8),
-      BaseUrlTextField(aiController: aiController as RemoteArtificialIntelligenceController),
+      BaseUrlTextField(ai: ai as RemoteArtificialIntelligenceController),
       const SizedBox(height: 8),
-      ApiKeyTextField(aiController: aiController as RemoteArtificialIntelligenceController),
+      ApiKeyTextField(ai: ai as RemoteArtificialIntelligenceController),
     ]
   );
 
@@ -49,7 +49,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
         maxLines: 1,
       ),
       Switch(
-        value: (aiController as OllamaController).searchLocalNetwork ?? false,
+        value: (ai as OllamaController).searchLocalNetwork ?? false,
         onChanged: (value) => onLocalSearchChanged(context, value),
       ),
     ],
@@ -58,7 +58,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   void onLocalSearchChanged(BuildContext context, bool value) {
     if (
       TargetPlatformExtension.isMobile &&
-      (aiController as OllamaController).searchLocalNetwork == null && 
+      (ai as OllamaController).searchLocalNetwork == null && 
       value
     ) {
       // Show alert dialog informing the user of the permissions required
@@ -69,7 +69,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
       return;
     }
 
-    (aiController as OllamaController).searchLocalNetwork = value;
+    (ai as OllamaController).searchLocalNetwork = value;
   }
 
   Widget buildPermissionsAlert(BuildContext context) => AlertDialog(
@@ -112,6 +112,6 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
 
     if (!granted) return;
 
-    (aiController as OllamaController).searchLocalNetwork = true;
+    (ai as OllamaController).searchLocalNetwork = true;
   }
 }

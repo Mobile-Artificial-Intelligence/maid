@@ -90,13 +90,13 @@ void main() {
 class Maid extends StatefulWidget {
   final AppSettings settings;
   final ChatController chatController;
-  final ArtificialIntelligenceController? aiController;
+  final ArtificialIntelligenceController? ai;
 
   Maid({
     super.key,
     AppSettings? settings,
     ChatController? chatController,
-    this.aiController
+    this.ai
   }) : settings = settings ?? AppSettings.load(),
        chatController = chatController ?? ChatController.load();
 
@@ -106,7 +106,7 @@ class Maid extends StatefulWidget {
 
 
 class MaidState extends State<Maid> {
-  ArtificialIntelligenceController aiController = LlamaCppController();
+  ArtificialIntelligenceController ai = LlamaCppController();
 
   static MaidState of(BuildContext context) => context.findAncestorStateOfType<MaidState>()!;
 
@@ -114,22 +114,22 @@ class MaidState extends State<Maid> {
   void initState() {
     super.initState();
     
-    if (widget.aiController != null) {
-      aiController = widget.aiController!;
+    if (widget.ai != null) {
+      ai = widget.ai!;
     }
     else {
       ArtificialIntelligenceController.load().then(
-        (newController) => setState(() => aiController = newController)
+        (newController) => setState(() => ai = newController)
       );
     }
   }
 
   Future<void> switchAi(String type) async {
-    await aiController.save();
+    await ai.save();
 
-    if (aiController.type == type) return;
+    if (ai.type == type) return;
 
-    aiController = await ArtificialIntelligenceController.load(type);
+    ai = await ArtificialIntelligenceController.load(type);
 
     setState(() => log('AI switched to $type'));
   }
@@ -184,7 +184,7 @@ class MaidState extends State<Maid> {
       '/settings': (context) => buildSettingsPage(),
       '/chat': (context) => buildHomePage(),
       '/about': (context) => const AboutPage(),
-      '/huggingface': (context) => HuggingFacePage(aiController: aiController),
+      '/huggingface': (context) => HuggingFacePage(ai: ai),
       if (kDebugMode) '/debug': (context) => DebugPage(),
     },
     supportedLocales: AppLocalizations.supportedLocales,
@@ -193,13 +193,13 @@ class MaidState extends State<Maid> {
   );
 
   Widget buildHomePage() => HomePage(
-    aiController: aiController, 
+    ai: ai, 
     chatController: widget.chatController, 
     settings: widget.settings
   );
 
   Widget buildSettingsPage() => SettingsPage(
-    aiController: aiController, 
+    ai: ai, 
     chatController: widget.chatController,
     settings: widget.settings
   );

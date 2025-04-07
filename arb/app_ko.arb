@@ -70,7 +70,7 @@
     "themeSeedColor": "테마 기본 색상",
     "editMessage": "메시지 편집",
     "settingsTitle": "설정",
-    "aiSettings": "{aiControllerType} 설정",
+    "aiSettings": "{aiType} 설정",
     "userSettings": "사용자 설정",
     "assistantSettings": "어시스턴트 설정",
     "systemSettings": "시스템 설정",

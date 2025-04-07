@@ -221,8 +221,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settingsTitle => '설정';
 
   @override
-  String aiSettings(String aiControllerType) {
-    return '$aiControllerType 설정';
+  String aiSettings(String aiType) {
+    return '$aiType 설정';
   }
 
   @override

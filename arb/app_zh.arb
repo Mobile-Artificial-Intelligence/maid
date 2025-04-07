@@ -70,7 +70,7 @@
     "themeSeedColor": "主题种子颜色",
     "editMessage": "编辑消息",
     "settingsTitle": "设置",
-    "aiSettings": "{aiControllerType} 设置",
+    "aiSettings": "{aiType} 设置",
     "userSettings": "用户设置",
     "assistantSettings": "助手设置",
     "systemSettings": "系统设置",

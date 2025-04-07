@@ -79,11 +79,11 @@
     "themeSeedColor": "Theme Seed Color",
     "editMessage": "Edit Message",
     "settingsTitle": "Settings",
-    "aiSettings": "{aiControllerType} Settings",
+    "aiSettings": "{aiType} Settings",
     "@aiSettings": {
-        "description": "Settings for {aiControllerType}",
+        "description": "Settings for {aiType}",
         "placeholders": {
-            "aiControllerType": {
+            "aiType": {
                 "type": "String",
                 "example": "Llama CPP"
             }

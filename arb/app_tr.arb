@@ -70,7 +70,7 @@
     "themeSeedColor": "Tema Tohum Rengi",
     "editMessage": "Mesajı Düzenle",
     "settingsTitle": "Ayarlar",
-    "aiSettings": "{aiControllerType} Ayarları",
+    "aiSettings": "{aiType} Ayarları",
     "userSettings": "Kullanıcı Ayarları",
     "assistantSettings": "Asistan Ayarları",
     "systemSettings": "Sistem Ayarları",

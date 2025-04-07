@@ -70,7 +70,7 @@
     "themeSeedColor": "'Colore di base del tema",
     "editMessage": "Modifica messaggio",
     "settingsTitle": "Impostazioni",
-    "aiSettings": "Impostazioni {aiControllerType}",
+    "aiSettings": "Impostazioni {aiType}",
     "userSettings": "Impostazioni utente",
     "assistantSettings": "Impostazioni assistente",
     "systemSettings": "Impostazioni di sistema",

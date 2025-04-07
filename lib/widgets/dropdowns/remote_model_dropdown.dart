@@ -1,10 +1,10 @@
 part of 'package:maid/main.dart';
 
 class RemoteModelDropdown extends StatefulWidget {
-  final RemoteArtificialIntelligenceController aiController;
+  final RemoteArtificialIntelligenceController ai;
   final bool refreshButton;
 
-  const RemoteModelDropdown({super.key, this.refreshButton = false, required this.aiController});
+  const RemoteModelDropdown({super.key, this.refreshButton = false, required this.ai});
 
   @override
   State<RemoteModelDropdown> createState() => RemoteModelDropdownState();
@@ -14,13 +14,13 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
   bool open = false;
 
   void onSelected(String? model) {
-    widget.aiController.model = model;
+    widget.ai.model = model;
     setState(() => open = false);
   }
 
   Future<bool> getModelOptions() async {
     try {
-      return await widget.aiController.getModelOptions();
+      return await widget.ai.getModelOptions();
     } 
     catch (exception) {
       if (!mounted) return false;
@@ -36,7 +36,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.aiController, 
+    listenable: widget.ai, 
     builder: buildRow
   );
 
@@ -46,7 +46,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
       if (widget.refreshButton) buildRefreshButton(),
       const SizedBox(width: 8),
       Text(
-        widget.aiController.model ?? AppLocalizations.of(context)!.noModelSelected,
+        widget.ai.model ?? AppLocalizations.of(context)!.noModelSelected,
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSurface,
           fontSize: 16
@@ -56,7 +56,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
     ]
   );
 
-  Widget buildFutureBuilder() => widget.aiController.canGetRemoteModels ? FutureBuilder<bool>(
+  Widget buildFutureBuilder() => widget.ai.canGetRemoteModels ? FutureBuilder<bool>(
     future: getModelOptions(),
     builder: buildPopupButton
   ) : const SizedBox.shrink();
@@ -79,7 +79,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
       tooltip: AppLocalizations.of(context)!.selectRemoteModel,
       icon: enabled ? buildPopupButtonIcon() : buildSpinner(),
       offset: const Offset(0, 40),
-      itemBuilder: (context) => widget.aiController.modelOptions.map(modelBuilder).toList(),
+      itemBuilder: (context) => widget.ai.modelOptions.map(modelBuilder).toList(),
       onOpened: () => setState(() => open = true),
       onCanceled: () => setState(() => open = false)
     );

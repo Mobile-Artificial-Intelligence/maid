@@ -70,7 +70,7 @@
     "themeSeedColor": "Основной цвет темы",
     "editMessage": "Редактировать сообщение",
     "settingsTitle": "Настройки",
-    "aiSettings": "Настройки {aiControllerType}",
+    "aiSettings": "Настройки {aiType}",
     "userSettings": "Настройки пользователя",
     "assistantSettings": "Настройки ассистента",
     "systemSettings": "Системные настройки",

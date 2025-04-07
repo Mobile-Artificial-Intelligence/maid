@@ -1,13 +1,13 @@
 part of 'package:maid/main.dart';
 
 class SettingsPage extends StatelessWidget {
-  final ArtificialIntelligenceController aiController;
+  final ArtificialIntelligenceController ai;
   final ChatController chatController;
   final AppSettings settings;
   
   const SettingsPage({
     super.key, 
-    required this.aiController, 
+    required this.ai, 
     required this.chatController,
     required this.settings
   });
@@ -27,10 +27,10 @@ class SettingsPage extends StatelessWidget {
     mainAxisSize: MainAxisSize.max,
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
-      ArtificialIntelligenceDropdown(aiController: aiController),
-      ArtificialIntelligenceSettings(aiController: aiController),
+      ArtificialIntelligenceDropdown(ai: ai),
+      ArtificialIntelligenceSettings(ai: ai),
       Divider(endIndent: 0, indent: 0, height: 32),
-      ParameterView(aiController: aiController),
+      ParameterView(ai: ai),
       Divider(endIndent: 0, indent: 0, height: 32),
       UserSettings(settings: settings),
       Divider(endIndent: 0, indent: 0, height: 32),
@@ -60,7 +60,7 @@ class SettingsPage extends StatelessWidget {
         onPressed: () {
           settings.clear();
           chatController.clear();
-          aiController.clear();
+          ai.clear();
         }, 
         child: Text(AppLocalizations.of(context)!.clearCache)
       )

@@ -1,11 +1,11 @@
 part of 'package:maid/main.dart';
 
 class HuggingFacePage extends StatelessWidget {
-  final ArtificialIntelligenceController aiController;
+  final ArtificialIntelligenceController ai;
 
   const HuggingFacePage({
     super.key, 
-    required this.aiController,
+    required this.ai,
   });
 
   @override
@@ -50,7 +50,7 @@ class HuggingFacePage extends StatelessWidget {
           tags: (modelMap['tags'] as YamlMap).map(
             (key, value) => MapEntry(key, value.toString())
           ),
-          llama: aiController as LlamaCppController,
+          llama: ai as LlamaCppController,
         )
       );
     }

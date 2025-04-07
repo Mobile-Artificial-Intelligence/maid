@@ -221,8 +221,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsTitle => '设置';
 
   @override
-  String aiSettings(String aiControllerType) {
-    return '$aiControllerType 设置';
+  String aiSettings(String aiType) {
+    return '$aiType 设置';
   }
 
   @override

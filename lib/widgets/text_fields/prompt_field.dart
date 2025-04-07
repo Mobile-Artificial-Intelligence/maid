@@ -1,13 +1,13 @@
 part of 'package:maid/main.dart';
 
 class PromptField extends StatefulWidget {
-  final ArtificialIntelligenceController aiController;
+  final ArtificialIntelligenceController ai;
   final ChatController chatController;
   final AppSettings settings;
 
   const PromptField({
     super.key, 
-    required this.aiController,
+    required this.ai,
     required this.chatController,
     required this.settings,
   });
@@ -64,7 +64,7 @@ class PromptFieldState extends State<PromptField> {
 
   void handleFile(String path) {
     if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
-      (widget.aiController as LlamaCppController).loadModelFile(path);
+      (widget.ai as LlamaCppController).loadModelFile(path);
     } 
   }
 
@@ -78,7 +78,7 @@ class PromptFieldState extends State<PromptField> {
     try {
       widget.chatController.addToEnd(UserChatMessage(prompt));
 
-      Stream<String> stream = widget.aiController.prompt(widget.chatController.root.chainData.copy());
+      Stream<String> stream = widget.ai.prompt(widget.chatController.root.chainData.copy());
 
       await widget.chatController.streamToEnd(stream);
     }
@@ -158,8 +158,8 @@ class PromptFieldState extends State<PromptField> {
 
   /// This is the submit button that will be used to submit the message.
   Widget suffixButtonBuilder() => ListenableBuilder(
-    listenable: widget.aiController,
-    builder: (context, child) => widget.aiController.busy ? 
+    listenable: widget.ai,
+    builder: (context, child) => widget.ai.busy ? 
       buildStopButton() : 
       buildPromptButton(),
   );
@@ -168,7 +168,7 @@ class PromptFieldState extends State<PromptField> {
     key: ValueKey('submit_prompt_button'),
     tooltip: AppLocalizations.of(context)!.submitPrompt,
     icon: const Icon(Icons.send),
-    onPressed: isNotEmpty && widget.aiController.canPrompt ? onSubmit : null,
+    onPressed: isNotEmpty && widget.ai.canPrompt ? onSubmit : null,
     disabledColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
   );
 
@@ -181,6 +181,6 @@ class PromptFieldState extends State<PromptField> {
       color: Theme.of(context).colorScheme.onError,
     ),
     iconSize: 30,
-    onPressed: widget.aiController.stop,
+    onPressed: widget.ai.stop,
   );
 }
