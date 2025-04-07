@@ -122,6 +122,12 @@ class MessageViewState extends State<MessageView> {
     controller.jumpTo(controller.offset + offset.dy - topBarHeight);
   }
 
+  void jumpToExtent(Duration duration) {
+    if (controller.hasClients) {
+      controller.jumpTo(controller.position.maxScrollExtent);
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Expanded(
     child: SingleChildScrollView(
@@ -148,6 +154,8 @@ class MessageViewState extends State<MessageView> {
     ) ?? AppLocalizations.of(context)!.newChat;
 
     if (currentRoot.currentChild == null) return const SizedBox.shrink();
+
+    WidgetsBinding.instance.addPostFrameCallback(jumpToExtent);
 
     return MessageWidget(
       key: rootKey,
