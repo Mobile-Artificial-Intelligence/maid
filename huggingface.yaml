@@ -185,6 +185,7 @@
     Q8_0: Tesslate_Tessa-T1-3B-Q8_0.gguf
     BF16: Tesslate_Tessa-T1-3B-bf16.gguf
 
+# NSFW model
 - name: NSFW 3B
   repo: UnfilteredAI/NSFW-3B
   branch: main
@@ -194,6 +195,7 @@
     IQ4_XS: nsfw-3b-iq4_xs-imat.gguf
     Q4_K_M: nsfw-3b-q4_k_m.gguf
 
+# Emotionally aware NSFW model
 - name: NSFW Flash
   repo: UnfilteredAI/NSFW-flash
   branch: main
