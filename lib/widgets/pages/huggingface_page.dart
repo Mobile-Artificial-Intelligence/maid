@@ -42,10 +42,15 @@ class HuggingFacePage extends StatelessWidget {
     for (final model in modelList) {
       final modelMap = model as YamlMap;
 
+      if (bool.fromEnvironment('WORKSAFE')) {
+        if (modelMap['nsfw'] == true) continue;
+      }
+
       widgets.add(
         HuggingfaceModel(
           name: modelMap['name'],
           repo: modelMap['repo'],
+          nsfw: modelMap['nsfw'] ?? false,
           parameters: modelMap['parameters'].toDouble(),
           tags: (modelMap['tags'] as YamlMap).map(
             (key, value) => MapEntry(key, value.toString())

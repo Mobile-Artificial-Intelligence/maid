@@ -184,3 +184,12 @@
     Q6_K_L: Tesslate_Tessa-T1-3B-Q6_K_L.gguf
     Q8_0: Tesslate_Tessa-T1-3B-Q8_0.gguf
     BF16: Tesslate_Tessa-T1-3B-bf16.gguf
+
+- name: NSFW 3B
+  repo: UnfilteredAI/NSFW-3B
+  branch: main
+  nsfw: true
+  parameters: 3.0
+  tags:
+    IQ4_XS: nsfw-3b-iq4_xs-imat.gguf
+    Q4_K_M: nsfw-3b-q4_k_m.gguf

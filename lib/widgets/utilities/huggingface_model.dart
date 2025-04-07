@@ -5,6 +5,7 @@ class HuggingfaceModel extends StatefulWidget {
   final String repo;
   final String branch;
   final double parameters; // Billions of parameters
+  final bool nsfw;
   final Map<String, String> tags;
   final LlamaCppController llama;
 
@@ -16,6 +17,7 @@ class HuggingfaceModel extends StatefulWidget {
     required this.parameters,
     required this.tags,
     required this.llama,
+    this.nsfw = false,
   });
 
   @override
@@ -143,7 +145,7 @@ class HuggingfaceModelState extends State<HuggingfaceModel> {
     padding: const EdgeInsets.all(8.0),
     margin: const EdgeInsets.all(4.0),
     decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+      color: widget.nsfw ? Theme.of(context).colorScheme.tertiaryContainer : Theme.of(context).colorScheme.surfaceContainerHigh,
       borderRadius: BorderRadius.circular(8.0),
     ),
     child: FittedBox(
