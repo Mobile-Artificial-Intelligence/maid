@@ -10,7 +10,10 @@ class NsfwWarningDialog extends StatelessWidget {
       AppLocalizations.of(context)!.warning,
       textAlign: TextAlign.center,
     ),
-    content: SingleChildScrollView(
+    content: ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 400,
+      ),
       child: Text(
         AppLocalizations.of(context)!.nsfwWarning,
         textAlign: TextAlign.center,
