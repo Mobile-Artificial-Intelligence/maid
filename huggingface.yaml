@@ -189,7 +189,15 @@
   repo: UnfilteredAI/NSFW-3B
   branch: main
   nsfw: true
-  parameters: 3.0
+  parameters: 2.8
   tags:
     IQ4_XS: nsfw-3b-iq4_xs-imat.gguf
     Q4_K_M: nsfw-3b-q4_k_m.gguf
+
+- name: NSFW Flash
+  repo: UnfilteredAI/NSFW-flash
+  branch: main
+  nsfw: true
+  parameters: 2.24
+  tags:
+    Q4_K_M: nsfw-flash-q4_k_m.gguf
