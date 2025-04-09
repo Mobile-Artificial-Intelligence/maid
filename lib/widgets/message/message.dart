@@ -4,13 +4,13 @@ class MessageWidget extends StatefulWidget {
   final ArtificialIntelligenceController ai;
   final ChatController chatController;
   final AppSettings settings;
-  final GeneralTreeNode<ChatMessage> node;
+  final GeneralTreeNode<LlamaMessage> node;
 
   /// The chain position is used to determine the position of the message in the chain.
   /// Where a position of 0 would indicate the bottom of the chain.
   final int chainPosition;
 
-  ChatMessage get message => node.currentChild!.data;
+  LlamaMessage get message => node.currentChild!.data;
   int get siblingsIndex => node.currentChildIndex!;
   int get siblingCount => node.children.length;
   bool get onNextEnabled => (siblingsIndex + 1) < siblingCount;
@@ -45,7 +45,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onSubmitEdit() {
-    widget.node.addChild(UserChatMessage(controller.text));
+    widget.node.addChild(UserLlamaMessage(controller.text));
 
     tryRegenerate(widget.node.currentChild!);
 
@@ -54,9 +54,9 @@ class MessageWidgetState extends State<MessageWidget> {
 
   void onRegenerate() => tryRegenerate(widget.node);
 
-  void tryRegenerate(GeneralTreeNode<ChatMessage> node) async {
+  void tryRegenerate(GeneralTreeNode<LlamaMessage> node) async {
     try {
-      node.addChild(AssistantChatMessage(''));
+      node.addChild(AssistantLlamaMessage(''));
 
       if (widget.ai is LlamaCppController) {
         (widget.ai as LlamaCppController).reloadModel(true);
@@ -191,7 +191,7 @@ class MessageWidgetState extends State<MessageWidget> {
   /// Builds the role of the message.
   Widget buildRole() => ListenableBuilder(
     listenable: widget.settings,
-    builder: widget.message is UserChatMessage ? buildUserRow : buildAssistantRow,
+    builder: widget.message is UserLlamaMessage ? buildUserRow : buildAssistantRow,
   );
 
   /// Builds the role of the message when the message is a user message.
@@ -291,7 +291,7 @@ class MessageWidgetState extends State<MessageWidget> {
   /// If the message is a user message, it will show an edit button.
   /// If the message is an assistant message, it will show a regenerate button.
   Widget buildRoleSpecificButton() {
-    if (widget.message is UserChatMessage) {
+    if (widget.message is UserLlamaMessage) {
       return IconButton(
         tooltip: AppLocalizations.of(context)!.edit,
         icon: const Icon(Icons.edit),

@@ -3,7 +3,7 @@ part of 'package:maid/main.dart';
 class ChatTile extends StatefulWidget {
   final ChatController chatController;
   final ArtificialIntelligenceController ai;
-  final GeneralTreeNode<ChatMessage> node;
+  final GeneralTreeNode<LlamaMessage> node;
   final bool selected;
 
   const ChatTile({

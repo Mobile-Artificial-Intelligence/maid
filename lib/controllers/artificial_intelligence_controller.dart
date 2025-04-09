@@ -115,7 +115,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     }
   }
 
-  Stream<String> prompt(List<ChatMessage> messages);
+  Stream<String> prompt(List<LlamaMessage> messages);
 
   void stop();
 
@@ -242,7 +242,7 @@ class LlamaCppController extends ArtificialIntelligenceController {
   }
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(List<LlamaMessage> messages) async* {
     assert(_model != null);
     busy = true;
 
@@ -394,7 +394,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   });
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(List<LlamaMessage> messages) async* {
     assert(_model != null);
     busy = true;
 
@@ -591,7 +591,7 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
   });
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(List<LlamaMessage> messages) async* {
     assert(_apiKey != null, 'API Key is required');
     assert(_model != null, 'Model is required');
     busy = true;
@@ -683,7 +683,7 @@ class MistralController extends RemoteArtificialIntelligenceController {
   });
   
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(List<LlamaMessage> messages) async* {
     assert(_apiKey != null, 'API Key is required');
     assert(_model != null, 'Model is required');
     busy = true;
@@ -780,7 +780,7 @@ class AnthropicController extends RemoteArtificialIntelligenceController {
   });
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(List<LlamaMessage> messages) async* {
     assert(_apiKey != null, 'API Key is required');
     assert(_model != null, 'Model is required');
     busy = true;
@@ -865,7 +865,7 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
   });
 
   @override
-  Stream<String> prompt(List<ChatMessage> messages) async* {
+  Stream<String> prompt(List<LlamaMessage> messages) async* {
     assert(apiKey != null, 'API Key is required');
     assert(model != null && model!.isNotEmpty, 'Model name is required');
     busy = true;

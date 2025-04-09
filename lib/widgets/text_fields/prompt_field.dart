@@ -76,7 +76,7 @@ class PromptFieldState extends State<PromptField> {
     controller.clear();
     setState(() => isNotEmpty = controller.text.isNotEmpty);
     try {
-      widget.chatController.addToEnd(UserChatMessage(prompt));
+      widget.chatController.addToEnd(UserLlamaMessage(prompt));
 
       Stream<String> stream = widget.ai.prompt(widget.chatController.root.chainData.copy());
 
