@@ -18,7 +18,7 @@ import 'package:lan_scanner/lan_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:dio/dio.dart';
-import 'package:listen_sharing_intent/listen_sharing_intent.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
