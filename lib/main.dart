@@ -24,7 +24,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:llama_sdk/llama_sdk.dart'
-    if (dart.library.html) 'package:lcpp/lcpp.web.dart';
+    if (dart.library.html) 'package:llama_sdk/llama_sdk.web.dart';
 import 'package:tree_structs/tree_structs.dart';
 import 'package:ollama_dart/ollama_dart.dart' as ollama;
 import 'package:openai_dart/openai_dart.dart' as open_ai;
