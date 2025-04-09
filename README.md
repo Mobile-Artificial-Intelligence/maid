@@ -97,7 +97,7 @@ IOS Releases not available at this time.
 ## Special Thanks and Related Projects
 - [ggerganov/llama.cpp](https://github.com/ggerganov/llama.cpp)
 - [davidmigloz/langchain_dart](https://github.com/davidmigloz/langchain_dart)
-- [Mobile-Artificial-Intelligence/lcpp](https://github.com/Mobile-Artificial-Intelligence/lcpp)
+- [Mobile-Artificial-Intelligence/llama_sdk](https://github.com/Mobile-Artificial-Intelligence/llama_sdk)
 
 ## Star History
 
