@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "721822016477",
+    "project_id": "mobile-ai-distribution",
+    "storage_bucket": "mobile-ai-distribution.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721822016477:android:7205e0ee57c9d295b78c34",
+        "android_client_info": {
+          "package_name": "com.danemadsen.maid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOlhLILnUfxFWAfMYNgdSuzPUQ38T3cqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -48,6 +48,10 @@ dependencies:
   dio: ^5.8.0+1
   path_provider: ^2.1.5
 
+  # Firebase
+  firebase_core: ^3.13.0
+  firebase_analytics: ^11.4.5
+
 dev_dependencies:
   integration_test:
     sdk: flutter
