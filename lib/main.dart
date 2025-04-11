@@ -6,6 +6,7 @@ import 'dart:math' as math;
 
 import 'package:anthropic_sdk_dart/anthropic_sdk_dart.dart' as anthropic;
 import 'package:crypto/crypto.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:maid/firebase_options.dart';
 import 'package:yaml/yaml.dart';
@@ -87,10 +88,12 @@ part 'widgets/utilities/huggingface_model.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    name: 'Maid',
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (!bool.fromEnvironment('NO_FIREBASE')) {
+    await Firebase.initializeApp(
+     name: 'Maid',
+     options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 
   runApp(Maid());
 }

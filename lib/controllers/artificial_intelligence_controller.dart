@@ -37,12 +37,12 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Map<String, dynamic> _overrides;
+  Map<String, dynamic> _parameters;
 
-  Map<String, dynamic> get overrides => _overrides;
+  Map<String, dynamic> get parameters => _parameters;
 
-  set overrides(Map<String, dynamic> newOverrides) {
-    _overrides = newOverrides;
+  set parameters(Map<String, dynamic> value) {
+    _parameters = value;
     save();
     notifyListeners();
   }
@@ -57,17 +57,17 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
 
   ArtificialIntelligenceController({
     String? model, 
-    Map<String, dynamic>? overrides
-  }) : _model = model , _overrides = overrides ?? {};
+    Map<String, dynamic>? parameters
+  }) : _model = model , _parameters = parameters ?? {};
 
   Map<String, dynamic> toMap() => {
     'model': _model,
-    'overrides': _overrides,
+    'parameters': _parameters,
   };
 
   void fromMap(Map<String, dynamic> map) {
     _model = map['model'];
-    _overrides = map['overrides'] ?? {};
+    _parameters = map['parameters'] ?? {};
     save();
     notifyListeners();
   }
@@ -121,7 +121,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
 
   void clear() async {
     _model = null;
-    _overrides = {};
+    _parameters = {};
     notifyListeners();
 
     final prefs = await SharedPreferences.getInstance();
@@ -179,7 +179,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 
   RemoteArtificialIntelligenceController({
     super.model, 
-    super.overrides,
+    super.parameters,
     String? baseUrl, 
     String? apiKey,
     bool customModel = false
@@ -188,7 +188,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
   @override
   Map<String, dynamic> toMap() => {
     'model': _model,
-    'overrides': _overrides,
+    'parameters': _parameters,
     'base_url': _baseUrl,
     'api_key': _apiKey,
     'custom_model': _customModel,
@@ -197,7 +197,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
   @override
   void fromMap(Map<String, dynamic> map) {
     _model = map['model'];
-    _overrides = map['overrides'] ?? {};
+    _parameters = map['parameters'] ?? {};
     _baseUrl = map['base_url'];
     _apiKey = map['api_key'];
     _customModel = map['custom_model'] ?? false;
@@ -210,7 +210,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
   @override
   void clear() async {
     _model = null;
-    _overrides = {};
+    _parameters = {};
     _baseUrl = null;
     _apiKey = null;
     _customModel = false;
@@ -236,7 +236,7 @@ class LlamaCppController extends ArtificialIntelligenceController {
 
   LlamaCppController({
     super.model, 
-    super.overrides
+    super.parameters
   }) {
     getLoadedModels();
   }
@@ -261,9 +261,19 @@ class LlamaCppController extends ArtificialIntelligenceController {
         'model_path': _model,
         'seed': math.Random().nextInt(1000000),
         'greedy': true,
-        ..._overrides
+        ..._parameters
       })
     );
+
+    if (!bool.fromEnvironment('NO_FIREBASE')) {
+      FirebaseAnalytics.instance.logEvent(
+        name: 'model_file_loaded',
+        parameters: {
+          'model_name': _model!.split('/').last,
+          'model_parameters': _parameters,
+        }
+      );
+    }
 
     _loadedHash = hash;
   }
@@ -388,7 +398,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
 
   OllamaController({
     super.model, 
-    super.overrides,
+    super.parameters,
     super.baseUrl, 
     super.apiKey
   });
@@ -409,7 +419,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
       request: ollama.GenerateChatCompletionRequest(
         model: _model!, 
         messages: messages.toOllamaMessages(),
-        options: ollama.RequestOptions.fromJson(_overrides),
+        options: ollama.RequestOptions.fromJson(_parameters),
         stream: true
       )
     );
@@ -550,7 +560,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   @override
   Map<String, dynamic> toMap() => {
     'model': _model,
-    'overrides': _overrides,
+    'parameters': _parameters,
     'base_url': _baseUrl,
     'api_key': _apiKey,
     'search_local_network': _searchLocalNetwork,
@@ -559,7 +569,7 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   @override
   void fromMap(Map<String, dynamic> map) {
     _model = map['model'];
-    _overrides = map['overrides'] ?? {};
+    _parameters = map['parameters'] ?? {};
     _baseUrl = map['base_url'];
     _apiKey = map['api_key'];
     _searchLocalNetwork = map['search_local_network'];
@@ -585,7 +595,7 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
 
   OpenAIController({
     super.model,
-    super.overrides,
+    super.parameters,
     super.baseUrl, 
     super.apiKey
   });
@@ -610,11 +620,11 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
         messages: messages.toOpenAiMessages(),
         model: open_ai.ChatCompletionModel.modelId(_model!),
         stream: true,
-        temperature: _overrides['temperature'],
-        topP: _overrides['top_p'],
-        maxTokens: _overrides['max_tokens'],
-        frequencyPenalty: _overrides['frequency_penalty'],
-        presencePenalty: _overrides['presence_penalty'],
+        temperature: _parameters['temperature'],
+        topP: _parameters['top_p'],
+        maxTokens: _parameters['max_tokens'],
+        frequencyPenalty: _parameters['frequency_penalty'],
+        presencePenalty: _parameters['presence_penalty'],
       )
     );
 
@@ -677,7 +687,7 @@ class MistralController extends RemoteArtificialIntelligenceController {
 
   MistralController({
     super.model, 
-    super.overrides,
+    super.parameters,
     super.baseUrl, 
     super.apiKey
   });
@@ -717,10 +727,10 @@ class MistralController extends RemoteArtificialIntelligenceController {
         messages: messages.toMistralMessages(),
         model: mistral.ChatCompletionModel.model(mistralModel),
         stream: true,
-        temperature: _overrides['temperature'],
-        topP: _overrides['top_p'],
-        maxTokens: _overrides['max_tokens'],
-        randomSeed: _overrides['seed'],
+        temperature: _parameters['temperature'],
+        topP: _parameters['top_p'],
+        maxTokens: _parameters['max_tokens'],
+        randomSeed: _parameters['seed'],
       )
     );
 
@@ -774,7 +784,7 @@ class AnthropicController extends RemoteArtificialIntelligenceController {
 
   AnthropicController({
     super.model, 
-    super.overrides,
+    super.parameters,
     super.baseUrl, 
     super.apiKey
   });
@@ -797,12 +807,12 @@ class AnthropicController extends RemoteArtificialIntelligenceController {
     final completionStream = _anthropicClient.createMessageStream(
       request: anthropic.CreateMessageRequest(
         model: anthropic.Model.model(anthropic.Models.values.firstWhere((model) => model.name == _model)),
-        maxTokens: _overrides['max_tokens'] ?? 1024,
+        maxTokens: _parameters['max_tokens'] ?? 1024,
         messages: messages.toAnthropicMessages(),
-        stopSequences: _overrides['stop_sequences'],
-        temperature: _overrides['temperature'],
-        topK: _overrides['top_k'],
-        topP: _overrides['top_p'],
+        stopSequences: _parameters['stop_sequences'],
+        temperature: _parameters['temperature'],
+        topK: _parameters['top_k'],
+        topP: _parameters['top_p'],
         stream: true,
       )
     );
@@ -859,7 +869,7 @@ class GoogleGeminiController extends RemoteArtificialIntelligenceController {
 
   GoogleGeminiController({
     super.model,
-    super.overrides,
+    super.parameters,
     super.baseUrl,
     super.apiKey,
   });
