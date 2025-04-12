@@ -107,9 +107,6 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
       case 'anthropic':
         return AnthropicController()
           ..fromMap(contextMap);
-      case 'google_gemini':
-        return GoogleGeminiController()
-          ..fromMap(contextMap);
       default:
         return LlamaCppController();
     }
@@ -843,106 +840,4 @@ class AnthropicController extends RemoteArtificialIntelligenceController {
   
   @override
   String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.anthropic;
-}
-////
-
-//Google gemini
-class GoogleGeminiController extends RemoteArtificialIntelligenceController {
-  @override
-  String get type => 'google_gemini';
-
-  @override
-  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && !busy;
-  
-  @override
-  bool get canGetRemoteModels => true;
-
-  GoogleGeminiController({
-    super.model,
-    super.overrides,
-    super.baseUrl,
-    super.apiKey,
-  });
-
-  @override
-  Stream<String> prompt(List<LlamaMessage> messages) async* {
-    assert(apiKey != null, 'API Key is required');
-    assert(model != null && model!.isNotEmpty, 'Model name is required');
-    busy = true;
-
-    final dio = Dio();
-
-    final url =
-        '${baseUrl ?? "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"}?key=$apiKey';
-
-    final requestBody = {
-      "contents": messages
-          .where((message) =>
-              message.role != 'system' && message.content.isNotEmpty)
-          .map((message) => {
-                "role": message.role,
-                "parts": [
-                  {"text": message.content}
-                ]
-              })
-          .toList(),
-    };
-
-    try {
-      final response = await dio.post(
-        url,
-        options: Options(headers: {"Content-Type": "application/json"}),
-        data: requestBody,
-      );
-
-      if (response.statusCode == 200) {
-        final responseData = response.data;
-
-        if (responseData['candidates'] != null &&
-            responseData['candidates'] is List) {
-          for (final candidate in responseData['candidates']) {
-            if (candidate['content'] != null &&
-                candidate['content']['parts'] != null &&
-                candidate['content']['parts'] is List) {
-              for (final part in candidate['content']['parts']) {
-                if (part['text'] != null) {
-                  yield part['text'];
-                } else {
-                  throw Exception('Part text is null or missing!');
-                }
-              }
-            } else {
-              throw Exception('Content parts are null or not a list!');
-            }
-          }
-        } else {
-          throw Exception('Candidates are null or not a list!');
-        }
-      } else {
-        throw Exception(
-            'Google Gemini API Error: ${response.statusCode} ${response.statusMessage}');
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      busy = false;
-    }
-  }
-
-  @override
-  void stop() {
-
-    busy = false;
-  }
-
-  @override
-  Future<bool> getModelOptions() async {
-    // Google Gemini model listing
-    _modelOptions = ["gemini-2.0-flash","gemini-2.0-pro-exp-02-05","gemini-1.5-pro","imagen-3.0-generate-002","gemini-2.0-flash-lite","gemini-1.5-flash"];
-    return true;
-  }
-
-  @override
-  String getTypeLocale(BuildContext context) =>
-      AppLocalizations.of(context)!.gemini;
 }
