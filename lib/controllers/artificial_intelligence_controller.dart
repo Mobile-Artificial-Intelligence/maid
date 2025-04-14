@@ -402,10 +402,6 @@ class OllamaController extends RemoteArtificialIntelligenceController {
       }
     );
 
-    for (final message in ChatController.instance.root.toOllamaMessages()) {
-      print('Ollama message: ${message.content}');
-    }
-
     final completionStream = _ollamaClient.generateChatCompletionStream(
       request: ollama.GenerateChatCompletionRequest(
         model: _model!, 
