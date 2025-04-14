@@ -1,12 +1,10 @@
 part of 'package:maid/main.dart';
 
 class ChatView extends StatelessWidget {
-  final ChatController chatController;
   final ArtificialIntelligenceController ai;
 
   const ChatView({
     super.key,
-    required this.chatController,
     required this.ai,
   });
 
@@ -18,7 +16,7 @@ class ChatView extends StatelessWidget {
         buildHeading(context),
         Divider(endIndent: 16, indent: 16, height: 16),
         ListenableBuilder(
-          listenable: chatController,
+          listenable: ChatController.instance,
           builder: buildListView
         )
       ],
@@ -46,17 +44,17 @@ class ChatView extends StatelessWidget {
     children: [
       IconButton(
         tooltip: AppLocalizations.of(context)!.import,
-        onPressed: chatController.importChat,
+        onPressed: ChatController.instance.importChat,
         icon: const Icon(Icons.folder_open),
       ),
       IconButton(
         tooltip: AppLocalizations.of(context)!.clearChats,
-        onPressed: chatController.clear,
+        onPressed: ChatController.instance.clear,
         icon: const Icon(Icons.delete),
       ),
       IconButton(
         tooltip: AppLocalizations.of(context)!.newChat,
-        onPressed: chatController.newChat,
+        onPressed: ChatController.instance.newChat,
         icon: const Icon(Icons.add),
       ),
     ]
@@ -64,10 +62,9 @@ class ChatView extends StatelessWidget {
   
   Widget buildListView(BuildContext context, Widget? child) => Expanded(
     child: ListView.builder(
-      itemCount: chatController.chats.length,
+      itemCount: ChatController.instance.chats.length,
       itemBuilder: (context, index) => ChatTile(
-        chatController: chatController,
-        node: chatController.chats[index], 
+        node: ChatController.instance.chats[index], 
         selected: index == 0,
         ai: ai,
       ),

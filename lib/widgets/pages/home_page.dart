@@ -2,12 +2,10 @@ part of 'package:maid/main.dart';
 
 class HomePage extends StatefulWidget {
   final ArtificialIntelligenceController ai;
-  final ChatController chatController;
 
   const HomePage({
     super.key, 
-    required this.ai,
-    required this.chatController
+    required this.ai
   });
 
   @override
@@ -49,7 +47,6 @@ class HomePageState extends State<HomePage> {
 
   Widget buildDrawer() => Drawer(
     child: ChatView(
-      chatController: widget.chatController,
       ai: widget.ai,
     )
   );
@@ -59,11 +56,9 @@ class HomePageState extends State<HomePage> {
       MessageView(
         maxMessages: 50,
         ai: widget.ai,
-        chatController: widget.chatController
       ),
       PromptField(
-        ai: widget.ai,
-        chatController: widget.chatController
+        ai: widget.ai
       ),
     ],
   );

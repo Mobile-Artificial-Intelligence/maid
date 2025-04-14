@@ -2,7 +2,6 @@ part of 'package:maid/main.dart';
 
 class MessageWidget extends StatefulWidget {
   final ArtificialIntelligenceController ai;
-  final ChatController chatController;
   final GeneralTreeNode<LlamaMessage> node;
 
   /// The chain position is used to determine the position of the message in the chain.
@@ -19,7 +18,6 @@ class MessageWidget extends StatefulWidget {
   const MessageWidget({
     required super.key, 
     required this.ai,
-    required this.chatController,
     required this.node,
     required this.chainPosition,
   });
@@ -65,7 +63,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
       Stream<String> stream = widget.ai.prompt(chainData);
 
-      await widget.chatController.streamToChild(node, stream);
+      await ChatController.instance.streamToChild(node, stream);
     }
     catch (exception) {
       if (!mounted) return;
@@ -100,7 +98,6 @@ class MessageWidgetState extends State<MessageWidget> {
       if (widget.buildChild) MessageWidget(
         key: childKey,
         ai: widget.ai,
-        chatController: widget.chatController,
         node: widget.node.currentChild!,
         chainPosition: widget.chainPosition - 1,
       ),
@@ -119,7 +116,7 @@ class MessageWidgetState extends State<MessageWidget> {
   );
 
   Widget buildChatListener() => ListenableBuilder(
-    listenable: widget.chatController, 
+    listenable: ChatController.instance, 
     builder: buildMessageColumn
   );
 

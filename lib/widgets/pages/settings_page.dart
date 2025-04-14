@@ -2,12 +2,10 @@ part of 'package:maid/main.dart';
 
 class SettingsPage extends StatelessWidget {
   final ArtificialIntelligenceController ai;
-  final ChatController chatController;
   
   const SettingsPage({
     super.key, 
-    required this.ai, 
-    required this.chatController
+    required this.ai
   });
 
   @override
@@ -47,7 +45,7 @@ class SettingsPage extends StatelessWidget {
     runSpacing: 16,
     children: [
       ElevatedButton(
-        onPressed: chatController.clear, 
+        onPressed: ChatController.instance.clear, 
         child: Text(AppLocalizations.of(context)!.clearChats)
       ),
       ElevatedButton(
@@ -57,7 +55,7 @@ class SettingsPage extends StatelessWidget {
       ElevatedButton(
         onPressed: () {
           AppSettings.instance.clear();
-          chatController.clear();
+          ChatController.instance.clear();
           ai.clear();
         }, 
         child: Text(AppLocalizations.of(context)!.clearCache)

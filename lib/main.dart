@@ -89,20 +89,16 @@ void main() {
 }
 
 class Maid extends StatefulWidget {
-  final ChatController chatController;
   final ArtificialIntelligenceController? ai;
 
-  Maid({
+  const Maid({
     super.key,
-    AppSettings? settings,
-    ChatController? chatController,
     this.ai
-  }) : chatController = chatController ?? ChatController.load();
+  });
 
   @override
   State<Maid> createState() => MaidState();
 }
-
 
 class MaidState extends State<Maid> {
   ArtificialIntelligenceController ai = LlamaCppController();
@@ -192,12 +188,10 @@ class MaidState extends State<Maid> {
   );
 
   Widget buildHomePage() => HomePage(
-    ai: ai, 
-    chatController: widget.chatController
+    ai: ai
   );
 
   Widget buildSettingsPage() => SettingsPage(
-    ai: ai, 
-    chatController: widget.chatController
+    ai: ai
   );
 }

@@ -2,13 +2,11 @@ part of 'package:maid/main.dart';
 
 class MessageView extends StatefulWidget {
   final ArtificialIntelligenceController ai;
-  final ChatController chatController;
   final int maxMessages;
 
   const MessageView({
     super.key, 
     required this.ai,
-    required this.chatController,
     required this.maxMessages,
   });
 
@@ -66,7 +64,7 @@ class MessageViewState extends State<MessageView> {
       newRootPosition = rootPosition - (widget.maxMessages ~/ 2);
     } 
     else {
-      final root = widget.chatController.root;
+      final root = ChatController.instance.root;
       newRootPosition = math.min(
         root.chain.length - widget.maxMessages, 
         rootPosition + (widget.maxMessages ~/ 2)
@@ -82,7 +80,7 @@ class MessageViewState extends State<MessageView> {
     controller.addListener(onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final root = widget.chatController.root;
+      final root = ChatController.instance.root;
       rootPosition = math.max(0, root.chain.length - widget.maxMessages);
       controller.jumpTo(controller.position.maxScrollExtent);
     });
@@ -135,7 +133,7 @@ class MessageViewState extends State<MessageView> {
   );
 
   Widget buildChatListener() => ListenableBuilder(
-    listenable: widget.chatController,
+    listenable: ChatController.instance,
     builder: buildSettingsListener
   );
 
@@ -145,7 +143,7 @@ class MessageViewState extends State<MessageView> {
   );
 
   Widget buildMessage(BuildContext context, Widget? child) {
-    final currentRoot = widget.chatController.root.chain[rootPosition];
+    final currentRoot = ChatController.instance.root.chain[rootPosition];
     currentRoot.data.content = AppSettings.instance.systemPrompt?.formatPlaceholders(
       AppSettings.instance.userName ?? AppLocalizations.of(context)!.user, 
       AppSettings.instance.assistantName ?? AppLocalizations.of(context)!.assistant
@@ -158,7 +156,6 @@ class MessageViewState extends State<MessageView> {
     return MessageWidget(
       key: rootKey,
       ai: widget.ai,
-      chatController: widget.chatController,
       node: currentRoot,
       chainPosition: widget.maxMessages - 1,
     );

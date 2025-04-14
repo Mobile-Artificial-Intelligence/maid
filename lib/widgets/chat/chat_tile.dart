@@ -1,14 +1,12 @@
 part of 'package:maid/main.dart';
 
 class ChatTile extends StatefulWidget {
-  final ChatController chatController;
   final ArtificialIntelligenceController ai;
   final GeneralTreeNode<LlamaMessage> node;
   final bool selected;
 
   const ChatTile({
     super.key,
-    required this.chatController,
     required this.node,
     required this.selected,
     required this.ai,
@@ -22,7 +20,7 @@ class ChatTileState extends State<ChatTile> {
   final GlobalKey key = GlobalKey();
 
   void onChatChange() {
-    widget.chatController.root = widget.node;
+    ChatController.instance.root = widget.node;
 
     if (widget.ai is LlamaCppController) {
       (widget.ai as LlamaCppController).reloadModel(true);
@@ -73,11 +71,11 @@ class ChatTileState extends State<ChatTile> {
 
   PopupMenuItem buildDeletePopover() => PopupMenuItem(
     child: Text(AppLocalizations.of(context)!.delete),
-    onTap:() => widget.chatController.deleteChat(widget.node),
+    onTap:() => ChatController.instance.deleteChat(widget.node),
   );
 
   PopupMenuItem buildExportPopover() => PopupMenuItem(
     child: Text(AppLocalizations.of(context)!.export),
-    onTap:() => widget.chatController.exportChat(widget.node),
+    onTap:() => ChatController.instance.exportChat(widget.node),
   );
 }

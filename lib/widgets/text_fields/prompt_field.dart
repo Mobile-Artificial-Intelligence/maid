@@ -2,12 +2,10 @@ part of 'package:maid/main.dart';
 
 class PromptField extends StatefulWidget {
   final ArtificialIntelligenceController ai;
-  final ChatController chatController;
 
   const PromptField({
     super.key, 
-    required this.ai,
-    required this.chatController
+    required this.ai
   });
 
   @override
@@ -74,11 +72,11 @@ class PromptFieldState extends State<PromptField> {
     controller.clear();
     setState(() => isNotEmpty = controller.text.isNotEmpty);
     try {
-      widget.chatController.addToEnd(UserLlamaMessage(prompt));
+      ChatController.instance.addToEnd(UserLlamaMessage(prompt));
 
-      Stream<String> stream = widget.ai.prompt(widget.chatController.root.chainData.copy());
+      Stream<String> stream = widget.ai.prompt(ChatController.instance.root.chainData.copy());
 
-      await widget.chatController.streamToEnd(stream);
+      await ChatController.instance.streamToEnd(stream);
     }
     catch (exception) {
       if (!mounted) return;

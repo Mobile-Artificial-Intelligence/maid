@@ -1,11 +1,13 @@
 part of 'package:maid/main.dart';
 
 class ChatController extends ChangeNotifier {
-  ChatController({
-    List<GeneralTreeNode<LlamaMessage>>? chats,
-  }) : _chats = chats ?? [];
+  static ChatController? _instance;
+  static ChatController get instance {
+    _instance ??= ChatController();
+    return _instance!;
+  }
 
-  ChatController.load() {
+  ChatController() {
     load();
   }
 
