@@ -89,7 +89,6 @@ void main() {
 }
 
 class Maid extends StatefulWidget {
-  final AppSettings settings;
   final ChatController chatController;
   final ArtificialIntelligenceController? ai;
 
@@ -98,8 +97,7 @@ class Maid extends StatefulWidget {
     AppSettings? settings,
     ChatController? chatController,
     this.ai
-  }) : settings = settings ?? AppSettings.load(),
-       chatController = chatController ?? ChatController.load();
+  }) : chatController = chatController ?? ChatController.load();
 
   @override
   State<Maid> createState() => MaidState();
@@ -165,15 +163,15 @@ class MaidState extends State<Maid> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.settings,
+    listenable: AppSettings.instance,
     builder: buildApp
   );
 
   Widget buildApp(BuildContext context, Widget? child) => MaterialApp(
     title: 'Maid',
-    theme: getTheme(ColorScheme.fromSeed(seedColor: widget.settings.seedColor, brightness: Brightness.light)),
-    darkTheme: getTheme(ColorScheme.fromSeed(seedColor: widget.settings.seedColor, brightness: Brightness.dark)),
-    themeMode: widget.settings.themeMode,
+    theme: getTheme(ColorScheme.fromSeed(seedColor: AppSettings.instance.seedColor, brightness: Brightness.light)),
+    darkTheme: getTheme(ColorScheme.fromSeed(seedColor: AppSettings.instance.seedColor, brightness: Brightness.dark)),
+    themeMode: AppSettings.instance.themeMode,
     home: buildHomePage(),
     localizationsDelegates: [
       AppLocalizations.delegate,
@@ -189,19 +187,17 @@ class MaidState extends State<Maid> {
       if (kDebugMode) '/debug': (context) => DebugPage(),
     },
     supportedLocales: AppLocalizations.supportedLocales,
-    locale: widget.settings.locale,
+    locale: AppSettings.instance.locale,
     debugShowCheckedModeBanner: false,
   );
 
   Widget buildHomePage() => HomePage(
     ai: ai, 
-    chatController: widget.chatController, 
-    settings: widget.settings
+    chatController: widget.chatController
   );
 
   Widget buildSettingsPage() => SettingsPage(
     ai: ai, 
-    chatController: widget.chatController,
-    settings: widget.settings
+    chatController: widget.chatController
   );
 }

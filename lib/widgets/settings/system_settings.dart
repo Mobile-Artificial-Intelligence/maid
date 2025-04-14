@@ -1,12 +1,7 @@
 part of 'package:maid/main.dart';
 
 class SystemSettings extends StatelessWidget {
-  final AppSettings settings;
-  
-  const SystemSettings({
-    super.key, 
-    required this.settings
-  });
+  const SystemSettings({super.key});
 
   @override
   Widget build(BuildContext context) => Column(
@@ -17,17 +12,17 @@ class SystemSettings extends StatelessWidget {
       ),
       const SizedBox(height: 8),
       ListenableTextField<AppSettings>(
-        listenable: settings,
-        selector: () => settings.systemPrompt,
-        onChanged: settings.setSystemPrompt,
+        listenable: AppSettings.instance,
+        selector: () => AppSettings.instance.systemPrompt,
+        onChanged: AppSettings.instance.setSystemPrompt,
         labelText: AppLocalizations.of(context)!.systemPrompt,
         keyboardType: TextInputType.multiline,
         maxLines: null
       ),
       const SizedBox(height: 8),
-      LocaleDropdown(settings: settings),
+      LocaleDropdown(),
       const SizedBox(height: 8),
-      ThemeModeDropdown(settings: settings),
+      ThemeModeDropdown(),
       const SizedBox(height: 8),
       Text(
         AppLocalizations.of(context)!.themeSeedColor,
@@ -39,12 +34,12 @@ class SystemSettings extends StatelessWidget {
   );
 
   Widget buildColorPicker() => ListenableBuilder(
-    listenable: settings,
+    listenable: AppSettings.instance,
     builder: (context, child) => HueRingPicker(
       portraitOnly: true,
       displayThumbColor: false,
-      pickerColor: settings.seedColor, 
-      onColorChanged: (newColor) => settings.seedColor = newColor,
+      pickerColor: AppSettings.instance.seedColor, 
+      onColorChanged: (newColor) => AppSettings.instance.seedColor = newColor,
     ),
   );
 }

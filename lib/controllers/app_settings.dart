@@ -1,6 +1,12 @@
 part of 'package:maid/main.dart';
 
 class AppSettings extends ChangeNotifier {
+  static AppSettings? _instance;
+  static AppSettings get instance {
+    _instance ??= AppSettings.load();
+    return _instance!;
+  }
+
   AppSettings({
     Uint8List? userImage,
     String? userName,

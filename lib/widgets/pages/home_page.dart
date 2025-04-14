@@ -3,13 +3,11 @@ part of 'package:maid/main.dart';
 class HomePage extends StatefulWidget {
   final ArtificialIntelligenceController ai;
   final ChatController chatController;
-  final AppSettings settings;
 
   const HomePage({
     super.key, 
     required this.ai,
-    required this.chatController,
-    required this.settings,
+    required this.chatController
   });
 
   @override
@@ -61,13 +59,11 @@ class HomePageState extends State<HomePage> {
       MessageView(
         maxMessages: 50,
         ai: widget.ai,
-        chatController: widget.chatController,
-        settings: widget.settings,
+        chatController: widget.chatController
       ),
       PromptField(
         ai: widget.ai,
-        chatController: widget.chatController,
-        settings: widget.settings,
+        chatController: widget.chatController
       ),
     ],
   );

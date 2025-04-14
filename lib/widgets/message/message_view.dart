@@ -3,14 +3,12 @@ part of 'package:maid/main.dart';
 class MessageView extends StatefulWidget {
   final ArtificialIntelligenceController ai;
   final ChatController chatController;
-  final AppSettings settings;
   final int maxMessages;
 
   const MessageView({
     super.key, 
     required this.ai,
     required this.chatController,
-    required this.settings,
     required this.maxMessages,
   });
 
@@ -142,15 +140,15 @@ class MessageViewState extends State<MessageView> {
   );
 
   Widget buildSettingsListener(BuildContext context, Widget? child) => ListenableBuilder(
-    listenable: widget.settings,
+    listenable: AppSettings.instance,
     builder: buildMessage
   );
 
   Widget buildMessage(BuildContext context, Widget? child) {
     final currentRoot = widget.chatController.root.chain[rootPosition];
-    currentRoot.data.content = widget.settings.systemPrompt?.formatPlaceholders(
-      widget.settings.userName ?? AppLocalizations.of(context)!.user, 
-      widget.settings.assistantName ?? AppLocalizations.of(context)!.assistant
+    currentRoot.data.content = AppSettings.instance.systemPrompt?.formatPlaceholders(
+      AppSettings.instance.userName ?? AppLocalizations.of(context)!.user, 
+      AppSettings.instance.assistantName ?? AppLocalizations.of(context)!.assistant
     ) ?? AppLocalizations.of(context)!.newChat;
 
     if (currentRoot.currentChild == null) return const SizedBox.shrink();
@@ -161,7 +159,6 @@ class MessageViewState extends State<MessageView> {
       key: rootKey,
       ai: widget.ai,
       chatController: widget.chatController,
-      settings: widget.settings,
       node: currentRoot,
       chainPosition: widget.maxMessages - 1,
     );

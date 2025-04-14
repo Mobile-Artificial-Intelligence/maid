@@ -3,13 +3,11 @@ part of 'package:maid/main.dart';
 class PromptField extends StatefulWidget {
   final ArtificialIntelligenceController ai;
   final ChatController chatController;
-  final AppSettings settings;
 
   const PromptField({
     super.key, 
     required this.ai,
-    required this.chatController,
-    required this.settings,
+    required this.chatController
   });
 
   @override
@@ -54,7 +52,7 @@ class PromptFieldState extends State<PromptField> {
     else if (first.type == SharedMediaType.image) {
       showDialog(
         context: context,
-        builder: (context) => SharingDialog(file: first, settings: widget.settings),
+        builder: (context) => SharingDialog(file: first),
       );
     }
     else if (first.type == SharedMediaType.file) {

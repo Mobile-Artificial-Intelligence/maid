@@ -1,13 +1,11 @@
 part of 'package:maid/main.dart';
 
 class SharingDialog extends StatelessWidget {
-  final AppSettings settings;
   final SharedMediaFile file;
 
   const SharingDialog({
     super.key,
-    required this.settings,
-    required this.file,
+    required this.file
   });
 
   @override
@@ -34,7 +32,7 @@ class SharingDialog extends StatelessWidget {
   List<Widget> buildActions(BuildContext context) => [
     TextButton(
       onPressed: () {
-        settings.userImage = File(file.path).readAsBytesSync();
+        AppSettings.instance.userImage = File(file.path).readAsBytesSync();
         Navigator.of(context).pop();
       }, 
       child: Text(
@@ -43,7 +41,7 @@ class SharingDialog extends StatelessWidget {
     ),
     TextButton(
       onPressed: () {
-        settings.assistantImage = File(file.path).readAsBytesSync();
+        AppSettings.instance.assistantImage = File(file.path).readAsBytesSync();
         Navigator.of(context).pop();
       }, 
       child: Text(

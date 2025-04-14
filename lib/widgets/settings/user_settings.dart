@@ -1,12 +1,7 @@
 part of 'package:maid/main.dart';
 
 class UserSettings extends StatelessWidget {
-  final AppSettings settings;
-
-  const UserSettings({
-    super.key, 
-    required this.settings
-  });
+  const UserSettings({super.key});
 
   @override
   Widget build(BuildContext context) => Column(
@@ -17,26 +12,26 @@ class UserSettings extends StatelessWidget {
       ),
       const SizedBox(height: 8),
       ListenableBuilder(
-        listenable: settings,
+        listenable: AppSettings.instance,
         builder: userImageBuilder,
       ),
       const SizedBox(height: 8),
       ElevatedButton(
-        onPressed: settings.loadUserImage, 
+        onPressed: AppSettings.instance.loadUserImage, 
         child: Text(AppLocalizations.of(context)!.loadUserImage),
       ),
       const SizedBox(height: 8),
       ListenableTextField<AppSettings>(
-        listenable: settings,
-        selector: () => settings.userName,
-        onChanged: settings.setUserName,
+        listenable: AppSettings.instance,
+        selector: () => AppSettings.instance.userName,
+        onChanged: AppSettings.instance.setUserName,
         labelText: AppLocalizations.of(context)!.userName,
       ),
     ],
   );
 
   Widget userImageBuilder(BuildContext context, Widget? child) {
-    if (settings.userImage == null) {
+    if (AppSettings.instance.userImage == null) {
       return Icon(
         Icons.person, 
         size: 50,
@@ -46,7 +41,7 @@ class UserSettings extends StatelessWidget {
 
     return CircleAvatar(
       radius: 50,
-      backgroundImage: MemoryImage(settings.userImage!),
+      backgroundImage: MemoryImage(AppSettings.instance.userImage!),
     );
   }
 }

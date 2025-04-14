@@ -3,7 +3,6 @@ part of 'package:maid/main.dart';
 class MessageWidget extends StatefulWidget {
   final ArtificialIntelligenceController ai;
   final ChatController chatController;
-  final AppSettings settings;
   final GeneralTreeNode<LlamaMessage> node;
 
   /// The chain position is used to determine the position of the message in the chain.
@@ -21,7 +20,6 @@ class MessageWidget extends StatefulWidget {
     required super.key, 
     required this.ai,
     required this.chatController,
-    required this.settings,
     required this.node,
     required this.chainPosition,
   });
@@ -103,7 +101,6 @@ class MessageWidgetState extends State<MessageWidget> {
         key: childKey,
         ai: widget.ai,
         chatController: widget.chatController,
-        settings: widget.settings,
         node: widget.node.currentChild!,
         chainPosition: widget.chainPosition - 1,
       ),
@@ -190,7 +187,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   /// Builds the role of the message.
   Widget buildRole() => ListenableBuilder(
-    listenable: widget.settings,
+    listenable: AppSettings.instance,
     builder: widget.message is UserLlamaMessage ? buildUserRow : buildAssistantRow,
   );
 
@@ -198,16 +195,16 @@ class MessageWidgetState extends State<MessageWidget> {
   Widget buildUserRow(BuildContext context, Widget? child) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      widget.settings.userImage == null ? Icon(
+      AppSettings.instance.userImage == null ? Icon(
         Icons.person, 
         color: Theme.of(context).colorScheme.onSurface
       ) : CircleAvatar(
         radius: 14,
-        backgroundImage: MemoryImage(widget.settings.userImage!),
+        backgroundImage: MemoryImage(AppSettings.instance.userImage!),
       ),
       const SizedBox(width: 10.0),
       Text(
-        widget.settings.userName ?? AppLocalizations.of(context)!.user,
+        AppSettings.instance.userName ?? AppLocalizations.of(context)!.user,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -219,16 +216,16 @@ class MessageWidgetState extends State<MessageWidget> {
   Widget buildAssistantRow(BuildContext context, Widget? child) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      widget.settings.assistantImage == null ? Icon(
+      AppSettings.instance.assistantImage == null ? Icon(
         Icons.assistant, 
         color: Theme.of(context).colorScheme.onSurface
       ) : CircleAvatar(
         radius: 14,
-        backgroundImage: MemoryImage(widget.settings.assistantImage!),
+        backgroundImage: MemoryImage(AppSettings.instance.assistantImage!),
       ),
       const SizedBox(width: 10.0),
       Text(
-        widget.settings.assistantName ?? AppLocalizations.of(context)!.assistant,
+        AppSettings.instance.assistantName ?? AppLocalizations.of(context)!.assistant,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),

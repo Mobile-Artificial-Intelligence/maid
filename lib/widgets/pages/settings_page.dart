@@ -3,13 +3,11 @@ part of 'package:maid/main.dart';
 class SettingsPage extends StatelessWidget {
   final ArtificialIntelligenceController ai;
   final ChatController chatController;
-  final AppSettings settings;
   
   const SettingsPage({
     super.key, 
     required this.ai, 
-    required this.chatController,
-    required this.settings
+    required this.chatController
   });
 
   @override
@@ -32,11 +30,11 @@ class SettingsPage extends StatelessWidget {
       Divider(endIndent: 0, indent: 0, height: 32),
       ParameterView(ai: ai),
       Divider(endIndent: 0, indent: 0, height: 32),
-      UserSettings(settings: settings),
+      UserSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
-      AssistantSettings(settings: settings),
+      AssistantSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
-      SystemSettings(settings: settings),
+      SystemSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
       buildResetRow(context)
     ],
@@ -53,12 +51,12 @@ class SettingsPage extends StatelessWidget {
         child: Text(AppLocalizations.of(context)!.clearChats)
       ),
       ElevatedButton(
-        onPressed: settings.clear, 
+        onPressed: AppSettings.instance.clear, 
         child: Text(AppLocalizations.of(context)!.resetSettings)
       ),
       ElevatedButton(
         onPressed: () {
-          settings.clear();
+          AppSettings.instance.clear();
           chatController.clear();
           ai.clear();
         }, 

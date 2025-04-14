@@ -1,12 +1,7 @@
 part of 'package:maid/main.dart';
 
 class LocaleDropdown extends StatefulWidget {
-  final AppSettings settings;
-  
-  const LocaleDropdown({
-    super.key, 
-    required this.settings
-  });
+  const LocaleDropdown({super.key});
 
   @override
   State<LocaleDropdown> createState() => LocaleDropdownState();
@@ -37,7 +32,7 @@ class LocaleDropdownState extends State<LocaleDropdown> {
     mainAxisSize: MainAxisSize.min,
     children: [
       ListenableBuilder(
-        listenable: widget.settings,
+        listenable: AppSettings.instance,
         builder: buildLocaleText
       ),
       buildPopupButton()
@@ -45,8 +40,8 @@ class LocaleDropdownState extends State<LocaleDropdown> {
   );
 
   Widget buildLocaleText(BuildContext context, Widget? child) => Text(
-    widget.settings.locale != null ? 
-      lookupAppLocalizations(widget.settings.locale!).friendlyName : 
+    AppSettings.instance.locale != null ? 
+      lookupAppLocalizations(AppSettings.instance.locale!).friendlyName : 
       AppLocalizations.of(context)!.defaultLocale,
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
@@ -65,10 +60,10 @@ class LocaleDropdownState extends State<LocaleDropdown> {
       setState(() => open = false);
 
       if (locale.languageCode == 'null') {
-        widget.settings.locale = null;
+        AppSettings.instance.locale = null;
       }
       else {
-        widget.settings.locale = locale;
+        AppSettings.instance.locale = locale;
       }
     }
   );
