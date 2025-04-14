@@ -43,9 +43,8 @@ class ChatMessage extends ChangeNotifier {
     required Stream<String> stream,
     required this.parent,
     DateTime? createdAt,
-    DateTime? updatedAt,
   }) : id = id ?? ValueKey<String>(math.Random().nextInt(2^62).toString().hash),
-        _updatedAt = updatedAt ?? DateTime.now(),
+        _updatedAt = DateTime.now(),
         _content = '',
         createdAt = createdAt ?? DateTime.now() {
     if (parent != null) {
@@ -205,7 +204,7 @@ class ChatMessage extends ChangeNotifier {
     final mapList = [{
       'id': id.value,
       'parent': parent?.id.value,
-      'children': _children.map((child) => child.id).toList(),
+      'children': _children.map((child) => child.id.value).toList(),
       'current_child': _currentChild?.id.value,
       'role': role.name,
       'content': content,
