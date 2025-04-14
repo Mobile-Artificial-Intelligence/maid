@@ -144,7 +144,7 @@ class MessageViewState extends State<MessageView> {
 
   Widget buildMessage(BuildContext context, Widget? child) {
     final currentRoot = ChatController.instance.root.chain[rootPosition];
-    currentRoot.data.content = AppSettings.instance.systemPrompt?.formatPlaceholders(
+    currentRoot.content = AppSettings.instance.systemPrompt?.formatPlaceholders(
       AppSettings.instance.userName ?? AppLocalizations.of(context)!.user, 
       AppSettings.instance.assistantName ?? AppLocalizations.of(context)!.assistant
     ) ?? AppLocalizations.of(context)!.newChat;

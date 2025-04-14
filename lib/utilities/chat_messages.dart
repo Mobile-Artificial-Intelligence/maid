@@ -30,7 +30,33 @@ class ChatMessage extends ChangeNotifier {
   })  : id = id ?? ValueKey<String>(math.Random().nextInt(2^62).toString().hash),
         _updatedAt = updatedAt ?? DateTime.now(),
         _content = content,
-        createdAt = createdAt ?? DateTime.now();
+        createdAt = createdAt ?? DateTime.now() {
+    if (parent != null) {
+      parent!._children.add(this);
+      parent!._currentChild = this;
+    }
+  }
+
+  ChatMessage.withStream({
+    ValueKey<String>? id,
+    required this.role,
+    required Stream<String> stream,
+    required this.parent,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) : id = id ?? ValueKey<String>(math.Random().nextInt(2^62).toString().hash),
+        _updatedAt = updatedAt ?? DateTime.now(),
+        _content = '',
+        createdAt = createdAt ?? DateTime.now() {
+    if (parent != null) {
+      parent!._children.add(this);
+      parent!._currentChild = this;
+    }
+
+    stream.listen((event) {
+      content += event;
+    });
+  }
 
   factory ChatMessage.fromMapList(List<Map<String, dynamic>> mapList, ValueKey<String>? id, [ChatMessage? parent]) {
     id ??= ValueKey<String>(mapList.firstWhere(
@@ -54,7 +80,8 @@ class ChatMessage extends ChangeNotifier {
 
     for (final childId in map['children']) {
       final child = ChatMessage.fromMapList(mapList, ValueKey<String>(childId), result);
-      result.addChild(child, false);
+      result._children.add(child);
+      result._currentChild = child;
     }
 
     if (map['current_child'] != null) {
@@ -68,6 +95,8 @@ class ChatMessage extends ChangeNotifier {
   }
 
   final List<ChatMessage> _children = [];
+
+  List<ChatMessage> get children => _children;
 
   final ValueKey<String> id;
   final ChatMessage? parent;
@@ -120,22 +149,57 @@ class ChatMessage extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addChild(ChatMessage child, [bool notify = true]) {
-    _children.add(child);
-    _currentChild = child;
-    
-    if (notify) {
-      _updatedAt = DateTime.now();
-      notifyListeners();
-    }
-  }
-
   void removeChild(ChatMessage child) {
     _children.remove(child);
-    _currentChild = null;
+    _currentChild = _children.isNotEmpty ? _children.first : null;
     _updatedAt = DateTime.now();
     notifyListeners();
   }
+
+  ChatMessage get tail {
+    if (_children.isEmpty) return this;
+
+    ChatMessage tail = this;
+    do {
+      if (tail.currentChild != null) {
+        tail = tail.currentChild!;
+      }
+    } while (tail.currentChild != null);
+
+    return tail;
+  }
+
+  List<ChatMessage> get chain {
+    final List<ChatMessage> chain = [];
+
+    ChatMessage current = this;
+    do {
+      chain.add(current);
+      
+      if (current.currentChild != null) {
+        current = current.currentChild!;
+      }
+    } while (current.currentChild != null);
+
+    return chain;
+  }
+
+  List<ChatMessage> get chainReverse {
+    final List<ChatMessage> chain = [];
+
+    ChatMessage current = this;
+    do {
+      chain.add(current);
+
+      if (current.parent != null) {
+        current = current.parent!;
+      }
+    } while (current.parent != null);
+
+    return chain;
+  }
+
+  int get currentChildIndex => _children.indexOf(_currentChild!);
 
   List<Map<String, dynamic>> toMapList() {
     final mapList = [{

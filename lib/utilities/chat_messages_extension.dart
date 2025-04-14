@@ -1,26 +1,60 @@
 part of 'package:maid/main.dart';
 
-extension ChatMessagesExtension on List<LlamaMessage> {
+extension ChatMessagesExtension on ChatMessage {
+  List<llama.LlamaMessage> toLlamaMessages() {
+    final List<llama.LlamaMessage> messages = [];
+
+    ChatMessage currentMessage = this;
+    do {
+      String role;
+      switch (currentMessage.role) {
+        case ChatMessageRole.user:
+          role = 'user';
+          break;
+        case ChatMessageRole.assistant:
+          role = 'assistant';
+          break;
+        case ChatMessageRole.system:
+          role = 'system';
+          break;
+      }
+
+      messages.add(llama.LlamaMessage.withRole(
+        role: role,
+        content: currentMessage.content,
+      ));
+
+      currentMessage = currentMessage.currentChild!;
+    } while (currentMessage.currentChild != null);
+
+    return messages;
+  }
+
   List<ollama.Message> toOllamaMessages() {
     final List<ollama.Message> messages = [];
 
-    for (final LlamaMessage chatMessage in this) {
+    ChatMessage currentMessage = this;
+    do {
       ollama.MessageRole role;
-      if (chatMessage is UserLlamaMessage) {
-        role = ollama.MessageRole.user;
-      } else if (chatMessage is AssistantLlamaMessage) {
-        role = ollama.MessageRole.assistant;
-      } else {
-        role = ollama.MessageRole.system;
+      switch (currentMessage.role) {
+        case ChatMessageRole.user:
+          role = ollama.MessageRole.user;
+          break;
+        case ChatMessageRole.assistant:
+          role = ollama.MessageRole.assistant;
+          break;
+        case ChatMessageRole.system:
+          role = ollama.MessageRole.system;
+          break;
       }
 
-      final ollama.Message message = ollama.Message(
+      messages.add(ollama.Message(
         role: role,
-        content: chatMessage.content,
-      );
+        content: currentMessage.content,
+      ));
 
-      messages.add(message);
-    }
+      currentMessage = currentMessage.currentChild!;
+    } while (currentMessage.currentChild != null);
 
     return messages;
   }
@@ -28,25 +62,26 @@ extension ChatMessagesExtension on List<LlamaMessage> {
   List<open_ai.ChatCompletionMessage> toOpenAiMessages() {
     final List<open_ai.ChatCompletionMessage> messages = [];
 
-    for (final LlamaMessage chatMessage in this) {
-      if (chatMessage is UserLlamaMessage) {
-        final content = open_ai.ChatCompletionUserMessageContent.string(chatMessage.content);
-
-        final message = open_ai.ChatCompletionMessage.user(content: content);
-
-        messages.add(message);
+    ChatMessage currentMessage = this;
+    do {
+      open_ai.ChatCompletionMessage message;
+      switch (currentMessage.role) {
+        case ChatMessageRole.user:
+          final content = open_ai.ChatCompletionUserMessageContent.string(currentMessage.content);
+          message = open_ai.ChatCompletionMessage.user(content: content);
+          break;
+        case ChatMessageRole.assistant:
+          message = open_ai.ChatCompletionMessage.assistant(content: currentMessage.content);
+          break;
+        case ChatMessageRole.system:
+          message = open_ai.ChatCompletionMessage.system(content: currentMessage.content);
+          break;
       }
-      else if (chatMessage is AssistantLlamaMessage) {
-        final message = open_ai.ChatCompletionMessage.assistant(content: chatMessage.content);
 
-        messages.add(message);
-      }
-      else {
-        final message = open_ai.ChatCompletionMessage.system(content: chatMessage.content);
+      messages.add(message);
 
-        messages.add(message);
-      }
-    }
+      currentMessage = currentMessage.currentChild!;
+    } while (currentMessage.currentChild != null);
 
     return messages;
   }
@@ -54,24 +89,30 @@ extension ChatMessagesExtension on List<LlamaMessage> {
   List<mistral.ChatCompletionMessage> toMistralMessages() {
     final List<mistral.ChatCompletionMessage> messages = [];
 
-    for (final LlamaMessage chatMessage in this) {
+    ChatMessage currentMessage = this;
+    do {
       mistral.ChatCompletionMessageRole role;
-
-      if (chatMessage is UserLlamaMessage) {
-        role = mistral.ChatCompletionMessageRole.user;
-      } else if (chatMessage is AssistantLlamaMessage) {
-        role = mistral.ChatCompletionMessageRole.assistant;
-      } else {
-        role = mistral.ChatCompletionMessageRole.system;
+      switch (currentMessage.role) {
+        case ChatMessageRole.user:
+          role = mistral.ChatCompletionMessageRole.user;
+          break;
+        case ChatMessageRole.assistant:
+          role = mistral.ChatCompletionMessageRole.assistant;
+          break;
+        case ChatMessageRole.system:
+          role = mistral.ChatCompletionMessageRole.system;
+          break;
       }
 
       final message = mistral.ChatCompletionMessage(
         role: role,
-        content: chatMessage.content,
+        content: currentMessage.content,
       );
 
       messages.add(message);
-    }
+
+      currentMessage = currentMessage.currentChild!;
+    } while (currentMessage.currentChild != null);
 
     return messages;
   }
@@ -79,22 +120,30 @@ extension ChatMessagesExtension on List<LlamaMessage> {
   List<anthropic.Message> toAnthropicMessages() {
     final List<anthropic.Message> messages = [];
 
-    for (final LlamaMessage chatMessage in this) {
+    ChatMessage currentMessage = this;
+    do {
       anthropic.MessageRole role;
-
-      if (chatMessage is UserLlamaMessage) {
-        role = anthropic.MessageRole.user;
-      } else {
-        role = anthropic.MessageRole.assistant;
+      switch (currentMessage.role) {
+        case ChatMessageRole.user:
+          role = anthropic.MessageRole.user;
+          break;
+        case ChatMessageRole.assistant:
+          role = anthropic.MessageRole.assistant;
+          break;
+        case ChatMessageRole.system:
+          role = anthropic.MessageRole.assistant;
+          break;
       }
 
       final message = anthropic.Message(
         role: role,
-        content: anthropic.MessageContent.text(chatMessage.content),
+        content: anthropic.MessageContent.text(currentMessage.content),
       );
 
       messages.add(message);
-    }
+
+      currentMessage = currentMessage.currentChild!;
+    } while (currentMessage.currentChild != null);
 
     return messages;
   }

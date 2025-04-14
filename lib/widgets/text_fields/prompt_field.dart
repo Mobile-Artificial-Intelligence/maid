@@ -67,16 +67,20 @@ class PromptFieldState extends State<PromptField> {
   /// This is the onPressed function that will be used to submit the message.
   /// It will call the onPrompt function with the text from the controller.
   /// It will also clear the controller after the message is submitted.
-  void onSubmit() async {
+  void onSubmit() {
     final prompt = controller.text;
     controller.clear();
     setState(() => isNotEmpty = controller.text.isNotEmpty);
     try {
-      ChatController.instance.addToEnd(UserLlamaMessage(prompt));
+      final newMessage = ChatMessage(
+        content: prompt,
+        role: ChatMessageRole.user,
+        parent: ChatController.instance.root.tail,
+      );
 
-      Stream<String> stream = widget.ai.prompt(ChatController.instance.root.chainData.copy());
+      Stream<String> stream = widget.ai.prompt();
 
-      await ChatController.instance.streamToEnd(stream);
+      ChatMessage.withStream(stream: stream, role: ChatMessageRole.assistant, parent: newMessage);
     }
     catch (exception) {
       if (!mounted) return;

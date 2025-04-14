@@ -2,7 +2,7 @@ part of 'package:maid/main.dart';
 
 class ChatTile extends StatefulWidget {
   final ArtificialIntelligenceController ai;
-  final GeneralTreeNode<LlamaMessage> node;
+  final ChatMessage node;
   final bool selected;
 
   const ChatTile({
@@ -39,7 +39,7 @@ class ChatTileState extends State<ChatTile> {
   Widget buildTile() => Container(
     padding: const EdgeInsets.all(16),
     child: Text(
-      widget.node.currentChild?.data.content ?? widget.node.data.content,
+      widget.node.currentChild?.content ?? widget.node.content,
       style: TextStyle(
         color: widget.selected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
         fontSize: 16,

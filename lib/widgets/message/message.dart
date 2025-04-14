@@ -2,14 +2,14 @@ part of 'package:maid/main.dart';
 
 class MessageWidget extends StatefulWidget {
   final ArtificialIntelligenceController ai;
-  final GeneralTreeNode<LlamaMessage> node;
+  final ChatMessage node;
 
   /// The chain position is used to determine the position of the message in the chain.
   /// Where a position of 0 would indicate the bottom of the chain.
   final int chainPosition;
 
-  LlamaMessage get message => node.currentChild!.data;
-  int get siblingsIndex => node.currentChildIndex!;
+  ChatMessage get message => node.currentChild!;
+  int get siblingsIndex => node.currentChildIndex;
   int get siblingCount => node.children.length;
   bool get onNextEnabled => (siblingsIndex + 1) < siblingCount;
   bool get onPreviousEnabled => siblingsIndex > 0;
@@ -33,7 +33,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   void onNext() => setState(() => widget.node.nextChild());
   void onPrevious() => setState(() => widget.node.previousChild());
-  void onDelete() => setState(() => widget.node.removeChildNode(widget.node.currentChild!));
+  void onDelete() => setState(() => widget.node.removeChild(widget.node.currentChild!));
 
   void onEdit() {
     controller.text = widget.message.content;
@@ -41,7 +41,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onSubmitEdit() {
-    widget.node.addChild(UserLlamaMessage(controller.text));
+    ChatMessage(content: controller.text, role: ChatMessageRole.user, parent: widget.node);
 
     tryRegenerate(widget.node.currentChild!);
 
@@ -50,20 +50,15 @@ class MessageWidgetState extends State<MessageWidget> {
 
   void onRegenerate() => tryRegenerate(widget.node);
 
-  void tryRegenerate(GeneralTreeNode<LlamaMessage> node) async {
+  void tryRegenerate(ChatMessage node) async {
     try {
-      node.addChild(AssistantLlamaMessage(''));
-
       if (widget.ai is LlamaCppController) {
         (widget.ai as LlamaCppController).reloadModel(true);
       }
 
-      final chainData = node.reverseChain.last.chainData.copy();
-      chainData.removeLast();
+      Stream<String> stream = widget.ai.prompt();
 
-      Stream<String> stream = widget.ai.prompt(chainData);
-
-      await ChatController.instance.streamToChild(node, stream);
+      ChatMessage.withStream(stream: stream, role: ChatMessageRole.assistant, parent: node);
     }
     catch (exception) {
       if (!mounted) return;
@@ -116,7 +111,7 @@ class MessageWidgetState extends State<MessageWidget> {
   );
 
   Widget buildChatListener() => ListenableBuilder(
-    listenable: ChatController.instance, 
+    listenable: widget.message, 
     builder: buildMessageColumn
   );
 
@@ -185,7 +180,7 @@ class MessageWidgetState extends State<MessageWidget> {
   /// Builds the role of the message.
   Widget buildRole() => ListenableBuilder(
     listenable: AppSettings.instance,
-    builder: widget.message is UserLlamaMessage ? buildUserRow : buildAssistantRow,
+    builder: widget.message.role == ChatMessageRole.user ? buildUserRow : buildAssistantRow,
   );
 
   /// Builds the role of the message when the message is a user message.
@@ -285,7 +280,7 @@ class MessageWidgetState extends State<MessageWidget> {
   /// If the message is a user message, it will show an edit button.
   /// If the message is an assistant message, it will show a regenerate button.
   Widget buildRoleSpecificButton() {
-    if (widget.message is UserLlamaMessage) {
+    if (widget.message.role == ChatMessageRole.user) {
       return IconButton(
         tooltip: AppLocalizations.of(context)!.edit,
         icon: const Icon(Icons.edit),

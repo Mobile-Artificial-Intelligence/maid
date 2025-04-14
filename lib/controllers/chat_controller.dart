@@ -11,25 +11,25 @@ class ChatController extends ChangeNotifier {
     load();
   }
 
-  List<GeneralTreeNode<LlamaMessage>> _chats = [];
+  List<ChatMessage> _chats = [];
 
-  List<GeneralTreeNode<LlamaMessage>> get chats => _chats;
+  List<ChatMessage> get chats => _chats;
 
-  set chats(List<GeneralTreeNode<LlamaMessage>> newChats) {
+  set chats(List<ChatMessage> newChats) {
     _chats = newChats;
     notifyListeners();
   }
 
-  GeneralTreeNode<LlamaMessage> get root {
+  ChatMessage get root {
     if (_chats.isEmpty) {
-      final chat = GeneralTreeNode<LlamaMessage>(SystemLlamaMessage('New Chat'));
+      final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat', parent: null);
       _chats.add(chat);
     }
 
     return _chats.first;
   }
 
-  set root(GeneralTreeNode<LlamaMessage> newRoot){
+  set root(ChatMessage newRoot){
     _chats.remove(newRoot);
 
     _chats.insert(0, newRoot);
@@ -39,7 +39,7 @@ class ChatController extends ChangeNotifier {
   }
 
   void newChat() {
-    final chat = GeneralTreeNode<LlamaMessage>(SystemLlamaMessage('New Chat'));
+    final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat', parent: null);
 
     _chats.insert(0, chat);
     
@@ -47,7 +47,7 @@ class ChatController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteChat(GeneralTreeNode<LlamaMessage> chat) {
+  void deleteChat(ChatMessage chat) {
     _chats.remove(chat);
     save();
     notifyListeners();
@@ -63,8 +63,8 @@ class ChatController extends ChangeNotifier {
     if (inputFile != null) {
       final bytes = inputFile.files.single.bytes ?? File(inputFile.files.single.path!).readAsBytesSync();
       final chatString = utf8.decode(bytes);
-      final chatMap = jsonDecode(chatString);
-      final chat = GeneralTreeNode.fromMap(chatMap, LlamaMessage.fromMap);
+      final chatMapList = jsonDecode(chatString);
+      final chat = ChatMessage.fromMapList(chatMapList, null);
 
       _chats.insert(0, chat);
       save();
@@ -72,9 +72,9 @@ class ChatController extends ChangeNotifier {
     }
   }
 
-  void exportChat(GeneralTreeNode<LlamaMessage> chat) async {
-    final chatMap = chat.toMap(LlamaMessage.messageToMap);
-    final chatString = jsonEncode(chatMap);
+  void exportChat(ChatMessage chat) async {
+    final chatMapList = chat.toMapList();
+    final chatString = jsonEncode(chatMapList);
 
     final outputFile = await FilePicker.platform.saveFile(
       dialogTitle: 'Export Chat',
@@ -95,37 +95,6 @@ class ChatController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addToEnd(LlamaMessage message) {
-    root.chain.last.addChild(message);
-    save();
-    notifyListeners();
-  }
-
-  Future<void> streamToEnd(Stream<String> stream) async {
-    root.chain.last.addChild(AssistantLlamaMessage(''));
-    notifyListeners();
-
-    await for (final response in stream) {
-      root.chain.last.data.content += response;
-      notifyListeners();
-    }
-
-    save();
-    notifyListeners();
-  }
-
-  Future<void> streamToChild(GeneralTreeNode<LlamaMessage> node, Stream<String> stream) async {
-    notifyListeners();
-    
-    await for (final response in stream) {
-      node.currentChild!.data.content += response;
-      notifyListeners();
-    }
-
-    save();
-    notifyListeners();
-  }
-
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -133,13 +102,13 @@ class ChatController extends ChangeNotifier {
 
     _chats.clear();
     for (final chatString in chatsStrings) {
-      final chatMap = jsonDecode(chatString);
-      final chat = GeneralTreeNode.fromMap(chatMap, LlamaMessage.fromMap);
+      final chatMapList = jsonDecode(chatString);
+      final chat = ChatMessage.fromMapList(chatMapList, null);
       _chats.add(chat);
     }
 
     if (_chats.isEmpty) {
-      final chat = GeneralTreeNode<LlamaMessage>(SystemLlamaMessage('New Chat'));
+      final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat', parent: null);
       _chats.add(chat);
     }
 
@@ -152,7 +121,7 @@ class ChatController extends ChangeNotifier {
     List<String> chatsStrings = [];
 
     for (final chat in _chats) {
-      final chatMap = chat.toMap(LlamaMessage.messageToMap);
+      final chatMap = chat.toMapList();
       final chatString = jsonEncode(chatMap);
       chatsStrings.add(chatString);
     }

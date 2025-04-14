@@ -352,10 +352,10 @@ packages:
     dependency: "direct main"
     description:
       name: llama_sdk
-      sha256: "43480f74eef69f67925986cf2503c92e51be5064504758ca5dc352ab7100c340"
+      sha256: b0cf7de25b716ae15c016f4d9dedd6ac64321318b28e6a212f20cae465582544
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   matcher:
     dependency: transitive
     description:
