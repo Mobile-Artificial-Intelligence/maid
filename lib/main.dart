@@ -169,7 +169,7 @@ class MaidState extends State<Maid> {
     theme: getTheme(ColorScheme.fromSeed(seedColor: AppSettings.instance.seedColor, brightness: Brightness.light)),
     darkTheme: getTheme(ColorScheme.fromSeed(seedColor: AppSettings.instance.seedColor, brightness: Brightness.dark)),
     themeMode: AppSettings.instance.themeMode,
-    home: buildHomePage(),
+    home: HomePage(ai: ai),
     localizationsDelegates: [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
@@ -177,8 +177,8 @@ class MaidState extends State<Maid> {
       GlobalCupertinoLocalizations.delegate,
     ],
     routes: {
-      '/settings': (context) => buildSettingsPage(),
-      '/chat': (context) => buildHomePage(),
+      '/settings': (context) => SettingsPage(ai: ai),
+      '/chat': (context) => HomePage(ai: ai),
       '/about': (context) => const AboutPage(),
       '/huggingface': (context) => HuggingFacePage(ai: ai),
       if (kDebugMode) '/debug': (context) => DebugPage(),
@@ -186,13 +186,5 @@ class MaidState extends State<Maid> {
     supportedLocales: AppLocalizations.supportedLocales,
     locale: AppSettings.instance.locale,
     debugShowCheckedModeBanner: false,
-  );
-
-  Widget buildHomePage() => HomePage(
-    ai: ai
-  );
-
-  Widget buildSettingsPage() => SettingsPage(
-    ai: ai
   );
 }

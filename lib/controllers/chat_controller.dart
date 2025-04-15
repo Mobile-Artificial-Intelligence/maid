@@ -102,7 +102,7 @@ class ChatController extends ChangeNotifier {
 
     _chats.clear();
     for (final chatString in chatsStrings) {
-      final chatMapList = jsonDecode(chatString);
+      final chatMapList = (jsonDecode(chatString) as List).cast<Map<String, dynamic>>();
       final chat = ChatMessage.fromMapList(chatMapList, null);
       _chats.add(chat);
     }
