@@ -1,7 +1,6 @@
 part of 'package:maid/main.dart';
 
 class MessageWidget extends StatefulWidget {
-  final ArtificialIntelligenceController ai;
   final ChatMessage node;
 
   /// The chain position is used to determine the position of the message in the chain.
@@ -17,7 +16,6 @@ class MessageWidget extends StatefulWidget {
 
   const MessageWidget({
     required super.key, 
-    required this.ai,
     required this.node,
     required this.chainPosition,
   });
@@ -65,11 +63,11 @@ class MessageWidgetState extends State<MessageWidget> {
 
   void tryRegenerate(ChatMessage node) async {
     try {
-      if (widget.ai is LlamaCppController) {
-        (widget.ai as LlamaCppController).reloadModel(true);
+      if (LlamaCppController.instance != null) {
+        LlamaCppController.instance!.reloadModel(true);
       }
 
-      Stream<String> stream = widget.ai.prompt();
+      Stream<String> stream = ArtificialIntelligenceController.instance.prompt();
 
       final newMessage = ChatMessage(content: '', role: ChatMessageRole.assistant);
 
@@ -89,7 +87,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {
-    if (widget.ai.busy) return;
+    if (ArtificialIntelligenceController.instance.busy) return;
 
     const threshold = 80;
     
@@ -111,7 +109,6 @@ class MessageWidgetState extends State<MessageWidget> {
       /// Builds the child node/s if it exists.
       if (widget.buildChild) MessageWidget(
         key: childKey,
-        ai: widget.ai,
         node: widget.node.currentChild!,
         chainPosition: widget.chainPosition - 1,
       ),
@@ -121,7 +118,7 @@ class MessageWidgetState extends State<MessageWidget> {
   // The buildCurrentMessage method will build the padding and the appropriate column based on the editing state.
   Widget buildCurrentMessage() => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-    child: editing && !widget.ai.busy ? 
+    child: editing && !ArtificialIntelligenceController.instance.busy ? 
       buildMessageEditingColumn() : 
       GestureDetector(
         onHorizontalDragEnd: onHorizontalDragEnd,
@@ -259,7 +256,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   /// Builds the actions for the user to interact with the message.
   Widget buildActions() => ListenableBuilder(
-    listenable: widget.ai,
+    listenable: ArtificialIntelligenceController.instance,
     builder: buildActionsRow,
   );
   
@@ -296,13 +293,13 @@ class MessageWidgetState extends State<MessageWidget> {
       IconButton(
         tooltip: AppLocalizations.of(context)!.previous,
         icon: const Icon(Icons.arrow_left),
-        onPressed: !widget.ai.busy && widget.onPreviousEnabled ? onPrevious : null,
+        onPressed: !ArtificialIntelligenceController.instance.busy && widget.onPreviousEnabled ? onPrevious : null,
       ),
       Text('${widget.siblingsIndex + 1} / ${widget.siblingCount}'),
       IconButton(
         tooltip: AppLocalizations.of(context)!.next,
         icon: const Icon(Icons.arrow_right),
-        onPressed: !widget.ai.busy && widget.onNextEnabled ? onNext : null,
+        onPressed: !ArtificialIntelligenceController.instance.busy && widget.onNextEnabled ? onNext : null,
       ),
     ],
   );
@@ -316,14 +313,14 @@ class MessageWidgetState extends State<MessageWidget> {
       return IconButton(
         tooltip: AppLocalizations.of(context)!.edit,
         icon: const Icon(Icons.edit),
-        onPressed: widget.ai.canPrompt ? onEdit : null,
+        onPressed: ArtificialIntelligenceController.instance.canPrompt ? onEdit : null,
       );
     } 
     else {
       return IconButton(
         tooltip: AppLocalizations.of(context)!.regenerate,
         icon: const Icon(Icons.refresh),
-        onPressed: widget.ai.canPrompt ? onRegenerate : null,
+        onPressed: ArtificialIntelligenceController.instance.canPrompt ? onRegenerate : null,
       );
     }
   }
@@ -332,6 +329,6 @@ class MessageWidgetState extends State<MessageWidget> {
   Widget buildDeleteButton() => IconButton(
     tooltip: AppLocalizations.of(context)!.delete,
     icon: const Icon(Icons.delete),
-    onPressed: !widget.ai.busy ? onDelete : null,
+    onPressed: !ArtificialIntelligenceController.instance.busy ? onDelete : null,
   );
 }

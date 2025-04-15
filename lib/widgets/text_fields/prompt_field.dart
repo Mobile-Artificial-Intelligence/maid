@@ -1,12 +1,7 @@
 part of 'package:maid/main.dart';
 
 class PromptField extends StatefulWidget {
-  final ArtificialIntelligenceController ai;
-
-  const PromptField({
-    super.key, 
-    required this.ai
-  });
+  const PromptField({super.key});
 
   @override
   State<PromptField> createState() => PromptFieldState();
@@ -60,7 +55,7 @@ class PromptFieldState extends State<PromptField> {
 
   void handleFile(String path) {
     if (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path)) {
-      (widget.ai as LlamaCppController).loadModelFile(path);
+      LlamaCppController.instance!.loadModelFile(path);
     } 
   }
 
@@ -79,7 +74,7 @@ class PromptFieldState extends State<PromptField> {
 
       ChatController.instance.root.tail.addChild(newMessage);
 
-      Stream<String> stream = widget.ai.prompt();
+      Stream<String> stream = ArtificialIntelligenceController.instance.prompt();
 
       newMessage = ChatMessage(content: '', role: ChatMessageRole.assistant);
 
@@ -165,8 +160,8 @@ class PromptFieldState extends State<PromptField> {
 
   /// This is the submit button that will be used to submit the message.
   Widget suffixButtonBuilder() => ListenableBuilder(
-    listenable: widget.ai,
-    builder: (context, child) => widget.ai.busy ? 
+    listenable: ArtificialIntelligenceController.instance,
+    builder: (context, child) => ArtificialIntelligenceController.instance.busy ? 
       buildStopButton() : 
       buildPromptButton(),
   );
@@ -175,7 +170,7 @@ class PromptFieldState extends State<PromptField> {
     key: ValueKey('submit_prompt_button'),
     tooltip: AppLocalizations.of(context)!.submitPrompt,
     icon: const Icon(Icons.send),
-    onPressed: isNotEmpty && widget.ai.canPrompt ? onSubmit : null,
+    onPressed: isNotEmpty && ArtificialIntelligenceController.instance.canPrompt ? onSubmit : null,
     disabledColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
   );
 
@@ -188,6 +183,6 @@ class PromptFieldState extends State<PromptField> {
       color: Theme.of(context).colorScheme.onError,
     ),
     iconSize: 30,
-    onPressed: widget.ai.stop,
+    onPressed: ArtificialIntelligenceController.instance.stop,
   );
 }

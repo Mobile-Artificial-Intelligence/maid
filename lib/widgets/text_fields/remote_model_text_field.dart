@@ -1,16 +1,11 @@
 part of 'package:maid/main.dart';
 
 class RemoteModelTextField extends StatelessWidget {
-  final RemoteArtificialIntelligenceController ai;
-
-  const RemoteModelTextField({
-    super.key,
-    required this.ai,
-  });
+  const RemoteModelTextField({super.key});
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: ai,
+    listenable: RemoteArtificialIntelligenceController.instance!,
     builder: buildRow,
   );
 
@@ -18,14 +13,14 @@ class RemoteModelTextField extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Expanded(
-        child: ai.customModel
+        child: RemoteArtificialIntelligenceController.instance!.customModel
           ? buildCustom(context)
           : buildNormal(context),
       ),
       const SizedBox(width: 8),
       Switch(
-        value: ai.customModel,
-        onChanged: (value) => ai.customModel = value,
+        value: RemoteArtificialIntelligenceController.instance!.customModel,
+        onChanged: (value) => RemoteArtificialIntelligenceController.instance!.customModel = value,
       ),
     ],
   );
@@ -40,16 +35,15 @@ class RemoteModelTextField extends StatelessWidget {
       ),
       RemoteModelDropdown(
         refreshButton: true,
-        ai: ai,
       ),
     ],
   );
 
 
   Widget buildCustom(BuildContext context) => ListenableTextField(
-    listenable: ai,
-    selector: () => ai.model,
-    onChanged: (value) => ai.model = value,
+    listenable: RemoteArtificialIntelligenceController.instance!,
+    selector: () => RemoteArtificialIntelligenceController.instance!.model,
+    onChanged: (value) => RemoteArtificialIntelligenceController.instance!.model = value,
     labelText: AppLocalizations.of(context)!.remoteModel,
     requireSave: true,
   );

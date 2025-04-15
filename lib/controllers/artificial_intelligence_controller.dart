@@ -1,6 +1,8 @@
 part of 'package:maid/main.dart';
 
 abstract class ArtificialIntelligenceController extends ChangeNotifier {
+  static ArtificialIntelligenceController instance = LlamaCppController();
+
   static Map<String, String> getTypes(BuildContext context) {
     Map<String, String> types = {};
 
@@ -82,7 +84,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
     await prefs.setString(type, contextString);
   }
 
-  static Future<ArtificialIntelligenceController> load([String? type]) async {
+  static Future<void> load([String? type]) async {
     final prefs = await SharedPreferences.getInstance();
 
     type ??= prefs.getString('ai_type') ?? (kIsWeb ? 'ollama' : 'llama_cpp');
@@ -93,22 +95,27 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
 
     switch (type) {
       case 'llama_cpp':
-        return LlamaCppController()
+        instance = LlamaCppController()
           ..fromMap(contextMap);
+        break;
       case 'ollama':
-        return OllamaController()
+        instance = OllamaController()
           ..fromMap(contextMap);
+        break;
       case 'open_ai':
-        return OpenAIController()
+        instance = OpenAIController()
           ..fromMap(contextMap);
+        break;
       case 'mistral':
-        return MistralController()
+        instance = MistralController()
           ..fromMap(contextMap);
+        break;
       case 'anthropic':
-        return AnthropicController()
+        instance = AnthropicController()
           ..fromMap(contextMap);
+        break;
       default:
-        return LlamaCppController();
+        instance = LlamaCppController();
     }
   }
 
@@ -132,6 +139,10 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
 }
 
 abstract class RemoteArtificialIntelligenceController extends ArtificialIntelligenceController {
+  static RemoteArtificialIntelligenceController? get instance => ArtificialIntelligenceController.instance is RemoteArtificialIntelligenceController
+    ? ArtificialIntelligenceController.instance as RemoteArtificialIntelligenceController
+    : null;
+
   static List<String> get types => [
     'ollama',
     'open_ai',
@@ -220,6 +231,10 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 }
 
 class LlamaCppController extends ArtificialIntelligenceController {
+  static LlamaCppController? get instance => ArtificialIntelligenceController.instance is LlamaCppController
+    ? ArtificialIntelligenceController.instance as LlamaCppController
+    : null;
+
   llama.Llama? _llama;
   String _loadedHash = '';
 
@@ -365,6 +380,10 @@ class LlamaCppController extends ArtificialIntelligenceController {
 }
 
 class OllamaController extends RemoteArtificialIntelligenceController {
+  static OllamaController? get instance => ArtificialIntelligenceController.instance is OllamaController
+    ? ArtificialIntelligenceController.instance as OllamaController
+    : null;
+
   late ollama.OllamaClient _ollamaClient;
 
   bool? _searchLocalNetwork;
@@ -572,6 +591,10 @@ class OllamaController extends RemoteArtificialIntelligenceController {
 }
 
 class OpenAIController extends RemoteArtificialIntelligenceController {
+  static OpenAIController? get instance => ArtificialIntelligenceController.instance is OpenAIController
+    ? ArtificialIntelligenceController.instance as OpenAIController
+    : null;
+
   late open_ai.OpenAIClient _openAiClient;
 
   @override
@@ -664,6 +687,10 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
 }
 
 class MistralController extends RemoteArtificialIntelligenceController {
+  static MistralController? get instance => ArtificialIntelligenceController.instance is MistralController
+    ? ArtificialIntelligenceController.instance as MistralController
+    : null;
+
   late mistral.MistralAIClient _mistralClient;
 
   @override
@@ -761,6 +788,10 @@ class MistralController extends RemoteArtificialIntelligenceController {
 }
 
 class AnthropicController extends RemoteArtificialIntelligenceController {
+  static AnthropicController? get instance => ArtificialIntelligenceController.instance is AnthropicController
+    ? ArtificialIntelligenceController.instance as AnthropicController
+    : null;
+
   late anthropic.AnthropicClient _anthropicClient;
 
   @override

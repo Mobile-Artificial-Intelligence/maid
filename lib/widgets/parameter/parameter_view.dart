@@ -1,12 +1,7 @@
 part of 'package:maid/main.dart';
 
 class ParameterView extends StatefulWidget {
-  final ArtificialIntelligenceController ai;
-  
-  const ParameterView({
-    super.key, 
-    required this.ai
-  });
+  const ParameterView({super.key});
 
   @override
   State<ParameterView> createState() => ParameterViewState();
@@ -20,7 +15,7 @@ class ParameterViewState extends State<ParameterView> {
   @override
   void initState() {
     super.initState();
-    parameters.addAll(widget.ai.overrides);
+    parameters.addAll(ArtificialIntelligenceController.instance.overrides);
     count = parameters.length;
     timer = Timer.periodic(const Duration(seconds: 2), (_) => save());
   }
@@ -32,11 +27,11 @@ class ParameterViewState extends State<ParameterView> {
   }
 
   void save() {
-    if (widget.ai.overrides.length == parameters.length && widget.ai.overrides.entries.every((entry) => parameters[entry.key] == entry.value)) {
+    if (ArtificialIntelligenceController.instance.overrides.length == parameters.length && ArtificialIntelligenceController.instance.overrides.entries.every((entry) => parameters[entry.key] == entry.value)) {
       return;
     }
 
-    widget.ai.overrides = Map.from(parameters);
+    ArtificialIntelligenceController.instance.overrides = Map.from(parameters);
   }
 
   void import() async {

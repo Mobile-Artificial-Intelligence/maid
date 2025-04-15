@@ -1,12 +1,7 @@
 part of 'package:maid/main.dart';
 
 class SettingsPage extends StatelessWidget {
-  final ArtificialIntelligenceController ai;
-  
-  const SettingsPage({
-    super.key, 
-    required this.ai
-  });
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -23,10 +18,10 @@ class SettingsPage extends StatelessWidget {
     mainAxisSize: MainAxisSize.max,
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
-      ArtificialIntelligenceDropdown(ai: ai),
-      ArtificialIntelligenceSettings(ai: ai),
+      ArtificialIntelligenceDropdown(),
+      ArtificialIntelligenceSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
-      ParameterView(ai: ai),
+      ParameterView(),
       Divider(endIndent: 0, indent: 0, height: 32),
       UserSettings(),
       Divider(endIndent: 0, indent: 0, height: 32),
@@ -56,7 +51,7 @@ class SettingsPage extends StatelessWidget {
         onPressed: () {
           AppSettings.instance.clear();
           ChatController.instance.clear();
-          ai.clear();
+          ArtificialIntelligenceController.instance.clear();
         }, 
         child: Text(AppLocalizations.of(context)!.clearCache)
       )

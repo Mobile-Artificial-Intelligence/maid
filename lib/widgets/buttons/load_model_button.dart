@@ -3,10 +3,9 @@ part of 'package:maid/main.dart';
 class LoadModelButton extends StatelessWidget {
   final double popoverMinWidth = 150;
   final double popoverMaxWidth = 300;
-  final LlamaCppController llama;
   final GlobalKey buttonKey = GlobalKey();
   
-  LoadModelButton({super.key, required this.llama});
+  LoadModelButton({super.key});
 
   void onTap(BuildContext context) async {
     final List<PopupMenuEntry> popoverItems = [
@@ -24,12 +23,12 @@ class LoadModelButton extends StatelessWidget {
       ),
     ];
 
-    if (llama.modelOptions.isNotEmpty) {
+    if (LlamaCppController.instance!.modelOptions.isNotEmpty) {
       popoverItems.add(
         const PopupMenuDivider(),
       );
 
-      for (final option in llama.modelOptions) {
+      for (final option in LlamaCppController.instance!.modelOptions) {
         popoverItems.add(
           PopupMenuItem(
             value: option,
@@ -52,13 +51,13 @@ class LoadModelButton extends StatelessWidget {
     );
 
     if (selection == 'load') {
-      llama.pickModel();
+      LlamaCppController.instance!.pickModel();
     } 
     else if (selection == 'download' && context.mounted) {
       Navigator.of(context).pushNamed('/huggingface');
     }
-    else if (selection != null && llama.modelOptions.isNotEmpty) {
-      llama.loadModelFile(selection, true);
+    else if (selection != null && LlamaCppController.instance!.modelOptions.isNotEmpty) {
+      LlamaCppController.instance!.loadModelFile(selection, true);
     }
   }
 
@@ -68,7 +67,7 @@ class LoadModelButton extends StatelessWidget {
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     final Size size = renderBox.size;
 
-    final width = llama.modelOptions.isNotEmpty
+    final width = LlamaCppController.instance!.modelOptions.isNotEmpty
       ? popoverMaxWidth
       : popoverMinWidth;
 
@@ -114,7 +113,7 @@ class LoadModelButton extends StatelessWidget {
       ),
       Expanded(
         child: ListenableBuilder(
-          listenable: llama, 
+          listenable: LlamaCppController.instance!, 
           builder: textBuilder
         )
       ),
@@ -128,11 +127,13 @@ class LoadModelButton extends StatelessWidget {
   Widget textBuilder(BuildContext context, Widget? child) {
     String text;
 
-    if (llama.loading) {
+    if (LlamaCppController.instance!.loading) {
       text = AppLocalizations.of(context)!.loading;
     }
     else {
-      text = llama.model != null ? llama.model!.split('/').last : AppLocalizations.of(context)!.loadModel;
+      text = LlamaCppController.instance!.model != null ? 
+        LlamaCppController.instance!.model!.split('/').last : 
+        AppLocalizations.of(context)!.loadModel;
     }
     
     return Text(

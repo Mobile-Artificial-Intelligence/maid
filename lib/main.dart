@@ -97,25 +97,21 @@ class Maid extends StatefulWidget {
 }
 
 class MaidState extends State<Maid> {
-  ArtificialIntelligenceController ai = LlamaCppController();
-
   static MaidState of(BuildContext context) => context.findAncestorStateOfType<MaidState>()!;
 
   @override
   void initState() {
     super.initState();
     
-    ArtificialIntelligenceController.load().then(
-      (newController) => setState(() => ai = newController)
-    );
+    ArtificialIntelligenceController.load();
   }
 
   Future<void> switchAi(String type) async {
-    await ai.save();
+    await ArtificialIntelligenceController.instance.save();
 
-    if (ai.type == type) return;
+    if (ArtificialIntelligenceController.instance.type == type) return;
 
-    ai = await ArtificialIntelligenceController.load(type);
+    await ArtificialIntelligenceController.load(type);
 
     setState(() => log('AI switched to $type'));
   }
@@ -159,7 +155,7 @@ class MaidState extends State<Maid> {
     theme: getTheme(ColorScheme.fromSeed(seedColor: AppSettings.instance.seedColor, brightness: Brightness.light)),
     darkTheme: getTheme(ColorScheme.fromSeed(seedColor: AppSettings.instance.seedColor, brightness: Brightness.dark)),
     themeMode: AppSettings.instance.themeMode,
-    home: HomePage(ai: ai),
+    home: HomePage(),
     localizationsDelegates: [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
@@ -167,10 +163,10 @@ class MaidState extends State<Maid> {
       GlobalCupertinoLocalizations.delegate,
     ],
     routes: {
-      '/settings': (context) => SettingsPage(ai: ai),
-      '/chat': (context) => HomePage(ai: ai),
+      '/settings': (context) => SettingsPage(),
+      '/chat': (context) => HomePage(),
       '/about': (context) => const AboutPage(),
-      '/huggingface': (context) => HuggingFacePage(ai: ai),
+      '/huggingface': (context) => HuggingFacePage(),
       if (kDebugMode) '/debug': (context) => DebugPage(),
     },
     supportedLocales: AppLocalizations.supportedLocales,

@@ -1,12 +1,7 @@
 part of 'package:maid/main.dart';
 
 class ChatView extends StatelessWidget {
-  final ArtificialIntelligenceController ai;
-
-  const ChatView({
-    super.key,
-    required this.ai,
-  });
+  const ChatView({super.key});
 
   @override
   Widget build(BuildContext context) => SafeArea(
@@ -65,8 +60,7 @@ class ChatView extends StatelessWidget {
       itemCount: ChatController.instance.chats.length,
       itemBuilder: (context, index) => ChatTile(
         node: ChatController.instance.chats[index], 
-        selected: index == 0,
-        ai: ai,
+        selected: index == 0
       ),
     )
   );

@@ -1,12 +1,7 @@
 part of 'package:maid/main.dart';
 
 class HuggingFacePage extends StatelessWidget {
-  final ArtificialIntelligenceController ai;
-
-  const HuggingFacePage({
-    super.key, 
-    required this.ai,
-  });
+  const HuggingFacePage({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -55,7 +50,7 @@ class HuggingFacePage extends StatelessWidget {
           tags: (modelMap['tags'] as YamlMap).map(
             (key, value) => MapEntry(key, value.toString())
           ),
-          llama: ai as LlamaCppController,
+          llama: LlamaCppController.instance!,
         )
       );
     }

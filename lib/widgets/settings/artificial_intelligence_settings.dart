@@ -1,16 +1,11 @@
 part of 'package:maid/main.dart';
 
 class ArtificialIntelligenceSettings extends StatelessWidget {
-  final ArtificialIntelligenceController ai;
-  
-  const ArtificialIntelligenceSettings({
-    super.key, 
-    required this.ai
-  });
+  const ArtificialIntelligenceSettings({super.key});
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: ai,
+    listenable: ArtificialIntelligenceController.instance,
     builder: buildColumn,
   );
 
@@ -18,25 +13,25 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     children: [
       Divider(endIndent: 0, indent: 0, height: 32),
       Text(
-        AppLocalizations.of(context)!.aiSettings(ai.getTypeLocale(context)),
+        AppLocalizations.of(context)!.aiSettings(ArtificialIntelligenceController.instance.getTypeLocale(context)),
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
-      ai is RemoteArtificialIntelligenceController
+      RemoteArtificialIntelligenceController.instance != null
         ? buildRemoteSettings(context)
-        : LoadModelButton(llama: ai as LlamaCppController),
+        : LoadModelButton(),
     ],
   );
 
   Widget buildRemoteSettings(BuildContext context) => Column(
     children: [
-      if (ai is OllamaController && !kIsWeb) buildLocalSearchSwitchRow(context),
+      if (OllamaController.instance != null && !kIsWeb) buildLocalSearchSwitchRow(context),
       const SizedBox(height: 8),
-      RemoteModelTextField(ai: ai as RemoteArtificialIntelligenceController),
+      RemoteModelTextField(),
       const SizedBox(height: 8),
-      BaseUrlTextField(ai: ai as RemoteArtificialIntelligenceController),
+      BaseUrlTextField(),
       const SizedBox(height: 8),
-      ApiKeyTextField(ai: ai as RemoteArtificialIntelligenceController),
+      ApiKeyTextField(),
     ]
   );
 
@@ -49,7 +44,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
         maxLines: 1,
       ),
       Switch(
-        value: (ai as OllamaController).searchLocalNetwork ?? false,
+        value: OllamaController.instance!.searchLocalNetwork ?? false,
         onChanged: (value) => onLocalSearchChanged(context, value),
       ),
     ],
@@ -58,7 +53,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
   void onLocalSearchChanged(BuildContext context, bool value) {
     if (
       TargetPlatformExtension.isMobile &&
-      (ai as OllamaController).searchLocalNetwork == null && 
+      OllamaController.instance!.searchLocalNetwork == null && 
       value
     ) {
       // Show alert dialog informing the user of the permissions required
@@ -69,7 +64,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
       return;
     }
 
-    (ai as OllamaController).searchLocalNetwork = value;
+    OllamaController.instance!.searchLocalNetwork = value;
   }
 
   Widget buildPermissionsAlert(BuildContext context) => AlertDialog(
@@ -112,6 +107,6 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
 
     if (!granted) return;
 
-    (ai as OllamaController).searchLocalNetwork = true;
+    OllamaController.instance!.searchLocalNetwork = true;
   }
 }

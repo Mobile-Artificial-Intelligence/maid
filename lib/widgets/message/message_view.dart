@@ -1,12 +1,10 @@
 part of 'package:maid/main.dart';
 
 class MessageView extends StatefulWidget {
-  final ArtificialIntelligenceController ai;
   final int maxMessages;
 
   const MessageView({
     super.key, 
-    required this.ai,
     required this.maxMessages,
   });
 
@@ -155,7 +153,6 @@ class MessageViewState extends State<MessageView> {
 
     return MessageWidget(
       key: rootKey,
-      ai: widget.ai,
       node: currentRoot,
       chainPosition: widget.maxMessages - 1,
     );
