@@ -97,23 +97,11 @@ class Maid extends StatefulWidget {
 }
 
 class MaidState extends State<Maid> {
-  static MaidState of(BuildContext context) => context.findAncestorStateOfType<MaidState>()!;
-
   @override
   void initState() {
     super.initState();
     
     AIController.load();
-  }
-
-  Future<void> switchAi(String type) async {
-    await AIController.instance.save();
-
-    if (AIController.instance.type == type) return;
-
-    await AIController.load(type);
-
-    setState(() => log('AI switched to $type'));
   }
 
   static ThemeData getTheme(ColorScheme colorScheme) {

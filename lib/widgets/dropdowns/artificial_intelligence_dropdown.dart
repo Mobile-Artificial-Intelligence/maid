@@ -10,6 +10,16 @@ class ArtificialIntelligenceDropdown extends StatefulWidget {
 class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDropdown> {
   bool open = false;
 
+  Future<void> switchAi(String type) async {
+    await AIController.instance.save();
+
+    if (AIController.instance.type == type) return;
+
+    await AIController.load(type);
+
+    setState(() => open = false);
+  }
+
   @override
   Widget build(BuildContext context) => Row(
     mainAxisSize: MainAxisSize.max,
@@ -55,10 +65,7 @@ class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDr
     itemBuilder: itemBuilder,
     onOpened: () => setState(() => open = true),
     onCanceled: () => setState(() => open = false),
-    onSelected: (type) {
-      MaidState.of(context).switchAi(type);
-      setState(() => open = false);
-    }
+    onSelected: switchAi
   );
 
   Widget buildPopupButtonIcon() => Icon(
