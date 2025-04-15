@@ -52,9 +52,7 @@ class ChatMessage extends ChangeNotifier {
       parent!._currentChild = this;
     }
 
-    stream.listen((event) {
-      content += event;
-    });
+    listenToStream(stream);
   }
 
   factory ChatMessage.fromMapList(List<Map<String, dynamic>> mapList, ValueKey<String>? id, [ChatMessage? parent]) {
@@ -114,6 +112,12 @@ class ChatMessage extends ChangeNotifier {
     _content = value;
     _updatedAt = DateTime.now();
     notifyListeners();
+  }
+
+  Future<void> listenToStream(Stream<String> stream) async {
+    await for (final event in stream) {
+      content += event;
+    }
   }
 
   ChatMessage? _currentChild;

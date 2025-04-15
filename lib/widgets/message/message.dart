@@ -31,9 +31,20 @@ class MessageWidgetState extends State<MessageWidget> {
   final TextEditingController controller = TextEditingController();
   bool editing = false;
 
-  void onNext() => setState(() => widget.node.nextChild());
-  void onPrevious() => setState(() => widget.node.previousChild());
-  void onDelete() => setState(() => widget.node.removeChild(widget.node.currentChild!));
+  void onNext() {
+    setState(() => widget.node.nextChild());
+    ChatController.instance.save();
+  }
+
+  void onPrevious() {
+    setState(() => widget.node.previousChild());
+    ChatController.instance.save();
+  }
+
+  void onDelete() {
+    setState(() => widget.node.removeChild(widget.node.currentChild!));
+    ChatController.instance.save();
+  }
 
   void onEdit() {
     controller.text = widget.message.content;
@@ -58,7 +69,11 @@ class MessageWidgetState extends State<MessageWidget> {
 
       Stream<String> stream = widget.ai.prompt();
 
-      ChatMessage.withStream(stream: stream, role: ChatMessageRole.assistant, parent: node);
+      final newMessage = ChatMessage(content: '', role: ChatMessageRole.assistant, parent: node);
+
+      await newMessage.listenToStream(stream);
+
+      await ChatController.instance.save();
     }
     catch (exception) {
       if (!mounted) return;
