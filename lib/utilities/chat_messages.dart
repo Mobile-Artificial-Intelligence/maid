@@ -55,7 +55,7 @@ class ChatMessage extends ChangeNotifier {
     listenToStream(stream);
   }
 
-  factory ChatMessage.fromMapList(List<Map<String, dynamic>> mapList, ValueKey<String>? id, [ChatMessage? parent]) {
+  factory ChatMessage.fromMapList(List<Map<String, dynamic>> mapList, {ValueKey<String>? id, ChatMessage? parent}) {
     id ??= ValueKey<String>(mapList.firstWhere(
       (map) => map['parent'] == null,
       orElse: () => throw ArgumentError('No root found in mapList'),
@@ -76,9 +76,7 @@ class ChatMessage extends ChangeNotifier {
     );
 
     for (final childId in map['children']) {
-      final child = ChatMessage.fromMapList(mapList, ValueKey<String>(childId), result);
-      result._children.add(child);
-      result._currentChild = child;
+      ChatMessage.fromMapList(mapList, id: ValueKey<String>(childId), parent: result);
     }
 
     if (map['current_child'] != null) {

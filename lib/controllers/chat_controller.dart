@@ -64,7 +64,7 @@ class ChatController extends ChangeNotifier {
       final bytes = inputFile.files.single.bytes ?? File(inputFile.files.single.path!).readAsBytesSync();
       final chatString = utf8.decode(bytes);
       final chatMapList = jsonDecode(chatString);
-      final chat = ChatMessage.fromMapList(chatMapList, null);
+      final chat = ChatMessage.fromMapList(chatMapList);
 
       _chats.insert(0, chat);
       save();
@@ -103,7 +103,7 @@ class ChatController extends ChangeNotifier {
     _chats.clear();
     for (final chatString in chatsStrings) {
       final chatMapList = (jsonDecode(chatString) as List).cast<Map<String, dynamic>>();
-      final chat = ChatMessage.fromMapList(chatMapList, null);
+      final chat = ChatMessage.fromMapList(chatMapList);
       _chats.add(chat);
     }
 
