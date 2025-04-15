@@ -22,7 +22,7 @@ class ChatController extends ChangeNotifier {
 
   ChatMessage get root {
     if (_chats.isEmpty) {
-      final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat', parent: null);
+      final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat');
       _chats.add(chat);
     }
 
@@ -39,7 +39,7 @@ class ChatController extends ChangeNotifier {
   }
 
   void newChat() {
-    final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat', parent: null);
+    final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat');
 
     _chats.insert(0, chat);
     
@@ -108,7 +108,7 @@ class ChatController extends ChangeNotifier {
     }
 
     if (_chats.isEmpty) {
-      final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat', parent: null);
+      final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat');
       _chats.add(chat);
     }
 
