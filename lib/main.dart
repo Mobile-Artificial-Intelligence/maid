@@ -90,12 +90,7 @@ void main() {
 }
 
 class Maid extends StatefulWidget {
-  final ArtificialIntelligenceController? ai;
-
-  const Maid({
-    super.key,
-    this.ai
-  });
+  const Maid({super.key});
 
   @override
   State<Maid> createState() => MaidState();
@@ -110,14 +105,9 @@ class MaidState extends State<Maid> {
   void initState() {
     super.initState();
     
-    if (widget.ai != null) {
-      ai = widget.ai!;
-    }
-    else {
-      ArtificialIntelligenceController.load().then(
-        (newController) => setState(() => ai = newController)
-      );
-    }
+    ArtificialIntelligenceController.load().then(
+      (newController) => setState(() => ai = newController)
+    );
   }
 
   Future<void> switchAi(String type) async {
