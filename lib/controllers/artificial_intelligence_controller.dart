@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
-abstract class ArtificialIntelligenceController extends ChangeNotifier {
-  static ArtificialIntelligenceController instance = LlamaCppController();
+abstract class AIController extends ChangeNotifier {
+  static AIController instance = LlamaCppController();
 
   static Map<String, String> getTypes(BuildContext context) {
     Map<String, String> types = {};
@@ -57,7 +57,7 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
   bool get canPrompt;
   String get hash => jsonEncode(toMap()).hash;
 
-  ArtificialIntelligenceController({
+  AIController({
     String? model, 
     Map<String, dynamic>? overrides
   }) : _model = model , _overrides = overrides ?? {};
@@ -138,9 +138,9 @@ abstract class ArtificialIntelligenceController extends ChangeNotifier {
   void notify() => notifyListeners();
 }
 
-abstract class RemoteArtificialIntelligenceController extends ArtificialIntelligenceController {
-  static RemoteArtificialIntelligenceController? get instance => ArtificialIntelligenceController.instance is RemoteArtificialIntelligenceController
-    ? ArtificialIntelligenceController.instance as RemoteArtificialIntelligenceController
+abstract class RemoteAIController extends AIController {
+  static RemoteAIController? get instance => AIController.instance is RemoteAIController
+    ? AIController.instance as RemoteAIController
     : null;
 
   static List<String> get types => [
@@ -185,7 +185,7 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
 
   bool get canGetRemoteModels;
 
-  RemoteArtificialIntelligenceController({
+  RemoteAIController({
     super.model, 
     super.overrides,
     String? baseUrl, 
@@ -230,9 +230,9 @@ abstract class RemoteArtificialIntelligenceController extends ArtificialIntellig
   }
 }
 
-class LlamaCppController extends ArtificialIntelligenceController {
-  static LlamaCppController? get instance => ArtificialIntelligenceController.instance is LlamaCppController
-    ? ArtificialIntelligenceController.instance as LlamaCppController
+class LlamaCppController extends AIController {
+  static LlamaCppController? get instance => AIController.instance is LlamaCppController
+    ? AIController.instance as LlamaCppController
     : null;
 
   llama.Llama? _llama;
@@ -379,9 +379,9 @@ class LlamaCppController extends ArtificialIntelligenceController {
   String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.llamaCpp;
 }
 
-class OllamaController extends RemoteArtificialIntelligenceController {
-  static OllamaController? get instance => ArtificialIntelligenceController.instance is OllamaController
-    ? ArtificialIntelligenceController.instance as OllamaController
+class OllamaController extends RemoteAIController {
+  static OllamaController? get instance => AIController.instance is OllamaController
+    ? AIController.instance as OllamaController
     : null;
 
   late ollama.OllamaClient _ollamaClient;
@@ -590,9 +590,9 @@ class OllamaController extends RemoteArtificialIntelligenceController {
   bool get canGetRemoteModels => baseUrl != null || searchLocalNetwork == true;
 }
 
-class OpenAIController extends RemoteArtificialIntelligenceController {
-  static OpenAIController? get instance => ArtificialIntelligenceController.instance is OpenAIController
-    ? ArtificialIntelligenceController.instance as OpenAIController
+class OpenAIController extends RemoteAIController {
+  static OpenAIController? get instance => AIController.instance is OpenAIController
+    ? AIController.instance as OpenAIController
     : null;
 
   late open_ai.OpenAIClient _openAiClient;
@@ -686,9 +686,9 @@ class OpenAIController extends RemoteArtificialIntelligenceController {
   bool get canGetRemoteModels => apiKey != null && apiKey!.isNotEmpty;
 }
 
-class MistralController extends RemoteArtificialIntelligenceController {
-  static MistralController? get instance => ArtificialIntelligenceController.instance is MistralController
-    ? ArtificialIntelligenceController.instance as MistralController
+class MistralController extends RemoteAIController {
+  static MistralController? get instance => AIController.instance is MistralController
+    ? AIController.instance as MistralController
     : null;
 
   late mistral.MistralAIClient _mistralClient;
@@ -787,9 +787,9 @@ class MistralController extends RemoteArtificialIntelligenceController {
   bool get canGetRemoteModels => true;
 }
 
-class AnthropicController extends RemoteArtificialIntelligenceController {
-  static AnthropicController? get instance => ArtificialIntelligenceController.instance is AnthropicController
-    ? ArtificialIntelligenceController.instance as AnthropicController
+class AnthropicController extends RemoteAIController {
+  static AnthropicController? get instance => AIController.instance is AnthropicController
+    ? AIController.instance as AnthropicController
     : null;
 
   late anthropic.AnthropicClient _anthropicClient;

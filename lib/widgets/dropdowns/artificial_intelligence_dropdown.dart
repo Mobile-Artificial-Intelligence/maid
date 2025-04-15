@@ -33,7 +33,7 @@ class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDr
     children: [
       const SizedBox(width: 8),
       ListenableBuilder(
-        listenable: ArtificialIntelligenceController.instance,
+        listenable: AIController.instance,
         builder: buildOverrideText
       ),
       buildPopupButton()
@@ -41,7 +41,7 @@ class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDr
   );
 
   Widget buildOverrideText(BuildContext context, Widget? child) => Text(
-    ArtificialIntelligenceController.instance.getTypeLocale(context),
+    AIController.instance.getTypeLocale(context),
     style: TextStyle(
       color: Theme.of(context).colorScheme.onSurface,
       fontSize: 16
@@ -70,7 +70,7 @@ class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDr
   List<PopupMenuEntry<String>> itemBuilder(BuildContext context) {
     List<PopupMenuEntry<String>> items = [];
 
-    for (final type in ArtificialIntelligenceController.getTypes(context).entries) {
+    for (final type in AIController.getTypes(context).entries) {
       items.add(PopupMenuItem<String>(
         padding: EdgeInsets.all(8),
         value: type.key,

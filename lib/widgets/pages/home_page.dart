@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: ArtificialIntelligenceController.instance, 
+    listenable: AIController.instance, 
     builder: scaffoldBuilder
   );
 

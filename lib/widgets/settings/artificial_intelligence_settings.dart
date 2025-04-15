@@ -5,7 +5,7 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: ArtificialIntelligenceController.instance,
+    listenable: AIController.instance,
     builder: buildColumn,
   );
 
@@ -13,11 +13,11 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
     children: [
       Divider(endIndent: 0, indent: 0, height: 32),
       Text(
-        AppLocalizations.of(context)!.aiSettings(ArtificialIntelligenceController.instance.getTypeLocale(context)),
+        AppLocalizations.of(context)!.aiSettings(AIController.instance.getTypeLocale(context)),
         style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 8),
-      RemoteArtificialIntelligenceController.instance != null
+      RemoteAIController.instance != null
         ? buildRemoteSettings(context)
         : LoadModelButton(),
     ],

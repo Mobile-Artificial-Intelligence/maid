@@ -13,13 +13,13 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
   bool open = false;
 
   void onSelected(String? model) {
-    RemoteArtificialIntelligenceController.instance!.model = model;
+    RemoteAIController.instance!.model = model;
     setState(() => open = false);
   }
 
   Future<bool> getModelOptions() async {
     try {
-      return await RemoteArtificialIntelligenceController.instance!.getModelOptions();
+      return await RemoteAIController.instance!.getModelOptions();
     } 
     catch (exception) {
       if (!mounted) return false;
@@ -35,7 +35,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: RemoteArtificialIntelligenceController.instance!, 
+    listenable: RemoteAIController.instance!, 
     builder: buildRow
   );
 
@@ -45,7 +45,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
       if (widget.refreshButton) buildRefreshButton(),
       const SizedBox(width: 8),
       Text(
-        RemoteArtificialIntelligenceController.instance!.model ?? AppLocalizations.of(context)!.noModelSelected,
+        RemoteAIController.instance!.model ?? AppLocalizations.of(context)!.noModelSelected,
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSurface,
           fontSize: 16
@@ -55,7 +55,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
     ]
   );
 
-  Widget buildFutureBuilder() => RemoteArtificialIntelligenceController.instance!.canGetRemoteModels ? FutureBuilder<bool>(
+  Widget buildFutureBuilder() => RemoteAIController.instance!.canGetRemoteModels ? FutureBuilder<bool>(
     future: getModelOptions(),
     builder: buildPopupButton
   ) : const SizedBox.shrink();
@@ -78,7 +78,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
       tooltip: AppLocalizations.of(context)!.selectRemoteModel,
       icon: enabled ? buildPopupButtonIcon() : buildSpinner(),
       offset: const Offset(0, 40),
-      itemBuilder: (context) => RemoteArtificialIntelligenceController.instance!.modelOptions.map(modelBuilder).toList(),
+      itemBuilder: (context) => RemoteAIController.instance!.modelOptions.map(modelBuilder).toList(),
       onOpened: () => setState(() => open = true),
       onCanceled: () => setState(() => open = false)
     );

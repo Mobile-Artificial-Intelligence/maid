@@ -11,7 +11,7 @@ class BaseUrlTextField extends StatelessWidget {
       );
     }
 
-    RemoteArtificialIntelligenceController.instance!.baseUrl = value;
+    RemoteAIController.instance!.baseUrl = value;
   }
 
   Widget exceptionBuilder(BuildContext context) => ErrorDialog(
@@ -23,8 +23,8 @@ class BaseUrlTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListenableTextField(
-    listenable: RemoteArtificialIntelligenceController.instance!,
-    selector: () => RemoteArtificialIntelligenceController.instance!.baseUrl, 
+    listenable: RemoteAIController.instance!,
+    selector: () => RemoteAIController.instance!.baseUrl, 
     onChanged: (value) => onChanged(context, value),
     labelText: AppLocalizations.of(context)!.baseUrl,
     requireSave: true,

@@ -67,7 +67,7 @@ class MessageWidgetState extends State<MessageWidget> {
         LlamaCppController.instance!.reloadModel(true);
       }
 
-      Stream<String> stream = ArtificialIntelligenceController.instance.prompt();
+      Stream<String> stream = AIController.instance.prompt();
 
       final newMessage = ChatMessage(content: '', role: ChatMessageRole.assistant);
 
@@ -87,7 +87,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {
-    if (ArtificialIntelligenceController.instance.busy) return;
+    if (AIController.instance.busy) return;
 
     const threshold = 80;
     
@@ -118,7 +118,7 @@ class MessageWidgetState extends State<MessageWidget> {
   // The buildCurrentMessage method will build the padding and the appropriate column based on the editing state.
   Widget buildCurrentMessage() => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-    child: editing && !ArtificialIntelligenceController.instance.busy ? 
+    child: editing && !AIController.instance.busy ? 
       buildMessageEditingColumn() : 
       GestureDetector(
         onHorizontalDragEnd: onHorizontalDragEnd,
@@ -256,7 +256,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
   /// Builds the actions for the user to interact with the message.
   Widget buildActions() => ListenableBuilder(
-    listenable: ArtificialIntelligenceController.instance,
+    listenable: AIController.instance,
     builder: buildActionsRow,
   );
   
@@ -293,13 +293,13 @@ class MessageWidgetState extends State<MessageWidget> {
       IconButton(
         tooltip: AppLocalizations.of(context)!.previous,
         icon: const Icon(Icons.arrow_left),
-        onPressed: !ArtificialIntelligenceController.instance.busy && widget.onPreviousEnabled ? onPrevious : null,
+        onPressed: !AIController.instance.busy && widget.onPreviousEnabled ? onPrevious : null,
       ),
       Text('${widget.siblingsIndex + 1} / ${widget.siblingCount}'),
       IconButton(
         tooltip: AppLocalizations.of(context)!.next,
         icon: const Icon(Icons.arrow_right),
-        onPressed: !ArtificialIntelligenceController.instance.busy && widget.onNextEnabled ? onNext : null,
+        onPressed: !AIController.instance.busy && widget.onNextEnabled ? onNext : null,
       ),
     ],
   );
@@ -313,14 +313,14 @@ class MessageWidgetState extends State<MessageWidget> {
       return IconButton(
         tooltip: AppLocalizations.of(context)!.edit,
         icon: const Icon(Icons.edit),
-        onPressed: ArtificialIntelligenceController.instance.canPrompt ? onEdit : null,
+        onPressed: AIController.instance.canPrompt ? onEdit : null,
       );
     } 
     else {
       return IconButton(
         tooltip: AppLocalizations.of(context)!.regenerate,
         icon: const Icon(Icons.refresh),
-        onPressed: ArtificialIntelligenceController.instance.canPrompt ? onRegenerate : null,
+        onPressed: AIController.instance.canPrompt ? onRegenerate : null,
       );
     }
   }
@@ -329,6 +329,6 @@ class MessageWidgetState extends State<MessageWidget> {
   Widget buildDeleteButton() => IconButton(
     tooltip: AppLocalizations.of(context)!.delete,
     icon: const Icon(Icons.delete),
-    onPressed: !ArtificialIntelligenceController.instance.busy ? onDelete : null,
+    onPressed: !AIController.instance.busy ? onDelete : null,
   );
 }

@@ -5,7 +5,7 @@ class RemoteModelTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: RemoteArtificialIntelligenceController.instance!,
+    listenable: RemoteAIController.instance!,
     builder: buildRow,
   );
 
@@ -13,14 +13,14 @@ class RemoteModelTextField extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Expanded(
-        child: RemoteArtificialIntelligenceController.instance!.customModel
+        child: RemoteAIController.instance!.customModel
           ? buildCustom(context)
           : buildNormal(context),
       ),
       const SizedBox(width: 8),
       Switch(
-        value: RemoteArtificialIntelligenceController.instance!.customModel,
-        onChanged: (value) => RemoteArtificialIntelligenceController.instance!.customModel = value,
+        value: RemoteAIController.instance!.customModel,
+        onChanged: (value) => RemoteAIController.instance!.customModel = value,
       ),
     ],
   );
@@ -41,9 +41,9 @@ class RemoteModelTextField extends StatelessWidget {
 
 
   Widget buildCustom(BuildContext context) => ListenableTextField(
-    listenable: RemoteArtificialIntelligenceController.instance!,
-    selector: () => RemoteArtificialIntelligenceController.instance!.model,
-    onChanged: (value) => RemoteArtificialIntelligenceController.instance!.model = value,
+    listenable: RemoteAIController.instance!,
+    selector: () => RemoteAIController.instance!.model,
+    onChanged: (value) => RemoteAIController.instance!.model = value,
     labelText: AppLocalizations.of(context)!.remoteModel,
     requireSave: true,
   );

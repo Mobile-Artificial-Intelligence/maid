@@ -74,7 +74,7 @@ class PromptFieldState extends State<PromptField> {
 
       ChatController.instance.root.tail.addChild(newMessage);
 
-      Stream<String> stream = ArtificialIntelligenceController.instance.prompt();
+      Stream<String> stream = AIController.instance.prompt();
 
       newMessage = ChatMessage(content: '', role: ChatMessageRole.assistant);
 
@@ -160,8 +160,8 @@ class PromptFieldState extends State<PromptField> {
 
   /// This is the submit button that will be used to submit the message.
   Widget suffixButtonBuilder() => ListenableBuilder(
-    listenable: ArtificialIntelligenceController.instance,
-    builder: (context, child) => ArtificialIntelligenceController.instance.busy ? 
+    listenable: AIController.instance,
+    builder: (context, child) => AIController.instance.busy ? 
       buildStopButton() : 
       buildPromptButton(),
   );
@@ -170,7 +170,7 @@ class PromptFieldState extends State<PromptField> {
     key: ValueKey('submit_prompt_button'),
     tooltip: AppLocalizations.of(context)!.submitPrompt,
     icon: const Icon(Icons.send),
-    onPressed: isNotEmpty && ArtificialIntelligenceController.instance.canPrompt ? onSubmit : null,
+    onPressed: isNotEmpty && AIController.instance.canPrompt ? onSubmit : null,
     disabledColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
   );
 
@@ -183,6 +183,6 @@ class PromptFieldState extends State<PromptField> {
       color: Theme.of(context).colorScheme.onError,
     ),
     iconSize: 30,
-    onPressed: ArtificialIntelligenceController.instance.stop,
+    onPressed: AIController.instance.stop,
   );
 }

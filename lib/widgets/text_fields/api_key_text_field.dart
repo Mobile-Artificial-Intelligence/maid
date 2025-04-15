@@ -5,9 +5,9 @@ class ApiKeyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListenableTextField(
-    listenable: RemoteArtificialIntelligenceController.instance!,
-    selector: () => RemoteArtificialIntelligenceController.instance!.apiKey, 
-    onChanged: (value) => RemoteArtificialIntelligenceController.instance!.apiKey = value,
+    listenable: RemoteAIController.instance!,
+    selector: () => RemoteAIController.instance!.apiKey, 
+    onChanged: (value) => RemoteAIController.instance!.apiKey = value,
     labelText: AppLocalizations.of(context)!.apiKey,
     requireSave: true,
   );

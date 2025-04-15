@@ -28,7 +28,7 @@ class ChatTileState extends State<ChatTile> {
   @override
   Widget build(BuildContext context) => InkWell(
     key: key,
-    onTap: !ArtificialIntelligenceController.instance.busy ? onChatChange : null,
+    onTap: !AIController.instance.busy ? onChatChange : null,
     onSecondaryTap: openPopover, 
     onLongPress: openPopover,
     child: buildTile(),

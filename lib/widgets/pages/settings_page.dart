@@ -51,7 +51,7 @@ class SettingsPage extends StatelessWidget {
         onPressed: () {
           AppSettings.instance.clear();
           ChatController.instance.clear();
-          ArtificialIntelligenceController.instance.clear();
+          AIController.instance.clear();
         }, 
         child: Text(AppLocalizations.of(context)!.clearCache)
       )

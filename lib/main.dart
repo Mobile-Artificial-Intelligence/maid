@@ -103,15 +103,15 @@ class MaidState extends State<Maid> {
   void initState() {
     super.initState();
     
-    ArtificialIntelligenceController.load();
+    AIController.load();
   }
 
   Future<void> switchAi(String type) async {
-    await ArtificialIntelligenceController.instance.save();
+    await AIController.instance.save();
 
-    if (ArtificialIntelligenceController.instance.type == type) return;
+    if (AIController.instance.type == type) return;
 
-    await ArtificialIntelligenceController.load(type);
+    await AIController.load(type);
 
     setState(() => log('AI switched to $type'));
   }
