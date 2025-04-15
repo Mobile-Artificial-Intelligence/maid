@@ -149,6 +149,8 @@ class MessageWidgetState extends State<MessageWidget> {
       }
     }
 
+    children.add(buildTime());
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
@@ -181,6 +183,17 @@ class MessageWidgetState extends State<MessageWidget> {
       buildRole(),
       buildActions(),
     ],
+  );
+
+  Widget buildTime() => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Text(
+      DateFormat('hh:mm a, MMM d y').format(widget.message.createdAt),
+      style: TextStyle(
+        fontSize: 12.0,
+        color: Theme.of(context).colorScheme.onSurface.withAlpha(150),
+      ),
+    )
   );
 
   /// Builds the top row of the message when the message is being edited.
