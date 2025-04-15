@@ -97,12 +97,28 @@ class ChatMessage extends ChangeNotifier {
       );
     }
 
+    DateTime? createdAt;
+    if (map['create_time'] is String) {
+      createdAt = DateTime.parse(map['create_time']);
+    }
+    else if (map['create_time'] is double) {
+      createdAt = DateTime.fromMillisecondsSinceEpoch((map['create_time'] * 1000 as double).toInt());
+    }
+
+    DateTime? updatedAt;
+    if (map['update_time'] is String) {
+      updatedAt = DateTime.parse(map['update_time']);
+    }
+    else if (map['update_time'] is double) {
+      updatedAt = DateTime.fromMillisecondsSinceEpoch((map['update_time'] * 1000 as double).toInt());
+    }
+
     return ChatMessage(
       id: id,
       role: ChatMessageRole.fromString(map['role']),
       content: map['content'],
-      createdAt: DateTime.parse(map['created_at']),
-      updatedAt: DateTime.parse(map['updated_at']),
+      createdAt: createdAt,
+      updatedAt: updatedAt,
       children: children,
       currentChild: currentChild,
     );
@@ -249,8 +265,8 @@ class ChatMessage extends ChangeNotifier {
       'current_child': currentChild?.id.value,
       'role': role.name,
       'content': content,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'create_time': createdAt.toIso8601String(),
+      'update_time': updatedAt.toIso8601String(),
     }];
 
     for (final child in _children) {
