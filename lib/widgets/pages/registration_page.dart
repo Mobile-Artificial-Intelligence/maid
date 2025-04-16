@@ -8,24 +8,107 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class RegistrationPageState extends State<RegistrationPage> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.dispose();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final usernameController = TextEditingController();
+
+  Future<void> signUp() async {
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    final email = emailController.text;
+    final password = passwordController.text;
+    final username = usernameController.text;
+    try {
+      await Supabase.instance.client.auth.signUp(
+          email: email, password: password, data: {'username': username});
+      
+      if (!mounted) return;
+      Navigator.of(context).pushNamedAndRemoveUntil('/chat', (route) => false);
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => ErrorDialog(exception: error),
+      );
+    }
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text('Registration'),
-      centerTitle: true,
-    ),
-  );
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+      ),
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          children: [
+            TextFormField(
+              controller: usernameController,
+              decoration: const InputDecoration(
+                label: Text('Username'),
+              ),
+              validator: (val) {
+                if (val == null || val.isEmpty) {
+                  return 'Required';
+                }
+                final isValid = RegExp(r'^[A-Za-z0-9_]{3,24}$').hasMatch(val);
+                if (!isValid) {
+                  return '3-24 long with alphanumeric or underscore';
+                }
+                return null;
+              },
+            ),
+            SizedBox(width: 16, height: 16),
+            TextFormField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                label: Text('Email'),
+              ),
+              validator: (val) {
+                if (val == null || val.isEmpty) {
+                  return 'Required';
+                }
+                return null;
+              },
+              keyboardType: TextInputType.emailAddress,
+            ),
+            SizedBox(width: 16, height: 16),
+            TextFormField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                label: Text('Password'),
+              ),
+              validator: (val) {
+                if (val == null || val.isEmpty) {
+                  return 'Required';
+                }
+                if (val.length < 6) {
+                  return '6 characters minimum';
+                }
+                return null;
+              },
+            ),
+            SizedBox(width: 16, height: 16),
+            ElevatedButton(
+              onPressed: signUp,
+              child: const Text('Register'),
+            ),
+            SizedBox(width: 16, height: 16),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/login');
+              },
+              child: const Text('I already have an account'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
