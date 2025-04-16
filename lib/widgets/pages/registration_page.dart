@@ -34,8 +34,7 @@ class RegistrationPageState extends State<RegistrationPage> {
       setState(() => submitting = false);
 
       if (!mounted) return;
-      Navigator.of(context).popUntil((route) => route.isFirst);
-      Navigator.of(context).pushNamed('/login');
+      Navigator.of(context).pushReplacementNamed('/login');
       
       showDialog(
         context: context,

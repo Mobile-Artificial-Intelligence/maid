@@ -1,7 +1,9 @@
 part of 'package:maid/main.dart';
 
 class MainDrawer extends StatelessWidget {
-  const MainDrawer({super.key});
+  final ValueNotifier<Session?> sessionNotifier = ValueNotifier(Supabase.instance.client.auth.currentSession);
+
+  MainDrawer({super.key});
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -73,13 +75,14 @@ class MainDrawer extends StatelessWidget {
 
   Widget buildFooter(BuildContext context) => Padding(
     padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-    child: buildFooterRow(context)
+    child: ListenableBuilder(
+      listenable: sessionNotifier, 
+      builder: buildFooterRow
+    )
   );
 
-  Widget buildFooterRow(BuildContext context) {
-    final currentSession = Supabase.instance.client.auth.currentSession;
-
-    if (currentSession == null) {
+  Widget buildFooterRow(BuildContext context, Widget? child) {
+    if (sessionNotifier.value == null) {
       return buildLoggedOutRow(context);
     }
 
@@ -98,12 +101,15 @@ class MainDrawer extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(
-        Supabase.instance.client.auth.currentSession?.user.email ?? 'User Email',
-        style: Theme.of(context).textTheme.bodySmall,
+        Supabase.instance.client.auth.currentSession?.user.userMetadata?['username'] ?? 'User',
+        style: Theme.of(context).textTheme.titleSmall,
       ),
       IconButton(
         tooltip: 'Logout', // TODO: Localize
-        onPressed: () => Supabase.instance.client.auth.signOut(),
+        onPressed: () async {
+          await Supabase.instance.client.auth.signOut();
+          sessionNotifier.value = Supabase.instance.client.auth.currentSession;
+        },
         icon: const Icon(Icons.logout),
       ),
     ],

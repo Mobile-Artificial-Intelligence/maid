@@ -16,7 +16,7 @@ class HomePageState extends State<HomePage> {
 
   Widget scaffoldBuilder(BuildContext context, Widget? child) => Scaffold(
     appBar: buildAppBar(),
-    drawer: const MainDrawer(),
+    drawer: MainDrawer(),
     body: buildBody(),
   );
 
