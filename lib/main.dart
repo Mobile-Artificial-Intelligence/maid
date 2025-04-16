@@ -69,6 +69,8 @@ part 'widgets/pages/about_page.dart';
 part 'widgets/pages/debug_page.dart';
 part 'widgets/pages/home_page.dart';
 part 'widgets/pages/huggingface_page.dart';
+part 'widgets/pages/login_page.dart';
+part 'widgets/pages/registration_page.dart';
 part 'widgets/pages/settings_page.dart';
 
 part 'widgets/settings/artificial_intelligence_settings.dart';
@@ -161,6 +163,8 @@ class MaidState extends State<Maid> {
       '/settings': (context) => SettingsPage(),
       '/chat': (context) => HomePage(),
       '/about': (context) => const AboutPage(),
+      '/login': (context) => LoginPage(),
+      '/register': (context) => RegistrationPage(),
       '/huggingface': (context) => HuggingFacePage(),
       if (kDebugMode) '/debug': (context) => DebugPage(),
     },

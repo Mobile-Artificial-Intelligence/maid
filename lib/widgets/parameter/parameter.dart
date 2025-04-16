@@ -22,6 +22,13 @@ class ParameterState extends State<Parameter> {
     valueController.text = widget.overrideValue != null ? widget.overrideValue.toString() : '';
   }
 
+  @override
+  void dispose() {
+    keyController.dispose();
+    valueController.dispose();
+    super.dispose();
+  }
+
   void onChange() {
     final key = keyController.text;
     final value = valueController.text;

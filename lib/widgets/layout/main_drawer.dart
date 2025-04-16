@@ -89,8 +89,8 @@ class MainDrawer extends StatelessWidget {
   Widget buildLoggedOutRow(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
-      TextButton(onPressed: () {}, child: Text('Login')),
-      TextButton(onPressed: () {}, child: Text('Sign Up')),
+      TextButton(onPressed: () => Navigator.of(context).pushNamed('/login'), child: Text('Login')),
+      TextButton(onPressed: () => Navigator.of(context).pushNamed('/register'), child: Text('Register')),
     ],
   );
 

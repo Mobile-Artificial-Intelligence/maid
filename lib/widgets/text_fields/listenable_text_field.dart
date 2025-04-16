@@ -28,6 +28,12 @@ class ListenableTextFieldState<T> extends State<ListenableTextField<T>> {
   final TextEditingController controller = TextEditingController();
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: widget.listenable,
     builder: buildTextField
