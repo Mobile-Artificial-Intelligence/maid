@@ -297,4 +297,76 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'Questo modello è stato intenzionalmente progettato per generare contenuti NSFW. Ciò può includere contenuti sessuali espliciti o violenti che coinvolgono tortura, stupro, omicidio e/o comportamenti sessualmente devianti. Se sei sensibile a questi temi, o se la loro discussione viola le leggi locali, NON PROSEGUIRE.';
+
+  @override
+  String get login => 'Accedi';
+
+  @override
+  String get logout => 'Esci';
+
+  @override
+  String get register => 'Registrati';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get confirmPassword => 'Conferma password';
+
+  @override
+  String get resetCode => 'Codice di reset';
+
+  @override
+  String get resetCodeSent => 'Un codice di reset è stato inviato alla tua email.';
+
+  @override
+  String get sendResetCode => 'Invia codice di reset';
+
+  @override
+  String get sendAgain => 'Invia di nuovo';
+
+  @override
+  String get required => 'Obbligatorio';
+
+  @override
+  String get invalidEmail => 'Inserisci un\'email valida';
+
+  @override
+  String get invalidUserName => 'Deve essere tra 3 e 24 caratteri, alfanumerico o underscore';
+
+  @override
+  String get invalidPasswordLength => 'Almeno 8 caratteri';
+
+  @override
+  String get invalidPassword => 'Includi maiuscole, minuscole, numero e simbolo';
+
+  @override
+  String get passwordNoMatch => 'Le password non corrispondono';
+
+  @override
+  String get createAccount => 'Crea un account';
+
+  @override
+  String get resetPassword => 'Reimposta la password';
+
+  @override
+  String get backToLogin => 'Torna al login';
+
+  @override
+  String get alreadyHaveAccount => 'Ho già un account';
+
+  @override
+  String get success => 'Successo';
+
+  @override
+  String get registrationSuccess => 'Registrazione avvenuta con successo';
+
+  @override
+  String get resetSuccess => 'La tua password è stata reimpostata correttamente.';
+
+  @override
+  String get emailVerify => 'Controlla la tua email per la verifica.';
 }

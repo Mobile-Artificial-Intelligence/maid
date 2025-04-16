@@ -297,4 +297,76 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'This model is intentionally designed to produce NSFW content. This may include explicit sexual or violent content involving torture, rape, murder and / or sexually deviant behaviour. If you are sensitive to such topics, or the discussion of such topics violates local laws, DO NOT PROCEED.';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get resetCode => 'Reset Code';
+
+  @override
+  String get resetCodeSent => 'A reset code has been sent to your email.';
+
+  @override
+  String get sendResetCode => 'Send Reset Code';
+
+  @override
+  String get sendAgain => 'Send Again';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email';
+
+  @override
+  String get invalidUserName => 'Must be 3-24 characters, alphanumeric or underscore';
+
+  @override
+  String get invalidPasswordLength => 'Minimum 8 characters';
+
+  @override
+  String get invalidPassword => 'Include upper, lower, number, and symbol';
+
+  @override
+  String get passwordNoMatch => 'Passwords do not match';
+
+  @override
+  String get createAccount => 'Create an account';
+
+  @override
+  String get resetPassword => 'Reset password';
+
+  @override
+  String get backToLogin => 'Back to Login';
+
+  @override
+  String get alreadyHaveAccount => 'I already have an account';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get registrationSuccess => 'Registration Successful';
+
+  @override
+  String get resetSuccess => 'Your password has been reset successfully.';
+
+  @override
+  String get emailVerify => 'Please check your email for verification.';
 }

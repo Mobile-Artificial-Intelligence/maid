@@ -297,4 +297,76 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'Эта модель была намеренно разработана для создания NSFW-контента. Это может включать откровенные сексуальные или жестокие сцены, включая пытки, изнасилование, убийство и/или сексуально девиантное поведение. Если вы чувствительны к таким темам или обсуждение таких тем нарушает местные законы, НЕ ПРОДОЛЖАЙТЕ.';
+
+  @override
+  String get login => 'Войти';
+
+  @override
+  String get logout => 'Выйти';
+
+  @override
+  String get register => 'Зарегистрироваться';
+
+  @override
+  String get email => 'Электронная почта';
+
+  @override
+  String get password => 'Пароль';
+
+  @override
+  String get confirmPassword => 'Подтвердите пароль';
+
+  @override
+  String get resetCode => 'Код сброса';
+
+  @override
+  String get resetCodeSent => 'Код сброса был отправлен на вашу электронную почту.';
+
+  @override
+  String get sendResetCode => 'Отправить код сброса';
+
+  @override
+  String get sendAgain => 'Отправить снова';
+
+  @override
+  String get required => 'Обязательно';
+
+  @override
+  String get invalidEmail => 'Пожалуйста, введите действующий электронный адрес';
+
+  @override
+  String get invalidUserName => 'Должно быть от 3 до 24 символов, буквы, цифры или нижнее подчеркивание';
+
+  @override
+  String get invalidPasswordLength => 'Минимум 8 символов';
+
+  @override
+  String get invalidPassword => 'Включайте большие и маленькие буквы, цифры и символы';
+
+  @override
+  String get passwordNoMatch => 'Пароли не совпадают';
+
+  @override
+  String get createAccount => 'Создать аккаунт';
+
+  @override
+  String get resetPassword => 'Сбросить пароль';
+
+  @override
+  String get backToLogin => 'Назад к входу';
+
+  @override
+  String get alreadyHaveAccount => 'У меня уже есть аккаунт';
+
+  @override
+  String get success => 'Успех';
+
+  @override
+  String get registrationSuccess => 'Регистрация прошла успешно';
+
+  @override
+  String get resetSuccess => 'Ваш пароль успешно сброшен.';
+
+  @override
+  String get emailVerify => 'Пожалуйста, проверьте свою электронную почту для подтверждения.';
 }

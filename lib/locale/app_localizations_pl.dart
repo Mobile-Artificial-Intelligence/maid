@@ -297,4 +297,76 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'Ten model został celowo zaprojektowany do generowania treści NSFW. Może to obejmować wyraźne treści seksualne lub brutalne, w tym tortury, gwałt, morderstwo i/lub zachowania seksualnie dewiacyjne. Jeśli jesteś wrażliwy na takie tematy lub ich omawianie narusza lokalne prawo, NIE KONTYNUUJ.';
+
+  @override
+  String get login => 'Zaloguj się';
+
+  @override
+  String get logout => 'Wyloguj się';
+
+  @override
+  String get register => 'Zarejestruj się';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Hasło';
+
+  @override
+  String get confirmPassword => 'Potwierdź hasło';
+
+  @override
+  String get resetCode => 'Kod resetujący';
+
+  @override
+  String get resetCodeSent => 'Kod resetujący został wysłany na Twój email.';
+
+  @override
+  String get sendResetCode => 'Wyślij kod resetujący';
+
+  @override
+  String get sendAgain => 'Wyślij ponownie';
+
+  @override
+  String get required => 'Wymagane';
+
+  @override
+  String get invalidEmail => 'Wprowadź prawidłowy email';
+
+  @override
+  String get invalidUserName => 'Musi mieć od 3 do 24 znaków, zawierać litery, cyfry lub podkreślenie';
+
+  @override
+  String get invalidPasswordLength => 'Minimum 8 znaków';
+
+  @override
+  String get invalidPassword => 'Zawierać wielkie, małe litery, cyfry i symbol';
+
+  @override
+  String get passwordNoMatch => 'Hasła nie pasują do siebie';
+
+  @override
+  String get createAccount => 'Utwórz konto';
+
+  @override
+  String get resetPassword => 'Resetuj hasło';
+
+  @override
+  String get backToLogin => 'Powrót do logowania';
+
+  @override
+  String get alreadyHaveAccount => 'Mam już konto';
+
+  @override
+  String get success => 'Sukces';
+
+  @override
+  String get registrationSuccess => 'Rejestracja zakończona sukcesem';
+
+  @override
+  String get resetSuccess => 'Twoje hasło zostało pomyślnie zresetowane.';
+
+  @override
+  String get emailVerify => 'Sprawdź swój email, aby zweryfikować.';
 }

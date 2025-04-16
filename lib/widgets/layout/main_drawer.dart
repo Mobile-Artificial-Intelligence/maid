@@ -92,8 +92,8 @@ class MainDrawer extends StatelessWidget {
   Widget buildLoggedOutRow(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
-      TextButton(onPressed: () => Navigator.of(context).pushNamed('/login'), child: Text('Login')),
-      TextButton(onPressed: () => Navigator.of(context).pushNamed('/register'), child: Text('Register')),
+      TextButton(onPressed: () => Navigator.of(context).pushNamed('/login'), child: Text(AppLocalizations.of(context)!.login)),
+      TextButton(onPressed: () => Navigator.of(context).pushNamed('/register'), child: Text(AppLocalizations.of(context)!.register)),
     ],
   );
 
@@ -101,11 +101,11 @@ class MainDrawer extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(
-        Supabase.instance.client.auth.currentSession?.user.userMetadata?['username'] ?? 'User',
+        Supabase.instance.client.auth.currentSession?.user.userMetadata?['username'] ?? AppLocalizations.of(context)!.user,
         style: Theme.of(context).textTheme.titleSmall,
       ),
       IconButton(
-        tooltip: 'Logout', // TODO: Localize
+        tooltip: AppLocalizations.of(context)!.logout,
         onPressed: () async {
           await Supabase.instance.client.auth.signOut();
           sessionNotifier.value = Supabase.instance.client.auth.currentSession;

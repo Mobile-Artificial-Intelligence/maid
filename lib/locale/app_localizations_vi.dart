@@ -297,4 +297,76 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'Mô hình này được thiết kế có chủ đích để tạo ra nội dung NSFW. Điều này có thể bao gồm nội dung tình dục hoặc bạo lực rõ ràng liên quan đến tra tấn, hiếp dâm, giết người và/hoặc hành vi lệch lạc tình dục. Nếu bạn nhạy cảm với những chủ đề như vậy hoặc việc thảo luận những chủ đề này vi phạm pháp luật địa phương, VUI LÒNG KHÔNG TIẾP TỤC.';
+
+  @override
+  String get login => 'Đăng nhập';
+
+  @override
+  String get logout => 'Đăng xuất';
+
+  @override
+  String get register => 'Đăng ký';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Mật khẩu';
+
+  @override
+  String get confirmPassword => 'Xác nhận mật khẩu';
+
+  @override
+  String get resetCode => 'Mã đặt lại';
+
+  @override
+  String get resetCodeSent => 'Một mã đặt lại đã được gửi đến email của bạn.';
+
+  @override
+  String get sendResetCode => 'Gửi mã đặt lại';
+
+  @override
+  String get sendAgain => 'Gửi lại';
+
+  @override
+  String get required => 'Bắt buộc';
+
+  @override
+  String get invalidEmail => 'Vui lòng nhập email hợp lệ';
+
+  @override
+  String get invalidUserName => 'Phải có từ 3 đến 24 ký tự, chữ, số hoặc gạch dưới';
+
+  @override
+  String get invalidPasswordLength => 'Tối thiểu 8 ký tự';
+
+  @override
+  String get invalidPassword => 'Bao gồm chữ hoa, chữ thường, số và ký hiệu';
+
+  @override
+  String get passwordNoMatch => 'Mật khẩu không khớp';
+
+  @override
+  String get createAccount => 'Tạo tài khoản';
+
+  @override
+  String get resetPassword => 'Đặt lại mật khẩu';
+
+  @override
+  String get backToLogin => 'Quay lại đăng nhập';
+
+  @override
+  String get alreadyHaveAccount => 'Tôi đã có tài khoản';
+
+  @override
+  String get success => 'Thành công';
+
+  @override
+  String get registrationSuccess => 'Đăng ký thành công';
+
+  @override
+  String get resetSuccess => 'Mật khẩu của bạn đã được đặt lại thành công.';
+
+  @override
+  String get emailVerify => 'Vui lòng kiểm tra email của bạn để xác nhận.';
 }

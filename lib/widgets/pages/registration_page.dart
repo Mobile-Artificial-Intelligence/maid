@@ -94,7 +94,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Text(
-        'Register',
+        AppLocalizations.of(context)!.register,
         style: Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.center,
       ),
@@ -109,28 +109,28 @@ class RegistrationPageState extends State<RegistrationPage> {
       const SizedBox(height: 16),
       ElevatedButton(
         onPressed: submitting ? null : signUp,
-        child: const Text('Register'),
+        child: Text(AppLocalizations.of(context)!.register),
       ),
       const SizedBox(height: 16),
       TextButton(
         onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
-        child: const Text('I already have an account'),
+        child: Text(AppLocalizations.of(context)!.alreadyHaveAccount),
       ),
     ],
   );
 
   Widget buildUsernameField() => TextFormField(
     controller: usernameController,
-    decoration: const InputDecoration(
-      label: Text('Username'),
+    decoration: InputDecoration(
+      label: Text(AppLocalizations.of(context)!.userName),
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
-        return 'Required';
+        return AppLocalizations.of(context)!.required;
       }
       final isValid = RegExp(r'^[A-Za-z0-9_]{3,24}$', caseSensitive: false).hasMatch(val);
       if (!isValid) {
-        return 'Must be 3-24 characters, alphanumeric or underscore';
+        return AppLocalizations.of(context)!.invalidUserName;
       }
       return null;
     },
@@ -138,16 +138,16 @@ class RegistrationPageState extends State<RegistrationPage> {
 
   Widget buildEmailField() => TextFormField(
     controller: emailController,
-    decoration: const InputDecoration(
-      label: Text('Email'),
+    decoration: InputDecoration(
+      label: Text(AppLocalizations.of(context)!.email),
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
-        return 'Required';
+        return AppLocalizations.of(context)!.required;
       }
       final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
       if (!emailRegex.hasMatch(val)) {
-        return 'Please enter a valid email';
+        return AppLocalizations.of(context)!.invalidEmail;
       }
       return null;
     },
@@ -158,7 +158,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     controller: passwordController,
     obscureText: obscurePassword,
     decoration: InputDecoration(
-      label: Text('Password'),
+      label: Text(AppLocalizations.of(context)!.password),
       suffixIcon: IconButton(
         onPressed: () => setState(() => obscurePassword = !obscurePassword), 
         icon: obscurePassword 
@@ -168,17 +168,17 @@ class RegistrationPageState extends State<RegistrationPage> {
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
-        return 'Required';
+        return AppLocalizations.of(context)!.required;
       }
       if (val.length < 8) {
-        return 'Minimum 8 characters';
+        return AppLocalizations.of(context)!.invalidPasswordLength;
       }
       final hasUppercase = val.contains(RegExp(r'[A-Z]'));
       final hasLowercase = val.contains(RegExp(r'[a-z]'));
       final hasDigit = val.contains(RegExp(r'[0-9]'));
       final hasSymbol = val.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
       if (!hasUppercase || !hasLowercase || !hasDigit || !hasSymbol) {
-        return 'Include upper, lower, number, and symbol';
+        return AppLocalizations.of(context)!.invalidPassword;
       }
       return null;
     },
@@ -188,7 +188,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     controller: passwordConfirmController,
     obscureText: obscurePasswordConfirm,
     decoration: InputDecoration(
-      label: Text('Confirm Password'),
+      label: Text(AppLocalizations.of(context)!.confirmPassword),
       suffixIcon: IconButton(
         onPressed: () => setState(() => obscurePasswordConfirm = !obscurePasswordConfirm), 
         icon: obscurePasswordConfirm 
@@ -198,23 +198,23 @@ class RegistrationPageState extends State<RegistrationPage> {
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
-        return 'Required';
+        return AppLocalizations.of(context)!.required;
       }
       if (val != passwordController.text) {
-        return 'Passwords do not match';
+        return AppLocalizations.of(context)!.passwordNoMatch;
       }
       return null;
     },
   );
 
   Widget buildRegistrationSuccessDialog(BuildContext context) => AlertDialog(
-    title: const Text('Registration Successful'),
-    content: const Text('Please check your email for verification.'),
+    title: Text(AppLocalizations.of(context)!.registrationSuccess),
+    content: Text(AppLocalizations.of(context)!.emailVerify),
     actionsAlignment: MainAxisAlignment.center,
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context).pop(),
-        child: const Text('OK'),
+        child: Text(AppLocalizations.of(context)!.ok),
       ),
     ],
   );

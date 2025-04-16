@@ -86,7 +86,7 @@ class LoginPageState extends State<LoginPage> {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Text(
-        'Login',
+        AppLocalizations.of(context)!.login,
         style: Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.center,
       ),
@@ -97,7 +97,7 @@ class LoginPageState extends State<LoginPage> {
       const SizedBox(height: 16),
       ElevatedButton(
         onPressed: submitting ? null : logIn,
-        child: const Text('Login'),
+        child: Text(AppLocalizations.of(context)!.login),
       ),
       const SizedBox(height: 16),
       buildRow(context),
@@ -106,16 +106,16 @@ class LoginPageState extends State<LoginPage> {
 
   Widget buildEmailField() => TextFormField(
     controller: emailController,
-    decoration: const InputDecoration(
-      label: Text('Email'),
+    decoration: InputDecoration(
+      label: Text(AppLocalizations.of(context)!.email),
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
-        return 'Required';
+        return AppLocalizations.of(context)!.required;
       }
       final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
       if (!emailRegex.hasMatch(val)) {
-        return 'Please enter a valid email';
+        return AppLocalizations.of(context)!.invalidEmail;
       }
       return null;
     },
@@ -126,7 +126,7 @@ class LoginPageState extends State<LoginPage> {
     controller: passwordController,
     obscureText: obscurePassword,
     decoration: InputDecoration(
-      label: const Text('Password'),
+      label: Text(AppLocalizations.of(context)!.password),
       suffixIcon: IconButton(
         onPressed: () => setState(() => obscurePassword = !obscurePassword),
         icon: obscurePassword
@@ -136,7 +136,7 @@ class LoginPageState extends State<LoginPage> {
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
-        return 'Required';
+        return AppLocalizations.of(context)!.required;
       }
       return null;
     },
@@ -147,11 +147,11 @@ class LoginPageState extends State<LoginPage> {
     children: [
       TextButton(
         onPressed: () => Navigator.of(context).pushReplacementNamed('/register'),
-        child: const Text('Create an account'),
+        child: Text(AppLocalizations.of(context)!.createAccount),
       ),
       TextButton(
         onPressed: () => Navigator.of(context).pushReplacementNamed('/reset-password'),
-        child: const Text('Reset password'),
+        child: Text(AppLocalizations.of(context)!.resetPassword),
       ),
     ],
   );

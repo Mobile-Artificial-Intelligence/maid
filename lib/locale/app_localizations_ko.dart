@@ -297,4 +297,76 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get nsfwWarning => '이 모델은 NSFW(부적절한 콘텐츠)를 생성하도록 의도적으로 설계되었습니다. 여기에는 고문, 강간, 살인 및/또는 성적으로 일탈된 행동과 관련된 노골적인 성적 또는 폭력적인 콘텐츠가 포함될 수 있습니다. 이러한 주제에 민감하시거나 해당 주제에 대한 논의가 현지 법률을 위반하는 경우, 진행하지 마십시오.';
+
+  @override
+  String get login => '로그인';
+
+  @override
+  String get logout => '로그아웃';
+
+  @override
+  String get register => '가입하기';
+
+  @override
+  String get email => '이메일';
+
+  @override
+  String get password => '비밀번호';
+
+  @override
+  String get confirmPassword => '비밀번호 확인';
+
+  @override
+  String get resetCode => '재설정 코드';
+
+  @override
+  String get resetCodeSent => '재설정 코드가 이메일로 전송되었습니다.';
+
+  @override
+  String get sendResetCode => '재설정 코드 전송';
+
+  @override
+  String get sendAgain => '다시 보내기';
+
+  @override
+  String get required => '필수';
+
+  @override
+  String get invalidEmail => '유효한 이메일을 입력하세요';
+
+  @override
+  String get invalidUserName => '3-24자, 영문자, 숫자 또는 밑줄만 사용 가능';
+
+  @override
+  String get invalidPasswordLength => '최소 8자';
+
+  @override
+  String get invalidPassword => '대문자, 소문자, 숫자 및 기호를 포함하세요';
+
+  @override
+  String get passwordNoMatch => '비밀번호가 일치하지 않습니다';
+
+  @override
+  String get createAccount => '계정 생성';
+
+  @override
+  String get resetPassword => '비밀번호 재설정';
+
+  @override
+  String get backToLogin => '로그인으로 돌아가기';
+
+  @override
+  String get alreadyHaveAccount => '이미 계정이 있습니다';
+
+  @override
+  String get success => '성공';
+
+  @override
+  String get registrationSuccess => '등록이 성공적으로 완료되었습니다';
+
+  @override
+  String get resetSuccess => '비밀번호가 성공적으로 재설정되었습니다.';
+
+  @override
+  String get emailVerify => '확인을 위해 이메일을 확인하세요.';
 }

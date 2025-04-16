@@ -297,4 +297,76 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'このモデルは、意図的にNSFW（閲覧注意）コンテンツを生成するように設計されています。これには、拷問、レイプ、殺人、および／または性的に逸脱した行為を含む、露骨な性的または暴力的なコンテンツが含まれる場合があります。こうした内容に敏感な方、またはその議論が現地の法律に違反する場合は、先に進まないでください。';
+
+  @override
+  String get login => 'ログイン';
+
+  @override
+  String get logout => 'ログアウト';
+
+  @override
+  String get register => '登録する';
+
+  @override
+  String get email => 'メールアドレス';
+
+  @override
+  String get password => 'パスワード';
+
+  @override
+  String get confirmPassword => 'パスワードの確認';
+
+  @override
+  String get resetCode => 'リセットコード';
+
+  @override
+  String get resetCodeSent => 'リセットコードがメールに送信されました。';
+
+  @override
+  String get sendResetCode => 'リセットコードを送信';
+
+  @override
+  String get sendAgain => '再送信';
+
+  @override
+  String get required => '必須';
+
+  @override
+  String get invalidEmail => '有効なメールアドレスを入力してください';
+
+  @override
+  String get invalidUserName => '3～24文字、英数字またはアンダースコアである必要があります';
+
+  @override
+  String get invalidPasswordLength => '最低8文字';
+
+  @override
+  String get invalidPassword => '大文字、小文字、数字、記号を含めてください';
+
+  @override
+  String get passwordNoMatch => 'パスワードが一致しません';
+
+  @override
+  String get createAccount => 'アカウントを作成';
+
+  @override
+  String get resetPassword => 'パスワードをリセット';
+
+  @override
+  String get backToLogin => 'ログインに戻る';
+
+  @override
+  String get alreadyHaveAccount => '既にアカウントをお持ちですか';
+
+  @override
+  String get success => '成功';
+
+  @override
+  String get registrationSuccess => '登録に成功しました';
+
+  @override
+  String get resetSuccess => 'パスワードが正常にリセットされました。';
+
+  @override
+  String get emailVerify => '確認のため、メールをチェックしてください。';
 }

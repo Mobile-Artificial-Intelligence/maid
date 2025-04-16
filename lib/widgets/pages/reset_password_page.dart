@@ -37,8 +37,8 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('A reset code has been sent to your email.'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.resetCodeSent),
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating
         ),
@@ -90,14 +90,14 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Success'),
-          content: const Text('Your password has been reset successfully.'),
+          title: Text(AppLocalizations.of(context)!.success),
+          content: Text(AppLocalizations.of(context)!.resetSuccess),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context)
                   .popUntil((route) => route.isFirst),
-              child: const Text('OK'),
+              child: Text(AppLocalizations.of(context)!.ok),
             ),
           ],
         ),
@@ -144,7 +144,7 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Text(
-        'Reset Password',
+        AppLocalizations.of(context)!.resetPassword,
         style: Theme.of(context).textTheme.titleLarge,
         textAlign: TextAlign.center,
       ),
@@ -160,12 +160,12 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
       const SizedBox(height: 16),
       ElevatedButton(
         onPressed: submitting ? null : sendOtp,
-        child: const Text('Send Reset Code'),
+        child: Text(AppLocalizations.of(context)!.sendResetCode),
       ),
       const SizedBox(height: 16),
       TextButton(
         onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
-        child: const Text('Back to Login'),
+        child: Text(AppLocalizations.of(context)!.backToLogin),
       ),
     ]
   );
@@ -180,7 +180,7 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
       const SizedBox(height: 16),
       ElevatedButton(
         onPressed: submitting ? null : resetPasswordWithOtp,
-        child: const Text('Reset Password'),
+        child: Text(AppLocalizations.of(context)!.resetPassword),
       ),
       const SizedBox(height: 16),
       Row(
@@ -188,11 +188,11 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
         children: [
           TextButton(
             onPressed: submitting ? null : sendOtp,
-            child: const Text('Send Again'),
+            child: Text(AppLocalizations.of(context)!.sendAgain),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
-            child: const Text('Back to Login'),
+            child: Text(AppLocalizations.of(context)!.backToLogin),
           ),
         ]
       )
@@ -201,16 +201,16 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
 
   Widget buildEmailField() => TextFormField(
     controller: emailController,
-    decoration: const InputDecoration(
-      label: Text('Email'),
+    decoration: InputDecoration(
+      label: Text(AppLocalizations.of(context)!.email),
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
-        return 'Required';
+        return AppLocalizations.of(context)!.required;
       }
       final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
       if (!emailRegex.hasMatch(val)) {
-        return 'Please enter a valid email';
+        return AppLocalizations.of(context)!.invalidEmail;
       }
       return null;
     },
@@ -219,15 +219,17 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
 
   Widget buildOtpField() => TextFormField(
     controller: otpController,
-    decoration: const InputDecoration(label: Text('Reset Code')),
-    validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+    decoration: InputDecoration(
+      label: Text(AppLocalizations.of(context)!.resetCode)
+    ),
+    validator: (val) => val == null || val.isEmpty ? AppLocalizations.of(context)!.required : null,
   );
 
   Widget buildPasswordField() => TextFormField(
     controller: passwordController,
     obscureText: obscurePassword,
     decoration: InputDecoration(
-      label: Text('Password'),
+      label: Text(AppLocalizations.of(context)!.password),
       suffixIcon: IconButton(
         onPressed: () => setState(() => obscurePassword = !obscurePassword), 
         icon: obscurePassword 
@@ -237,17 +239,17 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
-        return 'Required';
+        return AppLocalizations.of(context)!.required;
       }
       if (val.length < 8) {
-        return 'Minimum 8 characters';
+        return AppLocalizations.of(context)!.invalidPasswordLength;
       }
       final hasUppercase = val.contains(RegExp(r'[A-Z]'));
       final hasLowercase = val.contains(RegExp(r'[a-z]'));
       final hasDigit = val.contains(RegExp(r'[0-9]'));
       final hasSymbol = val.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
       if (!hasUppercase || !hasLowercase || !hasDigit || !hasSymbol) {
-        return 'Include upper, lower, number, and symbol';
+        return AppLocalizations.of(context)!.invalidPassword;
       }
       return null;
     },
@@ -257,7 +259,7 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
     controller: passwordConfirmController,
     obscureText: obscurePasswordConfirm,
     decoration: InputDecoration(
-      label: Text('Confirm Password'),
+      label: Text(AppLocalizations.of(context)!.confirmPassword),
       suffixIcon: IconButton(
         onPressed: () => setState(() => obscurePasswordConfirm = !obscurePasswordConfirm), 
         icon: obscurePasswordConfirm 
@@ -267,10 +269,10 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
-        return 'Required';
+        return AppLocalizations.of(context)!.required;
       }
       if (val != passwordController.text) {
-        return 'Passwords do not match';
+        return AppLocalizations.of(context)!.passwordNoMatch;
       }
       return null;
     },
