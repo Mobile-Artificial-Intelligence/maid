@@ -15,6 +15,10 @@ class RegistrationPageState extends State<RegistrationPage> {
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
 
+  bool submitting = false;
+  bool obscurePassword = true;
+  bool obscurePasswordConfirm = true;
+
   Future<void> signUp() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) {
@@ -24,8 +28,10 @@ class RegistrationPageState extends State<RegistrationPage> {
     final password = passwordController.text;
     final username = usernameController.text;
     try {
+      setState(() => submitting = true);
       await Supabase.instance.client.auth.signUp(
           email: email, password: password, data: {'username': username});
+      setState(() => submitting = false);
 
       if (!mounted) return;
       Navigator.of(context).pushNamedAndRemoveUntil('/chat', (route) => false);
@@ -75,7 +81,7 @@ class RegistrationPageState extends State<RegistrationPage> {
         buildPasswordConfirmField(),
         const SizedBox(height: 16),
         ElevatedButton(
-          onPressed: signUp,
+          onPressed: submitting ? null : signUp,
           child: const Text('Register'),
         ),
         const SizedBox(height: 16),
@@ -124,9 +130,15 @@ class RegistrationPageState extends State<RegistrationPage> {
 
   Widget buildPasswordField() => TextFormField(
     controller: passwordController,
-    obscureText: true,
-    decoration: const InputDecoration(
+    obscureText: obscurePassword,
+    decoration: InputDecoration(
       label: Text('Password'),
+      suffixIcon: IconButton(
+        onPressed: () => setState(() => obscurePassword = !obscurePassword), 
+        icon: obscurePassword 
+          ? const Icon(Icons.visibility_off) 
+          : const Icon(Icons.visibility)
+      )
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
@@ -148,9 +160,15 @@ class RegistrationPageState extends State<RegistrationPage> {
 
   Widget buildPasswordConfirmField() => TextFormField(
     controller: passwordConfirmController,
-    obscureText: true,
-    decoration: const InputDecoration(
+    obscureText: obscurePasswordConfirm,
+    decoration: InputDecoration(
       label: Text('Confirm Password'),
+      suffixIcon: IconButton(
+        onPressed: () => setState(() => obscurePasswordConfirm = !obscurePasswordConfirm), 
+        icon: obscurePasswordConfirm 
+          ? const Icon(Icons.visibility_off) 
+          : const Icon(Icons.visibility)
+      )
     ),
     validator: (val) {
       if (val == null || val.isEmpty) {
