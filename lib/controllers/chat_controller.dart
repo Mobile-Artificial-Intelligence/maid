@@ -60,16 +60,66 @@ class ChatController extends ChangeNotifier {
       allowedExtensions: ['json']
     );
 
-    if (inputFile != null) {
-      final bytes = inputFile.files.single.bytes ?? File(inputFile.files.single.path!).readAsBytesSync();
-      final chatString = utf8.decode(bytes);
-      final chatMapList = jsonDecode(chatString);
-      final chat = ChatMessage.fromMapList(chatMapList);
+    if (inputFile == null) return;
 
-      _chats.insert(0, chat);
-      save();
-      notifyListeners();
+    final bytes = inputFile.files.single.bytes ?? File(inputFile.files.single.path!).readAsBytesSync();
+    final chatString = utf8.decode(bytes);
+    List<Map<String, dynamic>> chatMapList = (jsonDecode(chatString) as List).cast<Map<String, dynamic>>();
+
+    // Handle OpenAI exported data
+    if (chatMapList.first['mapping'] != null) {
+      List<Map<String, dynamic>> newChatMapList = [];
+      for (final conversation in chatMapList) {
+        final mapping = conversation['mapping'] as Map<String, dynamic>;
+        mapping.remove('client-created-root');
+
+        final conversationMapList = mapping.values.map(openAiMapper).toList();
+
+        newChatMapList.addAll(conversationMapList);
+      }
+
+      chatMapList = newChatMapList;
     }
+
+    List<String> rootIds = chatMapList
+      .where((msg) => msg['parent'] == null)
+      .map((msg) => msg['id'] as String).toList();
+
+    _chats.clear();
+    for (final rootId in rootIds) {
+      final chat = ChatMessage.fromMapList(chatMapList, ValueKey<String>(rootId));
+      _chats.add(chat);
+    }
+    
+    save();
+    notifyListeners();
+  }
+
+  Map<String, dynamic> openAiMapper(dynamic msg) {
+    if (msg['message'] == null) {
+      msg['message'] = {
+        'author': {
+          'role': 'system',
+        },
+        'content': {
+          'parts': [''],
+        },
+      };
+    }
+    else if (msg['message']['content']['parts'] == null) {
+      msg['message']['content']['parts'] = [''];
+    }
+
+    return {
+      'id': msg['id'],
+      'parent': msg['parent'] != 'client-created-root' ? msg['parent'] : null,
+      'children': msg['children'],
+      'current_child': msg['children'].isNotEmpty ? msg['children'].last : null,
+      'role': msg['message']['author']['role'],
+      'content': msg['message']['content']['parts'].join('\n'),
+      'create_time': msg['message']['create_time'],
+      'update_time': msg['message']['update_time'],
+    };
   }
 
   void exportChat(ChatMessage chat) async {
