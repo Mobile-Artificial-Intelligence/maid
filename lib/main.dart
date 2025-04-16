@@ -108,6 +108,10 @@ class Maid extends StatefulWidget {
 }
 
 class MaidState extends State<Maid> {
+  static MaidState of(BuildContext context) => context.findAncestorStateOfType<MaidState>()!;
+
+  void rebuild() => setState(() {});
+
   @override
   void initState() {
     super.initState();

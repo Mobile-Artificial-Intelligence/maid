@@ -148,7 +148,6 @@ class ChatController extends ChangeNotifier {
   }
 
   Future<void> save() async {
-    print('Saving chats...');
     final prefs = await SharedPreferences.getInstance();
 
     List<String> chatsStrings = [];
