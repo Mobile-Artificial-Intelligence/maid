@@ -30,7 +30,7 @@ class HomePageState extends State<HomePage> {
 
   Widget buildTitle() => LlamaCppController.instance != null
     ? LoadModelButton()
-    : const RemoteModelDropdown();
+    : RemoteModelDropdown();
 
   Widget buildBody() => Column(
     children: [
