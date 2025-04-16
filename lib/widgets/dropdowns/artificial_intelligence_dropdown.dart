@@ -18,9 +18,6 @@ class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDr
     await AIController.load(type);
 
     setState(() => open = false);
-
-    if (!mounted) return;
-    MaidState.of(context).rebuild();
   }
 
   @override

@@ -1,7 +1,11 @@
 part of 'package:maid/main.dart';
 
 abstract class AIController extends ChangeNotifier {
-  static AIController instance = LlamaCppController();
+  static ValueNotifier<AIController> notifier = ValueNotifier(LlamaCppController());
+  static AIController get instance => notifier.value;
+  static set instance(AIController newInstance) {
+    notifier.value = newInstance;
+  }
 
   static Map<String, String> getTypes(BuildContext context) {
     Map<String, String> types = {};

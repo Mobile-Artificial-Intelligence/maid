@@ -97,27 +97,13 @@ Future<void> main() async {
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrbWN0Y2lpZm9teWV4bHNwb3VhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1OTEzODcsImV4cCI6MjA2MDE2NzM4N30.LkgnbusOxZNBDWIrQoRAWP0oYBO5sAFznhuYTMDWshU',
   );
 
+  await AIController.load();
+
   runApp(Maid());
 }
 
-class Maid extends StatefulWidget {
+class Maid extends StatelessWidget {
   const Maid({super.key});
-
-  @override
-  State<Maid> createState() => MaidState();
-}
-
-class MaidState extends State<Maid> {
-  static MaidState of(BuildContext context) => context.findAncestorStateOfType<MaidState>()!;
-
-  void rebuild() => setState(() {});
-
-  @override
-  void initState() {
-    super.initState();
-    
-    AIController.load();
-  }
 
   static ThemeData getTheme(ColorScheme colorScheme) {
     final appBarTheme = AppBarTheme(
@@ -159,6 +145,11 @@ class MaidState extends State<Maid> {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: AppSettings.instance,
+    builder: buildListener
+  );
+
+  Widget buildListener(BuildContext context, Widget? child) => ListenableBuilder(
+    listenable: AIController.notifier,
     builder: buildApp
   );
 
