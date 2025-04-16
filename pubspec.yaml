@@ -46,6 +46,7 @@ dependencies:
   web: ^1.1.1
   dio: ^5.8.0+1
   path_provider: ^2.1.5
+  supabase_flutter: ^2.8.4
 
 dev_dependencies:
   integration_test:
