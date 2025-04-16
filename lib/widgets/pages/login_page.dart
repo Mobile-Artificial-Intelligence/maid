@@ -53,37 +53,47 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Login'),
-        ),
-        body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: buildForm(context),
-          ),
-        ),
-      );
+    appBar: AppBar(),
+    body: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: buildForm(context),
+      ),
+    ),
+  );
 
   Widget buildForm(BuildContext context) => Form(
     key: formKey,
-    child: ListView(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      children: [
-        buildEmailField(),
-        const SizedBox(height: 16),
-        buildPasswordField(),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: submitting ? null : logIn,
-          child: const Text('Login'),
-        ),
-        const SizedBox(height: 16),
-        TextButton(
-          onPressed: () => Navigator.of(context).pushNamed('/register'),
-          child: const Text('Create an account'),
-        ),
-      ],
+    child: SingleChildScrollView(
+      child: buildColumn(context),
     ),
+  );
+
+  Widget buildColumn(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Text(
+        'Login',
+        style: Theme.of(context).textTheme.titleLarge,
+        textAlign: TextAlign.center,
+      ),
+      const SizedBox(height: 16),
+      buildEmailField(),
+      const SizedBox(height: 16),
+      buildPasswordField(),
+      const SizedBox(height: 16),
+      ElevatedButton(
+        onPressed: submitting ? null : logIn,
+        child: const Text('Login'),
+      ),
+      const SizedBox(height: 16),
+      TextButton(
+        onPressed: () => Navigator.of(context).pushNamed('/register'),
+        child: const Text('Create an account'),
+      ),
+    ],
   );
 
   Widget buildEmailField() => TextFormField(
