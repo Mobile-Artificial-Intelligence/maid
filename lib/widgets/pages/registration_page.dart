@@ -34,7 +34,13 @@ class RegistrationPageState extends State<RegistrationPage> {
       setState(() => submitting = false);
 
       if (!mounted) return;
-      Navigator.of(context).pushNamedAndRemoveUntil('/chat', (route) => false);
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushNamed('/login');
+      
+      showDialog(
+        context: context,
+        builder: buildRegistrationSuccessDialog,
+      );
     } catch (error) {
       showDialog(
         context: context,
@@ -179,5 +185,17 @@ class RegistrationPageState extends State<RegistrationPage> {
       }
       return null;
     },
+  );
+
+  Widget buildRegistrationSuccessDialog(BuildContext context) => AlertDialog(
+    title: const Text('Registration Successful'),
+    content: const Text('Please check your email for verification.'),
+    actionsAlignment: MainAxisAlignment.center,
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: const Text('OK'),
+      ),
+    ],
   );
 }
