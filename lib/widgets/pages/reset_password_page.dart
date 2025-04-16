@@ -21,8 +21,7 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
   bool obscurePasswordConfirm = true;
 
   Future<void> sendOtp() async {
-    final isValid = formKey.currentState!.validate();
-    if (!isValid) return;
+    if (!otpSent && !formKey.currentState!.validate()) return;
 
     final email = emailController.text;
 
@@ -44,7 +43,18 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
           behavior: SnackBarBehavior.floating
         ),
       );
-    } catch (error) {
+    } 
+    on AuthException catch (error) {
+      setState(() => submitting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message),
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating
+        ),
+      );
+    } 
+    catch (error) {
       setState(() => submitting = false);
       showDialog(
         context: context,
@@ -129,41 +139,65 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
       );
 
   Widget buildColumn(BuildContext context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Text(
+        'Reset Password',
+        style: Theme.of(context).textTheme.titleLarge,
+        textAlign: TextAlign.center,
+      ),
+      const SizedBox(height: 16),
+      if (otpSent) buildResetColumn() else
+        buildRequestColumn()
+    ],
+  );
+
+  Widget buildRequestColumn() => Column(
+    children: [
+      buildEmailField(),
+      const SizedBox(height: 16),
+      ElevatedButton(
+        onPressed: submitting ? null : sendOtp,
+        child: const Text('Send Reset Code'),
+      ),
+      const SizedBox(height: 16),
+      TextButton(
+        onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
+        child: const Text('Back to Login'),
+      ),
+    ]
+  );
+
+  Widget buildResetColumn() => Column(
+    children: [
+      buildOtpField(),
+      const SizedBox(height: 16),
+      buildPasswordField(),
+      const SizedBox(height: 16),
+      buildPasswordConfirmField(),
+      const SizedBox(height: 16),
+      ElevatedButton(
+        onPressed: submitting ? null : resetPasswordWithOtp,
+        child: const Text('Reset Password'),
+      ),
+      const SizedBox(height: 16),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(
-            'Reset Password',
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
+          TextButton(
+            onPressed: submitting ? null : sendOtp,
+            child: const Text('Send Again'),
           ),
-          const SizedBox(height: 16),
-          buildEmailField(),
-          const SizedBox(height: 16),
-          if (otpSent) ...[
-            buildOtpField(),
-            const SizedBox(height: 16),
-            buildPasswordField(),
-            const SizedBox(height: 16),
-            buildPasswordConfirmField(),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: submitting ? null : resetPasswordWithOtp,
-              child: const Text('Reset Password'),
-            ),
-          ] else
-            ElevatedButton(
-              onPressed: submitting ? null : sendOtp,
-              child: const Text('Send Reset Code'),
-            ),
-          const SizedBox(height: 16),
           TextButton(
             onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
             child: const Text('Back to Login'),
           ),
-        ],
-      );
+        ]
+      )
+    ]
+  );
 
   Widget buildEmailField() => TextFormField(
     controller: emailController,

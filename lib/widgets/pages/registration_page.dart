@@ -40,7 +40,18 @@ class RegistrationPageState extends State<RegistrationPage> {
         context: context,
         builder: buildRegistrationSuccessDialog,
       );
-    } catch (error) {
+    } 
+    on AuthException catch (error) {
+      setState(() => submitting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message),
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating
+        ),
+      );
+    } 
+    catch (error) {
       showDialog(
         context: context,
         builder: (context) => ErrorDialog(exception: error),
