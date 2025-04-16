@@ -16,7 +16,7 @@ class HomePageState extends State<HomePage> {
 
   Widget scaffoldBuilder(BuildContext context, Widget? child) => Scaffold(
     appBar: buildAppBar(),
-    drawer: buildDrawer(),
+    drawer: const MainDrawer(),
     body: buildBody(),
   );
 
@@ -31,10 +31,6 @@ class HomePageState extends State<HomePage> {
   Widget buildTitle() => LlamaCppController.instance != null
     ? LoadModelButton()
     : const RemoteModelDropdown();
-
-  Widget buildDrawer() => Drawer(
-    child: ChatView()
-  );
 
   Widget buildBody() => Column(
     children: [

@@ -47,7 +47,6 @@ part 'widgets/buttons/load_model_button.dart';
 part 'widgets/buttons/menu_button.dart';
 
 part 'widgets/chat/chat_tile.dart';
-part 'widgets/chat/chat_view.dart';
 
 part 'widgets/dialogs/error_dialog.dart';
 part 'widgets/dialogs/nsfw_warning_dialog.dart';
@@ -57,6 +56,8 @@ part 'widgets/dropdowns/artificial_intelligence_dropdown.dart';
 part 'widgets/dropdowns/locale_dropdown.dart';
 part 'widgets/dropdowns/remote_model_dropdown.dart';
 part 'widgets/dropdowns/theme_mode_dropdown.dart';
+
+part 'widgets/layout/main_drawer.dart';
 
 part 'widgets/message/message_view.dart';
 part 'widgets/message/message.dart';
