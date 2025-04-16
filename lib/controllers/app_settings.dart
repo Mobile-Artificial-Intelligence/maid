@@ -292,21 +292,36 @@ class AppSettings extends ChangeNotifier {
     if (userImage != null) {
       prefs.setString('userImage', base64.encode(userImage!));
     }
+    else {
+      prefs.remove('userImage');
+    }
 
     if (userName != null && userName!.isNotEmpty) {
       prefs.setString('userName', userName!);
+    }
+    else {
+      prefs.remove('userName');
     }
 
     if (assistantImage != null) {
       prefs.setString('assistantImage', base64.encode(assistantImage!));
     }
+    else {
+      prefs.remove('assistantImage');
+    }
 
     if (assistantName != null && assistantName!.isNotEmpty) {
       prefs.setString('assistantName', assistantName!);
     }
+    else {
+      prefs.remove('assistantName');
+    }
 
     if (systemPrompt != null && systemPrompt!.isNotEmpty) {
       prefs.setString('systemPrompt', systemPrompt!);
+    }
+    else {
+      prefs.remove('systemPrompt');
     }
 
     if (locale != null) {
