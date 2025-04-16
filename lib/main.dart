@@ -71,6 +71,7 @@ part 'widgets/pages/home_page.dart';
 part 'widgets/pages/huggingface_page.dart';
 part 'widgets/pages/login_page.dart';
 part 'widgets/pages/registration_page.dart';
+part 'widgets/pages/reset_password_page.dart';
 part 'widgets/pages/settings_page.dart';
 
 part 'widgets/settings/artificial_intelligence_settings.dart';
@@ -164,6 +165,7 @@ class MaidState extends State<Maid> {
       '/about': (context) => const AboutPage(),
       '/login': (context) => LoginPage(),
       '/register': (context) => RegistrationPage(),
+      '/reset-password': (context) => ResetPasswordPage(),
       '/huggingface': (context) => HuggingFacePage(),
       if (kDebugMode) '/debug': (context) => DebugPage(),
     },
