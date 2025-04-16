@@ -133,11 +133,21 @@ class MaidState extends State<Maid> {
       filled: true,
     );
 
+    final snackBarTheme = SnackBarThemeData(
+      backgroundColor: colorScheme.primary,
+      contentTextStyle: TextStyle(
+        color: colorScheme.onPrimary,
+        fontSize: 16.0,
+      ),
+      actionTextColor: colorScheme.onPrimary,
+    );
+
     return ThemeData(
       colorScheme: colorScheme,
       useMaterial3: true,
       appBarTheme: appBarTheme,
-      inputDecorationTheme: inputDecorationTheme
+      inputDecorationTheme: inputDecorationTheme,
+      snackBarTheme: snackBarTheme,
     );
   }
 

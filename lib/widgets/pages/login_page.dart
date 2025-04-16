@@ -35,7 +35,18 @@ class LoginPageState extends State<LoginPage> {
 
       if (!mounted) return;
       Navigator.of(context).pushReplacementNamed('/chat');
-    } catch (error) {
+    } 
+    on AuthException catch (error) {
+      setState(() => submitting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message),
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating
+        ),
+      );
+    } 
+    catch (error) {
       setState(() => submitting = false);
       showDialog(
         context: context,
