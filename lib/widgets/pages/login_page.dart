@@ -89,10 +89,7 @@ class LoginPageState extends State<LoginPage> {
         child: const Text('Login'),
       ),
       const SizedBox(height: 16),
-      TextButton(
-        onPressed: () => Navigator.of(context).pushReplacementNamed('/register'),
-        child: const Text('Create an account'),
-      ),
+      buildRow(context),
     ],
   );
 
@@ -132,5 +129,19 @@ class LoginPageState extends State<LoginPage> {
       }
       return null;
     },
+  );
+
+  Widget buildRow(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      TextButton(
+        onPressed: () => Navigator.of(context).pushReplacementNamed('/register'),
+        child: const Text('Create an account'),
+      ),
+      TextButton(
+        onPressed: () => Navigator.of(context).pushReplacementNamed('/reset-password'),
+        child: const Text('Reset password'),
+      ),
+    ],
   );
 }
