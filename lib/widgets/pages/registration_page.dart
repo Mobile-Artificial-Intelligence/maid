@@ -26,7 +26,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     try {
       await Supabase.instance.client.auth.signUp(
           email: email, password: password, data: {'username': username});
-      
+
       if (!mounted) return;
       Navigator.of(context).pushNamedAndRemoveUntil('/chat', (route) => false);
     } catch (error) {
@@ -38,37 +38,51 @@ class RegistrationPageState extends State<RegistrationPage> {
   }
 
   @override
+  void dispose() {
+    usernameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    passwordConfirmController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
       ),
-      body: buildForm(context),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: buildForm(context),
+        ),
+      ),
     );
   }
 
   Widget buildForm(BuildContext context) => Form(
     key: formKey,
     child: ListView(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       children: [
         buildUsernameField(),
-        SizedBox(width: 16, height: 16),
+        const SizedBox(height: 16),
         buildEmailField(),
-        SizedBox(width: 16, height: 16),
+        const SizedBox(height: 16),
         buildPasswordField(),
-        SizedBox(width: 16, height: 16),
+        const SizedBox(height: 16),
         buildPasswordConfirmField(),
-        SizedBox(width: 16, height: 16),
+        const SizedBox(height: 16),
         ElevatedButton(
           onPressed: signUp,
           child: const Text('Register'),
         ),
-        SizedBox(width: 16, height: 16),
+        const SizedBox(height: 16),
         TextButton(
           onPressed: () => Navigator.of(context).pushNamed('/login'),
           child: const Text('I already have an account'),
-        )
+        ),
       ],
     ),
   );
@@ -82,9 +96,9 @@ class RegistrationPageState extends State<RegistrationPage> {
       if (val == null || val.isEmpty) {
         return 'Required';
       }
-      final isValid = RegExp(r'^[A-Za-z0-9_]{3,24}$').hasMatch(val);
+      final isValid = RegExp(r'^[A-Za-z0-9_]{3,24}$', caseSensitive: false).hasMatch(val);
       if (!isValid) {
-        return '3-24 long with alphanumeric or underscore';
+        return 'Must be 3-24 characters, alphanumeric or underscore';
       }
       return null;
     },
@@ -98,6 +112,10 @@ class RegistrationPageState extends State<RegistrationPage> {
     validator: (val) {
       if (val == null || val.isEmpty) {
         return 'Required';
+      }
+      final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+      if (!emailRegex.hasMatch(val)) {
+        return 'Please enter a valid email';
       }
       return null;
     },
@@ -114,8 +132,15 @@ class RegistrationPageState extends State<RegistrationPage> {
       if (val == null || val.isEmpty) {
         return 'Required';
       }
-      if (val.length < 6) {
-        return '6 characters minimum';
+      if (val.length < 8) {
+        return 'Minimum 8 characters';
+      }
+      final hasUppercase = val.contains(RegExp(r'[A-Z]'));
+      final hasLowercase = val.contains(RegExp(r'[a-z]'));
+      final hasDigit = val.contains(RegExp(r'[0-9]'));
+      final hasSymbol = val.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
+      if (!hasUppercase || !hasLowercase || !hasDigit || !hasSymbol) {
+        return 'Include upper, lower, number, and symbol';
       }
       return null;
     },
