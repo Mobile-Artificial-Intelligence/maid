@@ -247,6 +247,9 @@ class AppSettings extends ChangeNotifier {
     }
 
     userName = prefs.getString('userName');
+    if (userName == null && Supabase.instance.client.auth.currentUser != null) {
+      userName = Supabase.instance.client.auth.currentUser?.userMetadata?['username'] as String?;
+    }
     
     final assistantImagePath = prefs.getString('assistantImage');
     if (assistantImagePath != null) {
