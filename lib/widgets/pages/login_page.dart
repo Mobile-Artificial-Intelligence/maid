@@ -90,7 +90,7 @@ class LoginPageState extends State<LoginPage> {
       ),
       const SizedBox(height: 16),
       TextButton(
-        onPressed: () => Navigator.of(context).pushNamed('/register'),
+        onPressed: () => Navigator.of(context).pushReplacementNamed('/register'),
         child: const Text('Create an account'),
       ),
     ],

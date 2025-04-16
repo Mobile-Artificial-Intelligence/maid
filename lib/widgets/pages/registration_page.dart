@@ -60,9 +60,7 @@ class RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
+      appBar: AppBar(),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 500),
@@ -74,28 +72,40 @@ class RegistrationPageState extends State<RegistrationPage> {
 
   Widget buildForm(BuildContext context) => Form(
     key: formKey,
-    child: ListView(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      children: [
-        buildUsernameField(),
-        const SizedBox(height: 16),
-        buildEmailField(),
-        const SizedBox(height: 16),
-        buildPasswordField(),
-        const SizedBox(height: 16),
-        buildPasswordConfirmField(),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: submitting ? null : signUp,
-          child: const Text('Register'),
-        ),
-        const SizedBox(height: 16),
-        TextButton(
-          onPressed: () => Navigator.of(context).pushNamed('/login'),
-          child: const Text('I already have an account'),
-        ),
-      ],
+    child: SingleChildScrollView(
+      child: buildColumn(context),
     ),
+  );
+
+  Widget buildColumn(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Text(
+        'Register',
+        style: Theme.of(context).textTheme.titleLarge,
+        textAlign: TextAlign.center,
+      ),
+      const SizedBox(height: 16),
+      buildUsernameField(),
+      const SizedBox(height: 16),
+      buildEmailField(),
+      const SizedBox(height: 16),
+      buildPasswordField(),
+      const SizedBox(height: 16),
+      buildPasswordConfirmField(),
+      const SizedBox(height: 16),
+      ElevatedButton(
+        onPressed: submitting ? null : signUp,
+        child: const Text('Register'),
+      ),
+      const SizedBox(height: 16),
+      TextButton(
+        onPressed: () => Navigator.of(context).pushReplacementNamed('/login'),
+        child: const Text('I already have an account'),
+      ),
+    ],
   );
 
   Widget buildUsernameField() => TextFormField(
