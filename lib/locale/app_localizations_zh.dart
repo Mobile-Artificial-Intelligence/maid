@@ -297,4 +297,76 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get nsfwWarning => '该模型被有意设计用于生成NSFW（不适宜公开）的内容。这可能包括涉及酷刑、强奸、谋杀和/或性变态行为的露骨性或暴力内容。如果您对这些话题较为敏感，或这些话题的讨论违反了当地法律，请不要继续。';
+
+  @override
+  String get login => '登录';
+
+  @override
+  String get logout => '登出';
+
+  @override
+  String get register => '注册';
+
+  @override
+  String get email => '电子邮件';
+
+  @override
+  String get password => '密码';
+
+  @override
+  String get confirmPassword => '确认密码';
+
+  @override
+  String get resetCode => '重置码';
+
+  @override
+  String get resetCodeSent => '重置码已发送至您的电子邮件。';
+
+  @override
+  String get sendResetCode => '发送重置码';
+
+  @override
+  String get sendAgain => '再次发送';
+
+  @override
+  String get required => '必填';
+
+  @override
+  String get invalidEmail => '请输入有效的电子邮件';
+
+  @override
+  String get invalidUserName => '必须为3-24个字符，字母数字或下划线';
+
+  @override
+  String get invalidPasswordLength => '至少8个字符';
+
+  @override
+  String get invalidPassword => '需包含大写字母、小写字母、数字和符号';
+
+  @override
+  String get passwordNoMatch => '密码不匹配';
+
+  @override
+  String get createAccount => '创建账户';
+
+  @override
+  String get resetPassword => '重置密码';
+
+  @override
+  String get backToLogin => '返回登录';
+
+  @override
+  String get alreadyHaveAccount => '我已有账户';
+
+  @override
+  String get success => '成功';
+
+  @override
+  String get registrationSuccess => '注册成功';
+
+  @override
+  String get resetSuccess => '您的密码已成功重置。';
+
+  @override
+  String get emailVerify => '请检查您的电子邮件以进行验证。';
 }

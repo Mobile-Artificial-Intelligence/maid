@@ -297,4 +297,76 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'Bu model, NSFW (uygunsuz) içerik üretmek üzere kasıtlı olarak tasarlanmıştır. Bu, işkence, tecavüz, cinayet ve/veya cinsel sapkın davranışlar içeren açık cinsel veya şiddet içeriğini kapsayabilir. Bu tür konulara karşı hassassanız veya bu konuların tartışılması yerel yasalara aykırıysa, DEVAM ETMEYİN.';
+
+  @override
+  String get login => 'Giriş Yap';
+
+  @override
+  String get logout => 'Çıkış Yap';
+
+  @override
+  String get register => 'Kayıt Ol';
+
+  @override
+  String get email => 'E-posta';
+
+  @override
+  String get password => 'Şifre';
+
+  @override
+  String get confirmPassword => 'Şifreyi Onayla';
+
+  @override
+  String get resetCode => 'Sıfırlama Kodu';
+
+  @override
+  String get resetCodeSent => 'E-posta adresinize bir sıfırlama kodu gönderildi.';
+
+  @override
+  String get sendResetCode => 'Sıfırlama Kodunu Gönder';
+
+  @override
+  String get sendAgain => 'Tekrar Gönder';
+
+  @override
+  String get required => 'Gerekli';
+
+  @override
+  String get invalidEmail => 'Lütfen geçerli bir e-posta adresi girin';
+
+  @override
+  String get invalidUserName => '3-24 karakter olmalı, alfanümerik veya alt çizgi';
+
+  @override
+  String get invalidPasswordLength => 'Minimum 8 karakter';
+
+  @override
+  String get invalidPassword => 'Büyük harf, küçük harf, rakam ve sembol içermelidir';
+
+  @override
+  String get passwordNoMatch => 'Şifreler eşleşmiyor';
+
+  @override
+  String get createAccount => 'Hesap Oluştur';
+
+  @override
+  String get resetPassword => 'Şifreyi Sıfırla';
+
+  @override
+  String get backToLogin => 'Girişe Geri Dön';
+
+  @override
+  String get alreadyHaveAccount => 'Zaten bir hesabım var';
+
+  @override
+  String get success => 'Başarılı';
+
+  @override
+  String get registrationSuccess => 'Kayıt Başarılı';
+
+  @override
+  String get resetSuccess => 'Şifreniz başarıyla sıfırlandı.';
+
+  @override
+  String get emailVerify => 'Lütfen doğrulama için e-posta adresinizi kontrol edin.';
 }

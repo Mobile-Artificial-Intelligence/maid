@@ -297,4 +297,76 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'यह मॉडल जानबूझकर ऐसा डिज़ाइन किया गया है ताकि यह NSFW (अशोभनीय) सामग्री उत्पन्न कर सके। इसमें यौन रूप से स्पष्ट या हिंसक सामग्री हो सकती है, जिसमें यातना, बलात्कार, हत्या और/या यौन विकृति शामिल हो सकती है। यदि आप ऐसे विषयों के प्रति संवेदनशील हैं, या इन विषयों पर चर्चा करना आपके स्थानीय कानूनों का उल्लंघन करता है, तो आगे न बढ़ें।';
+
+  @override
+  String get login => 'लॉगिन';
+
+  @override
+  String get logout => 'लॉग आउट';
+
+  @override
+  String get register => 'रजिस्टर';
+
+  @override
+  String get email => 'ईमेल';
+
+  @override
+  String get password => 'पासवर्ड';
+
+  @override
+  String get confirmPassword => 'पासवर्ड की पुष्टि करें';
+
+  @override
+  String get resetCode => 'रीसेट कोड';
+
+  @override
+  String get resetCodeSent => 'आपके ईमेल पर रीसेट कोड भेजा गया है।';
+
+  @override
+  String get sendResetCode => 'रीसेट कोड भेजें';
+
+  @override
+  String get sendAgain => 'फिर से भेजें';
+
+  @override
+  String get required => 'आवश्यक है';
+
+  @override
+  String get invalidEmail => 'कृपया एक मान्य ईमेल दर्ज करें';
+
+  @override
+  String get invalidUserName => '3-24 अक्षरों का होना चाहिए, अल्फ़ान्यूमेरिक या अंडरस्कोर';
+
+  @override
+  String get invalidPasswordLength => 'न्यूनतम 8 अक्षर';
+
+  @override
+  String get invalidPassword => 'बड़े अक्षर, छोटे अक्षर, संख्या, और प्रतीक शामिल करें';
+
+  @override
+  String get passwordNoMatch => 'पासवर्ड मेल नहीं खाते';
+
+  @override
+  String get createAccount => 'खाता बनाएं';
+
+  @override
+  String get resetPassword => 'पासवर्ड रीसेट करें';
+
+  @override
+  String get backToLogin => 'लॉगिन पर वापस जाएं';
+
+  @override
+  String get alreadyHaveAccount => 'मेरे पास पहले से ही खाता है';
+
+  @override
+  String get success => 'सफलता';
+
+  @override
+  String get registrationSuccess => 'पंजीकरण सफल';
+
+  @override
+  String get resetSuccess => 'आपका पासवर्ड सफलतापूर्वक रीसेट हो गया है।';
+
+  @override
+  String get emailVerify => 'कृपया सत्यापन के लिए अपने ईमेल की जाँच करें।';
 }

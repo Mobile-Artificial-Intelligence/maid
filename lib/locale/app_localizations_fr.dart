@@ -297,4 +297,76 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'Ce modèle a été intentionnellement conçu pour produire du contenu NSFW. Cela peut inclure du contenu sexuel explicite ou violent impliquant de la torture, du viol, du meurtre et/ou des comportements sexuellement déviants. Si vous êtes sensible à ces sujets, ou si leur discussion enfreint les lois locales, NE CONTINUEZ PAS.';
+
+  @override
+  String get login => 'Se connecter';
+
+  @override
+  String get logout => 'Déconnexion';
+
+  @override
+  String get register => 'S\'inscrire';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Mot de passe';
+
+  @override
+  String get confirmPassword => 'Confirmer le mot de passe';
+
+  @override
+  String get resetCode => 'Code de réinitialisation';
+
+  @override
+  String get resetCodeSent => 'Un code de réinitialisation a été envoyé à votre email.';
+
+  @override
+  String get sendResetCode => 'Envoyer le code de réinitialisation';
+
+  @override
+  String get sendAgain => 'Renvoyer';
+
+  @override
+  String get required => 'Requis';
+
+  @override
+  String get invalidEmail => 'Veuillez entrer un email valide';
+
+  @override
+  String get invalidUserName => 'Doit contenir 3 à 24 caractères, alphanumériques ou soulignés';
+
+  @override
+  String get invalidPasswordLength => 'Minimum 8 caractères';
+
+  @override
+  String get invalidPassword => 'Inclure majuscules, minuscules, chiffres et symboles';
+
+  @override
+  String get passwordNoMatch => 'Les mots de passe ne correspondent pas';
+
+  @override
+  String get createAccount => 'Créer un compte';
+
+  @override
+  String get resetPassword => 'Réinitialiser le mot de passe';
+
+  @override
+  String get backToLogin => 'Retour à la connexion';
+
+  @override
+  String get alreadyHaveAccount => 'J\'ai déjà un compte';
+
+  @override
+  String get success => 'Succès';
+
+  @override
+  String get registrationSuccess => 'Inscription réussie';
+
+  @override
+  String get resetSuccess => 'Votre mot de passe a été réinitialisé avec succès.';
+
+  @override
+  String get emailVerify => 'Veuillez vérifier votre email pour la vérification.';
 }

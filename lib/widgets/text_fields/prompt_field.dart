@@ -28,6 +28,8 @@ class PromptFieldState extends State<PromptField> {
   @override
   void dispose() {
     streamSubscription?.cancel();
+    streamSubscription = null;
+    controller.dispose();
     super.dispose();
   }
 

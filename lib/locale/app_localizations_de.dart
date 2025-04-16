@@ -297,4 +297,76 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'Dieses Modell wurde absichtlich so konzipiert, dass es nicht jugendfreier (NSFW) Inhalte erzeugt. Dazu können explizite sexuelle oder gewalttätige Inhalte gehören, einschließlich Folter, Vergewaltigung, Mord und/oder sexuell abweichendes Verhalten. Wenn Sie gegenüber solchen Themen sensibel sind oder deren Diskussion gegen lokale Gesetze verstößt, BRECHEN SIE JETZT AB.';
+
+  @override
+  String get login => 'Anmelden';
+
+  @override
+  String get logout => 'Abmelden';
+
+  @override
+  String get register => 'Registrieren';
+
+  @override
+  String get email => 'E-Mail';
+
+  @override
+  String get password => 'Passwort';
+
+  @override
+  String get confirmPassword => 'Passwort bestätigen';
+
+  @override
+  String get resetCode => 'Zurücksetzungscode';
+
+  @override
+  String get resetCodeSent => 'Ein Zurücksetzungscode wurde an Ihre E-Mail gesendet.';
+
+  @override
+  String get sendResetCode => 'Zurücksetzungscode senden';
+
+  @override
+  String get sendAgain => 'Erneut senden';
+
+  @override
+  String get required => 'Erforderlich';
+
+  @override
+  String get invalidEmail => 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
+
+  @override
+  String get invalidUserName => '3–24 Zeichen, alphanumerisch oder Unterstrich';
+
+  @override
+  String get invalidPasswordLength => 'Mindestens 8 Zeichen';
+
+  @override
+  String get invalidPassword => 'Groß-, Kleinbuchstaben, Zahl und Symbol erforderlich';
+
+  @override
+  String get passwordNoMatch => 'Passwörter stimmen nicht überein';
+
+  @override
+  String get createAccount => 'Konto erstellen';
+
+  @override
+  String get resetPassword => 'Passwort zurücksetzen';
+
+  @override
+  String get backToLogin => 'Zurück zur Anmeldung';
+
+  @override
+  String get alreadyHaveAccount => 'Ich habe bereits ein Konto';
+
+  @override
+  String get success => 'Erfolg';
+
+  @override
+  String get registrationSuccess => 'Registrierung erfolgreich';
+
+  @override
+  String get resetSuccess => 'Ihr Passwort wurde erfolgreich zurückgesetzt.';
+
+  @override
+  String get emailVerify => 'Bitte überprüfen Sie Ihre E-Mails zur Verifizierung.';
 }

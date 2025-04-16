@@ -7,6 +7,8 @@ import 'dart:math' as math;
 import 'package:anthropic_sdk_dart/anthropic_sdk_dart.dart' as anthropic;
 import 'package:intl/intl.dart';
 import 'package:crypto/crypto.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 import 'package:yaml/yaml.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -46,7 +48,6 @@ part 'widgets/buttons/load_model_button.dart';
 part 'widgets/buttons/menu_button.dart';
 
 part 'widgets/chat/chat_tile.dart';
-part 'widgets/chat/chat_view.dart';
 
 part 'widgets/dialogs/error_dialog.dart';
 part 'widgets/dialogs/nsfw_warning_dialog.dart';
@@ -56,6 +57,8 @@ part 'widgets/dropdowns/artificial_intelligence_dropdown.dart';
 part 'widgets/dropdowns/locale_dropdown.dart';
 part 'widgets/dropdowns/remote_model_dropdown.dart';
 part 'widgets/dropdowns/theme_mode_dropdown.dart';
+
+part 'widgets/layout/main_drawer.dart';
 
 part 'widgets/message/message_view.dart';
 part 'widgets/message/message.dart';
@@ -67,6 +70,9 @@ part 'widgets/pages/about_page.dart';
 part 'widgets/pages/debug_page.dart';
 part 'widgets/pages/home_page.dart';
 part 'widgets/pages/huggingface_page.dart';
+part 'widgets/pages/login_page.dart';
+part 'widgets/pages/registration_page.dart';
+part 'widgets/pages/reset_password_page.dart';
 part 'widgets/pages/settings_page.dart';
 
 part 'widgets/settings/artificial_intelligence_settings.dart';
@@ -83,8 +89,13 @@ part 'widgets/text_fields/remote_model_text_field.dart';
 part 'widgets/utilities/code_box.dart';
 part 'widgets/utilities/huggingface_model.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: 'https://xkmctciifomyexlspoua.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrbWN0Y2lpZm9teWV4bHNwb3VhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1OTEzODcsImV4cCI6MjA2MDE2NzM4N30.LkgnbusOxZNBDWIrQoRAWP0oYBO5sAFznhuYTMDWshU',
+  );
 
   runApp(Maid());
 }
@@ -97,6 +108,10 @@ class Maid extends StatefulWidget {
 }
 
 class MaidState extends State<Maid> {
+  static MaidState of(BuildContext context) => context.findAncestorStateOfType<MaidState>()!;
+
+  void rebuild() => setState(() {});
+
   @override
   void initState() {
     super.initState();
@@ -123,15 +138,24 @@ class MaidState extends State<Maid> {
       filled: true,
     );
 
+    final snackBarTheme = SnackBarThemeData(
+      backgroundColor: colorScheme.primary,
+      contentTextStyle: TextStyle(
+        color: colorScheme.onPrimary,
+        fontSize: 16.0,
+      ),
+      actionTextColor: colorScheme.onPrimary,
+    );
+
     return ThemeData(
       colorScheme: colorScheme,
       useMaterial3: true,
       appBarTheme: appBarTheme,
-      inputDecorationTheme: inputDecorationTheme
+      inputDecorationTheme: inputDecorationTheme,
+      snackBarTheme: snackBarTheme,
     );
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: AppSettings.instance,
@@ -154,6 +178,9 @@ class MaidState extends State<Maid> {
       '/settings': (context) => SettingsPage(),
       '/chat': (context) => HomePage(),
       '/about': (context) => const AboutPage(),
+      '/login': (context) => LoginPage(),
+      '/register': (context) => RegistrationPage(),
+      '/reset-password': (context) => ResetPasswordPage(),
       '/huggingface': (context) => HuggingFacePage(),
       if (kDebugMode) '/debug': (context) => DebugPage(),
     },

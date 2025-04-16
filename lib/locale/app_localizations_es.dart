@@ -297,4 +297,76 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get nsfwWarning => 'Este modelo ha sido diseñado intencionadamente para generar contenido NSFW. Esto puede incluir contenido sexual explícito o violento que involucre tortura, violación, asesinato y/o comportamientos sexualmente desviados. Si eres sensible a estos temas o su discusión infringe las leyes locales, NO CONTINÚES.';
+
+  @override
+  String get login => 'Iniciar sesión';
+
+  @override
+  String get logout => 'Cerrar sesión';
+
+  @override
+  String get register => 'Registrarse';
+
+  @override
+  String get email => 'Correo electrónico';
+
+  @override
+  String get password => 'Contraseña';
+
+  @override
+  String get confirmPassword => 'Confirmar contraseña';
+
+  @override
+  String get resetCode => 'Código de reinicio';
+
+  @override
+  String get resetCodeSent => 'Se ha enviado un código de reinicio a su correo electrónico.';
+
+  @override
+  String get sendResetCode => 'Enviar código de reinicio';
+
+  @override
+  String get sendAgain => 'Enviar de nuevo';
+
+  @override
+  String get required => 'Requerido';
+
+  @override
+  String get invalidEmail => 'Por favor, introduce un correo electrónico válido';
+
+  @override
+  String get invalidUserName => 'De 3 a 24 caracteres, alfanuméricos o guion bajo';
+
+  @override
+  String get invalidPasswordLength => 'Mínimo 8 caracteres';
+
+  @override
+  String get invalidPassword => 'Incluye mayúsculas, minúsculas, número y símbolo';
+
+  @override
+  String get passwordNoMatch => 'Las contraseñas no coinciden';
+
+  @override
+  String get createAccount => 'Crear una cuenta';
+
+  @override
+  String get resetPassword => 'Restablecer contraseña';
+
+  @override
+  String get backToLogin => 'Volver a iniciar sesión';
+
+  @override
+  String get alreadyHaveAccount => 'Ya tengo una cuenta';
+
+  @override
+  String get success => 'Éxito';
+
+  @override
+  String get registrationSuccess => 'Registro exitoso';
+
+  @override
+  String get resetSuccess => 'Tu contraseña ha sido restablecida con éxito.';
+
+  @override
+  String get emailVerify => 'Por favor, revisa tu correo para verificar.';
 }

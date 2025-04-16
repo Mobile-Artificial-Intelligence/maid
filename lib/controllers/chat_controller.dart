@@ -96,6 +96,16 @@ class ChatController extends ChangeNotifier {
   }
 
   Future<void> load() async {
+    if (Supabase.instance.client.auth.currentUser != null) {
+      await loadSupabase();
+
+      if (_chats.isNotEmpty) return;
+    }
+
+    await loadSharedPrefs();
+  }
+
+  Future<void> loadSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
 
     final chatsStrings = prefs.getStringList('chats') ?? [];
@@ -115,6 +125,28 @@ class ChatController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> loadSupabase() async {
+    if (Supabase.instance.client.auth.currentUser == null) throw Exception('User not logged in');
+  
+    final data = await Supabase.instance.client
+        .from('chat_messages')
+        .select('*');
+  
+    if (data.isEmpty) return;
+
+    List<String> rootIds = data
+      .where((msg) => msg['parent'] == null)
+      .map((msg) => msg['id'] as String).toList();
+
+    _chats.clear();
+    for (final rootId in rootIds) {
+      final chat = ChatMessage.fromMapList(data, ValueKey<String>(rootId));
+      _chats.add(chat);
+    }
+
+    notifyListeners();
+  }
+
   Future<void> save() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -127,5 +159,34 @@ class ChatController extends ChangeNotifier {
     }
 
     await prefs.setStringList('chats', chatsStrings);
+
+    if (Supabase.instance.client.auth.currentUser == null) return;
+
+    final userId = Supabase.instance.client.auth.currentUser!.id;
+
+    List<Map<String, dynamic>> messages = [];
+    for (final chat in _chats) {
+      final chatMap = chat.toMapList();
+      messages.addAll(chatMap);
+    }
+
+    for (final msg in messages) {
+      await Supabase.instance.client.from('chat_messages').upsert({
+        'id': msg['id'],
+        'user_id': userId,
+        'role': msg['role'],
+        'content': msg['content'],
+        'parent': msg['parent'],
+        'created_at': msg['create_time'],
+        'updated_at': msg['update_time'],
+      });
+    }
+
+    for (final msg in messages) {
+      await Supabase.instance.client.from('chat_messages').update({
+        'children': msg['children'],
+        'current_child': msg['current_child'],
+      }).eq('id', msg['id']);
+    }
   }
 }
