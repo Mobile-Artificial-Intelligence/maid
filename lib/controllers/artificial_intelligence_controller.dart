@@ -151,8 +151,7 @@ abstract class RemoteAIController extends AIController {
     'ollama',
     'open_ai',
     'mistral',
-    'anthropic',
-    'google_gemini',
+    'anthropic'
   ];
 
   String? _baseUrl;
@@ -175,16 +174,6 @@ abstract class RemoteAIController extends AIController {
     notifyListeners();
   }
 
-  bool _customModel;
-
-  bool get customModel => _customModel;
-
-  set customModel(bool newCustomModel) {
-    _customModel = newCustomModel;
-    save();
-    notifyListeners();
-  }
-
   String get connectionHash => (_baseUrl ?? '').hash + (_apiKey ?? '').hash;
 
   bool get canGetRemoteModels;
@@ -193,17 +182,15 @@ abstract class RemoteAIController extends AIController {
     super.model, 
     super.parameters,
     String? baseUrl, 
-    String? apiKey,
-    bool customModel = false
-  }) : _baseUrl = baseUrl, _apiKey = apiKey, _customModel = customModel;
+    String? apiKey
+  }) : _baseUrl = baseUrl, _apiKey = apiKey;
 
   @override
   Map<String, dynamic> toMap() => {
     'model': _model,
     'parameters': _parameters,
     'base_url': _baseUrl,
-    'api_key': _apiKey,
-    'custom_model': _customModel,
+    'api_key': _apiKey
   };
 
   @override
@@ -212,7 +199,6 @@ abstract class RemoteAIController extends AIController {
     _parameters = map['parameters'] ?? {};
     _baseUrl = map['base_url'];
     _apiKey = map['api_key'];
-    _customModel = map['custom_model'] ?? false;
     save();
     notifyListeners();
   }
@@ -225,7 +211,6 @@ abstract class RemoteAIController extends AIController {
     _parameters = {};
     _baseUrl = null;
     _apiKey = null;
-    _customModel = false;
     notifyListeners();
 
     final prefs = await SharedPreferences.getInstance();

@@ -1,11 +1,18 @@
 part of 'package:maid/main.dart';
 
 class RemoteModelTextField extends StatelessWidget {
+  static ValueNotifier<bool> useCustomModel = ValueNotifier(false);
+
   const RemoteModelTextField({super.key});
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: RemoteAIController.instance!,
+    builder: buildListener,
+  );
+
+  Widget buildListener(BuildContext context, Widget? child) => ListenableBuilder(
+    listenable: useCustomModel,
     builder: buildRow,
   );
 
@@ -13,14 +20,14 @@ class RemoteModelTextField extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Expanded(
-        child: RemoteAIController.instance!.customModel
+        child: useCustomModel.value
           ? buildCustom(context)
           : buildNormal(context),
       ),
       const SizedBox(width: 8),
       Switch(
-        value: RemoteAIController.instance!.customModel,
-        onChanged: (value) => RemoteAIController.instance!.customModel = value,
+        value: useCustomModel.value,
+        onChanged: (value) => useCustomModel.value = value,
       ),
     ],
   );
