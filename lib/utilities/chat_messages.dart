@@ -94,6 +94,9 @@ class ChatMessage extends ChangeNotifier {
         orElse: () => throw ArgumentError('No child found with id: ${map['current_child']}'),
       );
     }
+    else if (children.isNotEmpty) {
+      currentChild = children.last;
+    }
 
     DateTime? createdAt;
     if (map['create_time'] is String) {
