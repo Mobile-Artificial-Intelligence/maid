@@ -11,10 +11,8 @@ enum ChatMessageRole {
         return user;
       case 'assistant':
         return assistant;
-      case 'system':
-        return system;
       default:
-        throw ArgumentError('Invalid role: $role');
+        return system;
     }
   }
 }

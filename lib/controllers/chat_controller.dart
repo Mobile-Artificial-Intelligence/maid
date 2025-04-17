@@ -70,10 +70,19 @@ class ChatController extends ChangeNotifier {
     if (inputFile != null) {
       final bytes = inputFile.files.single.bytes ?? File(inputFile.files.single.path!).readAsBytesSync();
       final chatString = utf8.decode(bytes);
-      final chatMapList = jsonDecode(chatString);
-      final chat = ChatMessage.fromMapList(chatMapList);
+      final data = (jsonDecode(chatString) as List).cast<Map<String, dynamic>>();
+      if (data.isEmpty) return;
 
-      _chats.insert(0, chat);
+      List<String> rootIds = data
+        .where((msg) => msg['parent'] == null)
+        .map((msg) => msg['id'] as String).toList();
+
+      _chats.clear();
+      for (final rootId in rootIds) {
+        final chat = ChatMessage.fromMapList(data, ValueKey<String>(rootId));
+        _chats.add(chat);
+      }
+
       save();
       notifyListeners();
     }
