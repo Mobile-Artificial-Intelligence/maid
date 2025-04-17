@@ -8,8 +8,8 @@ create table chat_messages (
   parent uuid references chat_messages(id) on delete cascade,
   current_child uuid references chat_messages(id),
   children uuid[] default '{}',
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
+  create_time timestamptz default now(),
+  update_time timestamptz default now()
 );
 
 alter table chat_messages enable row level security;

@@ -193,8 +193,8 @@ class ChatController extends ChangeNotifier {
         'role': msg['role'],
         'content': msg['content'],
         'parent': msg['parent'],
-        'created_at': msg['create_time'],
-        'updated_at': msg['update_time'],
+        'create_time': msg['create_time'],
+        'update_time': msg['update_time'],
       });
     }
 
