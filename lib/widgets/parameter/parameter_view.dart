@@ -15,7 +15,7 @@ class ParameterViewState extends State<ParameterView> {
   @override
   void initState() {
     super.initState();
-    parameters.addAll(AIController.instance.overrides);
+    parameters.addAll(AIController.instance.parameters);
     count = parameters.length;
     timer = Timer.periodic(const Duration(seconds: 2), (_) => save());
   }
@@ -27,11 +27,11 @@ class ParameterViewState extends State<ParameterView> {
   }
 
   void save() {
-    if (AIController.instance.overrides.length == parameters.length && AIController.instance.overrides.entries.every((entry) => parameters[entry.key] == entry.value)) {
+    if (AIController.instance.parameters.length == parameters.length && AIController.instance.parameters.entries.every((entry) => parameters[entry.key] == entry.value)) {
       return;
     }
 
-    AIController.instance.overrides = Map.from(parameters);
+    AIController.instance.parameters = Map.from(parameters);
   }
 
   void import() async {
