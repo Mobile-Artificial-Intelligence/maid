@@ -70,8 +70,12 @@ class ChatController extends ChangeNotifier {
     if (inputFile != null) {
       final bytes = inputFile.files.single.bytes ?? File(inputFile.files.single.path!).readAsBytesSync();
       final chatString = utf8.decode(bytes);
-      final data = (jsonDecode(chatString) as List).cast<Map<String, dynamic>>();
+      List<Map<String, dynamic>> data = (jsonDecode(chatString) as List).cast<Map<String, dynamic>>();
       if (data.isEmpty) return;
+
+      if (data.first['mapping'] != null) {
+        data = OpenAiUtilities.openAiMapper(data);
+      }
 
       List<String> rootIds = data
         .where((msg) => msg['parent'] == null)
