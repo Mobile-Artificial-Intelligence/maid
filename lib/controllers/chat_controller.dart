@@ -143,20 +143,34 @@ class ChatController extends ChangeNotifier {
 
   Future<void> loadSupabase() async {
     if (Supabase.instance.client.auth.currentUser == null) throw Exception('User not logged in');
-  
-    final data = await Supabase.instance.client
-        .from('chat_messages')
-        .select('*');
-  
-    if (data.isEmpty) return;
 
-    List<String> rootIds = data
+    const pageSize = 1000;
+    int offset = 0;
+    List<Map<String, dynamic>> allData = [];
+
+    while (true) {
+      final page = await Supabase.instance.client
+          .from('chat_messages')
+          .select('*')
+          .range(offset, offset + pageSize - 1);
+
+      if (page.isEmpty) break;
+
+      allData.addAll(page);
+      if (page.length < pageSize) break;
+      offset += pageSize;
+    }
+
+    if (allData.isEmpty) return;
+
+    final rootIds = allData
       .where((msg) => msg['parent'] == null)
-      .map((msg) => msg['id'] as String).toList();
+      .map((msg) => msg['id'] as String)
+      .toList();
 
     _chats.clear();
     for (final rootId in rootIds) {
-      final chat = ChatMessage.fromMapList(data, ValueKey<String>(rootId));
+      final chat = ChatMessage.fromMapList(allData, ValueKey(rootId));
       _chats.add(chat);
     }
 
