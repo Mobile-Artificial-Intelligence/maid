@@ -61,6 +61,8 @@ part 'widgets/dropdowns/theme_mode_dropdown.dart';
 
 part 'widgets/layout/main_drawer.dart';
 
+part 'widgets/listeners/artificial_intelligence_listener.dart';
+
 part 'widgets/message/message_view.dart';
 part 'widgets/message/message.dart';
 

@@ -34,13 +34,7 @@ class RemoteModelDropdownState extends State<RemoteModelDropdown> {
   }
 
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: AIController.notifier, 
-    builder: buildListener
-  );
-
-  Widget buildListener(BuildContext context, Widget? child) => ListenableBuilder(
-    listenable: RemoteAIController.instance!, 
+  Widget build(BuildContext context) => AIListener(
     builder: buildRow
   );
 

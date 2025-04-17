@@ -42,8 +42,7 @@ class ArtificialIntelligenceDropdownState extends State<ArtificialIntelligenceDr
     mainAxisSize: MainAxisSize.min,
     children: [
       const SizedBox(width: 8),
-      ListenableBuilder(
-        listenable: AIController.instance,
+      AIListener(
         builder: buildOverrideText
       ),
       buildPopupButton()
