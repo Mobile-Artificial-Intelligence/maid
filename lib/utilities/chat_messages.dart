@@ -99,16 +99,10 @@ class ChatMessage extends ChangeNotifier {
     if (map['create_time'] is String) {
       createdAt = DateTime.parse(map['create_time']);
     }
-    else if (map['create_time'] is double) {
-      createdAt = DateTime.fromMillisecondsSinceEpoch((map['create_time'] * 1000 as double).toInt());
-    }
 
     DateTime? updatedAt;
     if (map['update_time'] is String) {
       updatedAt = DateTime.parse(map['update_time']);
-    }
-    else if (map['update_time'] is double) {
-      updatedAt = DateTime.fromMillisecondsSinceEpoch((map['update_time'] * 1000 as double).toInt());
     }
 
     return ChatMessage(
