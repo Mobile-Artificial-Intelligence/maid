@@ -182,7 +182,7 @@ class MessageWidgetState extends State<MessageWidget> {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       buildRole(),
-      buildActions(),
+      buildListener(),
     ],
   );
 
@@ -254,8 +254,13 @@ class MessageWidgetState extends State<MessageWidget> {
     ],
   );
 
+  Widget buildListener() => ListenableBuilder(
+    listenable: AIController.notifier, 
+    builder: buildActions
+  );
+
   /// Builds the actions for the user to interact with the message.
-  Widget buildActions() => ListenableBuilder(
+  Widget buildActions(BuildContext context, Widget? child) => ListenableBuilder(
     listenable: AIController.instance,
     builder: buildActionsRow,
   );

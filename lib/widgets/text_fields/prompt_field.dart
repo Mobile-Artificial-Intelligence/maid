@@ -157,11 +157,16 @@ class PromptFieldState extends State<PromptField> {
   /// It will have a hint text and a submit button at the end of the field.
   InputDecoration buildInputDecoration() => InputDecoration(
     hintText: AppLocalizations.of(context)!.typeMessage,
-    suffixIcon: suffixButtonBuilder()
+    suffixIcon: buildListener()
+  );
+  
+  Widget buildListener() => ListenableBuilder(
+    listenable: AIController.notifier, 
+    builder: suffixButtonBuilder
   );
 
   /// This is the submit button that will be used to submit the message.
-  Widget suffixButtonBuilder() => ListenableBuilder(
+  Widget suffixButtonBuilder(BuildContext context, Widget? child) => ListenableBuilder(
     listenable: AIController.instance,
     builder: (context, child) => AIController.instance.busy ? 
       buildStopButton() : 
