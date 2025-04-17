@@ -74,13 +74,13 @@ class PromptFieldState extends State<PromptField> {
         role: ChatMessageRole.user,
       );
 
-      ChatController.instance.root.tail.addChild(newMessage);
+      ChatController.instance.addMessage(newMessage);
 
       Stream<String> stream = AIController.instance.prompt();
 
       newMessage = ChatMessage(content: '', role: ChatMessageRole.assistant);
 
-      ChatController.instance.root.tail.addChild(newMessage);
+      ChatController.instance.addMessage(newMessage);
 
       await newMessage.listenToStream(stream);
 

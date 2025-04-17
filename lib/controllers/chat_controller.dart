@@ -38,6 +38,13 @@ class ChatController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addMessage(ChatMessage message) {
+    root.tail.addChild(message);
+
+    save();
+    notifyListeners();
+  }
+
   void newChat() {
     final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat');
 
