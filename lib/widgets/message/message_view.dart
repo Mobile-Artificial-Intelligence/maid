@@ -1,18 +1,15 @@
 part of 'package:maid/main.dart';
 
 class MessageView extends StatefulWidget {
-  final int maxMessages;
-
-  const MessageView({
-    super.key, 
-    required this.maxMessages,
-  });
+  const MessageView({super.key});
 
   @override
   State<MessageView> createState() => MessageViewState();
 }
 
 class MessageViewState extends State<MessageView> {
+  static const int maxMessages = 50;
+
   final GlobalKey rootKey = GlobalKey();
   final ScrollController controller = ScrollController();
   int rootPosition = 0;
@@ -59,13 +56,13 @@ class MessageViewState extends State<MessageView> {
     int newRootPosition = rootPosition;
 
     if (controller.position.pixels == 0) {
-      newRootPosition = rootPosition - (widget.maxMessages ~/ 2);
+      newRootPosition = rootPosition - (maxMessages ~/ 2);
     } 
     else {
       final root = ChatController.instance.root;
       newRootPosition = math.min(
-        root.chain.length - widget.maxMessages, 
-        rootPosition + (widget.maxMessages ~/ 2)
+        root.chain.length - maxMessages, 
+        rootPosition + (maxMessages ~/ 2)
       );
     }
 
@@ -79,7 +76,7 @@ class MessageViewState extends State<MessageView> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final root = ChatController.instance.root;
-      rootPosition = math.max(0, root.chain.length - widget.maxMessages);
+      rootPosition = math.max(0, root.chain.length - maxMessages);
       controller.jumpTo(controller.position.maxScrollExtent);
     });
   }
@@ -154,7 +151,7 @@ class MessageViewState extends State<MessageView> {
     return MessageWidget(
       key: rootKey,
       node: currentRoot,
-      chainPosition: widget.maxMessages - 1,
+      chainPosition: maxMessages - 1,
     );
   }
 }

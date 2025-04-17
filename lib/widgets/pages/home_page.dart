@@ -30,15 +30,12 @@ class HomePageState extends State<HomePage> {
 
   Widget buildTitle() => LlamaCppController.instance != null
     ? LoadModelButton()
-    : RemoteModelDropdown();
+    : const RemoteModelDropdown();
 
   Widget buildBody() => Column(
     children: [
-      MessageView(
-        maxMessages: 50,
-      ),
-      PromptField(
-      ),
+      MessageView(),
+      PromptField(),
     ],
   );
 }
