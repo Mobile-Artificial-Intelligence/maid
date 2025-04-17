@@ -101,7 +101,12 @@ class MessageWidgetState extends State<MessageWidget> {
 
   /// The build method will build the padding and the appropriate column based on the editing state.
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: widget.node.currentChild ?? widget.node, 
+    builder: buildColumn
+  );
+
+  Widget buildColumn(BuildContext context, Widget? child) => Column(
     children: [
       // Build the current node
       if (widget.node.currentChild != null) buildCurrentMessage(),
@@ -122,17 +127,12 @@ class MessageWidgetState extends State<MessageWidget> {
       buildMessageEditingColumn() : 
       GestureDetector(
         onHorizontalDragEnd: onHorizontalDragEnd,
-        child: buildChatListener()
+        child: buildMessageColumn()
       ),
   );
 
-  Widget buildChatListener() => ListenableBuilder(
-    listenable: widget.message, 
-    builder: buildMessageColumn
-  );
-
   // The buildMessageColumn method will build the message column when the message is not being edited.
-  Widget buildMessageColumn(BuildContext context, Widget? child) {
+  Widget buildMessageColumn() {
     List<Widget> children = [
       buildTopRow(),
     ];

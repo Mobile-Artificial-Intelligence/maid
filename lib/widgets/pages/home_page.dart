@@ -9,26 +9,26 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: AIController.instance, 
-    builder: scaffoldBuilder
-  );
-
-  Widget scaffoldBuilder(BuildContext context, Widget? child) => Scaffold(
+  Widget build(BuildContext context) => Scaffold(
     appBar: buildAppBar(),
     drawer: MainDrawer(),
     body: buildBody(),
   );
 
   PreferredSizeWidget buildAppBar() => AppBar(
-    title: buildTitle(),
+    title: buildListener(),
     centerTitle: true,
     actions: const [
       MenuButton()
     ] 
   );
 
-  Widget buildTitle() => LlamaCppController.instance != null
+  Widget buildListener() => ListenableBuilder(
+    listenable: AIController.notifier, 
+    builder: buildTitle
+  );
+
+  Widget buildTitle(BuildContext content, Widget? child) => LlamaCppController.instance != null
     ? LoadModelButton()
     : const RemoteModelDropdown();
 

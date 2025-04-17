@@ -145,11 +145,6 @@ class Maid extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: AppSettings.instance,
-    builder: buildListener
-  );
-
-  Widget buildListener(BuildContext context, Widget? child) => ListenableBuilder(
-    listenable: AIController.notifier,
     builder: buildApp
   );
 

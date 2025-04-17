@@ -5,8 +5,13 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: AIController.instance,
-    builder: buildColumn,
+    listenable: AIController.notifier, 
+    builder: buildListener
+  );
+
+  Widget buildListener(BuildContext context, Widget? child) => ListenableBuilder(
+    listenable: AIController.instance, 
+    builder: buildColumn
   );
 
   Widget buildColumn(BuildContext context, Widget? child) => Column(
