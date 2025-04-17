@@ -31,6 +31,8 @@ class LoginPageState extends State<LoginPage> {
         password: password,
       );
 
+      await ChatController.instance.load();
+
       setState(() => submitting = false);
 
       if (!mounted) return;
