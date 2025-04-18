@@ -18,3 +18,11 @@ with check (
   AND auth.uid() IS NOT NULL
   AND storage.objects.name = auth.uid() || '.jpg'
 );
+
+-- Allow user to update *only their own profile image*
+create policy "Users can upsert own profile image"
+on storage.objects for all
+using (
+  bucket_id = 'avatars'
+  AND auth.uid() = substring(name from '[^/]+')::uuid
+);

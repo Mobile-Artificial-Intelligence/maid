@@ -46,14 +46,14 @@ class AppSettings extends ChangeNotifier {
       allowCompression: false
     );
 
-    if (result == null ||
-        result.files.isEmpty ||
-        result.files.single.bytes == null) {
+    if (result == null || result.files.isEmpty) {
       _userImage = null;
+      save();
+      notifyListeners();
+      return;
     }
-    else {
-      _userImage = result.files.single.bytes;
-    }
+
+    _userImage = await result.files.single.xFile.readAsBytes();
 
     save();
     notifyListeners();
@@ -151,8 +151,7 @@ class AppSettings extends ChangeNotifier {
 
     if (
       result == null ||
-      result.files.isEmpty ||
-      result.files.single.bytes == null
+      result.files.isEmpty
     ) {
       _assistantImage = null;
       save();
@@ -160,7 +159,7 @@ class AppSettings extends ChangeNotifier {
       return;
     }
     
-    _assistantImage = result.files.single.bytes;
+    _assistantImage = await result.files.single.xFile.readAsBytes();
     notifyListeners();
 
     final image = img.decodeImage(_assistantImage!);
@@ -240,10 +239,28 @@ class AppSettings extends ChangeNotifier {
 
   void load() async {
     final prefs = await SharedPreferences.getInstance();
+    final user = Supabase.instance.client.auth.currentUser;
     
     final userImageBytes = prefs.getString('userImage');
     if (userImageBytes != null) {
       userImage = base64.decode(userImageBytes);
+    }
+    else if (user != null) {
+      try {
+        final image = await Supabase.instance.client.storage
+            .from('avatars')
+            .download('${user.id}.jpg');
+
+        userImage = image;
+      } 
+      catch (e) {
+        if (e.toString().contains('404')) {
+          userImage = null;
+        } 
+        else {
+          rethrow;
+        }
+      }
     }
 
     userName = prefs.getString('userName');
@@ -288,9 +305,22 @@ class AppSettings extends ChangeNotifier {
 
   void save() async {
     final prefs = await SharedPreferences.getInstance();
+    final user = Supabase.instance.client.auth.currentUser;
     
     if (userImage != null) {
       prefs.setString('userImage', base64.encode(userImage!));
+
+      if (user != null) {
+        final image = img.decodeImage(userImage!);
+        final imageJpeg = img.encodeJpg(image!, quality: 100);
+
+        await Supabase.instance.client.storage.from('avatars')
+        .uploadBinary(
+          '${user.id}.jpg',
+          imageJpeg,
+          fileOptions: const FileOptions(upsert: true),
+        );
+      }
     }
     else {
       prefs.remove('userImage');
@@ -299,7 +329,7 @@ class AppSettings extends ChangeNotifier {
     if (userName != null && userName!.isNotEmpty) {
       prefs.setString('userName', userName!);
 
-      if (Supabase.instance.client.auth.currentUser != null) {
+      if (user != null) {
         await Supabase.instance.client.auth.updateUser(
           UserAttributes(
             data: {
