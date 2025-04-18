@@ -5,7 +5,7 @@ alter table storage.objects enable row level security;
 create policy "Users can read their own profile image"
 on storage.objects for select
 using (
-  bucket_id = 'avatars'
+  bucket_id IN ('user-images', 'assistant-images')
   AND auth.uid() IS NOT NULL
   AND storage.objects.name = auth.uid() || '.jpg'
 );
@@ -14,7 +14,7 @@ using (
 create policy "Users can upload their own profile image"
 on storage.objects for insert
 with check (
-  bucket_id = 'avatars'
+  bucket_id IN ('user-images', 'assistant-images')
   AND auth.uid() IS NOT NULL
   AND storage.objects.name = auth.uid() || '.jpg'
 );
@@ -23,6 +23,6 @@ with check (
 create policy "Users can upsert own profile image"
 on storage.objects for all
 using (
-  bucket_id = 'avatars'
+  bucket_id IN ('user-images', 'assistant-images')
   AND auth.uid() = replace(substring(name from '[^/]+'), '.jpg', '')::uuid
 );

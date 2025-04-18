@@ -248,7 +248,7 @@ class AppSettings extends ChangeNotifier {
     else if (user != null) {
       try {
         final image = await Supabase.instance.client.storage
-            .from('avatars')
+            .from('user-images')
             .download('${user.id}.jpg');
 
         userImage = image;
@@ -314,7 +314,7 @@ class AppSettings extends ChangeNotifier {
         final image = img.decodeImage(userImage!);
         final imageJpeg = img.encodeJpg(image!, quality: 100);
 
-        await Supabase.instance.client.storage.from('avatars')
+        await Supabase.instance.client.storage.from('user-images')
         .uploadBinary(
           '${user.id}.jpg',
           imageJpeg,
