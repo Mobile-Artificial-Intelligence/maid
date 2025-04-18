@@ -101,7 +101,7 @@ class MainDrawer extends StatelessWidget {
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(
-        Supabase.instance.client.auth.currentSession?.user.userMetadata?['username'] ?? AppLocalizations.of(context)!.user,
+        Supabase.instance.client.auth.currentSession?.user.userMetadata?['user_name'] ?? AppLocalizations.of(context)!.user,
         style: Theme.of(context).textTheme.titleSmall,
       ),
       IconButton(

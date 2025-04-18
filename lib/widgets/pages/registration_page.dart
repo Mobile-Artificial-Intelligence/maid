@@ -10,7 +10,7 @@ class RegistrationPage extends StatefulWidget {
 class RegistrationPageState extends State<RegistrationPage> {
   final formKey = GlobalKey<FormState>();
 
-  final usernameController = TextEditingController();
+  final userNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
@@ -26,11 +26,11 @@ class RegistrationPageState extends State<RegistrationPage> {
     }
     final email = emailController.text;
     final password = passwordController.text;
-    final username = usernameController.text;
+    final userName = userNameController.text;
     try {
       setState(() => submitting = true);
       await Supabase.instance.client.auth.signUp(
-          email: email, password: password, data: {'username': username});
+          email: email, password: password, data: {'user_name': userName});
       setState(() => submitting = false);
 
       if (!mounted) return;
@@ -61,7 +61,7 @@ class RegistrationPageState extends State<RegistrationPage> {
 
   @override
   void dispose() {
-    usernameController.dispose();
+    userNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     passwordConfirmController.dispose();
@@ -99,7 +99,7 @@ class RegistrationPageState extends State<RegistrationPage> {
         textAlign: TextAlign.center,
       ),
       const SizedBox(height: 16),
-      buildUsernameField(),
+      buildUserNameField(),
       const SizedBox(height: 16),
       buildEmailField(),
       const SizedBox(height: 16),
@@ -119,8 +119,8 @@ class RegistrationPageState extends State<RegistrationPage> {
     ],
   );
 
-  Widget buildUsernameField() => TextFormField(
-    controller: usernameController,
+  Widget buildUserNameField() => TextFormField(
+    controller: userNameController,
     decoration: InputDecoration(
       label: Text(AppLocalizations.of(context)!.userName),
     ),

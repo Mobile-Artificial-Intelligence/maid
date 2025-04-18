@@ -264,16 +264,36 @@ class AppSettings extends ChangeNotifier {
     }
 
     userName = prefs.getString('userName');
-    if (userName == null && Supabase.instance.client.auth.currentUser != null) {
-      userName = Supabase.instance.client.auth.currentUser?.userMetadata?['username'] as String?;
+    if (userName == null && user != null) {
+      userName = user.userMetadata?['user_name'] as String? ?? user.userMetadata?['username'] as String?;
     }
     
-    final assistantImagePath = prefs.getString('assistantImage');
-    if (assistantImagePath != null) {
-      assistantImage = base64.decode(assistantImagePath);
+    final assistantImageBytes = prefs.getString('assistantImage');
+    if (assistantImageBytes != null) {
+      assistantImage = base64.decode(assistantImageBytes);
+    }
+    else if (user != null) {
+      try {
+        final image = await Supabase.instance.client.storage
+            .from('assistant-images')
+            .download('${user.id}.jpg');
+
+        assistantImage = image;
+      } 
+      catch (e) {
+        if (e.toString().contains('404')) {
+          assistantImage = null;
+        } 
+        else {
+          rethrow;
+        }
+      }
     }
 
     assistantName = prefs.getString('assistantName');
+    if (assistantName == null && user != null) {
+      assistantName = user.userMetadata?['assistant_name'] as String?;
+    }
 
     final seedColorR = prefs.getInt('seedColorR');
     final seedColorG = prefs.getInt('seedColorG');
@@ -333,7 +353,7 @@ class AppSettings extends ChangeNotifier {
         await Supabase.instance.client.auth.updateUser(
           UserAttributes(
             data: {
-              'username': userName,
+              'user_name': userName,
             }
           )
         );
@@ -345,6 +365,18 @@ class AppSettings extends ChangeNotifier {
 
     if (assistantImage != null) {
       prefs.setString('assistantImage', base64.encode(assistantImage!));
+
+      if (user != null) {
+        final image = img.decodeImage(assistantImage!);
+        final imageJpeg = img.encodeJpg(image!, quality: 100);
+
+        await Supabase.instance.client.storage.from('assistant-images')
+        .uploadBinary(
+          '${user.id}.jpg',
+          imageJpeg,
+          fileOptions: const FileOptions(upsert: true),
+        );
+      }
     }
     else {
       prefs.remove('assistantImage');
