@@ -298,6 +298,16 @@ class AppSettings extends ChangeNotifier {
 
     if (userName != null && userName!.isNotEmpty) {
       prefs.setString('userName', userName!);
+
+      if (Supabase.instance.client.auth.currentUser != null) {
+        await Supabase.instance.client.auth.updateUser(
+          UserAttributes(
+            data: {
+              'username': userName,
+            }
+          )
+        );
+      }
     }
     else {
       prefs.remove('userName');
