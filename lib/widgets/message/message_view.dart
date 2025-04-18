@@ -138,19 +138,20 @@ class MessageViewState extends State<MessageView> {
   );
 
   Widget buildMessage(BuildContext context, Widget? child) {
-    final currentRoot = ChatController.instance.root.chain[rootPosition];
-    currentRoot.content = AppSettings.instance.systemPrompt?.formatPlaceholders(
+    ChatController.instance.root.content = AppSettings.instance.systemPrompt?.formatPlaceholders(
       AppSettings.instance.userName ?? AppLocalizations.of(context)!.user, 
       AppSettings.instance.assistantName ?? AppLocalizations.of(context)!.assistant
     ) ?? AppLocalizations.of(context)!.newChat;
 
-    if (currentRoot.currentChild == null) return const SizedBox.shrink();
+    final localRoot = ChatController.instance.root.chain[rootPosition];
+
+    if (localRoot.currentChild == null) return const SizedBox.shrink();
 
     WidgetsBinding.instance.addPostFrameCallback(jumpToExtent);
 
     return MessageWidget(
       key: rootKey,
-      node: currentRoot,
+      node: localRoot,
       chainPosition: maxMessages - 1,
     );
   }
