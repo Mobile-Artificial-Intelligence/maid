@@ -24,5 +24,5 @@ create policy "Users can upsert own profile image"
 on storage.objects for all
 using (
   bucket_id = 'avatars'
-  AND auth.uid() = substring(name from '[^/]+')::uuid
+  AND auth.uid() = replace(substring(name from '[^/]+'), '.jpg', '')::uuid
 );
