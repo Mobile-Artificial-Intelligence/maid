@@ -69,17 +69,20 @@ class RegistrationPageState extends State<RegistrationPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 500),
-          child: buildForm(context),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(),
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: buildCenter(context),
+    ),
+  );
+
+  Widget buildCenter(BuildContext context) => Center(
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 400),
+      child: buildForm(context),
+    ),
+  );
 
   Widget buildForm(BuildContext context) => Form(
     key: formKey,
@@ -91,7 +94,6 @@ class RegistrationPageState extends State<RegistrationPage> {
   Widget buildColumn(BuildContext context) => Column(
     mainAxisSize: MainAxisSize.min,
     mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Text(
         AppLocalizations.of(context)!.register,
@@ -109,6 +111,10 @@ class RegistrationPageState extends State<RegistrationPage> {
       const SizedBox(height: 16),
       ElevatedButton(
         onPressed: submitting ? null : signUp,
+        style: ButtonStyle(
+          padding: WidgetStateProperty.all<EdgeInsets>(
+            const EdgeInsets.symmetric(horizontal: 50)),
+        ),
         child: Text(AppLocalizations.of(context)!.register),
       ),
       const SizedBox(height: 16),

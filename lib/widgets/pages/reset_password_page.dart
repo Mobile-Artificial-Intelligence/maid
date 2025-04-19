@@ -122,21 +122,26 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(),
-        body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: buildForm(context),
-          ),
-        ),
-      );
+    appBar: AppBar(),
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: buildCenter(context),
+    ),
+  );
+
+  Widget buildCenter(BuildContext context) => Center(
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 400),
+      child: buildForm(context),
+    ),
+  );
 
   Widget buildForm(BuildContext context) => Form(
-        key: formKey,
-        child: SingleChildScrollView(
-          child: buildColumn(context),
-        ),
-      );
+    key: formKey,
+    child: SingleChildScrollView(
+      child: buildColumn(context),
+    ),
+  );
 
   Widget buildColumn(BuildContext context) => Column(
     mainAxisSize: MainAxisSize.min,
