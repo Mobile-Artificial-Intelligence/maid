@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import 'package:anthropic_sdk_dart/anthropic_sdk_dart.dart' as anthropic;
 import 'package:intl/intl.dart';
 import 'package:crypto/crypto.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yaml/yaml.dart';
@@ -95,9 +96,14 @@ part 'widgets/utilities/huggingface_model.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final info = await PackageInfo.fromPlatform();
+
   await Supabase.initialize(
     url: 'https://xkmctciifomyexlspoua.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrbWN0Y2lpZm9teWV4bHNwb3VhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1OTEzODcsImV4cCI6MjA2MDE2NzM4N30.LkgnbusOxZNBDWIrQoRAWP0oYBO5sAFznhuYTMDWshU',
+    headers:  {
+      'user-agent': '${info.appName}/${info.version}',
+    }
   );
 
   await AIController.load();
