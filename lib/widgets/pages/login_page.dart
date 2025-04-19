@@ -67,11 +67,16 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(),
-    body: Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 500),
-        child: buildForm(context),
-      ),
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: buildCenter(context),
+    ),
+  );
+
+  Widget buildCenter(BuildContext context) => Center(
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 400),
+      child: buildForm(context),
     ),
   );
 
@@ -85,7 +90,6 @@ class LoginPageState extends State<LoginPage> {
   Widget buildColumn(BuildContext context) => Column(
     mainAxisSize: MainAxisSize.min,
     mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Text(
         AppLocalizations.of(context)!.login,
@@ -99,6 +103,10 @@ class LoginPageState extends State<LoginPage> {
       const SizedBox(height: 16),
       ElevatedButton(
         onPressed: submitting ? null : logIn,
+        style: ButtonStyle(
+          padding: WidgetStateProperty.all<EdgeInsets>(
+            const EdgeInsets.symmetric(horizontal: 50)),
+        ),
         child: Text(AppLocalizations.of(context)!.login),
       ),
       const SizedBox(height: 16),
@@ -144,8 +152,11 @@ class LoginPageState extends State<LoginPage> {
     },
   );
 
-  Widget buildRow(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget buildRow(BuildContext context) => Wrap(
+    alignment: WrapAlignment.center,
+    runAlignment: WrapAlignment.center,
+    spacing: 8,
+    runSpacing: 8,
     children: [
       TextButton(
         onPressed: () => Navigator.of(context).pushReplacementNamed('/register'),
