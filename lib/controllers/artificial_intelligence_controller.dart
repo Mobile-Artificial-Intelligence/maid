@@ -1,7 +1,7 @@
 part of 'package:maid/main.dart';
 
 abstract class AIController extends ChangeNotifier {
-  static ValueNotifier<AIController> notifier = ValueNotifier(LlamaCppController());
+  static ValueNotifier<AIController> notifier = ValueNotifier(kIsWeb ? OpenAIController() : LlamaCppController());
   static AIController get instance => notifier.value;
   static set instance(AIController newInstance) {
     notifier.value = newInstance;
@@ -119,7 +119,7 @@ abstract class AIController extends ChangeNotifier {
           ..fromMap(contextMap);
         break;
       default:
-        instance = LlamaCppController();
+        instance = kIsWeb ? OpenAIController() : LlamaCppController();
     }
   }
 
