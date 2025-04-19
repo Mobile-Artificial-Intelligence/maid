@@ -78,7 +78,7 @@ class ChatController extends ChangeNotifier {
       }
 
       List<String> rootIds = data
-        .where((msg) => msg['parent'] == null)
+        .where((msg) => !msg.containsKey('parent') || msg['parent'] == null)
         .map((msg) => msg['id'] as String).toList();
 
       _chats.clear();

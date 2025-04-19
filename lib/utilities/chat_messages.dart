@@ -73,7 +73,7 @@ class ChatMessage extends ChangeNotifier {
 
   factory ChatMessage.fromMapList(List<Map<String, dynamic>> mapList, [ValueKey<String>? id]) {
     id ??= ValueKey<String>(mapList.firstWhere(
-      (map) => map['parent'] == null,
+      (map) => !map.containsKey('parent') || map['parent'] == null,
       orElse: () => throw ArgumentError('No root found in mapList'),
     )['id']);
 
