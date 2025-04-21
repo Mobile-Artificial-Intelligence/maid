@@ -51,10 +51,7 @@ class ChatController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteMessage(ChatMessage message) {
-    for (final child in message.children) {
-      deleteMessage(child);
-    }
+  void deleteMessage(ChatMessage message) async {
     _mapping.remove(message.id);
 
     save();

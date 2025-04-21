@@ -94,9 +94,12 @@ class MessageViewState extends State<MessageView> {
 
     setState(() => rootPosition = newRootPosition);
 
-    final index = lastTopIndex - difference;
-
     final keys = getChainKeys();
+
+    int index = lastTopIndex - difference;
+
+    if (index < 0) index = 0;
+    if (index >= keys.length) index = keys.length - 1;
 
     final key = keys[index];
 
