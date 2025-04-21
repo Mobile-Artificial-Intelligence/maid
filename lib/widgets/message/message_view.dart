@@ -146,6 +146,13 @@ class MessageViewState extends State<MessageView> {
       AppSettings.instance.assistantName ?? AppLocalizations.of(context)!.assistant
     ) ?? AppLocalizations.of(context)!.newChat;
 
+    if (rootPosition < 0) {
+      rootPosition = 0;
+    }
+    if (rootPosition >= ChatController.instance.root.chain.length) {
+      rootPosition = ChatController.instance.root.chain.length - 1;
+    }
+
     final localRoot = ChatController.instance.root.chain[rootPosition];
 
     if (localRoot.currentChild == null) return const SizedBox.shrink();
