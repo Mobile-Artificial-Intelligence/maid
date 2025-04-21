@@ -27,8 +27,8 @@ abstract class AIController extends ChangeNotifier {
 
   bool get busy => _busy;
 
-  set busy(bool newBusy) {
-    _busy = newBusy;
+  set busy(bool value) {
+    _busy = value;
     save();
     notifyListeners();
   }

@@ -147,7 +147,9 @@ class MessageViewState extends State<MessageView> {
 
     if (localRoot.currentChild == null) return const SizedBox.shrink();
 
-    WidgetsBinding.instance.addPostFrameCallback(jumpToExtent);
+    if (AIController.instance.busy) {
+      WidgetsBinding.instance.addPostFrameCallback(jumpToExtent);
+    }
 
     return MessageWidget(
       key: rootKey,
