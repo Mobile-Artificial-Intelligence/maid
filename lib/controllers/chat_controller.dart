@@ -11,35 +11,51 @@ class ChatController extends ChangeNotifier {
     load();
   }
 
-  List<ChatMessage> _chats = [];
+  ValueKey<String>? _rootKey;
 
-  List<ChatMessage> get chats => _chats;
+  Map<ValueKey<String>, ChatMessage> _mapping = {};
 
-  set chats(List<ChatMessage> newChats) {
-    _chats = newChats;
+  Map<ValueKey<String>, ChatMessage> get mapping => _mapping;
+
+  set mapping(Map<ValueKey<String>, ChatMessage> newMapping) {
+    _mapping = newMapping;
     notifyListeners();
   }
 
+  List<ValueKey<String>> get roots {
+    return _mapping.keys.where((key) => _mapping[key]!.parent == null).toList();
+  }
+
   ChatMessage get root {
-    if (_chats.isEmpty) {
+    if (_mapping.isEmpty || _rootKey == null || !_mapping.containsKey(_rootKey)) {
       final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat');
-      _chats.add(chat);
+      _mapping[chat.id] = chat;
+      _rootKey = chat.id;
     }
 
-    return _chats.first;
+    return _mapping[_rootKey]!;
   }
 
   set root(ChatMessage newRoot){
-    _chats.remove(newRoot);
-
-    _chats.insert(0, newRoot);
+    _mapping[newRoot.id] = newRoot;
+    _rootKey = newRoot.id;
 
     save();
     notifyListeners();
   }
 
   void addMessage(ChatMessage message) {
-    root.tail.addChild(message);
+    _mapping[message.id] = message;
+
+    save();
+    notifyListeners();
+  }
+
+  void deleteMessage(ChatMessage message) {
+    for (final child in message.children) {
+      deleteMessage(child);
+    }
+    _mapping.remove(message.id);
 
     save();
     notifyListeners();
@@ -47,15 +63,18 @@ class ChatController extends ChangeNotifier {
 
   void newChat() {
     final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat');
-
-    _chats.insert(0, chat);
+    _mapping[chat.id] = chat;
+    _rootKey = chat.id;
     
     save();
     notifyListeners();
   }
 
   void deleteChat(ChatMessage chat) {
-    _chats.remove(chat);
+    final chatRoot = chat.root; // Ensures we delete the root chat
+
+    deleteMessage(chatRoot);
+
     save();
     notifyListeners();
   }
@@ -77,15 +96,12 @@ class ChatController extends ChangeNotifier {
         data = OpenAiUtilities.openAiMapper(data);
       }
 
-      List<String> rootIds = data
-        .where((msg) => !msg.containsKey('parent') || msg['parent'] == null)
-        .map((msg) => msg['id'] as String).toList();
-
-      _chats.clear();
-      for (final rootId in rootIds) {
-        final chat = ChatMessage.fromMapList(data, ValueKey<String>(rootId));
-        _chats.add(chat);
+      _mapping.clear();
+      for (final chatMap in data) {
+        final chat = ChatMessage.fromMap(chatMap);
+        _mapping[chat.id] = chat;
       }
+      _rootKey = _mapping.keys.firstWhere((key) => _mapping[key]!.parent == null);
 
       save();
       notifyListeners();
@@ -93,7 +109,12 @@ class ChatController extends ChangeNotifier {
   }
 
   void exportChat(ChatMessage chat) async {
-    final chatMapList = chat.toMapList();
+    List<Map<String, dynamic>> chatMapList = [];
+
+    for (final msg in chat.root.chain) {
+      chatMapList.add(msg.toMap());
+    }
+
     final chatString = jsonEncode(chatMapList);
 
     final outputFile = await FilePicker.platform.saveFile(
@@ -110,7 +131,7 @@ class ChatController extends ChangeNotifier {
   }
 
   void clear() {
-    _chats.clear();
+    _mapping.clear();
     save();
     notifyListeners();
   }
@@ -119,7 +140,7 @@ class ChatController extends ChangeNotifier {
     if (Supabase.instance.client.auth.currentUser != null) {
       await loadSupabase();
 
-      if (_chats.isNotEmpty) return;
+      if (_mapping.isNotEmpty) return;
     }
 
     await loadSharedPrefs();
@@ -128,18 +149,19 @@ class ChatController extends ChangeNotifier {
   Future<void> loadSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final chatsStrings = prefs.getStringList('chats') ?? [];
+    final chatsStrings = prefs.getStringList('chat_messages') ?? [];
 
-    _chats.clear();
+    _mapping.clear();
     for (final chatString in chatsStrings) {
-      final chatMapList = (jsonDecode(chatString) as List).cast<Map<String, dynamic>>();
-      final chat = ChatMessage.fromMapList(chatMapList);
-      _chats.add(chat);
+      final chatMap = jsonDecode(chatString);
+      final chat = ChatMessage.fromMap(chatMap);
+      _mapping[chat.id] = chat;
     }
 
-    if (_chats.isEmpty) {
+    if (_mapping.isEmpty) {
       final chat = ChatMessage(role: ChatMessageRole.system, content: 'New Chat');
-      _chats.add(chat);
+      _mapping[chat.id] = chat;
+      _rootKey = chat.id;
     }
 
     notifyListeners();
@@ -150,7 +172,7 @@ class ChatController extends ChangeNotifier {
 
     const pageSize = 1000;
     int offset = 0;
-    List<Map<String, dynamic>> allData = [];
+    List<Map<String, dynamic>> data = [];
 
     while (true) {
       final page = await Supabase.instance.client
@@ -160,23 +182,19 @@ class ChatController extends ChangeNotifier {
 
       if (page.isEmpty) break;
 
-      allData.addAll(page);
+      data.addAll(page);
       if (page.length < pageSize) break;
       offset += pageSize;
     }
 
-    if (allData.isEmpty) return;
+    if (data.isEmpty) return;
 
-    final rootIds = allData
-      .where((msg) => msg['parent'] == null)
-      .map((msg) => msg['id'] as String)
-      .toList();
-
-    _chats.clear();
-    for (final rootId in rootIds) {
-      final chat = ChatMessage.fromMapList(allData, ValueKey(rootId));
-      _chats.add(chat);
+    _mapping.clear();
+    for (final chatMap in data) {
+      final chat = ChatMessage.fromMap(chatMap);
+      _mapping[chat.id] = chat;
     }
+    _rootKey = _mapping.keys.firstWhere((key) => _mapping[key]!.parent == null);
 
     notifyListeners();
   }
@@ -185,24 +203,21 @@ class ChatController extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     List<String> chatsStrings = [];
+    List<Map<String, dynamic>> messages = [];
 
-    for (final chat in _chats) {
-      final chatMap = chat.toMapList();
+    for (final chat in _mapping.values) {
+      final chatMap = chat.toMap();
+      messages.add(chatMap);
+
       final chatString = jsonEncode(chatMap);
       chatsStrings.add(chatString);
     }
 
-    await prefs.setStringList('chats', chatsStrings);
+    await prefs.setStringList('chat_messages', chatsStrings);
 
     if (Supabase.instance.client.auth.currentUser == null) return;
 
     final userId = Supabase.instance.client.auth.currentUser!.id;
-
-    List<Map<String, dynamic>> messages = [];
-    for (final chat in _chats) {
-      final chatMap = chat.toMapList();
-      messages.addAll(chatMap);
-    }
 
     for (final msg in messages) {
       await Supabase.instance.client.from('chat_messages').upsert({

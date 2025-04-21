@@ -50,7 +50,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onSubmitEdit() {
-    final editedMessage = ChatMessage(content: controller.text, role: ChatMessageRole.user);
+    final editedMessage = ChatMessage(parent: widget.node.parent!.id, content: controller.text, role: ChatMessageRole.user);
 
     widget.node.addChild(editedMessage);
 
@@ -69,7 +69,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
       Stream<String> stream = AIController.instance.prompt();
 
-      final newMessage = ChatMessage(content: '', role: ChatMessageRole.assistant);
+      final newMessage = ChatMessage(parent: node.id, content: '', role: ChatMessageRole.assistant);
 
       node.addChild(newMessage);
 

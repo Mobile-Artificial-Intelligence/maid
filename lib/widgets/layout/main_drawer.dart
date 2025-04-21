@@ -65,9 +65,9 @@ class MainDrawer extends StatelessWidget {
   
   Widget buildListView(BuildContext context, Widget? child) => Expanded(
     child: ListView.builder(
-      itemCount: ChatController.instance.chats.length,
+      itemCount: ChatController.instance.roots.length,
       itemBuilder: (context, index) => ChatTile(
-        node: ChatController.instance.chats[index], 
+        node: ChatController.instance.mapping[ChatController.instance.roots[index]]!, 
         selected: index == 0
       ),
     )

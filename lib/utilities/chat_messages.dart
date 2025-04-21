@@ -20,13 +20,15 @@ enum ChatMessageRole {
 class ChatMessage extends ChangeNotifier {
   ChatMessage({
     ValueKey<String>? id,
+    ValueKey<String>? parent,
     required this.role,
     required String content,
     DateTime? createdAt,
     DateTime? updatedAt,
-    List<ChatMessage>? children,
-    ChatMessage? currentChild,
+    List<ValueKey<String>>? children,
+    ValueKey<String>? currentChild,
   })  : id = id ?? ValueKey<String>(const Uuid().v7()),
+        _parent = parent,
         _updatedAt = updatedAt ?? DateTime.now(),
         _content = content,
         createdAt = createdAt ?? DateTime.now(),
@@ -38,25 +40,23 @@ class ChatMessage extends ChangeNotifier {
     else if (!_children.contains(currentChild)) {
       _children.add(currentChild);
     }
-    
-    for (final child in _children) {
-      child.parent = this;
-    }
   }
 
   ChatMessage.withStream({
     ValueKey<String>? id,
+    ValueKey<String>? parent,
     required this.role,
     required Stream<String> stream,
     DateTime? createdAt,
-    List<ChatMessage>? children,
-    ChatMessage? currentChild,
+    List<ValueKey<String>>? children,
+    ValueKey<String>? currentChild,
   }) : id = id ?? ValueKey<String>(const Uuid().v7()),
-        _updatedAt = DateTime.now(),
-        _content = '',
-        createdAt = createdAt ?? DateTime.now(),
-        _children = children ?? [],
-        _currentChild = currentChild {
+       _parent = parent,
+       _updatedAt = DateTime.now(),
+       _content = '',
+       createdAt = createdAt ?? DateTime.now(),
+       _children = children ?? [],
+       _currentChild = currentChild {
     if (currentChild == null) {
       _currentChild = _children.isNotEmpty ? _children.first : null;
     }
@@ -64,54 +64,24 @@ class ChatMessage extends ChangeNotifier {
       _children.add(currentChild);
     }
 
-    for (final child in _children) {
-      child.parent = this;
-    }
-
     listenToStream(stream);
   }
 
-  factory ChatMessage.fromMapList(List<Map<String, dynamic>> mapList, [ValueKey<String>? id]) {
-    id ??= ValueKey<String>(mapList.firstWhere(
-      (map) => !map.containsKey('parent') || map['parent'] == null,
-      orElse: () => throw ArgumentError('No root found in mapList'),
-    )['id']);
-
-    final map = mapList.firstWhere(
-      (map) => map['id'] == id!.value,
-      orElse: () => throw ArgumentError('No message found with id: ${id!.value}'),
-    );
-
-    List<ChatMessage> children = [];
-    for (final childId in map['children']) {
-      children.add(ChatMessage.fromMapList(mapList, ValueKey<String>(childId)));
-    }
-
-    ChatMessage? currentChild;
-    if (map['current_child'] != null) {
-      currentChild = children.firstWhere(
-        (child) => child.id.value == map['current_child'],
-        orElse: () => throw ArgumentError('No child found with id: ${map['current_child']}'),
-      );
-    }
-    else if (children.isNotEmpty) {
-      currentChild = children.last;
-    }
-
-    DateTime? createdAt;
-    if (map['create_time'] is String) {
-      createdAt = DateTime.parse(map['create_time']);
-    }
-
-    DateTime? updatedAt;
-    if (map['update_time'] is String) {
-      updatedAt = DateTime.parse(map['update_time']);
-    }
+  factory ChatMessage.fromMap(Map<String, dynamic> map) {
+    final id = ValueKey<String>(map['id'] as String);
+    final parent = map['parent'] != null ? ValueKey<String>(map['parent'] as String) : null;
+    final role = ChatMessageRole.fromString(map['role'] as String);
+    final content = map['content'] as String;
+    final createdAt = map['create_time'] != null ? DateTime.parse(map['create_time'] as String) : null;
+    final updatedAt = map['update_time'] != null ? DateTime.parse(map['update_time'] as String) : null;
+    final children = map['children'] != null && map['children'] is List ? (map['children'] as List).map((e) => ValueKey<String>(e as String)).toList() : <ValueKey<String>>[];
+    final currentChild = map['current_child'] != null ? ValueKey<String>(map['current_child'] as String) : null;
 
     return ChatMessage(
       id: id,
-      role: ChatMessageRole.fromString(map['role']),
-      content: map['content'],
+      parent: parent,
+      role: role,
+      content: content,
       createdAt: createdAt,
       updatedAt: updatedAt,
       children: children,
@@ -119,22 +89,13 @@ class ChatMessage extends ChangeNotifier {
     );
   }
 
-  final List<ChatMessage> _children;
+  final List<ValueKey<String>> _children;
 
-  List<ChatMessage> get children => _children;
+  List<ChatMessage> get children => _children.map((key) => ChatController.instance.mapping[key]!).toList();
 
-  ChatMessage? _parent;
+  final ValueKey<String>? _parent;
 
-  ChatMessage? get parent => _parent;
-
-  set parent(ChatMessage? value) {
-    if (_parent != null) {
-      throw ArgumentError('Parent already set');
-    }
-
-    _parent = value;
-    notifyListeners();
-  }
+  ChatMessage? get parent => _parent != null ? ChatController.instance.mapping[_parent] : null;
 
   final ValueKey<String> id;
   final ChatMessageRole role;
@@ -160,9 +121,9 @@ class ChatMessage extends ChangeNotifier {
     }
   }
 
-  ChatMessage? _currentChild;
+  ValueKey<String>? _currentChild;
 
-  ChatMessage? get currentChild => _currentChild;
+  ChatMessage? get currentChild => _currentChild != null ? ChatController.instance.mapping[_currentChild!] : null;
 
   void nextChild() {
     if (_children.isEmpty) return;
@@ -193,22 +154,36 @@ class ChatMessage extends ChangeNotifier {
   }
 
   void addChild(ChatMessage child) {
-    _children.add(child);
-    child.parent = this;
-    _currentChild = child;
+    ChatController.instance.addMessage(child);
+    _children.add(child.id);
+    _currentChild = child.id;
     _updatedAt = DateTime.now();
     notifyListeners();
   }
 
   void removeChild(ChatMessage child) {
-    _children.remove(child);
+    ChatController.instance.deleteMessage(child);
+    _children.remove(child.id);
     _currentChild = _children.isNotEmpty ? _children.first : null;
     _updatedAt = DateTime.now();
     notifyListeners();
   }
 
+  ChatMessage get root {
+    if (parent == null) return this;
+
+    ChatMessage root = this;
+    do {
+      if (root.parent != null) {
+        root = root.parent!;
+      }
+    } while (root.parent != null);
+
+    return root;
+  }
+
   ChatMessage get tail {
-    if (_children.isEmpty) return this;
+    if (children.isEmpty) return this;
 
     ChatMessage tail = this;
     do {
@@ -252,22 +227,14 @@ class ChatMessage extends ChangeNotifier {
 
   int get currentChildIndex => _children.indexOf(_currentChild!);
 
-  List<Map<String, dynamic>> toMapList() {
-    final mapList = [{
-      'id': id.value,
-      'parent': parent?.id.value,
-      'children': children.map((child) => child.id.value).toList(),
-      'current_child': currentChild?.id.value,
-      'role': role.name,
-      'content': content,
-      'create_time': createdAt.toIso8601String(),
-      'update_time': updatedAt.toIso8601String(),
-    }];
-
-    for (final child in _children) {
-      mapList.addAll(child.toMapList());
-    }
-
-    return mapList;
-  }
+  Map<String, dynamic> toMap() => {
+    'id': id.value,
+    'parent': _parent?.value,
+    'children': _children.map((child) => child.value).toList(),
+    'current_child': _currentChild?.value,
+    'role': role.name,
+    'content': content,
+    'create_time': createdAt.toIso8601String(),
+    'update_time': updatedAt.toIso8601String(),
+  };
 }
