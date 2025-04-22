@@ -161,6 +161,8 @@ class ChatController extends ChangeNotifier {
       _rootKey = chat.id;
     }
 
+    _rootKey = _mapping.keys.firstWhere((key) => _mapping[key]!.parent == null);
+
     notifyListeners();
   }
 

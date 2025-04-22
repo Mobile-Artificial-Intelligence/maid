@@ -73,12 +73,7 @@ class MessageViewState extends State<MessageView> {
   void initState() {
     super.initState();
     controller.addListener(onScroll);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final root = ChatController.instance.root;
-      rootPosition = math.max(0, root.chain.length - maxMessages);
-      controller.jumpTo(controller.position.maxScrollExtent);
-    });
+    rootPosition = math.max(0, ChatController.instance.root.chain.length - maxMessages);
   }
 
   void onScroll() {
@@ -175,7 +170,7 @@ class MessageViewState extends State<MessageView> {
     return ListView.builder(
       controller: controller,
       itemBuilder: (context, index) => MessageWidget.itemBuilder(rootPosition + index),
-      itemCount: maxMessages
+      itemCount: math.min(maxMessages, ChatController.instance.root.chain.length - 1),
     );
   }
 }
