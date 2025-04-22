@@ -34,7 +34,9 @@ class HomePageState extends State<HomePage> {
 
   Widget buildBody() => Column(
     children: [
-      MessageView(),
+      Expanded(
+        child: MessageView(),
+      ),
       PromptField(),
     ],
   );

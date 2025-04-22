@@ -84,6 +84,7 @@
     "leadMaintainer": "Ведущий разработчик",
     "apiKey": "API-ключ",
     "baseUrl": "Базовый URL",
+    "scrollToRecent": "Прокрутить к последним сообщениям",
     "clearPrompt": "Очистить промпт",
     "submitPrompt": "Отправить промпт",
     "stopPrompt": "Остановить промпт",

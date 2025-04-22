@@ -265,6 +265,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get baseUrl => 'Базовый URL';
 
   @override
+  String get scrollToRecent => 'Прокрутить к последним сообщениям';
+
+  @override
   String get clearPrompt => 'Очистить промпт';
 
   @override

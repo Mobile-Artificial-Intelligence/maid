@@ -265,6 +265,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get baseUrl => 'URL cơ sở';
 
   @override
+  String get scrollToRecent => 'Cuộn đến tin nhắn gần đây';
+
+  @override
   String get clearPrompt => 'Xóa lời nhắc';
 
   @override

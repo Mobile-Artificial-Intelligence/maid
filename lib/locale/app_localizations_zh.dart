@@ -265,6 +265,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get baseUrl => '基础 URL';
 
   @override
+  String get scrollToRecent => '滚动到最近的消息';
+
+  @override
   String get clearPrompt => '清除提示词';
 
   @override

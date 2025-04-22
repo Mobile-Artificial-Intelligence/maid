@@ -84,6 +84,7 @@
     "leadMaintainer": "Responsable principal",
     "apiKey": "Clé API",
     "baseUrl": "URL de base",
+    "scrollToRecent": "Faire défiler vers le récent",
     "clearPrompt": "Effacer le prompt",
     "submitPrompt": "Envoyer le prompt",
     "stopPrompt": "Arrêter le prompt",

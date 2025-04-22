@@ -265,6 +265,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get baseUrl => 'Temel URL';
 
   @override
+  String get scrollToRecent => 'Son Mesajlara Kaydır';
+
+  @override
   String get clearPrompt => 'İstemi Temizle';
 
   @override

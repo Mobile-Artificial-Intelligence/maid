@@ -265,6 +265,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get baseUrl => '기본 URL';
 
   @override
+  String get scrollToRecent => '최근 메시지로 스크롤';
+
+  @override
   String get clearPrompt => '프롬프트 삭제';
 
   @override

@@ -265,6 +265,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get baseUrl => 'बेस यूआरएल';
 
   @override
+  String get scrollToRecent => 'हाल के संदेशों पर स्क्रॉल करें';
+
+  @override
   String get clearPrompt => 'प्रॉम्प्ट साफ़ करें';
 
   @override

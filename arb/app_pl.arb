@@ -84,6 +84,7 @@
     "leadMaintainer": "Główny opiekun projektu",
     "apiKey": "Klucz API",
     "baseUrl": "Bazowy URL",
+    "scrollToRecent": "Przewiń do najnowszych wiadomości",
     "clearPrompt": "Wyczyść podpowiedź",
     "submitPrompt": "Wyślij podpowiedź",
     "stopPrompt": "Zatrzymaj podpowiedź",

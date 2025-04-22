@@ -84,6 +84,7 @@
     "leadMaintainer": "Hauptbetreuer",
     "apiKey": "API-Schlüssel",
     "baseUrl": "Basis-URL",
+    "scrollToRecent": "Zuletzt verwendet",
     "clearPrompt": "Prompt löschen",
     "submitPrompt": "Prompt senden",
     "stopPrompt": "Prompt stoppen",

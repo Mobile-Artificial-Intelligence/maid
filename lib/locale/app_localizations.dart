@@ -621,6 +621,12 @@ abstract class AppLocalizations {
   /// **'Base URL'**
   String get baseUrl;
 
+  /// No description provided for @scrollToRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Scroll to Recent'**
+  String get scrollToRecent;
+
   /// No description provided for @clearPrompt.
   ///
   /// In en, this message translates to:

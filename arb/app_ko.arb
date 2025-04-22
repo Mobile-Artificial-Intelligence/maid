@@ -84,6 +84,7 @@
     "leadMaintainer": "수석 유지 관리자",
     "apiKey": "API 키",
     "baseUrl": "기본 URL",
+    "scrollToRecent": "최근 메시지로 스크롤",
     "clearPrompt": "프롬프트 삭제",
     "submitPrompt": "프롬프트 제출",
     "stopPrompt": "프롬프트 중지",

@@ -84,6 +84,7 @@
     "leadMaintainer": "प्रधान अनुरक्षक",
     "apiKey": "एपीआई कुंजी",
     "baseUrl": "बेस यूआरएल",
+    "scrollToRecent": "हाल के संदेशों पर स्क्रॉल करें",
     "clearPrompt": "प्रॉम्प्ट साफ़ करें",
     "submitPrompt": "प्रॉम्प्ट सबमिट करें",
     "stopPrompt": "प्रॉम्प्ट रोकें",
