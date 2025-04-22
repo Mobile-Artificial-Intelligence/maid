@@ -126,17 +126,16 @@ class MessageViewState extends State<MessageView> {
   Widget build(BuildContext context) => Expanded(
     child: SingleChildScrollView(
       controller: controller,
-      child: buildChatListener(),
+      child: buildSettingsListener(),
     )
   );
 
-  Widget buildChatListener() => ListenableBuilder(
-    listenable: ChatController.instance,
-    builder: buildSettingsListener
+  Widget buildSettingsListener() => ListenableBuilder(
+    listenable: AppSettings.instance,
+    builder: buildChatListener
   );
 
-  Widget buildSettingsListener(BuildContext context, Widget? child) => ListenableBuilder(
-    listenable: AppSettings.instance,
+  Widget buildChatListener(BuildContext context, Widget? child) => ChatListener(
     builder: buildMessage
   );
 
@@ -161,10 +160,9 @@ class MessageViewState extends State<MessageView> {
       WidgetsBinding.instance.addPostFrameCallback(jumpToExtent);
     }
 
-    return MessageWidget(
-      key: rootKey,
-      node: localRoot,
-      chainPosition: maxMessages - 1,
+    return ListView.builder(
+      itemBuilder: MessageWidget.itemBuilder,
+      itemCount: ChatController.instance.root.chain.length,
     );
   }
 }

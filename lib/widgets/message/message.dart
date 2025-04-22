@@ -3,22 +3,25 @@ part of 'package:maid/main.dart';
 class MessageWidget extends StatefulWidget {
   final ChatMessage node;
 
-  /// The chain position is used to determine the position of the message in the chain.
-  /// Where a position of 0 would indicate the bottom of the chain.
-  final int chainPosition;
-
   ChatMessage get message => node.currentChild!;
   int get siblingsIndex => node.currentChildIndex;
   int get siblingCount => node.children.length;
   bool get onNextEnabled => (siblingsIndex + 1) < siblingCount;
   bool get onPreviousEnabled => siblingsIndex > 0;
-  bool get buildChild => node.currentChild?.currentChild != null && chainPosition > 0;
 
   const MessageWidget({
     required super.key, 
-    required this.node,
-    required this.chainPosition,
+    required this.node
   });
+
+  factory MessageWidget.itemBuilder(BuildContext context, int index) {
+    final message = ChatController.instance.root.chain[index];
+
+    return MessageWidget(
+      key: message.id,
+      node: message,
+    );
+  }
 
   @override
   State<MessageWidget> createState() => MessageWidgetState();
@@ -103,25 +106,11 @@ class MessageWidgetState extends State<MessageWidget> {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: widget.node.currentChild ?? widget.node, 
-    builder: buildColumn
-  );
-
-  Widget buildColumn(BuildContext context, Widget? child) => Column(
-    children: [
-      // Build the current node
-      if (widget.node.currentChild != null) buildCurrentMessage(),
-
-      /// Builds the child node/s if it exists.
-      if (widget.buildChild) MessageWidget(
-        key: childKey,
-        node: widget.node.currentChild!,
-        chainPosition: widget.chainPosition - 1,
-      ),
-    ],
+    builder: buildMessage
   );
 
   // The buildCurrentMessage method will build the padding and the appropriate column based on the editing state.
-  Widget buildCurrentMessage() => Padding(
+  Widget buildMessage(BuildContext context, Widget? child) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
     child: editing && !AIController.instance.busy ? 
       buildMessageEditingColumn() : 
