@@ -14,7 +14,7 @@ class MessageWidget extends StatefulWidget {
     required this.node
   });
 
-  factory MessageWidget.itemBuilder(BuildContext context, int index) {
+  factory MessageWidget.itemBuilder(int index) {
     final message = ChatController.instance.root.chain[index];
 
     return MessageWidget(
