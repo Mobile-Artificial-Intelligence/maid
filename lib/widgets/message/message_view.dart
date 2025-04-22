@@ -123,11 +123,28 @@ class MessageViewState extends State<MessageView> {
   }
 
   @override
-  Widget build(BuildContext context) => Expanded(
-    child: SingleChildScrollView(
-      controller: controller,
-      child: buildChatListener(),
+  Widget build(BuildContext context) => Column(
+    children: [
+      if (rootPosition >= 0 && rootPosition < ChatController.instance.root.chain.length - maxMessages)
+        buildClearButton(),
+      Expanded(
+        child: buildScrollView()
+      )
+    ],
+  );
+
+  Widget buildClearButton() => Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: ElevatedButton(
+      key: ValueKey('scroll_to_recent_button'),
+      onPressed: () => setState(() => rootPosition = ChatController.instance.root.chain.length - maxMessages), 
+      child: Text(AppLocalizations.of(context)!.scrollToRecent),
     )
+  );
+
+  Widget buildScrollView() => SingleChildScrollView(
+    controller: controller,
+    child: buildChatListener(),
   );
 
   Widget buildChatListener() => ListenableBuilder(

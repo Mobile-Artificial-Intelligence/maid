@@ -265,6 +265,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get baseUrl => 'ベースURL';
 
   @override
+  String get scrollToRecent => '最近のメッセージにスクロール';
+
+  @override
   String get clearPrompt => 'プロンプトをクリア';
 
   @override

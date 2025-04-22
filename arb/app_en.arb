@@ -102,6 +102,7 @@
     "leadMaintainer": "Lead Maintainer",
     "apiKey": "API Key",
     "baseUrl": "Base URL",
+    "scrollToRecent": "Scroll to Recent",
     "clearPrompt": "Clear Prompt",
     "submitPrompt": "Submit Prompt",
     "stopPrompt": "Stop Prompt",

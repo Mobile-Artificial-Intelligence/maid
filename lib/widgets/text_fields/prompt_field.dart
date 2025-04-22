@@ -69,20 +69,25 @@ class PromptFieldState extends State<PromptField> {
     controller.clear();
     setState(() => isNotEmpty = controller.text.isNotEmpty);
     try {
-      ChatMessage newMessage = ChatMessage(
+      final userMessage = ChatMessage(
+        parent: ChatController.instance.root.tail.id,
         content: prompt,
         role: ChatMessageRole.user,
       );
 
-      ChatController.instance.addMessage(newMessage);
+      ChatController.instance.root.tail.addChild(userMessage);
 
       Stream<String> stream = AIController.instance.prompt();
 
-      newMessage = ChatMessage(content: '', role: ChatMessageRole.assistant);
+      final assistantMessage = ChatMessage(
+        parent: userMessage.id,
+        content: '', 
+        role: ChatMessageRole.assistant
+      );
 
-      ChatController.instance.addMessage(newMessage);
+      userMessage.addChild(assistantMessage);
 
-      await newMessage.listenToStream(stream);
+      await assistantMessage.listenToStream(stream);
 
       await ChatController.instance.save();
     }

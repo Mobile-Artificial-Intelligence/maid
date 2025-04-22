@@ -265,6 +265,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get baseUrl => 'URL base';
 
   @override
+  String get scrollToRecent => 'Desplazarse a reciente';
+
+  @override
   String get clearPrompt => 'Borrar prompt';
 
   @override

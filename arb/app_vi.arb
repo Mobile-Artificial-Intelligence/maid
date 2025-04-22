@@ -84,6 +84,7 @@
     "leadMaintainer": "Người bảo trì chính",
     "apiKey": "Khóa API",
     "baseUrl": "URL cơ sở",
+    "scrollToRecent": "Cuộn đến tin nhắn gần đây",
     "clearPrompt": "Xóa lời nhắc",
     "submitPrompt": "Gửi lời nhắc",
     "stopPrompt": "Dừng lời nhắc",

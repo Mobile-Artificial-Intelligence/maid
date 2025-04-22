@@ -84,6 +84,7 @@
     "leadMaintainer": "Baş Sorumlu",
     "apiKey": "API Anahtarı",
     "baseUrl": "Temel URL",
+    "scrollToRecent": "Son Mesajlara Kaydır",
     "clearPrompt": "İstemi Temizle",
     "submitPrompt": "İstemi Gönder",
     "stopPrompt": "İstemi Durdur",
