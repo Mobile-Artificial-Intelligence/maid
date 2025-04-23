@@ -118,12 +118,21 @@ class MessageViewState extends State<MessageView> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: AppSettings.instance,
+    builder: buildChatListener
+  );
+
+  Widget buildChatListener(BuildContext context, Widget? child) => ChatListener(
+    builder: buildColumn
+  );
+  
+  Widget buildColumn(BuildContext context, Widget? child) => Column(
     children: [
-      if (rootPosition < ChatController.instance.root.chain.length - maxMessages)
+      if (ChatController.instance.root.chain.length > maxMessages && rootPosition < ChatController.instance.root.chain.length - maxMessages)
         buildClearButton(),
       Expanded(
-        child: buildSettingsListener()
+        child: buildMessage()
       )
     ],
   );
@@ -137,16 +146,7 @@ class MessageViewState extends State<MessageView> {
     )
   );
 
-  Widget buildSettingsListener() => ListenableBuilder(
-    listenable: AppSettings.instance,
-    builder: buildChatListener
-  );
-
-  Widget buildChatListener(BuildContext context, Widget? child) => ChatListener(
-    builder: buildMessage
-  );
-
-  Widget buildMessage(BuildContext context, Widget? child) {
+  Widget buildMessage() {
     ChatController.instance.root.content = AppSettings.instance.systemPrompt?.formatPlaceholders(
       AppSettings.instance.userName ?? AppLocalizations.of(context)!.user, 
       AppSettings.instance.assistantName ?? AppLocalizations.of(context)!.assistant
