@@ -73,12 +73,7 @@ class MessageViewState extends State<MessageView> {
   void initState() {
     super.initState();
     controller.addListener(onScroll);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final root = ChatController.instance.root;
-      rootPosition = math.max(0, root.chain.length - maxMessages);
-      controller.jumpTo(controller.position.maxScrollExtent);
-    });
+    rootPosition = math.max(0, ChatController.instance.root.chain.length - maxMessages);
   }
 
   void onScroll() {
@@ -128,7 +123,7 @@ class MessageViewState extends State<MessageView> {
       if (rootPosition >= 0 && rootPosition < ChatController.instance.root.chain.length - maxMessages)
         buildClearButton(),
       Expanded(
-        child: buildScrollView()
+        child: buildSettingsListener()
       )
     ],
   );
@@ -142,18 +137,12 @@ class MessageViewState extends State<MessageView> {
     )
   );
 
-  Widget buildScrollView() => SingleChildScrollView(
-    controller: controller,
-    child: buildChatListener(),
-  );
-
-  Widget buildChatListener() => ListenableBuilder(
-    listenable: ChatController.instance,
-    builder: buildSettingsListener
-  );
-
-  Widget buildSettingsListener(BuildContext context, Widget? child) => ListenableBuilder(
+  Widget buildSettingsListener() => ListenableBuilder(
     listenable: AppSettings.instance,
+    builder: buildChatListener
+  );
+
+  Widget buildChatListener(BuildContext context, Widget? child) => ChatListener(
     builder: buildMessage
   );
 
@@ -178,10 +167,10 @@ class MessageViewState extends State<MessageView> {
       WidgetsBinding.instance.addPostFrameCallback(jumpToExtent);
     }
 
-    return MessageWidget(
-      key: rootKey,
-      node: localRoot,
-      chainPosition: maxMessages - 1,
+    return ListView.builder(
+      controller: controller,
+      itemBuilder: (context, index) => MessageWidget.itemBuilder(rootPosition + index),
+      itemCount: math.min(maxMessages, ChatController.instance.root.chain.length - 1),
     );
   }
 }
