@@ -120,7 +120,7 @@ class MessageViewState extends State<MessageView> {
   @override
   Widget build(BuildContext context) => Column(
     children: [
-      if (rootPosition >= 0 && rootPosition < ChatController.instance.root.chain.length - maxMessages)
+      if (rootPosition < ChatController.instance.root.chain.length - maxMessages)
         buildClearButton(),
       Expanded(
         child: buildSettingsListener()
