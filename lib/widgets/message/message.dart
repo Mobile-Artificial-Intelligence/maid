@@ -3,25 +3,22 @@ part of 'package:maid/main.dart';
 class MessageWidget extends StatefulWidget {
   final ChatMessage node;
 
+  /// The chain position is used to determine the position of the message in the chain.
+  /// Where a position of 0 would indicate the bottom of the chain.
+  final int chainPosition;
+
   ChatMessage get message => node.currentChild!;
   int get siblingsIndex => node.currentChildIndex;
   int get siblingCount => node.children.length;
   bool get onNextEnabled => (siblingsIndex + 1) < siblingCount;
   bool get onPreviousEnabled => siblingsIndex > 0;
+  bool get buildChild => node.currentChild?.currentChild != null && chainPosition > 0;
 
   const MessageWidget({
     required super.key, 
-    required this.node
+    required this.node,
+    required this.chainPosition,
   });
-
-  factory MessageWidget.itemBuilder(int index) {
-    final message = ChatController.instance.root.chain[index];
-
-    return MessageWidget(
-      key: message.id,
-      node: message,
-    );
-  }
 
   @override
   State<MessageWidget> createState() => MessageWidgetState();
@@ -43,7 +40,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onDelete() {
-    setState(() => widget.node.removeChild(widget.message));
+    setState(() => widget.node.removeChild(widget.node.currentChild!));
     ChatController.instance.save();
   }
 
@@ -53,11 +50,11 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onSubmitEdit() {
-    final editedMessage = ChatMessage(parent: widget.node.id, content: controller.text, role: ChatMessageRole.user);
+    final editedMessage = ChatMessage(content: controller.text, role: ChatMessageRole.user);
 
     widget.node.addChild(editedMessage);
 
-    tryRegenerate(editedMessage);
+    tryRegenerate(widget.node.currentChild!);
 
     setState(() => editing = false);
   }
@@ -72,7 +69,7 @@ class MessageWidgetState extends State<MessageWidget> {
 
       Stream<String> stream = AIController.instance.prompt();
 
-      final newMessage = ChatMessage(parent: node.id, content: '', role: ChatMessageRole.assistant);
+      final newMessage = ChatMessage(content: '', role: ChatMessageRole.assistant);
 
       node.addChild(newMessage);
 
@@ -105,21 +102,26 @@ class MessageWidgetState extends State<MessageWidget> {
   /// The build method will build the padding and the appropriate column based on the editing state.
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.node, 
-    builder: buildMessage
+    listenable: widget.node.currentChild ?? widget.node, 
+    builder: buildColumn
   );
 
-  Widget buildListener(BuildContext context, Widget? child) {
-    if (widget.node.currentChild == null) return buildMessage(context, child);
+  Widget buildColumn(BuildContext context, Widget? child) => Column(
+    children: [
+      // Build the current node
+      if (widget.node.currentChild != null) buildCurrentMessage(),
 
-    return ListenableBuilder(
-      listenable: widget.message, 
-      builder: buildMessage
-    );
-  }
+      /// Builds the child node/s if it exists.
+      if (widget.buildChild) MessageWidget(
+        key: childKey,
+        node: widget.node.currentChild!,
+        chainPosition: widget.chainPosition - 1,
+      ),
+    ],
+  );
 
   // The buildCurrentMessage method will build the padding and the appropriate column based on the editing state.
-  Widget buildMessage(BuildContext context, Widget? child) => Padding(
+  Widget buildCurrentMessage() => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
     child: editing && !AIController.instance.busy ? 
       buildMessageEditingColumn() : 

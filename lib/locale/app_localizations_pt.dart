@@ -326,7 +326,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get resetCodeSent => 'Um Código de Reinicio foi enviado para o seu email.';
 
   @override
-  String get sendResetCode => 'Enviar código de redefinição';
+  String get sendResetCode => 'Enviar código de recuperação';
 
   @override
   String get sendAgain => 'Enviar De Novo';

@@ -126,13 +126,13 @@ class MessageViewState extends State<MessageView> {
   Widget buildChatListener(BuildContext context, Widget? child) => ChatListener(
     builder: buildColumn
   );
-  
+
   Widget buildColumn(BuildContext context, Widget? child) => Column(
     children: [
       if (ChatController.instance.root.chain.length > maxMessages && rootPosition < ChatController.instance.root.chain.length - maxMessages)
         buildClearButton(),
       Expanded(
-        child: buildMessage()
+        child: buildMessage(),
       )
     ],
   );
@@ -167,10 +167,13 @@ class MessageViewState extends State<MessageView> {
       WidgetsBinding.instance.addPostFrameCallback(jumpToExtent);
     }
 
-    return ListView.builder(
+    return SingleChildScrollView(
       controller: controller,
-      itemBuilder: (context, index) => MessageWidget.itemBuilder(rootPosition + index),
-      itemCount: math.min(maxMessages, ChatController.instance.root.chain.length),
+      child: MessageWidget(
+        key: rootKey,
+        node: localRoot,
+        chainPosition: maxMessages - 1,
+      )
     );
   }
 }

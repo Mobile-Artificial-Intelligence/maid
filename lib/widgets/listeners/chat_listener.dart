@@ -16,7 +16,7 @@ class ChatListener extends StatelessWidget{
 
   Widget buildMessageListener(int index) => ListenableBuilder(
     listenable: ChatController.instance.root.chain[index],
-    builder: ChatController.instance.root.chain.length - 1 >= index 
+    builder: ChatController.instance.root.chain.length == index 
       ? (context, child) => builder(context, child)
       : (context, child) => buildMessageListener(index + 1),
   );
