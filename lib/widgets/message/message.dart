@@ -53,11 +53,11 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onSubmitEdit() {
-    final editedMessage = ChatMessage(parent: widget.node.parent!.id, content: controller.text, role: ChatMessageRole.user);
+    final editedMessage = ChatMessage(parent: widget.node.id, content: controller.text, role: ChatMessageRole.user);
 
     widget.node.addChild(editedMessage);
 
-    tryRegenerate(widget.node.currentChild!);
+    tryRegenerate(editedMessage);
 
     setState(() => editing = false);
   }
