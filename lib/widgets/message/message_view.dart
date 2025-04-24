@@ -170,7 +170,7 @@ class MessageViewState extends State<MessageView> {
     return ListView.builder(
       controller: controller,
       itemBuilder: (context, index) => MessageWidget.itemBuilder(rootPosition + index),
-      itemCount: math.min(maxMessages, ChatController.instance.root.chain.length - 1),
+      itemCount: math.min(maxMessages, ChatController.instance.root.chain.length),
     );
   }
 }
