@@ -23,7 +23,7 @@ class ChatController extends ChangeNotifier {
   }
 
   List<ValueKey<String>> get roots {
-    return _mapping.keys.where((key) => _mapping[key]!.parent == null).toList();
+    return _mapping.keys.where((key) => _mapping[key]!.isRoot).toList();
   }
 
   ChatMessage get root {

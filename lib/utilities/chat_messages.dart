@@ -95,6 +95,8 @@ class ChatMessage extends ChangeNotifier {
 
   final ValueKey<String>? _parent;
 
+  bool get isRoot => _parent == null;
+
   ChatMessage? get parent => _parent != null ? ChatController.instance.mapping[_parent] : null;
 
   final ValueKey<String> id;
