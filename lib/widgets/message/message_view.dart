@@ -123,7 +123,8 @@ class MessageViewState extends State<MessageView> {
     builder: buildChatListener
   );
 
-  Widget buildChatListener(BuildContext context, Widget? child) => ChatListener(
+  Widget buildChatListener(BuildContext context, Widget? child) => ListenableBuilder(
+    listenable: ChatController.instance,
     builder: buildColumn
   );
 
