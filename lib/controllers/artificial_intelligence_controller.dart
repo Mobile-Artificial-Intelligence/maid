@@ -1,11 +1,17 @@
 part of 'package:maid/main.dart';
 
 abstract class AIController extends ChangeNotifier {
-  static ValueNotifier<AIController> notifier = ValueNotifier(kIsWeb ? OpenAIController() : LlamaCppController());
-  static AIController get instance => notifier.value;
+  static ValueNotifier<AIController?> notifier = ValueNotifier(null);
+  static AIController get instance => notifier.value ?? defaultController;
   static set instance(AIController newInstance) {
+    if (notifier.value != null) {
+      notifier.value!.save();
+    }
+
     notifier.value = newInstance;
   }
+
+  static AIController get defaultController => kIsWeb ? OpenAIController() : LlamaCppController();
 
   static Map<String, String> getTypes(BuildContext context) {
     Map<String, String> types = {};
