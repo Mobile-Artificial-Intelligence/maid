@@ -77,6 +77,10 @@ class PromptFieldState extends State<PromptField> {
 
       ChatController.instance.root.tail.addChild(userMessage);
 
+      assert(ChatController.instance.root.tail == userMessage);
+      assert(ChatController.instance.mapping.containsKey(userMessage.id));
+      assert(ChatController.instance.mapping.containsValue(userMessage));
+
       Stream<String> stream = AIController.instance.prompt();
 
       final assistantMessage = ChatMessage(
@@ -86,6 +90,10 @@ class PromptFieldState extends State<PromptField> {
       );
 
       userMessage.addChild(assistantMessage);
+
+      assert(ChatController.instance.root.tail == assistantMessage);
+      assert(ChatController.instance.mapping.containsKey(assistantMessage.id));
+      assert(ChatController.instance.mapping.containsValue(assistantMessage));
 
       await assistantMessage.listenToStream(stream);
 

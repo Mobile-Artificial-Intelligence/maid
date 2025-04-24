@@ -43,7 +43,7 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onDelete() {
-    setState(() => widget.node.removeChild(widget.node.currentChild!));
+    setState(() => widget.node.removeChild(widget.message));
     ChatController.instance.save();
   }
 
@@ -53,11 +53,11 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   void onSubmitEdit() {
-    final editedMessage = ChatMessage(parent: widget.node.parent!.id, content: controller.text, role: ChatMessageRole.user);
+    final editedMessage = ChatMessage(parent: widget.node.id, content: controller.text, role: ChatMessageRole.user);
 
     widget.node.addChild(editedMessage);
 
-    tryRegenerate(widget.node.currentChild!);
+    tryRegenerate(editedMessage);
 
     setState(() => editing = false);
   }
@@ -105,9 +105,18 @@ class MessageWidgetState extends State<MessageWidget> {
   /// The build method will build the padding and the appropriate column based on the editing state.
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.node.currentChild ?? widget.node, 
+    listenable: widget.node, 
     builder: buildMessage
   );
+
+  Widget buildListener(BuildContext context, Widget? child) {
+    if (widget.node.currentChild == null) return buildMessage(context, child);
+
+    return ListenableBuilder(
+      listenable: widget.message, 
+      builder: buildMessage
+    );
+  }
 
   // The buildCurrentMessage method will build the padding and the appropriate column based on the editing state.
   Widget buildMessage(BuildContext context, Widget? child) => Padding(
