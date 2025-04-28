@@ -1,4 +1,4 @@
-<div align="center" id = "top">
+<div align="center" id="top">
   <img alt="logo" height="200px" src="images/logo-combined.svg">
 </div>
 
