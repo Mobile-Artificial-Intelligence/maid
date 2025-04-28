@@ -1,6 +1,6 @@
 name: maid
 version: 2.0.7
-description: 'A cross-platform Flutter app for chatting with AI.'
+description: 'The Mobile Artifical Intelligence Distribution (MAID) project is a research initiative focused on the development and deployment of artificial intelligence (AI) systems on mobile devices. The goal of MAID is to create a frontend for AI that is private, secure, and efficient, allowing users to leverage the power of AI without compromising their personal data or privacy.'
 publish_to: 'none'
 
 environment:
