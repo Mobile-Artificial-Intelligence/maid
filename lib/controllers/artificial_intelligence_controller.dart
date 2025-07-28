@@ -635,7 +635,7 @@ class OpenAIController extends RemoteAIController {
 
     try {
       await for (final completion in completionStream) {
-        yield completion.choices.first.delta.content ?? '';
+        yield completion.choices.first.delta?.content ?? '';
       }
     }
     catch (e) {

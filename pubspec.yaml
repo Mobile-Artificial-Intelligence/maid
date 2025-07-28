@@ -27,10 +27,10 @@ dependencies:
 
   # Supported Ecosystems
   llama_sdk: ^0.0.5
-  ollama_dart: ^0.2.2+1
-  openai_dart: ^0.4.5
-  mistralai_dart: ^0.0.3+4
-  anthropic_sdk_dart: ^0.2.0+1
+  ollama_dart: ^0.2.3
+  openai_dart: ^0.5.2
+  mistralai_dart: ^0.0.4
+  anthropic_sdk_dart: ^0.2.1
 
   # For searching local network for ollama
   device_info_plus: ^11.3.0
