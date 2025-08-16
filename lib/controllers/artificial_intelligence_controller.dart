@@ -1082,4 +1082,71 @@ class AzureOpenAIController extends RemoteAIController {
     final apiVersionRegex = RegExp(r'^\d{4}-\d{2}-\d{2}(-preview)?$');
     return apiVersionRegex.hasMatch(apiVersion);
   }
+
+  /// Constructs the base Azure OpenAI endpoint URL
+  /// Format: https://{resource-name}.openai.azure.com
+  String get _baseEndpoint {
+    if (_resourceName == null || _resourceName!.isEmpty) {
+      throw StateError('Resource name is required to construct Azure OpenAI endpoint');
+    }
+    return 'https://$_resourceName.openai.azure.com';
+  }
+
+  /// Constructs the Azure OpenAI chat completions endpoint URL
+  /// Format: https://{resource-name}.openai.azure.com/openai/deployments/{deployment-name}/chat/completions?api-version={api-version}
+  String get _chatCompletionsUrl {
+    if (_deploymentName == null || _deploymentName!.isEmpty) {
+      throw StateError('Deployment name is required to construct Azure OpenAI chat completions endpoint');
+    }
+    if (_apiVersion == null || _apiVersion!.isEmpty) {
+      throw StateError('API version is required to construct Azure OpenAI endpoint');
+    }
+    return '$_baseEndpoint/openai/deployments/$_deploymentName/chat/completions?api-version=$_apiVersion';
+  }
+
+  /// Constructs the Azure OpenAI deployments listing endpoint URL
+  /// Format: https://{resource-name}.openai.azure.com/openai/deployments?api-version={api-version}
+  String get _deploymentsUrl {
+    if (_apiVersion == null || _apiVersion!.isEmpty) {
+      throw StateError('API version is required to construct Azure OpenAI endpoint');
+    }
+    return '$_baseEndpoint/openai/deployments?api-version=$_apiVersion';
+  }
+
+  /// Constructs Azure OpenAI authentication headers
+  /// Uses api-key header instead of Authorization Bearer token
+  Map<String, String> get _authHeaders {
+    if (_apiKey == null || _apiKey!.isEmpty) {
+      throw StateError('API key is required for Azure OpenAI authentication');
+    }
+    return {
+      'Content-Type': 'application/json',
+      'api-key': _apiKey!,
+    };
+  }
+
+  /// Constructs Azure OpenAI request headers with authentication and content type
+  Map<String, String> _buildRequestHeaders([Map<String, String>? additionalHeaders]) {
+    final headers = Map<String, String>.from(_authHeaders);
+    if (additionalHeaders != null) {
+      headers.addAll(additionalHeaders);
+    }
+    return headers;
+  }
+
+  /// Validates that all required Azure OpenAI configuration is present for making requests
+  void _validateConfiguration() {
+    if (_resourceName == null || _resourceName!.isEmpty) {
+      throw StateError('Azure resource name is required');
+    }
+    if (_deploymentName == null || _deploymentName!.isEmpty) {
+      throw StateError('Azure deployment name is required');
+    }
+    if (_apiKey == null || _apiKey!.isEmpty) {
+      throw StateError('Azure OpenAI API key is required');
+    }
+    if (_apiVersion == null || _apiVersion!.isEmpty) {
+      throw StateError('Azure OpenAI API version is required');
+    }
+  }
 }
