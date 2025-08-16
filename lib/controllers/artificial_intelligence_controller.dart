@@ -1090,12 +1090,86 @@ class AzureOpenAIController extends RemoteAIController {
 
   @override
   Future<bool> getModelOptions() async {
-    // TODO: Implement deployment discovery and model options
-    // This is a placeholder implementation
     try {
-      _modelOptions = ['gpt-35-turbo', 'gpt-4', 'gpt-4-32k'];
-      return true;
+      // Validate that we have the required configuration to fetch deployments
+      if (_resourceName == null || _resourceName!.isEmpty) {
+        return false;
+      }
+      if (_apiKey == null || _apiKey!.isEmpty) {
+        return false;
+      }
+      if (_apiVersion == null || _apiVersion!.isEmpty) {
+        return false;
+      }
+
+      // Create Dio client for making the request
+      final client = Dio();
+      
+      // Make request to Azure OpenAI deployments endpoint
+      final response = await client.get(
+        _deploymentsUrl,
+        options: Options(
+          headers: _authHeaders,
+          // Set reasonable timeout for deployment discovery
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+        ),
+      );
+
+      // Parse the response to extract deployment names
+      if (response.statusCode == 200 && response.data != null) {
+        final data = response.data;
+        
+        // Azure OpenAI deployments API returns a 'data' array with deployment objects
+        if (data['data'] != null && data['data'] is List) {
+          final deployments = data['data'] as List;
+          
+          // Extract deployment names from the response
+          final deploymentNames = <String>[];
+          for (final deployment in deployments) {
+            if (deployment is Map<String, dynamic> && deployment['id'] != null) {
+              deploymentNames.add(deployment['id'].toString());
+            }
+          }
+          
+          // Update model options with discovered deployments
+          _modelOptions = deploymentNames;
+          
+          // If we found deployments, return success
+          return deploymentNames.isNotEmpty;
+        }
+      }
+      
+      // If we couldn't parse deployments, fall back to empty list
+      _modelOptions = [];
+      return false;
+      
     } catch (e) {
+      // Handle Azure OpenAI specific errors gracefully
+      final errorString = e.toString();
+      
+      // Don't rethrow connection errors, just return false
+      if (errorString.contains(RegExp(r'Connection (failed|refused|timeout)'))) {
+        _modelOptions = [];
+        return false;
+      }
+      
+      // Handle HTTP error responses
+      if (errorString.contains('404')) {
+        // Resource not found - likely invalid resource name
+        _modelOptions = [];
+        return false;
+      } else if (errorString.contains('401')) {
+        // Unauthorized - likely invalid API key
+        _modelOptions = [];
+        return false;
+      } else if (errorString.contains('403')) {
+        // Forbidden - API key doesn't have permission to list deployments
+        _modelOptions = [];
+        return false;
+      }
+      
+      // For other errors, don't clear existing options but return false
       return false;
     }
   }
