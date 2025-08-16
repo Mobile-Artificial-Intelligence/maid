@@ -902,6 +902,13 @@ class AzureOpenAIController extends RemoteAIController {
       _deploymentName!.isNotEmpty &&
       !busy;
 
+  @override
+  set parameters(Map<String, dynamic> value) {
+    _parameters = _validateAndSanitizeParameters(value);
+    save();
+    notifyListeners();
+  }
+
   AzureOpenAIController({
     super.model,
     super.parameters,
@@ -928,7 +935,7 @@ class AzureOpenAIController extends RemoteAIController {
   @override
   void fromMap(Map<String, dynamic> map) {
     _model = map['model'];
-    _parameters = map['parameters'] ?? {};
+    _parameters = _validateAndSanitizeParameters(map['parameters'] ?? {});
     _baseUrl = map['base_url'];
     _apiKey = map['api_key'];
 
@@ -978,8 +985,8 @@ class AzureOpenAIController extends RemoteAIController {
         'api-key': _apiKey!,
       };
 
-      // Prepare the request body in OpenAI format
-      final requestBody = {
+      // Prepare the request body in OpenAI format with validated parameters
+      final requestBody = <String, dynamic>{
         'messages': ChatController.instance.root
             .toOpenAiMessages()
             .map((msg) => {
@@ -988,12 +995,11 @@ class AzureOpenAIController extends RemoteAIController {
                 })
             .toList(),
         'stream': true,
-        'temperature': _parameters['temperature'],
-        'top_p': _parameters['top_p'],
-        'max_tokens': _parameters['max_tokens'],
-        'frequency_penalty': _parameters['frequency_penalty'],
-        'presence_penalty': _parameters['presence_penalty'],
       };
+
+      // Add validated parameters to request body
+      final validatedParams = _validateAndSanitizeParameters(_parameters);
+      requestBody.addAll(validatedParams);
 
       // Remove null parameters
       requestBody.removeWhere((key, value) => value == null);
@@ -1095,14 +1101,15 @@ class AzureOpenAIController extends RemoteAIController {
       // Create Dio client for making the request
       final client = Dio();
 
+      // Configure timeouts for deployment discovery
+      client.options.connectTimeout = const Duration(seconds: 10);
+      client.options.receiveTimeout = const Duration(seconds: 10);
+
       // Make request to Azure OpenAI deployments endpoint
       final response = await client.get(
         _deploymentsUrl,
         options: Options(
           headers: _authHeaders,
-          // Set reasonable timeout for deployment discovery
-          connectTimeout: const Duration(seconds: 10),
-          receiveTimeout: const Duration(seconds: 10),
         ),
       );
 
@@ -1376,6 +1383,255 @@ class AzureOpenAIController extends RemoteAIController {
     }
     if (_apiVersion == null || _apiVersion!.isEmpty) {
       throw StateError('Azure OpenAI API version is required');
+    }
+  }
+
+  /// Validates and sanitizes parameters according to Azure OpenAI constraints
+  /// Returns a new map with validated parameters, removing invalid ones and applying defaults
+  Map<String, dynamic> _validateAndSanitizeParameters(
+      Map<String, dynamic> params) {
+    final validatedParams = <String, dynamic>{};
+
+    // Temperature: 0.0 to 2.0 (Azure OpenAI constraint)
+    if (params.containsKey('temperature')) {
+      final temp = params['temperature'];
+      if (temp is num && temp >= 0.0 && temp <= 2.0) {
+        validatedParams['temperature'] = temp.toDouble();
+      }
+    }
+
+    // Top P: 0.0 to 1.0 (Azure OpenAI constraint)
+    if (params.containsKey('top_p')) {
+      final topP = params['top_p'];
+      if (topP is num && topP >= 0.0 && topP <= 1.0) {
+        validatedParams['top_p'] = topP.toDouble();
+      }
+    }
+
+    // Max tokens: 1 to model-specific maximum (Azure OpenAI constraint)
+    if (params.containsKey('max_tokens')) {
+      final maxTokens = params['max_tokens'];
+      if (maxTokens is num && maxTokens >= 1 && maxTokens <= 32768) {
+        validatedParams['max_tokens'] = maxTokens.toInt();
+      }
+    }
+
+    // Frequency penalty: -2.0 to 2.0 (Azure OpenAI constraint)
+    if (params.containsKey('frequency_penalty')) {
+      final freqPenalty = params['frequency_penalty'];
+      if (freqPenalty is num && freqPenalty >= -2.0 && freqPenalty <= 2.0) {
+        validatedParams['frequency_penalty'] = freqPenalty.toDouble();
+      }
+    }
+
+    // Presence penalty: -2.0 to 2.0 (Azure OpenAI constraint)
+    if (params.containsKey('presence_penalty')) {
+      final presPenalty = params['presence_penalty'];
+      if (presPenalty is num && presPenalty >= -2.0 && presPenalty <= 2.0) {
+        validatedParams['presence_penalty'] = presPenalty.toDouble();
+      }
+    }
+
+    // Stop sequences: array of up to 4 strings (Azure OpenAI constraint)
+    if (params.containsKey('stop')) {
+      final stop = params['stop'];
+      if (stop is List && stop.length <= 4) {
+        final validStop = stop
+            .where((item) => item is String && item.isNotEmpty)
+            .cast<String>()
+            .toList();
+        if (validStop.isNotEmpty) {
+          validatedParams['stop'] = validStop;
+        }
+      } else if (stop is String && stop.isNotEmpty) {
+        validatedParams['stop'] = [stop];
+      }
+    }
+
+    // N (number of completions): 1 to 128 (Azure OpenAI constraint, but typically 1 for streaming)
+    if (params.containsKey('n')) {
+      final n = params['n'];
+      if (n is num && n >= 1 && n <= 128) {
+        validatedParams['n'] = n.toInt();
+      }
+    }
+
+    // Logit bias: object with token IDs as keys and bias values from -100 to 100
+    if (params.containsKey('logit_bias')) {
+      final logitBias = params['logit_bias'];
+      if (logitBias is Map<String, dynamic>) {
+        final validLogitBias = <String, dynamic>{};
+        for (final entry in logitBias.entries) {
+          final tokenId = int.tryParse(entry.key);
+          final bias = entry.value;
+          if (tokenId != null && bias is num && bias >= -100 && bias <= 100) {
+            validLogitBias[entry.key] = bias.toDouble();
+          }
+        }
+        if (validLogitBias.isNotEmpty) {
+          validatedParams['logit_bias'] = validLogitBias;
+        }
+      }
+    }
+
+    // User identifier: string for tracking purposes (Azure OpenAI supports this)
+    if (params.containsKey('user')) {
+      final user = params['user'];
+      if (user is String && user.isNotEmpty && user.length <= 256) {
+        validatedParams['user'] = user;
+      }
+    }
+
+    // Seed: integer for deterministic sampling (Azure OpenAI supports this in newer versions)
+    if (params.containsKey('seed')) {
+      final seed = params['seed'];
+      if (seed is num && seed >= -2147483648 && seed <= 2147483647) {
+        validatedParams['seed'] = seed.toInt();
+      }
+    }
+
+    return validatedParams;
+  }
+
+  /// Validates a specific parameter value according to Azure OpenAI constraints
+  /// Returns true if the parameter is valid, false otherwise
+  bool _isValidParameter(String key, dynamic value) {
+    switch (key) {
+      case 'temperature':
+        return value is num && value >= 0.0 && value <= 2.0;
+      case 'top_p':
+        return value is num && value >= 0.0 && value <= 1.0;
+      case 'max_tokens':
+        return value is num && value >= 1 && value <= 32768;
+      case 'frequency_penalty':
+      case 'presence_penalty':
+        return value is num && value >= -2.0 && value <= 2.0;
+      case 'stop':
+        if (value is List) {
+          return value.length <= 4 &&
+              value.every((item) => item is String && item.isNotEmpty);
+        } else if (value is String) {
+          return value.isNotEmpty;
+        }
+        return false;
+      case 'n':
+        return value is num && value >= 1 && value <= 128;
+      case 'logit_bias':
+        if (value is Map<String, dynamic>) {
+          return value.entries.every((entry) {
+            final tokenId = int.tryParse(entry.key);
+            final bias = entry.value;
+            return tokenId != null &&
+                bias is num &&
+                bias >= -100 &&
+                bias <= 100;
+          });
+        }
+        return false;
+      case 'user':
+        return value is String && value.isNotEmpty && value.length <= 256;
+      case 'seed':
+        return value is num && value >= -2147483648 && value <= 2147483647;
+      default:
+        // Allow unknown parameters but don't validate them
+        return true;
+    }
+  }
+
+  /// Gets the default value for a parameter if none is provided
+  dynamic _getDefaultParameterValue(String key) {
+    switch (key) {
+      case 'temperature':
+        return 1.0;
+      case 'top_p':
+        return 1.0;
+      case 'max_tokens':
+        return null; // Let Azure OpenAI decide based on model
+      case 'frequency_penalty':
+      case 'presence_penalty':
+        return 0.0;
+      case 'n':
+        return 1;
+      default:
+        return null;
+    }
+  }
+
+  /// Public method to validate a parameter for UI feedback
+  /// Returns a validation result with error message if invalid
+  Map<String, dynamic> validateParameter(String key, dynamic value) {
+    final isValid = _isValidParameter(key, value);
+    if (isValid) {
+      return {'valid': true, 'message': null};
+    }
+
+    // Provide specific error messages for different parameter types
+    switch (key) {
+      case 'temperature':
+        return {
+          'valid': false,
+          'message': 'Temperature must be between 0.0 and 2.0'
+        };
+      case 'top_p':
+        return {'valid': false, 'message': 'Top P must be between 0.0 and 1.0'};
+      case 'max_tokens':
+        return {
+          'valid': false,
+          'message': 'Max tokens must be between 1 and 32768'
+        };
+      case 'frequency_penalty':
+      case 'presence_penalty':
+        return {
+          'valid': false,
+          'message': 'Penalty must be between -2.0 and 2.0'
+        };
+      case 'stop':
+        return {
+          'valid': false,
+          'message': 'Stop sequences must be up to 4 non-empty strings'
+        };
+      case 'n':
+        return {'valid': false, 'message': 'N must be between 1 and 128'};
+      case 'user':
+        return {
+          'valid': false,
+          'message':
+              'User identifier must be a non-empty string up to 256 characters'
+        };
+      case 'seed':
+        return {
+          'valid': false,
+          'message':
+              'Seed must be an integer between -2147483648 and 2147483647'
+        };
+      default:
+        return {'valid': false, 'message': 'Invalid parameter value'};
+    }
+  }
+
+  /// Gets parameter constraints for UI display
+  Map<String, dynamic> getParameterConstraints(String key) {
+    switch (key) {
+      case 'temperature':
+        return {'min': 0.0, 'max': 2.0, 'default': 1.0, 'type': 'double'};
+      case 'top_p':
+        return {'min': 0.0, 'max': 1.0, 'default': 1.0, 'type': 'double'};
+      case 'max_tokens':
+        return {'min': 1, 'max': 32768, 'default': null, 'type': 'int'};
+      case 'frequency_penalty':
+      case 'presence_penalty':
+        return {'min': -2.0, 'max': 2.0, 'default': 0.0, 'type': 'double'};
+      case 'n':
+        return {'min': 1, 'max': 128, 'default': 1, 'type': 'int'};
+      case 'seed':
+        return {
+          'min': -2147483648,
+          'max': 2147483647,
+          'default': null,
+          'type': 'int'
+        };
+      default:
+        return {'type': 'string'};
     }
   }
 }
