@@ -52,6 +52,7 @@
     "localNetworkSearchTitle": "Tìm kiếm mạng nội bộ",
     "localNetworkSearchContent": "Tính năng này yêu cầu thêm quyền để tìm kiếm Ollama trong mạng nội bộ của bạn.",
     "openAI": "OpenAI",
+    "azureOpenAI": "Azure OpenAI",
     "mistral": "Mistral",
     "anthropic": "Anthropic",
     "gemini": "Gemini",

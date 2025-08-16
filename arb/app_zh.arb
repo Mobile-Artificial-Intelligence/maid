@@ -52,6 +52,7 @@
     "localNetworkSearchTitle": "本地网络搜索",
     "localNetworkSearchContent": "此功能需要额外的权限来搜索本地网络中的 Ollama 实例。",
     "openAI": "OpenAI",
+    "azureOpenAI": "Azure OpenAI",
     "mistral": "Mistral",
     "anthropic": "Anthropic",
     "gemini": "Gemini",

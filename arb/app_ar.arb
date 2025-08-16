@@ -52,6 +52,7 @@
     "localNetworkSearchTitle": "بحث في الشبكة المحلية",
     "localNetworkSearchContent": "تتطلب هذه الميزة أذونات إضافية للبحث عن مثيلات Ollama في شبكتك المحلية.",
     "openAI": "OpenAI",
+    "azureOpenAI": "Azure OpenAI",
     "mistral": "Mistral",
     "anthropic": "Anthropic",
     "gemini": "Gemini",

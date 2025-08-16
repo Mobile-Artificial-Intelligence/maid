@@ -61,6 +61,7 @@
     "localNetworkSearchTitle": "Local Network Search",
     "localNetworkSearchContent": "This feature requires additional permissions to search your local network for Ollama instances.",
     "openAI": "OpenAI",
+    "azureOpenAI": "Azure OpenAI",
     "mistral": "Mistral",
     "anthropic": "Anthropic",
     "gemini": "Gemini",

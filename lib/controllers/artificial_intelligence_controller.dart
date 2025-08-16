@@ -24,6 +24,7 @@ abstract class AIController extends ChangeNotifier {
     types['open_ai'] = AppLocalizations.of(context)!.openAI;
     types['mistral'] = AppLocalizations.of(context)!.mistral;
     types['anthropic'] = AppLocalizations.of(context)!.anthropic;
+    types['azure_openai'] = AppLocalizations.of(context)!.azureOpenAI;
     //types['google_gemini'] = AppLocalizations.of(context)!.gemini;
 
     return types;
@@ -124,6 +125,10 @@ abstract class AIController extends ChangeNotifier {
         instance = AnthropicController()
           ..fromMap(contextMap);
         break;
+      case 'azure_openai':
+        instance = AzureOpenAIController()
+          ..fromMap(contextMap);
+        break;
       default:
         instance = kIsWeb ? OpenAIController() : LlamaCppController();
     }
@@ -157,7 +162,8 @@ abstract class RemoteAIController extends AIController {
     'ollama',
     'open_ai',
     'mistral',
-    'anthropic'
+    'anthropic',
+    'azure_openai'
   ];
 
   String? _baseUrl;

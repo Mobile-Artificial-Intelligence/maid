@@ -52,6 +52,7 @@
     "localNetworkSearchTitle": "로컬 네트워크 검색",
     "localNetworkSearchContent": "이 기능을 사용하려면 Ollama 인스턴스를 검색하기 위한 추가 권한이 필요합니다.",
     "openAI": "OpenAI",
+    "azureOpenAI": "Azure OpenAI",
     "mistral": "Mistral",
     "anthropic": "Anthropic",
     "gemini": "Gemini",
