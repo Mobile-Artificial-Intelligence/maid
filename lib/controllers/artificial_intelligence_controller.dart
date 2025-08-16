@@ -977,26 +977,114 @@ class AzureOpenAIController extends RemoteAIController {
 
   @override
   Stream<String> prompt() async* {
-    // TODO: Implement Azure OpenAI chat completion streaming
-    // This is a placeholder implementation
     assert(_apiKey != null, 'API Key is required');
     assert(_resourceName != null, 'Resource name is required');
     assert(_deploymentName != null, 'Deployment name is required');
     
     busy = true;
-    
+
     try {
-      // Placeholder - will be implemented in task 4
-      yield 'Azure OpenAI response placeholder';
+      _azureClient = Dio();
+      
+      // Configure Azure OpenAI specific headers
+      final headers = {
+        'Content-Type': 'application/json',
+        'api-key': _apiKey!,
+      };
+
+      // Prepare the request body in OpenAI format
+      final requestBody = {
+        'messages': ChatController.instance.root.toOpenAiMessages().map((msg) => {
+          'role': msg.role.name,
+          'content': msg.content,
+        }).toList(),
+        'stream': true,
+        'temperature': _parameters['temperature'],
+        'top_p': _parameters['top_p'],
+        'max_tokens': _parameters['max_tokens'],
+        'frequency_penalty': _parameters['frequency_penalty'],
+        'presence_penalty': _parameters['presence_penalty'],
+      };
+
+      // Remove null parameters
+      requestBody.removeWhere((key, value) => value == null);
+
+      final response = await _azureClient.post(
+        _chatCompletionsUrl,
+        data: requestBody,
+        options: Options(
+          headers: headers,
+          responseType: ResponseType.stream,
+        ),
+      );
+
+      final stream = response.data.stream as Stream<Uint8List>;
+      String buffer = '';
+
+      await for (final chunk in stream) {
+        final chunkString = utf8.decode(chunk);
+        buffer += chunkString;
+
+        // Process complete lines
+        final lines = buffer.split('\n');
+        buffer = lines.removeLast(); // Keep incomplete line in buffer
+
+        for (final line in lines) {
+          final trimmedLine = line.trim();
+          
+          // Skip empty lines and non-data lines
+          if (trimmedLine.isEmpty || !trimmedLine.startsWith('data: ')) {
+            continue;
+          }
+
+          final dataContent = trimmedLine.substring(6); // Remove 'data: ' prefix
+          
+          // Check for stream end
+          if (dataContent == '[DONE]') {
+            return;
+          }
+
+          try {
+            final jsonData = jsonDecode(dataContent);
+            
+            // Extract content from Azure OpenAI response format
+            if (jsonData['choices'] != null && 
+                jsonData['choices'].isNotEmpty &&
+                jsonData['choices'][0]['delta'] != null &&
+                jsonData['choices'][0]['delta']['content'] != null) {
+              
+              final content = jsonData['choices'][0]['delta']['content'] as String;
+              if (content.isNotEmpty) {
+                yield content;
+              }
+            }
+          } catch (e) {
+            // Skip malformed JSON chunks
+            continue;
+          }
+        }
+      }
+    } catch (e) {
+      // This is expected when the user presses stop
+      if (!e.toString().contains('Connection closed')) {
+        // Handle Azure OpenAI specific errors
+        final errorMessage = _mapAzureError(e);
+        throw Exception(errorMessage);
+      }
     } finally {
       busy = false;
     }
   }
 
+  late Dio _azureClient;
+
   @override
   void stop() {
-    // TODO: Implement proper stop functionality for Azure OpenAI
-    // This is a placeholder implementation
+    try {
+      _azureClient.close(force: true);
+    } catch (e) {
+      // Client might not be initialized or already closed
+    }
     busy = false;
   }
 
@@ -1029,6 +1117,75 @@ class AzureOpenAIController extends RemoteAIController {
   @override
   bool get canGetRemoteModels => _apiKey != null && _apiKey!.isNotEmpty &&
                                 _resourceName != null && _resourceName!.isNotEmpty;
+
+  /// Maps Azure OpenAI specific errors to user-friendly messages
+  String _mapAzureError(dynamic error) {
+    final errorString = error.toString();
+    
+    // Handle DioException specifically
+    if (error is DioException) {
+      if (error.response?.statusCode == 404) {
+        if (errorString.contains('DeploymentNotFound') || 
+            errorString.contains('deployment') ||
+            errorString.contains('not found')) {
+          return 'Deployment "$_deploymentName" not found in resource "$_resourceName". Please check your deployment name.';
+        }
+        return 'Azure OpenAI resource "$_resourceName" not found. Please check your resource name.';
+      }
+      
+      if (error.response?.statusCode == 401) {
+        return 'Invalid Azure OpenAI API key. Please check your API key and try again.';
+      }
+      
+      if (error.response?.statusCode == 403) {
+        return 'Access denied to Azure OpenAI resource "$_resourceName". Please check your permissions.';
+      }
+      
+      if (error.response?.statusCode == 429) {
+        return 'Azure OpenAI rate limit exceeded. Please wait and try again.';
+      }
+      
+      if (error.response?.statusCode == 400) {
+        final responseData = error.response?.data;
+        if (responseData != null && responseData.toString().contains('api-version')) {
+          return 'Invalid API version "$_apiVersion". Please check the supported API versions.';
+        }
+        return 'Bad request to Azure OpenAI. Please check your configuration.';
+      }
+      
+      // Handle connection errors
+      if (error.type == DioExceptionType.connectionTimeout ||
+          error.type == DioExceptionType.receiveTimeout ||
+          error.type == DioExceptionType.sendTimeout) {
+        return 'Connection timeout to Azure OpenAI resource "$_resourceName". Please check your network connection.';
+      }
+      
+      if (error.type == DioExceptionType.connectionError) {
+        return 'Cannot connect to Azure OpenAI resource "$_resourceName". Please check your resource name and network connection.';
+      }
+    }
+    
+    // Handle DNS resolution errors
+    if (errorString.contains('Failed host lookup') || 
+        errorString.contains('No address associated with hostname')) {
+      return 'Cannot resolve Azure OpenAI resource "$_resourceName". Please check your resource name.';
+    }
+    
+    // Handle SSL/TLS errors
+    if (errorString.contains('CERTIFICATE_VERIFY_FAILED') ||
+        errorString.contains('TLS') ||
+        errorString.contains('SSL')) {
+      return 'SSL/TLS error connecting to Azure OpenAI. Please check your network configuration.';
+    }
+    
+    // Generic Azure OpenAI error
+    if (errorString.contains('azure') || errorString.contains('openai')) {
+      return 'Azure OpenAI error: ${error.toString()}';
+    }
+    
+    // Fallback to original error
+    return 'Error connecting to Azure OpenAI: ${error.toString()}';
+  }
 
   /// Validates Azure resource name according to Azure naming conventions
   /// Resource names must be 1-63 characters, contain only alphanumeric characters and hyphens,
