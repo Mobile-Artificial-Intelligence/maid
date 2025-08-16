@@ -161,10 +161,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get localNetworkSearchTitle => 'Yerel Ağ Arama';
 
   @override
-  String get localNetworkSearchContent => 'Bu özellik, yerel ağınızda Ollama örneklerini aramak için ek izinler gerektirir.';
+  String get localNetworkSearchContent =>
+      'Bu özellik, yerel ağınızda Ollama örneklerini aramak için ek izinler gerektirir.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get aboutTitle => 'Hakkında';
 
   @override
-  String get aboutContent => 'Maid, llama.cpp modelleriyle yerel olarak ve Ollama, Mistral ve OpenAI modelleriyle uzaktan etkileşim kurmak için çapraz platformlu, ücretsiz ve açık kaynaklı bir uygulamadır. Maid, sillytavern karakter kartlarını destekleyerek favori karakterlerinizle etkileşim kurmanızı sağlar. Maid, huggingface’ten doğrudan uygulama içinde küratörlü bir model listesini indirmeyi destekler. Maid, MIT lisansı altında dağıtılır ve herhangi bir garanti olmaksızın, açık veya zımni olarak sunulur. Maid, Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft veya bu uygulama ile uyumlu bir model sağlayan herhangi bir şirketle bağlantılı değildir.';
+  String get aboutContent =>
+      'Maid, llama.cpp modelleriyle yerel olarak ve Ollama, Mistral ve OpenAI modelleriyle uzaktan etkileşim kurmak için çapraz platformlu, ücretsiz ve açık kaynaklı bir uygulamadır. Maid, sillytavern karakter kartlarını destekleyerek favori karakterlerinizle etkileşim kurmanızı sağlar. Maid, huggingface’ten doğrudan uygulama içinde küratörlü bir model listesini indirmeyi destekler. Maid, MIT lisansı altında dağıtılır ve herhangi bir garanti olmaksızın, açık veya zımni olarak sunulur. Maid, Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft veya bu uygulama ile uyumlu bir model sağlayan herhangi bir şirketle bağlantılı değildir.';
 
   @override
   String get leadMaintainer => 'Baş Sorumlu';
@@ -299,7 +304,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get warning => 'Uyarı';
 
   @override
-  String get nsfwWarning => 'Bu model, NSFW (uygunsuz) içerik üretmek üzere kasıtlı olarak tasarlanmıştır. Bu, işkence, tecavüz, cinayet ve/veya cinsel sapkın davranışlar içeren açık cinsel veya şiddet içeriğini kapsayabilir. Bu tür konulara karşı hassassanız veya bu konuların tartışılması yerel yasalara aykırıysa, DEVAM ETMEYİN.';
+  String get nsfwWarning =>
+      'Bu model, NSFW (uygunsuz) içerik üretmek üzere kasıtlı olarak tasarlanmıştır. Bu, işkence, tecavüz, cinayet ve/veya cinsel sapkın davranışlar içeren açık cinsel veya şiddet içeriğini kapsayabilir. Bu tür konulara karşı hassassanız veya bu konuların tartışılması yerel yasalara aykırıysa, DEVAM ETMEYİN.';
 
   @override
   String get login => 'Giriş Yap';
@@ -323,7 +329,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get resetCode => 'Sıfırlama Kodu';
 
   @override
-  String get resetCodeSent => 'E-posta adresinize bir sıfırlama kodu gönderildi.';
+  String get resetCodeSent =>
+      'E-posta adresinize bir sıfırlama kodu gönderildi.';
 
   @override
   String get sendResetCode => 'Sıfırlama Kodunu Gönder';
@@ -338,13 +345,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get invalidEmail => 'Lütfen geçerli bir e-posta adresi girin';
 
   @override
-  String get invalidUserName => '3-24 karakter olmalı, alfanümerik veya alt çizgi';
+  String get invalidUserName =>
+      '3-24 karakter olmalı, alfanümerik veya alt çizgi';
 
   @override
   String get invalidPasswordLength => 'Minimum 8 karakter';
 
   @override
-  String get invalidPassword => 'Büyük harf, küçük harf, rakam ve sembol içermelidir';
+  String get invalidPassword =>
+      'Büyük harf, küçük harf, rakam ve sembol içermelidir';
 
   @override
   String get passwordNoMatch => 'Şifreler eşleşmiyor';
@@ -371,5 +380,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get resetSuccess => 'Şifreniz başarıyla sıfırlandı.';
 
   @override
-  String get emailVerify => 'Lütfen doğrulama için e-posta adresinizi kontrol edin.';
+  String get emailVerify =>
+      'Lütfen doğrulama için e-posta adresinizi kontrol edin.';
 }

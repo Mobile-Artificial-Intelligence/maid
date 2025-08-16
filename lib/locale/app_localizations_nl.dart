@@ -161,10 +161,14 @@ class AppLocalizationsNl extends AppLocalizations {
   String get localNetworkSearchTitle => 'Zoeken in lokaal netwerk';
 
   @override
-  String get localNetworkSearchContent => 'Deze functie vereist extra machtigingen om Ollama-instanties in uw lokale netwerk te zoeken.';
+  String get localNetworkSearchContent =>
+      'Deze functie vereist extra machtigingen om Ollama-instanties in uw lokale netwerk te zoeken.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get aboutTitle => 'Over';
 
   @override
-  String get aboutContent => 'Maid is een gratis en open-source cross-platform applicatie voor het lokaal gebruiken van llama.cpp-modellen en het op afstand gebruiken van Ollama-, Mistral- en OpenAI-modellen. Maid ondersteunt Sillytavern-karakterkaarten, zodat je met je favoriete karakters kunt communiceren. Maid biedt de mogelijkheid om een lijst met geselecteerde modellen rechtstreeks vanuit de app te downloaden via Hugging Face. Maid wordt gedistribueerd onder de MIT-licentie en wordt geleverd zonder enige garantie, expliciet of impliciet. Maid is niet verbonden met Hugging Face, Meta (Facebook), MistralAI, OpenAI, Google, Microsoft of andere bedrijven die een compatibel model aanbieden.';
+  String get aboutContent =>
+      'Maid is een gratis en open-source cross-platform applicatie voor het lokaal gebruiken van llama.cpp-modellen en het op afstand gebruiken van Ollama-, Mistral- en OpenAI-modellen. Maid ondersteunt Sillytavern-karakterkaarten, zodat je met je favoriete karakters kunt communiceren. Maid biedt de mogelijkheid om een lijst met geselecteerde modellen rechtstreeks vanuit de app te downloaden via Hugging Face. Maid wordt gedistribueerd onder de MIT-licentie en wordt geleverd zonder enige garantie, expliciet of impliciet. Maid is niet verbonden met Hugging Face, Meta (Facebook), MistralAI, OpenAI, Google, Microsoft of andere bedrijven die een compatibel model aanbieden.';
 
   @override
   String get leadMaintainer => 'Hoofdonderhouder';
@@ -299,7 +304,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get warning => 'Waarschuwing';
 
   @override
-  String get nsfwWarning => 'Dit model is opzettelijk ontworpen om NSFW-inhoud te genereren. Dit kan expliciete seksuele of gewelddadige inhoud omvatten met betrekking tot marteling, verkrachting, moord en/of seksueel afwijkend gedrag. Als je gevoelig bent voor dergelijke onderwerpen, of als de bespreking van dergelijke onderwerpen in strijd is met de lokale wetgeving, GA NIET VERDER.';
+  String get nsfwWarning =>
+      'Dit model is opzettelijk ontworpen om NSFW-inhoud te genereren. Dit kan expliciete seksuele of gewelddadige inhoud omvatten met betrekking tot marteling, verkrachting, moord en/of seksueel afwijkend gedrag. Als je gevoelig bent voor dergelijke onderwerpen, of als de bespreking van dergelijke onderwerpen in strijd is met de lokale wetgeving, GA NIET VERDER.';
 
   @override
   String get login => 'Inloggen';
@@ -338,13 +344,15 @@ class AppLocalizationsNl extends AppLocalizations {
   String get invalidEmail => 'Voer een geldig e-mailadres in';
 
   @override
-  String get invalidUserName => 'Moet 3-24 tekens bevatten, alfanumeriek of een underscore';
+  String get invalidUserName =>
+      'Moet 3-24 tekens bevatten, alfanumeriek of een underscore';
 
   @override
   String get invalidPasswordLength => 'Minimaal 8 tekens';
 
   @override
-  String get invalidPassword => 'Inclusief hoofdletters, kleine letters, cijfers en symbolen';
+  String get invalidPassword =>
+      'Inclusief hoofdletters, kleine letters, cijfers en symbolen';
 
   @override
   String get passwordNoMatch => 'Wachtwoorden komen niet overeen';

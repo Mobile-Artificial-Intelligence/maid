@@ -161,10 +161,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get localNetworkSearchTitle => 'Local Network Search';
 
   @override
-  String get localNetworkSearchContent => 'This feature requires additional permissions to search your local network for Ollama instances.';
+  String get localNetworkSearchContent =>
+      'This feature requires additional permissions to search your local network for Ollama instances.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutTitle => 'About';
 
   @override
-  String get aboutContent => 'Maid is a cross-platform free and open source application for interfacing with llama.cpp models locally, and remotely with Ollama, Mistral, and OpenAI models remotely. Maid supports sillytavern character cards to allow you to interact with all your favorite characters. Maid supports downloading a curated list of Models in-app directly from huggingface. Maid is distributed under the MIT licence and is provided without warrenty of any kind, express or implied. Maid is not affiliated with Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company providing a model compatible with this application.';
+  String get aboutContent =>
+      'Maid is a cross-platform free and open source application for interfacing with llama.cpp models locally, and remotely with Ollama, Mistral, and OpenAI models remotely. Maid supports sillytavern character cards to allow you to interact with all your favorite characters. Maid supports downloading a curated list of Models in-app directly from huggingface. Maid is distributed under the MIT licence and is provided without warrenty of any kind, express or implied. Maid is not affiliated with Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company providing a model compatible with this application.';
 
   @override
   String get leadMaintainer => 'Lead Maintainer';
@@ -299,7 +304,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get warning => 'Warning';
 
   @override
-  String get nsfwWarning => 'This model is intentionally designed to produce NSFW content. This may include explicit sexual or violent content involving torture, rape, murder and / or sexually deviant behaviour. If you are sensitive to such topics, or the discussion of such topics violates local laws, DO NOT PROCEED.';
+  String get nsfwWarning =>
+      'This model is intentionally designed to produce NSFW content. This may include explicit sexual or violent content involving torture, rape, murder and / or sexually deviant behaviour. If you are sensitive to such topics, or the discussion of such topics violates local laws, DO NOT PROCEED.';
 
   @override
   String get login => 'Login';
@@ -338,7 +344,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidEmail => 'Please enter a valid email';
 
   @override
-  String get invalidUserName => 'Must be 3-24 characters, alphanumeric or underscore';
+  String get invalidUserName =>
+      'Must be 3-24 characters, alphanumeric or underscore';
 
   @override
   String get invalidPasswordLength => 'Minimum 8 characters';

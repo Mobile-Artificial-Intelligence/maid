@@ -161,10 +161,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get localNetworkSearchTitle => 'Busca na Rede Local';
 
   @override
-  String get localNetworkSearchContent => 'Esta função requer permissões adicionais para procurar na sua rede local por instâncias do Ollama.';
+  String get localNetworkSearchContent =>
+      'Esta função requer permissões adicionais para procurar na sua rede local por instâncias do Ollama.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get aboutTitle => 'Sobre';
 
   @override
-  String get aboutContent => 'Maid é um aplicativo gratuito e de código aberto, multiplataforma, para interagir com modelos do llama.cpp localmente, e com os modelos da Ollama, Mistral e OpenAI de forma remota. O Maid é compatível com os cartões de personagens do SillyTavern, permitindo que você interaja com todos os seus personagens favoritos. Ele também permite o download, direto pelo aplicativo, de uma lista selecionada de modelos hospedados no Hugging Face.';
+  String get aboutContent =>
+      'Maid é um aplicativo gratuito e de código aberto, multiplataforma, para interagir com modelos do llama.cpp localmente, e com os modelos da Ollama, Mistral e OpenAI de forma remota. O Maid é compatível com os cartões de personagens do SillyTavern, permitindo que você interaja com todos os seus personagens favoritos. Ele também permite o download, direto pelo aplicativo, de uma lista selecionada de modelos hospedados no Hugging Face.';
 
   @override
   String get leadMaintainer => 'Responsável Principal pelo Projeto';
@@ -299,7 +304,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get warning => 'Aviso';
 
   @override
-  String get nsfwWarning => 'Este modelo foi intencionalmente projetado para gerar conteúdo impróprio (NSFW). Isso pode incluir conteúdo sexual ou violento explícito envolvendo tortura, estupro, assassinato e/ou comportamentos sexualmente desviantes. Se você for sensível a esses temas ou se a discussão desses temas violar leis locais, NÃO PROSSIGA.';
+  String get nsfwWarning =>
+      'Este modelo foi intencionalmente projetado para gerar conteúdo impróprio (NSFW). Isso pode incluir conteúdo sexual ou violento explícito envolvendo tortura, estupro, assassinato e/ou comportamentos sexualmente desviantes. Se você for sensível a esses temas ou se a discussão desses temas violar leis locais, NÃO PROSSIGA.';
 
   @override
   String get login => 'Entrar';
@@ -323,7 +329,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get resetCode => 'Código de recuperação';
 
   @override
-  String get resetCodeSent => 'Um Código de Reinicio foi enviado para o seu email.';
+  String get resetCodeSent =>
+      'Um Código de Reinicio foi enviado para o seu email.';
 
   @override
   String get sendResetCode => 'Enviar código de recuperação';
@@ -338,13 +345,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get invalidEmail => 'Por favor digite um email válido';
 
   @override
-  String get invalidUserName => 'Deve ter de 3 a 24 caracteres, alfanumérico e underline';
+  String get invalidUserName =>
+      'Deve ter de 3 a 24 caracteres, alfanumérico e underline';
 
   @override
   String get invalidPasswordLength => 'Mínimo de 8 Caracteres';
 
   @override
-  String get invalidPassword => 'Inclua Letras Minúsculas, Maiúsculas, Números e Símbolos';
+  String get invalidPassword =>
+      'Inclua Letras Minúsculas, Maiúsculas, Números e Símbolos';
 
   @override
   String get passwordNoMatch => 'As senhas estão diferentes';
@@ -371,5 +380,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get resetSuccess => 'Sua senha foi reiniciada com sucesso.';
 
   @override
-  String get emailVerify => 'Por favor verifique o seu email para concluir a verificação.';
+  String get emailVerify =>
+      'Por favor verifique o seu email para concluir a verificação.';
 }

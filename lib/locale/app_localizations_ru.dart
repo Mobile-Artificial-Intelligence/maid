@@ -161,10 +161,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get localNetworkSearchTitle => 'Поиск в локальной сети';
 
   @override
-  String get localNetworkSearchContent => 'Эта функция требует дополнительных разрешений для поиска Ollama в вашей локальной сети.';
+  String get localNetworkSearchContent =>
+      'Эта функция требует дополнительных разрешений для поиска Ollama в вашей локальной сети.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get aboutTitle => 'О программе';
 
   @override
-  String get aboutContent => 'Maid — это кроссплатформенное бесплатное и открытое приложение для работы с моделями llama.cpp локально, а также с моделями Ollama, Mistral, Google Gemini и OpenAI удаленно. Maid поддерживает карточки персонажей Sillytavern, позволяя взаимодействовать со всеми вашими любимыми персонажами. В приложении можно загружать модели из Hugging Face. Maid распространяется под лицензией MIT и предоставляется без каких-либо гарантий, явных или подразумеваемых. Maid не связан с Hugging Face, Meta (Facebook), MistralAI, OpenAI, Google, Microsoft или другими компаниями, предоставляющими совместимые модели.';
+  String get aboutContent =>
+      'Maid — это кроссплатформенное бесплатное и открытое приложение для работы с моделями llama.cpp локально, а также с моделями Ollama, Mistral, Google Gemini и OpenAI удаленно. Maid поддерживает карточки персонажей Sillytavern, позволяя взаимодействовать со всеми вашими любимыми персонажами. В приложении можно загружать модели из Hugging Face. Maid распространяется под лицензией MIT и предоставляется без каких-либо гарантий, явных или подразумеваемых. Maid не связан с Hugging Face, Meta (Facebook), MistralAI, OpenAI, Google, Microsoft или другими компаниями, предоставляющими совместимые модели.';
 
   @override
   String get leadMaintainer => 'Ведущий разработчик';
@@ -299,7 +304,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get warning => 'Предупреждение';
 
   @override
-  String get nsfwWarning => 'Эта модель была намеренно разработана для создания NSFW-контента. Это может включать откровенные сексуальные или жестокие сцены, включая пытки, изнасилование, убийство и/или сексуально девиантное поведение. Если вы чувствительны к таким темам или обсуждение таких тем нарушает местные законы, НЕ ПРОДОЛЖАЙТЕ.';
+  String get nsfwWarning =>
+      'Эта модель была намеренно разработана для создания NSFW-контента. Это может включать откровенные сексуальные или жестокие сцены, включая пытки, изнасилование, убийство и/или сексуально девиантное поведение. Если вы чувствительны к таким темам или обсуждение таких тем нарушает местные законы, НЕ ПРОДОЛЖАЙТЕ.';
 
   @override
   String get login => 'Войти';
@@ -323,7 +329,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get resetCode => 'Код сброса';
 
   @override
-  String get resetCodeSent => 'Код сброса был отправлен на вашу электронную почту.';
+  String get resetCodeSent =>
+      'Код сброса был отправлен на вашу электронную почту.';
 
   @override
   String get sendResetCode => 'Отправить код сброса';
@@ -335,16 +342,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get required => 'Обязательно';
 
   @override
-  String get invalidEmail => 'Пожалуйста, введите действующий электронный адрес';
+  String get invalidEmail =>
+      'Пожалуйста, введите действующий электронный адрес';
 
   @override
-  String get invalidUserName => 'Должно быть от 3 до 24 символов, буквы, цифры или нижнее подчеркивание';
+  String get invalidUserName =>
+      'Должно быть от 3 до 24 символов, буквы, цифры или нижнее подчеркивание';
 
   @override
   String get invalidPasswordLength => 'Минимум 8 символов';
 
   @override
-  String get invalidPassword => 'Включайте большие и маленькие буквы, цифры и символы';
+  String get invalidPassword =>
+      'Включайте большие и маленькие буквы, цифры и символы';
 
   @override
   String get passwordNoMatch => 'Пароли не совпадают';
@@ -371,5 +381,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get resetSuccess => 'Ваш пароль успешно сброшен.';
 
   @override
-  String get emailVerify => 'Пожалуйста, проверьте свою электронную почту для подтверждения.';
+  String get emailVerify =>
+      'Пожалуйста, проверьте свою электронную почту для подтверждения.';
 }

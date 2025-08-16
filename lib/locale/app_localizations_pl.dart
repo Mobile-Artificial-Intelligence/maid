@@ -161,10 +161,14 @@ class AppLocalizationsPl extends AppLocalizations {
   String get localNetworkSearchTitle => 'Wyszukiwanie w sieci lokalnej';
 
   @override
-  String get localNetworkSearchContent => 'Ta funkcja wymaga dodatkowych uprawnień do wyszukiwania instancji Ollama w sieci lokalnej.';
+  String get localNetworkSearchContent =>
+      'Ta funkcja wymaga dodatkowych uprawnień do wyszukiwania instancji Ollama w sieci lokalnej.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsPl extends AppLocalizations {
   String get aboutTitle => 'Informacje';
 
   @override
-  String get aboutContent => 'Maid jest darmową, otwartoźródłową, wieloplatformową aplikacją umożliwiającą interakcję z lokalnymi modelami llama.cpp oraz zdalnie z modelami Ollama, Mistral i OpenAI. Maid obsługuje karty postaci SillyTavern, umożliwiając interakcję ze wszystkimi ulubionymi postaciami. Aplikacja pozwala na pobieranie modeli bezpośrednio z Huggingface. Maid jest rozpowszechniany na licencji MIT i dostarczany bez żadnej gwarancji, wyrażonej lub domniemanej. Maid nie jest powiązany z Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft ani żadną inną firmą dostarczającą kompatybilny model.';
+  String get aboutContent =>
+      'Maid jest darmową, otwartoźródłową, wieloplatformową aplikacją umożliwiającą interakcję z lokalnymi modelami llama.cpp oraz zdalnie z modelami Ollama, Mistral i OpenAI. Maid obsługuje karty postaci SillyTavern, umożliwiając interakcję ze wszystkimi ulubionymi postaciami. Aplikacja pozwala na pobieranie modeli bezpośrednio z Huggingface. Maid jest rozpowszechniany na licencji MIT i dostarczany bez żadnej gwarancji, wyrażonej lub domniemanej. Maid nie jest powiązany z Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft ani żadną inną firmą dostarczającą kompatybilny model.';
 
   @override
   String get leadMaintainer => 'Główny opiekun projektu';
@@ -299,7 +304,8 @@ class AppLocalizationsPl extends AppLocalizations {
   String get warning => 'Ostrzeżenie';
 
   @override
-  String get nsfwWarning => 'Ten model został celowo zaprojektowany do generowania treści NSFW. Może to obejmować wyraźne treści seksualne lub brutalne, w tym tortury, gwałt, morderstwo i/lub zachowania seksualnie dewiacyjne. Jeśli jesteś wrażliwy na takie tematy lub ich omawianie narusza lokalne prawo, NIE KONTYNUUJ.';
+  String get nsfwWarning =>
+      'Ten model został celowo zaprojektowany do generowania treści NSFW. Może to obejmować wyraźne treści seksualne lub brutalne, w tym tortury, gwałt, morderstwo i/lub zachowania seksualnie dewiacyjne. Jeśli jesteś wrażliwy na takie tematy lub ich omawianie narusza lokalne prawo, NIE KONTYNUUJ.';
 
   @override
   String get login => 'Zaloguj się';
@@ -338,7 +344,8 @@ class AppLocalizationsPl extends AppLocalizations {
   String get invalidEmail => 'Wprowadź prawidłowy email';
 
   @override
-  String get invalidUserName => 'Musi mieć od 3 do 24 znaków, zawierać litery, cyfry lub podkreślenie';
+  String get invalidUserName =>
+      'Musi mieć od 3 do 24 znaków, zawierać litery, cyfry lub podkreślenie';
 
   @override
   String get invalidPasswordLength => 'Minimum 8 znaków';

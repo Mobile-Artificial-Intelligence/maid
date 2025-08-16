@@ -161,10 +161,14 @@ class AppLocalizationsVi extends AppLocalizations {
   String get localNetworkSearchTitle => 'Tìm kiếm mạng nội bộ';
 
   @override
-  String get localNetworkSearchContent => 'Tính năng này yêu cầu thêm quyền để tìm kiếm Ollama trong mạng nội bộ của bạn.';
+  String get localNetworkSearchContent =>
+      'Tính năng này yêu cầu thêm quyền để tìm kiếm Ollama trong mạng nội bộ của bạn.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get aboutTitle => 'Giới thiệu';
 
   @override
-  String get aboutContent => 'Maid là một ứng dụng đa nền tảng mã nguồn mở miễn phí để tương tác với các mô hình llama.cpp nội bộ và từ xa với các mô hình Ollama, Mistral và OpenAI. Maid hỗ trợ các thẻ nhân vật sillytavern để bạn tương tác với các nhân vật yêu thích. Maid cho phép tải xuống các mô hình được tuyển chọn trực tiếp từ Huggingface ngay trong ứng dụng. Maid được phân phối theo giấy phép MIT và không có bảo đảm nào, dù rõ ràng hay ngụ ý. Maid không liên quan đến Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft hoặc bất kỳ công ty nào khác cung cấp mô hình tương thích với ứng dụng này.';
+  String get aboutContent =>
+      'Maid là một ứng dụng đa nền tảng mã nguồn mở miễn phí để tương tác với các mô hình llama.cpp nội bộ và từ xa với các mô hình Ollama, Mistral và OpenAI. Maid hỗ trợ các thẻ nhân vật sillytavern để bạn tương tác với các nhân vật yêu thích. Maid cho phép tải xuống các mô hình được tuyển chọn trực tiếp từ Huggingface ngay trong ứng dụng. Maid được phân phối theo giấy phép MIT và không có bảo đảm nào, dù rõ ràng hay ngụ ý. Maid không liên quan đến Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft hoặc bất kỳ công ty nào khác cung cấp mô hình tương thích với ứng dụng này.';
 
   @override
   String get leadMaintainer => 'Người bảo trì chính';
@@ -299,7 +304,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get warning => 'Cảnh báo';
 
   @override
-  String get nsfwWarning => 'Mô hình này được thiết kế có chủ đích để tạo ra nội dung NSFW. Điều này có thể bao gồm nội dung tình dục hoặc bạo lực rõ ràng liên quan đến tra tấn, hiếp dâm, giết người và/hoặc hành vi lệch lạc tình dục. Nếu bạn nhạy cảm với những chủ đề như vậy hoặc việc thảo luận những chủ đề này vi phạm pháp luật địa phương, VUI LÒNG KHÔNG TIẾP TỤC.';
+  String get nsfwWarning =>
+      'Mô hình này được thiết kế có chủ đích để tạo ra nội dung NSFW. Điều này có thể bao gồm nội dung tình dục hoặc bạo lực rõ ràng liên quan đến tra tấn, hiếp dâm, giết người và/hoặc hành vi lệch lạc tình dục. Nếu bạn nhạy cảm với những chủ đề như vậy hoặc việc thảo luận những chủ đề này vi phạm pháp luật địa phương, VUI LÒNG KHÔNG TIẾP TỤC.';
 
   @override
   String get login => 'Đăng nhập';
@@ -338,7 +344,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get invalidEmail => 'Vui lòng nhập email hợp lệ';
 
   @override
-  String get invalidUserName => 'Phải có từ 3 đến 24 ký tự, chữ, số hoặc gạch dưới';
+  String get invalidUserName =>
+      'Phải có từ 3 đến 24 ký tự, chữ, số hoặc gạch dưới';
 
   @override
   String get invalidPasswordLength => 'Tối thiểu 8 ký tự';

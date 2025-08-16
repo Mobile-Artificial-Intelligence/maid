@@ -161,10 +161,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get localNetworkSearchTitle => 'Cerca nella rete locale';
 
   @override
-  String get localNetworkSearchContent => 'Questa funzionalità richiede permessi aggiuntivi per cercare le istanze di Ollama nella rete locale.';
+  String get localNetworkSearchContent =>
+      'Questa funzionalità richiede permessi aggiuntivi per cercare le istanze di Ollama nella rete locale.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get aboutTitle => 'Informazioni';
 
   @override
-  String get aboutContent => 'Maid è un\'applicazione multipiattaforma gratuita e open source per interfacciarsi localmente con i modelli di llama.cpp, e da remoto con i modelli di Ollama, Mistral e OpenAI. Maid supporta le schede dei personaggi di sillytavern per permetterti di interagire con tutti i tuoi personaggi preferiti. Maid consente di scaricare, direttamente dall\'app, una lista curata di modelli da huggingface. Maid è distribuito sotto la licenza MIT ed è fornito senza alcuna garanzia, esplicita o implicita. Maid non è affiliato con Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft o con qualsiasi altra azienda che fornisce un modello compatibile con questa applicazione.';
+  String get aboutContent =>
+      'Maid è un\'applicazione multipiattaforma gratuita e open source per interfacciarsi localmente con i modelli di llama.cpp, e da remoto con i modelli di Ollama, Mistral e OpenAI. Maid supporta le schede dei personaggi di sillytavern per permetterti di interagire con tutti i tuoi personaggi preferiti. Maid consente di scaricare, direttamente dall\'app, una lista curata di modelli da huggingface. Maid è distribuito sotto la licenza MIT ed è fornito senza alcuna garanzia, esplicita o implicita. Maid non è affiliato con Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft o con qualsiasi altra azienda che fornisce un modello compatibile con questa applicazione.';
 
   @override
   String get leadMaintainer => 'Manutentore principale';
@@ -299,7 +304,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get warning => 'Avviso';
 
   @override
-  String get nsfwWarning => 'Questo modello è stato intenzionalmente progettato per generare contenuti NSFW. Ciò può includere contenuti sessuali espliciti o violenti che coinvolgono tortura, stupro, omicidio e/o comportamenti sessualmente devianti. Se sei sensibile a questi temi, o se la loro discussione viola le leggi locali, NON PROSEGUIRE.';
+  String get nsfwWarning =>
+      'Questo modello è stato intenzionalmente progettato per generare contenuti NSFW. Ciò può includere contenuti sessuali espliciti o violenti che coinvolgono tortura, stupro, omicidio e/o comportamenti sessualmente devianti. Se sei sensibile a questi temi, o se la loro discussione viola le leggi locali, NON PROSEGUIRE.';
 
   @override
   String get login => 'Accedi';
@@ -323,7 +329,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get resetCode => 'Codice di reset';
 
   @override
-  String get resetCodeSent => 'Un codice di reset è stato inviato alla tua email.';
+  String get resetCodeSent =>
+      'Un codice di reset è stato inviato alla tua email.';
 
   @override
   String get sendResetCode => 'Invia codice di reset';
@@ -338,13 +345,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get invalidEmail => 'Inserisci un\'email valida';
 
   @override
-  String get invalidUserName => 'Deve essere tra 3 e 24 caratteri, alfanumerico o underscore';
+  String get invalidUserName =>
+      'Deve essere tra 3 e 24 caratteri, alfanumerico o underscore';
 
   @override
   String get invalidPasswordLength => 'Almeno 8 caratteri';
 
   @override
-  String get invalidPassword => 'Includi maiuscole, minuscole, numero e simbolo';
+  String get invalidPassword =>
+      'Includi maiuscole, minuscole, numero e simbolo';
 
   @override
   String get passwordNoMatch => 'Le password non corrispondono';
@@ -368,7 +377,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get registrationSuccess => 'Registrazione avvenuta con successo';
 
   @override
-  String get resetSuccess => 'La tua password è stata reimpostata correttamente.';
+  String get resetSuccess =>
+      'La tua password è stata reimpostata correttamente.';
 
   @override
   String get emailVerify => 'Controlla la tua email per la verifica.';

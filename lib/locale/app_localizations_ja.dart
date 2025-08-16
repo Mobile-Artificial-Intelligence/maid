@@ -161,10 +161,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get localNetworkSearchTitle => 'ローカルネットワーク検索';
 
   @override
-  String get localNetworkSearchContent => 'この機能は、ローカルネットワーク上のOllamaインスタンスを検索するための追加の権限を必要とします。';
+  String get localNetworkSearchContent =>
+      'この機能は、ローカルネットワーク上のOllamaインスタンスを検索するための追加の権限を必要とします。';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get aboutTitle => 'アプリについて';
 
   @override
-  String get aboutContent => 'Maidは、ローカルのllama.cppモデル、およびリモートのOllama、Mistral、Google Gemini、OpenAIモデルとインターフェースするためのクロスプラットフォームの無料かつオープンソースのアプリケーションです。Maidは、SillyTavernのキャラクターカードをサポートしており、お気に入りのキャラクターと対話することができます。Maidは、Hugging Faceからモデルを直接アプリ内でダウンロードできる機能を提供しています。MaidはMITライセンスのもとで配布されており、明示的または暗示的な保証なしで提供されます。Maidは、Hugging Face、Meta (Facebook)、MistralAI、OpenAI、Google、Microsoft、またはこのアプリケーションと互換性のあるモデルを提供する他の企業とは提携していません。';
+  String get aboutContent =>
+      'Maidは、ローカルのllama.cppモデル、およびリモートのOllama、Mistral、Google Gemini、OpenAIモデルとインターフェースするためのクロスプラットフォームの無料かつオープンソースのアプリケーションです。Maidは、SillyTavernのキャラクターカードをサポートしており、お気に入りのキャラクターと対話することができます。Maidは、Hugging Faceからモデルを直接アプリ内でダウンロードできる機能を提供しています。MaidはMITライセンスのもとで配布されており、明示的または暗示的な保証なしで提供されます。Maidは、Hugging Face、Meta (Facebook)、MistralAI、OpenAI、Google、Microsoft、またはこのアプリケーションと互換性のあるモデルを提供する他の企業とは提携していません。';
 
   @override
   String get leadMaintainer => 'リードメンテナー';
@@ -299,7 +304,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get warning => '警告';
 
   @override
-  String get nsfwWarning => 'このモデルは、意図的にNSFW（閲覧注意）コンテンツを生成するように設計されています。これには、拷問、レイプ、殺人、および／または性的に逸脱した行為を含む、露骨な性的または暴力的なコンテンツが含まれる場合があります。こうした内容に敏感な方、またはその議論が現地の法律に違反する場合は、先に進まないでください。';
+  String get nsfwWarning =>
+      'このモデルは、意図的にNSFW（閲覧注意）コンテンツを生成するように設計されています。これには、拷問、レイプ、殺人、および／または性的に逸脱した行為を含む、露骨な性的または暴力的なコンテンツが含まれる場合があります。こうした内容に敏感な方、またはその議論が現地の法律に違反する場合は、先に進まないでください。';
 
   @override
   String get login => 'ログイン';

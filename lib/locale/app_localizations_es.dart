@@ -161,10 +161,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get localNetworkSearchTitle => 'Búsqueda en la red local';
 
   @override
-  String get localNetworkSearchContent => 'Esta función requiere permisos adicionales para buscar instancias de Ollama en su red local.';
+  String get localNetworkSearchContent =>
+      'Esta función requiere permisos adicionales para buscar instancias de Ollama en su red local.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get aboutTitle => 'Acerca de';
 
   @override
-  String get aboutContent => 'Maid es una aplicación gratuita y de código abierto multiplataforma para interactuar con modelos Llama.cpp localmente y de forma remota con Ollama, Mistral, Google Gemini y OpenAI. Maid admite tarjetas de personajes de Sillytavern para que puedas interactuar con tus personajes favoritos. También permite descargar una lista seleccionada de modelos directamente desde Huggingface. Maid se distribuye bajo la licencia MIT y se proporciona sin garantía de ningún tipo, expresa o implícita. Maid no está afiliada con Huggingface, Meta (Facebook), MistralAI, OpenAI, Google, Microsoft ni ninguna otra empresa que proporcione modelos compatibles con esta aplicación.';
+  String get aboutContent =>
+      'Maid es una aplicación gratuita y de código abierto multiplataforma para interactuar con modelos Llama.cpp localmente y de forma remota con Ollama, Mistral, Google Gemini y OpenAI. Maid admite tarjetas de personajes de Sillytavern para que puedas interactuar con tus personajes favoritos. También permite descargar una lista seleccionada de modelos directamente desde Huggingface. Maid se distribuye bajo la licencia MIT y se proporciona sin garantía de ningún tipo, expresa o implícita. Maid no está afiliada con Huggingface, Meta (Facebook), MistralAI, OpenAI, Google, Microsoft ni ninguna otra empresa que proporcione modelos compatibles con esta aplicación.';
 
   @override
   String get leadMaintainer => 'Mantenedor principal';
@@ -299,7 +304,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get warning => 'Advertencia';
 
   @override
-  String get nsfwWarning => 'Este modelo ha sido diseñado intencionadamente para generar contenido NSFW. Esto puede incluir contenido sexual explícito o violento que involucre tortura, violación, asesinato y/o comportamientos sexualmente desviados. Si eres sensible a estos temas o su discusión infringe las leyes locales, NO CONTINÚES.';
+  String get nsfwWarning =>
+      'Este modelo ha sido diseñado intencionadamente para generar contenido NSFW. Esto puede incluir contenido sexual explícito o violento que involucre tortura, violación, asesinato y/o comportamientos sexualmente desviados. Si eres sensible a estos temas o su discusión infringe las leyes locales, NO CONTINÚES.';
 
   @override
   String get login => 'Iniciar sesión';
@@ -323,7 +329,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get resetCode => 'Código de reinicio';
 
   @override
-  String get resetCodeSent => 'Se ha enviado un código de reinicio a su correo electrónico.';
+  String get resetCodeSent =>
+      'Se ha enviado un código de reinicio a su correo electrónico.';
 
   @override
   String get sendResetCode => 'Enviar código de reinicio';
@@ -335,16 +342,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get required => 'Requerido';
 
   @override
-  String get invalidEmail => 'Por favor, introduce un correo electrónico válido';
+  String get invalidEmail =>
+      'Por favor, introduce un correo electrónico válido';
 
   @override
-  String get invalidUserName => 'De 3 a 24 caracteres, alfanuméricos o guion bajo';
+  String get invalidUserName =>
+      'De 3 a 24 caracteres, alfanuméricos o guion bajo';
 
   @override
   String get invalidPasswordLength => 'Mínimo 8 caracteres';
 
   @override
-  String get invalidPassword => 'Incluye mayúsculas, minúsculas, número y símbolo';
+  String get invalidPassword =>
+      'Incluye mayúsculas, minúsculas, número y símbolo';
 
   @override
   String get passwordNoMatch => 'Las contraseñas no coinciden';

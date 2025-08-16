@@ -167,6 +167,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get openAI => 'OpenAI';
 
   @override
+  String get azureOpenAI => 'Azure OpenAI';
+
+  @override
   String get mistral => 'Mistral';
 
   @override
@@ -253,7 +256,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aboutTitle => '关于';
 
   @override
-  String get aboutContent => 'Maid 是一款跨平台、开源免费应用，可本地运行 llama.cpp 模型，并支持远程连接 Ollama、Mistral、Google Gemini 和 OpenAI 模型。Maid 兼容 Sillytavern 角色卡，让您能与喜爱的角色互动。Maid 可直接从 Hugging Face 下载精选模型。Maid 遵循 MIT 许可证分发，并不提供任何明示或暗示的担保。Maid 与 Hugging Face、Meta (Facebook)、MistralAI、OpenAI、Google、Microsoft 或其他提供兼容模型的公司无关。';
+  String get aboutContent =>
+      'Maid 是一款跨平台、开源免费应用，可本地运行 llama.cpp 模型，并支持远程连接 Ollama、Mistral、Google Gemini 和 OpenAI 模型。Maid 兼容 Sillytavern 角色卡，让您能与喜爱的角色互动。Maid 可直接从 Hugging Face 下载精选模型。Maid 遵循 MIT 许可证分发，并不提供任何明示或暗示的担保。Maid 与 Hugging Face、Meta (Facebook)、MistralAI、OpenAI、Google、Microsoft 或其他提供兼容模型的公司无关。';
 
   @override
   String get leadMaintainer => '主要维护者';
@@ -299,7 +303,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get warning => '警告';
 
   @override
-  String get nsfwWarning => '该模型被有意设计用于生成NSFW（不适宜公开）的内容。这可能包括涉及酷刑、强奸、谋杀和/或性变态行为的露骨性或暴力内容。如果您对这些话题较为敏感，或这些话题的讨论违反了当地法律，请不要继续。';
+  String get nsfwWarning =>
+      '该模型被有意设计用于生成NSFW（不适宜公开）的内容。这可能包括涉及酷刑、强奸、谋杀和/或性变态行为的露骨性或暴力内容。如果您对这些话题较为敏感，或这些话题的讨论违反了当地法律，请不要继续。';
 
   @override
   String get login => '登录';

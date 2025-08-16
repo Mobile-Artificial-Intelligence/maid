@@ -161,10 +161,14 @@ class AppLocalizationsKo extends AppLocalizations {
   String get localNetworkSearchTitle => '로컬 네트워크 검색';
 
   @override
-  String get localNetworkSearchContent => '이 기능을 사용하려면 Ollama 인스턴스를 검색하기 위한 추가 권한이 필요합니다.';
+  String get localNetworkSearchContent =>
+      '이 기능을 사용하려면 Ollama 인스턴스를 검색하기 위한 추가 권한이 필요합니다.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get aboutTitle => '정보';
 
   @override
-  String get aboutContent => 'Maid는 로컬에서 llama.cpp 모델과 원격에서 Ollama, Mistral, Google Gemini 및 OpenAI 모델을 사용할 수 있는 크로스플랫폼 무료 오픈 소스 애플리케이션입니다. Maid는 Sillytavern 캐릭터 카드를 지원하여 좋아하는 캐릭터와 상호 작용할 수 있습니다. Maid는 Hugging Face에서 직접 큐레이션된 모델 목록을 앱 내에서 다운로드할 수 있도록 지원합니다. Maid는 MIT 라이선스로 배포되며, 명시적이거나 암시적인 어떠한 보증도 제공되지 않습니다. Maid는 Hugging Face, Meta (Facebook), MistralAI, OpenAI, Google, Microsoft 또는 이 애플리케이션과 호환되는 모델을 제공하는 다른 회사와 제휴하지 않습니다.';
+  String get aboutContent =>
+      'Maid는 로컬에서 llama.cpp 모델과 원격에서 Ollama, Mistral, Google Gemini 및 OpenAI 모델을 사용할 수 있는 크로스플랫폼 무료 오픈 소스 애플리케이션입니다. Maid는 Sillytavern 캐릭터 카드를 지원하여 좋아하는 캐릭터와 상호 작용할 수 있습니다. Maid는 Hugging Face에서 직접 큐레이션된 모델 목록을 앱 내에서 다운로드할 수 있도록 지원합니다. Maid는 MIT 라이선스로 배포되며, 명시적이거나 암시적인 어떠한 보증도 제공되지 않습니다. Maid는 Hugging Face, Meta (Facebook), MistralAI, OpenAI, Google, Microsoft 또는 이 애플리케이션과 호환되는 모델을 제공하는 다른 회사와 제휴하지 않습니다.';
 
   @override
   String get leadMaintainer => '수석 유지 관리자';
@@ -299,7 +304,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get warning => '경고';
 
   @override
-  String get nsfwWarning => '이 모델은 NSFW(부적절한 콘텐츠)를 생성하도록 의도적으로 설계되었습니다. 여기에는 고문, 강간, 살인 및/또는 성적으로 일탈된 행동과 관련된 노골적인 성적 또는 폭력적인 콘텐츠가 포함될 수 있습니다. 이러한 주제에 민감하시거나 해당 주제에 대한 논의가 현지 법률을 위반하는 경우, 진행하지 마십시오.';
+  String get nsfwWarning =>
+      '이 모델은 NSFW(부적절한 콘텐츠)를 생성하도록 의도적으로 설계되었습니다. 여기에는 고문, 강간, 살인 및/또는 성적으로 일탈된 행동과 관련된 노골적인 성적 또는 폭력적인 콘텐츠가 포함될 수 있습니다. 이러한 주제에 민감하시거나 해당 주제에 대한 논의가 현지 법률을 위반하는 경우, 진행하지 마십시오.';
 
   @override
   String get login => '로그인';

@@ -161,10 +161,14 @@ class AppLocalizationsHi extends AppLocalizations {
   String get localNetworkSearchTitle => 'स्थानीय नेटवर्क खोज';
 
   @override
-  String get localNetworkSearchContent => 'इस सुविधा को आपके स्थानीय नेटवर्क में ओल्लामा इंस्टेंस खोजने के लिए अतिरिक्त अनुमतियों की आवश्यकता है।';
+  String get localNetworkSearchContent =>
+      'इस सुविधा को आपके स्थानीय नेटवर्क में ओल्लामा इंस्टेंस खोजने के लिए अतिरिक्त अनुमतियों की आवश्यकता है।';
 
   @override
   String get openAI => 'ओपनएआई';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'मिस्ट्रल';
@@ -253,7 +257,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get aboutTitle => 'बारे में';
 
   @override
-  String get aboutContent => 'Maid एक क्रॉस-प्लेटफ़ॉर्म मुक्त और ओपन-सोर्स एप्लिकेशन है जो स्थानीय रूप से llama.cpp मॉडल और दूरस्थ रूप से Ollama, Mistral, और OpenAI मॉडल से इंटरफ़ेस करने के लिए डिज़ाइन किया गया है। Maid सिल्लीटैवर्न चरित्र कार्ड का समर्थन करता है जिससे आप अपने पसंदीदा पात्रों के साथ संवाद कर सकते हैं। Maid ऐप के भीतर सीधे Hugging Face से क्यूरेटेड मॉडल की सूची डाउनलोड करने की सुविधा देता है। Maid को MIT लाइसेंस के तहत वितरित किया जाता है और इसे किसी भी प्रकार की गारंटी के बिना प्रदान किया जाता है, चाहे वह व्यक्त हो या निहित। Maid का Hugging Face, Meta (Facebook), Mistral AI, OpenAI, Google, Microsoft या किसी अन्य कंपनी से कोई संबंध नहीं है जो इस एप्लिकेशन के साथ संगत मॉडल प्रदान करती है।';
+  String get aboutContent =>
+      'Maid एक क्रॉस-प्लेटफ़ॉर्म मुक्त और ओपन-सोर्स एप्लिकेशन है जो स्थानीय रूप से llama.cpp मॉडल और दूरस्थ रूप से Ollama, Mistral, और OpenAI मॉडल से इंटरफ़ेस करने के लिए डिज़ाइन किया गया है। Maid सिल्लीटैवर्न चरित्र कार्ड का समर्थन करता है जिससे आप अपने पसंदीदा पात्रों के साथ संवाद कर सकते हैं। Maid ऐप के भीतर सीधे Hugging Face से क्यूरेटेड मॉडल की सूची डाउनलोड करने की सुविधा देता है। Maid को MIT लाइसेंस के तहत वितरित किया जाता है और इसे किसी भी प्रकार की गारंटी के बिना प्रदान किया जाता है, चाहे वह व्यक्त हो या निहित। Maid का Hugging Face, Meta (Facebook), Mistral AI, OpenAI, Google, Microsoft या किसी अन्य कंपनी से कोई संबंध नहीं है जो इस एप्लिकेशन के साथ संगत मॉडल प्रदान करती है।';
 
   @override
   String get leadMaintainer => 'प्रधान अनुरक्षक';
@@ -299,7 +304,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get warning => 'चेतावनी';
 
   @override
-  String get nsfwWarning => 'यह मॉडल जानबूझकर ऐसा डिज़ाइन किया गया है ताकि यह NSFW (अशोभनीय) सामग्री उत्पन्न कर सके। इसमें यौन रूप से स्पष्ट या हिंसक सामग्री हो सकती है, जिसमें यातना, बलात्कार, हत्या और/या यौन विकृति शामिल हो सकती है। यदि आप ऐसे विषयों के प्रति संवेदनशील हैं, या इन विषयों पर चर्चा करना आपके स्थानीय कानूनों का उल्लंघन करता है, तो आगे न बढ़ें।';
+  String get nsfwWarning =>
+      'यह मॉडल जानबूझकर ऐसा डिज़ाइन किया गया है ताकि यह NSFW (अशोभनीय) सामग्री उत्पन्न कर सके। इसमें यौन रूप से स्पष्ट या हिंसक सामग्री हो सकती है, जिसमें यातना, बलात्कार, हत्या और/या यौन विकृति शामिल हो सकती है। यदि आप ऐसे विषयों के प्रति संवेदनशील हैं, या इन विषयों पर चर्चा करना आपके स्थानीय कानूनों का उल्लंघन करता है, तो आगे न बढ़ें।';
 
   @override
   String get login => 'लॉगिन';
@@ -338,13 +344,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get invalidEmail => 'कृपया एक मान्य ईमेल दर्ज करें';
 
   @override
-  String get invalidUserName => '3-24 अक्षरों का होना चाहिए, अल्फ़ान्यूमेरिक या अंडरस्कोर';
+  String get invalidUserName =>
+      '3-24 अक्षरों का होना चाहिए, अल्फ़ान्यूमेरिक या अंडरस्कोर';
 
   @override
   String get invalidPasswordLength => 'न्यूनतम 8 अक्षर';
 
   @override
-  String get invalidPassword => 'बड़े अक्षर, छोटे अक्षर, संख्या, और प्रतीक शामिल करें';
+  String get invalidPassword =>
+      'बड़े अक्षर, छोटे अक्षर, संख्या, और प्रतीक शामिल करें';
 
   @override
   String get passwordNoMatch => 'पासवर्ड मेल नहीं खाते';

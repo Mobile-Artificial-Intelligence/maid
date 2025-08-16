@@ -161,10 +161,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get localNetworkSearchTitle => 'بحث في الشبكة المحلية';
 
   @override
-  String get localNetworkSearchContent => 'تتطلب هذه الميزة أذونات إضافية للبحث عن مثيلات Ollama في شبكتك المحلية.';
+  String get localNetworkSearchContent =>
+      'تتطلب هذه الميزة أذونات إضافية للبحث عن مثيلات Ollama في شبكتك المحلية.';
 
   @override
   String get openAI => 'OpenAI';
+
+  @override
+  String get azureOpenAI => 'Azure OpenAI';
 
   @override
   String get mistral => 'Mistral';
@@ -253,7 +257,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aboutTitle => 'حول';
 
   @override
-  String get aboutContent => 'Maid هو تطبيق مجاني ومفتوح المصدر متعدد المنصات للتعامل مع نماذج llama.cpp محليًا ومع نماذج Ollama وMistral وOpenAI عن بُعد. يدعم Maid بطاقات شخصيات Sillytavern للتفاعل مع جميع شخصياتك المفضلة. يتيح Maid تنزيل قائمة مختارة من النماذج مباشرة من Hugging Face داخل التطبيق. يتم توزيع Maid بموجب ترخيص MIT ويتم توفيره بدون أي ضمان من أي نوع، صريح أو ضمني. Maid غير مرتبط بـ Hugging Face أو Meta (Facebook) أو MistralAI أو OpenAI أو Google أو Microsoft أو أي شركة أخرى تقدم نموذجًا متوافقًا مع هذا التطبيق.';
+  String get aboutContent =>
+      'Maid هو تطبيق مجاني ومفتوح المصدر متعدد المنصات للتعامل مع نماذج llama.cpp محليًا ومع نماذج Ollama وMistral وOpenAI عن بُعد. يدعم Maid بطاقات شخصيات Sillytavern للتفاعل مع جميع شخصياتك المفضلة. يتيح Maid تنزيل قائمة مختارة من النماذج مباشرة من Hugging Face داخل التطبيق. يتم توزيع Maid بموجب ترخيص MIT ويتم توفيره بدون أي ضمان من أي نوع، صريح أو ضمني. Maid غير مرتبط بـ Hugging Face أو Meta (Facebook) أو MistralAI أو OpenAI أو Google أو Microsoft أو أي شركة أخرى تقدم نموذجًا متوافقًا مع هذا التطبيق.';
 
   @override
   String get leadMaintainer => 'المسؤول الرئيسي';
@@ -299,7 +304,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get warning => 'تحذير';
 
   @override
-  String get nsfwWarning => 'تم تصميم هذا النموذج عمدًا لإنتاج محتوى غير مناسب (NSFW). قد يشمل ذلك محتوى جنسيًا صريحًا أو عنيفًا يتضمن التعذيب أو الاغتصاب أو القتل و/أو السلوك الجنسي المنحرف. إذا كنت حساسًا لمثل هذه الموضوعات، أو إذا كان مناقشة هذه الموضوعات ينتهك القوانين المحلية، فلا تتابع.';
+  String get nsfwWarning =>
+      'تم تصميم هذا النموذج عمدًا لإنتاج محتوى غير مناسب (NSFW). قد يشمل ذلك محتوى جنسيًا صريحًا أو عنيفًا يتضمن التعذيب أو الاغتصاب أو القتل و/أو السلوك الجنسي المنحرف. إذا كنت حساسًا لمثل هذه الموضوعات، أو إذا كان مناقشة هذه الموضوعات ينتهك القوانين المحلية، فلا تتابع.';
 
   @override
   String get login => 'تسجيل الدخول';
@@ -323,7 +329,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get resetCode => 'رمز إعادة التعيين';
 
   @override
-  String get resetCodeSent => 'تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني.';
+  String get resetCodeSent =>
+      'تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني.';
 
   @override
   String get sendResetCode => 'إرسال رمز إعادة التعيين';
@@ -338,13 +345,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidEmail => 'يرجى إدخال بريد إلكتروني صالح';
 
   @override
-  String get invalidUserName => 'يجب أن يكون بين 3-24 حرفًا، أبجديًا رقميًا أو شرطة سفلية';
+  String get invalidUserName =>
+      'يجب أن يكون بين 3-24 حرفًا، أبجديًا رقميًا أو شرطة سفلية';
 
   @override
   String get invalidPasswordLength => 'الحد الأدنى 8 أحرف';
 
   @override
-  String get invalidPassword => 'يجب أن يحتوي على أحرف كبيرة وصغيرة وأرقام ورموز';
+  String get invalidPassword =>
+      'يجب أن يحتوي على أحرف كبيرة وصغيرة وأرقام ورموز';
 
   @override
   String get passwordNoMatch => 'كلمات المرور غير متطابقة';
