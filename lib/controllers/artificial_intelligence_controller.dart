@@ -11,7 +11,8 @@ abstract class AIController extends ChangeNotifier {
     notifier.value = newInstance;
   }
 
-  static AIController get defaultController => kIsWeb ? OpenAIController() : LlamaCppController();
+  static AIController get defaultController =>
+      kIsWeb ? OpenAIController() : LlamaCppController();
 
   static Map<String, String> getTypes(BuildContext context) {
     Map<String, String> types = {};
@@ -68,15 +69,14 @@ abstract class AIController extends ChangeNotifier {
   bool get canPrompt;
   String get hash => jsonEncode(toMap()).hash;
 
-  AIController({
-    String? model, 
-    Map<String, dynamic>? parameters
-  }) : _model = model , _parameters = parameters ?? {};
+  AIController({String? model, Map<String, dynamic>? parameters})
+      : _model = model,
+        _parameters = parameters ?? {};
 
   Map<String, dynamic> toMap() => {
-    'model': _model,
-    'parameters': _parameters,
-  };
+        'model': _model,
+        'parameters': _parameters,
+      };
 
   void fromMap(Map<String, dynamic> map) {
     _model = map['model'];
@@ -106,28 +106,22 @@ abstract class AIController extends ChangeNotifier {
 
     switch (type) {
       case 'llama_cpp':
-        instance = LlamaCppController()
-          ..fromMap(contextMap);
+        instance = LlamaCppController()..fromMap(contextMap);
         break;
       case 'ollama':
-        instance = OllamaController()
-          ..fromMap(contextMap);
+        instance = OllamaController()..fromMap(contextMap);
         break;
       case 'open_ai':
-        instance = OpenAIController()
-          ..fromMap(contextMap);
+        instance = OpenAIController()..fromMap(contextMap);
         break;
       case 'mistral':
-        instance = MistralController()
-          ..fromMap(contextMap);
+        instance = MistralController()..fromMap(contextMap);
         break;
       case 'anthropic':
-        instance = AnthropicController()
-          ..fromMap(contextMap);
+        instance = AnthropicController()..fromMap(contextMap);
         break;
       case 'azure_openai':
-        instance = AzureOpenAIController()
-          ..fromMap(contextMap);
+        instance = AzureOpenAIController()..fromMap(contextMap);
         break;
       default:
         instance = kIsWeb ? OpenAIController() : LlamaCppController();
@@ -154,17 +148,13 @@ abstract class AIController extends ChangeNotifier {
 }
 
 abstract class RemoteAIController extends AIController {
-  static RemoteAIController? get instance => AIController.instance is RemoteAIController
-    ? AIController.instance as RemoteAIController
-    : null;
+  static RemoteAIController? get instance =>
+      AIController.instance is RemoteAIController
+          ? AIController.instance as RemoteAIController
+          : null;
 
-  static List<String> get types => [
-    'ollama',
-    'open_ai',
-    'mistral',
-    'anthropic',
-    'azure_openai'
-  ];
+  static List<String> get types =>
+      ['ollama', 'open_ai', 'mistral', 'anthropic', 'azure_openai'];
 
   String? _baseUrl;
 
@@ -190,20 +180,18 @@ abstract class RemoteAIController extends AIController {
 
   bool get canGetRemoteModels;
 
-  RemoteAIController({
-    super.model, 
-    super.parameters,
-    String? baseUrl, 
-    String? apiKey
-  }) : _baseUrl = baseUrl, _apiKey = apiKey;
+  RemoteAIController(
+      {super.model, super.parameters, String? baseUrl, String? apiKey})
+      : _baseUrl = baseUrl,
+        _apiKey = apiKey;
 
   @override
   Map<String, dynamic> toMap() => {
-    'model': _model,
-    'parameters': _parameters,
-    'base_url': _baseUrl,
-    'api_key': _apiKey
-  };
+        'model': _model,
+        'parameters': _parameters,
+        'base_url': _baseUrl,
+        'api_key': _apiKey
+      };
 
   @override
   void fromMap(Map<String, dynamic> map) {
@@ -232,9 +220,10 @@ abstract class RemoteAIController extends AIController {
 }
 
 class LlamaCppController extends AIController {
-  static LlamaCppController? get instance => AIController.instance is LlamaCppController
-    ? AIController.instance as LlamaCppController
-    : null;
+  static LlamaCppController? get instance =>
+      AIController.instance is LlamaCppController
+          ? AIController.instance as LlamaCppController
+          : null;
 
   llama.Llama? _llama;
   String _loadedHash = '';
@@ -247,10 +236,7 @@ class LlamaCppController extends AIController {
   @override
   bool get canPrompt => _llama != null && !busy;
 
-  LlamaCppController({
-    super.model, 
-    super.parameters
-  }) {
+  LlamaCppController({super.model, super.parameters}) {
     getLoadedModels();
   }
 
@@ -269,31 +255,28 @@ class LlamaCppController extends AIController {
   void reloadModel([bool force = false]) async {
     if ((hash == _loadedHash && !force) || _model == null) return;
 
-    _llama = llama.Llama(
-      llama.LlamaController.fromMap({
-        'model_path': _model,
-        'seed': math.Random().nextInt(1000000),
-        'greedy': true,
-        ..._parameters
-      })
-    );
+    _llama = llama.Llama(llama.LlamaController.fromMap({
+      'model_path': _model,
+      'seed': math.Random().nextInt(1000000),
+      'greedy': true,
+      ..._parameters
+    }));
 
     _loadedHash = hash;
   }
 
   void pickModel() async {
     _model = null;
-    
+
     final result = await FilePicker.platform.pickFiles(
-      dialogTitle: "Load Model File",
-      type: FileType.any,
-      allowMultiple: false,
-      allowCompression: false,
-      onFileLoading: (status) {
-        loading = status == FilePickerStatus.picking;
-        super.notifyListeners();
-      }
-    );
+        dialogTitle: "Load Model File",
+        type: FileType.any,
+        allowMultiple: false,
+        allowCompression: false,
+        onFileLoading: (status) {
+          loading = status == FilePickerStatus.picking;
+          super.notifyListeners();
+        });
 
     loading = false;
     super.notifyListeners();
@@ -317,7 +300,7 @@ class LlamaCppController extends AIController {
   }
 
   void loadModelFile(String path, [bool notify = false]) async {
-    assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
+    assert(RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
     _model = path;
     reloadModel();
 
@@ -330,8 +313,8 @@ class LlamaCppController extends AIController {
     notifyListeners();
   }
 
-  void addModelFile( path) async {
-    assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
+  void addModelFile(path) async {
+    assert(RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
     _modelOptions.removeWhere((model) => model == path);
     _modelOptions.add(path);
 
@@ -342,7 +325,7 @@ class LlamaCppController extends AIController {
   }
 
   void removeLoadedModel(String path) async {
-    assert (RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
+    assert(RegExp(r'\.gguf$', caseSensitive: false).hasMatch(path));
     _modelOptions.removeWhere((model) => model == path);
 
     if (_model == path) {
@@ -375,15 +358,17 @@ class LlamaCppController extends AIController {
     _loadedHash = '';
     loading = false;
   }
-  
+
   @override
-  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.llamaCpp;
+  String getTypeLocale(BuildContext context) =>
+      AppLocalizations.of(context)!.llamaCpp;
 }
 
 class OllamaController extends RemoteAIController {
-  static OllamaController? get instance => AIController.instance is OllamaController
-    ? AIController.instance as OllamaController
-    : null;
+  static OllamaController? get instance =>
+      AIController.instance is OllamaController
+          ? AIController.instance as OllamaController
+          : null;
 
   late ollama.OllamaClient _ollamaClient;
 
@@ -403,12 +388,8 @@ class OllamaController extends RemoteAIController {
   @override
   bool get canPrompt => _model != null && _model!.isNotEmpty && !busy;
 
-  OllamaController({
-    super.model, 
-    super.parameters,
-    super.baseUrl, 
-    super.apiKey
-  });
+  OllamaController(
+      {super.model, super.parameters, super.baseUrl, super.apiKey});
 
   @override
   Stream<String> prompt() async* {
@@ -416,33 +397,26 @@ class OllamaController extends RemoteAIController {
     busy = true;
 
     _ollamaClient = ollama.OllamaClient(
-      baseUrl: "${_baseUrl ?? 'http://localhost:11434'}/api",
-      headers: {
-        'Authorization': 'Bearer $_apiKey'
-      }
-    );
+        baseUrl: "${_baseUrl ?? 'http://localhost:11434'}/api",
+        headers: {'Authorization': 'Bearer $_apiKey'});
 
     final completionStream = _ollamaClient.generateChatCompletionStream(
-      request: ollama.GenerateChatCompletionRequest(
-        model: _model!, 
-        messages: ChatController.instance.root.toOllamaMessages(),
-        options: ollama.RequestOptions.fromJson(_parameters),
-        stream: true
-      )
-    );
+        request: ollama.GenerateChatCompletionRequest(
+            model: _model!,
+            messages: ChatController.instance.root.toOllamaMessages(),
+            options: ollama.RequestOptions.fromJson(_parameters),
+            stream: true));
 
     try {
       await for (final completion in completionStream) {
         yield completion.message.content;
       }
-    }
-    catch (e) {
+    } catch (e) {
       // This is expected when the user presses stop
       if (!e.toString().contains('Connection closed')) {
         rethrow;
       }
-    }
-    finally {
+    } finally {
       busy = false;
     }
   }
@@ -461,15 +435,15 @@ class OllamaController extends RemoteAIController {
 
   Future<Uri?> checkForOllama(Uri url) async {
     final dio = Dio();
-  
+
     dio.options.headers.addAll({
       "Accept": "application/json",
       'Authorization': 'Bearer $_apiKey',
     });
-  
+
     try {
       final response = await dio.getUri(url);
-  
+
       if (response.statusCode == 200) {
         log('Found Ollama at ${url.host}');
         return url;
@@ -479,7 +453,7 @@ class OllamaController extends RemoteAIController {
         log(e.toString());
       }
     }
-  
+
     return null;
   }
 
@@ -487,7 +461,8 @@ class OllamaController extends RemoteAIController {
     assert(_searchLocalNetwork == true);
 
     // Check current URL
-    if (_baseUrl != null && await checkForOllama(Uri.parse(_baseUrl!)) != null) {
+    if (_baseUrl != null &&
+        await checkForOllama(Uri.parse(_baseUrl!)) != null) {
       return true;
     }
 
@@ -504,7 +479,8 @@ class OllamaController extends RemoteAIController {
     final baseIP = ipToCSubnet(localIP ?? '');
 
     // Scan the local network for hosts
-    final hosts = await LanScanner(debugLogging: true).quickIcmpScanAsync(baseIP);
+    final hosts =
+        await LanScanner(debugLogging: true).quickIcmpScanAsync(baseIP);
 
     List<Future<Uri?>> hostFutures = [];
     for (final host in hosts) {
@@ -566,12 +542,12 @@ class OllamaController extends RemoteAIController {
 
   @override
   Map<String, dynamic> toMap() => {
-    'model': _model,
-    'parameters': _parameters,
-    'base_url': _baseUrl,
-    'api_key': _apiKey,
-    'search_local_network': _searchLocalNetwork,
-  };
+        'model': _model,
+        'parameters': _parameters,
+        'base_url': _baseUrl,
+        'api_key': _apiKey,
+        'search_local_network': _searchLocalNetwork,
+      };
 
   @override
   void fromMap(Map<String, dynamic> map) {
@@ -583,18 +559,20 @@ class OllamaController extends RemoteAIController {
     save();
     notifyListeners();
   }
-  
+
   @override
-  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.ollama;
-  
+  String getTypeLocale(BuildContext context) =>
+      AppLocalizations.of(context)!.ollama;
+
   @override
   bool get canGetRemoteModels => baseUrl != null || searchLocalNetwork == true;
 }
 
 class OpenAIController extends RemoteAIController {
-  static OpenAIController? get instance => AIController.instance is OpenAIController
-    ? AIController.instance as OpenAIController
-    : null;
+  static OpenAIController? get instance =>
+      AIController.instance is OpenAIController
+          ? AIController.instance as OpenAIController
+          : null;
 
   late open_ai.OpenAIClient _openAiClient;
 
@@ -602,14 +580,15 @@ class OpenAIController extends RemoteAIController {
   String get type => 'open_ai';
 
   @override
-  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty && !busy;
+  bool get canPrompt =>
+      _apiKey != null &&
+      _apiKey!.isNotEmpty &&
+      _model != null &&
+      _model!.isNotEmpty &&
+      !busy;
 
-  OpenAIController({
-    super.model,
-    super.parameters,
-    super.baseUrl, 
-    super.apiKey
-  });
+  OpenAIController(
+      {super.model, super.parameters, super.baseUrl, super.apiKey});
 
   @override
   Stream<String> prompt() async* {
@@ -627,30 +606,27 @@ class OpenAIController extends RemoteAIController {
     );
 
     final completionStream = _openAiClient.createChatCompletionStream(
-      request: open_ai.CreateChatCompletionRequest(
-        messages: ChatController.instance.root.toOpenAiMessages(),
-        model: open_ai.ChatCompletionModel.modelId(_model!),
-        stream: true,
-        temperature: _parameters['temperature'],
-        topP: _parameters['top_p'],
-        maxTokens: _parameters['max_tokens'],
-        frequencyPenalty: _parameters['frequency_penalty'],
-        presencePenalty: _parameters['presence_penalty'],
-      )
-    );
+        request: open_ai.CreateChatCompletionRequest(
+      messages: ChatController.instance.root.toOpenAiMessages(),
+      model: open_ai.ChatCompletionModel.modelId(_model!),
+      stream: true,
+      temperature: _parameters['temperature'],
+      topP: _parameters['top_p'],
+      maxTokens: _parameters['max_tokens'],
+      frequencyPenalty: _parameters['frequency_penalty'],
+      presencePenalty: _parameters['presence_penalty'],
+    ));
 
     try {
       await for (final completion in completionStream) {
         yield completion.choices.first.delta?.content ?? '';
       }
-    }
-    catch (e) {
+    } catch (e) {
       // This is expected when the user presses stop
       if (!e.toString().contains('Connection closed')) {
         rethrow;
       }
-    }
-    finally {
+    } finally {
       busy = false;
     }
   }
@@ -660,7 +636,7 @@ class OpenAIController extends RemoteAIController {
     _openAiClient.endSession();
     busy = false;
   }
-  
+
   @override
   Future<bool> getModelOptions() async {
     assert(_apiKey != null && _apiKey!.isNotEmpty, 'API Key is required');
@@ -679,18 +655,20 @@ class OpenAIController extends RemoteAIController {
     _modelOptions = modelsResponse.data.map((model) => model.id).toList();
     return true;
   }
-  
+
   @override
-  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.openAI;
-  
+  String getTypeLocale(BuildContext context) =>
+      AppLocalizations.of(context)!.openAI;
+
   @override
   bool get canGetRemoteModels => apiKey != null && apiKey!.isNotEmpty;
 }
 
 class MistralController extends RemoteAIController {
-  static MistralController? get instance => AIController.instance is MistralController
-    ? AIController.instance as MistralController
-    : null;
+  static MistralController? get instance =>
+      AIController.instance is MistralController
+          ? AIController.instance as MistralController
+          : null;
 
   late mistral.MistralAIClient _mistralClient;
 
@@ -698,15 +676,16 @@ class MistralController extends RemoteAIController {
   String get type => 'mistral';
 
   @override
-  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty && !busy;
+  bool get canPrompt =>
+      _apiKey != null &&
+      _apiKey!.isNotEmpty &&
+      _model != null &&
+      _model!.isNotEmpty &&
+      !busy;
 
-  MistralController({
-    super.model, 
-    super.parameters,
-    super.baseUrl, 
-    super.apiKey
-  });
-  
+  MistralController(
+      {super.model, super.parameters, super.baseUrl, super.apiKey});
+
   @override
   Stream<String> prompt() async* {
     assert(_apiKey != null, 'API Key is required');
@@ -726,45 +705,39 @@ class MistralController extends RemoteAIController {
 
     if (_model == 'mistral-medium') {
       mistralModel = mistral.ChatCompletionModels.mistralMedium;
-    } 
-    else if (_model == 'mistral-small') {
+    } else if (_model == 'mistral-small') {
       mistralModel = mistral.ChatCompletionModels.mistralSmall;
-    } 
-    else if (_model == 'mistral-tiny') {
+    } else if (_model == 'mistral-tiny') {
       mistralModel = mistral.ChatCompletionModels.mistralTiny;
-    } 
-    else {
+    } else {
       throw Exception('Unknown Mistral model: $model');
     }
 
     final completionStream = _mistralClient.createChatCompletionStream(
-      request: mistral.ChatCompletionRequest(
-        messages: ChatController.instance.root.toMistralMessages(),
-        model: mistral.ChatCompletionModel.model(mistralModel),
-        stream: true,
-        temperature: _parameters['temperature'],
-        topP: _parameters['top_p'],
-        maxTokens: _parameters['max_tokens'],
-        randomSeed: _parameters['seed'],
-      )
-    );
+        request: mistral.ChatCompletionRequest(
+      messages: ChatController.instance.root.toMistralMessages(),
+      model: mistral.ChatCompletionModel.model(mistralModel),
+      stream: true,
+      temperature: _parameters['temperature'],
+      topP: _parameters['top_p'],
+      maxTokens: _parameters['max_tokens'],
+      randomSeed: _parameters['seed'],
+    ));
 
     try {
       await for (final completion in completionStream) {
         yield completion.choices.first.delta.content ?? '';
       }
-    }
-    catch (e) {
+    } catch (e) {
       // This is expected when the user presses stop
       if (!e.toString().contains('Connection closed')) {
         rethrow;
       }
-    }
-    finally {
+    } finally {
       busy = false;
     }
   }
-  
+
   @override
   void stop() {
     _mistralClient.endSession();
@@ -780,18 +753,20 @@ class MistralController extends RemoteAIController {
     ];
     return true;
   }
-  
+
   @override
-  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.mistral;
-  
+  String getTypeLocale(BuildContext context) =>
+      AppLocalizations.of(context)!.mistral;
+
   @override
   bool get canGetRemoteModels => true;
 }
 
 class AnthropicController extends RemoteAIController {
-  static AnthropicController? get instance => AIController.instance is AnthropicController
-    ? AIController.instance as AnthropicController
-    : null;
+  static AnthropicController? get instance =>
+      AIController.instance is AnthropicController
+          ? AIController.instance as AnthropicController
+          : null;
 
   late anthropic.AnthropicClient _anthropicClient;
 
@@ -799,14 +774,15 @@ class AnthropicController extends RemoteAIController {
   String get type => 'anthropic';
 
   @override
-  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && _model != null && _model!.isNotEmpty && !busy;
+  bool get canPrompt =>
+      _apiKey != null &&
+      _apiKey!.isNotEmpty &&
+      _model != null &&
+      _model!.isNotEmpty &&
+      !busy;
 
-  AnthropicController({
-    super.model, 
-    super.parameters,
-    super.baseUrl, 
-    super.apiKey
-  });
+  AnthropicController(
+      {super.model, super.parameters, super.baseUrl, super.apiKey});
 
   @override
   Stream<String> prompt() async* {
@@ -824,17 +800,17 @@ class AnthropicController extends RemoteAIController {
     );
 
     final completionStream = _anthropicClient.createMessageStream(
-      request: anthropic.CreateMessageRequest(
-        model: anthropic.Model.model(anthropic.Models.values.firstWhere((model) => model.name == _model)),
-        maxTokens: _parameters['max_tokens'] ?? 1024,
-        messages: ChatController.instance.root.toAnthropicMessages(),
-        stopSequences: _parameters['stop_sequences'],
-        temperature: _parameters['temperature'],
-        topK: _parameters['top_k'],
-        topP: _parameters['top_p'],
-        stream: true,
-      )
-    );
+        request: anthropic.CreateMessageRequest(
+      model: anthropic.Model.model(
+          anthropic.Models.values.firstWhere((model) => model.name == _model)),
+      maxTokens: _parameters['max_tokens'] ?? 1024,
+      messages: ChatController.instance.root.toAnthropicMessages(),
+      stopSequences: _parameters['stop_sequences'],
+      temperature: _parameters['temperature'],
+      topK: _parameters['top_k'],
+      topP: _parameters['top_p'],
+      stream: true,
+    ));
 
     try {
       await for (final completion in completionStream) {
@@ -842,14 +818,12 @@ class AnthropicController extends RemoteAIController {
 
         yield completion.delta.text;
       }
-    }
-    catch (e) {
+    } catch (e) {
       // This is expected when the user presses stop
       if (!e.toString().contains('Connection closed')) {
         rethrow;
       }
-    }
-    finally {
+    } finally {
       busy = false;
     }
   }
@@ -866,18 +840,20 @@ class AnthropicController extends RemoteAIController {
 
     return true;
   }
-  
+
   @override
   bool get canGetRemoteModels => true;
-  
+
   @override
-  String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.anthropic;
+  String getTypeLocale(BuildContext context) =>
+      AppLocalizations.of(context)!.anthropic;
 }
 
 class AzureOpenAIController extends RemoteAIController {
-  static AzureOpenAIController? get instance => AIController.instance is AzureOpenAIController
-    ? AIController.instance as AzureOpenAIController
-    : null;
+  static AzureOpenAIController? get instance =>
+      AIController.instance is AzureOpenAIController
+          ? AIController.instance as AzureOpenAIController
+          : null;
 
   String? _resourceName;
   String? _deploymentName;
@@ -917,10 +893,14 @@ class AzureOpenAIController extends RemoteAIController {
   String get type => 'azure_openai';
 
   @override
-  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && 
-                       _resourceName != null && _resourceName!.isNotEmpty &&
-                       _deploymentName != null && _deploymentName!.isNotEmpty &&
-                       !busy;
+  bool get canPrompt =>
+      _apiKey != null &&
+      _apiKey!.isNotEmpty &&
+      _resourceName != null &&
+      _resourceName!.isNotEmpty &&
+      _deploymentName != null &&
+      _deploymentName!.isNotEmpty &&
+      !busy;
 
   AzureOpenAIController({
     super.model,
@@ -930,20 +910,20 @@ class AzureOpenAIController extends RemoteAIController {
     String? resourceName,
     String? deploymentName,
     String? apiVersion,
-  }) : _resourceName = resourceName,
-       _deploymentName = deploymentName,
-       _apiVersion = apiVersion ?? '2024-02-15-preview';
+  })  : _resourceName = resourceName,
+        _deploymentName = deploymentName,
+        _apiVersion = apiVersion ?? '2024-02-15-preview';
 
   @override
   Map<String, dynamic> toMap() => {
-    'model': _model,
-    'parameters': _parameters,
-    'base_url': _baseUrl,
-    'api_key': _apiKey,
-    'resource_name': _resourceName,
-    'deployment_name': _deploymentName,
-    'api_version': _apiVersion,
-  };
+        'model': _model,
+        'parameters': _parameters,
+        'base_url': _baseUrl,
+        'api_key': _apiKey,
+        'resource_name': _resourceName,
+        'deployment_name': _deploymentName,
+        'api_version': _apiVersion,
+      };
 
   @override
   void fromMap(Map<String, dynamic> map) {
@@ -951,7 +931,7 @@ class AzureOpenAIController extends RemoteAIController {
     _parameters = map['parameters'] ?? {};
     _baseUrl = map['base_url'];
     _apiKey = map['api_key'];
-    
+
     // Validate and set Azure-specific fields
     final resourceName = map['resource_name'] as String?;
     if (resourceName != null && !_isValidResourceName(resourceName)) {
@@ -960,7 +940,7 @@ class AzureOpenAIController extends RemoteAIController {
     } else {
       _resourceName = resourceName;
     }
-    
+
     final deploymentName = map['deployment_name'] as String?;
     if (deploymentName != null && !_isValidDeploymentName(deploymentName)) {
       // Log warning but don't throw - allow loading with invalid data for recovery
@@ -968,7 +948,7 @@ class AzureOpenAIController extends RemoteAIController {
     } else {
       _deploymentName = deploymentName;
     }
-    
+
     final apiVersion = map['api_version'] as String? ?? '2024-02-15-preview';
     if (!_isValidApiVersion(apiVersion)) {
       // Fall back to default API version if invalid
@@ -976,7 +956,7 @@ class AzureOpenAIController extends RemoteAIController {
     } else {
       _apiVersion = apiVersion;
     }
-    
+
     save();
     notifyListeners();
   }
@@ -986,12 +966,12 @@ class AzureOpenAIController extends RemoteAIController {
     assert(_apiKey != null, 'API Key is required');
     assert(_resourceName != null, 'Resource name is required');
     assert(_deploymentName != null, 'Deployment name is required');
-    
+
     busy = true;
 
     try {
       _azureClient = Dio();
-      
+
       // Configure Azure OpenAI specific headers
       final headers = {
         'Content-Type': 'application/json',
@@ -1000,10 +980,13 @@ class AzureOpenAIController extends RemoteAIController {
 
       // Prepare the request body in OpenAI format
       final requestBody = {
-        'messages': ChatController.instance.root.toOpenAiMessages().map((msg) => {
-          'role': msg.role.name,
-          'content': msg.content,
-        }).toList(),
+        'messages': ChatController.instance.root
+            .toOpenAiMessages()
+            .map((msg) => {
+                  'role': msg.role.name,
+                  'content': msg.content,
+                })
+            .toList(),
         'stream': true,
         'temperature': _parameters['temperature'],
         'top_p': _parameters['top_p'],
@@ -1037,14 +1020,15 @@ class AzureOpenAIController extends RemoteAIController {
 
         for (final line in lines) {
           final trimmedLine = line.trim();
-          
+
           // Skip empty lines and non-data lines
           if (trimmedLine.isEmpty || !trimmedLine.startsWith('data: ')) {
             continue;
           }
 
-          final dataContent = trimmedLine.substring(6); // Remove 'data: ' prefix
-          
+          final dataContent =
+              trimmedLine.substring(6); // Remove 'data: ' prefix
+
           // Check for stream end
           if (dataContent == '[DONE]') {
             return;
@@ -1052,14 +1036,14 @@ class AzureOpenAIController extends RemoteAIController {
 
           try {
             final jsonData = jsonDecode(dataContent);
-            
+
             // Extract content from Azure OpenAI response format
-            if (jsonData['choices'] != null && 
+            if (jsonData['choices'] != null &&
                 jsonData['choices'].isNotEmpty &&
                 jsonData['choices'][0]['delta'] != null &&
                 jsonData['choices'][0]['delta']['content'] != null) {
-              
-              final content = jsonData['choices'][0]['delta']['content'] as String;
+              final content =
+                  jsonData['choices'][0]['delta']['content'] as String;
               if (content.isNotEmpty) {
                 yield content;
               }
@@ -1110,7 +1094,7 @@ class AzureOpenAIController extends RemoteAIController {
 
       // Create Dio client for making the request
       final client = Dio();
-      
+
       // Make request to Azure OpenAI deployments endpoint
       final response = await client.get(
         _deploymentsUrl,
@@ -1125,41 +1109,42 @@ class AzureOpenAIController extends RemoteAIController {
       // Parse the response to extract deployment names
       if (response.statusCode == 200 && response.data != null) {
         final data = response.data;
-        
+
         // Azure OpenAI deployments API returns a 'data' array with deployment objects
         if (data['data'] != null && data['data'] is List) {
           final deployments = data['data'] as List;
-          
+
           // Extract deployment names from the response
           final deploymentNames = <String>[];
           for (final deployment in deployments) {
-            if (deployment is Map<String, dynamic> && deployment['id'] != null) {
+            if (deployment is Map<String, dynamic> &&
+                deployment['id'] != null) {
               deploymentNames.add(deployment['id'].toString());
             }
           }
-          
+
           // Update model options with discovered deployments
           _modelOptions = deploymentNames;
-          
+
           // If we found deployments, return success
           return deploymentNames.isNotEmpty;
         }
       }
-      
+
       // If we couldn't parse deployments, fall back to empty list
       _modelOptions = [];
       return false;
-      
     } catch (e) {
       // Handle Azure OpenAI specific errors gracefully
       final errorString = e.toString();
-      
+
       // Don't rethrow connection errors, just return false
-      if (errorString.contains(RegExp(r'Connection (failed|refused|timeout)'))) {
+      if (errorString
+          .contains(RegExp(r'Connection (failed|refused|timeout)'))) {
         _modelOptions = [];
         return false;
       }
-      
+
       // Handle HTTP error responses
       if (errorString.contains('404')) {
         // Resource not found - likely invalid resource name
@@ -1174,7 +1159,7 @@ class AzureOpenAIController extends RemoteAIController {
         _modelOptions = [];
         return false;
       }
-      
+
       // For other errors, don't clear existing options but return false
       return false;
     }
@@ -1189,80 +1174,82 @@ class AzureOpenAIController extends RemoteAIController {
   }
 
   @override
-  String getTypeLocale(BuildContext context) {
-    // TODO: Implement proper localization - placeholder for now
-    return 'Azure OpenAI';
-  }
+  String getTypeLocale(BuildContext context) =>
+      AppLocalizations.of(context)!.azureOpenAI;
 
   @override
-  bool get canGetRemoteModels => _apiKey != null && _apiKey!.isNotEmpty &&
-                                _resourceName != null && _resourceName!.isNotEmpty;
+  bool get canGetRemoteModels =>
+      _apiKey != null &&
+      _apiKey!.isNotEmpty &&
+      _resourceName != null &&
+      _resourceName!.isNotEmpty;
 
   /// Maps Azure OpenAI specific errors to user-friendly messages
   String _mapAzureError(dynamic error) {
     final errorString = error.toString();
-    
+
     // Handle DioException specifically
     if (error is DioException) {
       if (error.response?.statusCode == 404) {
-        if (errorString.contains('DeploymentNotFound') || 
+        if (errorString.contains('DeploymentNotFound') ||
             errorString.contains('deployment') ||
             errorString.contains('not found')) {
           return 'Deployment "$_deploymentName" not found in resource "$_resourceName". Please check your deployment name.';
         }
         return 'Azure OpenAI resource "$_resourceName" not found. Please check your resource name.';
       }
-      
+
       if (error.response?.statusCode == 401) {
         return 'Invalid Azure OpenAI API key. Please check your API key and try again.';
       }
-      
+
       if (error.response?.statusCode == 403) {
         return 'Access denied to Azure OpenAI resource "$_resourceName". Please check your permissions.';
       }
-      
+
       if (error.response?.statusCode == 429) {
         return 'Azure OpenAI rate limit exceeded. Please wait and try again.';
       }
-      
+
       if (error.response?.statusCode == 400) {
         final responseData = error.response?.data;
-        if (responseData != null && responseData.toString().contains('api-version')) {
+        if (responseData != null &&
+            responseData.toString().contains('api-version')) {
           return 'Invalid API version "$_apiVersion". Please check the supported API versions.';
         }
         return 'Bad request to Azure OpenAI. Please check your configuration.';
       }
-      
+
       // Handle connection errors
       if (error.type == DioExceptionType.connectionTimeout ||
           error.type == DioExceptionType.receiveTimeout ||
           error.type == DioExceptionType.sendTimeout) {
         return 'Connection timeout to Azure OpenAI resource "$_resourceName". Please check your network connection.';
       }
-      
+
       if (error.type == DioExceptionType.connectionError) {
         return 'Cannot connect to Azure OpenAI resource "$_resourceName". Please check your resource name and network connection.';
       }
     }
-    
+
     // Handle DNS resolution errors
-    if (errorString.contains('Failed host lookup') || 
+    if (errorString.contains('Failed host lookup') ||
         errorString.contains('No address associated with hostname')) {
       return 'Cannot resolve Azure OpenAI resource "$_resourceName". Please check your resource name.';
     }
-    
+
     // Handle SSL/TLS errors
     if (errorString.contains('CERTIFICATE_VERIFY_FAILED') ||
         errorString.contains('TLS') ||
         errorString.contains('SSL')) {
       return 'SSL/TLS error connecting to Azure OpenAI. Please check your network configuration.';
     }
-    
+
     // Generic Azure OpenAI error
     if (errorString.contains('azure') || errorString.contains('openai')) {
       return 'Azure OpenAI error: ${error.toString()}';
     }
-    
+
     // Fallback to original error
     return 'Error connecting to Azure OpenAI: ${error.toString()}';
   }
@@ -1274,22 +1261,22 @@ class AzureOpenAIController extends RemoteAIController {
     if (resourceName.isEmpty || resourceName.length > 63) {
       return false;
     }
-    
+
     // Must start and end with alphanumeric character
     if (!RegExp(r'^[a-zA-Z0-9].*[a-zA-Z0-9]$').hasMatch(resourceName)) {
       return false;
     }
-    
+
     // Can only contain alphanumeric characters and hyphens
     if (!RegExp(r'^[a-zA-Z0-9-]+$').hasMatch(resourceName)) {
       return false;
     }
-    
+
     // Cannot contain consecutive hyphens
     if (resourceName.contains('--')) {
       return false;
     }
-    
+
     return true;
   }
 
@@ -1299,12 +1286,12 @@ class AzureOpenAIController extends RemoteAIController {
     if (deploymentName.isEmpty || deploymentName.length > 64) {
       return false;
     }
-    
+
     // Can only contain alphanumeric characters, hyphens, and underscores
     if (!RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(deploymentName)) {
       return false;
     }
-    
+
     return true;
   }
 
@@ -1314,7 +1301,7 @@ class AzureOpenAIController extends RemoteAIController {
     if (apiVersion.isEmpty) {
       return false;
     }
-    
+
     // Check for valid API version format: YYYY-MM-DD or YYYY-MM-DD-preview
     final apiVersionRegex = RegExp(r'^\d{4}-\d{2}-\d{2}(-preview)?$');
     return apiVersionRegex.hasMatch(apiVersion);
@@ -1324,7 +1311,8 @@ class AzureOpenAIController extends RemoteAIController {
   /// Format: https://{resource-name}.openai.azure.com
   String get _baseEndpoint {
     if (_resourceName == null || _resourceName!.isEmpty) {
-      throw StateError('Resource name is required to construct Azure OpenAI endpoint');
+      throw StateError(
+          'Resource name is required to construct Azure OpenAI endpoint');
     }
     return 'https://$_resourceName.openai.azure.com';
   }
@@ -1333,10 +1321,12 @@ class AzureOpenAIController extends RemoteAIController {
   /// Format: https://{resource-name}.openai.azure.com/openai/deployments/{deployment-name}/chat/completions?api-version={api-version}
   String get _chatCompletionsUrl {
     if (_deploymentName == null || _deploymentName!.isEmpty) {
-      throw StateError('Deployment name is required to construct Azure OpenAI chat completions endpoint');
+      throw StateError(
+          'Deployment name is required to construct Azure OpenAI chat completions endpoint');
     }
     if (_apiVersion == null || _apiVersion!.isEmpty) {
-      throw StateError('API version is required to construct Azure OpenAI endpoint');
+      throw StateError(
+          'API version is required to construct Azure OpenAI endpoint');
     }
     return '$_baseEndpoint/openai/deployments/$_deploymentName/chat/completions?api-version=$_apiVersion';
   }
@@ -1345,7 +1335,8 @@ class AzureOpenAIController extends RemoteAIController {
   /// Format: https://{resource-name}.openai.azure.com/openai/deployments?api-version={api-version}
   String get _deploymentsUrl {
     if (_apiVersion == null || _apiVersion!.isEmpty) {
-      throw StateError('API version is required to construct Azure OpenAI endpoint');
+      throw StateError(
+          'API version is required to construct Azure OpenAI endpoint');
     }
     return '$_baseEndpoint/openai/deployments?api-version=$_apiVersion';
   }
@@ -1363,7 +1354,8 @@ class AzureOpenAIController extends RemoteAIController {
   }
 
   /// Constructs Azure OpenAI request headers with authentication and content type
-  Map<String, String> _buildRequestHeaders([Map<String, String>? additionalHeaders]) {
+  Map<String, String> _buildRequestHeaders(
+      [Map<String, String>? additionalHeaders]) {
     final headers = Map<String, String>.from(_authHeaders);
     if (additionalHeaders != null) {
       headers.addAll(additionalHeaders);
