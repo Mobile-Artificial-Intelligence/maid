@@ -867,3 +867,134 @@ class AnthropicController extends RemoteAIController {
   @override
   String getTypeLocale(BuildContext context) => AppLocalizations.of(context)!.anthropic;
 }
+
+class AzureOpenAIController extends RemoteAIController {
+  static AzureOpenAIController? get instance => AIController.instance is AzureOpenAIController
+    ? AIController.instance as AzureOpenAIController
+    : null;
+
+  String? _resourceName;
+  String? _deploymentName;
+  String? _apiVersion;
+
+  String? get resourceName => _resourceName;
+  set resourceName(String? value) {
+    _resourceName = value;
+    save();
+    notifyListeners();
+  }
+
+  String? get deploymentName => _deploymentName;
+  set deploymentName(String? value) {
+    _deploymentName = value;
+    save();
+    notifyListeners();
+  }
+
+  String? get apiVersion => _apiVersion;
+  set apiVersion(String? value) {
+    _apiVersion = value;
+    save();
+    notifyListeners();
+  }
+
+  @override
+  String get type => 'azure_openai';
+
+  @override
+  bool get canPrompt => _apiKey != null && _apiKey!.isNotEmpty && 
+                       _resourceName != null && _resourceName!.isNotEmpty &&
+                       _deploymentName != null && _deploymentName!.isNotEmpty &&
+                       !busy;
+
+  AzureOpenAIController({
+    super.model,
+    super.parameters,
+    super.baseUrl,
+    super.apiKey,
+    String? resourceName,
+    String? deploymentName,
+    String? apiVersion,
+  }) : _resourceName = resourceName,
+       _deploymentName = deploymentName,
+       _apiVersion = apiVersion ?? '2024-02-15-preview';
+
+  @override
+  Map<String, dynamic> toMap() => {
+    'model': _model,
+    'parameters': _parameters,
+    'base_url': _baseUrl,
+    'api_key': _apiKey,
+    'resource_name': _resourceName,
+    'deployment_name': _deploymentName,
+    'api_version': _apiVersion,
+  };
+
+  @override
+  void fromMap(Map<String, dynamic> map) {
+    _model = map['model'];
+    _parameters = map['parameters'] ?? {};
+    _baseUrl = map['base_url'];
+    _apiKey = map['api_key'];
+    _resourceName = map['resource_name'];
+    _deploymentName = map['deployment_name'];
+    _apiVersion = map['api_version'] ?? '2024-02-15-preview';
+    save();
+    notifyListeners();
+  }
+
+  @override
+  Stream<String> prompt() async* {
+    // TODO: Implement Azure OpenAI chat completion streaming
+    // This is a placeholder implementation
+    assert(_apiKey != null, 'API Key is required');
+    assert(_resourceName != null, 'Resource name is required');
+    assert(_deploymentName != null, 'Deployment name is required');
+    
+    busy = true;
+    
+    try {
+      // Placeholder - will be implemented in task 4
+      yield 'Azure OpenAI response placeholder';
+    } finally {
+      busy = false;
+    }
+  }
+
+  @override
+  void stop() {
+    // TODO: Implement proper stop functionality for Azure OpenAI
+    // This is a placeholder implementation
+    busy = false;
+  }
+
+  @override
+  Future<bool> getModelOptions() async {
+    // TODO: Implement deployment discovery and model options
+    // This is a placeholder implementation
+    try {
+      _modelOptions = ['gpt-35-turbo', 'gpt-4', 'gpt-4-32k'];
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  void clear() {
+    super.clear();
+    _resourceName = null;
+    _deploymentName = null;
+    _apiVersion = '2024-02-15-preview';
+  }
+
+  @override
+  String getTypeLocale(BuildContext context) {
+    // TODO: Implement proper localization - placeholder for now
+    return 'Azure OpenAI';
+  }
+
+  @override
+  bool get canGetRemoteModels => _apiKey != null && _apiKey!.isNotEmpty &&
+                                _resourceName != null && _resourceName!.isNotEmpty;
+}
