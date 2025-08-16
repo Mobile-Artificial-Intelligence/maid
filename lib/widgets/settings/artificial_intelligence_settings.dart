@@ -34,8 +34,16 @@ class ArtificialIntelligenceSettings extends StatelessWidget {
       const SizedBox(height: 8),
       RemoteModelTextField(),
       const SizedBox(height: 8),
-      BaseUrlTextField(),
-      const SizedBox(height: 8),
+      if (AzureOpenAIController.instance == null) BaseUrlTextField(),
+      if (AzureOpenAIController.instance != null) ...[
+        ResourceNameTextField(),
+        const SizedBox(height: 8),
+        DeploymentNameTextField(),
+        const SizedBox(height: 8),
+        ApiVersionDropdown(),
+        const SizedBox(height: 8),
+      ],
+      if (AzureOpenAIController.instance == null) const SizedBox(height: 8),
       ApiKeyTextField(),
     ]
   );

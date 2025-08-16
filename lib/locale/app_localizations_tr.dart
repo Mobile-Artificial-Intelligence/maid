@@ -270,6 +270,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get baseUrl => 'Temel URL';
 
   @override
+  String get resourceName => 'Kaynak Adı';
+
+  @override
+  String get deploymentName => 'Dağıtım Adı';
+
+  @override
+  String get apiVersion => 'API Sürümü';
+
+  @override
   String get scrollToRecent => 'Son Mesajlara Kaydır';
 
   @override

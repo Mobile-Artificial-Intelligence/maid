@@ -270,6 +270,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get baseUrl => 'Base URL';
 
   @override
+  String get resourceName => 'Resource Name';
+
+  @override
+  String get deploymentName => 'Deployment Name';
+
+  @override
+  String get apiVersion => 'API Version';
+
+  @override
   String get scrollToRecent => 'Scroll to Recent';
 
   @override

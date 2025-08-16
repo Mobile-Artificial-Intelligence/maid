@@ -270,6 +270,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get baseUrl => 'Base URL';
 
   @override
+  String get resourceName => 'Nome do recurso';
+
+  @override
+  String get deploymentName => 'Nome da implantação';
+
+  @override
+  String get apiVersion => 'Versão da API';
+
+  @override
   String get scrollToRecent => 'Scroll to Recent';
 
   @override

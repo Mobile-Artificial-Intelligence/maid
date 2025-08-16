@@ -270,6 +270,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get baseUrl => 'बेस यूआरएल';
 
   @override
+  String get resourceName => 'संसाधन नाम';
+
+  @override
+  String get deploymentName => 'परिनियोजन नाम';
+
+  @override
+  String get apiVersion => 'एपीआई संस्करण';
+
+  @override
   String get scrollToRecent => 'हाल के संदेशों पर स्क्रॉल करें';
 
   @override

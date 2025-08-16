@@ -270,6 +270,15 @@ class AppLocalizationsNl extends AppLocalizations {
   String get baseUrl => 'Basis-URL';
 
   @override
+  String get resourceName => 'Resourcenaam';
+
+  @override
+  String get deploymentName => 'Implementatienaam';
+
+  @override
+  String get apiVersion => 'API-versie';
+
+  @override
   String get scrollToRecent => 'Scroll naar recent';
 
   @override

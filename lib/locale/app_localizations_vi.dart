@@ -270,6 +270,15 @@ class AppLocalizationsVi extends AppLocalizations {
   String get baseUrl => 'URL cơ sở';
 
   @override
+  String get resourceName => 'Tên tài nguyên';
+
+  @override
+  String get deploymentName => 'Tên triển khai';
+
+  @override
+  String get apiVersion => 'Phiên bản API';
+
+  @override
   String get scrollToRecent => 'Cuộn đến tin nhắn gần đây';
 
   @override

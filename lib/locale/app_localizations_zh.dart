@@ -269,6 +269,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get baseUrl => '基础 URL';
 
   @override
+  String get resourceName => '资源名称';
+
+  @override
+  String get deploymentName => '部署名称';
+
+  @override
+  String get apiVersion => 'API 版本';
+
+  @override
   String get scrollToRecent => '滚动到最近的消息';
 
   @override

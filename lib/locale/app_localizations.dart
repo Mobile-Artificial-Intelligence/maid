@@ -636,6 +636,24 @@ abstract class AppLocalizations {
   /// **'Base URL'**
   String get baseUrl;
 
+  /// No description provided for @resourceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Resource Name'**
+  String get resourceName;
+
+  /// No description provided for @deploymentName.
+  ///
+  /// In en, this message translates to:
+  /// **'Deployment Name'**
+  String get deploymentName;
+
+  /// No description provided for @apiVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'API Version'**
+  String get apiVersion;
+
   /// No description provided for @scrollToRecent.
   ///
   /// In en, this message translates to:

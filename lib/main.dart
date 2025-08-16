@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:typed_data';
 
 import 'package:anthropic_sdk_dart/anthropic_sdk_dart.dart' as anthropic;
 import 'package:intl/intl.dart';
@@ -56,6 +55,7 @@ part 'widgets/dialogs/error_dialog.dart';
 part 'widgets/dialogs/nsfw_warning_dialog.dart';
 part 'widgets/dialogs/sharing_dialog.dart';
 
+part 'widgets/dropdowns/api_version_dropdown.dart';
 part 'widgets/dropdowns/artificial_intelligence_dropdown.dart';
 part 'widgets/dropdowns/locale_dropdown.dart';
 part 'widgets/dropdowns/remote_model_dropdown.dart';
@@ -87,9 +87,11 @@ part 'widgets/settings/user_settings.dart';
 
 part 'widgets/text_fields/api_key_text_field.dart';
 part 'widgets/text_fields/base_url_text_field.dart';
+part 'widgets/text_fields/deployment_name_text_field.dart';
 part 'widgets/text_fields/listenable_text_field.dart';
 part 'widgets/text_fields/prompt_field.dart';
 part 'widgets/text_fields/remote_model_text_field.dart';
+part 'widgets/text_fields/resource_name_text_field.dart';
 
 part 'widgets/utilities/code_box.dart';
 part 'widgets/utilities/huggingface_model.dart';

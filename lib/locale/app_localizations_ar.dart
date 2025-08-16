@@ -270,6 +270,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get baseUrl => 'عنوان URL الأساسي';
 
   @override
+  String get resourceName => 'اسم المورد';
+
+  @override
+  String get deploymentName => 'اسم النشر';
+
+  @override
+  String get apiVersion => 'إصدار API';
+
+  @override
   String get scrollToRecent => 'التمرير إلى الأحدث';
 
   @override

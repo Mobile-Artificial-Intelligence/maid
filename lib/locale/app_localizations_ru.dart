@@ -270,6 +270,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get baseUrl => 'Базовый URL';
 
   @override
+  String get resourceName => 'Имя ресурса';
+
+  @override
+  String get deploymentName => 'Имя развертывания';
+
+  @override
+  String get apiVersion => 'Версия API';
+
+  @override
   String get scrollToRecent => 'Прокрутить к последним сообщениям';
 
   @override

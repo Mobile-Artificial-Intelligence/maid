@@ -270,6 +270,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get baseUrl => '기본 URL';
 
   @override
+  String get resourceName => '리소스 이름';
+
+  @override
+  String get deploymentName => '배포 이름';
+
+  @override
+  String get apiVersion => 'API 버전';
+
+  @override
   String get scrollToRecent => '최근 메시지로 스크롤';
 
   @override
