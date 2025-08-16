@@ -879,6 +879,9 @@ class AzureOpenAIController extends RemoteAIController {
 
   String? get resourceName => _resourceName;
   set resourceName(String? value) {
+    if (value != null && !_isValidResourceName(value)) {
+      throw ArgumentError('Invalid Azure resource name: $value');
+    }
     _resourceName = value;
     save();
     notifyListeners();
@@ -886,6 +889,9 @@ class AzureOpenAIController extends RemoteAIController {
 
   String? get deploymentName => _deploymentName;
   set deploymentName(String? value) {
+    if (value != null && !_isValidDeploymentName(value)) {
+      throw ArgumentError('Invalid Azure deployment name: $value');
+    }
     _deploymentName = value;
     save();
     notifyListeners();
@@ -893,6 +899,9 @@ class AzureOpenAIController extends RemoteAIController {
 
   String? get apiVersion => _apiVersion;
   set apiVersion(String? value) {
+    if (value != null && !_isValidApiVersion(value)) {
+      throw ArgumentError('Invalid Azure API version: $value');
+    }
     _apiVersion = value;
     save();
     notifyListeners();
@@ -936,9 +945,32 @@ class AzureOpenAIController extends RemoteAIController {
     _parameters = map['parameters'] ?? {};
     _baseUrl = map['base_url'];
     _apiKey = map['api_key'];
-    _resourceName = map['resource_name'];
-    _deploymentName = map['deployment_name'];
-    _apiVersion = map['api_version'] ?? '2024-02-15-preview';
+    
+    // Validate and set Azure-specific fields
+    final resourceName = map['resource_name'] as String?;
+    if (resourceName != null && !_isValidResourceName(resourceName)) {
+      // Log warning but don't throw - allow loading with invalid data for recovery
+      _resourceName = null;
+    } else {
+      _resourceName = resourceName;
+    }
+    
+    final deploymentName = map['deployment_name'] as String?;
+    if (deploymentName != null && !_isValidDeploymentName(deploymentName)) {
+      // Log warning but don't throw - allow loading with invalid data for recovery
+      _deploymentName = null;
+    } else {
+      _deploymentName = deploymentName;
+    }
+    
+    final apiVersion = map['api_version'] as String? ?? '2024-02-15-preview';
+    if (!_isValidApiVersion(apiVersion)) {
+      // Fall back to default API version if invalid
+      _apiVersion = '2024-02-15-preview';
+    } else {
+      _apiVersion = apiVersion;
+    }
+    
     save();
     notifyListeners();
   }
@@ -997,4 +1029,57 @@ class AzureOpenAIController extends RemoteAIController {
   @override
   bool get canGetRemoteModels => _apiKey != null && _apiKey!.isNotEmpty &&
                                 _resourceName != null && _resourceName!.isNotEmpty;
+
+  /// Validates Azure resource name according to Azure naming conventions
+  /// Resource names must be 1-63 characters, contain only alphanumeric characters and hyphens,
+  /// start and end with alphanumeric characters, and not contain consecutive hyphens
+  bool _isValidResourceName(String resourceName) {
+    if (resourceName.isEmpty || resourceName.length > 63) {
+      return false;
+    }
+    
+    // Must start and end with alphanumeric character
+    if (!RegExp(r'^[a-zA-Z0-9].*[a-zA-Z0-9]$').hasMatch(resourceName)) {
+      return false;
+    }
+    
+    // Can only contain alphanumeric characters and hyphens
+    if (!RegExp(r'^[a-zA-Z0-9-]+$').hasMatch(resourceName)) {
+      return false;
+    }
+    
+    // Cannot contain consecutive hyphens
+    if (resourceName.contains('--')) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  /// Validates Azure deployment name according to Azure OpenAI naming conventions
+  /// Deployment names must be 1-64 characters and contain only alphanumeric characters, hyphens, and underscores
+  bool _isValidDeploymentName(String deploymentName) {
+    if (deploymentName.isEmpty || deploymentName.length > 64) {
+      return false;
+    }
+    
+    // Can only contain alphanumeric characters, hyphens, and underscores
+    if (!RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(deploymentName)) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  /// Validates Azure OpenAI API version format
+  /// API versions should follow the format YYYY-MM-DD or YYYY-MM-DD-preview
+  bool _isValidApiVersion(String apiVersion) {
+    if (apiVersion.isEmpty) {
+      return false;
+    }
+    
+    // Check for valid API version format: YYYY-MM-DD or YYYY-MM-DD-preview
+    final apiVersionRegex = RegExp(r'^\d{4}-\d{2}-\d{2}(-preview)?$');
+    return apiVersionRegex.hasMatch(apiVersion);
+  }
 }
