@@ -144,10 +144,26 @@ class MessageWidgetState extends State<MessageWidget> {
       if (part.isEmpty) continue;
 
       if (i % 2 == 0) {
-        children.add(SelectableText(part));
+        children.add(
+          MarkdownBody(
+            data: part,
+            selectable: true,
+            onTapLink: (text, href, title) {
+              if (href != null) launchUrl(Uri.parse(href));
+            },
+            styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              p: Theme.of(context).textTheme.bodyMedium,
+              code: Theme.of(context).textTheme.bodySmall?.copyWith(
+                backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                fontFamily: 'monospace',
+              ),
+            ),
+          ),
+        );
       } else {
         children.add(CodeBox(code: part, label: AppLocalizations.of(context)!.code));
       }
+
     }
 
     children.add(buildTime());
