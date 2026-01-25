@@ -4,12 +4,12 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for Chinese (`zh`).
-class AppLocalizationsZh extends AppLocalizations {
-  AppLocalizationsZh([String locale = 'zh']) : super(locale);
+/// The translations for Chinese (`zh_CN`).
+class AppLocalizationsZhCN extends AppLocalizations {
+  AppLocalizationsZhCN([String locale = 'zh_CN']) : super(locale);
 
   @override
-  String get friendlyName => '中文';
+  String get friendlyName => '简体中文';
 
   @override
   String get localeTitle => '区域';

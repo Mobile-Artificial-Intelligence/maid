@@ -20,7 +20,8 @@ import 'app_localizations_pt.dart';
 import 'app_localizations_ru.dart';
 import 'app_localizations_tr.dart';
 import 'app_localizations_vi.dart';
-import 'app_localizations_zh.dart';
+import 'app_localizations_zh_CN.dart';
+import 'app_localizations_zh_TW.dart';
 
 // ignore_for_file: type=lint
 
@@ -120,7 +121,8 @@ abstract class AppLocalizations {
     Locale('ru'),
     Locale('tr'),
     Locale('vi'),
-    Locale('zh')
+    Locale('zh_CN')
+    Locale('zh_TW')
   ];
 
   /// No description provided for @friendlyName.
@@ -847,7 +849,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['ar', 'de', 'en', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru', 'tr', 'vi', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['ar', 'de', 'en', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru', 'tr', 'vi', 'zh_CN', 'zh_TW'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -873,7 +875,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
     case 'ru': return AppLocalizationsRu();
     case 'tr': return AppLocalizationsTr();
     case 'vi': return AppLocalizationsVi();
-    case 'zh': return AppLocalizationsZh();
+    case 'zh_CN': return AppLocalizationsZhCN();
+    case 'zh_TW': return AppLocalizationsZhCN();
   }
 
   throw FlutterError(
