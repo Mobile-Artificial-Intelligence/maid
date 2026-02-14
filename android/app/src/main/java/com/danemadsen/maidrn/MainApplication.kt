@@ -1,4 +1,4 @@
-package com.danemadsen.maidrn
+package com.danemadsen.maid
 
 import android.app.Application
 import android.content.res.Configuration

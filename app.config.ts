@@ -13,7 +13,7 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
 
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "com.danemadsen.maidrn",
+    bundleIdentifier: "com.danemadsen.maid",
   },
 
   android: {
@@ -21,7 +21,7 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#000000",
     },
-    package: "com.danemadsen.maidrn",
+    package: "com.danemadsen.maid",
     permissions: [
       "android.permission.RECORD_AUDIO",
       "android.permission.MODIFY_AUDIO_SETTINGS",
