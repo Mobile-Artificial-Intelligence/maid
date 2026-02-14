@@ -14,8 +14,10 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node (Yarn cache)
         uses: actions/setup-node@v4
