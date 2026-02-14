@@ -1,3 +1,0 @@
-- Add localization support for spanish, french, japanese, korean, russian and chinese.
-- Add support for sharing images, gguf files and text to maid.
-- Fix a few different bugs
