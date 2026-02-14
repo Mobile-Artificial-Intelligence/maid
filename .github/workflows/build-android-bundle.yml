@@ -7,10 +7,6 @@ on:
   pull_request:
     branches: [main]
 
-concurrency:
-  group: build-android-aab-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build-aab:
     runs-on: ubuntu-latest

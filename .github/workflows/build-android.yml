@@ -7,10 +7,6 @@ on:
   pull_request:
     branches: [main]
 
-concurrency:
-  group: build-android-apk-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build-apk:
     runs-on: ubuntu-latest
