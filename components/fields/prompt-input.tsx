@@ -153,9 +153,8 @@ function PromptInput({ root }: PromptInputProps) {
     
     setMappings(next);
 
-    next = updateContent<string, Record<string, any>>(next, root || parent, systemPrompt || "", (meta) => ({ ...meta, updateTime: new Date().toISOString() }));
-
-    const conversation = getConversation(next, root || parent);
+    const conversationMappings = updateContent<string, Record<string, any>>(next, root || parent, systemPrompt || "", (meta) => ({ ...meta, updateTime: new Date().toISOString() }));
+    const conversation = getConversation(conversationMappings, root || parent);
     
     let buffer = "";
     promptModel(

@@ -42,7 +42,7 @@ function ChatView({ id }: ChatViewProps) {
     >
       {id ? (
         <FlatList
-          data={getConversation(mappings, id)}
+          data={getConversation(mappings, id).slice(1)}
           style={styles.list}
           keyExtractor={(item) => item.id?.toString() ?? randomUUID()}
           renderItem={renderItem}

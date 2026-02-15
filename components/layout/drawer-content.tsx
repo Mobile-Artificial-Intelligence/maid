@@ -24,7 +24,7 @@ function DrawerContent() {
       "system",
       "New Chat",
       id,
-      id,
+      undefined,
       undefined,
       {
         createTime: time.toISOString(),
@@ -106,9 +106,7 @@ function DrawerContent() {
       </View>
       <View style={styles.divider} />
       <ScrollView style={styles.sessions}>
-        {getRoots<string>(mappings).map((session) => 
-          <SessionButton key={session.id} node={session} />
-        )}
+        {getRoots<string>(mappings).map((session) => <SessionButton key={session.id} node={session} />)}
       </ScrollView>
       <View style={styles.divider} />
       <View style={styles.account}>
