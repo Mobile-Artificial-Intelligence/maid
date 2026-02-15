@@ -1,10 +1,15 @@
+import LogEntryView from "@/components/views/log-entry-view";
 import { useSystem } from "@/context";
+import { getLogs } from "@/utilities/logger";
 import * as Application from "expo-application";
 import * as Device from "expo-device";
 import { StyleSheet, Text, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 function About() {
   const { colorScheme } = useSystem();
+
+  const logs = getLogs();
   
   const styles = StyleSheet.create({
     view: {
@@ -27,6 +32,13 @@ function About() {
     value: {
       color: colorScheme.outline,
       fontSize: 14,
+    },
+    title: {
+      marginTop: 16,
+      textAlign: "center",
+      color: colorScheme.onSurface,
+      fontSize: 18,
+      fontWeight: "bold",
     },
   });
 
@@ -62,6 +74,10 @@ function About() {
         <Text style={styles.label}>OS Build</Text>
         <Text style={styles.value}>{Device.osBuildId}</Text>
       </View>
+      <Text style={styles.title}>Logs</Text>
+      <ScrollView>
+        {logs.map((log, index) => <LogEntryView key={index} entry={log} />)}
+      </ScrollView>
     </View>
   );
 }

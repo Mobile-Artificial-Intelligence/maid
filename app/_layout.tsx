@@ -2,6 +2,7 @@
 import DefaultHeader from '@/components/layout/default-header';
 import DrawerContent from '@/components/layout/drawer-content';
 import { ArtificialIntelligenceProvider, SystemContextProvider, useSystem } from "@/context";
+import { installConsoleCapture } from '@/utilities/logger';
 import { Buffer } from "buffer";
 import Drawer from 'expo-router/drawer';
 import { StatusBar } from "react-native";
@@ -9,6 +10,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import "react-native-url-polyfill/auto";
 
 (global as any).Buffer = Buffer;
+
+installConsoleCapture();
 
 function RootLayout() {
   return (
