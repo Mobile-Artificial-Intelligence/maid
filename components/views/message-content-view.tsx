@@ -1,6 +1,4 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
-import MessageControlsView from "@/components/views/message-controls-view";
-import MessageRoleView from "@/components/views/message-role-view";
 import { useLLM, useSystem } from "@/context";
 import splitReasoning from "@/utilities/reasoning";
 import * as Application from "expo-application";
@@ -141,33 +139,6 @@ function MessageContentView({ message }: { message: MessageNode }) {
       )}
     </View>
   )
-}
+};
 
-function MessageView({ message }: { message: MessageNode }) {
-  const styles = StyleSheet.create({
-    view: {
-      flexDirection: "column",
-      alignItems: "flex-start",
-      marginVertical: 12,
-      marginHorizontal: 4,
-    },
-    mainRow: {
-      flexDirection: "row",
-      marginBottom: 8,
-      justifyContent: "space-between",
-      width: "100%",
-    }
-  });
-
-  return (
-    <View style={styles.view}>
-      <View style={styles.mainRow}>
-        <MessageRoleView message={message} />
-        <MessageControlsView message={message} />
-      </View>
-      <MessageContentView message={message} />
-    </View>
-  );
-}
-
-export default MessageView;
+export default MessageContentView;
