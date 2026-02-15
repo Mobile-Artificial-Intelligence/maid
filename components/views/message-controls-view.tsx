@@ -1,5 +1,6 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useLLM, useSystem, useTTS } from "@/context";
+import splitReasoning from "@/utilities/reasoning";
 import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
 import * as Device from "expo-device";
@@ -67,7 +68,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
         <>
           <MaterialCommunityIconButton
             icon="volume-high"
-            onPress={() => textToSpeech(message.content)}
+            onPress={() => textToSpeech(splitReasoning(message)[0] ?? message.content)}
             disabled={!speakEnabled}
           />
           <MaterialCommunityIconButton

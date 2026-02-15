@@ -6,9 +6,10 @@ import { randomUUID } from "expo-crypto";
 import * as Device from "expo-device";
 import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 
 function MessageContentView({ message }: { message: MessageNode }) {
+  const [ showReasoning, setShowReasoning ] = useState<boolean>(false);
   const [ editText, setEditText ] = useState<string>(message.content);
   const { colorScheme, mappings, setMappings, editing, setEditing } = useSystem();
   const { parameters, type, model, modelFileKey, promptModel } = useLLM();
@@ -17,19 +18,26 @@ function MessageContentView({ message }: { message: MessageNode }) {
     view: {
       flexDirection: "column",
       alignItems: "flex-start",
+      width: "100%",
+      gap: 8,
     },
     editingControls: {
-      width: "100%",
       marginTop: 10,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-end",
     },
+    showReasoningButton: {
+      alignSelf: "center",
+    },
+    showReasoningButtonText: {
+      color: colorScheme.primary,
+      fontSize: 14,
+    },
     reasoning: {
       color: colorScheme.outline,
       fontSize: 14,
       fontStyle: "italic",
-      marginBottom: 8,
     },
     content: {
       color: colorScheme.onSurface,
@@ -99,18 +107,16 @@ function MessageContentView({ message }: { message: MessageNode }) {
     setEditText(message.content);
   };
 
-  let content: string | undefined = message.content.trim();
-  let reasoning: string | undefined = undefined;
-  if (message.content.includes("<think>")) {
-    [content, reasoning] = splitReasoning(message, "<think>", "</think>");
-  }
-  else if (message.content.includes("<reasoning>")) {
-    [content, reasoning] = splitReasoning(message, "<reasoning>", "</reasoning>");
-  }
+  const [content, reasoning] = splitReasoning(message);
 
   return (
     <View style={styles.view}>
-      {reasoning && <Text style={styles.reasoning}>{reasoning}</Text>}
+      {reasoning && (
+        <TouchableHighlight style={styles.showReasoningButton} onPress={() => setShowReasoning(!showReasoning)}>
+          <Text style={styles.showReasoningButtonText}>{showReasoning ? "Hide Reasoning" : "Show Reasoning"}</Text>
+        </TouchableHighlight>
+      )}
+      {reasoning && showReasoning && <Text style={styles.reasoning}>{reasoning}</Text>}
       {editing !== message.id && <Text style={styles.content}>{content}</Text>}
       {editing === message.id && (
         <View style={styles.view}>
