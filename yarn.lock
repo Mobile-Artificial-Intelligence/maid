@@ -4670,10 +4670,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-llama.rn@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/llama.rn/-/llama.rn-0.11.0.tgz#62efab6571a102b1f01052e484d5cd0d924607a0"
-  integrity sha512-FLQwBdg1n7H9lqnQinOSv0Cly7Du1NEhMktaNJDGGsMEd/qFG0l8Iwyqsk8c2ZIIn2b6C4FPUCL2yDvlL41IBw==
+llama.rn@^0.6.15:
+  version "0.6.15"
+  resolved "https://registry.yarnpkg.com/llama.rn/-/llama.rn-0.6.15.tgz#9def441c37a61e35424a10d2e7a932de26bf91d9"
+  integrity sha512-FCwbtjBhQ28lB8QjsqIx8Y+ZFsUtejMXLMqDRuCjE3f+isUggZqGPUFGaknenMAk/76nGLjU7V//waYgt4JX7Q==
 
 locate-path@^5.0.0:
   version "5.0.0"

@@ -5,7 +5,7 @@ import HuggingfaceModelsRaw from "@/models.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from 'expo-file-system';
 import { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface HuggingfaceModel {
   id: string;
@@ -158,7 +158,7 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
           onValueChange={setTag}
         />
       </View>
-      {progress && <ActivityIndicator size="large" color={colorScheme.onPrimaryContainer} />}
+      {progress && <Text style={styles.name}>{Math.round((progress?.totalBytesWritten / progress?.totalBytesExpectedToWrite) * 100)}%</Text>}
       {!progress && !downloaded && <MaterialIconButton
         icon="download"
         size={18}
