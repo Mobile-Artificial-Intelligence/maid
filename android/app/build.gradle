@@ -128,32 +128,46 @@ android {
         }
     }
     signingConfigs {
-        release {
-            if (keystoreProperties['storeFile']) {
-                storeFile file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-                keyAlias keystoreProperties['releaseAlias']
-                keyPassword keystoreProperties['releasePassword']
-            } else {
-                println("⚠️ Keystore properties not found or incomplete, using debug signing config for release build. Please create a 'key.properties' file with the correct signing information to enable release signing.")
-                signingConfig signingConfigs.debug
-            }
-        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+    
+        release {
+            if (keystorePropertiesFile.exists()
+                    && keystoreProperties['storeFile']
+                    && keystoreProperties['storePassword']
+                    && keystoreProperties['releaseAlias']
+                    && keystoreProperties['releasePassword']) {
+                    
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['releaseAlias']
+                keyPassword keystoreProperties['releasePassword']
+            } else {
+                println("⚠️ Keystore properties not found or incomplete; release builds will use debug signing unless you add key.properties.")
+                // NOTE: don't set signingConfig here
+            }
+        }
     }
+    
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
+    
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.release
+            // If you have a real keystore, use it; otherwise fall back to debug signing
+            signingConfig (keystorePropertiesFile.exists()
+                    && keystoreProperties['storeFile']
+                    && keystoreProperties['storePassword']
+                    && keystoreProperties['releaseAlias']
+                    && keystoreProperties['releasePassword']
+                ? signingConfigs.release
+                : signingConfigs.debug)
+    
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
