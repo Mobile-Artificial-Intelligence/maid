@@ -5,6 +5,7 @@ import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { MessageNode } from "message-nodes";
 import { StyleSheet, Text, View } from "react-native";
 
+
 function MessageRoleView({ message }: { message: MessageNode }) {
   const { userName, assistantName, colorScheme } = useSystem();
 
@@ -20,37 +21,29 @@ function MessageRoleView({ message }: { message: MessageNode }) {
       marginLeft: 8,
     },
   });
-  
-  let role = message.role.charAt(0).toUpperCase() + message.role.slice(1);
-  if (message.role === "user" && userName) {
-    role = userName;
-  } 
-  else if (message.role === "assistant" && assistantName) {
-    role = assistantName;
-  }
 
-  let profile = (
-    <Icon
-      name="account-cog"
-      size={26}
-      color={colorScheme.onSurface}
-    />
-  );
-  if (message.role === "user") {
-    profile = (
-      <UserImageView size={26} />
-    )
-  } 
-  else if (message.role === "assistant") {
-    profile = (
-      <AssistantImageView size={26} />
-    )
-  }
-  
+  const roleNames: Record<string, string | undefined> = {
+    user: userName,
+    assistant: assistantName,
+  };
+
+  const avatars: Record<string, React.ReactNode> = {
+    user: <UserImageView size={26} />,
+    assistant: <AssistantImageView size={26} />,
+  };
+
+  const role = roleNames[message.role] ?? (message.role.charAt(0).toUpperCase() + message.role.slice(1));
+  const profile =
+    avatars[message.role] ?? (
+      <Icon name="account-cog" size={26} color={colorScheme.onSurface} />
+    );
+
   return (
     <View style={styles.row}>
       {profile}
-      <Text style={styles.role}>{role}</Text>
+      <Text style={[styles.role, { color: colorScheme.onSurface }]}>
+        {role}
+      </Text>
     </View>
   );
 }
