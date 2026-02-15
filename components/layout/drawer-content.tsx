@@ -1,7 +1,10 @@
 import { MaterialIconButton } from "@/components/buttons/icon-button";
 import SessionButton from "@/components/buttons/session-button";
 import { useSystem } from "@/context";
+import validateMappings from "@/utilities/mappings";
 import { randomUUID } from "expo-crypto";
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
 import { useRouter } from "expo-router";
 import { addNode, getRoots } from "message-nodes";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -9,6 +12,30 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 function DrawerContent() {
   const router = useRouter();
   const { colorScheme, mappings, setMappings, authenticated, logout } = useSystem();
+  
+  const loadMappings = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/json",
+        multiple: true,
+      });
+
+      if (result.canceled) return;
+
+      for (const file of result.assets ?? []) {
+        try {
+          const content = await FileSystem.readAsStringAsync(file.uri);
+          const parsed = JSON.parse(content);
+          const validMap = validateMappings(parsed);
+          setMappings(prev => ({ ...prev, ...validMap }));
+        } catch (fileError) {
+          console.warn(`Failed to load file: ${file.name}`, fileError);
+        }
+      }
+    } catch (error) {
+      console.warn("Failed to load mappings:", error);
+    }
+  };
 
   const clearSessions = () => {
     router.replace("/chat");
@@ -88,7 +115,7 @@ function DrawerContent() {
             icon="folder-open"
             style={styles.button}
             size={24}
-            onPress={() => console.log("Load Session clicked")}
+            onPress={loadMappings}
           />
           <MaterialIconButton
             icon="delete"
