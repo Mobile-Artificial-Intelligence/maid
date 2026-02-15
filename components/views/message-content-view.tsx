@@ -99,29 +99,6 @@ function MessageContentView({ message }: { message: MessageNode }) {
     setEditText(message.content);
   };
 
-  const editingInput = (
-    <View style={styles.view}>
-      <TextInput
-        style={styles.content}
-        value={editText}
-        onChangeText={(text) => setEditText(text)}
-        multiline
-      />
-      <View
-        style={styles.editingControls}
-      >
-        <MaterialCommunityIconButton
-          icon="check"
-          onPress={onEdit}
-        />
-        <MaterialCommunityIconButton
-          icon="close"
-          onPress={onEditDone}
-        />
-      </View>
-    </View>
-  );
-
   let content: string | undefined = message.content.trim();
   let reasoning: string | undefined = undefined;
   if (message.content.includes("<think>")) {
@@ -134,8 +111,28 @@ function MessageContentView({ message }: { message: MessageNode }) {
   return (
     <View style={styles.view}>
       {reasoning && <Text style={styles.reasoning}>{reasoning}</Text>}
-      {editing === message.id ? editingInput : (
-        <Text style={styles.content}>{content}</Text>
+      {editing !== message.id && <Text style={styles.content}>{content}</Text>}
+      {editing === message.id && (
+        <View style={styles.view}>
+          <TextInput
+            style={styles.content}
+            value={editText}
+            onChangeText={(text) => setEditText(text)}
+            multiline
+          />
+          <View
+            style={styles.editingControls}
+          >
+            <MaterialCommunityIconButton
+              icon="check"
+              onPress={onEdit}
+            />
+            <MaterialCommunityIconButton
+              icon="close"
+              onPress={onEditDone}
+            />
+          </View>
+        </View>
       )}
     </View>
   )
