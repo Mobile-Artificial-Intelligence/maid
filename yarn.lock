@@ -3277,10 +3277,10 @@ expo-crypto@~14.1.5:
   dependencies:
     base64-js "^1.3.0"
 
-expo-deep-phonemizer@^1.0.2:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/expo-deep-phonemizer/-/expo-deep-phonemizer-1.0.5.tgz#05804151eba31a748a1274929479f779f021ce52"
-  integrity sha512-1FEKtoM7E0CWXvR4ILaD816LyN3FUj23SD/XnDaNGcQv1BabTJzmvS+fSCiacIjHaDS/4AERpIhGWe8LG8TxMw==
+expo-deep-phonemizer@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/expo-deep-phonemizer/-/expo-deep-phonemizer-1.0.6.tgz#ebf7f8bf4099d757bbf1b2382e77f9f759017b18"
+  integrity sha512-g/yzTZ73jX0Aam/K8TXJG3y0ZuI4akZTQLNsbI4gfY3NKiUx2349hhi71Hu6tg6EeWJKrDYS4MB6VVs8Cf0ekg==
   dependencies:
     expo "~53.0.22"
     expo-file-system "^18.1.11"
@@ -3340,15 +3340,16 @@ expo-keep-awake@~14.1.4:
   resolved "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-14.1.4.tgz"
   integrity sha512-wU9qOnosy4+U4z/o4h8W9PjPvcFMfZXrlUoKTMBW7F4pLqhkkP/5G4EviPZixv4XWFMjn1ExQ5rV6BX8GwJsWA==
 
-expo-kokoro@1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/expo-kokoro/-/expo-kokoro-1.1.5.tgz#8bafba6011f2c3ea946b22e0e1b049eb22cd45d7"
-  integrity sha512-NQ9x9LkrQ0YVup6ArnmS7CV3GdpMR9Tn9CeuKH4n8xEKwxziRd8nQyTq/jXFER2oOGZbliEE4G3DlepvxTkcsg==
+expo-kokoro@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/expo-kokoro/-/expo-kokoro-1.1.8.tgz#4b6de315bbab9b4b195e6f545ac3a19bdd95f96e"
+  integrity sha512-43mHI3cdiEuLuPD5n22+p8v0yVrzqXS4FjcdQqTtBiIKKY1gUU8jLEs2Rl6RLy6cVhp16QF1iU3VwzMPxIJE2w==
   dependencies:
     expo "~53.0.22"
-    expo-deep-phonemizer "^1.0.2"
+    expo-deep-phonemizer "^1.0.6"
     expo-file-system "^18.1.11"
     onnxruntime-react-native "^1.22.0"
+    onnxruntime-web "^1.23.0"
     react "19.0.0"
     react-native "0.79.6"
 
