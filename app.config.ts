@@ -49,6 +49,28 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
     "expo-font",
     "expo-web-browser",
     "expo-secure-store",
+    [
+      "expo-build-properties",
+      {
+        android: {
+          // You don't have ProGuard enabled right now, so this is optional.
+          // Keep it commented until/if you turn minify on.
+          // extraProguardRules: `
+          // # llama.rn
+          // -keep class com.rnllama.** { *; }
+          // `,
+        },
+      },
+    ],
+    [
+      "llama.rn",
+      {
+        enableEntitlements: true,
+        entitlementsProfile: "production",
+        forceCxx20: true,
+        enableOpenCLAndHexagon: true
+      },
+    ],
   ],
 
   experiments: {

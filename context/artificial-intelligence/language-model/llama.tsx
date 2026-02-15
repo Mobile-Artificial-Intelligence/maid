@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDocumentAsync } from "expo-document-picker";
 import * as FileSystem from 'expo-file-system';
-import { initLlama, LlamaContext as LlamaRnContext } from 'llama.rn';
+import { initLlama, LlamaContext as LlamaRnContext, loadLlamaModelInfo } from 'llama.rn';
 import { MessageNode } from 'message-nodes';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { LlamaContextProps, ParameterTypes } from "./types";
@@ -150,8 +150,16 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
       setLoading(true);
 
       try {
+        const info = await loadLlamaModelInfo(modelFile) as Record<string, any>;
+        const ctx_key = Object.keys(info).find(key => key.toLowerCase().endsWith("context_length"));
+        const n_ctx = ctx_key ? Number(info[ctx_key]) : 2048;
+
+
         const llamaContext = await initLlama({
           model: modelFile,
+          use_mlock: true,
+          n_ctx,
+          n_gpu_layers: 99,
           ...parameters,
         });
 

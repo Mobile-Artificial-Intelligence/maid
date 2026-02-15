@@ -2193,6 +2193,16 @@ agent-base@^7.1.2:
   resolved "https://registry.npmjs.org/agent-base/-/agent-base-7.1.4.tgz"
   integrity sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==
 
+ajv@^8.11.0:
+  version "8.18.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.18.0.tgz#8864186b6738d003eb3a933172bb3833e10cefbc"
+  integrity sha512-PlXPeEWMXMZ7sPYOHqmDyCJzcfNrUr3fGNKtezX14ykXOEIvyK81d+qydx89KY5O71FKMPaQ2vBfBFI5NHR63A==
+  dependencies:
+    fast-deep-equal "^3.1.3"
+    fast-uri "^3.0.1"
+    json-schema-traverse "^1.0.0"
+    require-from-string "^2.0.2"
+
 anser@^1.4.9:
   version "1.4.10"
   resolved "https://registry.npmjs.org/anser/-/anser-1.4.10.tgz"
@@ -3244,6 +3254,14 @@ expo-blur@~14.1.5:
   resolved "https://registry.npmjs.org/expo-blur/-/expo-blur-14.1.5.tgz"
   integrity sha512-CCLJHxN4eoAl06ESKT3CbMasJ98WsjF9ZQEJnuxtDb9ffrYbZ+g9ru84fukjNUOTtc8A8yXE5z8NgY1l0OMrmQ==
 
+expo-build-properties@~0.14.8:
+  version "0.14.8"
+  resolved "https://registry.yarnpkg.com/expo-build-properties/-/expo-build-properties-0.14.8.tgz#03aac5eb297c1f4ad3c5b95d8bf897340104d041"
+  integrity sha512-GTFNZc5HaCS9RmCi6HspCe2+isleuOWt2jh7UEKHTDQ9tdvzkIoWc7U6bQO9lH3Mefk4/BcCUZD/utl7b1wdqw==
+  dependencies:
+    ajv "^8.11.0"
+    semver "^7.6.0"
+
 expo-constants@~17.1.7:
   version "17.1.7"
   resolved "https://registry.npmjs.org/expo-constants/-/expo-constants-17.1.7.tgz"
@@ -3488,6 +3506,11 @@ fast-json-stable-stringify@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz"
   integrity sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
+
+fast-uri@^3.0.1:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.0.tgz#66eecff6c764c0df9b762e62ca7edcfb53b4edfa"
+  integrity sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==
 
 fb-watchman@^2.0.0:
   version "2.0.2"
@@ -4569,6 +4592,11 @@ json-schema-to-ts@^3.1.1:
     "@babel/runtime" "^7.18.3"
     ts-algebra "^2.0.0"
 
+json-schema-traverse@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz#ae7bcb3656ab77a73ba5c49bf654f38e6b6860e2"
+  integrity sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==
+
 json5@^2.2.3:
   version "2.2.3"
   resolved "https://registry.npmjs.org/json5/-/json5-2.2.3.tgz"
@@ -4670,10 +4698,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-llama.rn@^0.6.15:
-  version "0.6.15"
-  resolved "https://registry.yarnpkg.com/llama.rn/-/llama.rn-0.6.15.tgz#9def441c37a61e35424a10d2e7a932de26bf91d9"
-  integrity sha512-FCwbtjBhQ28lB8QjsqIx8Y+ZFsUtejMXLMqDRuCjE3f+isUggZqGPUFGaknenMAk/76nGLjU7V//waYgt4JX7Q==
+llama.rn@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/llama.rn/-/llama.rn-0.11.0.tgz#62efab6571a102b1f01052e484d5cd0d924607a0"
+  integrity sha512-FLQwBdg1n7H9lqnQinOSv0Cly7Du1NEhMktaNJDGGsMEd/qFG0l8Iwyqsk8c2ZIIn2b6C4FPUCL2yDvlL41IBw==
 
 locate-path@^5.0.0:
   version "5.0.0"
