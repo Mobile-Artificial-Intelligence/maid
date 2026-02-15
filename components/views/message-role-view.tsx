@@ -33,10 +33,7 @@ function MessageRoleView({ message }: { message: MessageNode }) {
   };
 
   const role = roleNames[message.role] ?? (message.role.charAt(0).toUpperCase() + message.role.slice(1));
-  const profile =
-    avatars[message.role] ?? (
-      <Icon name="account-cog" size={26} color={colorScheme.onSurface} />
-    );
+  const profile = avatars[message.role] ?? <Icon name="account-cog" size={26} color={colorScheme.onSurface} />;
 
   return (
     <View style={styles.row}>
