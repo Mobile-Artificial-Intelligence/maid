@@ -10,7 +10,7 @@ import { addNode, branchNode, getChildren, getConversation, lastChild, MessageNo
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-function MessageNodeView({ message }: { message: MessageNode }) {
+function MessageView({ message }: { message: MessageNode }) {
   const [ editText, setEditText ] = useState<string>(message.content);
   const { userName, assistantName, colorScheme, mappings, setMappings, editing, setEditing, deleteMessage } = useSystem();
   const { parameters, type, model, modelFileKey, busy, promptModel } = useLLM();
@@ -268,4 +268,4 @@ function MessageNodeView({ message }: { message: MessageNode }) {
   );
 }
 
-export default MessageNodeView;
+export default MessageView;

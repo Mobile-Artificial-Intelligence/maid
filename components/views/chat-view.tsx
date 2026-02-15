@@ -1,5 +1,5 @@
 import PromptInput from "@/components/fields/prompt-input";
-import MessageNodeView from "@/components/views/chat-message-view";
+import MessageView from "@/components/views/message-view";
 import { useSystem } from "@/context";
 import { randomUUID } from "expo-crypto";
 import { getConversation, hasNode, MessageNode } from "message-nodes";
@@ -13,7 +13,7 @@ function ChatView({ id }: ChatViewProps) {
   const { colorScheme, mappings } = useSystem();
 
   const renderItem = ({ item }: { item: MessageNode }) => (
-    <MessageNodeView 
+    <MessageView 
       key={item.id} 
       message={item} 
     />
