@@ -19,7 +19,7 @@ interface HuggingfaceModel {
 const HuggingfaceModels = HuggingfaceModelsRaw as Array<HuggingfaceModel>;
 
 function ModelDownload({ source }: { source: HuggingfaceModel }) {
-  const { modelFiles, setModelFiles, setModelFileKey } = useLLM();
+  const { modelFiles, setModelFiles, modelFileKey, setModelFileKey } = useLLM();
   const { colorScheme } = useSystem();
   const { id, name, repo, branch, tags } = source;
 
@@ -198,8 +198,8 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
       color: colorScheme.secondary,
     },
     textButton: {
-      color: colorScheme.onPrimaryContainer,
-      backgroundColor: colorScheme.primaryContainer,
+      color: modelFileKey === currentKey ? colorScheme.onPrimary : colorScheme.onPrimaryContainer,
+      backgroundColor: modelFileKey === currentKey ? colorScheme.primary : colorScheme.primaryContainer,
       paddingVertical: 4,
       paddingHorizontal: 12,
       borderRadius: 20,
