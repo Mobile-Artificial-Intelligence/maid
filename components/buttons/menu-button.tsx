@@ -1,102 +1,74 @@
 import { MaterialIconButton } from "@/components/buttons/icon-button";
+import Popover from "@/components/views/popover-view";
 import { useSystem } from "@/context";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
-  Modal,
+  LayoutRectangle,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
+  View
 } from "react-native";
 
-function MenuButtonPopoverModal({
-  visible,
-  onClose,
-}: {
-  visible: boolean;
-  onClose: () => void;
-}) {
+function MenuButton() {
   const router = useRouter();
   const { colorScheme } = useSystem();
+  const [visible, setVisible] = useState(false);
+  const [anchor, setAnchor] = useState<LayoutRectangle | null>(null);
+
+  const anchorRef = useRef<View>(null);
+
+  const open = () => {
+    anchorRef.current?.measureInWindow((x, y, width, height) => {
+      setAnchor({ x, y, width, height });
+      setVisible(true);
+    });
+  };
 
   const styles = StyleSheet.create({
-    overlay: {
-      flex: 1,
-      backgroundColor: "transparent",
-    },
-    anchor: {
-      flex: 1,
-      alignItems: "flex-end",
-    },
-    popover: {
-      position: "absolute",
-      top: 120,
-      right: 8,
-      backgroundColor: colorScheme.surfaceVariant,
-      borderRadius: 8,
-      width: 100,
-      paddingVertical: 6,
-      alignItems: "center",
-    },
     link: {
       paddingVertical: 8,
       paddingHorizontal: 12,
       color: colorScheme.onSurface,
-      fontSize: 16    
-    }
+      fontSize: 16,
+    },
   });
 
   return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="fade"
-      onRequestClose={onClose}
-      statusBarTranslucent
-    >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.overlay}>
-          <View style={styles.anchor}>
-            <TouchableWithoutFeedback>
-              <View style={styles.popover}>
-                <TouchableOpacity onPress={() => {
-                  onClose();
-                  router.push("/settings");
-                }}>
-                  <Text style={styles.link}>Settings</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
-                  onClose();
-                  router.push("/about");
-                }}>
-                  <Text style={styles.link}>About</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
-  );
-}
-
-export default function MenuButton() {
-  const { colorScheme } = useSystem();
-  const [visible, setVisible] = useState(false);
-
-  return (
     <View style={{ margin: 4 }}>
-      <MaterialIconButton
-        icon="more-vert"
-        size={28}
-        onPress={() => setVisible(true)}
-      />
-      <MenuButtonPopoverModal
+      {/* THIS is what we measure */}
+      <View ref={anchorRef} collapsable={false}>
+        <MaterialIconButton icon="more-vert" size={28} onPress={open} />
+      </View>
+
+      <Popover
+        position="bottom"
+        anchor={anchor}
+        offset={{ y: (anchor?.height ?? 0) * 2 }}
         visible={visible}
         onClose={() => setVisible(false)}
-      />
+      >
+        <TouchableOpacity
+          onPress={() => {
+            setVisible(false);
+            router.push("/settings");
+          }}
+        >
+          <Text style={styles.link}>Settings</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            setVisible(false);
+            router.push("/about");
+          }}
+        >
+          <Text style={styles.link}>About</Text>
+        </TouchableOpacity>
+      </Popover>
     </View>
   );
 }
+
+export default MenuButton;
