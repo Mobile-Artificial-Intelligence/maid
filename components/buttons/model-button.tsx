@@ -1,3 +1,4 @@
+import Popover from "@/components/views/popover-view";
 import { useLLM, useSystem } from "@/context";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
@@ -10,7 +11,6 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import Popover from "../views/popover-view";
 
 function ModelButton() {
   const router = useRouter();
