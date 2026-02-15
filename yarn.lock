@@ -3322,7 +3322,7 @@ expo-keep-awake@~14.1.4:
   resolved "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-14.1.4.tgz"
   integrity sha512-wU9qOnosy4+U4z/o4h8W9PjPvcFMfZXrlUoKTMBW7F4pLqhkkP/5G4EviPZixv4XWFMjn1ExQ5rV6BX8GwJsWA==
 
-expo-kokoro@^1.1.7:
+expo-kokoro@^1.1.5:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/expo-kokoro/-/expo-kokoro-1.1.7.tgz#12a821c766134281787dba6963cda579712672bf"
   integrity sha512-J8Tolxsd5owcRDKM3XLQx42nbejWJmZJntEhgBWE/FcXtC/cwYgtKZzt6ReSqvRE1iS97pmx3Um5s1EP+yhLZA==
