@@ -38,6 +38,7 @@ function RootLayoutContent() {
           sceneStyle: {
             backgroundColor: colorScheme.surface,
           },
+          overlayColor: `${colorScheme.scrim}52`
         }}
         drawerContent={(props: any) => <DrawerContent />}
       >

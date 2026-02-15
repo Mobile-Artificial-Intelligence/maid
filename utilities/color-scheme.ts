@@ -47,6 +47,25 @@ export interface ColorScheme {
   inversePrimary: string;
 }
 
+function enforceDeeperDark(scheme: ColorScheme): ColorScheme {
+  if (scheme.brightness !== "dark") return scheme;
+
+  return {
+    ...scheme,
+
+    // true dark surfaces
+    surface: "#0b0b0c",
+    surfaceVariant: "#121316",
+
+    // improve contrast
+    inverseSurface: "#e6e6e6",
+    outlineVariant: "#2a2b30",
+
+    // darker overlay
+    scrim: "#000000",
+  };
+}
+
 export function createColorScheme(seedColor: string, brightness: Brightness = "light"): ColorScheme {
   const cleanedSeedColor = `#${seedColor.replace(/^#/, '').slice(0, 6)}`;
 
@@ -54,7 +73,7 @@ export function createColorScheme(seedColor: string, brightness: Brightness = "l
 
   const scheme = brightness === "light" ? theme.schemes.light : theme.schemes.dark;
 
-  return {
+  return enforceDeeperDark({
     brightness,
     primary: hexFromArgb(scheme.primary),
     onPrimary: hexFromArgb(scheme.onPrimary),
@@ -83,5 +102,5 @@ export function createColorScheme(seedColor: string, brightness: Brightness = "l
     inverseSurface: hexFromArgb(scheme.inverseSurface),
     inverseOnSurface: hexFromArgb(scheme.inverseOnSurface),
     inversePrimary: hexFromArgb(scheme.inversePrimary),
-  };
+  });
 }
