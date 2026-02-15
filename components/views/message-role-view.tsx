@@ -13,10 +13,11 @@ function MessageRoleView({ message }: { message: MessageNode }) {
     row: {
       flexDirection: "row",
       alignItems: "center",
+      gap: 8
     },
     role: {
       color: colorScheme.onSurface,
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: "bold",
       marginLeft: 8,
     },
@@ -28,12 +29,12 @@ function MessageRoleView({ message }: { message: MessageNode }) {
   };
 
   const avatars: Record<string, React.ReactNode> = {
-    user: <UserImageView size={26} />,
-    assistant: <AssistantImageView size={26} />,
+    user: <UserImageView size={30} />,
+    assistant: <AssistantImageView size={30} />,
   };
 
   const role = roleNames[message.role] ?? (message.role.charAt(0).toUpperCase() + message.role.slice(1));
-  const profile = avatars[message.role] ?? <Icon name="account-cog" size={26} color={colorScheme.onSurface} />;
+  const profile = avatars[message.role] ?? <Icon name="account-cog" size={30} color={colorScheme.onSurface} />;
 
   return (
     <View style={styles.row}>

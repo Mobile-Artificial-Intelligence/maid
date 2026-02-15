@@ -7,6 +7,7 @@ import * as Device from "expo-device";
 import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
+import Markdown from 'react-native-markdown-display';
 
 function MessageContentView({ message }: { message: MessageNode }) {
   const [ showReasoning, setShowReasoning ] = useState<boolean>(false);
@@ -43,6 +44,39 @@ function MessageContentView({ message }: { message: MessageNode }) {
       color: colorScheme.onSurface,
       fontSize: 14,
     },
+  });
+
+  const markdownStyle = StyleSheet.create({
+    body: {
+      color: colorScheme.onSurface,
+      fontSize: 14,
+    },
+    link: {
+      color: colorScheme.primary,
+    },
+    code_inline: {
+      backgroundColor: colorScheme.surfaceVariant,
+      color: colorScheme.onSurface,
+      borderRadius: 4,
+    },
+    code_block: {
+      backgroundColor: colorScheme.surfaceVariant,
+      color: colorScheme.onSurface,
+      borderWidth: 0,
+      borderRadius: 4,
+      padding: 8,
+    },
+    fence: {
+      backgroundColor: colorScheme.surfaceVariant,
+      color: colorScheme.onSurface,
+      borderWidth: 0,
+      borderRadius: 4,
+      padding: 8,
+    },
+    hr: {
+      backgroundColor: colorScheme.outline,
+      marginVertical: 16,
+    }
   });
 
   const onEdit = () => {
@@ -117,7 +151,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
         </TouchableHighlight>
       )}
       {reasoning && showReasoning && <Text style={styles.reasoning}>{reasoning}</Text>}
-      {editing !== message.id && <Text style={styles.content}>{content}</Text>}
+      {editing !== message.id && <Markdown style={markdownStyle}>{content}</Markdown>}
       {editing === message.id && (
         <View style={styles.view}>
           <TextInput

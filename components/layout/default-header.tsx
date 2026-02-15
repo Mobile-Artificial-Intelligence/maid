@@ -47,7 +47,7 @@ function DefaultHeader(props: DrawerHeaderProps) {
     >
       <MaterialIconButton
         icon="arrow-back"
-        size={24}
+        size={28}
         style={styles.backButton}
         onPress={() => props.navigation.goBack()}
       />

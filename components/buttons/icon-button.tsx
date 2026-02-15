@@ -24,7 +24,7 @@ export function MaterialIconButton(props: IconButtonProps) {
     >
       <MaterialIcons
         name={props.icon as any}
-        size={props.size ?? 26}
+        size={props.size ?? 28}
         color={props.disabled ? (props.disabledColor ?? colorScheme.outline) : (props.color ?? colorScheme.onSurface)}
       />
     </TouchableOpacity>
@@ -42,7 +42,7 @@ export function MaterialCommunityIconButton(props: IconButtonProps) {
     >
       <MaterialCommunityIcons
         name={props.icon as any}
-        size={props.size ?? 26}
+        size={props.size ?? 28}
         color={props.disabled ? (props.disabledColor ?? colorScheme.outline) : (props.color ?? colorScheme.onSurface)}
       />
     </TouchableOpacity>
