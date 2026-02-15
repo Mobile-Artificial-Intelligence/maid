@@ -10,7 +10,6 @@ import {
   View,
 } from "react-native";
 
-const POPOVER_WIDTH = 150;
 const EDGE_PADDING = 8;
 const GAP = 6;
 
@@ -28,6 +27,7 @@ interface PopoverViewProps {
   offset?: { x?: number; y?: number };
 
   anchor: LayoutRectangle | null;
+  width: number;
   visible: boolean;
   onClose: () => void;
   children: ReactNode;
@@ -40,6 +40,7 @@ function Popover({
   align = "center",
   offset,
   anchor,
+  width,
   visible,
   onClose,
   children,
@@ -63,8 +64,8 @@ function Popover({
 
     // Horizontal align helpers (for top/bottom)
     const leftStart = anchor.x;
-    const leftCenter = anchor.x + anchor.width / 2 - POPOVER_WIDTH / 2;
-    const leftEnd = anchor.x + anchor.width - POPOVER_WIDTH;
+    const leftCenter = anchor.x + anchor.width / 2 - width / 2;
+    const leftEnd = anchor.x + anchor.width - width;
 
     const alignedLeftRaw =
       align === "start" ? leftStart : align === "end" ? leftEnd : leftCenter;
@@ -98,12 +99,12 @@ function Popover({
         break;
 
       case "left":
-        left = anchor.x - POPOVER_WIDTH - GAP;
+        left = anchor.x - width - GAP;
         top = alignedTopRaw;
         break;
     }
 
-    left = clamp(left + offX, EDGE_PADDING, screenW - POPOVER_WIDTH - EDGE_PADDING);
+    left = clamp(left + offX, EDGE_PADDING, screenW - width - EDGE_PADDING);
     top = clamp(top + offY, EDGE_PADDING, screenH - popoverH - EDGE_PADDING);
 
     return { left, top };
@@ -116,13 +117,13 @@ function Popover({
         container: { flex: 1 },
         popoverBase: {
           position: "absolute",
-          width: POPOVER_WIDTH,
+          width: width,
           backgroundColor: colorScheme.surfaceVariant,
           borderRadius: 8,
           paddingVertical: 6,
         },
       }),
-    [colorScheme.surfaceVariant]
+    [colorScheme.surfaceVariant, width]
   );
 
   return (

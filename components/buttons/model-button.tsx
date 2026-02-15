@@ -3,101 +3,14 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
-  Dimensions,
   findNodeHandle,
   LayoutRectangle,
-  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
+  View
 } from "react-native";
-
-const POPOVER_WIDTH = 150;
-
-function ModelButtonPopover({
-  visible,
-  onClose,
-  anchor, // { x, y, width, height } in screen coords
-  onLoadModel,
-  onDownloadModel,
-}: {
-  visible: boolean;
-  onClose: () => void;
-  anchor: LayoutRectangle | null;
-  onLoadModel: () => void | Promise<void>;
-  onDownloadModel: () => void | Promise<void>;
-}) {
-  const { colorScheme } = useSystem();
-  const screenW = Dimensions.get("window").width;
-
-  let left = 0;
-  if (anchor) {
-    left = anchor.x + anchor.width / 2 - POPOVER_WIDTH / 2;
-    left = Math.max(8, Math.min(left, screenW - POPOVER_WIDTH - 8));
-  }
-
-  const styles = StyleSheet.create({
-    overlay: { 
-      flex: 1, 
-      backgroundColor: "transparent" 
-    },
-    container: { 
-      flex: 1 
-    },
-    popover: {
-      position: "absolute",
-      top: 120,
-      left,
-      width: POPOVER_WIDTH,
-      backgroundColor: colorScheme.surfaceVariant,
-      borderRadius: 8,
-      paddingVertical: 6,
-    },
-    item: { 
-      paddingVertical: 10, 
-      paddingHorizontal: 12,
-      alignItems: "center",
-    },
-    text: { 
-      color: colorScheme.onSurface, 
-      fontSize: 16 
-    }
-  });
-
-  const click = async (fn: () => void | Promise<void>) => {
-    onClose();
-    await Promise.resolve(fn());
-  };
-
-  return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="fade"
-      onRequestClose={onClose}
-      statusBarTranslucent
-    >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.overlay}>
-          <View style={styles.container}>
-            <TouchableWithoutFeedback>
-              <View style={styles.popover}>
-                <TouchableOpacity style={styles.item} onPress={() => click(onLoadModel)}>
-                  <Text style={styles.text} numberOfLines={1}>Load Model</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.item} onPress={() => click(onDownloadModel)}>
-                  <Text style={styles.text} numberOfLines={1}>Download Model</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
-  );
-}
+import Popover from "../views/popover-view";
 
 function ModelButton() {
   const router = useRouter();
@@ -145,6 +58,15 @@ function ModelButton() {
       flex: 1,
       textAlign: "center",
     },
+    item: { 
+      paddingVertical: 10, 
+      paddingHorizontal: 12,
+      alignItems: "center",
+    },
+    popoverText: { 
+      color: colorScheme.onSurface, 
+      fontSize: 16 
+    }
   });
 
   return (
@@ -157,15 +79,34 @@ function ModelButton() {
         <Icon name="chevron-triple-right" size={20} color={colorScheme.onPrimary} />
       </TouchableOpacity>
 
-      <ModelButtonPopover
+      <Popover
+        position="bottom"
+        anchor={anchor}
+        offset={{ y: (anchor?.height ?? 0) * 3 }}
+        width={180}
         visible={visible}
         onClose={() => setVisible(false)}
-        anchor={anchor}
-        onLoadModel={() => pickModelFile()}
-        onDownloadModel={() => {
-          router.push("/download");
-        }}
-      />
+      >
+        <TouchableOpacity
+          style={styles.item}
+          onPress={() => {
+            setVisible(false);
+            pickModelFile();
+          }}
+        >
+          <Text style={styles.popoverText}>Load Model</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.item}
+          onPress={() => {
+            setVisible(false);
+            router.push("/download");
+          }}
+        >
+          <Text style={styles.popoverText}>Download Model</Text>
+        </TouchableOpacity>
+      </Popover>
     </View>
   );
 }

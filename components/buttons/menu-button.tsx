@@ -46,6 +46,7 @@ function MenuButton() {
         position="bottom"
         anchor={anchor}
         offset={{ y: (anchor?.height ?? 0) * 2 }}
+        width={120}
         visible={visible}
         onClose={() => setVisible(false)}
       >
