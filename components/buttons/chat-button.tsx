@@ -5,7 +5,7 @@ import { deleteNode, getRootMapping, MessageNode, updateContent } from "message-
 import { useEffect, useRef, useState } from "react";
 import { LayoutRectangle, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
-function SessionButton({ node }: { node: MessageNode<string> }) {
+function ChatButton({ node }: { node: MessageNode<string> }) {
   const { colorScheme, root, setRoot, mappings, setMappings } = useSystem();
   const [visible, setVisible] = useState<boolean>(false);
   const [rename, setRename] = useState<boolean>(false);
@@ -147,4 +147,4 @@ function SessionButton({ node }: { node: MessageNode<string> }) {
   );
 }
 
-export default SessionButton;
+export default ChatButton;

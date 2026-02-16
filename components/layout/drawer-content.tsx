@@ -1,5 +1,5 @@
+import ChatButton from "@/components/buttons/chat-button";
 import { MaterialIconButton } from "@/components/buttons/icon-button";
-import SessionButton from "@/components/buttons/session-button";
 import { useSystem } from "@/context";
 import validateMappings from "@/utilities/mappings";
 import { randomUUID } from "expo-crypto";
@@ -133,7 +133,7 @@ function DrawerContent() {
       </View>
       <View style={styles.divider} />
       <ScrollView style={styles.sessions}>
-        {getRoots<string>(mappings).map((root) => <SessionButton key={root.id} node={root} />)}
+        {getRoots<string>(mappings).map((root) => <ChatButton key={root.id} node={root} />)}
       </ScrollView>
       <View style={styles.divider} />
       <View style={styles.account}>
