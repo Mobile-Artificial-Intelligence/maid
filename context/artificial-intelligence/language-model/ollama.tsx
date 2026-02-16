@@ -195,7 +195,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
       onUpdate(chunk.message.content);
     }
     setBusy(false);
-  }
+  };
 
   const value = { 
     ready: !!ollama && !!model,
