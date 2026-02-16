@@ -4,12 +4,30 @@ on:
   workflow_call:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-android.yml'
+      - 'android/**'
+      - '*.ts'
+      - '*.tsx'
+      - '*.js'
+      - '*.json'
+      - '*.lock'
   pull_request:
-    branches: [main]
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-android.yml'
+      - 'android/**'
+      - '*.ts'
+      - '*.tsx'
+      - '*.js'
+      - '*.json'
+      - '*.lock'
 
 jobs:
-  build-android:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
