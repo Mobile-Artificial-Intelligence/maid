@@ -117,9 +117,6 @@ function useSyncedImage(
     if (!imageUri || imageUri.startsWith("http")) return;
 
     try {
-      const resp = await fetch(uri);
-      const blob = await resp.blob();
-
       const path = `${user.id}.jpg`;
 
       await uploadImageFromUri({
