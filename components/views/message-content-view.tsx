@@ -79,6 +79,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
     controls: {
       marginTop: 10,
       width: "100%",
+      gap: 16,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-end",
