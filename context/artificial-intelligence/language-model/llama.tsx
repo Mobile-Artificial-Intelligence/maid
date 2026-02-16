@@ -138,50 +138,66 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
   }, [llama, prompting, loading]);
 
   useEffect(() => {
-    if (!modelFileKey || !modelFiles[modelFileKey] || !isGGUF(modelFiles[modelFileKey])) return;
-    const modelFile = modelFiles[modelFileKey];
-
-    const currentLoadId = ++loadIdRef.current;
     let cancelled = false;
+    let timeout: ReturnType<typeof setTimeout> | null = null;
 
-    const timeout = setTimeout(async () => {
-      if (loading) return;
-
-      setLoading(true);
-
-      try {
-        const info = await loadLlamaModelInfo(modelFile) as Record<string, any>;
-        const ctx_key = Object.keys(info).find(key => key.toLowerCase().endsWith("context_length"));
-        const n_ctx = ctx_key ? Number(info[ctx_key]) : 2048;
-
-
-        const llamaContext = await initLlama({
-          model: modelFile,
-          use_mlock: true,
-          n_ctx,
-          n_gpu_layers: 99,
-          ...parameters,
-        });
-
-        // if a newer load started, ignore this one
-        if (cancelled || currentLoadId !== loadIdRef.current) {
-          await llamaContext.release?.(); // optional cleanup if API supports
-          return;
-        }
-
-        setLlama(llamaContext);
-      } catch (error) {
-        console.error("Error initializing model:", error);
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+    const loadModel = async () => {
+      if (!modelFileKey || !modelFiles[modelFileKey]) {
+        return;
       }
-    }, 400);
+
+      const modelFile = modelFiles[modelFileKey];
+
+      // Ensure the selected file is a GGUF model before proceeding
+      const isGguf = await isGGUF(modelFile);
+      if (!isGguf) {
+        return;
+      }
+
+      const currentLoadId = ++loadIdRef.current;
+
+      timeout = setTimeout(async () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        try {
+          const info = await loadLlamaModelInfo(modelFile) as Record<string, any>;
+          const ctx_key = Object.keys(info).find(key => key.toLowerCase().endsWith("context_length"));
+          const n_ctx = ctx_key ? Number(info[ctx_key]) : 2048;
+
+          const llamaContext = await initLlama({
+            model: modelFile,
+            use_mlock: true,
+            n_ctx,
+            n_gpu_layers: 99,
+            ...parameters,
+          });
+
+          // if a newer load started, ignore this one
+          if (cancelled || currentLoadId !== loadIdRef.current) {
+            await llamaContext.release?.(); // optional cleanup if API supports
+            return;
+          }
+
+          setLlama(llamaContext);
+        } catch (error) {
+          console.error("Error initializing model:", error);
+        } finally {
+          if (!cancelled) {
+            setLoading(false);
+          }
+        }
+      }, 400);
+    };
+
+    loadModel();
 
     return () => {
       cancelled = true;
-      clearTimeout(timeout);
+      if (timeout !== null) {
+        clearTimeout(timeout);
+      }
     };
   }, [modelFileKey, modelFiles, parameters]);
 
