@@ -226,7 +226,7 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
     setBusy(true);
 
     try {
-      const parts = await anthropic.messages.stream({
+      await anthropic.messages.stream({
         model,
         max_tokens: 1024,
         stream: true,
