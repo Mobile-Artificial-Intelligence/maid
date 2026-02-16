@@ -133,7 +133,7 @@ function DrawerContent() {
       </View>
       <View style={styles.divider} />
       <ScrollView style={styles.sessions}>
-        {getRoots<string>(mappings).map((session) => <SessionButton key={session.id} node={session} />)}
+        {getRoots<string>(mappings).map((root) => <SessionButton key={root.id} node={root} />)}
       </ScrollView>
       <View style={styles.divider} />
       <View style={styles.account}>

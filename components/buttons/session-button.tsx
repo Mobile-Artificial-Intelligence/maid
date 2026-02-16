@@ -1,13 +1,14 @@
 import Popover from "@/components/views/popover-view";
 import { useSystem } from "@/context";
 import * as FileSystem from "expo-file-system";
-import { deleteNode, getRootMapping, MessageNode } from "message-nodes";
+import { deleteNode, getRootMapping, MessageNode, updateContent } from "message-nodes";
 import { useRef, useState } from "react";
-import { LayoutRectangle, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { LayoutRectangle, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
 function SessionButton({ node }: { node: MessageNode<string> }) {
   const { colorScheme, root, setRoot, mappings, setMappings } = useSystem();
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [rename, setRename] = useState<boolean>(false);
   const [anchor, setAnchor] = useState<LayoutRectangle | null>(null);
   const anchorRef = useRef<Text>(null);
 
@@ -16,6 +17,11 @@ function SessionButton({ node }: { node: MessageNode<string> }) {
       setAnchor({ x, y, width, height });
       setVisible(true);
     });
+  };
+
+  const renameChat = (title: string) => {
+    setMappings((prev) => updateContent<string, Record<string, any>>(prev, node.id, c => c, m => ({ ...m, title })));
+    setRename(false);
   };
 
   const exportChat = async () => {
@@ -72,7 +78,7 @@ function SessionButton({ node }: { node: MessageNode<string> }) {
     
   return (
     <>
-      <TouchableOpacity
+      {!rename && <TouchableOpacity
         key={`${node.id}-button`}
         style={styles.button}
         onPress={() => setRoot(node.id)}
@@ -88,7 +94,18 @@ function SessionButton({ node }: { node: MessageNode<string> }) {
         >
           {node.metadata?.title || "New Chat"}
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
+      {rename && <TextInput
+        key={`${node.id}-textfield`}
+        style={[
+          styles.button, 
+          styles.buttonText, 
+          root === node.id ? styles.buttonTextActive : null
+        ]}
+        defaultValue={node.metadata?.title || "New Chat"}
+        onEndEditing={(e) => renameChat(e.nativeEvent.text)}
+        autoFocus
+      />}
       <Popover
         position="bottom"
         anchor={anchor}
@@ -99,7 +116,8 @@ function SessionButton({ node }: { node: MessageNode<string> }) {
       >
         <TouchableOpacity
           onPress={() => {
-            
+            setVisible(false);
+            setRename(true);
           }}
         >
           <Text style={styles.popoverButton}>Rename</Text>
