@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Android
 
 on:
   workflow_call:
@@ -9,7 +9,7 @@ on:
     branches: [main]
 
 jobs:
-  build-apk:
+  build-android:
     runs-on: ubuntu-latest
     permissions:
       contents: read
