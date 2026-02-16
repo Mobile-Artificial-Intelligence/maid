@@ -7,6 +7,7 @@ to authenticated
 using (
   bucket_id = 'user-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 );
 
 create policy "Users can read their own assistant image"
@@ -16,6 +17,7 @@ to authenticated
 using (
   bucket_id = 'assistant-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 );
 
 -- INSERT (authenticated only)
@@ -26,6 +28,7 @@ to authenticated
 with check (
   bucket_id = 'user-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 );
 
 create policy "Users can upload their own assistant image"
@@ -35,6 +38,7 @@ to authenticated
 with check (
   bucket_id = 'assistant-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 );
 
 -- UPDATE (authenticated only)
@@ -45,10 +49,12 @@ to authenticated
 using (
   bucket_id = 'user-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 )
 with check (
   bucket_id = 'user-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 );
 
 create policy "Users can update their own assistant image"
@@ -58,10 +64,12 @@ to authenticated
 using (
   bucket_id = 'assistant-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 )
 with check (
   bucket_id = 'assistant-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 );
 
 -- DELETE (optional, authenticated only)
@@ -72,6 +80,7 @@ to authenticated
 using (
   bucket_id = 'user-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 );
 
 create policy "Users can delete their own assistant image"
@@ -81,4 +90,5 @@ to authenticated
 using (
   bucket_id = 'assistant-images'
   and name = auth.uid()::text || '.jpg'
+  and (auth.jwt()->>'is_anonymous')::boolean = false
 );

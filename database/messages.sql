@@ -16,8 +16,8 @@ alter table messages enable row level security;
 create policy "Allow users to access their own messages"
 on public.messages
 for all
-using (auth.uid() = user_id)
-with check (auth.uid() = user_id);
+using (auth.uid() = user_id and (auth.jwt()->>'is_anonymous')::boolean = false)
+with check (auth.uid() = user_id and (auth.jwt()->>'is_anonymous')::boolean = false);
 
 -- Trigger function to delete a message if both parent and child are NULL
 create or replace function delete_if_both_null() 
