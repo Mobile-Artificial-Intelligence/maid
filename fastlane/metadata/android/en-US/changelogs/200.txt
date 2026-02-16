@@ -1,0 +1,6 @@
+- Complete rewrite of the entire code-base
+- Added support for infinite scrolling / lazy loading of messages
+- removed many of the more niche or buggy features such as text to speech and character exporting 
+- greatly reduced the scope of character importing
+- reduced the complexity of model parameters
+- improved theming 
