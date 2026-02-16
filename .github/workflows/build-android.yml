@@ -69,9 +69,26 @@ jobs:
           chmod +x android/gradlew
           yarn build-android
 
-      - name: Upload APK artifact
+      - name: Rename APK
+        run: |
+          mkdir -p release
+          mv android/app/build/outputs/apk/release/app-universal-release.apk release/maid-android-universal.apk
+          mv android/app/build/outputs/apk/release/app-arm64-v8a-release.apk release/maid-android-arm64-v8a.apk
+          mv android/app/build/outputs/apk/release/app-x86_64-release.apk release/maid-android-x86_64.apk
+
+      - name: Build AAB (bundleRelease)
+        run: |
+          chmod +x android/gradlew
+          yarn build-android-bundle
+
+      - name: Rename AAB
+        run: |
+          mkdir -p release
+          mv android/app/build/outputs/bundle/release/app-release.aab release/maid-android-bundle.aab
+
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
-          path: android/app/build/outputs/apk/release/*.apk
+          name: maid-android
+          path: release
           if-no-files-found: error
