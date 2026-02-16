@@ -1,11 +1,22 @@
 import Dropdown from "@/components/dropdowns/dropdown";
-import { useSystem, useTTS } from "@/context";
-import { KokoroVoice, KokoroVoices } from "expo-kokoro";
+import { useSystem } from "@/context";
+import { getAvailableVoicesAsync, Voice } from "expo-speech";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 function VoiceDropdown() {
-  const { voice, setVoice } = useTTS();
+  const [voices, setVoices] = useState<Array<Voice>>([]);
+  const { voice, setVoice } = useSystem();
   const { colorScheme } = useSystem();
+
+  const loadVoices = async () => {
+    const availableVoices = await getAvailableVoicesAsync();
+    setVoices(availableVoices);
+  };
+
+  useEffect(() => {
+    loadVoices();
+  }, []);
 
   const styles = StyleSheet.create({
     view: {
@@ -28,13 +39,13 @@ function VoiceDropdown() {
   });
 
   // construct items by capitilizing the first letter of each voice
-  const items = KokoroVoices.map((voice) => {
+  const items = voices.map((voice) => {
     return {
       label: (
         <View style={styles.label}>
           <Text style={styles.title}>{voice.name}</Text>
-          <Text style={styles.subtitle}>{`Gender: ${voice.gender}`}</Text>
-          <Text style={styles.subtitle}>{`Nationality: ${voice.nationality}`}</Text>
+          <Text style={styles.subtitle}>{`Language: ${voice.language}`}</Text>
+          <Text style={styles.subtitle}>{`Quality: ${voice.quality}`}</Text>
         </View>
       ),
       selectedLabel: voice.name,
@@ -47,11 +58,13 @@ function VoiceDropdown() {
       <Text style={styles.title}>
         Voice
       </Text>
-      <Dropdown<KokoroVoice>
-        items={items}
-        selectedValue={voice}
-        onValueChange={setVoice}
-      />
+      {voices.length > 0 && (
+        <Dropdown<Voice | undefined>
+          items={items}
+          selectedValue={voice}
+          onValueChange={setVoice}
+        />
+      )}
     </View>
   );
 }

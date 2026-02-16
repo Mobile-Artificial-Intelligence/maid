@@ -1,16 +1,16 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
-import { useLLM, useSystem, useTTS } from "@/context";
+import { useLLM, useSystem } from "@/context";
 import splitReasoning from "@/utilities/reasoning";
 import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
 import * as Device from "expo-device";
+import { speak } from "expo-speech";
 import { branchNode, getChildren, getConversation, lastChild, MessageNode, nextChild, updateContent } from "message-nodes";
 import { StyleSheet, Text, View } from "react-native";
 
 function MessageControlsView({ message }: { message: MessageNode }) {
-  const { colorScheme, mappings, setMappings, editing, setEditing, deleteMessage } = useSystem();
+  const { colorScheme, mappings, setMappings, editing, setEditing, deleteMessage, voice } = useSystem();
   const { parameters, type, model, modelFileKey, busy, promptModel } = useLLM();
-  const { textToSpeech, canSpeak } = useTTS();
 
   const styles = StyleSheet.create({
     row: {
@@ -58,7 +58,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
     );
   };
 
-  const speakEnabled = canSpeak && !editing && !busy;
+  const speakEnabled = voice && !editing && !busy;
   const siblings = getChildren(mappings, message.parent!);
   const index = siblings.findIndex((child) => child.id === message.id);
 
@@ -68,7 +68,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
         <>
           <MaterialCommunityIconButton
             icon="volume-high"
-            onPress={() => textToSpeech(splitReasoning(message)[0] ?? message.content)}
+            onPress={() => speak(splitReasoning(message)[0] ?? message.content, { voice: voice!.identifier })}
             disabled={!speakEnabled}
           />
           <MaterialCommunityIconButton

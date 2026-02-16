@@ -1,8 +1,10 @@
 import useMappings from '@/hooks/use-mappings';
 import useSyncedImage from '@/hooks/use-synced-image';
 import useSyncedString from '@/hooks/use-synced-string';
+import useVoice from '@/hooks/use-voice';
 import { ColorScheme, createColorScheme } from '@/utilities/color-scheme';
 import supabase from '@/utilities/supabase';
+import { Voice } from 'expo-speech';
 import { deleteNode, MessageNode } from 'message-nodes';
 import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 import 'react-native-url-polyfill/auto';
@@ -28,6 +30,8 @@ interface SystemContextProps {
   setEditing: Dispatch<SetStateAction<string | undefined>>;
   mappings: Record<string, MessageNode<string>>;
   setMappings: Dispatch<SetStateAction<Record<string, MessageNode<string>>>>;
+  voice: Voice | undefined;
+  setVoice: Dispatch<SetStateAction<Voice | undefined>>;
   accentColor: string;
   setAccentColor: (color: string) => void;
 }
@@ -62,7 +66,7 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
 
   const [editing, setEditing] = useState<string | undefined>(undefined);
   const [mappings, setMappings] = useMappings(authenticated);
-
+  const [voice, setVoice] = useVoice();
   const [accentColor, setAccentColor] = useState<string>("#2196F3");
 
   const colorScheme = createColorScheme(accentColor, "dark");
@@ -153,6 +157,8 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
     setEditing,
     mappings,
     setMappings,
+    voice,
+    setVoice,
     accentColor,
     setAccentColor
   };
