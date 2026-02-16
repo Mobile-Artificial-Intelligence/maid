@@ -38,8 +38,6 @@ export async function insertReport(
         Alert.alert("Couldn’t submit report", "Sign-in failed. Please try again.");
         return;
       }
-
-      userId = anonRes.user.id;
     }
 
     // 2) Insert report
