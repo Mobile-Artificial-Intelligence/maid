@@ -10,12 +10,22 @@ function VoiceDropdown() {
   const { colorScheme } = useSystem();
 
   const loadVoices = async () => {
-    const availableVoices = await getAvailableVoicesAsync();
-    setVoices(availableVoices);
+    try {
+      const availableVoices = await getAvailableVoicesAsync();
+      setVoices(availableVoices);
+    } catch (error) {
+      console.error("Error loading voices:", error);
+    }
   };
 
   useEffect(() => {
     loadVoices();
+    
+    const timeout = setTimeout(() => {
+      loadVoices();
+    }, 2000);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   const styles = StyleSheet.create({
@@ -53,18 +63,18 @@ function VoiceDropdown() {
     }
   });
 
+  if (voices.length === 0) return null;
+
   return (
     <View style={styles.view}>
       <Text style={styles.title}>
         Voice
       </Text>
-      {voices.length > 0 && (
-        <Dropdown<Voice | undefined>
-          items={items}
-          selectedValue={voice}
-          onValueChange={setVoice}
-        />
-      )}
+      <Dropdown<Voice | undefined>
+        items={items}
+        selectedValue={voice}
+        onValueChange={setVoice}
+      />
     </View>
   );
 }

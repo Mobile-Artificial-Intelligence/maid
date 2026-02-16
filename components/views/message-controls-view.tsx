@@ -64,19 +64,19 @@ function MessageControlsView({ message }: { message: MessageNode }) {
 
   return (
     <View style={styles.row}>
+      {message.role === "assistant" && voice && 
+        <MaterialCommunityIconButton
+          icon="volume-high"
+          onPress={() => speak(splitReasoning(message)[0] ?? message.content, { voice: voice!.identifier })}
+          disabled={!speakEnabled}
+        />
+      }
       {message.role === "assistant" &&
-        <>
-          <MaterialCommunityIconButton
-            icon="volume-high"
-            onPress={() => speak(splitReasoning(message)[0] ?? message.content, { voice: voice!.identifier })}
-            disabled={!speakEnabled}
-          />
-          <MaterialCommunityIconButton
-            icon="reload"
-            onPress={onRegenerate}
-            disabled={!!editing || busy}
-          />
-        </>
+        <MaterialCommunityIconButton
+          icon="reload"
+          onPress={onRegenerate}
+          disabled={!!editing || busy}
+        />
       }
       {message.role === "user" &&
         <MaterialCommunityIconButton
