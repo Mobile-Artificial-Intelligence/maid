@@ -209,7 +209,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
 
     setModelFiles({ ...updatedModelFiles, [name]: newPath });
     setModelFileKey(name);
-  }
+  };
 
   const promptModel = async (
     messages: Array<MessageNode>, 
