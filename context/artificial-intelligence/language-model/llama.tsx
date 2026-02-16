@@ -192,7 +192,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
     if (file.assets === null) return;
     const asset = file.assets[0];
 
-    if (!/\.gguf$/i.test(asset.uri) || !isGGUF(asset.uri)) {
+    if (!/\.gguf$/i.test(asset.uri) || !(await isGGUF(asset.uri))) {
       alert("Please select a valid GGUF model file");
       return;
     }
