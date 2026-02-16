@@ -40,6 +40,15 @@ function About() {
       fontSize: 18,
       fontWeight: "bold",
     },
+    logView: { 
+      flex: 1, 
+      backgroundColor: colorScheme.surfaceVariant, 
+      padding: 10, 
+      borderRadius: 8 
+    },
+    scrollView: { 
+      flexGrow: 1 
+    }
   });
 
   return (
@@ -75,9 +84,21 @@ function About() {
         <Text style={styles.value}>{Device.osBuildId}</Text>
       </View>
       <Text style={styles.title}>Logs</Text>
-      <ScrollView>
-        {logs.map((log, index) => <LogEntryView key={index} entry={log} />)}
-      </ScrollView>
+      <View style={styles.logView}>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <ScrollView
+            horizontal
+            contentContainerStyle={styles.scrollView}
+            showsHorizontalScrollIndicator
+          >
+            <View>
+              {logs.map((log, index) => (
+                <LogEntryView key={index} entry={log} />
+              ))}
+            </View>
+          </ScrollView>
+        </ScrollView>
+      </View>
     </View>
   );
 }

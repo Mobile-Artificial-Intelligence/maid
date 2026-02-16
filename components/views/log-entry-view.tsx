@@ -14,7 +14,8 @@ function LogEntryView({ entry }: { entry: LogEntry }) {
   const styles = StyleSheet.create({
     container: {
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "flex-start",
+      gap: 16,
       marginVertical: 4,
     },
     level: {
@@ -25,7 +26,7 @@ function LogEntryView({ entry }: { entry: LogEntry }) {
       paddingVertical: 2,
       borderRadius: 4,
       fontWeight: "bold",
-      width: 60,
+      width: 80,
     },
     message: {
       color: colorScheme.onSurface,
