@@ -99,6 +99,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
     content: {
       color: colorScheme.onSurface,
       fontSize: 14,
+      paddingHorizontal: 0,
     },
   });
 
@@ -209,7 +210,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
       {reasoning && showReasoning && <Text style={styles.reasoning}>{reasoning}</Text>}
       {editing !== message.id && <Markdown style={markdownStyle}>{content}</Markdown>}
       {editing === message.id && (
-        <View style={styles.view}>
+        <>
           <TextInput
             style={styles.content}
             value={editText}
@@ -228,7 +229,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
               onPress={onEditDone}
             />
           </View>
-        </View>
+        </>
       )}
       {message.role === "assistant" && message.content.length > 0 && (
         <View
