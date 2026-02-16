@@ -1,4 +1,4 @@
-import supabase from "@/utilities/supabase";
+import supabase, { isAnonymous } from "@/utilities/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
@@ -30,7 +30,7 @@ function useSyncedString(
       hydratedRef.current = false;
 
       try {
-        if (authenticated) {
+        if (authenticated && !(await isAnonymous())) {
           const { data: { user }, error } = await supabase.auth.getUser();
           if (cancelled) return;
 
@@ -87,7 +87,7 @@ function useSyncedString(
           await AsyncStorage.removeItem(key);
         }
 
-        if (!authenticated) return;
+        if (!authenticated || (await isAnonymous())) return;
 
         // Remote: only write non-default values (matching your current behavior)
         if (!value || value === defaultValue) return;

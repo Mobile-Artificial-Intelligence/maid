@@ -1,4 +1,4 @@
-import supabase from "@/utilities/supabase";
+import supabase, { isAnonymous } from "@/utilities/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Buffer } from "buffer";
 import * as FileSystem from "expo-file-system";
@@ -62,6 +62,11 @@ function useSyncedImage(
   };
 
   const loadSupabaseUrl = async (): Promise<string | null> => {
+    if (await isAnonymous()) {
+      console.warn("User is anonymous; skipping Supabase load");
+      return null;
+    }
+
     const { data: userRes, error: userErr } = await supabase.auth.getUser();
     if (userErr) {
       console.error("getUser error:", userErr);
@@ -90,6 +95,11 @@ function useSyncedImage(
   };
 
   const saveSupabase = async (uri: string) => {
+    if (await isAnonymous()) {
+      console.warn("User is anonymous; skipping Supabase save");
+      return;
+    }
+
     const { data: userRes, error: userErr } = await supabase.auth.getUser();
     if (userErr) {
       console.error("getUser error:", userErr);

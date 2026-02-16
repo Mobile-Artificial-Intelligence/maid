@@ -10,26 +10,59 @@ import { useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 import Markdown from 'react-native-markdown-display';
 
-export async function insertReport(content: string, provider: string, model: string, upvoted: boolean = false): Promise<void> {
-  const { error } = await supabase
-    .from("reports")
-    .insert({
+export async function insertReport(
+  content: string,
+  provider: string,
+  model: string,
+  upvoted: boolean = false
+): Promise<void> {
+  try {
+    // 1) Ensure we have a signed-in user (anonymous if needed)
+    const { data: sessionRes, error: sessionErr } = await supabase.auth.getSession();
+    if (sessionErr) console.warn("getSession error:", sessionErr);
+
+    let userId = sessionRes?.session?.user?.id;
+
+    if (!userId) {
+      const authAny = supabase.auth as any;
+
+      if (typeof authAny.signInAnonymously !== "function") {
+        console.error("signInAnonymously() not available. Update supabase-js and enable anonymous sign-ins in Supabase.");
+        Alert.alert("Couldn’t submit report", "Sign-in isn’t available right now.");
+        return;
+      }
+
+      const { data: anonRes, error: anonErr } = await authAny.signInAnonymously();
+      if (anonErr || !anonRes?.user?.id) {
+        console.error("Anonymous sign-in failed:", anonErr);
+        Alert.alert("Couldn’t submit report", "Sign-in failed. Please try again.");
+        return;
+      }
+
+      userId = anonRes.user.id;
+    }
+
+    // 2) Insert report
+    const { error } = await supabase.from("reports").insert({
       content,
       provider,
       model,
-      upvoted,
+      upvoted
     });
 
-  if (error) {
-    console.error("Error inserting report:", error);
-  }
+    if (error) {
+      console.error("Error inserting report:", error);
+      Alert.alert("Couldn’t submit report", error.message);
+      return;
+    }
 
-  Alert.alert(
-    "Report Submitted",
-    "Thank you for your feedback!",
-    [{ text: "OK" }],
-    { cancelable: true }
-  );
+    Alert.alert("Report Submitted", "Thank you for your feedback!", [{ text: "OK" }], {
+      cancelable: true,
+    });
+  } catch (e) {
+    console.error("insertReport unexpected error:", e);
+    Alert.alert("Couldn’t submit report", "Unexpected error. Please try again.");
+  }
 }
 
 function MessageContentView({ message }: { message: MessageNode }) {

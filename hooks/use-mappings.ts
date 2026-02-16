@@ -1,5 +1,5 @@
 import validateMappings from '@/utilities/mappings';
-import supabase from '@/utilities/supabase';
+import supabase, { isAnonymous } from '@/utilities/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Application from "expo-application";
 import * as Device from "expo-device";
@@ -10,6 +10,11 @@ function useMappings(authenticated: boolean): [Record<string, MessageNode<string
   const [mappings, setMappings] = useState<Record<string, MessageNode<string>>>({});
 
   const saveSupabaseMappings = async () => {
+    if (await isAnonymous()) {
+      console.warn("User is anonymous; skipping Supabase save");
+      return;
+    }
+
     const { data: { user }, error: userErr } = await supabase.auth.getUser();
     if (userErr) {
       console.error("getUser error:", userErr);
@@ -61,6 +66,11 @@ function useMappings(authenticated: boolean): [Record<string, MessageNode<string
   }, [mappings, authenticated]);
 
   const loadSupabaseMappings = async () => {
+    if (await isAnonymous()) {
+      console.warn("User is anonymous; skipping Supabase load");
+      return;
+    }
+
     const userResponse = await supabase.auth.getUser();
     const user = userResponse.data.user;
     
