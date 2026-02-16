@@ -252,7 +252,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
     parameters,
     setParameters,
     promptModel,
-  }
+  };
 
   return (
     <LlamaContext.Provider value={value}>
