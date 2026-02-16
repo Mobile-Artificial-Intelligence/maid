@@ -244,7 +244,7 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
 
   const resetBaseURL = () => {
     setBaseURL(DEFAULT_BASE_URL);
-  }
+  };
 
   const value = {
     ready: !!openai && !!model,
