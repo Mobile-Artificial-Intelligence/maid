@@ -248,7 +248,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
         </View>
       )}
     </View>
-  )
+  );
 };
 
 export default MessageContentView;
