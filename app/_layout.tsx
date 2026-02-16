@@ -33,12 +33,11 @@ function RootLayoutContent() {
         screenOptions={{
           header: (props: any) => <DefaultHeader {...props} />,
           drawerStyle: {
-            backgroundColor: colorScheme.surface
+            backgroundColor: `${colorScheme.surface}f4`
           },
           sceneStyle: {
             backgroundColor: colorScheme.surface,
           },
-          overlayColor: `${colorScheme.scrim}52`
         }}
         drawerContent={(props: any) => <DrawerContent />}
       >
