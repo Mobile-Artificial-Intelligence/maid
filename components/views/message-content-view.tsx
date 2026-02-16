@@ -7,7 +7,7 @@ import { randomUUID } from "expo-crypto";
 import * as Device from "expo-device";
 import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
+import { Alert, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 import Markdown from 'react-native-markdown-display';
 
 export async function insertReport(content: string, provider: string, model: string, upvoted: boolean = false): Promise<void> {
@@ -23,6 +23,13 @@ export async function insertReport(content: string, provider: string, model: str
   if (error) {
     console.error("Error inserting report:", error);
   }
+
+  Alert.alert(
+    "Report Submitted",
+    "Thank you for your feedback!",
+    [{ text: "OK" }],
+    { cancelable: true }
+  );
 }
 
 function MessageContentView({ message }: { message: MessageNode }) {
@@ -40,6 +47,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
     },
     controls: {
       marginTop: 10,
+      width: "100%",
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "flex-end",
@@ -190,16 +198,18 @@ function MessageContentView({ message }: { message: MessageNode }) {
           </View>
         </View>
       )}
-      {message.role === "assistant" && (
+      {message.role === "assistant" && message.content.length > 0 && (
         <View
           style={styles.controls}
         >
           <MaterialCommunityIconButton
             icon="thumb-up"
+            size={22}
             onPress={() => insertReport(message.content, type, model || modelFileKey || "", true)}
           />
           <MaterialCommunityIconButton
             icon="thumb-down"
+            size={22}
             onPress={() => insertReport(message.content, type, model || modelFileKey || "", false)}
           />
         </View>
