@@ -1,7 +1,7 @@
 
 import DefaultHeader from '@/components/layout/default-header';
 import DrawerContent from '@/components/layout/drawer-content';
-import { ArtificialIntelligenceProvider, SystemContextProvider, useSystem } from "@/context";
+import { LanguageModelProvider, SystemContextProvider, useSystem } from "@/context";
 import { installConsoleCapture } from '@/utilities/logger';
 import { Buffer } from "buffer";
 import Drawer from 'expo-router/drawer';
@@ -16,9 +16,9 @@ installConsoleCapture();
 function RootLayout() {
   return (
     <SystemContextProvider>
-      <ArtificialIntelligenceProvider>
+      <LanguageModelProvider>
         <RootLayoutContent />
-      </ArtificialIntelligenceProvider>
+      </LanguageModelProvider>
     </SystemContextProvider>
   );
 }

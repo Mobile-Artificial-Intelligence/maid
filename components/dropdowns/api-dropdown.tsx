@@ -1,6 +1,6 @@
 import Dropdown from "@/components/dropdowns/dropdown";
 import { useLLM, useSystem } from "@/context";
-import { LanguageModelTypes } from "@/context/artificial-intelligence/language-model";
+import { LanguageModelTypes } from "@/context/language-model";
 import { StyleSheet, Text, View } from "react-native";
 
 function ApiDropdown() {

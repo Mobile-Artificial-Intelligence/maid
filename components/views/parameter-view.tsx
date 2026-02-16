@@ -1,6 +1,6 @@
 import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useLLM, useSystem } from "@/context";
-import { ParameterTypes } from "@/context/artificial-intelligence/language-model/types";
+import { ParameterTypes } from "@/context/language-model/types";
 import { randomUUID } from "expo-crypto";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";

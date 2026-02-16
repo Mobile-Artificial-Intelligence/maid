@@ -1,3 +1,3 @@
-export * from "./artificial-intelligence";
+export * from "./language-model";
 export * from "./system";
 
