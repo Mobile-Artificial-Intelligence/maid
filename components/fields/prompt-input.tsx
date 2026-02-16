@@ -8,13 +8,9 @@ import { addNode, getConversation, updateContent } from "message-nodes";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-interface PromptInputProps {
-  root?: string;
-}
-
-function PromptInput({ root }: PromptInputProps) {
+function PromptInput() {
   const router = useRouter();
-  const { colorScheme, mappings, systemPrompt, setMappings } = useSystem();
+  const { colorScheme, mappings, systemPrompt, setMappings, root } = useSystem();
   const { type, model, modelFileKey, parameters, ready, promptModel } = useLLM();
 
   const [prompt, setPrompt] = useState<string>("");

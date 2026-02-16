@@ -20,10 +20,10 @@ function useVoice(): [Voice | undefined, Dispatch<SetStateAction<Voice | undefin
     loadVoice();
   }, []);
 
-  const saveVoice = async (newVoice: Voice | undefined) => {
+  const saveVoice = async () => {
     try {
-      if (newVoice) {
-        await AsyncStorage.setItem("voice", JSON.stringify(newVoice));
+      if (voice) {
+        await AsyncStorage.setItem("voice", JSON.stringify(voice));
       } else {
         await AsyncStorage.removeItem("voice");
       }
@@ -33,7 +33,7 @@ function useVoice(): [Voice | undefined, Dispatch<SetStateAction<Voice | undefin
   };
 
   useEffect(() => {
-    saveVoice(voice);
+    saveVoice();
   }, [voice]);
 
   return [voice, setVoice];

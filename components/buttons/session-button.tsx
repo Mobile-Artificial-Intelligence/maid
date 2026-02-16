@@ -1,12 +1,9 @@
 import { useSystem } from "@/context";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { MessageNode } from "message-nodes";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 function SessionButton({ node }: { node: MessageNode<string> }) {
-  const router = useRouter();
-  const { id } = useLocalSearchParams<{ id?: string }>();
-  const { colorScheme } = useSystem();
+  const { colorScheme, root, setRoot } = useSystem();
 
   const styles = StyleSheet.create({
     view: {
@@ -25,21 +22,17 @@ function SessionButton({ node }: { node: MessageNode<string> }) {
       color: colorScheme.primary
     }
   });
-
-  const onSwitch = () => {
-    router.replace(`/chat/${node.id}`);
-  }
     
   return (
     <TouchableOpacity
       key={`${node.id}-button`}
       style={styles.button}
-      onPress={onSwitch}
+      onPress={() => setRoot(node.id)}
     >
       <Text
         style={[
           styles.buttonText,
-          id === node.id ? styles.buttonTextActive : null
+          root === node.id ? styles.buttonTextActive : null
         ]}
         numberOfLines={1}
       >

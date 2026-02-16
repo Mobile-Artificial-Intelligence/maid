@@ -5,12 +5,8 @@ import { randomUUID } from "expo-crypto";
 import { getConversation, hasNode, MessageNode } from "message-nodes";
 import { FlatList, StyleSheet, View } from "react-native";
 
-interface ChatViewProps {
-  id?: string | undefined;
-}
-
-function ChatView({ id }: ChatViewProps) {
-  const { colorScheme, mappings } = useSystem();
+function ChatView() {
+  const { colorScheme, mappings, root } = useSystem();
 
   const renderItem = ({ item }: { item: MessageNode }) => (
     <MessageView 
@@ -32,23 +28,23 @@ function ChatView({ id }: ChatViewProps) {
     },
   });
 
-  if (id && !hasNode(mappings, id)) {
-    console.warn(`No conversation found for id ${id}`);
+  if (root && !hasNode(mappings, root)) {
+    console.warn(`No conversation found for id ${root}`);
   }
 
   return (
     <View
       style={styles.view}
     >
-      {id ? (
+      {root ? (
         <FlatList
-          data={getConversation(mappings, id).slice(1)}
+          data={getConversation(mappings, root).slice(1)}
           style={styles.list}
           keyExtractor={(item) => item.id?.toString() ?? randomUUID()}
           renderItem={renderItem}
         />
       ) : <View style={styles.list} />}
-      <PromptInput root={id} />
+      <PromptInput />
     </View>
   );
 }

@@ -1,4 +1,5 @@
 import useMappings from '@/hooks/use-mappings';
+import useRoot from '@/hooks/use-root';
 import useSyncedImage from '@/hooks/use-synced-image';
 import useSyncedString from '@/hooks/use-synced-string';
 import useVoice from '@/hooks/use-voice';
@@ -28,6 +29,8 @@ interface SystemContextProps {
   setSystemPrompt: (prompt: string | undefined) => void;
   editing: string | undefined;
   setEditing: Dispatch<SetStateAction<string | undefined>>;
+  root: string | undefined;
+  setRoot: Dispatch<SetStateAction<string | undefined>>;
   mappings: Record<string, MessageNode<string>>;
   setMappings: Dispatch<SetStateAction<Record<string, MessageNode<string>>>>;
   voice: Voice | undefined;
@@ -40,6 +43,8 @@ const SystemContext = createContext<SystemContextProps | undefined>(undefined);
 
 export function SystemContextProvider({ children }: { children: ReactNode }) {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
+
+  const [root, setRoot] = useRoot();
 
   const [userName, setUserName] = useSyncedString(authenticated, {
     key: "user_name",
@@ -155,6 +160,8 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
     setSystemPrompt,
     editing,
     setEditing,
+    root,
+    setRoot,
     mappings,
     setMappings,
     voice,
