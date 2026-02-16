@@ -37,12 +37,12 @@ function DrawerContent() {
     }
   };
 
-  const clearSessions = () => {
+  const clearChats = () => {
     setRoot(undefined);
     setMappings({});
   };
 
-  const createSession = () => {
+  const createChat = () => {
     const id = randomUUID();
     const time = new Date();
     setMappings((prev) => addNode<string>(
@@ -121,13 +121,13 @@ function DrawerContent() {
             icon="delete"
             style={styles.button}
             size={24}
-            onPress={clearSessions}
+            onPress={clearChats}
           />
           <MaterialIconButton
             icon="add"
             style={styles.button}
             size={24}
-            onPress={createSession}
+            onPress={createChat}
           />
         </View>
       </View>
