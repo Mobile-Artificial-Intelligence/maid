@@ -11,7 +11,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 
 function DrawerContent() {
   const router = useRouter();
-  const { colorScheme, mappings, setMappings, authenticated, logout } = useSystem();
+  const { colorScheme, mappings, setMappings, setRoot, authenticated, logout } = useSystem();
   
   const loadMappings = async () => {
     try {
@@ -38,7 +38,7 @@ function DrawerContent() {
   };
 
   const clearSessions = () => {
-    router.replace("/chat");
+    setRoot(undefined);
     setMappings({});
   };
 
@@ -57,7 +57,7 @@ function DrawerContent() {
         createTime: time.toISOString(),
       }
     ));
-    router.replace(`/chat/${id}`);
+    setRoot(id);
   };
     
   const styles = StyleSheet.create({
