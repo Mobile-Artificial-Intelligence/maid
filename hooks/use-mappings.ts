@@ -1,8 +1,6 @@
 import validateMappings from '@/utilities/mappings';
 import supabase, { isAnonymous } from '@/utilities/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Application from "expo-application";
-import * as Device from "expo-device";
 import { MessageNode } from 'message-nodes';
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
@@ -36,13 +34,7 @@ function useMappings(authenticated: boolean): [Record<string, MessageNode<string
       parent: node.parent ?? null,
       child: node.child ?? null,
       metadata: {
-        appVersion: node.metadata?.appVersion || Application.nativeApplicationVersion || undefined,
-        appBuild: node.metadata?.appBuild || Application.nativeBuildVersion || undefined,
-        device: node.metadata?.device || Device.modelName || undefined,
-        osBuildId: node.metadata?.osBuildId || Device.osBuildId || undefined,
-        osVersion: node.metadata?.osVersion || Device.osVersion || undefined,
-        cpu: node.metadata?.cpu || Device.supportedCpuArchitectures || undefined,
-        ram: node.metadata?.ram || Device.totalMemory || undefined,
+        ...node.metadata,
         createTime: node.metadata?.createTime || new Date().toISOString(),
         updateTime: node.metadata?.updateTime || new Date().toISOString(),
       }
