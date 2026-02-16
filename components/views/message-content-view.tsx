@@ -1,6 +1,7 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useLLM, useSystem } from "@/context";
 import splitReasoning from "@/utilities/reasoning";
+import supabase from "@/utilities/supabase";
 import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
 import * as Device from "expo-device";
@@ -8,6 +9,21 @@ import { addNode, branchNode, getConversation, MessageNode, updateContent } from
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 import Markdown from 'react-native-markdown-display';
+
+export async function insertReport(content: string, provider: string, model: string, upvoted: boolean = false): Promise<void> {
+  const { error } = await supabase
+    .from("reports")
+    .insert({
+      content,
+      provider,
+      model,
+      upvoted,
+    });
+
+  if (error) {
+    console.error("Error inserting report:", error);
+  }
+}
 
 function MessageContentView({ message }: { message: MessageNode }) {
   const [ showReasoning, setShowReasoning ] = useState<boolean>(false);
@@ -22,7 +38,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
       width: "100%",
       gap: 8,
     },
-    editingControls: {
+    controls: {
       marginTop: 10,
       flexDirection: "row",
       alignItems: "center",
@@ -161,7 +177,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
             multiline
           />
           <View
-            style={styles.editingControls}
+            style={styles.controls}
           >
             <MaterialCommunityIconButton
               icon="check"
@@ -172,6 +188,20 @@ function MessageContentView({ message }: { message: MessageNode }) {
               onPress={onEditDone}
             />
           </View>
+        </View>
+      )}
+      {message.role === "assistant" && (
+        <View
+          style={styles.controls}
+        >
+          <MaterialCommunityIconButton
+            icon="thumb-up"
+            onPress={() => insertReport(message.content, type, model || modelFileKey || "", true)}
+          />
+          <MaterialCommunityIconButton
+            icon="thumb-down"
+            onPress={() => insertReport(message.content, type, model || modelFileKey || "", false)}
+          />
         </View>
       )}
     </View>
