@@ -9,8 +9,8 @@ on:
     paths:
       - '.github/workflows/build-android.yml'
       - 'android/**'
-      - '*.ts'
-      - '*.tsx'
+      - '**/*.ts'
+      - '**/*.tsx'
       - '*.js'
       - '*.json'
       - '*.lock'
@@ -20,8 +20,8 @@ on:
     paths:
       - '.github/workflows/build-android.yml'
       - 'android/**'
-      - '*.ts'
-      - '*.tsx'
+      - '**/*.ts'
+      - '**/*.tsx'
       - '*.js'
       - '*.json'
       - '*.lock'
