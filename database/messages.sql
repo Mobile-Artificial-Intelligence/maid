@@ -6,7 +6,7 @@ create table messages (
   role text not null,
   content text not null,
   parent uuid references messages(id) on delete cascade,
-  child uuid references messages(id),
+  child uuid references messages(id) on delete set null,
   metadata jsonb,
 );
 
