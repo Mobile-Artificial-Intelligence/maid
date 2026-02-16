@@ -2,15 +2,24 @@ import Popover from "@/components/views/popover-view";
 import { useSystem } from "@/context";
 import * as FileSystem from "expo-file-system";
 import { deleteNode, getRootMapping, MessageNode, updateContent } from "message-nodes";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LayoutRectangle, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
 function SessionButton({ node }: { node: MessageNode<string> }) {
   const { colorScheme, root, setRoot, mappings, setMappings } = useSystem();
   const [visible, setVisible] = useState<boolean>(false);
   const [rename, setRename] = useState<boolean>(false);
+  const [renameEvent, setRenameEvent] = useState<string>("");
   const [anchor, setAnchor] = useState<LayoutRectangle | null>(null);
   const anchorRef = useRef<Text>(null);
+
+  useEffect(() => {
+    if (!rename) return;
+
+    const timeout = setTimeout(() => setRename(false), 5000);
+
+    return () => clearTimeout(timeout);
+  }, [rename, renameEvent]);
 
   const open = () => {
     anchorRef.current?.measureInWindow((x, y, width, height) => {
@@ -103,6 +112,7 @@ function SessionButton({ node }: { node: MessageNode<string> }) {
           root === node.id ? styles.buttonTextActive : null
         ]}
         defaultValue={node.metadata?.title || "New Chat"}
+        onChange={(e) => setRenameEvent(e.nativeEvent.text)}
         onEndEditing={(e) => renameChat(e.nativeEvent.text)}
         autoFocus
       />}
