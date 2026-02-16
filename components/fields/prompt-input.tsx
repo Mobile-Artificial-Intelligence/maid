@@ -3,14 +3,12 @@ import { useLLM, useSystem } from "@/context";
 import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
 import * as Device from "expo-device";
-import { useRouter } from "expo-router";
 import { addNode, getConversation, updateContent } from "message-nodes";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 function PromptInput() {
-  const router = useRouter();
-  const { colorScheme, mappings, systemPrompt, setMappings, root } = useSystem();
+  const { colorScheme, mappings, systemPrompt, setMappings, root, setRoot } = useSystem();
   const { type, model, modelFileKey, parameters, ready, promptModel } = useLLM();
 
   const [prompt, setPrompt] = useState<string>("");
@@ -83,11 +81,12 @@ function PromptInput() {
         next,
         parent,
         "system",
-        "New Chat",
+        systemPrompt || "You are a helpful assistant.",
         parent,
         undefined,
         undefined,
         {
+          title: "New Chat",
           appVersion: Application.nativeApplicationVersion || undefined,
           appBuild: Application.nativeBuildVersion || undefined,
           device: Device.modelName || undefined,
@@ -148,9 +147,9 @@ function PromptInput() {
     );
     
     setMappings(next);
+    setRoot(root || parent);
 
-    const conversationMappings = updateContent<string, Record<string, any>>(next, root || parent, systemPrompt || "", (meta) => ({ ...meta, updateTime: new Date().toISOString() }));
-    const conversation = getConversation(conversationMappings, root || parent);
+    const conversation = getConversation(next, root || parent);
     
     let buffer = "";
     promptModel(
@@ -160,10 +159,6 @@ function PromptInput() {
         setMappings(updateContent(next, responseId, buffer, (meta) => ({ ...meta, updateTime: new Date().toISOString() })));
       }
     );
-
-    if (!root) {
-      router.replace(`/chat/${parent}`);
-    }
   };
 
   return (

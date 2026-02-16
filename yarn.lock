@@ -4626,10 +4626,10 @@ merge-stream@^2.0.0:
   resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"
   integrity sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
 
-message-nodes@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/message-nodes/-/message-nodes-1.0.6.tgz#635ac9f042537175f34addf2a2d186d65b5bc859"
-  integrity sha512-ARA8xggF+mpFif36ujQtmLZGi9Ln4QG5Zzi1E7aeSl6w7CjfLtkG4tNTdM6/YvwJsl3K65BeuPK7w6Y/P+sugw==
+message-nodes@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/message-nodes/-/message-nodes-1.0.7.tgz#8a321b6127a9496890779069c2f9aacdb5088272"
+  integrity sha512-JD7wZtYhiEpgVr/jxE0v/C1FyycAHwZm/AqpBpB6nMEiKcDf2tbjhHXmJiJZdI5yeBaJvQ24eg4nFE7lcFzLPA==
 
 metro-babel-transformer@0.82.5:
   version "0.82.5"

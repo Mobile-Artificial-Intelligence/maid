@@ -31,7 +31,7 @@ function useMappings(authenticated: boolean): [Record<string, MessageNode<string
       id: node.id,
       user_id: user.id,
       role: node.role,
-      content: node.content || "New Chat",
+      content: node.content,
       root: node.root,
       parent: node.parent ?? null,
       child: node.child ?? null,

@@ -23,10 +23,11 @@ function validateMappings(mappings: Record<string, MessageNode<string>>): Record
     const newRoot: MessageNode<string> = {
       id: root.id,
       role: "system",
-      content: "New Chat",
+      content: "You are a helpful assistant.",
       root: root.id,
       child: root.child,
       metadata: {
+        title: "New Chat",
         createTime: new Date().toISOString(),
         updateTime: new Date().toISOString(),
       }
@@ -41,7 +42,7 @@ function validateMappings(mappings: Record<string, MessageNode<string>>): Record
 
   const emptyRoots = getRoots<string>(validMappings).filter(root => !root.content || root.content.trim().length === 0);
   emptyRoots.forEach(root => {
-    validMappings[root.id].content = "New Chat";
+    validMappings[root.id].content = "You are a helpful assistant.";
   });
 
   const childlessRoots = getRoots<string>(validMappings).filter(root => !root.child);
