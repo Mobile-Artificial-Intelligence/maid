@@ -1,9 +1,9 @@
 import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useSystem } from "@/context";
-import { DrawerHeaderProps } from "@react-navigation/drawer";
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View } from "react-native";
 
-function DefaultHeader(props: DrawerHeaderProps) {
+function DefaultHeader(props: NativeStackHeaderProps) {
   const { colorScheme } = useSystem();
 
   const styles = StyleSheet.create({

@@ -1,16 +1,31 @@
 import Header from "@/components/layout/chat-header";
-import { Stack } from "expo-router";
+import DrawerContent from "@/components/layout/drawer-content";
+import { useSystem } from "@/context";
+import { DrawerHeaderProps } from "@react-navigation/drawer";
+import Drawer from "expo-router/drawer";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function ChatLayout() {
+  const { colorScheme } = useSystem();
+
   return (
-    <Stack
-      screenOptions={{
-        header: (props: any) => <Header openDrawer={props.navigation.openDrawer} />,
-      }}
-    >
-      <Stack.Screen name="index" options={{ animation: "none" }} />
-      <Stack.Screen name="[id]" options={{ animation: "none" }} />
-    </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Drawer
+        screenOptions={{
+          header: (props: DrawerHeaderProps) => <Header {...props} />,
+          drawerStyle: {
+            backgroundColor: `${colorScheme.surface}f0`
+          },
+          sceneStyle: {
+            backgroundColor: colorScheme.surface,
+          },
+        }}
+        drawerContent={(props: any) => <DrawerContent />}
+      >
+        <Drawer.Screen name="index" />
+        <Drawer.Screen name="[id]" />
+      </Drawer>
+    </GestureHandlerRootView>
   );
 }
 

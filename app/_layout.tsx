@@ -1,12 +1,10 @@
 
 import DefaultHeader from '@/components/layout/default-header';
-import DrawerContent from '@/components/layout/drawer-content';
 import { ChatContextProvider, LanguageModelProvider, SystemContextProvider, useSystem } from "@/context";
 import { installConsoleCapture } from '@/utilities/logger';
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { Buffer } from "buffer";
-import Drawer from 'expo-router/drawer';
-import { StatusBar } from "react-native";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Stack } from "expo-router";
 import "react-native-url-polyfill/auto";
 
 (global as any).Buffer = Buffer;
@@ -29,52 +27,45 @@ function RootLayoutContent() {
   const { colorScheme } = useSystem();
   
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar backgroundColor={colorScheme.surface} />
-      <Drawer
-        screenOptions={{
-          header: (props: any) => <DefaultHeader {...props} />,
-          drawerStyle: {
-            backgroundColor: `${colorScheme.surface}f0`
-          },
-          sceneStyle: {
-            backgroundColor: colorScheme.surface,
-          },
-        }}
-        drawerContent={(props: any) => <DrawerContent />}
-      >
-        <Drawer.Screen 
-          name="chat" 
-          options={{ 
-            headerShown: false
-          }} 
-        />
-        <Drawer.Screen 
-          name="account" 
-          options={{ 
-            headerShown: true 
-          }} 
-        />
-        <Drawer.Screen 
-          name="download" 
-          options={{ 
-            headerShown: true 
-          }} 
-        />
-        <Drawer.Screen 
-          name="settings" 
-          options={{ 
-            headerShown: true 
-          }} 
-        />
-        <Drawer.Screen 
-          name="about" 
-          options={{ 
-            headerShown: true 
-          }} 
-        />
-      </Drawer>
-    </GestureHandlerRootView>
+    <Stack
+      screenOptions={{
+        header: (props: NativeStackHeaderProps) => <DefaultHeader {...props} />,
+        contentStyle: {
+          backgroundColor: colorScheme.surface,
+        },
+      }}
+    >
+      <Stack.Screen 
+        name="chat" 
+        options={{ 
+          headerShown: false
+        }} 
+      />
+      <Stack.Screen 
+        name="account" 
+        options={{ 
+          headerShown: true 
+        }} 
+      />
+      <Stack.Screen 
+        name="download" 
+        options={{ 
+          headerShown: true 
+        }} 
+      />
+      <Stack.Screen 
+        name="settings" 
+        options={{ 
+          headerShown: true 
+        }} 
+      />
+      <Stack.Screen 
+        name="about" 
+        options={{ 
+          headerShown: true 
+        }} 
+      />
+    </Stack>
   );
 }
 

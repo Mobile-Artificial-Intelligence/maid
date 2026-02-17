@@ -3,13 +3,10 @@ import MenuButton from "@/components/buttons/menu-button";
 import ModelButton from "@/components/buttons/model-button";
 import ModelDropdown from "@/components/dropdowns/model-dropdown";
 import { useLLM, useSystem } from "@/context";
+import { DrawerHeaderProps } from "@react-navigation/drawer";
 import { StyleSheet, View } from "react-native";
 
-interface HeaderProps { 
-  openDrawer: () => void 
-}
-
-function Header(props: HeaderProps) {
+function Header(props: DrawerHeaderProps) {
   const { type } = useLLM();
   const { colorScheme } = useSystem();
 
@@ -30,7 +27,7 @@ function Header(props: HeaderProps) {
       <MaterialIconButton
         icon="menu"
         size={28}
-        onPress={props.openDrawer}
+        onPress={props.navigation.openDrawer}
       />
       {type === "Llama" ? <ModelButton /> : <ModelDropdown small />}
       <MenuButton />
