@@ -7,7 +7,7 @@ import { ColorScheme, createColorScheme } from '@/utilities/color-scheme';
 import supabase, { isAnonymous } from '@/utilities/supabase';
 import { Voice } from 'expo-speech';
 import { deleteNode, MessageNode } from 'message-nodes';
-import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
+import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
 import 'react-native-url-polyfill/auto';
 
 interface SystemContextProps {
@@ -74,7 +74,10 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
   const [voice, setVoice] = useVoice();
   const [accentColor, setAccentColor] = useState<string>("#2196F3");
 
-  const colorScheme = createColorScheme(accentColor, "dark");
+  const colorScheme = useMemo<ColorScheme>(
+    () => createColorScheme(accentColor, "dark"),
+    [accentColor]
+  );
 
   const login = async (email: string, password: string): Promise<void> => {
     const { data, error } = await supabase.auth.signInWithPassword({
