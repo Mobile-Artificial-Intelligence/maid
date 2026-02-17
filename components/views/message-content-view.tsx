@@ -201,6 +201,31 @@ function MessageContentView({ message }: { message: MessageNode }) {
 
   const [content, reasoning] = splitReasoning(message);
 
+  if (editing === message.id) {
+    return (
+      <View style={styles.view}>
+        <TextInput
+          style={styles.content}
+          value={editText}
+          onChangeText={(text) => setEditText(text)}
+          multiline
+        />
+        <View
+          style={styles.controls}
+        >
+          <MaterialCommunityIconButton
+            icon="check"
+            onPress={onEdit}
+          />
+          <MaterialCommunityIconButton
+            icon="close"
+            onPress={onEditDone}
+          />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.view}>
       {reasoning && (
@@ -209,29 +234,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
         </TouchableHighlight>
       )}
       {reasoning && showReasoning && <Text style={styles.reasoning}>{reasoning}</Text>}
-      {editing !== message.id && <Markdown style={markdownStyle}>{content}</Markdown>}
-      {editing === message.id && (
-        <>
-          <TextInput
-            style={styles.content}
-            value={editText}
-            onChangeText={(text) => setEditText(text)}
-            multiline
-          />
-          <View
-            style={styles.controls}
-          >
-            <MaterialCommunityIconButton
-              icon="check"
-              onPress={onEdit}
-            />
-            <MaterialCommunityIconButton
-              icon="close"
-              onPress={onEditDone}
-            />
-          </View>
-        </>
-      )}
+      {content && <Markdown style={markdownStyle}>{content}</Markdown>}
       {message.role === "assistant" && message.content.length > 0 && (
         <View
           style={styles.controls}
