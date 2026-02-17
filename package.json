@@ -7,6 +7,7 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "build-android": "cd android && ./gradlew assembleRelease",
+    "build-android-debug": "cd android && ./gradlew assembleDebug",
     "build-android-bundle": "cd android && ./gradlew bundleRelease",
     "ios": "expo run:ios",
     "web": "expo start --web",
