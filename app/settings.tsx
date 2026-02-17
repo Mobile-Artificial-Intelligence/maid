@@ -2,6 +2,7 @@ import ClearButtons from "@/components/buttons/clear-buttons";
 import AssistantSettings from "@/components/settings/assistant-settings";
 import ModelSettings from "@/components/settings/model-settings";
 import SystemSettings from "@/components/settings/system-settings";
+import ThemeSettings from "@/components/settings/theme-settings";
 import UserSettings from "@/components/settings/user-settings";
 import { useSystem } from "@/context";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -40,6 +41,8 @@ function Settings() {
       <AssistantSettings />
       <View style={styles.divider} />
       <SystemSettings />
+      <View style={styles.divider} />
+      <ThemeSettings />
       <View style={styles.divider} />
       <ClearButtons />
     </ScrollView>
