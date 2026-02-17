@@ -1,6 +1,6 @@
 import ChatButton from "@/components/buttons/chat-button";
 import { MaterialIconButton } from "@/components/buttons/icon-button";
-import { useSystem } from "@/context";
+import { useChat, useSystem } from "@/context";
 import validateMappings from "@/utilities/mappings";
 import { randomUUID } from "expo-crypto";
 import * as DocumentPicker from "expo-document-picker";
@@ -11,7 +11,8 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 
 function DrawerContent() {
   const router = useRouter();
-  const { colorScheme, mappings, setMappings, setRoot, authenticated, logout } = useSystem();
+  const { mappings, setMappings, setRoot } = useChat();
+  const { colorScheme, authenticated, logout } = useSystem();
   
   const loadMappings = async () => {
     try {

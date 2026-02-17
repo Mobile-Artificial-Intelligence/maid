@@ -1,5 +1,5 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
-import { useLLM, useSystem } from "@/context";
+import { useChat, useLLM, useSystem } from "@/context";
 import splitReasoning from "@/utilities/reasoning";
 import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
@@ -9,7 +9,8 @@ import { branchNode, getChildren, getConversation, lastChild, MessageNode, nextC
 import { StyleSheet, Text, View } from "react-native";
 
 function MessageControlsView({ message }: { message: MessageNode }) {
-  const { colorScheme, mappings, setMappings, editing, setEditing, deleteMessage, voice } = useSystem();
+  const { mappings, setMappings, editing, setEditing, deleteMessage } = useChat();
+  const { colorScheme, voice } = useSystem();
   const { parameters, type, model, modelFileKey, busy, promptModel } = useLLM();
 
   const styles = StyleSheet.create({

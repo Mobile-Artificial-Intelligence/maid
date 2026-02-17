@@ -1,5 +1,5 @@
 import { MaterialIconButton } from "@/components/buttons/icon-button";
-import { useLLM, useSystem } from "@/context";
+import { useChat, useLLM, useSystem } from "@/context";
 import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
 import * as Device from "expo-device";
@@ -8,7 +8,8 @@ import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 function PromptInput() {
-  const { colorScheme, mappings, systemPrompt, setMappings, root, setRoot } = useSystem();
+  const { mappings, setMappings, root, setRoot } = useChat();
+  const { colorScheme, systemPrompt } = useSystem();
   const { type, model, modelFileKey, parameters, ready, promptModel } = useLLM();
 
   const [prompt, setPrompt] = useState<string>("");

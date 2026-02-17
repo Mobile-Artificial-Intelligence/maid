@@ -16,6 +16,35 @@ const supabase = createClient(
   }
 );
 
+export async function isAuthenticated(): Promise<boolean> {
+  try {
+    const { data: sessionRes, error: sessionErr } = await supabase.auth.getSession();
+    if (sessionErr) console.warn("getSession error:", sessionErr);
+
+    let userId = sessionRes?.session?.user?.id;
+
+    if (!userId) {
+      const authAny = supabase.auth as any;
+
+      if (typeof authAny.signInAnonymously !== "function") {
+        console.error("Anonymous sign-in not supported. Update supabase-js and enable anonymous sign-ins in Supabase.");
+        return false;
+      }
+
+      const { data: anonRes, error: anonErr } = await authAny.signInAnonymously();
+      if (anonErr || !anonRes?.user?.id) {
+        console.error("Anonymous sign-in failed:", anonErr);
+        return false;
+      }
+    }
+
+    return true;
+  } catch (e) {
+    console.error("Error checking authentication:", e);
+    return false;
+  }
+}
+
 export async function isAnonymous(): Promise<boolean> {
   const session = await supabase.auth.getSession().then(({ data }) => data.session).catch(() => null);
   const user = session?.user;

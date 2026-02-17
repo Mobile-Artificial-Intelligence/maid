@@ -1,12 +1,13 @@
 import Popover from "@/components/views/popover-view";
-import { useSystem } from "@/context";
+import { useChat, useSystem } from "@/context";
 import * as FileSystem from "expo-file-system";
 import { deleteNode, getRootMapping, MessageNode, updateContent } from "message-nodes";
 import { useEffect, useRef, useState } from "react";
 import { LayoutRectangle, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
 function ChatButton({ node }: { node: MessageNode<string> }) {
-  const { colorScheme, root, setRoot, mappings, setMappings } = useSystem();
+  const { root, setRoot, mappings, setMappings } = useChat();
+  const { colorScheme } = useSystem();
   const [visible, setVisible] = useState<boolean>(false);
   const [rename, setRename] = useState<boolean>(false);
   const [renameEvent, setRenameEvent] = useState<string>("");

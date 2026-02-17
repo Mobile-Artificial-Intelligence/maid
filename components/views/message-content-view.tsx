@@ -1,5 +1,5 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
-import { useLLM, useSystem } from "@/context";
+import { useChat, useLLM, useSystem } from "@/context";
 import splitReasoning from "@/utilities/reasoning";
 import supabase from "@/utilities/supabase";
 import * as Application from "expo-application";
@@ -66,7 +66,8 @@ export async function insertReport(
 function MessageContentView({ message }: { message: MessageNode }) {
   const [ showReasoning, setShowReasoning ] = useState<boolean>(false);
   const [ editText, setEditText ] = useState<string>(message.content);
-  const { colorScheme, mappings, setMappings, editing, setEditing } = useSystem();
+  const { mappings, setMappings, editing, setEditing } = useChat();
+  const { colorScheme } = useSystem();
   const { parameters, type, model, modelFileKey, promptModel } = useLLM();
 
   const styles = StyleSheet.create({

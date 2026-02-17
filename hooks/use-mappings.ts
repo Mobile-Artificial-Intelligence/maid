@@ -1,13 +1,18 @@
 import validateMappings from '@/utilities/mappings';
-import supabase, { isAnonymous } from '@/utilities/supabase';
+import supabase, { isAnonymous, isAuthenticated } from '@/utilities/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MessageNode } from 'message-nodes';
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-function useMappings(authenticated: boolean): [Record<string, MessageNode<string, Record<string, any>>>, Dispatch<SetStateAction<Record<string, MessageNode<string, Record<string, any>>>>>] {
+function useMappings(): [Record<string, MessageNode<string, Record<string, any>>>, Dispatch<SetStateAction<Record<string, MessageNode<string, Record<string, any>>>>>] {
   const [mappings, setMappings] = useState<Record<string, MessageNode<string>>>({});
 
   const saveSupabaseMappings = async () => {
+    if (!await isAuthenticated()) {
+      console.warn("User not authenticated; skipping Supabase save");
+      return;
+    }
+
     if (await isAnonymous()) {
       console.warn("User is anonymous; skipping Supabase save");
       return;
@@ -48,16 +53,19 @@ function useMappings(authenticated: boolean): [Record<string, MessageNode<string
   };
 
   useEffect(() => {
-    if (!authenticated) return;
-
     const timeout = setTimeout(() => {
       saveSupabaseMappings();
     }, 5000); // Save every 5 seconds
 
     return () => clearTimeout(timeout);
-  }, [mappings, authenticated]);
+  }, [mappings]);
 
   const loadSupabaseMappings = async () => {
+    if (!await isAuthenticated()) {
+      console.warn("User not authenticated; skipping Supabase load");
+      return;
+    }
+
     if (await isAnonymous()) {
       console.warn("User is anonymous; skipping Supabase load");
       return;
@@ -100,12 +108,25 @@ function useMappings(authenticated: boolean): [Record<string, MessageNode<string
   };
 
   useEffect(() => {
-    if (authenticated) {
-      loadSupabaseMappings().catch((error) => {
-        console.error("Error loading messages:", error);
-      });
-    }
-  }, [authenticated]);
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event !== "SIGNED_IN" || !session?.user) return;
+
+        try {
+          await loadSupabaseMappings();
+
+          await saveSupabaseMappings();
+        } 
+        catch (error) {
+          console.error("Error loading messages on auth change:", error);
+        }
+      }
+    );
+
+    return () => {
+      subscription.subscription.unsubscribe();
+    };
+  }, []);
 
   const saveLocalMappings = async () => {
     try {

@@ -1,12 +1,9 @@
-import useMappings from '@/hooks/use-mappings';
-import useRoot from '@/hooks/use-root';
 import useSyncedImage from '@/hooks/use-synced-image';
 import useSyncedString from '@/hooks/use-synced-string';
 import useVoice from '@/hooks/use-voice';
 import { ColorScheme, createColorScheme } from '@/utilities/color-scheme';
 import supabase, { isAnonymous } from '@/utilities/supabase';
 import { Voice } from 'expo-speech';
-import { deleteNode, MessageNode } from 'message-nodes';
 import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
 import 'react-native-url-polyfill/auto';
 
@@ -16,7 +13,6 @@ interface SystemContextProps {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
-  deleteMessage: (id: string) => void;
   userName: string | undefined;
   setUserName: (name: string | undefined) => void;
   userImage: string | undefined;
@@ -27,12 +23,6 @@ interface SystemContextProps {
   setAssistantImage: (image: string | undefined) => void;
   systemPrompt: string | undefined;
   setSystemPrompt: (prompt: string | undefined) => void;
-  editing: string | undefined;
-  setEditing: Dispatch<SetStateAction<string | undefined>>;
-  root: string | undefined;
-  setRoot: Dispatch<SetStateAction<string | undefined>>;
-  mappings: Record<string, MessageNode<string>>;
-  setMappings: Dispatch<SetStateAction<Record<string, MessageNode<string>>>>;
   voice: Voice | undefined;
   setVoice: Dispatch<SetStateAction<Voice | undefined>>;
   accentColor: string;
@@ -43,8 +33,6 @@ const SystemContext = createContext<SystemContextProps | undefined>(undefined);
 
 export function SystemContextProvider({ children }: { children: ReactNode }) {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
-
-  const [root, setRoot] = useRoot();
 
   const [userName, setUserName] = useSyncedString(authenticated, {
     key: "user_name",
@@ -69,8 +57,6 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
     defaultValue: "",
   });
 
-  const [editing, setEditing] = useState<string | undefined>(undefined);
-  const [mappings, setMappings] = useMappings(authenticated);
   const [voice, setVoice] = useVoice();
   const [accentColor, setAccentColor] = useState<string>("#2196F3");
 
@@ -122,19 +108,6 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
     return;
   };
 
-  const deleteMessage = async (id: string) => {
-    setMappings((prev) => deleteNode(prev, id));
-    
-    const { error } = await supabase
-      .from("messages")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      console.error("Error deleting message:", error);
-    }
-  };
-
   const checkAuthentication = async () => {
     const session = await supabase.auth.getSession();
     setAuthenticated(!!session.data.session && !(await isAnonymous()));
@@ -150,7 +123,6 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
     login,
     logout,
     register,
-    deleteMessage,
     userName,
     setUserName,
     userImage,
@@ -161,12 +133,6 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
     setAssistantImage,
     systemPrompt,
     setSystemPrompt,
-    editing,
-    setEditing,
-    root,
-    setRoot,
-    mappings,
-    setMappings,
     voice,
     setVoice,
     accentColor,

@@ -1,10 +1,10 @@
 import ChatView from "@/components/views/chat-view";
-import { useSystem } from "@/context";
+import { useChat } from "@/context";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
 
 function Index() {
-  const { setRoot } = useSystem();
+  const { setRoot } = useChat();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   useEffect(() => {

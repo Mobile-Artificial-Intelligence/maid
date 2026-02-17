@@ -1,7 +1,7 @@
 
 import DefaultHeader from '@/components/layout/default-header';
 import DrawerContent from '@/components/layout/drawer-content';
-import { LanguageModelProvider, SystemContextProvider, useSystem } from "@/context";
+import { ChatContextProvider, LanguageModelProvider, SystemContextProvider, useSystem } from "@/context";
 import { installConsoleCapture } from '@/utilities/logger';
 import { Buffer } from "buffer";
 import Drawer from 'expo-router/drawer';
@@ -17,7 +17,9 @@ function RootLayout() {
   return (
     <SystemContextProvider>
       <LanguageModelProvider>
-        <RootLayoutContent />
+        <ChatContextProvider>
+          <RootLayoutContent />
+        </ChatContextProvider>
       </LanguageModelProvider>
     </SystemContextProvider>
   );
