@@ -1,4 +1,5 @@
 import { useSystem } from "@/context";
+import supabase from "@/utilities/supabase";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
@@ -13,7 +14,7 @@ import {
 
 function Login() {
   const router = useRouter();
-  const { login, colorScheme } = useSystem();
+  const { colorScheme } = useSystem();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -44,7 +45,21 @@ function Login() {
     setSubmitting(true);
 
     try {
-      await login(email, password);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        Alert.alert("Login Failed", error.message);
+        return;
+      }
+
+      if (!data?.user) {
+        Alert.alert("Login Failed", "Unexpected response from server.");
+        return;
+      }
+
       Alert.alert("Login Successful", "You have been logged in successfully.");
       router.replace("/chat");
     } catch (error: any) {

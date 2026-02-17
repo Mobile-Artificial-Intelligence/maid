@@ -1,23 +1,15 @@
+import useAuthentication from '@/hooks/use-authentication';
 import validateMappings from '@/utilities/mappings';
-import supabase, { isAnonymous, isAuthenticated } from '@/utilities/supabase';
+import supabase from '@/utilities/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MessageNode } from 'message-nodes';
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 function useMappings(): [Record<string, MessageNode<string, Record<string, any>>>, Dispatch<SetStateAction<Record<string, MessageNode<string, Record<string, any>>>>>] {
+  const [authenticated, anonymous] = useAuthentication();
   const [mappings, setMappings] = useState<Record<string, MessageNode<string>>>({});
 
   const saveSupabaseMappings = async () => {
-    if (!await isAuthenticated()) {
-      console.warn("User not authenticated; skipping Supabase save");
-      return;
-    }
-
-    if (await isAnonymous()) {
-      console.warn("User is anonymous; skipping Supabase save");
-      return;
-    }
-
     const { data: { user }, error: userErr } = await supabase.auth.getUser();
     if (userErr) {
       console.error("getUser error:", userErr);
@@ -53,20 +45,17 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
   };
 
   useEffect(() => {
+    if (!authenticated || anonymous) return;
+
     const timeout = setTimeout(() => {
       saveSupabaseMappings();
     }, 5000); // Save every 5 seconds
 
     return () => clearTimeout(timeout);
-  }, [mappings]);
+  }, [mappings, authenticated, anonymous]);
 
   const loadSupabaseMappings = async () => {
-    if (!await isAuthenticated()) {
-      console.warn("User not authenticated; skipping Supabase load");
-      return;
-    }
-
-    if (await isAnonymous()) {
+    if (anonymous) {
       console.warn("User is anonymous; skipping Supabase load");
       return;
     }
@@ -108,25 +97,12 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
   };
 
   useEffect(() => {
-    const { data: subscription } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event !== "SIGNED_IN" || !session?.user) return;
-
-        try {
-          await loadSupabaseMappings();
-
-          await saveSupabaseMappings();
-        } 
-        catch (error) {
-          console.error("Error loading messages on auth change:", error);
-        }
-      }
-    );
-
-    return () => {
-      subscription.subscription.unsubscribe();
-    };
-  }, []);
+    if (authenticated && !anonymous) {
+      loadSupabaseMappings().catch((error) => {
+        console.error("Error loading messages:", error);
+      });
+    }
+  }, [authenticated, anonymous]);
 
   const saveLocalMappings = async () => {
     try {

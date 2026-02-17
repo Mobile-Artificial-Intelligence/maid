@@ -1,4 +1,5 @@
 import { useSystem } from "@/context";
+import supabase from "@/utilities/supabase";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
@@ -13,7 +14,7 @@ import {
 
 function Register() {
   const router = useRouter();
-  const { register, colorScheme, userName, setUserName } = useSystem();
+  const { colorScheme, userName, setUserName } = useSystem();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -59,7 +60,17 @@ function Register() {
     setSubmitting(true);
 
     try {
-      await register(email, password);
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { user_name: userName } },
+      });
+  
+      if (error) {
+        Alert.alert("Registration Failed", error.message);
+        return;
+      }
+      
       Alert.alert("Registration Successful", "Your account has been created successfully.");
       router.replace("/account/login");
     } catch (error: any) {

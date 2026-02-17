@@ -1,7 +1,9 @@
 import ChatButton from "@/components/buttons/chat-button";
 import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useChat, useSystem } from "@/context";
+import useAuthentication from "@/hooks/use-authentication";
 import validateMappings from "@/utilities/mappings";
+import supabase from "@/utilities/supabase";
 import { randomUUID } from "expo-crypto";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -11,8 +13,9 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 
 function DrawerContent() {
   const router = useRouter();
+  const [authenticated, anonymous] = useAuthentication();
   const { mappings, setMappings, setRoot } = useChat();
-  const { colorScheme, authenticated, logout } = useSystem();
+  const { colorScheme } = useSystem();
   
   const loadMappings = async () => {
     try {
@@ -59,6 +62,14 @@ function DrawerContent() {
       }
     ));
     setRoot(id);
+  };
+
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
     
   const styles = StyleSheet.create({
@@ -138,7 +149,7 @@ function DrawerContent() {
       </ScrollView>
       <View style={styles.divider} />
       <View style={styles.account}>
-        {authenticated ? (
+        {authenticated && !anonymous ? (
           <TouchableOpacity onPress={logout}>
             <Text style={styles.accountText}>Logout</Text>
           </TouchableOpacity>

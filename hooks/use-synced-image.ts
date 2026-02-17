@@ -1,8 +1,9 @@
-import supabase, { isAnonymous } from "@/utilities/supabase";
+import supabase from "@/utilities/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Buffer } from "buffer";
 import * as FileSystem from "expo-file-system";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import useAuthentication from "./use-authentication";
 
 async function uploadImageFromUri(opts: {
   bucket: string;
@@ -32,9 +33,9 @@ async function uploadImageFromUri(opts: {
 }
 
 function useSyncedImage(
-  authenticated: boolean,
   options: { key: string, bucket: string, ext?: string }
 ): [string | undefined, Dispatch<SetStateAction<string | undefined>>] {
+  const [authenticated, anonymous] = useAuthentication();
   const { key, bucket, ext = "jpg" } = options;
   const [imageUri, setImageUri] = useState<string | undefined>(undefined);
 
@@ -62,11 +63,6 @@ function useSyncedImage(
   };
 
   const loadSupabaseUrl = async (): Promise<string | null> => {
-    if (await isAnonymous()) {
-      console.warn("User is anonymous; skipping Supabase load");
-      return null;
-    }
-
     const { data: userRes, error: userErr } = await supabase.auth.getUser();
     if (userErr) {
       console.error("getUser error:", userErr);
@@ -95,11 +91,6 @@ function useSyncedImage(
   };
 
   const saveSupabase = async (uri: string) => {
-    if (await isAnonymous()) {
-      console.warn("User is anonymous; skipping Supabase save");
-      return;
-    }
-
     const { data: userRes, error: userErr } = await supabase.auth.getUser();
     if (userErr) {
       console.error("getUser error:", userErr);
@@ -137,7 +128,7 @@ function useSyncedImage(
     (async () => {
       hydratingRef.current = true;
       try {
-        if (authenticated) {
+        if (authenticated && !anonymous) {
           // Prefer remote when signed in
           const remoteUrl = await loadSupabaseUrl();
           if (remoteUrl) {
@@ -159,7 +150,7 @@ function useSyncedImage(
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authenticated, bucket, key, ext]);
+  }, [authenticated, anonymous, bucket, key, ext]);
 
   // Persist when changed
   useEffect(() => {
@@ -168,7 +159,7 @@ function useSyncedImage(
 
       await saveLocal(imageUri);
 
-      if (authenticated && imageUri) {
+      if (authenticated && !anonymous && imageUri) {
         await saveSupabase(imageUri);
         // After upload, refresh signed URL so you see the new image immediately
         const remoteUrl = await loadSupabaseUrl();
@@ -176,7 +167,7 @@ function useSyncedImage(
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageUri, authenticated]);
+  }, [imageUri, authenticated, anonymous]);
 
   return [imageUri, setImageUri];
 }

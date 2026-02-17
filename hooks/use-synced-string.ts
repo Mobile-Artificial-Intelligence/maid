@@ -1,4 +1,5 @@
-import supabase, { isAnonymous } from "@/utilities/supabase";
+import useAuthentication from "@/hooks/use-authentication";
+import supabase from "@/utilities/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
@@ -9,9 +10,9 @@ function normalizeString(value: unknown): string | undefined {
 }
 
 function useSyncedString(
-  authenticated: boolean,
   options: { key: string, defaultValue: string }
 ): [string | undefined, Dispatch<SetStateAction<string | undefined>>] {
+  const [authenticated, anonymous] = useAuthentication();
   const { key, defaultValue } = options;
 
   const [value, setValue] = useState<string | undefined>(undefined);
@@ -30,7 +31,7 @@ function useSyncedString(
       hydratedRef.current = false;
 
       try {
-        if (authenticated && !(await isAnonymous())) {
+        if (authenticated && !anonymous) {
           const { data: { user }, error } = await supabase.auth.getUser();
           if (cancelled) return;
 
@@ -71,7 +72,7 @@ function useSyncedString(
     return () => {
       cancelled = true;
     };
-  }, [authenticated, key, defaultValue]);
+  }, [authenticated, anonymous, key, defaultValue]);
 
   // 2) SAVE (when value changes, after initial hydration)
   useEffect(() => {
@@ -87,7 +88,7 @@ function useSyncedString(
           await AsyncStorage.removeItem(key);
         }
 
-        if (!authenticated || (await isAnonymous())) return;
+        if (!authenticated || anonymous) return;
 
         // Remote: only write non-default values (matching your current behavior)
         if (!value || value === defaultValue) return;
@@ -119,7 +120,7 @@ function useSyncedString(
     };
 
     persist();
-  }, [value, authenticated, key, defaultValue]);
+  }, [value, authenticated, anonymous, key, defaultValue]);
 
   return [value, setValue];
 }
