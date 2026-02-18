@@ -1,9 +1,10 @@
 import useSyncedImage from '@/hooks/use-synced-image';
 import useSyncedString from '@/hooks/use-synced-string';
+import useTheme from '@/hooks/use-theme';
 import useVoice from '@/hooks/use-voice';
-import { ColorScheme, createColorScheme } from '@/utilities/color-scheme';
+import { ColorScheme } from '@/utilities/color-scheme';
 import { Voice } from 'expo-speech';
-import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useMemo, useState } from "react";
+import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext } from "react";
 import 'react-native-url-polyfill/auto';
 
 interface SystemContextProps {
@@ -51,15 +52,9 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
   });
 
   const [voice, setVoice] = useVoice();
-  const [accentColor, setAccentColor] = useState<string>("#2196F3");
-
-  const colorScheme = useMemo<ColorScheme>(
-    () => createColorScheme(accentColor, "dark"),
-    [accentColor]
-  );
-
+  const { colorScheme, accentColor, setAccentColor } = useTheme();
+  
   const value = {
-    colorScheme,
     userName,
     setUserName,
     userImage,
@@ -72,6 +67,7 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
     setSystemPrompt,
     voice,
     setVoice,
+    colorScheme,
     accentColor,
     setAccentColor
   };
