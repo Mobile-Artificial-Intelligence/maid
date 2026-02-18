@@ -28,11 +28,11 @@ function VoiceDropdown() {
   useEffect(() => {
     loadVoices();
     
-    const timeout = setTimeout(() => {
+    const interval = setInterval(() => {
       loadVoices();
-    }, 2000);
+    }, 10000);
 
-    return () => clearTimeout(timeout);
+    return () => clearInterval(interval);
   }, []);
 
   const styles = StyleSheet.create({
