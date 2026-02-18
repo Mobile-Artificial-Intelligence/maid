@@ -1,5 +1,6 @@
 import Dropdown from "@/components/dropdowns/dropdown";
 import { useSystem } from "@/context";
+import { getLocales } from 'expo-localization';
 import { getAvailableVoicesAsync, Voice } from "expo-speech";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -11,8 +12,14 @@ function VoiceDropdown() {
 
   const loadVoices = async () => {
     try {
+      const locales = getLocales();
       const availableVoices = await getAvailableVoicesAsync();
-      setVoices(availableVoices);
+
+      const filteredVoices = availableVoices.filter(voice =>
+        locales.some(locale => locale.languageCode === voice.language)
+      );
+
+      setVoices(filteredVoices);
     } catch (error) {
       console.error("Error loading voices:", error);
     }
