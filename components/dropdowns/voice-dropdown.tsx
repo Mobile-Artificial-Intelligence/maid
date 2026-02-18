@@ -16,7 +16,7 @@ function VoiceDropdown() {
       const availableVoices = await getAvailableVoicesAsync();
 
       const filteredVoices = availableVoices.filter(voice =>
-        locales.some(locale => locale.languageCode === voice.language)
+        locales.some(locale => locale.languageTag === voice.language)
       );
 
       setVoices(filteredVoices);
