@@ -11,7 +11,7 @@
     "build-android-bundle": "cd android && ./gradlew bundleRelease",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "test": "jest --watchAll",
+    "test": "jest --ci --detectOpenHandles --runInBand --forceExit",
     "lint": "expo lint"
   },
   "jest": {
