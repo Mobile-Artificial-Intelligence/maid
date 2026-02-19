@@ -1,4 +1,5 @@
 import "@testing-library/jest-native/extend-expect";
+import { View } from "react-native";
 import "react-native-gesture-handler/jestSetup";
 
 jest.mock("expo/fetch", () => {
@@ -13,3 +14,11 @@ jest.mock("@react-native-async-storage/async-storage", () =>
 );
 
 jest.mock("react-native-reanimated", () => require("react-native-reanimated/mock"));
+
+beforeAll(() => {
+  (View.prototype).measureInWindow = function (
+    cb
+  ) {
+    cb(10, 20, 100, 40);
+  };
+});

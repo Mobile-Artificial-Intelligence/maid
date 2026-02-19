@@ -1,6 +1,5 @@
-import { screen } from "expo-router/testing-library";
-
-import renderApp from "../__test_utilities__/render-app";
+import { fireEvent, screen } from "expo-router/testing-library";
+import renderApp from "../__test-utilities__/render-app";
 
 describe("Chat page", () => {
   beforeEach(() => renderApp());
@@ -33,5 +32,21 @@ describe("Chat page", () => {
     const menuButton = await screen.findByTestId("menu-button");
     expect(menuButton).toBeOnTheScreen();
     expect(menuButton.type).toBe("View");
+  });
+
+  it("should open the drawer when the open drawer button is pressed", async () => {
+    const openDrawerButton = await screen.findByTestId("open-drawer-button");
+    fireEvent.press(openDrawerButton);
+    
+    const drawer = await screen.findByTestId("drawer-content");
+    expect(drawer).toBeOnTheScreen();
+  });
+
+  it("should open the menu popover when the menu button is pressed", async () => {
+    const menuButton = await screen.findByTestId("menu-button");
+    fireEvent.press(menuButton);
+    
+    const menuPopover = await screen.findByTestId("menu-popover");
+    expect(menuPopover).toBeOnTheScreen();
   });
 });

@@ -43,6 +43,7 @@ function MenuButton() {
       </View>
 
       <Popover
+        testID="menu-popover"
         position="bottom"
         anchor={anchor}
         offset={{ y: (anchor?.height ?? 0) * 2 }}
@@ -51,6 +52,7 @@ function MenuButton() {
         onClose={() => setVisible(false)}
       >
         <TouchableOpacity
+          testID="settings-button"
           onPress={() => {
             setVisible(false);
             router.push("/settings");
@@ -60,6 +62,7 @@ function MenuButton() {
         </TouchableOpacity>
 
         <TouchableOpacity
+          testID="about-button"
           onPress={() => {
             setVisible(false);
             router.push("/about");
