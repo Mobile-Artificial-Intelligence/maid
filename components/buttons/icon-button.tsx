@@ -5,6 +5,7 @@ import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 
 interface IconButtonProps {
   icon: string;
+  testID?: string;
   size?: number;
   color?: string;
   disabledColor?: string;
@@ -18,6 +19,7 @@ export function MaterialIconButton(props: IconButtonProps) {
 
   return (
     <TouchableOpacity 
+      testID={props.testID}
       style={[props.style, { margin: 4 }]}
       onPress={props.onPress}
       disabled={props.disabled}
@@ -36,6 +38,7 @@ export function MaterialCommunityIconButton(props: IconButtonProps) {
 
   return (
     <TouchableOpacity 
+      testID={props.testID}
       style={[props.style, { margin: 4 }]}
       onPress={props.onPress}
       disabled={props.disabled}
