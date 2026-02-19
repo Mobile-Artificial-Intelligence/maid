@@ -4,11 +4,13 @@ import splitReasoning from "@/utilities/reasoning";
 import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
 import * as Device from "expo-device";
-import { speak } from "expo-speech";
+import * as Speech from "expo-speech";
 import { branchNode, getChildren, getConversation, lastChild, MessageNode, nextChild, updateContent } from "message-nodes";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 function MessageControlsView({ message }: { message: MessageNode }) {
+  const [ speaking, setSpeaking ] = useState<boolean>(false);
   const { mappings, setMappings, editing, setEditing, deleteMessage } = useChat();
   const { colorScheme, voice } = useSystem();
   const { parameters, type, model, modelFileKey, busy, promptModel } = useLLM();
@@ -59,16 +61,71 @@ function MessageControlsView({ message }: { message: MessageNode }) {
     );
   };
 
+  const onSpeak = async () => {
+    if (speaking) {
+      console.warn("Already speaking");
+      return;
+    }
+
+    if (!voice) {
+      console.warn("No voice selected");
+      return;
+    }
+
+    try {
+      Speech.speak(splitReasoning(message)[0] ?? message.content, { voice: voice!.identifier });
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const isSpeaking = await Speech.isSpeakingAsync();
+      setSpeaking(isSpeaking);
+    }
+    catch (error) {
+      console.error("Error speaking message:", error);
+    }
+  };
+
+  const onSpeakCancel = async () => {
+    if (!speaking) return;
+
+    try {
+      await Speech.stop();
+
+      const isSpeaking = await Speech.isSpeakingAsync();
+      setSpeaking(isSpeaking);
+    }
+    catch (error) {
+      console.error("Error stopping speech:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!speaking) return;
+
+    const interval = setInterval(async () => {
+      const isSpeaking = await Speech.isSpeakingAsync();
+      setSpeaking(isSpeaking);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [speaking]);
+
   const speakEnabled = voice && !editing && !busy;
   const siblings = getChildren(mappings, message.parent!);
   const index = siblings.findIndex((child) => child.id === message.id);
 
   return (
     <View style={styles.row}>
-      {message.role === "assistant" && voice && 
+      {message.role === "assistant" && voice && !speaking &&
         <MaterialCommunityIconButton
           icon="volume-high"
-          onPress={() => speak(splitReasoning(message)[0] ?? message.content, { voice: voice!.identifier })}
+          onPress={onSpeak}
+          disabled={!speakEnabled}
+        />
+      }
+      {message.role === "assistant" && voice && speaking &&
+        <MaterialCommunityIconButton
+          icon="volume-off"
+          onPress={onSpeakCancel}
           disabled={!speakEnabled}
         />
       }
