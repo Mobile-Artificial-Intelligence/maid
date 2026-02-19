@@ -1,5 +1,5 @@
 import { fireEvent, renderRouter, screen } from "expo-router/testing-library";
-import routes from "../__utilities__/routes";
+import routes from "./utilities/routes";
 
 describe("Chat page", () => {
   beforeEach(() => renderRouter(routes, { initialUrl: "/chat" }));

@@ -13,7 +13,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "__mocks__/file-mock.js"  ],
+, "__tests__/utilities/file-mock.js"  ],
   "exclude": [
     "jest.config.ts",
     "**/*.test.ts",
