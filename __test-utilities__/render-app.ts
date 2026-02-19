@@ -8,7 +8,7 @@ import Login from "../app/account/login";
 import Register from "../app/account/register";
 import Chat from "../app/chat/[[id]]";
 import ChatLayout from "../app/chat/_layout";
-import Downloads from "../app/download";
+import Download from "../app/download";
 import Root from "../app/index";
 import Settings from "../app/settings";
 
@@ -24,7 +24,7 @@ function renderApp() {
       "chat/_layout": ChatLayout,
       "chat/index": Chat,
       "about": About,
-      "downloads": Downloads,
+      "download": Download,
       "settings": Settings,
     },
     {
