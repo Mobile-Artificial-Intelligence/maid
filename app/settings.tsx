@@ -31,6 +31,7 @@ function Settings() {
 
   return (
     <ScrollView
+      testID="settings-page"
       style={styles.container} 
       contentContainerStyle={styles.content}
     >
