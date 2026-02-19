@@ -67,7 +67,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
   const [ editText, setEditText ] = useState<string>(message.content);
   const { mappings, setMappings, editing, setEditing } = useChat();
   const { colorScheme } = useSystem();
-  const { parameters, type, model, modelFileKey, promptModel } = useLLM();
+  const LLM = useLLM();
 
   const styles = StyleSheet.create({
     view: {
@@ -157,16 +157,16 @@ function MessageContentView({ message }: { message: MessageNode }) {
       undefined,
       {
         ...getMetadata(),
-        ...parameters,
-        provider: type.toLowerCase().replace(" ", "-"),
-        model: model || modelFileKey,
+        ...LLM.parameters,
+        provider: LLM.type.toLowerCase().replace(" ", "-"),
+        model: LLM.model || LLM.modelFileKey,
       }
     );
 
     setMappings(next);
 
     let buffer = "";
-    promptModel(
+    LLM.prompt(
       getConversation(next, message.root!),
       (chunk: string) => {
         buffer += chunk;
@@ -225,12 +225,12 @@ function MessageContentView({ message }: { message: MessageNode }) {
           <MaterialCommunityIconButton
             icon="thumb-up"
             size={22}
-            onPress={() => insertReport(message.content, type, model || modelFileKey || "", true)}
+            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelFileKey || "", true)}
           />
           <MaterialCommunityIconButton
             icon="thumb-down"
             size={22}
-            onPress={() => insertReport(message.content, type, model || modelFileKey || "", false)}
+            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelFileKey || "", false)}
           />
         </View>
       )}

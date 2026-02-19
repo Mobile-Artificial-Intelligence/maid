@@ -12,7 +12,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
   const [ speaking, setSpeaking ] = useState<boolean>(false);
   const { mappings, setMappings, editing, setEditing, deleteMessage } = useChat();
   const { colorScheme, voice } = useSystem();
-  const { parameters, type, model, modelFileKey, busy, promptModel } = useLLM();
+  const LLM = useLLM();
 
   const styles = StyleSheet.create({
     row: {
@@ -35,16 +35,16 @@ function MessageControlsView({ message }: { message: MessageNode }) {
       "",
       {
         ...getMetadata(),
-        ...parameters,
-        provider: type.toLowerCase().replace(" ", "-"),
-        model: model || modelFileKey,
+        ...LLM.parameters,
+        provider: LLM.type.toLowerCase().replace(" ", "-"),
+        model: LLM.model || LLM.modelFileKey,
       }
     );
 
     setMappings(next);
 
     let buffer = "";
-    promptModel(
+    LLM.prompt(
       getConversation(next, message.root!),
       (chunk: string) => {
         buffer += chunk;
@@ -101,7 +101,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
     return () => clearInterval(interval);
   }, [speaking]);
 
-  const speakEnabled = voice && !editing && !busy;
+  const speakEnabled = voice && !editing && !LLM.busy;
   const siblings = getChildren(mappings, message.parent!);
   const index = siblings.findIndex((child) => child.id === message.id);
 
@@ -125,20 +125,20 @@ function MessageControlsView({ message }: { message: MessageNode }) {
         <MaterialCommunityIconButton
           icon="reload"
           onPress={onRegenerate}
-          disabled={!!editing || busy}
+          disabled={!!editing || LLM.busy}
         />
       }
       {message.role === "user" &&
         <MaterialCommunityIconButton
           icon="pencil"
           onPress={() => setEditing(message.id)}
-          disabled={!!editing || busy}
+          disabled={!!editing || LLM.busy}
         />
       }
       <MaterialCommunityIconButton
         icon="menu-left"
         onPress={() => setMappings((prev) => lastChild(prev, message.parent!))}
-        disabled={index <= 0 || !!editing || busy}
+        disabled={index <= 0 || !!editing || LLM.busy}
       />
       <Text
         style={styles.counter}
@@ -148,12 +148,12 @@ function MessageControlsView({ message }: { message: MessageNode }) {
       <MaterialCommunityIconButton
         icon="menu-right"
         onPress={() => setMappings((prev) => nextChild(prev, message.parent!))}
-        disabled={index === siblings.length - 1 || !!editing || busy}
+        disabled={index === siblings.length - 1 || !!editing || LLM.busy}
       />
       <MaterialCommunityIconButton
         icon="delete"
         onPress={() => deleteMessage(message.id)}
-        disabled={!!editing || busy}
+        disabled={!!editing || LLM.busy}
       />
     </View>
   );

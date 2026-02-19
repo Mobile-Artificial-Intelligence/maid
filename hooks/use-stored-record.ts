@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 function useStoredRecord<K extends string | number | symbol = string, V = string | number | boolean>(key: string): [Record<K, V>, Dispatch<SetStateAction<Record<K, V>>>] {
   const [record, setRecord] = useState<Record<K, V>>({} as Record<K, V>);
+  const hydrated = useRef<boolean>(false);
 
   const saveRecord = async () => {
     try {
@@ -14,7 +15,9 @@ function useStoredRecord<K extends string | number | symbol = string, V = string
   };
 
   useEffect(() => {
-    saveRecord();
+    if (hydrated.current) {
+      saveRecord();
+    }
   }, [record]);
 
   const loadRecord = async () => {
@@ -26,6 +29,8 @@ function useStoredRecord<K extends string | number | symbol = string, V = string
       }
     } catch (error) {
       console.error("Error loading record: ", key, error);
+    } finally {
+      hydrated.current = true;
     }
   };
 

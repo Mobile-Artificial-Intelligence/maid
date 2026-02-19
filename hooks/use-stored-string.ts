@@ -1,23 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 function useStoredString(key: string, initial?: string): [string | undefined,  Dispatch<SetStateAction<string | undefined>>] {
   const [value, setValue] = useState<string | undefined>(initial);
-
-  const loadValue = async () => {
-    try {
-      const storedValue = await AsyncStorage.getItem(key);
-      if (storedValue) {
-        setValue(storedValue);
-      }
-    } catch (error) {
-      console.error(`Error loading ${key} from storage:`, error);
-    }
-  };
-
-  useEffect(() => {
-    loadValue();
-  }, []);
+  const hydrated = useRef<boolean>(false);
 
   const saveValue = async () => {
     try {
@@ -33,8 +19,27 @@ function useStoredString(key: string, initial?: string): [string | undefined,  D
   };
 
   useEffect(() => {
-    saveValue();
+    if (hydrated.current) {
+      saveValue();
+    }
   }, [value]);
+
+  const loadValue = async () => {
+    try {
+      const storedValue = await AsyncStorage.getItem(key);
+      if (storedValue) {
+        setValue(storedValue);
+      }
+    } catch (error) {
+      console.error(`Error loading ${key} from storage:`, error);
+    } finally {
+      hydrated.current = true;
+    }
+  };
+
+  useEffect(() => {
+    loadValue();
+  }, []);
 
   return [value, setValue];
 }

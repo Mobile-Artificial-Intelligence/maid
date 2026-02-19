@@ -1,6 +1,6 @@
 import { ColorScheme, createColorScheme } from "@/utilities/color-scheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 
 interface ThemeData {
   colorScheme: ColorScheme;
@@ -10,6 +10,7 @@ interface ThemeData {
 
 function useTheme(): ThemeData {
   const [accentColor, setAccentColor] = useState<string>("#2196F3");
+  const hydrated = useRef<boolean>(false);
   
   const colorScheme = useMemo<ColorScheme>(
     () => createColorScheme(accentColor, "dark"),
@@ -24,6 +25,8 @@ function useTheme(): ThemeData {
       }
     } catch (error) {
       console.error("Error loading accent color from storage:", error);
+    } finally {
+      hydrated.current = true;
     }
   };
   
@@ -40,7 +43,9 @@ function useTheme(): ThemeData {
   };
   
   useEffect(() => {
-    saveAccentColor();
+    if (hydrated.current) {
+      saveAccentColor();
+    }
   }, [accentColor]);
 
   return {

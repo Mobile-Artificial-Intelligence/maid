@@ -9,9 +9,9 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-nativ
 function PromptInput() {
   const { mappings, setMappings, root, setRoot } = useChat();
   const { colorScheme, systemPrompt } = useSystem();
-  const { type, model, modelFileKey, parameters, ready, promptModel } = useLLM();
+  const LLM = useLLM();
 
-  const [prompt, setPrompt] = useState<string>("");
+  const [promptText, setPromptText] = useState<string>("");
 
   const styles = StyleSheet.create({
     root: {
@@ -67,7 +67,7 @@ function PromptInput() {
   });
 
   const onPrompt = () => {
-    if (!ready) return;
+    if (!LLM.ready) return;
 
     let next = mappings;
     let parent: string | undefined = undefined;
@@ -97,14 +97,14 @@ function PromptInput() {
       next,
       id,
       "user",
-      prompt,
+      promptText,
       root || parent,
       parent,
       undefined,
       getMetadata()
     );
     
-    setPrompt("");
+    setPromptText("");
 
     const responseId = randomUUID();
     next = addNode<string>(
@@ -117,9 +117,9 @@ function PromptInput() {
       undefined,
       {
         ...getMetadata(),
-        ...parameters,
-        provider: type.toLowerCase().replace(" ", "-"),
-        model: model || modelFileKey,
+        ...LLM.parameters,
+        provider: LLM.type.toLowerCase().replace(" ", "-"),
+        model: LLM.model || LLM.modelFileKey,
       }
     );
     
@@ -129,7 +129,7 @@ function PromptInput() {
     const conversation = getConversation(next, root || parent);
     
     let buffer = "";
-    promptModel(
+    LLM.prompt(
       conversation,
       (chunk: string) => {
         buffer += chunk;
@@ -142,9 +142,9 @@ function PromptInput() {
     <View
       style={styles.root}
     >
-      {prompt.length > 0 && (
+      {promptText.length > 0 && (
         <TouchableOpacity
-          onPress={() => setPrompt("")}
+          onPress={() => setPromptText("")}
         >
           <Text style={styles.clearButtonText}>Clear Prompt</Text>
         </TouchableOpacity>
@@ -156,15 +156,15 @@ function PromptInput() {
           placeholderTextColor={colorScheme.onSurface}
           underlineColorAndroid="transparent"
           multiline
-          value={prompt}
-          onChangeText={setPrompt}
+          value={promptText}
+          onChangeText={setPromptText}
         />
         <MaterialIconButton
           icon="send"
-          size={28}
+          size={32}
           color={colorScheme.primary}
           onPress={onPrompt}
-          disabled={prompt.length == 0 || !ready}
+          disabled={promptText.length == 0 || !LLM.ready}
         />
       </View>
     </View>

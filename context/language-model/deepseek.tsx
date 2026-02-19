@@ -51,7 +51,7 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
     fetchModels();
   }, [deepSeek]);
 
-  const promptModel = async (
+  const prompt = async (
     messages: Array<MessageNode>,
     onUpdate: (message: string) => void
   ) => {
@@ -101,7 +101,7 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
     setParameters,
     headers,
     setHeaders,
-    promptModel
+    prompt
   };
 
   return (

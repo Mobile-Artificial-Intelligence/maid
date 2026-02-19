@@ -51,7 +51,7 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
     fetchModels();
   }, [mistral]);
 
-  const promptModel = async (
+  const prompt = async (
     messages: Array<MessageNode>,
     onUpdate: (message: string) => void
   ) => {
@@ -106,7 +106,7 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
     models,
     parameters,
     setParameters,
-    promptModel
+    prompt
   };
 
   return (
