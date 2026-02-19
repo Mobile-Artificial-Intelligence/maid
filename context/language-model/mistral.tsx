@@ -1,4 +1,4 @@
-import useParameters from '@/hooks/use-parameters';
+import useStoredRecord from '@/hooks/use-stored-record';
 import { Mistral } from '@mistralai/mistralai';
 import { TextChunk } from "@mistralai/mistralai/models/components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,7 +17,7 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
   const [apiKey, setApiKey] = useState<string | undefined>(undefined);
   const [model, setModel] = useState<string | undefined>(undefined);
 
-  const [parameters, setParameters] = useParameters("mistral-parameters");
+  const [parameters, setParameters] = useStoredRecord("mistral-parameters");
 
   const [mistral, setMistral] = useState<Mistral | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);

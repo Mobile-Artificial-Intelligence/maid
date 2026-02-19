@@ -1,4 +1,3 @@
-import { ParameterTypes } from "@/hooks/use-parameters";
 import { MessageNode } from "message-nodes";
 
 export const LanguageModelTypes = [
@@ -15,8 +14,8 @@ export type LanguageModelType = typeof LanguageModelTypes[number];
 interface LanguageModelBaseProps {
   ready: boolean;
   busy: boolean;
-  parameters: Record<string, ParameterTypes>;
-  setParameters: React.Dispatch<React.SetStateAction<Record<string, ParameterTypes>>>;
+  parameters: Record<string, string | number | boolean>;
+  setParameters: React.Dispatch<React.SetStateAction<Record<string, string | number | boolean>>>;
   promptModel: (
     messages: Array<MessageNode>, 
     onUpdate: (message: string) => void

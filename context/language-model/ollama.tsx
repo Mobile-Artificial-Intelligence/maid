@@ -1,4 +1,4 @@
-import useParameters from "@/hooks/use-parameters";
+import useStoredRecord from "@/hooks/use-stored-record";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
@@ -15,7 +15,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
   const [headers, setHeaders] = useState<Record<string, string>>({});
 
   const [model, setModel] = useState<string | undefined>(undefined);
-  const [parameters, setParameters] = useParameters("ollama-parameters");
+  const [parameters, setParameters] = useStoredRecord("ollama-parameters");
 
   const [ollama, setOllama] = useState<Ollama | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
