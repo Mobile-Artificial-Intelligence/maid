@@ -10,7 +10,7 @@ import ParameterView from "@/components/views/parameter-view";
 import { useSystem } from "@/context";
 import { StyleSheet, Text, View } from "react-native";
 
-function ModelSettings() {
+function ModelSettingsView() {
   const { colorScheme } = useSystem();
 
   const styles = StyleSheet.create({
@@ -43,4 +43,4 @@ function ModelSettings() {
   );
 }
 
-export default ModelSettings;
+export default ModelSettingsView;

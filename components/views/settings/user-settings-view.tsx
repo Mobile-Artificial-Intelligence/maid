@@ -1,10 +1,10 @@
-import AssistantImageView from "@/components/views/assistant-image-view";
+import UserImageView from "@/components/views/user-image-view";
 import { useSystem } from "@/context";
 import * as ImagePicker from 'expo-image-picker';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-function AssistantSettings() {
-  const { colorScheme, assistantName, setAssistantName, setAssistantImage } = useSystem();
+function UserSettingsView() {
+  const { colorScheme, userName, setUserName, setUserImage } = useSystem();
 
   const styles = StyleSheet.create({
     view: {
@@ -51,7 +51,7 @@ function AssistantSettings() {
     });
 
     if (!pickerResult.canceled) {
-      setAssistantImage(pickerResult.assets[0].uri);
+      setUserImage(pickerResult.assets[0].uri);
     }
   };
 
@@ -60,26 +60,26 @@ function AssistantSettings() {
       style={styles.view}
     >
       <Text style={styles.title}>
-        Assistant Settings
+        User Settings
       </Text>
-      <AssistantImageView size={80} />
+      <UserImageView size={80} />
       <TouchableOpacity
         onPress={onPress}
       >
         <Text style={styles.button}>
-          Load Assistant Image
+          Load User Image
         </Text>
       </TouchableOpacity>
       <TextInput
         style={styles.input}
-        placeholder="Assistant Name"
+        placeholder="User Name"
         placeholderTextColor={colorScheme.onSurface}
         underlineColorAndroid="transparent"
-        value={assistantName}
-        onChangeText={setAssistantName}
+        value={userName}
+        onChangeText={setUserName}
       />
     </View>
   );
 }
 
-export default AssistantSettings;
+export default UserSettingsView;

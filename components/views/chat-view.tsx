@@ -1,5 +1,5 @@
 import PromptInput from "@/components/fields/prompt-input";
-import MessageView from "@/components/views/message-view";
+import MessageView from "@/components/views/message/message-view";
 import { useChat, useSystem } from "@/context";
 import { randomUUID } from "expo-crypto";
 import { getConversation, hasNode, MessageNode } from "message-nodes";
