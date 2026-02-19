@@ -119,7 +119,7 @@ function DrawerContent() {
   });
     
   return (
-    <View style={styles.view}>
+    <View testID="drawer-content" style={styles.view}>
       <View style={styles.header}>
         <Text style={styles.controlsText}>Chats</Text>
         <View style={styles.controls}>

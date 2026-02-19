@@ -17,6 +17,7 @@ type PopoverPosition = "top" | "bottom" | "left" | "right";
 type PopoverAlign = "start" | "center" | "end";
 
 interface PopoverViewProps {
+  testID?: string;
   position: PopoverPosition;
   /**
    * For bottom/top: controls horizontal alignment relative to the anchor
@@ -36,6 +37,7 @@ interface PopoverViewProps {
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(v, max));
 
 function Popover({
+  testID,
   position,
   align = "center",
   offset,
@@ -128,6 +130,7 @@ function Popover({
 
   return (
     <Modal
+      testID={testID}
       transparent
       visible={visible}
       animationType="fade"
