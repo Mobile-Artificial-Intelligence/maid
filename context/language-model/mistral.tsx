@@ -1,9 +1,10 @@
+import useParameters from '@/hooks/use-parameters';
 import { Mistral } from '@mistralai/mistralai';
 import { TextChunk } from "@mistralai/mistralai/models/components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MessageNode } from 'message-nodes';
 import { createContext, useContext, useEffect, useState } from "react";
-import { MistralContextProps, ParameterTypes } from "./types";
+import { MistralContextProps } from "./types";
 
 const DEFAULT_BASE_URL = "https://api.mistral.ai";
 
@@ -16,7 +17,7 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
   const [apiKey, setApiKey] = useState<string | undefined>(undefined);
   const [model, setModel] = useState<string | undefined>(undefined);
 
-  const [parameters, setParameters] = useState<Record<string, any>>({});
+  const [parameters, setParameters] = useParameters("mistral-parameters");
 
   const [mistral, setMistral] = useState<Mistral | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
@@ -113,35 +114,6 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveModel();
   }, [model]);
-
-  const saveParameters = async () => {
-    try {
-      const jsonValue = JSON.stringify(parameters);
-      await AsyncStorage.setItem("mistral-parameters", jsonValue);
-    } catch (error) {
-      console.error("Error saving Mistral parameters:", error);
-    }
-  };
-
-  const loadParameters = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("mistral-parameters");
-      if (jsonValue) {
-        const loadedParameters: Record<string, ParameterTypes> = JSON.parse(jsonValue);
-        setParameters(loadedParameters);
-      }
-    } catch (error) {
-      console.error("Error loading Mistral parameters:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadParameters();
-  }, []);
-
-  useEffect(() => {
-    saveParameters();
-  }, [parameters]);
 
   useEffect(() => {
     if (!apiKey) {

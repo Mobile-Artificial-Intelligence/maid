@@ -1,9 +1,10 @@
+import useParameters from "@/hooks/use-parameters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import { Ollama } from "ollama/browser";
 import { createContext, useContext, useEffect, useState } from "react";
-import { OllamaContextProps, ParameterTypes } from "./types";
+import { OllamaContextProps } from "./types";
 
 const OllamaContext = createContext<OllamaContextProps | undefined>(undefined);
 
@@ -14,7 +15,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
   const [headers, setHeaders] = useState<Record<string, string>>({});
 
   const [model, setModel] = useState<string | undefined>(undefined);
-  const [parameters, setParameters] = useState<Record<string, any>>({});
+  const [parameters, setParameters] = useParameters("ollama-parameters");
 
   const [ollama, setOllama] = useState<Ollama | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
@@ -109,35 +110,6 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveHeaders();
   }, [headers]);
-
-  const saveParameters = async () => {
-    try {
-      const jsonValue = JSON.stringify(parameters);
-      await AsyncStorage.setItem("ollama-parameters", jsonValue);
-    } catch (error) {
-      console.error("Error saving Ollama parameters:", error);
-    }
-  };
-
-  const loadParameters = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("ollama-parameters");
-      if (jsonValue) {
-        const loadedParameters: Record<string, ParameterTypes> = JSON.parse(jsonValue);
-        setParameters(loadedParameters);
-      }
-    } catch (error) {
-      console.error("Error loading Ollama parameters:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadParameters();
-  }, []);
-
-  useEffect(() => {
-    saveParameters();
-  }, [parameters]);
 
   useEffect(() => {
     if (!baseURL) {

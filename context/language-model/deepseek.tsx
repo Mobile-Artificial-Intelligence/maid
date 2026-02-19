@@ -1,9 +1,10 @@
+import useParameters from "@/hooks/use-parameters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import OpenAI from 'openai';
 import { createContext, useContext, useEffect, useState } from "react";
-import { DeepSeekContextProps, ParameterTypes } from "./types";
+import { DeepSeekContextProps } from "./types";
 
 const DeepSeekContext = createContext<DeepSeekContextProps | undefined>(undefined);
 
@@ -14,7 +15,7 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
   const [model, setModel] = useState<string | undefined>(undefined);
 
   const [headers, setHeaders] = useState<Record<string, string>>({});
-  const [parameters, setParameters] = useState<Record<string, any>>({});
+  const [parameters, setParameters] = useParameters("deepseek-parameters");
 
   const [deepSeek, setDeepSeek] = useState<OpenAI | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
@@ -109,35 +110,6 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveHeaders();
   }, [headers]);
-
-  const saveParameters = async () => {
-    try {
-      const jsonValue = JSON.stringify(parameters);
-      await AsyncStorage.setItem("deepseek-parameters", jsonValue);
-    } catch (error) {
-      console.error("Error saving DeepSeek parameters:", error);
-    }
-  };
-
-  const loadParameters = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("deepseek-parameters");
-      if (jsonValue) {
-        const loadedParameters: Record<string, ParameterTypes> = JSON.parse(jsonValue);
-        setParameters(loadedParameters);
-      }
-    } catch (error) {
-      console.error("Error loading DeepSeek parameters:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadParameters();
-  }, []);
-
-  useEffect(() => {
-    saveParameters();
-  }, [parameters]);
 
   useEffect(() => {
     if (!apiKey) {
