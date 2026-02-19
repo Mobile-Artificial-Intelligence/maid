@@ -1,8 +1,8 @@
-import { fireEvent, screen } from "expo-router/testing-library";
-import renderApp from "../__test-utilities__/render-app";
+import { fireEvent, renderRouter, screen } from "expo-router/testing-library";
+import routes from "../__test-utilities__/routes";
 
 describe("Chat page", () => {
-  beforeEach(() => renderApp());
+  beforeEach(() => renderRouter(routes, { initialUrl: "/chat" }));
 
   it("should render the chat page", async () => {
     const chatPage = await screen.findByTestId("chat-page");
