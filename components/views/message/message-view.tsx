@@ -1,6 +1,6 @@
-import MessageContentView from "@/components/views/message-content-view";
-import MessageControlsView from "@/components/views/message-controls-view";
-import MessageRoleView from "@/components/views/message-role-view";
+import MessageContentView from "@/components/views/message/content-view";
+import MessageControlsView from "@/components/views/message/controls-view";
+import MessageRoleView from "@/components/views/message/role-view";
 import { MessageNode } from "message-nodes";
 import { StyleSheet, View } from "react-native";
 

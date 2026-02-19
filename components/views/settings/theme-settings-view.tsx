@@ -2,7 +2,7 @@ import { useSystem } from "@/context";
 import { StyleSheet, Text, View } from "react-native";
 import ColorPicker, { HueSlider } from "reanimated-color-picker";
 
-function ThemeSettings() {
+function ThemeSettingsView() {
   const { colorScheme, accentColor, setAccentColor } = useSystem();
 
   const styles = StyleSheet.create({
@@ -36,4 +36,4 @@ function ThemeSettings() {
   );
 }
 
-export default ThemeSettings;
+export default ThemeSettingsView;

@@ -1,7 +1,7 @@
 import { useSystem } from "@/context";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-function SystemSettings() {
+function SystemSettingsView() {
   const { colorScheme, systemPrompt, setSystemPrompt } = useSystem();
 
   const styles = StyleSheet.create({
@@ -50,4 +50,4 @@ function SystemSettings() {
   );
 }
 
-export default SystemSettings;
+export default SystemSettingsView;
