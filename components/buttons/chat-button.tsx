@@ -5,7 +5,7 @@ import { deleteNode, getRootMapping, MessageNode, updateContent } from "message-
 import { useEffect, useRef, useState } from "react";
 import { LayoutRectangle, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
-function ChatButton({ node }: { node: MessageNode<string> }) {
+function ChatButton({ node, testID }: { node: MessageNode<string>, testID?: string }) {
   const { root, setRoot, mappings, setMappings } = useChat();
   const { colorScheme } = useSystem();
   const [visible, setVisible] = useState<boolean>(false);
@@ -89,6 +89,7 @@ function ChatButton({ node }: { node: MessageNode<string> }) {
   return (
     <>
       {!rename && <TouchableOpacity
+        testID={testID}
         key={`${node.id}-button`}
         style={styles.button}
         onPress={() => setRoot(node.id)}
@@ -106,6 +107,7 @@ function ChatButton({ node }: { node: MessageNode<string> }) {
         </Text>
       </TouchableOpacity>}
       {rename && <TextInput
+        testID={`${testID}-textfield`}
         key={`${node.id}-textfield`}
         style={[
           styles.button, 
@@ -126,6 +128,7 @@ function ChatButton({ node }: { node: MessageNode<string> }) {
         onClose={() => setVisible(false)}
       >
         <TouchableOpacity
+          testID={`${testID}-rename`}
           onPress={() => {
             setVisible(false);
             setRename(true);
@@ -134,11 +137,13 @@ function ChatButton({ node }: { node: MessageNode<string> }) {
           <Text style={styles.popoverButton}>Rename</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          testID={`${testID}-export`}
           onPress={exportChat}
         >
           <Text style={styles.popoverButton}>Export</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          testID={`${testID}-delete`}
           onPress={deleteChat}
         >
           <Text style={styles.popoverButton}>Delete</Text>

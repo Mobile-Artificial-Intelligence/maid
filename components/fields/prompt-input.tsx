@@ -168,6 +168,7 @@ function PromptInput() {
     >
       {promptText.length > 0 && (
         <TouchableOpacity
+          testID="clear-prompt-button"
           onPress={() => setPromptText("")}
         >
           <Text style={styles.clearButtonText}>Clear Prompt</Text>
@@ -185,6 +186,7 @@ function PromptInput() {
           onChangeText={setPromptText}
         />
         <MaterialIconButton
+          testID="send-button"
           icon="send"
           size={32}
           color={colorScheme.primary}

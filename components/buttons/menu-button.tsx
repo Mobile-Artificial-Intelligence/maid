@@ -39,7 +39,7 @@ function MenuButton() {
     <View style={{ margin: 4 }}>
       {/* THIS is what we measure */}
       <View ref={anchorRef} collapsable={false}>
-        <MaterialIconButton icon="more-vert" size={28} onPress={open} />
+        <MaterialIconButton testID="menu-button" icon="more-vert" size={28} onPress={open} />
       </View>
 
       <Popover

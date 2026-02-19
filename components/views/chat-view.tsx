@@ -35,6 +35,7 @@ function ChatView() {
 
   return (
     <View
+      testID="chat-view"
       style={styles.view}
     >
       {root ? (
