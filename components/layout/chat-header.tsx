@@ -25,6 +25,7 @@ function Header(props: DrawerHeaderProps) {
   return (
     <View style={styles.root}>
       <MaterialIconButton
+        testID="open-drawer-button"
         icon="menu"
         size={28}
         onPress={props.navigation.openDrawer}

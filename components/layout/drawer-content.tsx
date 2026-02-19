@@ -124,18 +124,21 @@ function DrawerContent() {
         <Text style={styles.controlsText}>Chats</Text>
         <View style={styles.controls}>
           <MaterialIconButton
+            testID="load-mappings-button"
             icon="folder-open"
             style={styles.button}
             size={24}
             onPress={loadMappings}
           />
           <MaterialIconButton
+            testID="clear-chats-button"
             icon="delete"
             style={styles.button}
             size={24}
             onPress={clearChats}
           />
           <MaterialIconButton
+            testID="new-chat-button"
             icon="add"
             style={styles.button}
             size={24}
@@ -145,22 +148,24 @@ function DrawerContent() {
       </View>
       <View style={styles.divider} />
       <ScrollView style={styles.sessions}>
-        {getRoots<string>(mappings).map((root) => <ChatButton key={root.id} node={root} />)}
+        {getRoots<string>(mappings).map((root, index) => <ChatButton testID={`chat-button-${index}`} key={root.id} node={root} />)}
       </ScrollView>
       <View style={styles.divider} />
       <View style={styles.account}>
         {authenticated && !anonymous ? (
-          <TouchableOpacity onPress={logout}>
+          <TouchableOpacity testID="logout-button" onPress={logout}>
             <Text style={styles.accountText}>Logout</Text>
           </TouchableOpacity>
         ) : (
           <>
             <TouchableOpacity
+              testID="login-button"
               onPress={() => router.push("/account/login")}
             >
                 <Text style={styles.accountText}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              testID="register-button"
               onPress={() => router.push("/account/register")}
             >
               <Text style={styles.accountText}>Register</Text>

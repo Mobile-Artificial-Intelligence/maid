@@ -46,6 +46,7 @@ function DefaultHeader(props: NativeStackHeaderProps) {
       style={styles.root}
     >
       <MaterialIconButton
+        testID="back-button"
         icon="arrow-back"
         size={28}
         style={styles.backButton}
