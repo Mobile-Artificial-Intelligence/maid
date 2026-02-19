@@ -5,8 +5,8 @@ import ModelDropdown from "@/components/dropdowns/model-dropdown";
 import VoiceDropdown from "@/components/dropdowns/voice-dropdown";
 import ApiKeyField from "@/components/fields/api-key-field";
 import BaseUrlField from "@/components/fields/base-url-field";
-import HeaderView from "@/components/views/header-view";
-import ParameterView from "@/components/views/parameter-view";
+import HeaderView from "@/components/views/settings/header-view";
+import ParameterView from "@/components/views/settings/parameter-view";
 import { useSystem } from "@/context";
 import { StyleSheet, Text, View } from "react-native";
 
