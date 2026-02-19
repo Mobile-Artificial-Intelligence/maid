@@ -1,5 +1,5 @@
 import useStoredRecord from "@/hooks/use-stored-record";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import useStoredString from "@/hooks/use-stored-string";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import { Ollama } from "ollama/browser";
@@ -11,78 +11,15 @@ const OllamaContext = createContext<OllamaContextProps | undefined>(undefined);
 export function OllamaProvider({ children }: { children: React.ReactNode }) {
   const [busy, setBusy] = useState<boolean>(false);
 
-  const [baseURL, setBaseURL] = useState<string | undefined>(undefined);
-
-  const [model, setModel] = useState<string | undefined>(undefined);
+  const [baseURL, setBaseURL] = useStoredString("ollama-base-url");
+  const [model, setModel] = useStoredString("ollama-model");
 
   const [headers, setHeaders] = useStoredRecord<string, string>("ollama-headers");
   const [parameters, setParameters] = useStoredRecord("ollama-parameters");
 
   const [ollama, setOllama] = useState<Ollama | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
-
-  const saveBaseURL = async () => {
-    try {
-      if (baseURL) {
-        await AsyncStorage.setItem("ollama-base-url", baseURL);
-      } else {
-        await AsyncStorage.removeItem("ollama-base-url");
-      }
-    } catch (error) {
-      console.error("Error saving Ollama base URL:", error);
-    }
-  };
-
-  const loadBaseURL = async () => {
-    try {
-      const storedBaseURL = await AsyncStorage.getItem("ollama-base-url");
-      if (storedBaseURL) {
-        setBaseURL(storedBaseURL);
-      }
-    } catch (error) {
-      console.error("Error loading Ollama base URL:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadBaseURL();
-  }, []);
-
-  useEffect(() => {
-    saveBaseURL();
-  }, [baseURL]);
-
-  const saveModel = async () => {
-    try {
-      if (model) {
-        await AsyncStorage.setItem("ollama-model", model);
-      } else {
-        await AsyncStorage.removeItem("ollama-model");
-      }
-    } catch (error) {
-      console.error("Error saving Ollama model:", error);
-    }
-  };
-
-  const loadModel = async () => {
-    try {
-      const storedModel = await AsyncStorage.getItem("ollama-model");
-      if (storedModel) {
-        setModel(storedModel);
-      }
-    } catch (error) {
-      console.error("Error loading Ollama model:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadModel();
-  }, []);
-
-  useEffect(() => {
-    saveModel();
-  }, [model]);
-
+  
   useEffect(() => {
     if (!baseURL) {
       console.warn("Ollama host not set");

@@ -1,5 +1,5 @@
 import useStoredRecord from "@/hooks/use-stored-record";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import useStoredString from "@/hooks/use-stored-string";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import OpenAI from 'openai';
@@ -11,76 +11,14 @@ const DeepSeekContext = createContext<DeepSeekContextProps | undefined>(undefine
 export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
   const [busy, setBusy] = useState<boolean>(false);
 
-  const [apiKey, setApiKey] = useState<string | undefined>(undefined);
-  const [model, setModel] = useState<string | undefined>(undefined);
+  const [apiKey, setApiKey] = useStoredString("deepseek-api-key");
+  const [model, setModel] = useStoredString("deepseek-model");
 
   const [headers, setHeaders] = useStoredRecord<string, string>("deepseek-headers");
   const [parameters, setParameters] = useStoredRecord<string, string | number | boolean>("deepseek-parameters");
 
   const [deepSeek, setDeepSeek] = useState<OpenAI | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
-
-  const saveApiKey = async () => {
-    try {
-      if (apiKey) {
-        await AsyncStorage.setItem("deepseek-api-key", apiKey);
-      } else {
-        await AsyncStorage.removeItem("deepseek-api-key");
-      }
-    } catch (error) {
-      console.error("Error saving DeepSeek API key:", error);
-    }
-  };
-
-  const loadApiKey = async () => {
-    try {
-      const storedApiKey = await AsyncStorage.getItem("deepseek-api-key");
-      if (storedApiKey) {
-        setApiKey(storedApiKey);
-      }
-    } catch (error) {
-      console.error("Error loading DeepSeek API key:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadApiKey();
-  }, []);
-
-  useEffect(() => {
-    saveApiKey();
-  }, [apiKey]);
-
-  const saveModel = async () => {
-    try {
-      if (model) {
-        await AsyncStorage.setItem("deepseek-model", model);
-      } else {
-        await AsyncStorage.removeItem("deepseek-model");
-      }
-    } catch (error) {
-      console.error("Error saving DeepSeek model:", error);
-    }
-  };
-
-  const loadModel = async () => {
-    try {
-      const storedModel = await AsyncStorage.getItem("deepseek-model");
-      if (storedModel) {
-        setModel(storedModel);
-      }
-    } catch (error) {
-      console.error("Error loading DeepSeek model:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadModel();
-  }, []);
-
-  useEffect(() => {
-    saveModel();
-  }, [model]);
 
   useEffect(() => {
     if (!apiKey) {

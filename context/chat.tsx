@@ -1,5 +1,5 @@
 import useMappings from "@/hooks/use-mappings";
-import useRoot from "@/hooks/use-root";
+import useStoredString from "@/hooks/use-stored-string";
 import supabase from "@/utilities/supabase";
 import { deleteNode, MessageNode } from "message-nodes";
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
@@ -17,7 +17,7 @@ interface ChatContextProps {
 const ChatContext = createContext<ChatContextProps | undefined>(undefined);
 
 export function ChatContextProvider({ children }: { children: ReactNode }) {
-  const [root, setRoot] = useRoot();
+  const [root, setRoot] = useStoredString("root-message-id");
   const [editing, setEditing] = useState<string | undefined>(undefined);
   const [mappings, setMappings] = useMappings();
 
