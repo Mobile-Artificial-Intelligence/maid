@@ -116,7 +116,7 @@ function Login() {
   });
 
   return (
-    <View style={styles.view}>
+    <View testID="login-page" style={styles.view}>
       <Text style={styles.title}>Welcome Back</Text>
 
       <TextInput

@@ -53,6 +53,7 @@ function About() {
 
   return (
     <View
+      testID="about-page"
       style={styles.view}
     >
       <View style={styles.row}>

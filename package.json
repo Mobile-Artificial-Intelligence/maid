@@ -20,7 +20,10 @@
     "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|expo-router|escape-string-regexp|react-navigation|@react-navigation/.*|@material/material-color-utilities)"
-    ]
+    ],
+    "moduleNameMapper": {
+      "\\.(png|jpg|jpeg|gif|webp|svg)$": "<rootDir>/__mocks__/file-mock.js" 
+    }
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.65.0",

@@ -127,7 +127,7 @@ function Register() {
   });
 
   return (
-    <View style={styles.view}>
+    <View testID="register-page" style={styles.view}>
       <Text style={styles.title}>Create An Account</Text>
 
       <TextInput

@@ -1,5 +1,5 @@
 import { fireEvent, renderRouter, screen } from "expo-router/testing-library";
-import routes from "../__test-utilities__/routes";
+import routes from "../__utilities__/routes";
 
 describe("Chat page", () => {
   beforeEach(() => renderRouter(routes, { initialUrl: "/chat" }));
@@ -42,11 +42,61 @@ describe("Chat page", () => {
     expect(drawer).toBeOnTheScreen();
   });
 
+  it("should navigate to login when the login button is pressed", async () => {
+    const menuButton = await screen.findByTestId("menu-button");
+    fireEvent.press(menuButton);
+    
+    const loginButton = await screen.findByTestId("login-button");
+    fireEvent.press(loginButton);
+    
+    const loginPage = await screen.findByTestId("login-page");
+    expect(loginPage).toBeOnTheScreen();
+  });
+
+  it("should navigate to register when the register button is pressed", async () => {
+    const menuButton = await screen.findByTestId("menu-button");
+    fireEvent.press(menuButton);
+    
+    const registerButton = await screen.findByTestId("register-button");
+    fireEvent.press(registerButton);
+    
+    const registerPage = await screen.findByTestId("register-page");
+    expect(registerPage).toBeOnTheScreen();
+  });
+
   it("should open the menu popover when the menu button is pressed", async () => {
     const menuButton = await screen.findByTestId("menu-button");
     fireEvent.press(menuButton);
     
     const menuPopover = await screen.findByTestId("menu-popover");
     expect(menuPopover).toBeOnTheScreen();
+  });
+
+  it("should navigate to settings when the settings button in the menu popover is pressed", async () => {
+    const menuButton = await screen.findByTestId("menu-button");
+    fireEvent.press(menuButton);
+
+    const menuPopover = await screen.findByTestId("menu-popover");
+    expect(menuPopover).toBeOnTheScreen();
+    
+    const settingsButton = await screen.findByTestId("settings-button");
+    fireEvent.press(settingsButton);
+    
+    const settingsPage = await screen.findByTestId("settings-page");
+    expect(settingsPage).toBeOnTheScreen();
+  });
+
+  it("should navigate to about when the about button in the menu popover is pressed", async () => {
+    const menuButton = await screen.findByTestId("menu-button");
+    fireEvent.press(menuButton);
+
+    const menuPopover = await screen.findByTestId("menu-popover");
+    expect(menuPopover).toBeOnTheScreen();
+    
+    const aboutButton = await screen.findByTestId("about-button");
+    fireEvent.press(aboutButton);
+    
+    const aboutPage = await screen.findByTestId("about-page");
+    expect(aboutPage).toBeOnTheScreen();
   });
 });
