@@ -50,7 +50,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
     fetchModels();
   }, [ollama]);
 
-  const promptModel = async (
+  const prompt = async (
     messages: Array<MessageNode>, 
     onUpdate: (message: string) => void
   ) => {
@@ -89,7 +89,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
     setModel,  
     parameters, 
     setParameters,
-    promptModel,
+    prompt,
     models
   };
 

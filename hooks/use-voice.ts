@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Voice } from "expo-speech";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 function useVoice(): [Voice | undefined, Dispatch<SetStateAction<Voice | undefined>>] {
   const [voice, setVoice] = useState<Voice | undefined>(undefined);
+  const hydrated = useRef<boolean>(false);
 
   const loadVoice = async () => {
     try {
@@ -13,6 +14,8 @@ function useVoice(): [Voice | undefined, Dispatch<SetStateAction<Voice | undefin
       }
     } catch (error) {
       console.error("Error loading voice from storage:", error);
+    } finally {
+      hydrated.current = true;
     }
   };
 
@@ -33,7 +36,9 @@ function useVoice(): [Voice | undefined, Dispatch<SetStateAction<Voice | undefin
   };
 
   useEffect(() => {
-    saveVoice();
+    if (hydrated.current) {
+      saveVoice();
+    }
   }, [voice]);
 
   return [voice, setVoice];

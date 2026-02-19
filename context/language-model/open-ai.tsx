@@ -54,7 +54,7 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
     fetchModels();
   }, [openai]);
 
-  const promptModel = async (
+  const prompt = async (
     messages: Array<MessageNode>,
     onUpdate: (message: string) => void
   ) => {
@@ -111,7 +111,7 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
     setParameters,
     headers,
     setHeaders,
-    promptModel
+    prompt
   };
 
   return (

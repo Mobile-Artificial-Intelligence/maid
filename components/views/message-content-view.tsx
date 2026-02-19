@@ -68,7 +68,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
   const [ editText, setEditText ] = useState<string>(message.content);
   const { mappings, setMappings, editing, setEditing } = useChat();
   const { colorScheme } = useSystem();
-  const { parameters, type, model, modelFileKey, promptModel } = useLLM();
+  const LLM = useLLM();
 
   const styles = StyleSheet.create({
     view: {
@@ -166,7 +166,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
       id,
       undefined,
       {
-        ...parameters,
+        ...LLM.parameters,
         appVersion: Application.nativeApplicationVersion || undefined,
         appBuild: Application.nativeBuildVersion || undefined,
         device: Device.modelName || undefined,
@@ -174,8 +174,8 @@ function MessageContentView({ message }: { message: MessageNode }) {
         osVersion: Device.osVersion || undefined,
         cpu: Device.supportedCpuArchitectures || undefined,
         ram: Device.totalMemory || undefined,
-        provider: type.toLowerCase().replace(" ", "-"),
-        model: model || modelFileKey,
+        provider: LLM.type.toLowerCase().replace(" ", "-"),
+        model: LLM.model || LLM.modelFileKey,
         createTime: new Date().toISOString()
       }
     );
@@ -183,7 +183,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
     setMappings(next);
 
     let buffer = "";
-    promptModel(
+    LLM.prompt(
       getConversation(next, message.root!),
       (chunk: string) => {
         buffer += chunk;
@@ -242,12 +242,12 @@ function MessageContentView({ message }: { message: MessageNode }) {
           <MaterialCommunityIconButton
             icon="thumb-up"
             size={22}
-            onPress={() => insertReport(message.content, type, model || modelFileKey || "", true)}
+            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelFileKey || "", true)}
           />
           <MaterialCommunityIconButton
             icon="thumb-down"
             size={22}
-            onPress={() => insertReport(message.content, type, model || modelFileKey || "", false)}
+            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelFileKey || "", false)}
           />
         </View>
       )}

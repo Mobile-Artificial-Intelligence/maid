@@ -161,7 +161,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
     setModelFileKey(name);
   };
 
-  const promptModel = async (
+  const prompt = async (
     messages: Array<MessageNode>, 
     onUpdate: (message: string) => void
   ) => {
@@ -201,7 +201,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
     setModelFiles,
     parameters,
     setParameters,
-    promptModel,
+    prompt,
   };
 
   return (

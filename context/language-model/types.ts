@@ -16,7 +16,7 @@ interface LanguageModelBaseProps {
   busy: boolean;
   parameters: Record<string, string | number | boolean>;
   setParameters: React.Dispatch<React.SetStateAction<Record<string, string | number | boolean>>>;
-  promptModel: (
+  prompt: (
     messages: Array<MessageNode>, 
     onUpdate: (message: string) => void
   ) => Promise<void | undefined>;
