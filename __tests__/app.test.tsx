@@ -5,6 +5,12 @@ import renderApp from "../__test_utilities__/render-app";
 describe("Chat page", () => {
   beforeEach(() => renderApp());
 
+  it("should render the chat page", async () => {
+    const chatPage = await screen.findByTestId("chat-page");
+    expect(chatPage).toBeOnTheScreen();
+    expect(chatPage.type).toBe("View");
+  });
+
   it("should render the prompt input", async () => {
     const input = await screen.findByTestId("prompt-input");
     expect(input).toBeOnTheScreen();
