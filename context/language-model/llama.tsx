@@ -1,10 +1,11 @@
+import useParameters from '@/hooks/use-parameters';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDocumentAsync } from "expo-document-picker";
 import * as FileSystem from 'expo-file-system';
 import { initLlama, LlamaContext as LlamaRnContext, loadLlamaModelInfo } from 'llama.rn';
 import { MessageNode } from 'message-nodes';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
-import { LlamaContextProps, ParameterTypes } from "./types";
+import { LlamaContextProps } from "./types";
 
 async function isGGUF(fileUri: string): Promise<boolean> {
   try {
@@ -57,7 +58,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
   const [modelFiles, setModelFiles] = useState<Record<string, string>>({});
 
   const [modelFileKey, setModelFileKey] = useState<string | undefined>(undefined);
-  const [parameters, setParameters] = useState<Record<string, ParameterTypes>>({});
+  const [parameters, setParameters] = useParameters("llama-parameters");
 
   const [llama, setLlama] = useState<LlamaRnContext | undefined>(undefined);
 
@@ -98,35 +99,6 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
       loadModelFiles();
     }
   }, [modelFileKey, modelFiles]);
-
-  const saveParameters = async () => {
-    try {
-      const jsonValue = JSON.stringify(parameters);
-      await AsyncStorage.setItem("llama-parameters", jsonValue);
-    } catch (error) {
-      console.error("Error saving parameters:", error);
-    }
-  };
-
-  const loadParameters = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("llama-parameters");
-      if (jsonValue) {
-        const loadedParameters: Record<string, ParameterTypes> = JSON.parse(jsonValue);
-        setParameters(loadedParameters);
-      }
-    } catch (error) {
-      console.error("Error loading parameters:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadParameters();
-  }, []);
-
-  useEffect(() => {
-    saveParameters();
-  }, [parameters]);
 
   useEffect(() => {
     if (llama && !prompting && !loading) {

@@ -1,6 +1,5 @@
+import { ParameterTypes } from "@/hooks/use-parameters";
 import { MessageNode } from "message-nodes";
-
-export type ParameterTypes = string | number | boolean;
 
 export const LanguageModelTypes = [
   "Llama",

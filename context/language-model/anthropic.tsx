@@ -1,9 +1,10 @@
+import useParameters from '@/hooks/use-parameters';
 import Anthropic from '@anthropic-ai/sdk';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import { createContext, useContext, useEffect, useState } from "react";
-import { AnthropicContextProps, ParameterTypes } from "./types";
+import { AnthropicContextProps } from "./types";
 
 const DEFAULT_BASE_URL = "https://api.anthropic.com";
 
@@ -17,7 +18,7 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
 
   const [apiKey, setApiKey] = useState<string | undefined>(undefined);
   const [model, setModel] = useState<string | undefined>(undefined);
-  const [parameters, setParameters] = useState<Record<string, any>>({});
+  const [parameters, setParameters] = useParameters("anthropic-parameters");
 
   const [anthropic, setAnthropic] = useState<Anthropic | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
@@ -143,35 +144,6 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveHeaders();
   }, [headers]);
-
-  const saveParameters = async () => {
-    try {
-      const jsonValue = JSON.stringify(parameters);
-      await AsyncStorage.setItem("anthropic-parameters", jsonValue);
-    } catch (error) {
-      console.error("Error saving Anthropic parameters:", error);
-    }
-  };
-
-  const loadParameters = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("anthropic-parameters");
-      if (jsonValue) {
-        const loadedParameters: Record<string, ParameterTypes> = JSON.parse(jsonValue);
-        setParameters(loadedParameters);
-      }
-    } catch (error) {
-      console.error("Error loading Anthropic parameters:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadParameters();
-  }, []);
-
-  useEffect(() => {
-    saveParameters();
-  }, [parameters]);
 
   useEffect(() => {
     if (!apiKey) {

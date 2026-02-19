@@ -1,9 +1,10 @@
+import useParameters from "@/hooks/use-parameters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import OpenAI from 'openai';
 import { createContext, useContext, useEffect, useState } from "react";
-import { OpenAIContextProps, ParameterTypes } from "./types";
+import { OpenAIContextProps } from "./types";
 
 const DEFAULT_BASE_URL = "https://api.openai.com/v1";
 
@@ -17,7 +18,7 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
   const [model, setModel] = useState<string | undefined>(undefined);
 
   const [headers, setHeaders] = useState<Record<string, string>>({});
-  const [parameters, setParameters] = useState<Record<string, any>>({});
+  const [parameters, setParameters] = useParameters("open-ai-parameters");
 
   const [openai, setOpenAI] = useState<OpenAI | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
@@ -143,35 +144,6 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveHeaders();
   }, [headers]);
-
-  const saveParameters = async () => {
-    try {
-      const jsonValue = JSON.stringify(parameters);
-      await AsyncStorage.setItem("open-ai-parameters", jsonValue);
-    } catch (error) {
-      console.error("Error saving OpenAI parameters:", error);
-    }
-  };
-
-  const loadParameters = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("open-ai-parameters");
-      if (jsonValue) {
-        const loadedParameters: Record<string, ParameterTypes> = JSON.parse(jsonValue);
-        setParameters(loadedParameters);
-      }
-    } catch (error) {
-      console.error("Error loading OpenAI parameters:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadParameters();
-  }, []);
-
-  useEffect(() => {
-    saveParameters();
-  }, [parameters]);
 
   useEffect(() => {
     if (!apiKey) {
