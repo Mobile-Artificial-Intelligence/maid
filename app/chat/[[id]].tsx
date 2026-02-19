@@ -2,12 +2,21 @@ import PromptInput from "@/components/fields/prompt-input";
 import MessageView from "@/components/views/message/message-view";
 import { useChat, useSystem } from "@/context";
 import { randomUUID } from "expo-crypto";
+import { useLocalSearchParams } from "expo-router";
 import { getConversation, hasNode, MessageNode } from "message-nodes";
+import { useEffect } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
-function ChatView() {
-  const { mappings, root } = useChat();
+function Chat() {
   const { colorScheme } = useSystem();
+  const { mappings, root, setRoot } = useChat();
+  const { id } = useLocalSearchParams<{ id?: string }>();
+
+  useEffect(() => {
+    if (id) {
+      setRoot(id);
+    }
+  }, [id, setRoot]);
 
   const renderItem = ({ item }: { item: MessageNode }) => (
     <MessageView 
@@ -35,20 +44,18 @@ function ChatView() {
 
   return (
     <View
-      testID="chat-view"
+      testID="chat-page"
       style={styles.view}
     >
-      {root ? (
-        <FlatList
-          data={getConversation(mappings, root).slice(1)}
-          style={styles.list}
-          keyExtractor={(item) => item.id?.toString() ?? randomUUID()}
-          renderItem={renderItem}
-        />
-      ) : <View style={styles.list} />}
+      {root ? <FlatList
+        data={getConversation(mappings, root).slice(1)}
+        style={styles.list}
+        keyExtractor={(item) => item.id?.toString() ?? randomUUID()}
+        renderItem={renderItem}
+      /> : <View style={styles.list} />}
       <PromptInput />
     </View>
   );
 }
 
-export default ChatView;
+export default Chat;
