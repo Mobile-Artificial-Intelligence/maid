@@ -1,4 +1,4 @@
-import useParameters from '@/hooks/use-parameters';
+import useStoredRecord from '@/hooks/use-stored-record';
 import Anthropic from '@anthropic-ai/sdk';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetch as expoFetch } from "expo/fetch";
@@ -18,7 +18,7 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
 
   const [apiKey, setApiKey] = useState<string | undefined>(undefined);
   const [model, setModel] = useState<string | undefined>(undefined);
-  const [parameters, setParameters] = useParameters("anthropic-parameters");
+  const [parameters, setParameters] = useStoredRecord("anthropic-parameters");
 
   const [anthropic, setAnthropic] = useState<Anthropic | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);

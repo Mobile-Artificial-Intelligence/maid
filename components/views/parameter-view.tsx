@@ -1,6 +1,5 @@
 import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useLLM, useSystem } from "@/context";
-import { ParameterTypes } from "@/context/language-model/types";
 import { randomUUID } from "expo-crypto";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -93,12 +92,12 @@ function ParameterView() {
 
 interface ParameterViewItemProps {
   parameterKey: string;
-  value?: ParameterTypes;
+  value?: string | number | boolean;
   onDelete: () => void;
 }
 
-function parseValue(value: string): ParameterTypes {
-  let parsedValue: ParameterTypes = value;
+function parseValue(value: string): string | number | boolean {
+  let parsedValue: string | number | boolean = value;
 
   if (value.toLowerCase() === "true") {
     parsedValue = true;
@@ -145,7 +144,7 @@ function ParameterViewItem(props: ParameterViewItemProps) {
 
     const parsedValue = parseValue(value);
 
-    setParameters((prev: Record<string, ParameterTypes>) => { 
+    setParameters((prev: Record<string, string | number | boolean>) => { 
       const updated = { ...prev };
       delete updated[oldKey];
       return { ...updated, [key]: parsedValue };
@@ -165,7 +164,7 @@ function ParameterViewItem(props: ParameterViewItemProps) {
 
     const parsedValue = parseValue(newValue);
 
-    setParameters((prev: Record<string, ParameterTypes>) => ({ ...prev, [key]: parsedValue }));
+    setParameters((prev: Record<string, string | number | boolean>) => ({ ...prev, [key]: parsedValue }));
 
     setValue(newValue);
   }

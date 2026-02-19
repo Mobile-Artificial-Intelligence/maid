@@ -1,4 +1,4 @@
-import useParameters from '@/hooks/use-parameters';
+import useStoredRecord from '@/hooks/use-stored-record';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDocumentAsync } from "expo-document-picker";
 import * as FileSystem from 'expo-file-system';
@@ -58,7 +58,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
   const [modelFiles, setModelFiles] = useState<Record<string, string>>({});
 
   const [modelFileKey, setModelFileKey] = useState<string | undefined>(undefined);
-  const [parameters, setParameters] = useParameters("llama-parameters");
+  const [parameters, setParameters] = useStoredRecord("llama-parameters");
 
   const [llama, setLlama] = useState<LlamaRnContext | undefined>(undefined);
 

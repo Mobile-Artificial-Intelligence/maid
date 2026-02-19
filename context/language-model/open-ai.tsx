@@ -1,4 +1,4 @@
-import useParameters from "@/hooks/use-parameters";
+import useStoredRecord from "@/hooks/use-stored-record";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
@@ -18,7 +18,7 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
   const [model, setModel] = useState<string | undefined>(undefined);
 
   const [headers, setHeaders] = useState<Record<string, string>>({});
-  const [parameters, setParameters] = useParameters("open-ai-parameters");
+  const [parameters, setParameters] = useStoredRecord("open-ai-parameters");
 
   const [openai, setOpenAI] = useState<OpenAI | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
