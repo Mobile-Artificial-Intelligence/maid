@@ -14,7 +14,7 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
   const [apiKey, setApiKey] = useState<string | undefined>(undefined);
   const [model, setModel] = useState<string | undefined>(undefined);
 
-  const [headers, setHeaders] = useState<Record<string, string>>({});
+  const [headers, setHeaders] = useStoredRecord<string, string>("deepseek-headers");
   const [parameters, setParameters] = useStoredRecord<string, string | number | boolean>("deepseek-parameters");
 
   const [deepSeek, setDeepSeek] = useState<OpenAI | undefined>(undefined);
@@ -81,35 +81,6 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveModel();
   }, [model]);
-
-  const saveHeaders = async () => {
-    try {
-      const jsonValue = JSON.stringify(headers);
-      await AsyncStorage.setItem("deepseek-headers", jsonValue);
-    } catch (error) {
-      console.error("Error saving DeepSeek headers:", error);
-    }
-  };
-
-  const loadHeaders = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("deepseek-headers");
-      if (jsonValue) {
-        const loadedHeaders: Record<string, string> = JSON.parse(jsonValue);
-        setHeaders(loadedHeaders);
-      }
-    } catch (error) {
-      console.error("Error loading DeepSeek headers:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadHeaders();
-  }, []);
-
-  useEffect(() => {
-    saveHeaders();
-  }, [headers]);
 
   useEffect(() => {
     if (!apiKey) {

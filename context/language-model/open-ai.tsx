@@ -17,7 +17,7 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
   const [apiKey, setApiKey] = useState<string | undefined>(undefined);
   const [model, setModel] = useState<string | undefined>(undefined);
 
-  const [headers, setHeaders] = useState<Record<string, string>>({});
+  const [headers, setHeaders] = useStoredRecord<string, string>("open-ai-headers");
   const [parameters, setParameters] = useStoredRecord("open-ai-parameters");
 
   const [openai, setOpenAI] = useState<OpenAI | undefined>(undefined);
@@ -115,35 +115,6 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveModel();
   }, [model]);
-
-  const saveHeaders = async () => {
-    try {
-      const jsonValue = JSON.stringify(headers);
-      await AsyncStorage.setItem("open-ai-headers", jsonValue);
-    } catch (error) {
-      console.error("Error saving OpenAI headers:", error);
-    }
-  };
-
-  const loadHeaders = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("open-ai-headers");
-      if (jsonValue) {
-        const loadedHeaders: Record<string, string> = JSON.parse(jsonValue);
-        setHeaders(loadedHeaders);
-      }
-    } catch (error) {
-      console.error("Error loading OpenAI headers:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadHeaders();
-  }, []);
-
-  useEffect(() => {
-    saveHeaders();
-  }, [headers]);
 
   useEffect(() => {
     if (!apiKey) {

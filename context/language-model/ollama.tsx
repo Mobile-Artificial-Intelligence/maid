@@ -12,9 +12,10 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
   const [busy, setBusy] = useState<boolean>(false);
 
   const [baseURL, setBaseURL] = useState<string | undefined>(undefined);
-  const [headers, setHeaders] = useState<Record<string, string>>({});
 
   const [model, setModel] = useState<string | undefined>(undefined);
+
+  const [headers, setHeaders] = useStoredRecord<string, string>("ollama-headers");
   const [parameters, setParameters] = useStoredRecord("ollama-parameters");
 
   const [ollama, setOllama] = useState<Ollama | undefined>(undefined);
@@ -81,35 +82,6 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveModel();
   }, [model]);
-
-  const saveHeaders = async () => {
-    try {
-      const jsonValue = JSON.stringify(headers);
-      await AsyncStorage.setItem("ollama-headers", jsonValue);
-    } catch (error) {
-      console.error("Error saving Ollama headers:", error);
-    }
-  };
-
-  const loadHeaders = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("ollama-headers");
-      if (jsonValue) {
-        const loadedHeaders: Record<string, string> = JSON.parse(jsonValue);
-        setHeaders(loadedHeaders);
-      }
-    } catch (error) {
-      console.error("Error loading Ollama headers:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadHeaders();
-  }, []);
-
-  useEffect(() => {
-    saveHeaders();
-  }, [headers]);
 
   useEffect(() => {
     if (!baseURL) {

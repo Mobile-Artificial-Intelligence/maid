@@ -14,7 +14,7 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
   const [busy, setBusy] = useState<boolean>(false);
 
   const [baseURL, setBaseURL] = useState<string | undefined>(DEFAULT_BASE_URL);
-  const [headers, setHeaders] = useState<Record<string, string>>({});
+  const [headers, setHeaders] = useStoredRecord<string, string>("anthropic-headers");
 
   const [apiKey, setApiKey] = useState<string | undefined>(undefined);
   const [model, setModel] = useState<string | undefined>(undefined);
@@ -115,35 +115,6 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     saveModel();
   }, [model]);
-
-  const saveHeaders = async () => {
-    try {
-      const jsonValue = JSON.stringify(headers);
-      await AsyncStorage.setItem("anthropic-headers", jsonValue);
-    } catch (error) {
-      console.error("Error saving Anthropic headers:", error);
-    }
-  };
-
-  const loadHeaders = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("anthropic-headers");
-      if (jsonValue) {
-        const loadedHeaders: Record<string, string> = JSON.parse(jsonValue);
-        setHeaders(loadedHeaders);
-      }
-    } catch (error) {
-      console.error("Error loading Anthropic headers:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadHeaders();
-  }, []);
-
-  useEffect(() => {
-    saveHeaders();
-  }, [headers]);
 
   useEffect(() => {
     if (!apiKey) {
