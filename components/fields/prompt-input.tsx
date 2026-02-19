@@ -175,6 +175,7 @@ function PromptInput() {
       )}
       <View style={styles.inputView}>
         <TextInput
+          testID="prompt-input"
           style={styles.input}
           placeholder="Type a message..."
           placeholderTextColor={colorScheme.onSurface}
