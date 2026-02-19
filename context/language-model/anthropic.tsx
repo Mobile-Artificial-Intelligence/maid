@@ -1,6 +1,6 @@
 import useStoredRecord from '@/hooks/use-stored-record';
+import useStoredString from '@/hooks/use-stored-string';
 import Anthropic from '@anthropic-ai/sdk';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -13,108 +13,15 @@ const AnthropicContext = createContext<AnthropicContextProps | undefined>(undefi
 export function AnthropicProvider({ children }: { children: React.ReactNode }) {
   const [busy, setBusy] = useState<boolean>(false);
 
-  const [baseURL, setBaseURL] = useState<string | undefined>(DEFAULT_BASE_URL);
+  const [baseURL, setBaseURL] = useStoredString("anthropic-base-url", DEFAULT_BASE_URL);
   const [headers, setHeaders] = useStoredRecord<string, string>("anthropic-headers");
 
-  const [apiKey, setApiKey] = useState<string | undefined>(undefined);
-  const [model, setModel] = useState<string | undefined>(undefined);
+  const [apiKey, setApiKey] = useStoredString("anthropic-api-key");
+  const [model, setModel] = useStoredString("anthropic-model");
   const [parameters, setParameters] = useStoredRecord("anthropic-parameters");
 
   const [anthropic, setAnthropic] = useState<Anthropic | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
-
-  const saveBaseURL = async () => {
-    try {
-      if (baseURL) {
-        await AsyncStorage.setItem("anthropic-base-url", baseURL);
-      } else {
-        await AsyncStorage.removeItem("anthropic-base-url");
-      }
-    } catch (error) {
-      console.error("Error saving Anthropic base URL:", error);
-    }
-  };
-
-  const loadBaseURL = async () => {
-    try {
-      const storedBaseURL = await AsyncStorage.getItem("anthropic-base-url");
-      if (storedBaseURL) {
-        setBaseURL(storedBaseURL);
-      }
-    } catch (error) {
-      console.error("Error loading Anthropic base URL:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadBaseURL();
-  }, []);
-
-  useEffect(() => {
-    saveBaseURL();
-  }, [baseURL]);
-
-  const saveApiKey = async () => {
-    try {
-      if (apiKey) {
-        await AsyncStorage.setItem("anthropic-api-key", apiKey);
-      } else {
-        await AsyncStorage.removeItem("anthropic-api-key");
-      }
-    } catch (error) {
-      console.error("Error saving Anthropic API key:", error);
-    }
-  };
-
-  const loadApiKey = async () => {
-    try {
-      const storedApiKey = await AsyncStorage.getItem("anthropic-api-key");
-      if (storedApiKey) {
-        setApiKey(storedApiKey);
-      }
-    } catch (error) {
-      console.error("Error loading Anthropic API key:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadApiKey();
-  }, []);
-
-  useEffect(() => {
-    saveApiKey();
-  }, [apiKey]);
-
-  const saveModel = async () => {
-    try {
-      if (model) {
-        await AsyncStorage.setItem("anthropic-model", model);
-      } else {
-        await AsyncStorage.removeItem("anthropic-model");
-      }
-    } catch (error) {
-      console.error("Error saving Anthropic model:", error);
-    }
-  };
-
-  const loadModel = async () => {
-    try {
-      const storedModel = await AsyncStorage.getItem("anthropic-model");
-      if (storedModel) {
-        setModel(storedModel);
-      }
-    } catch (error) {
-      console.error("Error loading Anthropic model:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadModel();
-  }, []);
-
-  useEffect(() => {
-    saveModel();
-  }, [model]);
 
   useEffect(() => {
     if (!apiKey) {

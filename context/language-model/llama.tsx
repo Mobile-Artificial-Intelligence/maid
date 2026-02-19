@@ -1,5 +1,5 @@
 import useStoredRecord from '@/hooks/use-stored-record';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import useStoredString from '@/hooks/use-stored-string';
 import { getDocumentAsync } from "expo-document-picker";
 import * as FileSystem from 'expo-file-system';
 import { initLlama, LlamaContext as LlamaRnContext, loadLlamaModelInfo } from 'llama.rn';
@@ -55,50 +55,12 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
   const [prompting, setPrompting] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [modelFiles, setModelFiles] = useState<Record<string, string>>({});
+  const [modelFiles, setModelFiles] = useStoredRecord<string, string>("llama-model-files");
+  const [modelFileKey, setModelFileKey] = useStoredString("llama-model-file-key");
 
-  const [modelFileKey, setModelFileKey] = useState<string | undefined>(undefined);
   const [parameters, setParameters] = useStoredRecord("llama-parameters");
 
   const [llama, setLlama] = useState<LlamaRnContext | undefined>(undefined);
-
-  const saveModelFiles = async () => {
-    if (!modelFileKey) return;
-
-    try {
-      await AsyncStorage.setItem("llama-model-file-key", modelFileKey);
-      const jsonValue = JSON.stringify(modelFiles);
-      await AsyncStorage.setItem("llama-model-files", jsonValue);
-    } catch (error) {
-      console.error("Error saving model file:", error);
-    }
-  };
-
-  const loadModelFiles = async () => {
-    try {
-      const storedKey = await AsyncStorage.getItem("llama-model-file-key");
-      if (storedKey) {
-        setModelFileKey(storedKey);
-      }
-
-      const jsonValue = await AsyncStorage.getItem("llama-model-files");
-      if (jsonValue) {
-        const loadedModelFiles: Record<string, string> = JSON.parse(jsonValue);
-        setModelFiles(loadedModelFiles);
-      }
-    } catch (error) {
-      console.error("Error loading model file:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (modelFileKey) {
-      saveModelFiles();
-    }
-    else {
-      loadModelFiles();
-    }
-  }, [modelFileKey, modelFiles]);
 
   useEffect(() => {
     if (llama && !prompting && !loading) {

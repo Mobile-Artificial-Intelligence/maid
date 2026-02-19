@@ -1,7 +1,7 @@
 import useStoredRecord from '@/hooks/use-stored-record';
+import useStoredString from '@/hooks/use-stored-string';
 import { Mistral } from '@mistralai/mistralai';
 import { TextChunk } from "@mistralai/mistralai/models/components";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MessageNode } from 'message-nodes';
 import { createContext, useContext, useEffect, useState } from "react";
 import { MistralContextProps } from "./types";
@@ -13,107 +13,14 @@ const MistralContext = createContext<MistralContextProps | undefined>(undefined)
 export function MistralProvider({ children }: { children: React.ReactNode }) {
   const [busy, setBusy] = useState<boolean>(false);
 
-  const [baseURL, setBaseURL] = useState<string | undefined>(DEFAULT_BASE_URL);
-  const [apiKey, setApiKey] = useState<string | undefined>(undefined);
-  const [model, setModel] = useState<string | undefined>(undefined);
+  const [baseURL, setBaseURL] = useStoredString("mistral-base-url", DEFAULT_BASE_URL);
+  const [apiKey, setApiKey] = useStoredString("mistral-api-key");
+  const [model, setModel] = useStoredString("mistral-model");
 
   const [parameters, setParameters] = useStoredRecord("mistral-parameters");
 
   const [mistral, setMistral] = useState<Mistral | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
-
-  const saveBaseURL = async () => {
-    try {
-      if (baseURL) {
-        await AsyncStorage.setItem("mistral-base-url", baseURL);
-      } else {
-        await AsyncStorage.removeItem("mistral-base-url");
-      }
-    } catch (error) {
-      console.error("Error saving Mistral base URL:", error);
-    }
-  };
-
-  const loadBaseURL = async () => {
-    try {
-      const storedBaseURL = await AsyncStorage.getItem("mistral-base-url");
-      if (storedBaseURL) {
-        setBaseURL(storedBaseURL);
-      }
-    } catch (error) {
-      console.error("Error loading Mistral base URL:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadBaseURL();
-  }, []);
-
-  useEffect(() => {
-    saveBaseURL();
-  }, [baseURL]);
-
-  const saveApiKey = async () => {
-    try {
-      if (apiKey) {
-        await AsyncStorage.setItem("mistral-api-key", apiKey);
-      } else {
-        await AsyncStorage.removeItem("mistral-api-key");
-      }
-    } catch (error) {
-      console.error("Error saving Mistral API key:", error);
-    }
-  };
-
-  const loadApiKey = async () => {
-    try {
-      const storedApiKey = await AsyncStorage.getItem("mistral-api-key");
-      if (storedApiKey) {
-        setApiKey(storedApiKey);
-      }
-    } catch (error) {
-      console.error("Error loading Mistral API key:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadApiKey();
-  }, []);
-
-  useEffect(() => {
-    saveApiKey();
-  }, [apiKey]);
-
-  const saveModel = async () => {
-    try {
-      if (model) {
-        await AsyncStorage.setItem("mistral-model", model);
-      } else {
-        await AsyncStorage.removeItem("mistral-model");
-      }
-    } catch (error) {
-      console.error("Error saving Mistral model:", error);
-    }
-  };
-
-  const loadModel = async () => {
-    try {
-      const storedModel = await AsyncStorage.getItem("mistral-model");
-      if (storedModel) {
-        setModel(storedModel);
-      }
-    } catch (error) {
-      console.error("Error loading Mistral model:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadModel();
-  }, []);
-
-  useEffect(() => {
-    saveModel();
-  }, [model]);
 
   useEffect(() => {
     if (!apiKey) {

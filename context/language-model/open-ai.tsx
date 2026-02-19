@@ -1,5 +1,5 @@
 import useStoredRecord from "@/hooks/use-stored-record";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import useStoredString from "@/hooks/use-stored-string";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import OpenAI from 'openai';
@@ -13,108 +13,15 @@ const OpenAIContext = createContext<OpenAIContextProps | undefined>(undefined);
 export function OpenAIProvider({ children }: { children: React.ReactNode }) {
   const [busy, setBusy] = useState<boolean>(false);
 
-  const [baseURL, setBaseURL] = useState<string | undefined>(DEFAULT_BASE_URL);
-  const [apiKey, setApiKey] = useState<string | undefined>(undefined);
-  const [model, setModel] = useState<string | undefined>(undefined);
+  const [baseURL, setBaseURL] = useStoredString("open-ai-base-url", DEFAULT_BASE_URL);
+  const [apiKey, setApiKey] = useStoredString("open-ai-api-key");
+  const [model, setModel] = useStoredString("open-ai-model");
 
   const [headers, setHeaders] = useStoredRecord<string, string>("open-ai-headers");
   const [parameters, setParameters] = useStoredRecord("open-ai-parameters");
 
   const [openai, setOpenAI] = useState<OpenAI | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
-
-  const saveBaseURL = async () => {
-    try {
-      if (baseURL) {
-        await AsyncStorage.setItem("open-ai-base-url", baseURL);
-      } else {
-        await AsyncStorage.removeItem("open-ai-base-url");
-      }
-    } catch (error) {
-      console.error("Error saving OpenAI base URL:", error);
-    }
-  };
-
-  const loadBaseURL = async () => {
-    try {
-      const storedBaseURL = await AsyncStorage.getItem("open-ai-base-url");
-      if (storedBaseURL) {
-        setBaseURL(storedBaseURL);
-      }
-    } catch (error) {
-      console.error("Error loading OpenAI base URL:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadBaseURL();
-  }, []);
-
-  useEffect(() => {
-    saveBaseURL();
-  }, [baseURL]);
-
-  const saveApiKey = async () => {
-    try {
-      if (apiKey) {
-        await AsyncStorage.setItem("open-ai-api-key", apiKey);
-      } else {
-        await AsyncStorage.removeItem("open-ai-api-key");
-      }
-    } catch (error) {
-      console.error("Error saving OpenAI API key:", error);
-    }
-  };
-
-  const loadApiKey = async () => {
-    try {
-      const storedApiKey = await AsyncStorage.getItem("open-ai-api-key");
-      if (storedApiKey) {
-        setApiKey(storedApiKey);
-      }
-    } catch (error) {
-      console.error("Error loading OpenAI API key:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadApiKey();
-  }, []);
-
-  useEffect(() => {
-    saveApiKey();
-  }, [apiKey]);
-
-  const saveModel = async () => {
-    try {
-      if (model) {
-        await AsyncStorage.setItem("open-ai-model", model);
-      } else {
-        await AsyncStorage.removeItem("open-ai-model");
-      }
-    } catch (error) {
-      console.error("Error saving OpenAI model:", error);
-    }
-  };
-
-  const loadModel = async () => {
-    try {
-      const storedModel = await AsyncStorage.getItem("open-ai-model");
-      if (storedModel) {
-        setModel(storedModel);
-      }
-    } catch (error) {
-      console.error("Error loading OpenAI model:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadModel();
-  }, []);
-
-  useEffect(() => {
-    saveModel();
-  }, [model]);
 
   useEffect(() => {
     if (!apiKey) {
