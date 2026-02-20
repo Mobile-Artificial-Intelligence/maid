@@ -1,1 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" id="svg1" width="254.389" height="254.389" version="1.1" viewBox="0 0 67.307 67.307" xml:space="preserve"><style id="style1">#accent-lettering,#black-lettering{display:inline;fill:none;stroke:#18a0ff;stroke-width:8.16302;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1}#black-lettering{stroke:#fff}</style><g id="layer1" transform="matrix(0.41829194,0,0,0.38995414,-1.6713811,-18.786038)"><path id="accent-lettering" d="M 89.156844,156.06472 109.1424,124.91619 m 1e-5,-12.02918 v 0"/><path id="black-lettering" d="m 59.758151,156.06472 15.732008,-43.17831 13.666685,43.17831 M 109.1424,124.91619 v 31.14853"/></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="svg1"
+   width="132.58411"
+   height="132.58411"
+   version="1.1"
+   viewBox="0 0 35.079497 35.079497"
+   xml:space="preserve"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1" /><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="0.92771304"
+     inkscape:cx="66.83101"
+     inkscape:cy="66.83101"
+     inkscape:window-width="1312"
+     inkscape:window-height="449"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" /><style
+     id="style1">#accent-lettering,#black-lettering{display:inline;fill:none;stroke:#18a0ff;stroke-width:8.16302;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1}#black-lettering{stroke:#fff}</style><g
+     id="layer1"
+     transform="matrix(0.41829194,0,0,0.38995414,-17.785132,-34.899788)"><path
+       id="accent-lettering"
+       d="M 89.156844,156.06472 109.1424,124.91619 m 1e-5,-12.02918 v 0" /><path
+       id="black-lettering"
+       d="m 59.758151,156.06472 15.732008,-43.17831 13.666685,43.17831 M 109.1424,124.91619 v 31.14853" /></g></svg>
