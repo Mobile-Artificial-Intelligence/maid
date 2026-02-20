@@ -71,7 +71,7 @@ function ModelButton() {
 
   return (
     <View ref={buttonRef} style={styles.wrapper} collapsable={false}>
-      <TouchableOpacity style={styles.button} onPress={open} activeOpacity={0.8}>
+      <TouchableOpacity testID="model-button" style={styles.button} onPress={open} activeOpacity={0.8}>
         <Icon name="chevron-triple-left" size={20} color={colorScheme.onPrimary} />
         <Text style={styles.text} numberOfLines={1}>
           {modelFileKey ? modelFileKey : "Load Model"}

@@ -10,6 +10,12 @@ describe("Chat page", () => {
     expect(chatPage.type).toBe("View");
   });
 
+  it("should render the model button", async () => {
+    const modelButton = await screen.findByTestId("model-button");
+    expect(modelButton).toBeOnTheScreen();
+    expect(modelButton.type).toBe("View");
+  });
+
   it("should render the prompt input", async () => {
     const input = await screen.findByTestId("prompt-input");
     expect(input).toBeOnTheScreen();
