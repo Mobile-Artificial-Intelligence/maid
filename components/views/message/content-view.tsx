@@ -2,6 +2,7 @@ import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
 import getMetadata from "@/utilities/metadata";
 import splitReasoning from "@/utilities/reasoning";
+import getSupabase from "@/utilities/supabase";
 import { randomUUID } from "expo-crypto";
 import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
 import { useState } from "react";
