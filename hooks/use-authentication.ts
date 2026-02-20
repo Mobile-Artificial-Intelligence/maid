@@ -1,4 +1,4 @@
-import supabase from "@/utilities/supabase";
+import getSupabase from "@/utilities/supabase";
 import { useEffect, useState } from "react";
 
 function useAuthentication(): [boolean, boolean] {
@@ -6,7 +6,7 @@ function useAuthentication(): [boolean, boolean] {
   const [anonymous, setAnonymous] = useState<boolean>(false);
 
   useEffect(() => {
-    const { data: subscription } = supabase.auth.onAuthStateChange(
+    const { data: subscription } = getSupabase().auth.onAuthStateChange(
       async (event, session) => {
         const user = session?.user;
 

@@ -1,7 +1,7 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
 import splitReasoning from "@/utilities/reasoning";
-import supabase from "@/utilities/supabase";
+import getSupabase from "@/utilities/supabase";
 import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
 import * as Device from "expo-device";
@@ -18,16 +18,16 @@ export async function insertReport(
 ): Promise<void> {
   try {
     // 1) Ensure we have a signed-in user (anonymous if needed)
-    const { data: sessionRes, error: sessionErr } = await supabase.auth.getSession();
+    const { data: sessionRes, error: sessionErr } = await getSupabase().auth.getSession();
     if (sessionErr) console.warn("getSession error:", sessionErr);
 
     let userId = sessionRes?.session?.user?.id;
 
     if (!userId) {
-      const authAny = supabase.auth as any;
+      const authAny = getSupabase().auth as any;
 
       if (typeof authAny.signInAnonymously !== "function") {
-        console.error("signInAnonymously() not available. Update supabase-js and enable anonymous sign-ins in Supabase.");
+        console.error("signInAnonymously() not available. UpdategetSupabase-js and enable anonymous sign-ins in Supabase.");
         Alert.alert("Couldn’t submit report", "Sign-in isn’t available right now.");
         return;
       }
@@ -41,7 +41,7 @@ export async function insertReport(
     }
 
     // 2) Insert report
-    const { error } = await supabase.from("reports").insert({
+    const { error } = await getSupabase().from("reports").insert({
       content,
       provider,
       model,

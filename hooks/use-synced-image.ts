@@ -1,4 +1,4 @@
-import supabase from "@/utilities/supabase";
+import getSupabase from "@/utilities/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Buffer } from "buffer";
 import * as FileSystem from "expo-file-system";
@@ -21,7 +21,7 @@ async function uploadImageFromUri(opts: {
   // Convert base64 -> bytes
   const bytes = Uint8Array.from(Buffer.from(base64, "base64"));
 
-  const { error } = await supabase.storage
+  const { error } = await getSupabase().storage
     .from(bucket)
     .upload(path, bytes, {
       upsert: true,
@@ -63,7 +63,7 @@ function useSyncedImage(
   };
 
   const loadSupabaseUrl = async (): Promise<string | null> => {
-    const { data: userRes, error: userErr } = await supabase.auth.getUser();
+    const { data: userRes, error: userErr } = await getSupabase().auth.getUser();
     if (userErr) {
       console.error("getUser error:", userErr);
       return null;
@@ -74,7 +74,7 @@ function useSyncedImage(
     const path = objectPathForUser(user.id);
 
     // If bucket is PUBLIC you can use getPublicUrl instead.
-    const { data, error } = await supabase.storage
+    const { data, error } = await getSupabase().storage
       .from(bucket)
       .createSignedUrl(path, 3600);
 
@@ -91,7 +91,7 @@ function useSyncedImage(
   };
 
   const saveSupabase = async (uri: string) => {
-    const { data: userRes, error: userErr } = await supabase.auth.getUser();
+    const { data: userRes, error: userErr } = await getSupabase().auth.getUser();
     if (userErr) {
       console.error("getUser error:", userErr);
       return;

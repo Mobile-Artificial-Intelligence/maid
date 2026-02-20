@@ -1,6 +1,6 @@
 import useMappings from "@/hooks/use-mappings";
 import useStoredString from "@/hooks/use-stored-string";
-import supabase from "@/utilities/supabase";
+import getSupabase from "@/utilities/supabase";
 import { deleteNode, MessageNode } from "message-nodes";
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
 
@@ -24,7 +24,7 @@ export function ChatContextProvider({ children }: { children: ReactNode }) {
   const deleteMessage = async (id: string) => {
     setMappings((prev) => deleteNode(prev, id));
     
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from("messages")
       .delete()
       .eq("id", id);
