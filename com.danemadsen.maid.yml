@@ -1,6 +1,6 @@
 AntiFeatures:
   NonFreeNet:
-    en-US: Remote models rely on Mistral, Google Gemini and OpenAI.
+    en-US: Optional use of OpenAI, DeepSeek, Anthropic or Mistral APIs. 
   NonFreeDep:
     en-US: Depends on Qualcomm Hexagon SDK which is not open source.
 Categories:
