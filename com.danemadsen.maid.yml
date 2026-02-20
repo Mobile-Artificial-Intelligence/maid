@@ -743,6 +743,80 @@ Builds:
       - popd
       - mv $repo/maid com.danemadsen.maid
 
+  - versionName: 3.0.0
+    versionCode: 30001
+    commit: YOUR_COMMIT_HERE
+    submodules: false
+    output: android/app/build/outputs/apk/release/app-arm64-v8a-release.apk
+    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
+    sudo:
+      - apt-get update
+      - apt-get install -y curl xz-utils ca-certificates
+      - cd /tmp
+      - curl -fL -o node.tar.xz https://nodejs.org/download/release/v20.11.1/node-v20.11.1-linux-x64.tar.xz
+      - echo "f1cd449fcbeb1b948e8498cb8edd9655fa319d109a7f4c5bd96a9b122b91538a  node.tar.xz" | sha256sum -c -
+      - tar -xJf node.tar.xz
+      - cp -a node-v20.11.1-linux-x64/. /usr/local/
+      - npm -g install yarn@1.22.22
+    prebuild:
+      - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
+      - yes | sdkmanager --licenses || true
+      - bash scripts/install-hexagon.sh
+      - |
+          FILE="./android/gradle.properties"
+          LINE="rnllamaBuildFromSource=true"
+          touch "$FILE"
+          if ! grep -qxF "$LINE" "$FILE"; then
+            printf "\n%s\n" "$LINE" >> "$FILE"
+          fi
+      - yarn install --frozen-lockfile
+    scandelete:
+      - node_modules/
+    scanignore:
+      - android/build.gradle
+      - node_modules/react-native/android/com/facebook/react/react-native/*/
+      - node_modules/jsc-android/
+    build:
+      - chmod +x android/gradlew
+      - ./android/gradlew :app:assembleRelease
+
+  - versionName: 3.0.0
+    versionCode: 30002
+    commit: YOUR_COMMIT_HERE
+    submodules: false
+    output: android/app/build/outputs/apk/release/app-x86_64-release.apk
+    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
+    sudo:
+      - apt-get update
+      - apt-get install -y curl xz-utils ca-certificates
+      - cd /tmp
+      - curl -fL -o node.tar.xz https://nodejs.org/download/release/v20.11.1/node-v20.11.1-linux-x64.tar.xz
+      - echo "f1cd449fcbeb1b948e8498cb8edd9655fa319d109a7f4c5bd96a9b122b91538a  node.tar.xz" | sha256sum -c -
+      - tar -xJf node.tar.xz
+      - cp -a node-v20.11.1-linux-x64/. /usr/local/
+      - npm -g install yarn@1.22.22
+    prebuild:
+      - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
+      - yes | sdkmanager --licenses || true
+      - bash scripts/install-hexagon.sh
+      - |
+          FILE="./android/gradle.properties"
+          LINE="rnllamaBuildFromSource=true"
+          touch "$FILE"
+          if ! grep -qxF "$LINE" "$FILE"; then
+            printf "\n%s\n" "$LINE" >> "$FILE"
+          fi
+      - yarn install --frozen-lockfile
+    scandelete:
+      - node_modules/
+    scanignore:
+      - android/build.gradle
+      - node_modules/react-native/android/com/facebook/react/react-native/*/
+      - node_modules/jsc-android/
+    build:
+      - chmod +x android/gradlew
+      - ./android/gradlew :app:assembleRelease
+
 AllowedAPKSigningKeys: 835ed22ed895c4c272d698aa6e4e48db0b4e36dccf7010d5de15034ac9e1b96f
 
 AutoUpdateMode: Version
