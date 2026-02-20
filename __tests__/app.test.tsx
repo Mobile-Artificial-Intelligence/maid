@@ -37,6 +37,14 @@ describe("Chat page", () => {
     
     const downloadPage = await screen.findByTestId("download-page");
     expect(downloadPage).toBeOnTheScreen();
+
+    const backButton = await screen.findByTestId("back-button");
+    fireEvent.press(backButton);
+
+    expect(downloadPage).not.toBeOnTheScreen();
+
+    const chatPage = await screen.findByTestId("chat-page");
+    expect(chatPage).toBeOnTheScreen();
   });
 
   it("should navigate to login when the login button is pressed", async () => {
@@ -51,6 +59,14 @@ describe("Chat page", () => {
     
     const loginPage = await screen.findByTestId("login-page");
     expect(loginPage).toBeOnTheScreen();
+
+    const backButton = await screen.findByTestId("back-button");
+    fireEvent.press(backButton);
+
+    expect(loginPage).not.toBeOnTheScreen();
+
+    const chatPage = await screen.findByTestId("chat-page");
+    expect(chatPage).toBeOnTheScreen();
   });
 
   it("should navigate to register when the register button is pressed", async () => {
@@ -65,6 +81,14 @@ describe("Chat page", () => {
     
     const registerPage = await screen.findByTestId("register-page");
     expect(registerPage).toBeOnTheScreen();
+
+    const backButton = await screen.findByTestId("back-button");
+    fireEvent.press(backButton);
+
+    expect(registerPage).not.toBeOnTheScreen();
+
+    const chatPage = await screen.findByTestId("chat-page");
+    expect(chatPage).toBeOnTheScreen();
   });
 
   it("should open the menu popover when the menu button is pressed", async () => {
@@ -87,6 +111,14 @@ describe("Chat page", () => {
     
     const settingsPage = await screen.findByTestId("settings-page");
     expect(settingsPage).toBeOnTheScreen();
+
+    const backButton = await screen.findByTestId("back-button");
+    fireEvent.press(backButton);
+
+    expect(settingsPage).not.toBeOnTheScreen();
+
+    const chatPage = await screen.findByTestId("chat-page");
+    expect(chatPage).toBeOnTheScreen();
   });
 
   it("should navigate to about when the about button in the menu popover is pressed", async () => {
@@ -101,5 +133,13 @@ describe("Chat page", () => {
     
     const aboutPage = await screen.findByTestId("about-page");
     expect(aboutPage).toBeOnTheScreen();
+
+    const backButton = await screen.findByTestId("back-button");
+    fireEvent.press(backButton);
+
+    expect(aboutPage).not.toBeOnTheScreen();
+
+    const chatPage = await screen.findByTestId("chat-page");
+    expect(chatPage).toBeOnTheScreen();
   });
 });
