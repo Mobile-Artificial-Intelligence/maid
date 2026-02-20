@@ -80,6 +80,7 @@ function ModelButton() {
       </TouchableOpacity>
 
       <Popover
+        testID="model-popover"
         position="bottom"
         anchor={anchor}
         offset={{ y: (anchor?.height ?? 0) * 3 }}
@@ -88,6 +89,7 @@ function ModelButton() {
         onClose={() => setVisible(false)}
       >
         <TouchableOpacity
+          testID="load-model-button"
           style={styles.item}
           onPress={() => {
             setVisible(false);
@@ -98,6 +100,7 @@ function ModelButton() {
         </TouchableOpacity>
 
         <TouchableOpacity
+          testID="download-model-button"
           style={styles.item}
           onPress={() => {
             setVisible(false);

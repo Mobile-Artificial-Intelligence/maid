@@ -10,12 +10,6 @@ describe("Chat page", () => {
     expect(chatPage.type).toBe("View");
   });
 
-  it("should render the model button", async () => {
-    const modelButton = await screen.findByTestId("model-button");
-    expect(modelButton).toBeOnTheScreen();
-    expect(modelButton.type).toBe("View");
-  });
-
   it("should render the prompt input", async () => {
     const input = await screen.findByTestId("prompt-input");
     expect(input).toBeOnTheScreen();
@@ -28,29 +22,26 @@ describe("Chat page", () => {
     expect(sendButton.type).toBe("View");
   });
 
-  it("should render the open drawer button", async () => {
-    const openDrawerButton = await screen.findByTestId("open-drawer-button");
-    expect(openDrawerButton).toBeOnTheScreen();
-    expect(openDrawerButton.type).toBe("View");
+  it("should navigate to the model download page when the download model button is pressed", async () => {
+    const modelButton = await screen.findByTestId("model-button");
+    fireEvent.press(modelButton);
+
+    const modelPopover = await screen.findByTestId("model-popover");
+    expect(modelPopover).toBeOnTheScreen();
+    
+    const downloadModelButton = await screen.findByTestId("download-model-button");
+    fireEvent.press(downloadModelButton);
+    
+    const downloadPage = await screen.findByTestId("download-page");
+    expect(downloadPage).toBeOnTheScreen();
   });
 
-  it("should render the menu button", async () => {
-    const menuButton = await screen.findByTestId("menu-button");
-    expect(menuButton).toBeOnTheScreen();
-    expect(menuButton.type).toBe("View");
-  });
-
-  it("should open the drawer when the open drawer button is pressed", async () => {
+  it("should navigate to login when the login button is pressed", async () => {
     const openDrawerButton = await screen.findByTestId("open-drawer-button");
     fireEvent.press(openDrawerButton);
     
     const drawer = await screen.findByTestId("drawer-content");
     expect(drawer).toBeOnTheScreen();
-  });
-
-  it("should navigate to login when the login button is pressed", async () => {
-    const menuButton = await screen.findByTestId("menu-button");
-    fireEvent.press(menuButton);
     
     const loginButton = await screen.findByTestId("login-button");
     fireEvent.press(loginButton);
@@ -60,8 +51,11 @@ describe("Chat page", () => {
   });
 
   it("should navigate to register when the register button is pressed", async () => {
-    const menuButton = await screen.findByTestId("menu-button");
-    fireEvent.press(menuButton);
+    const openDrawerButton = await screen.findByTestId("open-drawer-button");
+    fireEvent.press(openDrawerButton);
+    
+    const drawer = await screen.findByTestId("drawer-content");
+    expect(drawer).toBeOnTheScreen();
     
     const registerButton = await screen.findByTestId("register-button");
     fireEvent.press(registerButton);
