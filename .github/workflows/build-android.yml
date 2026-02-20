@@ -7,7 +7,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-android.yml'
+      - '.github/workflows/build-android-source.yml'
       - 'android/**'
       - '**/*.ts'
       - '**/*.tsx'
@@ -18,7 +18,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-android.yml'
+      - '.github/workflows/build-android-source.yml'
       - 'android/**'
       - '**/*.ts'
       - '**/*.tsx'
@@ -79,6 +79,44 @@ jobs:
           echo "releasePassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+
+      - name: Install Hexagon SDK
+        run: |
+          set -e
+
+          SDK_URL="https://github.com/snapdragon-toolchain/hexagon-sdk/releases/download/v6.4.0.2/hexagon-sdk-v6.4.0.2-amd64-lnx.tar.xz"
+          SDK_DIR="$HOME/.hexagon-sdk"
+
+          echo "Creating SDK directory..."
+          mkdir -p "$SDK_DIR"
+
+          echo "Downloading Hexagon SDK..."
+          curl -L "$SDK_URL" -o /tmp/hexagon-sdk.tar.xz
+
+          echo "Extracting SDK..."
+          tar -xJf /tmp/hexagon-sdk.tar.xz -C "$SDK_DIR" --strip-components=1
+
+          echo "Hexagon SDK installed at $SDK_DIR"
+
+
+      - name: Enable rnllama build from source
+        run: |
+          FILE="./android/gradle.properties"
+          LINE="rnllamaBuildFromSource=true"
+
+          echo "🔧 Updating $FILE"
+
+          # Ensure file exists
+          touch "$FILE"
+
+          # Add only if it doesn't already exist
+          if ! grep -qxF "$LINE" "$FILE"; then
+            echo "" >> "$FILE"
+            echo "$LINE" >> "$FILE"
+            echo "Added rnllamaBuildFromSource=true"
+          else
+            echo "Property already present"
+          fi
 
       - name: Install JS deps
         run: yarn install --frozen-lockfile
