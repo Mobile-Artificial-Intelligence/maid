@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    id="svg1"
-   width="132.58411"
-   height="132.58411"
+   width="200"
+   height="200"
    version="1.1"
-   viewBox="0 0 35.079497 35.079497"
+   viewBox="0 0 52.916595 52.916595"
    xml:space="preserve"
    sodipodi:docname="logo.svg"
    inkscape:version="1.3.2 (091e20e, 2023-11-25)"
@@ -22,8 +22,8 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="0.92771304"
-     inkscape:cx="66.83101"
-     inkscape:cy="66.83101"
+     inkscape:cx="99.707556"
+     inkscape:cy="100.24652"
      inkscape:window-width="1312"
      inkscape:window-height="449"
      inkscape:window-x="0"
@@ -32,7 +32,7 @@
      inkscape:current-layer="svg1" /><style
      id="style1">#accent-lettering,#black-lettering{display:inline;fill:none;stroke:#18a0ff;stroke-width:8.16302;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1}#black-lettering{stroke:#fff}</style><g
      id="layer1"
-     transform="matrix(0.41829194,0,0,0.38995414,-17.785132,-34.899788)"><path
+     transform="matrix(0.85310343,0,0,0.79530869,-45.586524,-80.491576)"><path
        id="accent-lettering"
        d="M 89.156844,156.06472 109.1424,124.91619 m 1e-5,-12.02918 v 0" /><path
        id="black-lettering"
