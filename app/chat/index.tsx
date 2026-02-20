@@ -2,21 +2,12 @@ import PromptInput from "@/components/fields/prompt-input";
 import MessageView from "@/components/views/message/message-view";
 import { useChat, useSystem } from "@/context";
 import { randomUUID } from "expo-crypto";
-import { useLocalSearchParams } from "expo-router";
 import { getConversation, hasNode, MessageNode } from "message-nodes";
-import { useEffect } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
 function Chat() {
   const { colorScheme } = useSystem();
-  const { mappings, root, setRoot } = useChat();
-  const { id } = useLocalSearchParams<{ id?: string }>();
-
-  useEffect(() => {
-    if (id) {
-      setRoot(id);
-    }
-  }, [id, setRoot]);
+  const { mappings, root } = useChat();
 
   const renderItem = ({ item }: { item: MessageNode }) => (
     <MessageView 
