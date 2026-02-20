@@ -268,6 +268,7 @@ function Download() {
 
   return (
     <ScrollView
+      testID="download-page"
       style={styles.view}
     >
       {HuggingfaceModels.map((model, index) => (
