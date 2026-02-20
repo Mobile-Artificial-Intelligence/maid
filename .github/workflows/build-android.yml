@@ -166,45 +166,7 @@ jobs:
           echo "releaseAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
 
       - name: Install Hexagon SDK
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          SDK_VERSION="6.4.0.2"
-          SDK_URL="https://github.com/snapdragon-toolchain/hexagon-sdk/releases/download/v${SDK_VERSION}/hexagon-sdk-v${SDK_VERSION}-amd64-lnx.tar.xz"
-          SDK_ROOT="$HOME/.hexagon-sdk/${SDK_VERSION}"
-
-          echo "Creating SDK directory: $SDK_ROOT"
-          mkdir -p "$SDK_ROOT"
-
-          echo "Downloading Hexagon SDK..."
-          curl -fL "$SDK_URL" -o /tmp/hexagon-sdk.tar.xz
-
-          echo "Extracting Hexagon SDK..."
-          tar -xJf /tmp/hexagon-sdk.tar.xz -C "$SDK_ROOT" --strip-components=1
-
-          echo "Exporting HEXAGON paths for later steps..."
-          {
-            echo "HEXAGON_SDK_ROOT=$SDK_ROOT"
-            echo "HEXAGON_TOOLS_ROOT=$SDK_ROOT/tools/HEXAGON_Tools/19.0.04"
-          } >> "$GITHUB_ENV"
-
-          echo "Sanity check: libcdsprpc.so"
-          if [[ ! -f "$SDK_ROOT/ipc/fastrpc/remote/ship/android_aarch64/libcdsprpc.so" ]]; then
-            echo "❌ Expected lib missing at:"
-            echo "  $SDK_ROOT/ipc/fastrpc/remote/ship/android_aarch64/libcdsprpc.so"
-            echo
-            echo "Searching for libcdsprpc.so under $SDK_ROOT:"
-            find "$SDK_ROOT" -name "libcdsprpc.so" -print || true
-            echo
-            echo "Listing ipc/fastrpc tree (if present):"
-            ls -la "$SDK_ROOT/ipc" || true
-            ls -la "$SDK_ROOT/ipc/fastrpc" || true
-            exit 1
-          fi
-
-          echo "✅ Hexagon SDK installed correctly at $SDK_ROOT"
-
+        run: ../../scripts/install-hexagon.sh
 
       - name: Enable rnllama build from source
         run: |
