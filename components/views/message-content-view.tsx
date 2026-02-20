@@ -1,10 +1,9 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
+import getMetadata from "@/utilities/metadata";
 import splitReasoning from "@/utilities/reasoning";
 import supabase from "@/utilities/supabase";
-import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
-import * as Device from "expo-device";
 import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
@@ -144,16 +143,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
       message.id,
       id,
       editText,
-      {
-        appVersion: Application.nativeApplicationVersion || undefined,
-        appBuild: Application.nativeBuildVersion || undefined,
-        device: Device.modelName || undefined,
-        osBuildId: Device.osBuildId || undefined,
-        osVersion: Device.osVersion || undefined,
-        cpu: Device.supportedCpuArchitectures || undefined,
-        ram: Device.totalMemory || undefined,
-        createTime: new Date().toISOString(),
-      }
+      getMetadata()
     );
 
     const responseId = randomUUID();
@@ -166,17 +156,10 @@ function MessageContentView({ message }: { message: MessageNode }) {
       id,
       undefined,
       {
+        ...getMetadata(),
         ...parameters,
-        appVersion: Application.nativeApplicationVersion || undefined,
-        appBuild: Application.nativeBuildVersion || undefined,
-        device: Device.modelName || undefined,
-        osBuildId: Device.osBuildId || undefined,
-        osVersion: Device.osVersion || undefined,
-        cpu: Device.supportedCpuArchitectures || undefined,
-        ram: Device.totalMemory || undefined,
         provider: type.toLowerCase().replace(" ", "-"),
         model: model || modelFileKey,
-        createTime: new Date().toISOString()
       }
     );
 

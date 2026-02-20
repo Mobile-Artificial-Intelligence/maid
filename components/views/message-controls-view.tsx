@@ -1,9 +1,8 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
+import getMetadata from "@/utilities/metadata";
 import splitReasoning from "@/utilities/reasoning";
-import * as Application from "expo-application";
 import { randomUUID } from "expo-crypto";
-import * as Device from "expo-device";
 import { speak } from "expo-speech";
 import { branchNode, getChildren, getConversation, lastChild, MessageNode, nextChild, updateContent } from "message-nodes";
 import { StyleSheet, Text, View } from "react-native";
@@ -33,17 +32,10 @@ function MessageControlsView({ message }: { message: MessageNode }) {
       responseId,
       "",
       {
+        ...getMetadata(),
         ...parameters,
-        appVersion: Application.nativeApplicationVersion || undefined,
-        appBuild: Application.nativeBuildVersion || undefined,
-        device: Device.modelName || undefined,
-        osBuildId: Device.osBuildId || undefined,
-        osVersion: Device.osVersion || undefined,
-        cpu: Device.supportedCpuArchitectures || undefined,
-        ram: Device.totalMemory || undefined,
         provider: type.toLowerCase().replace(" ", "-"),
         model: model || modelFileKey,
-        createTime: new Date().toISOString()
       }
     );
 

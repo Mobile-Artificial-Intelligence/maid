@@ -1,8 +1,7 @@
 import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
-import * as Application from "expo-application";
+import getMetadata from "@/utilities/metadata";
 import { randomUUID } from "expo-crypto";
-import * as Device from "expo-device";
 import { addNode, getConversation, updateContent } from "message-nodes";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -88,14 +87,7 @@ function PromptInput() {
         undefined,
         {
           title: "New Chat",
-          appVersion: Application.nativeApplicationVersion || undefined,
-          appBuild: Application.nativeBuildVersion || undefined,
-          device: Device.modelName || undefined,
-          osBuildId: Device.osBuildId || undefined,
-          osVersion: Device.osVersion || undefined,
-          cpu: Device.supportedCpuArchitectures || undefined,
-          ram: Device.totalMemory || undefined,
-          createTime: new Date().toISOString(),
+          ...getMetadata(),
         }
       );
     }
@@ -109,16 +101,7 @@ function PromptInput() {
       root || parent,
       parent,
       undefined,
-      {
-        appVersion: Application.nativeApplicationVersion || undefined,
-        appBuild: Application.nativeBuildVersion || undefined,
-        device: Device.modelName || undefined,
-        osBuildId: Device.osBuildId || undefined,
-        osVersion: Device.osVersion || undefined,
-        cpu: Device.supportedCpuArchitectures || undefined,
-        ram: Device.totalMemory || undefined,
-        createTime: new Date().toISOString(),
-      }
+      getMetadata()
     );
     
     setPrompt("");
@@ -133,17 +116,10 @@ function PromptInput() {
       id,
       undefined,
       {
+        ...getMetadata(),
         ...parameters,
-        appVersion: Application.nativeApplicationVersion || undefined,
-        appBuild: Application.nativeBuildVersion || undefined,
-        device: Device.modelName || undefined,
-        osBuildId: Device.osBuildId || undefined,
-        osVersion: Device.osVersion || undefined,
-        cpu: Device.supportedCpuArchitectures || undefined,
-        ram: Device.totalMemory || undefined,
         provider: type.toLowerCase().replace(" ", "-"),
         model: model || modelFileKey,
-        createTime: new Date().toISOString()
       }
     );
     
