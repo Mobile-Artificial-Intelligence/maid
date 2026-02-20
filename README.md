@@ -4,8 +4,9 @@
 
 # Maid - Mobile Artificial Intelligence Distribution
 
-
-</div>
+[![Build Android](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-android.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-android.yml)
+[![Test](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/test.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/test.yml)
+[![CodeQL](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/github-code-scanning/codeql)
 
 <div align="center">
 <a href="https://f-droid.org/packages/com.danemadsen.maid/">
