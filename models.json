@@ -6,13 +6,13 @@
     "parameters": 1.2,
     "branch": "main",
     "tags": {
-      "BF16": "LFM2.5-1.2B-Thinking-BF16.gguf",
-      "F16": "LFM2.5-1.2B-Thinking-F16.gguf",
       "Q4_0": "LFM2.5-1.2B-Thinking-Q4_0.gguf",
       "Q4_K_M": "LFM2.5-1.2B-Thinking-Q4_K_M.gguf",
       "Q5_K_M": "LFM2.5-1.2B-Thinking-Q5_K_M.gguf",
       "Q6_K": "LFM2.5-1.2B-Thinking-Q6_K.gguf",
-      "Q8_0": "LFM2.5-1.2B-Thinking-Q8_0.gguf"
+      "Q8_0": "LFM2.5-1.2B-Thinking-Q8_0.gguf",
+      "BF16": "LFM2.5-1.2B-Thinking-BF16.gguf",
+      "F16": "LFM2.5-1.2B-Thinking-F16.gguf"
     }
   },
   {
