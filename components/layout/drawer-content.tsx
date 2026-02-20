@@ -3,7 +3,7 @@ import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useChat, useSystem } from "@/context";
 import useAuthentication from "@/hooks/use-authentication";
 import validateMappings from "@/utilities/mappings";
-import supabase from "@/utilities/supabase";
+import getSupabase from "@/utilities/supabase";
 import { randomUUID } from "expo-crypto";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -66,7 +66,7 @@ function DrawerContent() {
 
   const logout = async () => {
     try {
-      await supabase.auth.signOut();
+      await getSupabase().auth.signOut();
     } catch (error) {
       console.error("Error during logout:", error);
     }

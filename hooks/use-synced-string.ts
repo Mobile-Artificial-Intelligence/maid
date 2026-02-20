@@ -1,5 +1,5 @@
 import useAuthentication from "@/hooks/use-authentication";
-import supabase from "@/utilities/supabase";
+import getSupabase from "@/utilities/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
@@ -32,7 +32,7 @@ function useSyncedString(
 
       try {
         if (authenticated && !anonymous) {
-          const { data: { user }, error } = await supabase.auth.getUser();
+          const { data: { user }, error } = await getSupabase().auth.getUser();
           if (cancelled) return;
 
           if (error || !user) {
@@ -96,7 +96,7 @@ function useSyncedString(
         // Skip if we already know remote matches
         if (value === lastRemoteRef.current) return;
 
-        const { data: { user }, error: userErr } = await supabase.auth.getUser();
+        const { data: { user }, error: userErr } = await getSupabase().auth.getUser();
         if (userErr || !user) return;
 
         const currentRemote = normalizeString((user.user_metadata as any)?.[key]);
@@ -105,7 +105,7 @@ function useSyncedString(
           return;
         }
 
-        const { error } = await supabase.auth.updateUser({
+        const { error } = await getSupabase().auth.updateUser({
           data: { [key]: value },
         });
 

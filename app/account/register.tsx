@@ -1,5 +1,5 @@
 import { useSystem } from "@/context";
-import supabase from "@/utilities/supabase";
+import getSupabase from "@/utilities/supabase";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
@@ -60,7 +60,7 @@ function Register() {
     setSubmitting(true);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { error } = await getSupabase().auth.signUp({
         email,
         password,
         options: { data: { user_name: userName } },

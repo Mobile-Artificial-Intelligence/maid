@@ -1,5 +1,5 @@
 import { useSystem } from "@/context";
-import supabase from "@/utilities/supabase";
+import getSupabase from "@/utilities/supabase";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
@@ -45,7 +45,7 @@ function Login() {
     setSubmitting(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await getSupabase().auth.signInWithPassword({
         email,
         password,
       });

@@ -28,6 +28,9 @@ describe("Chat page", () => {
 
     const modelPopover = await screen.findByTestId("model-popover");
     expect(modelPopover).toBeOnTheScreen();
+
+    const loadModelButton = await screen.findByTestId("load-model-button");
+    expect(loadModelButton).toBeOnTheScreen();
     
     const downloadModelButton = await screen.findByTestId("download-model-button");
     fireEvent.press(downloadModelButton);

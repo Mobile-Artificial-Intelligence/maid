@@ -1,6 +1,6 @@
 import useAuthentication from '@/hooks/use-authentication';
 import validateMappings from '@/utilities/mappings';
-import supabase from '@/utilities/supabase';
+import getSupabase from '@/utilities/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MessageNode } from 'message-nodes';
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -10,7 +10,7 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
   const [mappings, setMappings] = useState<Record<string, MessageNode<string>>>({});
 
   const saveSupabaseMappings = async () => {
-    const { data: { user }, error: userErr } = await supabase.auth.getUser();
+    const { data: { user }, error: userErr } = await getSupabase().auth.getUser();
     if (userErr) {
       console.error("getUser error:", userErr);
       return;
@@ -37,7 +37,7 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
       }
     }));
 
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from("messages")
       .upsert(upsertData, { onConflict: "id" }); // explicit
 
@@ -60,14 +60,14 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
       return;
     }
 
-    const userResponse = await supabase.auth.getUser();
+    const userResponse = await getSupabase().auth.getUser();
     const user = userResponse.data.user;
     
     if (!user) {
       throw new Error("No user logged in");
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('messages')
       .select('*');
 
