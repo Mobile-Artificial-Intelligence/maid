@@ -7,7 +7,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-android-source.yml'
+      - '.github/workflows/build-android.yml'
       - 'android/**'
       - '**/*.ts'
       - '**/*.tsx'
@@ -18,7 +18,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-android-source.yml'
+      - '.github/workflows/build-android.yml'
       - 'android/**'
       - '**/*.ts'
       - '**/*.tsx'
