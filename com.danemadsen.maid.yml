@@ -2,8 +2,9 @@ AntiFeatures:
   NonFreeNet:
     en-US: Optional use of OpenAI, DeepSeek, Anthropic or Mistral APIs. 
   NonFreeDep:
-    en-US: Depends on Qualcomm Hexagon SDK which is not open source.
+    en-US: Depends on Qualcomm Hexagon SDK which is not open source. Binary is not included in release.
 Categories:
+  - AI Chat
   - Reading
 License: MIT
 AuthorName: Mobile Artificial Intelligence
@@ -25,7 +26,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-x86_64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-x86_64.apk
     rm:
       - linux
       - macos
@@ -64,7 +66,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-arm64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-arm64.apk
     rm:
       - linux
       - macos
@@ -103,7 +106,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-x86_64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-x86_64.apk
     rm:
       - linux
       - macos
@@ -142,7 +146,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-arm64-v8a.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-arm64-v8a.apk
     rm:
       - linux
       - macos
@@ -181,7 +186,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-x86_64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-x86_64.apk
     rm:
       - linux
       - macos
@@ -220,7 +226,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-arm64-v8a.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-arm64-v8a.apk
     rm:
       - linux
       - macos
@@ -259,7 +266,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-x86_64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-x86_64.apk
     rm:
       - linux
       - macos
@@ -298,7 +306,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-arm64-v8a.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-arm64-v8a.apk
     rm:
       - linux
       - macos
@@ -337,7 +346,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-x86_64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-x86_64.apk
     rm:
       - linux
       - macos
@@ -376,7 +386,8 @@ Builds:
       - mkdir -p /builds/mobile-artificial-intelligence
       - chown vagrant /builds/mobile-artificial-intelligence
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-arm64-v8a.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/%v/maid-android-arm64-v8a.apk
     rm:
       - linux
       - macos
@@ -415,7 +426,8 @@ Builds:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
     rm:
       - linux
       - macos
@@ -457,7 +469,8 @@ Builds:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
     rm:
       - linux
       - macos
@@ -499,7 +512,8 @@ Builds:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
     rm:
       - linux
       - macos
@@ -541,7 +555,8 @@ Builds:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
     rm:
       - linux
       - macos
@@ -583,7 +598,8 @@ Builds:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
     rm:
       - linux
       - macos
@@ -625,7 +641,8 @@ Builds:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
     rm:
       - linux
       - macos
@@ -667,7 +684,8 @@ Builds:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
     output: build/app/outputs/flutter-apk/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
     rm:
       - linux
       - macos
@@ -709,7 +727,8 @@ Builds:
       - mkdir -p /home/runner
       - chown vagrant /home/runner
     output: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
+    binary: 
+      https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
     rm:
       - linux
       - macos
@@ -744,20 +763,21 @@ Builds:
       - mv $repo/maid com.danemadsen.maid
 
   - versionName: 3.0.0
-    versionCode: 30001
-    commit: YOUR_COMMIT_HERE
-    submodules: false
+    versionCode: 26141
+    commit: 2d22f5952367914643db1b4bcd731760063e5963
     output: android/app/build/outputs/apk/release/app-arm64-v8a-release.apk
     binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
     sudo:
       - apt-get update
       - apt-get install -y curl xz-utils ca-certificates
       - cd /tmp
-      - curl -fL -o node.tar.xz https://nodejs.org/download/release/v20.11.1/node-v20.11.1-linux-x64.tar.xz
-      - echo "f1cd449fcbeb1b948e8498cb8edd9655fa319d109a7f4c5bd96a9b122b91538a  node.tar.xz" | sha256sum -c -
-      - tar -xJf node.tar.xz
-      - cp -a node-v20.11.1-linux-x64/. /usr/local/
-      - npm -g install yarn@1.22.22
+      - NODE_VER=20.11.1
+      - curl -fL --retry 5 --retry-all-errors --retry-delay 2 -o "node-v${NODE_VER}-linux-x64.tar.xz" "https://nodejs.org/dist/v${NODE_VER}/node-v${NODE_VER}-linux-x64.tar.xz"
+      - curl -fL --retry 5 --retry-all-errors --retry-delay 2 -o SHASUMS256.txt "https://nodejs.org/dist/v${NODE_VER}/SHASUMS256.txt"
+      - grep " node-v${NODE_VER}-linux-x64.tar.xz$" SHASUMS256.txt | sha256sum -c -
+      - tar -xJf "node-v${NODE_VER}-linux-x64.tar.xz"
+      - cp -a "node-v${NODE_VER}-linux-x64/." /usr/local/
+      - npm install -g yarn@1.22.22
     prebuild:
       - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
       - yes | sdkmanager --licenses || true
@@ -781,20 +801,21 @@ Builds:
       - ./android/gradlew :app:assembleRelease
 
   - versionName: 3.0.0
-    versionCode: 30002
-    commit: YOUR_COMMIT_HERE
-    submodules: false
+    versionCode: 26142
+    commit: 2d22f5952367914643db1b4bcd731760063e5963
     output: android/app/build/outputs/apk/release/app-x86_64-release.apk
     binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
     sudo:
       - apt-get update
       - apt-get install -y curl xz-utils ca-certificates
       - cd /tmp
-      - curl -fL -o node.tar.xz https://nodejs.org/download/release/v20.11.1/node-v20.11.1-linux-x64.tar.xz
-      - echo "f1cd449fcbeb1b948e8498cb8edd9655fa319d109a7f4c5bd96a9b122b91538a  node.tar.xz" | sha256sum -c -
-      - tar -xJf node.tar.xz
-      - cp -a node-v20.11.1-linux-x64/. /usr/local/
-      - npm -g install yarn@1.22.22
+      - NODE_VER=20.11.1
+      - curl -fL --retry 5 --retry-all-errors --retry-delay 2 -o "node-v${NODE_VER}-linux-x64.tar.xz" "https://nodejs.org/dist/v${NODE_VER}/node-v${NODE_VER}-linux-x64.tar.xz"
+      - curl -fL --retry 5 --retry-all-errors --retry-delay 2 -o SHASUMS256.txt "https://nodejs.org/dist/v${NODE_VER}/SHASUMS256.txt"
+      - grep " node-v${NODE_VER}-linux-x64.tar.xz$" SHASUMS256.txt | sha256sum -c -
+      - tar -xJf "node-v${NODE_VER}-linux-x64.tar.xz"
+      - cp -a "node-v${NODE_VER}-linux-x64/." /usr/local/
+      - npm install -g yarn@1.22.22
     prebuild:
       - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
       - yes | sdkmanager --licenses || true
@@ -824,6 +845,6 @@ UpdateCheckMode: Tags
 VercodeOperation:
   - '%c * 10 + 1'
   - '%c * 10 + 2'
-UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
-CurrentVersion: 2.0.4
-CurrentVersionCode: 22532
+UpdateCheckData: package.json|"version":\s*"([^"]+)"|.|"build-no":\s*(\d+)
+CurrentVersion: 3.0.0
+CurrentVersionCode: 26142
