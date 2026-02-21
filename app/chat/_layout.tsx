@@ -21,7 +21,6 @@ function ChatLayout() {
       drawerContent={(props: any) => <DrawerContent />}
     >
       <Drawer.Screen name="index" />
-      <Drawer.Screen name="[id]" />
     </Drawer>
   );
 }
