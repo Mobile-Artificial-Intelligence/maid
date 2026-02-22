@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Carousel from "@/components/carousel";
-import TryMaidButton from "@/components/try-maid-button";
-import styles from "./page.module.css";
+import styles from "@/app/page.module.css";
 
 export default function Home() {
   return (
@@ -25,16 +24,11 @@ export default function Home() {
                   personal data or privacy.
               </p>
           </div>
-          <TryMaidButton />
           <div className={styles.maidText} >
               <h2>First of its kind</h2>
               <p>
                   In development since 2022, Maid is the first project to allow users to conveniently chat with 
                   large language models locally on their mobile devices without a internet connection. 
-              </p>
-              <p>
-                  Maid is also one of the only AI frontends with a broad support of all platforms. Whether you are
-                  using a mobile device, a desktop computer, or a web browser, Maid has you covered.
               </p>
           </div>
           <div className={styles.maidLists} >
@@ -46,16 +40,7 @@ export default function Home() {
                       <li>OpenAI</li>
                       <li>Mistral</li>
                       <li>Anthropic</li>
-                  </ul>
-              </div>
-              <div className={styles.maidText} >
-                  <h2>Supported Platforms</h2>
-                  <ul>
-                      <li>Android</li>
-                      <li>Windows</li>
-                      <li>Linux</li>
-                      <li>MacOS</li>
-                      <li>Web</li>
+                      <li>DeepSeek</li>
                   </ul>
               </div>
           </div>
@@ -64,14 +49,6 @@ export default function Home() {
                 <Image 
                   src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
                   alt="Get it on Google Play"
-                  height={80}
-                  width={210} 
-                />
-              </a>
-              <a href="https://f-droid.org/packages/com.danemadsen.maid/">
-                <Image 
-                  src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-                  alt="Get it on F-Droid"
                   height={80}
                   width={210} 
                 />
@@ -102,22 +79,6 @@ export default function Home() {
               </a>
           </div>
           <Carousel />
-      </section>
-      <section className={styles.sdkSection} >
-          <h1>llama_sdk</h1>
-          <p>
-              `llama_sdk` is a dart package created for the Mobile Artificial Intelligence Distribution (MAID) project.
-              It provides a simple and efficient way to interact with the the llama.cpp library, 
-              allowing developers to integrate advanced AI capabilities into their cross platform flutter applications.
-          </p>
-          <p>
-              The package is designed to be easy to use, with a focus on performance and reliability. 
-              It builds llama.cpp from source on all platforms to ensure accountability and transparency.
-              This means that developers can trust that the code they are using is secure and free from any malicious
-              modifications.
-          </p>
-          <p>Add `llama_sdk` to your flutter project now by running the following command in your flutter project root:</p>
-          <div className={styles.codebox} ><code>flutter pub add llama_sdk</code></div>
       </section>
     </div>
   );
