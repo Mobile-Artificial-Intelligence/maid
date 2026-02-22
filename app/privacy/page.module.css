@@ -1,0 +1,50 @@
+.privacy {
+    padding: 0 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+}
+
+.privacy h1, 
+.privacy h2 {
+    transition: font-size 0.6s ease;
+}
+
+.privacy h1, 
+.privacy h2 {
+    margin: 0;
+    text-align: left;
+    color: #a0effa;
+}
+
+.privacy h1 {
+    font-size: 1.5rem;
+}
+
+.privacy h2 {
+    font-size: 1.25rem;
+}
+
+.privacy p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    margin: 0;
+    padding-bottom: 1rem;
+    text-align: left;
+}
+
+.privacy ul {
+    list-style: none;
+    padding-left: 2em;
+}
+
+.privacy ul li {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+}
+
+.privacy ul li::before {
+    content: "- ";
+    margin-left: -1em;
+}

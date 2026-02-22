@@ -1,0 +1,151 @@
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+header {
+  padding-left: 10px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+}
+
+#logo-group {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+#logo-group h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+  transition: font-size 0.6s ease;
+}
+#logo-group img {
+  height: 2em;
+  will-change: filter;
+  transition: filter 300ms, height 0.6s ease;
+}
+#logo-group img:hover {
+  filter: drop-shadow(0 0 1em #00e1ff);
+}
+
+/* Show full title by default */
+h1 #title-full {
+  display: inline;
+}
+h1 #title-short {
+  display: none;
+}
+
+/* On small screens, swap them */
+@media (max-width: 800px) {
+  h1 #title-full {
+    display: none;
+  }
+  h1 #title-short {
+    display: inline;
+  }
+}
+
+#link-group {
+  padding-right: 10px;
+  display: flex;
+  gap: 1em;
+}
+
+#link-group a {
+  position: relative;
+  color: white;
+  text-decoration: none;
+  font-size: 1.25rem;
+  transition: all 300ms;
+  overflow: hidden;
+  transition: font-size 0.6s ease;
+}
+
+@media (max-width: 768px) {
+  #logo-group img {
+    height: 1.5em;
+  }
+
+  #logo-group h1 {
+    font-size: 1rem;
+  }
+
+  #link-group a {
+    font-size: 1rem;
+  }
+}
+
+#link-group a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #00e1ff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease, transform-origin 0s ease 0.3s;
+  pointer-events: none;
+}
+
+#link-group a:hover {
+  filter: drop-shadow(0 0 1em #00e1ff);
+}
+
+#link-group a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+#link-group a:not(:hover)::after {
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}

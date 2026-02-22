@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://mobile-artificial-intelligence.com/
+
+# Sitemaps
+Sitemap: https://mobile-artificial-intelligence.com/sitemap.xml

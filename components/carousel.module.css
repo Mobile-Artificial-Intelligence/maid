@@ -1,0 +1,64 @@
+.carousel {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 1rem 0;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    cursor: grab;
+    cursor: -webkit-grab;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+  
+  .dragging {
+    cursor: grabbing !important;
+    cursor: -webkit-grabbing !important;
+  }
+  
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .carouselImg {
+    max-width: 150px;
+    height: auto;
+    border-radius: 8px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    pointer-events: none;
+    user-select: none;
+    transition: transform 0.3s ease;
+  }
+  
+  .carouselImg:hover {
+    transform: scale(1.05);
+  }
+  
+  .expanded {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(2.5) !important;
+    z-index: 1000;
+    max-height: 40vh;
+    cursor: zoom-out !important;
+    pointer-events: auto !important;
+  }
+  
+  @media (min-width: 768px) {
+    .carouselImg {
+      max-width: 225px;
+    }
+  }
+  
+  @media (min-width: 1536px) {
+    .carouselImg {
+      max-width: 300px;
+    }
+  }
+  
