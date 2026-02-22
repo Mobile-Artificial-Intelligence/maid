@@ -89,7 +89,7 @@ export default function Carousel() {
   return (
     <>
       <div className={styles.carousel} ref={carouselRef}>
-        {Array.from({ length: 9 }, (_, i) => (
+        {Array.from({ length: 8 }, (_, i) => (
           <Image
             key={i}
             width={225}
