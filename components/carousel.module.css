@@ -1,64 +1,80 @@
 .carousel {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 1rem 0;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
-    cursor: grab;
-    cursor: -webkit-grab;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-  }
-  
-  .dragging {
-    cursor: grabbing !important;
-    cursor: -webkit-grabbing !important;
-  }
-  
-  .carousel::-webkit-scrollbar {
-    display: none;
-  }
-  
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1rem 0;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+
+  /* pointer events version works well with this */
+  touch-action: pan-y;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.dragging {
+  cursor: grabbing !important;
+}
+
+.carouselImg {
+  max-width: 150px;
+  height: auto;
+  border-radius: 8px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  user-select: none;
+  transition: transform 0.2s ease;
+  cursor: zoom-in;
+  /* important for pointer events on touch */
+  pointer-events: auto;
+}
+
+.carouselImg:hover {
+  transform: scale(1.05);
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 999;
+}
+
+.expanded {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 1000;
+  width: min(90vw, 420px) !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: 85vh !important;
+  cursor: zoom-out !important;
+  border-radius: 12px;
+}
+
+/* prevent hover transform fighting with expanded */
+.expanded:hover {
+  transform: translate(-50%, -50%) !important;
+}
+
+@media (min-width: 768px) {
   .carouselImg {
-    max-width: 150px;
-    height: auto;
-    border-radius: 8px;
-    flex-shrink: 0;
-    scroll-snap-align: start;
-    pointer-events: none;
-    user-select: none;
-    transition: transform 0.3s ease;
+    max-width: 225px;
   }
-  
-  .carouselImg:hover {
-    transform: scale(1.05);
+}
+
+@media (min-width: 1536px) {
+  .carouselImg {
+    max-width: 300px;
   }
-  
-  .expanded {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) scale(2.5) !important;
-    z-index: 1000;
-    max-height: 40vh;
-    cursor: zoom-out !important;
-    pointer-events: auto !important;
-  }
-  
-  @media (min-width: 768px) {
-    .carouselImg {
-      max-width: 225px;
-    }
-  }
-  
-  @media (min-width: 1536px) {
-    .carouselImg {
-      max-width: 300px;
-    }
-  }
-  
+}

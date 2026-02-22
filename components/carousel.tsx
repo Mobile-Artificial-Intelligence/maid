@@ -1,99 +1,119 @@
-"use client"; // required for useEffect and refs in app directory
+"use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./carousel.module.css";
 import Image from "next/image";
 
 export default function Carousel() {
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
+  const isDraggingRef = useRef(false);
+  const movedRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
   useEffect(() => {
     const carousel = carouselRef.current;
     if (!carousel) return;
 
-    let isDown = false;
-    let startX = 0;
-    let scrollLeft = 0;
+    const onPointerDown = (e: PointerEvent) => {
+      // only left click / primary pointer
+      if (e.button !== 0) return;
+      if (expandedIndex !== null) return;
 
-    const startDragging = (x: number) => {
-      if (carousel.querySelector(`.${styles.expanded}`)) return;
-      isDown = true;
+      isDraggingRef.current = true;
+      movedRef.current = false;
+
       carousel.classList.add(styles.dragging);
-      startX = x - carousel.offsetLeft;
-      scrollLeft = carousel.scrollLeft;
+
+      startXRef.current = e.clientX;
+      scrollLeftRef.current = carousel.scrollLeft;
+
+      // capture pointer so drag continues even if cursor leaves element
+      carousel.setPointerCapture?.(e.pointerId);
     };
 
-    const stopDragging = () => {
-      isDown = false;
-      carousel.classList.remove(styles.dragging);
-    };
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDraggingRef.current) return;
 
-    const doDragging = (x: number) => {
-      if (!isDown) return;
-      const walk = x - carousel.offsetLeft - startX;
-      carousel.scrollLeft = scrollLeft - walk;
-    };
+      const dx = e.clientX - startXRef.current;
 
-    const mouseDown = (e: MouseEvent) => startDragging(e.pageX);
-    const mouseMove = (e: MouseEvent) => {
-      if (!isDown) return;
+      // small threshold so click doesn't count as drag
+      if (Math.abs(dx) > 4) {
+        movedRef.current = true;
+      }
+
+      carousel.scrollLeft = scrollLeftRef.current - dx;
+
+      // prevent text selection / accidental image drag
       e.preventDefault();
-      doDragging(e.pageX);
     };
-    const mouseUp = stopDragging;
-    const mouseLeave = stopDragging;
 
-    const touchStart = (e: TouchEvent) => {
-      if (e.touches.length === 1 && !carousel.querySelector(`.${styles.expanded}`)) {
-        startDragging(e.touches[0].pageX);
+    const stopDragging = (e?: PointerEvent) => {
+      if (!isDraggingRef.current) return;
+      isDraggingRef.current = false;
+      carousel.classList.remove(styles.dragging);
+
+      if (e) {
+        carousel.releasePointerCapture?.(e.pointerId);
       }
     };
-    const touchMove = (e: TouchEvent) => {
-      if (!isDown) return;
-      doDragging(e.touches[0].pageX);
-    };
-    const touchEnd = stopDragging;
 
-    carousel.addEventListener("mousedown", mouseDown);
-    carousel.addEventListener("mousemove", mouseMove);
-    carousel.addEventListener("mouseup", mouseUp);
-    carousel.addEventListener("mouseleave", mouseLeave);
-
-    carousel.addEventListener("touchstart", touchStart, { passive: false });
-    carousel.addEventListener("touchmove", touchMove, { passive: false });
-    carousel.addEventListener("touchend", touchEnd);
+    carousel.addEventListener("pointerdown", onPointerDown);
+    carousel.addEventListener("pointermove", onPointerMove);
+    carousel.addEventListener("pointerup", stopDragging);
+    carousel.addEventListener("pointercancel", stopDragging);
+    carousel.addEventListener("pointerleave", stopDragging);
 
     return () => {
-      carousel.removeEventListener("mousedown", mouseDown);
-      carousel.removeEventListener("mousemove", mouseMove);
-      carousel.removeEventListener("mouseup", mouseUp);
-      carousel.removeEventListener("mouseleave", mouseLeave);
-      carousel.removeEventListener("touchstart", touchStart);
-      carousel.removeEventListener("touchmove", touchMove);
-      carousel.removeEventListener("touchend", touchEnd);
+      carousel.removeEventListener("pointerdown", onPointerDown);
+      carousel.removeEventListener("pointermove", onPointerMove);
+      carousel.removeEventListener("pointerup", stopDragging);
+      carousel.removeEventListener("pointercancel", stopDragging);
+      carousel.removeEventListener("pointerleave", stopDragging);
     };
-  }, []);
+  }, [expandedIndex]);
 
-  const toggleImage = (e: React.MouseEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    img.classList.toggle(styles.expanded);
+  const toggleImage = (index: number) => {
+    // If the pointer moved, treat it as drag, not click
+    if (movedRef.current) {
+      movedRef.current = false;
+      return;
+    }
+
+    setExpandedIndex((prev) => (prev === index ? null : index));
   };
 
   return (
-    <div className={styles.carousel} ref={carouselRef}>
-      {Array.from({ length: 7 }, (_, i) => (
-        <Image
-          key={i}
-          width={225}
-          height={500}
-          src={`/images/maid-screenshot-${i + 1}.png`}
-          alt={`mobile ai distribution ${i + 1}`}
-          onClick={toggleImage}
-          style={{ pointerEvents: "auto", cursor: "zoom-in" }}
-          className={styles.carouselImg}
-          draggable={false}
+    <>
+      <div className={styles.carousel} ref={carouselRef}>
+        {Array.from({ length: 7 }, (_, i) => (
+          <Image
+            key={i}
+            width={225}
+            height={500}
+            src={`/images/maid-screenshot-${i + 1}.png`}
+            alt={`mobile ai distribution ${i + 1}`}
+            onClick={() => toggleImage(i)}
+            className={`${styles.carouselImg} ${
+              expandedIndex === i ? styles.expanded : ""
+            }`}
+            draggable={false}
+            sizes="(min-width: 1536px) 300px, (min-width: 768px) 225px, 150px"
+          />
+        ))}
+      </div>
+
+      {/* optional backdrop */}
+      {expandedIndex !== null && (
+        <div
+          className={styles.backdrop}
+          onClick={() => setExpandedIndex(null)}
+          aria-hidden="true"
         />
-      ))}
-    </div>
+      )}
+    </>
   );
 }
