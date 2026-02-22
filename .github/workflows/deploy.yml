@@ -20,12 +20,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: yarn
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install
 
       - name: Build Next.JS app
-        run: npm run build
+        run: yarn build
 
       - name: Add CNAME file
         run: echo 'mobile-artificial-intelligence.com' > ./out/CNAME
