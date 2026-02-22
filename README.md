@@ -3,11 +3,14 @@
 </div>
 
 # Maid - Mobile Artificial Intelligence Distribution
+
 <div align="center">
+  
 [![Build Android](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-android.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-android.yml)
 [![Test](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/test.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/test.yml)
 [![Code Quality](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/github-code-scanning/codeql)
 [![Website](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/deploy.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/deploy.yml)
+
 </div>
 
 <div align="center">
