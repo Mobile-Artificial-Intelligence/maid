@@ -26,13 +26,22 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const ollamaInstance = new Ollama({
-      host: baseURL,
-      headers,
-      fetch: expoFetch as typeof fetch,
-    });
+    try {
+      new URL(baseURL);
+    } catch {
+      return;
+    }
 
-    setOllama(ollamaInstance);
+    try {
+      const ollamaInstance = new Ollama({
+        host: baseURL,
+        headers,
+        fetch: expoFetch as typeof fetch,
+      });
+      setOllama(ollamaInstance);
+    } catch (error) {
+      console.warn("Failed to create Ollama instance:", error);
+    }
   }, [baseURL, headers]);
 
   useEffect(() => {
