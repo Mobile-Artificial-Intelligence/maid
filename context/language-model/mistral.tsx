@@ -28,12 +28,21 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const mistralInstance = new Mistral({
-      apiKey,
-      serverURL: baseURL
-    });
+    try {
+      new URL(baseURL ?? "");
+    } catch {
+      return;
+    }
 
-    setMistral(mistralInstance);
+    try {
+      const mistralInstance = new Mistral({
+        apiKey,
+        serverURL: baseURL
+      });
+      setMistral(mistralInstance);
+    } catch (error) {
+      console.warn("Failed to create Mistral instance:", error);
+    }
   }, [apiKey, baseURL]);
 
   useEffect(() => {

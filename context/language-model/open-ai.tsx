@@ -29,14 +29,23 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const openaiInstance = new OpenAI({
-      apiKey,
-      baseURL,
-      defaultHeaders: headers,
-      fetch: expoFetch as typeof fetch,
-    });
+    try {
+      new URL(baseURL ?? "");
+    } catch {
+      return;
+    }
 
-    setOpenAI(openaiInstance);
+    try {
+      const openaiInstance = new OpenAI({
+        apiKey,
+        baseURL,
+        defaultHeaders: headers,
+        fetch: expoFetch as typeof fetch,
+      });
+      setOpenAI(openaiInstance);
+    } catch (error) {
+      console.warn("Failed to create OpenAI instance:", error);
+    }
   }, [apiKey, baseURL, headers]);
 
   useEffect(() => {

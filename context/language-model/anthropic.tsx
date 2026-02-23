@@ -29,14 +29,23 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const anthropicInstance = new Anthropic({
-      apiKey,
-      baseURL,
-      defaultHeaders: headers,
-      fetch: expoFetch as typeof fetch,
-    });
+    try {
+      new URL(baseURL ?? "");
+    } catch {
+      return;
+    }
 
-    setAnthropic(anthropicInstance);
+    try {
+      const anthropicInstance = new Anthropic({
+        apiKey,
+        baseURL,
+        defaultHeaders: headers,
+        fetch: expoFetch as typeof fetch,
+      });
+      setAnthropic(anthropicInstance);
+    } catch (error) {
+      console.warn("Failed to create Anthropic instance:", error);
+    }
   }, [apiKey, baseURL, headers]);
 
   useEffect(() => {
