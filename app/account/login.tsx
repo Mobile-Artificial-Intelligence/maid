@@ -157,6 +157,10 @@ function Login() {
       <TouchableOpacity onPress={() => router.replace("/account/register")}>
         <Text style={styles.linkText}>Don’t have an account? Register</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.push("/account/reset-password" as any)}>
+        <Text style={styles.linkText}>Forgot password?</Text>
+      </TouchableOpacity>
     </View>
   );
 }

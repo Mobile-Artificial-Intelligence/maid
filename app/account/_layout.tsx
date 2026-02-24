@@ -11,6 +11,7 @@ function AccountLayout() {
       <Stack.Screen name="login" options={{ animation: "none" }} />
       <Stack.Screen name="register" options={{ animation: "none" }} />
       <Stack.Screen name="change-password" options={{ animation: "none" }} />
+      <Stack.Screen name="reset-password" options={{ animation: "none" }} />
     </Stack>
   );
 }
