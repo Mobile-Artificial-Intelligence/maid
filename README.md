@@ -15,18 +15,18 @@
 
 <div align="center">
 <a href="https://github.com/Mobile-Artificial-Intelligence/maid/releases/latest">
-  <img
-    src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/refs/heads/main/badge_github.png"
-    alt="Get it on GitHub"
-    width="210" 
-  />
+<img
+  src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/refs/heads/main/badge_github.png"
+  alt="Get it on GitHub"
+  width="210" 
+/>
 </a>
 <a href='https://play.google.com/store/apps/details?id=com.danemadsen.maid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
-  <img 
-    src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'
-    alt='Get it on Google Play'
-    height="80"
-  />
+<img 
+  src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'
+  alt='Get it on Google Play'
+  height="80"
+/>
 </a>
 </div>
 
