@@ -14,27 +14,6 @@
 </div>
 
 <div align="center">
-<a href="https://f-droid.org/packages/com.danemadsen.maid/">
-  <img 
-    src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="80"
-  >
-</a>
-<a href="https://www.openapk.net/maid/com.danemadsen.maid/">
-  <img 
-    src="https://www.openapk.net/images/openapk-badge.png"
-    alt="Get it on OpenAPK"
-    height="80"
-  >
-</a>
-<a href="https://www.androidfreeware.net/download-maid-apk.html">
-  <img 
-    src="https://www.androidfreeware.net/images/androidfreeware-badge.png"
-    alt="Get it on Android Freeware"
-    height="80"
-  >
-</a>
 <a href="https://github.com/Mobile-Artificial-Intelligence/maid/releases/latest">
   <img
     src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/refs/heads/main/badge_github.png"
