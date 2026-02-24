@@ -30,6 +30,10 @@
 </a>
 </div>
 
+Maid is a free and open source application for interfacing with llama.cpp models locally, and with Anthropic, DeepSeek, Ollama, Mistral and OpenAI models remotely. Maid is built using React Native and is available for Android. The application is designed to be fast, efficient and user-friendly, making it easy for users to interact with their models on the go.
+
+For text to speech functionality check out Maids companion app [Maise](https://github.com/Mobile-Artificial-Intelligence/maise).
+
 ## Cloning
 To clone the repository, use the following command:
 
