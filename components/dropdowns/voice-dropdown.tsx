@@ -5,6 +5,10 @@ import { getAvailableVoicesAsync, Voice } from "expo-speech";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
+function getLanguage(tag: string): string {
+  return tag.split("-")[0].toLowerCase();
+}
+
 function VoiceDropdown() {
   const [voices, setVoices] = useState<Array<Voice>>([]);
   const { voice, setVoice } = useSystem();
@@ -16,7 +20,9 @@ function VoiceDropdown() {
       const availableVoices = await getAvailableVoicesAsync();
 
       const filteredVoices = availableVoices.filter(voice =>
-        locales.some(locale => locale.languageTag === voice.language)
+        locales.some(
+          locale => getLanguage(locale.languageTag) === getLanguage(voice.language)
+        )
       );
 
       setVoices(filteredVoices);
