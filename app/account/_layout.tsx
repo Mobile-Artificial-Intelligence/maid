@@ -7,6 +7,7 @@ function AccountLayout() {
         headerShown: false,
       }}
     >
+      <Stack.Screen name="index" options={{ animation: "none" }} />
       <Stack.Screen name="login" options={{ animation: "none" }} />
       <Stack.Screen name="register" options={{ animation: "none" }} />
     </Stack>

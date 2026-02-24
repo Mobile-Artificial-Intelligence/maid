@@ -153,8 +153,8 @@ function DrawerContent() {
       <View style={styles.divider} />
       <View style={styles.account}>
         {authenticated && !anonymous ? (
-          <TouchableOpacity testID="logout-button" onPress={logout}>
-            <Text style={styles.accountText}>Logout</Text>
+          <TouchableOpacity testID="account-button" onPress={() => router.push("/account")}>
+            <Text style={styles.accountText}>Account</Text>
           </TouchableOpacity>
         ) : (
           <>
