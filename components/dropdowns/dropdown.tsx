@@ -39,7 +39,7 @@ function Dropdown<T>({
   const rootRef = useRef<View>(null);
 
   const selectedItem =
-    items.find((item) => item.value === selectedValue) ?? items[0];
+    items.find((item) => item.value == selectedValue) ?? items[0];
 
   const openMenu = () => {
     if (rootRef.current) {
