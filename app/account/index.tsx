@@ -86,22 +86,30 @@ export default function Index() {
       testID="account-page" 
       style={styles.view}
     >
-      <View style={styles.row}>
-        <TouchableOpacity 
-          testID="logout-button" 
-          onPress={logout} 
+      <TouchableOpacity
+        testID="logout-button"
+        onPress={logout}
+      >
+        <Text
+          style={[styles.buttonTextBase, styles.buttonTextPrimary]}
         >
-          <Text 
-            style={[styles.buttonTextBase, styles.buttonTextPrimary]}
-          >
-            Logout
+          Logout
+        </Text>
+      </TouchableOpacity>
+      <View style={styles.row}>
+        <TouchableOpacity
+          testID="change-password-button"
+          onPress={() => router.push("/account/change-password" as any)}
+        >
+          <Text style={[styles.buttonTextBase, styles.buttonTextPrimary]}>
+            Change Password
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           testID="delete-account-button"
           onPress={() => setShowDeleteConfirm(true)}
         >
-          <Text 
+          <Text
             style={[styles.buttonTextBase, styles.buttonTextDanger]}
           >
             Delete Account
