@@ -1,12 +1,11 @@
 import { useSystem } from '@/context';
-import useAuthentication from '@/hooks/use-authentication';
 import getSupabase from '@/utilities/supabase';
-import { Redirect } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function Index() {
-  const [authenticated, anonymous] = useAuthentication();
+  const router = useRouter();
   const { colorScheme } = useSystem();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
 
@@ -16,16 +15,18 @@ export default function Index() {
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
-      gap: 16,
+      gap: 8,
       backgroundColor: colorScheme.surface,
     },
-    button: {
-      marginTop: 8,
+    row: {
+      flexDirection: "row",
+      gap: 16,
+      justifyContent: "space-between",
     },
     buttonTextBase: {
       borderRadius: 20,
-      paddingVertical: 12,
-      paddingHorizontal: 48,
+      paddingVertical: 8,
+      paddingHorizontal: 32,
       fontSize: 16,
       textAlign: "center",
       fontWeight: "bold",
@@ -61,6 +62,10 @@ export default function Index() {
       if (!res.ok || !data.success) {
         throw new Error(data.error ?? "Failed to delete account");
       }
+      else {
+        await getSupabase().auth.signOut();
+        router.replace("/account/login");
+      }
     } catch (error) {
       console.error("Error deleting account:", error);
     }
@@ -70,42 +75,39 @@ export default function Index() {
   const logout = async () => {
     try {
       await getSupabase().auth.signOut();
+      router.replace("/account/login");
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
-  
-  if (!authenticated || anonymous) {
-    return <Redirect href="/account/login" />;
-  }
 
   return (
     <View 
       testID="account-page" 
       style={styles.view}
     >
-      <TouchableOpacity 
-        testID="logout-button" 
-        onPress={logout} 
-        style={styles.button}
-      >
-        <Text 
-          style={[styles.buttonTextBase, styles.buttonTextPrimary]}
+      <View style={styles.row}>
+        <TouchableOpacity 
+          testID="logout-button" 
+          onPress={logout} 
         >
-          Logout
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        testID="delete-account-button"
-        onPress={() => setShowDeleteConfirm(true)}
-        style={styles.button}
-      >
-        <Text 
-          style={[styles.buttonTextBase, styles.buttonTextDanger]}
+          <Text 
+            style={[styles.buttonTextBase, styles.buttonTextPrimary]}
+          >
+            Logout
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          testID="delete-account-button"
+          onPress={() => setShowDeleteConfirm(true)}
         >
-          Delete Account
-        </Text>
-      </TouchableOpacity>
+          <Text 
+            style={[styles.buttonTextBase, styles.buttonTextDanger]}
+          >
+            Delete Account
+          </Text>
+        </TouchableOpacity>
+      </View>
       <Modal
         visible={showDeleteConfirm}
         transparent
@@ -119,34 +121,32 @@ export default function Index() {
           backgroundColor: "rgba(0,0,0,0.5)"
         }}>
           <View style={{
-            backgroundColor: colorScheme.surface,
-            padding: 24,
-            borderRadius: 8,
+            backgroundColor: colorScheme.surfaceVariant,
+            padding: 32,
+            borderRadius: 32,
             width: "80%",
             alignItems: "center",
-            gap: 16
+            gap: 48
           }}>
-            <Text style={{ color: colorScheme.onSurface, fontSize: 18, fontWeight: "bold" }}>
+            <Text style={{ color: colorScheme.onSurface, fontSize: 18, fontWeight: "bold", textAlign: "center" }}>
               Are you sure you want to delete your account?
             </Text>
             <View style={{ flexDirection: "row", gap: 16 }}>
-              <TouchableOpacity 
-                onPress={() => setShowDeleteConfirm(false)} 
-                style={[styles.button, { backgroundColor: colorScheme.outline }]}
-              >
-                <Text style={[styles.buttonTextBase, { color: colorScheme.onSurface }]}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => {
                   setShowDeleteConfirm(false);
                   deleteAccount();
                 }} 
-                style={[styles.button, styles.buttonTextDanger]}
               >
-                <Text style={[styles.buttonTextBase, styles.buttonTextDanger]}>
-                  Delete
+                <Text style={[styles.buttonTextBase, styles.buttonTextPrimary]}>
+                  Yes
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => setShowDeleteConfirm(false)} 
+              >
+                <Text style={[styles.buttonTextBase, styles.buttonTextPrimary]}>
+                  No
                 </Text>
               </TouchableOpacity>
             </View>
