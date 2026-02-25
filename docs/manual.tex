@@ -4,11 +4,27 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{enumitem}
+
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\definecolor{keywordcolor}{rgb}{0.0,0.4,0.8}
+
+\lstset{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{gray},
+    keywordstyle=\color{keywordcolor}\bfseries,
+}
 
 \setlength{\fboxsep}{0pt}
 
 \begin{document}
-\begin{titlepage}	
+\begin{titlepage}
     \centering
     \rule{\textwidth}{1pt}\par
     \vspace*{1.2cm}
@@ -29,4 +45,383 @@
 \tableofcontents
 
 \newpage
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Introduction}
+
+Maid (Mobile Artificial Intelligence Distribution) is a free and open-source application for interfacing with AI language models on Android. It supports both fully local inference via \texttt{llama.cpp} and remote inference through the APIs of Anthropic, DeepSeek, Mistral, Ollama, and OpenAI.
+
+All settings are stored locally on your device using encrypted application storage — no API keys or personal data are sent anywhere other than the provider you configure.
+
+\subsection{Companion App}
+
+For text-to-speech functionality, Maid has a companion app called \textbf{Maise}. It can be found at\\
+\url{https://github.com/Mobile-Artificial-Intelligence/maise}.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Selecting a Provider}
+
+On the Settings screen, tap the \textbf{API} dropdown at the top of the page to choose which AI provider Maid should use. The available options are:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Llama} — Local inference on-device (no internet required)
+    \item \textbf{Ollama} — Local or self-hosted server
+    \item \textbf{OpenAI} — OpenAI cloud API (and compatible endpoints)
+    \item \textbf{Anthropic} — Anthropic Claude cloud API
+    \item \textbf{Mistral} — Mistral AI cloud API
+    \item \textbf{DeepSeek} — DeepSeek cloud API
+\end{itemize}
+
+After selecting a provider, the settings panel will update to show the fields relevant to that provider.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Llama (Local Inference)}
+
+\subsection{Overview}
+
+The Llama provider runs AI models directly on your device using \texttt{llama.cpp} via the \texttt{llama.rn} library. No internet connection is required and no data leaves your device. Performance depends on your device's CPU and available RAM.
+
+\subsection{Selecting a Built-in Model}
+
+Maid ships with a curated catalogue of GGUF models that can be downloaded directly from within the app. Open Settings, ensure \textbf{Llama} is selected as the API, then tap the \textbf{Model} dropdown to browse available models. Selecting a model and quantisation will begin the download automatically.
+
+The built-in catalogue includes the following models:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Model} & \textbf{Parameters} & \textbf{Quantisations Available} \\
+\midrule
+LFM 2.5 1.2B Thinking      & 1.2B & Q4\_0, Q4\_K\_M, Q5\_K\_M, Q6\_K, Q8\_0, BF16, F16 \\
+Qwen3 4B                   & 4.0B & Q4\_K\_M, Q5\_0, Q5\_K\_M, Q6\_K, Q8\_0 \\
+Phi 3 Mini 4K Instruct     & 3.8B & Q4, FP16 \\
+TinyLlama 1.1B Chat        & 1.1B & Q2\_K through Q8\_0 \\
+Gemma 2 2B IT              & 2.0B & IQ3\_M through F32 \\
+Gemma 3 1B IT              & 1.0B & Q2\_K through BF16 \\
+Gemmasutra Mini 2B v1      & 2.0B & Q2\_K through F32 \\
+Gemmasutra Small 4B v1a    & 4.0B & Q2\_K through Q8\_0 \\
+Qwen2.5 1.5B Instruct      & 1.5B & Q2\_K through FP16 \\
+Llama 3.2 1B Instruct      & 1.0B & IQ3\_M through F16 \\
+Llama 3.2 3B Instruct      & 3.0B & IQ3\_M through F16 \\
+Tesslate Tessa T1 3B       & 3.0B & IQ2\_M through BF16 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Choosing a Quantisation}
+
+Quantisation reduces model size at the cost of some accuracy. A general guide:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Q2\_K / Q3\_K} — Smallest size, lowest quality. Useful when RAM is very limited.
+    \item \textbf{Q4\_K\_M} — Good balance of size and quality. Recommended for most devices.
+    \item \textbf{Q5\_K\_M / Q6\_K} — Higher quality, larger download. Suitable for higher-end devices.
+    \item \textbf{Q8\_0} — Near-lossless quality. Requires the most RAM.
+    \item \textbf{F16 / BF16} — Full precision. Not recommended for mobile inference.
+\end{itemize}
+
+\subsection{Loading a Custom Model File}
+
+To use a GGUF model file you have obtained separately:
+
+\begin{enumerate}
+    \item Transfer the \texttt{.gguf} file to your device (e.g.\ via USB or a file manager).
+    \item In Maid, go to \textbf{Settings} and select \textbf{Llama} as the API.
+    \item Tap \textbf{Add Model File} and navigate to the file location using the file picker.
+    \item Once added, select the file from the \textbf{Model} dropdown.
+\end{enumerate}
+
+\subsection{Configuration}
+
+No API key or server address is needed. The only configurable items are:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Model} — The GGUF model file to load.
+    \item \textbf{Parameters} — Optional inference parameters (see Section~\ref{sec:parameters}).
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Ollama}
+
+\subsection{Overview}
+
+Ollama is a tool for running large language models locally on a desktop or server. Maid connects to an Ollama instance over the network, which means you can run a capable model on a more powerful machine (such as a desktop PC or a home server) and use Maid on your phone as the interface.
+
+\subsection{Installing Ollama}
+
+Install Ollama on the host machine by following the official instructions at \url{https://ollama.com}. Once installed, start the Ollama service and pull a model, for example:
+
+\begin{lstlisting}[language=bash]
+ollama pull llama3.2
+\end{lstlisting}
+
+By default Ollama listens on \texttt{http://localhost:11434}.
+
+\subsection{Allowing Remote Connections}
+
+If Maid is running on a different device than Ollama, you must allow Ollama to accept connections from other hosts. Set the environment variable before starting Ollama:
+
+\begin{lstlisting}[language=bash]
+OLLAMA_HOST=0.0.0.0 ollama serve
+\end{lstlisting}
+
+Ensure your firewall allows inbound connections on port \texttt{11434} from your phone's network.
+
+\subsection{Configuration in Maid}
+
+\begin{enumerate}
+    \item Go to \textbf{Settings} and select \textbf{Ollama} from the API dropdown.
+    \item Enter the \textbf{Base URL} of your Ollama server, e.g.:
+\begin{lstlisting}
+http://192.168.1.100:11434
+\end{lstlisting}
+    \item Maid will automatically fetch the list of models available on your Ollama server.
+    \item Select a model from the \textbf{Model} dropdown.
+    \item Optionally configure \textbf{Custom Headers} and \textbf{Parameters} (see Sections~\ref{sec:headers} and~\ref{sec:parameters}).
+\end{enumerate}
+
+\subsection{Required Fields}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Field} & \textbf{Required} & \textbf{Default} \\
+\midrule
+Base URL & Yes & — \\
+Model    & Yes & — \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{OpenAI}
+
+\subsection{Overview}
+
+The OpenAI provider connects to OpenAI's cloud API. It also supports any third-party API that is compatible with the OpenAI REST specification, such as LM Studio, vLLM, or OpenRouter, by changing the Base URL.
+
+\subsection{Obtaining an API Key}
+
+\begin{enumerate}
+    \item Create an account at \url{https://platform.openai.com}.
+    \item Navigate to \textbf{API Keys} in your account dashboard.
+    \item Click \textbf{Create new secret key} and copy the generated key.
+\end{enumerate}
+
+Keep your API key secure. Charges are incurred based on token usage.
+
+\subsection{Configuration in Maid}
+
+\begin{enumerate}
+    \item Go to \textbf{Settings} and select \textbf{OpenAI} from the API dropdown.
+    \item Paste your API key into the \textbf{API Key} field.
+    \item Maid will automatically fetch and populate the \textbf{Model} dropdown with the models available on your account.
+    \item Select a model (e.g.\ \texttt{gpt-4o}, \texttt{gpt-4o-mini}, \texttt{o3-mini}).
+    \item Optionally set a \textbf{Custom Base URL} if you are using a compatible third-party endpoint.
+    \item Optionally configure \textbf{Custom Headers} and \textbf{Parameters} (see Sections~\ref{sec:headers} and~\ref{sec:parameters}).
+\end{enumerate}
+
+\subsection{Required Fields}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Field} & \textbf{Required} & \textbf{Default} \\
+\midrule
+API Key  & Yes & — \\
+Model    & Yes & — \\
+Base URL & No  & \texttt{https://api.openai.com/v1} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Using Compatible APIs}
+
+Because the Base URL is configurable, OpenAI mode also works with any OpenAI-compatible endpoint. Examples:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{LM Studio} — set Base URL to \texttt{http://<host>:1234/v1}
+    \item \textbf{OpenRouter} — set Base URL to \texttt{https://openrouter.ai/api/v1} and use your OpenRouter API key
+    \item \textbf{vLLM} — set Base URL to \texttt{http://<host>:8000/v1}
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Anthropic}
+
+\subsection{Overview}
+
+The Anthropic provider connects to Anthropic's Claude family of models via the official Claude API. Claude models are known for their strong reasoning, instruction-following, and safety characteristics.
+
+\subsection{Obtaining an API Key}
+
+\begin{enumerate}
+    \item Create an account at \url{https://console.anthropic.com}.
+    \item Navigate to \textbf{API Keys} in the left-hand sidebar.
+    \item Click \textbf{Create Key}, name it, and copy the generated key.
+\end{enumerate}
+
+API usage is billed per token. Review Anthropic's pricing page for current rates.
+
+\subsection{Configuration in Maid}
+
+\begin{enumerate}
+    \item Go to \textbf{Settings} and select \textbf{Anthropic} from the API dropdown.
+    \item Paste your API key into the \textbf{API Key} field.
+    \item Maid will automatically fetch and populate the \textbf{Model} dropdown with available Claude models (e.g.\ \texttt{claude-opus-4-6}, \texttt{claude-sonnet-4-6}, \texttt{claude-haiku-4-5}).
+    \item Select a model.
+    \item Optionally set a \textbf{Custom Base URL} if routing through a proxy.
+    \item Optionally configure \textbf{Custom Headers} and \textbf{Parameters} (see Sections~\ref{sec:headers} and~\ref{sec:parameters}).
+\end{enumerate}
+
+\subsection{Required Fields}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Field} & \textbf{Required} & \textbf{Default} \\
+\midrule
+API Key  & Yes & — \\
+Model    & Yes & — \\
+Base URL & No  & \texttt{https://api.anthropic.com} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Mistral}
+
+\subsection{Overview}
+
+The Mistral provider connects to Mistral AI's cloud API. Mistral offers a range of efficient and capable models including Mistral Large, Mistral Small, and Codestral.
+
+\subsection{Obtaining an API Key}
+
+\begin{enumerate}
+    \item Create an account at \url{https://console.mistral.ai}.
+    \item Navigate to \textbf{API Keys} in the left-hand menu.
+    \item Click \textbf{Create new key} and copy the generated key.
+\end{enumerate}
+
+\subsection{Configuration in Maid}
+
+\begin{enumerate}
+    \item Go to \textbf{Settings} and select \textbf{Mistral} from the API dropdown.
+    \item Paste your API key into the \textbf{API Key} field.
+    \item Maid will automatically fetch and populate the \textbf{Model} dropdown with available Mistral models.
+    \item Select a model (e.g.\ \texttt{mistral-large-latest}, \texttt{mistral-small-latest}).
+    \item Optionally set a \textbf{Custom Base URL} if using a self-hosted Mistral-compatible server.
+    \item Optionally configure \textbf{Parameters} (see Section~\ref{sec:parameters}).
+\end{enumerate}
+
+\textbf{Note:} The Mistral provider does not support custom HTTP headers.
+
+\subsection{Required Fields}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Field} & \textbf{Required} & \textbf{Default} \\
+\midrule
+API Key  & Yes & — \\
+Model    & Yes & — \\
+Base URL & No  & \texttt{https://api.mistral.ai} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{DeepSeek}
+
+\subsection{Overview}
+
+The DeepSeek provider connects to the DeepSeek cloud API. DeepSeek offers high-quality models at competitive pricing, including the DeepSeek-V3 and DeepSeek-R1 reasoning model.
+
+\subsection{Obtaining an API Key}
+
+\begin{enumerate}
+    \item Create an account at \url{https://platform.deepseek.com}.
+    \item Navigate to \textbf{API Keys} in your dashboard.
+    \item Click \textbf{Create API Key} and copy the generated key.
+\end{enumerate}
+
+\subsection{Configuration in Maid}
+
+\begin{enumerate}
+    \item Go to \textbf{Settings} and select \textbf{DeepSeek} from the API dropdown.
+    \item Paste your API key into the \textbf{API Key} field.
+    \item Maid will automatically fetch and populate the \textbf{Model} dropdown.
+    \item Select a model (e.g.\ \texttt{deepseek-chat}, \texttt{deepseek-reasoner}).
+    \item Optionally configure \textbf{Custom Headers} and \textbf{Parameters} (see Sections~\ref{sec:headers} and~\ref{sec:parameters}).
+\end{enumerate}
+
+\textbf{Note:} The DeepSeek provider always connects to \texttt{https://api.deepseek.com}. The base URL is not configurable.
+
+\subsection{Required Fields}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Field} & \textbf{Required} & \textbf{Default} \\
+\midrule
+API Key & Yes & — \\
+Model   & Yes & — \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Advanced Configuration}
+
+\subsection{Model Parameters}
+\label{sec:parameters}
+
+All providers expose a \textbf{Parameters} panel that lets you fine-tune inference behaviour. Tap \textbf{Parameters} on the Settings screen to expand the panel. Common parameters include:
+
+\begin{center}
+\begin{tabular}{lp{9cm}}
+\toprule
+\textbf{Parameter} & \textbf{Description} \\
+\midrule
+\texttt{temperature} & Controls randomness. Lower values (e.g.\ 0.2) produce more deterministic output; higher values (e.g.\ 1.0) produce more varied output. \\
+\texttt{top\_p}      & Nucleus sampling threshold. Limits token selection to the top $p$ cumulative probability mass. \\
+\texttt{top\_k}      & Limits token selection to the top $k$ most likely tokens at each step. \\
+\texttt{max\_tokens} & Maximum number of tokens the model may generate in a single response. \\
+\texttt{seed}        & Sets a fixed random seed for reproducible outputs (where supported). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Parameters that are left blank are omitted from the API request, allowing each provider to use its own defaults.
+
+\subsection{Custom HTTP Headers}
+\label{sec:headers}
+
+The OpenAI, Anthropic, DeepSeek, and Ollama providers allow you to supply additional HTTP headers. This is useful for:
+
+\begin{itemize}[noitemsep]
+    \item Passing organisation or project identifiers required by a corporate proxy.
+    \item Supplying additional authentication tokens (e.g.\ \texttt{HTTP-Referer} required by OpenRouter).
+    \item Tagging requests for logging or rate-limit tier purposes.
+\end{itemize}
+
+To add a header, tap \textbf{Headers} on the Settings screen, then tap the \textbf{+} button. Enter the header name and value, then save. Multiple headers can be added.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Provider Feature Comparison}
+
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Provider} & \textbf{API Key} & \textbf{Custom Base URL} & \textbf{Custom Headers} & \textbf{Local} \\
+\midrule
+Llama    & No  & No  & No  & Yes \\
+Ollama   & No  & Yes & Yes & Yes \\
+OpenAI   & Yes & Yes & Yes & No  \\
+Anthropic & Yes & Yes & Yes & No  \\
+Mistral  & Yes & Yes & No  & No  \\
+DeepSeek & Yes & No  & Yes & No  \\
+\bottomrule
+\end{tabular}
+\end{center}
+
 \end{document}
