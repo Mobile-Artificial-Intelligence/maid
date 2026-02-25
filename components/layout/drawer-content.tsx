@@ -3,7 +3,6 @@ import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useChat, useSystem } from "@/context";
 import useAuthentication from "@/hooks/use-authentication";
 import validateMappings from "@/utilities/mappings";
-import getSupabase from "@/utilities/supabase";
 import { randomUUID } from "expo-crypto";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -62,14 +61,6 @@ function DrawerContent() {
       }
     ));
     setRoot(id);
-  };
-
-  const logout = async () => {
-    try {
-      await getSupabase().auth.signOut();
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
   };
     
   const styles = StyleSheet.create({
