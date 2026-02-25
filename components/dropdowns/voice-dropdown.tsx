@@ -87,6 +87,7 @@ function VoiceDropdown() {
         items={items}
         selectedValue={voice}
         onValueChange={setVoice}
+        equalityFn={(a, b) => a?.identifier === b?.identifier}
       />
     </View>
   );

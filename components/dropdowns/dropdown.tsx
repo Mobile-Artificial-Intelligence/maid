@@ -23,6 +23,7 @@ interface DropdownProps<T> {
   items: DropdownItem<T>[];
   selectedValue: T;
   onValueChange: (value: T) => void;
+  equalityFn?: (a: T, b: T) => boolean;
 }
 
 const POPOVER_MIN_WIDTH = 180;
@@ -32,6 +33,7 @@ function Dropdown<T>({
   items,
   selectedValue,
   onValueChange,
+  equalityFn,
 }: DropdownProps<T>) {
   const { colorScheme } = useSystem();
   const [open, setOpen] = useState(false);
@@ -39,7 +41,7 @@ function Dropdown<T>({
   const rootRef = useRef<View>(null);
 
   const selectedItem =
-    items.find((item) => item.value == selectedValue) ?? items[0];
+    items.find((item) => equalityFn ? equalityFn(item.value, selectedValue) : item.value == selectedValue) ?? items[0];
 
   const openMenu = () => {
     if (rootRef.current) {
