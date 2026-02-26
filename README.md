@@ -32,7 +32,21 @@
 
 Maid is a free and open source application for interfacing with llama.cpp models locally, and with Anthropic, DeepSeek, Ollama, Mistral and OpenAI models remotely. Maid is built using React Native and is available for Android. The application is designed to be fast, efficient and user-friendly, making it easy for users to interact with their models on the go.
 
-For text to speech functionality check out Maids companion app [Maise](https://github.com/Mobile-Artificial-Intelligence/maise).
+For text to speech functionality check out Maid's companion app [Maise](https://github.com/Mobile-Artificial-Intelligence/maise).
+
+## Features
+
+- **Local inference** — run GGUF models fully on-device via llama.cpp; no internet required
+- **Remote providers** — connect to Anthropic, DeepSeek, Mistral, Ollama, and OpenAI with your own API key
+- **One-tap model downloads** — browse and download curated Hugging Face models (Qwen, Phi, LFM, TinyLlama, and more) directly from the app
+- **Bring your own model** — load any GGUF file from local storage
+- **Conversation management** — create, rename, delete, export, and import chats as JSON
+- **Customisable parameters** — tune temperature, top-p, top-k, context length, and other generation parameters per session
+- **Custom system prompt** — set a global system prompt and assistant persona
+- **Voice output** — pair with [Maise](https://github.com/Mobile-Artificial-Intelligence/maise) for text-to-speech
+- **Optional account sync** — register / log in to back up settings and chat history via Supabase
+- **Material You theming** — light and dark themes that follow your system preference
+- **Fully open source** — MIT licensed, no telemetry, no ads
 
 ## Cloning
 To clone the repository, use the following command:
@@ -46,6 +60,13 @@ Run the following command to install dependencies:
 
 ```bash
 yarn install
+```
+
+## Testing
+Run the test suite with:
+
+```bash
+yarn test
 ```
 
 ## Building
