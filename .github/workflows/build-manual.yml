@@ -1,0 +1,39 @@
+name: Build Manual
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-manual.yml'
+      - 'docs/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-manual.yml'
+      - 'docs/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX manual
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: manual.tex
+          working_directory: docs
+
+      - name: Upload manual PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-manual
+          path: docs/manual.pdf
+          if-no-files-found: error
