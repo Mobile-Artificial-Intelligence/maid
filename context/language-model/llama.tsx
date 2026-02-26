@@ -51,9 +51,7 @@ const LlamaContext = createContext<LlamaContextProps | undefined>(undefined);
 
 export function LlamaProvider({ children }: { children: ReactNode }) {
   const loadIdRef = useRef<number>(0);
-  const [ready, setReady] = useState<boolean>(false);
-  const [prompting, setPrompting] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [busy, setBusy] = useState<boolean>(false);
 
   const [modelFiles, setModelFiles] = useStoredRecord<string, string>("llama-model-files");
   const [modelFileKey, setModelFileKey] = useStoredString("llama-model-file-key");
@@ -61,15 +59,6 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
   const [parameters, setParameters] = useStoredRecord("llama-parameters");
 
   const [llama, setLlama] = useState<LlamaRnContext | undefined>(undefined);
-
-  useEffect(() => {
-    if (llama && !prompting && !loading) {
-      setReady(true);
-    }
-    else {
-      setReady(false);
-    }
-  }, [llama, prompting, loading]);
 
   useEffect(() => {
     let cancelled = false;
@@ -91,9 +80,9 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
       const currentLoadId = ++loadIdRef.current;
 
       timeout = setTimeout(async () => {
-        if (loading) return;
+        if (busy) return;
 
-        setLoading(true);
+        setBusy(true);
 
         try {
           const info = await loadLlamaModelInfo(modelFile) as Record<string, any>;
@@ -119,7 +108,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
           console.error("Error initializing model:", error);
         } finally {
           if (!cancelled) {
-            setLoading(false);
+            setBusy(false);
           }
         }
       }, 400);
@@ -170,12 +159,12 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    if (prompting) {
+    if (busy) {
       console.warn("Prompt already in progress");
       return;
     }
 
-    setPrompting(true);
+    setBusy(true);
 
     try {
       const result = await llama.completion({
@@ -188,12 +177,12 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
       console.error("Error prompting model:", error);
     }
 
-    setPrompting(false);
+    setBusy(false);
   };
 
   const value = {
-    ready,
-    busy: prompting || loading,
+    ready: !!llama,
+    busy,
     modelFileKey,
     pickModelFile,
     setModelFileKey,

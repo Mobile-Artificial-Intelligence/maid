@@ -89,7 +89,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
 
   const value = { 
     ready: !!ollama && !!model,
-    busy: busy,
+    busy,
     baseURL,
     setBaseURL,
     headers,
