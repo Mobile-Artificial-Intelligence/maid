@@ -91,6 +91,51 @@ describe("Chat page", () => {
     expect(chatPage).toBeOnTheScreen();
   });
 
+  it("should show the clear prompt button when text is entered", async () => {
+    const input = await screen.findByTestId("prompt-input");
+    fireEvent.changeText(input, "Hello");
+
+    const clearButton = await screen.findByTestId("clear-prompt-button");
+    expect(clearButton).toBeOnTheScreen();
+  });
+
+  it("should clear the prompt input when the clear prompt button is pressed", async () => {
+    const input = await screen.findByTestId("prompt-input");
+    fireEvent.changeText(input, "Hello");
+
+    const clearButton = await screen.findByTestId("clear-prompt-button");
+    fireEvent.press(clearButton);
+
+    expect(clearButton).not.toBeOnTheScreen();
+  });
+
+  it("should create a new chat when the new chat button is pressed", async () => {
+    const openDrawerButton = await screen.findByTestId("open-drawer-button");
+    fireEvent.press(openDrawerButton);
+
+    const newChatButton = await screen.findByTestId("new-chat-button");
+    fireEvent.press(newChatButton);
+
+    const chatButton = await screen.findByTestId("chat-button-0");
+    expect(chatButton).toBeOnTheScreen();
+  });
+
+  it("should clear all chats when the clear chats button is pressed", async () => {
+    const openDrawerButton = await screen.findByTestId("open-drawer-button");
+    fireEvent.press(openDrawerButton);
+
+    const newChatButton = await screen.findByTestId("new-chat-button");
+    fireEvent.press(newChatButton);
+
+    const chatButton = await screen.findByTestId("chat-button-0");
+    expect(chatButton).toBeOnTheScreen();
+
+    const clearChatsButton = await screen.findByTestId("clear-chats-button");
+    fireEvent.press(clearChatsButton);
+
+    expect(chatButton).not.toBeOnTheScreen();
+  });
+
   it("should open the menu popover when the menu button is pressed", async () => {
     const menuButton = await screen.findByTestId("menu-button");
     fireEvent.press(menuButton);
