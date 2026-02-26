@@ -128,7 +128,7 @@ export default function Index() {
           alignItems: "center",
           backgroundColor: "rgba(0,0,0,0.5)"
         }}>
-          <View style={{
+          <View testID="delete-confirm-modal" style={{
             backgroundColor: colorScheme.surfaceVariant,
             padding: 32,
             borderRadius: 32,
@@ -140,18 +140,20 @@ export default function Index() {
               Are you sure you want to delete your account?
             </Text>
             <View style={{ flexDirection: "row", gap: 16 }}>
-              <TouchableOpacity 
+              <TouchableOpacity
+                testID="delete-confirm-button"
                 onPress={() => {
                   setShowDeleteConfirm(false);
                   deleteAccount();
-                }} 
+                }}
               >
                 <Text style={[styles.buttonTextBase, styles.buttonTextPrimary]}>
                   Yes
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => setShowDeleteConfirm(false)} 
+              <TouchableOpacity
+                testID="delete-cancel-button"
+                onPress={() => setShowDeleteConfirm(false)}
               >
                 <Text style={[styles.buttonTextBase, styles.buttonTextPrimary]}>
                   No

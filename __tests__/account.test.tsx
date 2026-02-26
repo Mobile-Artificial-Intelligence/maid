@@ -29,21 +29,21 @@ describe("Account page", () => {
     const deleteAccountButton = await screen.findByTestId("delete-account-button");
     fireEvent.press(deleteAccountButton);
 
-    const confirmText = await screen.findByText("Are you sure you want to delete your account?");
-    expect(confirmText).toBeOnTheScreen();
+    const confirmModal = await screen.findByTestId("delete-confirm-modal");
+    expect(confirmModal).toBeOnTheScreen();
   });
 
-  it("should hide the delete confirmation when the no button is pressed", async () => {
+  it("should hide the delete confirmation when the cancel button is pressed", async () => {
     const deleteAccountButton = await screen.findByTestId("delete-account-button");
     fireEvent.press(deleteAccountButton);
 
-    const confirmText = await screen.findByText("Are you sure you want to delete your account?");
-    expect(confirmText).toBeOnTheScreen();
+    const confirmModal = await screen.findByTestId("delete-confirm-modal");
+    expect(confirmModal).toBeOnTheScreen();
 
-    const noButton = await screen.findByText("No");
-    fireEvent.press(noButton);
+    const cancelButton = await screen.findByTestId("delete-cancel-button");
+    fireEvent.press(cancelButton);
 
-    expect(confirmText).not.toBeOnTheScreen();
+    expect(confirmModal).not.toBeOnTheScreen();
   });
 
   it("should navigate to the change password page when the change password button is pressed", async () => {

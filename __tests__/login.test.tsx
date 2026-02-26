@@ -35,7 +35,7 @@ describe("Login page", () => {
   });
 
   it("should navigate to the register page when the register link is pressed", async () => {
-    const registerLink = await screen.findByText("Don't have an account? Register");
+    const registerLink = await screen.findByTestId("register-link");
     fireEvent.press(registerLink);
 
     const registerPage = await screen.findByTestId("register-page");
@@ -43,7 +43,7 @@ describe("Login page", () => {
   });
 
   it("should navigate to the reset password page when the forgot password link is pressed", async () => {
-    const forgotPasswordLink = await screen.findByText("Forgot password?");
+    const forgotPasswordLink = await screen.findByTestId("forgot-password-link");
     fireEvent.press(forgotPasswordLink);
 
     const resetPasswordPage = await screen.findByTestId("reset-password-page");

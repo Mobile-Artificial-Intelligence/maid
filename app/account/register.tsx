@@ -187,7 +187,7 @@ function Register() {
         )}
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.replace("/account/login")}>
+      <TouchableOpacity testID="login-link" onPress={() => router.replace("/account/login")}>
         <Text style={styles.linkText}>Already have an account? Log in</Text>
       </TouchableOpacity>
     </View>

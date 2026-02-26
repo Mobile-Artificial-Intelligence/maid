@@ -47,7 +47,7 @@ describe("Register page", () => {
   });
 
   it("should navigate to the login page when the login link is pressed", async () => {
-    const loginLink = await screen.findByText("Already have an account? Log in");
+    const loginLink = await screen.findByTestId("login-link");
     fireEvent.press(loginLink);
 
     const loginPage = await screen.findByTestId("login-page");
