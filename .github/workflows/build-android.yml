@@ -112,6 +112,34 @@ jobs:
           path: release
           if-no-files-found: error
 
+      - name: Upload ARM64 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-android-arm64-v8a
+          path: release/maid-android-arm64-v8a.apk
+          if-no-files-found: error
+
+      - name: Upload x86_64 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-android-x86_64
+          path: release/maid-android-x86_64.apk
+          if-no-files-found: error
+
+      - name: Upload Universal APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-android-universal
+          path: release/maid-android-universal.apk
+          if-no-files-found: error
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: maid-android-bundle
+          path: release/maid-android-bundle.aab
+          if-no-files-found: error
+
   build-source:
     runs-on: ubuntu-latest
     permissions:
@@ -222,27 +250,27 @@ jobs:
       - name: Upload ARM64 APK
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-arm64-v8a
+          name: maid-android-source-arm64-v8a
           path: release/maid-android-arm64-v8a.apk
           if-no-files-found: error
 
       - name: Upload x86_64 APK
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-x86_64
+          name: maid-android-source-x86_64
           path: release/maid-android-x86_64.apk
           if-no-files-found: error
 
       - name: Upload Universal APK
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-universal
+          name: maid-android-source-universal
           path: release/maid-android-universal.apk
           if-no-files-found: error
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-bundle
+          name: maid-android-source-bundle
           path: release/maid-android-bundle.aab
           if-no-files-found: error
