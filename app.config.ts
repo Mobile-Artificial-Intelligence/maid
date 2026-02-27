@@ -78,7 +78,7 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
       {
         microphonePermission: "Allow $(PRODUCT_NAME) to use the microphone.",
         speechRecognitionPermission: "Allow $(PRODUCT_NAME) to use speech recognition.",
-        androidSpeechServicePackages: ["com.google.android.googlequicksearchbox"]
+        androidSpeechServicePackages: ["com.google.android.googlequicksearchbox", "com.google.android.tts"]
       }
     ]
   ],

@@ -84,6 +84,12 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
   };
 
   const startDictation = async () => {
+    const available = ExpoSpeechRecognitionModule.isRecognitionAvailable();
+    if (!available) {
+      console.warn("Speech recognition is not available on this device.");
+      return;
+    }
+
     const { granted } = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
 
     if (!granted) {
