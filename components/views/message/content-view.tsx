@@ -3,11 +3,11 @@ import { useChat, useLLM, useSystem } from "@/context";
 import getMetadata from "@/utilities/metadata";
 import splitReasoning from "@/utilities/reasoning";
 import getSupabase from "@/utilities/supabase";
+import Markdown from '@novastera-oss/react-native-markdown-display';
 import { randomUUID } from "expo-crypto";
 import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
-import Markdown from 'react-native-markdown-display';
 
 export async function insertReport(
   content: string,
