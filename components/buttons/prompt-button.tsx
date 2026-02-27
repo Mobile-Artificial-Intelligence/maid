@@ -145,7 +145,7 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
       resultListener.remove();
       errorListener?.remove?.();
     };
-  }, [promptText, setPromptText]);
+  }, [setPromptText]);
 
   if (dictating) {
     return (
