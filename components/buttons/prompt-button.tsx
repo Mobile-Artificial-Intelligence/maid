@@ -84,13 +84,7 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
   };
 
   const startDictation = async () => {
-    const perms = await ExpoSpeechRecognitionModule.getPermissionsAsync();
-
-    let granted = perms.granted;
-    if (!granted && perms.canAskAgain) {
-      const request = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
-      granted = request.granted;
-    }
+    const { granted } = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
 
     if (!granted) {
       console.warn("Microphone permission denied.");
