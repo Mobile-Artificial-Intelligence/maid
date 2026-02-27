@@ -4,7 +4,7 @@ import getMetadata from "@/utilities/metadata";
 import { randomUUID } from "expo-crypto";
 import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
 import { addNode, getConversation, updateContent } from "message-nodes";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 interface PromptButtonProps {
   promptText: string; 
@@ -15,18 +15,22 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
   const { mappings, setMappings, root, setRoot } = useChat();
   const { colorScheme, systemPrompt } = useSystem();
   const LLM = useLLM();
-  const [dictating, setDictating] = useState<boolean>(false);
+
+  const [dictating, setDictating] = useState(false);
+
+  // When dictation starts, we capture what the user already typed so we can append to it.
+  const dictationBaseRef = useRef<string>("");
 
   const prompt = () => {
     if (!LLM.ready) return;
 
     let next = mappings;
-    let parent: string | undefined = undefined;
+    let parent: string | undefined;
+
     if (root) {
       const thread = getConversation(mappings, root);
       parent = thread[thread.length - 1].id;
-    }
-    else {
+    } else {
       parent = randomUUID();
       next = addNode<string>(
         next,
@@ -36,25 +40,12 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
         parent,
         undefined,
         undefined,
-        {
-          title: "New Chat",
-          ...getMetadata(),
-        }
+        { title: "New Chat", ...getMetadata() }
       );
     }
 
     const id = randomUUID();
-    next = addNode<string>(
-      next,
-      id,
-      "user",
-      promptText,
-      root || parent,
-      parent,
-      undefined,
-      getMetadata()
-    );
-    
+    next = addNode<string>(next, id, "user", promptText, root || parent, parent, undefined, getMetadata());
     setPromptText("");
 
     const responseId = randomUUID();
@@ -73,91 +64,107 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
         model: LLM.model || LLM.modelFileKey,
       }
     );
-    
+
     setMappings(next);
     setRoot(root || parent);
 
     const conversation = getConversation(next, root || parent);
-    
+
     let buffer = "";
-    LLM.prompt(
-      conversation,
-      (chunk: string) => {
-        buffer += chunk;
-        setMappings(updateContent(next, responseId, buffer, (meta) => ({ ...meta, updateTime: new Date().toISOString() })));
-      }
-    );
+    LLM.prompt(conversation, (chunk: string) => {
+      buffer += chunk;
+      setMappings(prev =>
+        updateContent(prev, responseId, buffer, meta => ({
+          ...meta,
+          updateTime: new Date().toISOString(),
+        }))
+      );
+    });
   };
 
-  const dictate = async () => {
+  const startDictation = async () => {
+    const perms = await ExpoSpeechRecognitionModule.getPermissionsAsync();
+
+    let granted = perms.granted;
+    if (!granted && perms.canAskAgain) {
+      const request = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+      granted = request.granted;
+    }
+
+    if (!granted) {
+      console.warn("Microphone permission denied.");
+      return;
+    }
+
+    dictationBaseRef.current = promptText; // capture current typed text
+
+    ExpoSpeechRecognitionModule.start({
+      lang: "en-US",
+      addsPunctuation: true,
+      androidIntentOptions: {
+        EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
+        EXTRA_MASK_OFFENSIVE_WORDS: false,
+      },
+    });
+  };
+
+  const toggleDictation = async () => {
+    if (dictating) {
+      ExpoSpeechRecognitionModule.stop();
+      return;
+    }
     try {
-      let granted = false;
-      const perms = await ExpoSpeechRecognitionModule.getPermissionsAsync();
-      if (perms.granted) {
-        granted = true;
-      }
-      else if (perms.canAskAgain) {
-        const request = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
-        granted = request.granted;
-      }
-      else {
-        console.warn("Microphone permission denied and cannot ask again.");
-        return;
-      }
-
-      if (!granted) {
-        console.warn("Microphone permission denied.");
-        return;
-      }
-
-      ExpoSpeechRecognitionModule.start({ 
-        lang: "en-US",
-        addsPunctuation: true,
-        androidIntentOptions: {
-          EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
-          EXTRA_MASK_OFFENSIVE_WORDS: false,
-        } 
-      });
-    } catch (error) {
-      console.error("Error requesting microphone permission:", error);
+      await startDictation();
+    } catch (e) {
+      console.error("Dictation failed to start:", e);
+      setDictating(false);
     }
   };
 
   useEffect(() => {
-    const startListener = ExpoSpeechRecognitionModule.addListener(
-      "start", 
-      () => setDictating(true)
-    );
+    const startListener = ExpoSpeechRecognitionModule.addListener("start", () => {
+      setDictating(true);
+    });
 
-    const endListener = ExpoSpeechRecognitionModule.addListener(
-      "end",
-      () => setDictating(false)
-    );
+    const endListener = ExpoSpeechRecognitionModule.addListener("end", () => {
+      setDictating(false);
+    });
 
-    const resultListener = ExpoSpeechRecognitionModule.addListener(
-      "result", 
-      (event) => setPromptText(event.results[0].transcript)
-    );
+    const resultListener = ExpoSpeechRecognitionModule.addListener("result", (event) => {
+      const transcript = event.results?.[0]?.transcript ?? "";
+      // append onto baseline (and keep a space if needed)
+      const base = dictationBaseRef.current;
+      const glue = base.trim().length > 0 ? " " : "";
+      setPromptText(base + glue + transcript);
+    });
+
+    // If the lib supports it, this is worth having:
+    const errorListener = ExpoSpeechRecognitionModule.addListener?.("error" as any, (event: any) => {
+      console.error("Speech recognition error:", event);
+      setDictating(false);
+    });
 
     return () => {
       startListener.remove();
       endListener.remove();
       resultListener.remove();
+      errorListener?.remove?.();
     };
-  }, []);
+  }, [promptText, setPromptText]);
 
   if (dictating) {
     return (
-      <MaterialIconButton 
-        testID="stop-dictate-button" 
-        icon="mic" 
-        size={32} 
+      <MaterialIconButton
+        testID="stop-dictate-button"
+        icon="mic"
+        size={32}
         color={colorScheme.primary}
-        onPress={ExpoSpeechRecognitionModule.stop} 
+        onPress={() => ExpoSpeechRecognitionModule.stop()}
       />
     );
   }
-  else if (promptText.trim().length > 0) {
+
+  if (promptText.trim().length > 0) {
     return (
       <MaterialIconButton
         testID="send-button"
@@ -171,12 +178,12 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
   }
 
   return (
-    <MaterialIconButton 
-      testID="dictate-button" 
-      icon="mic-none" 
-      size={32} 
+    <MaterialIconButton
+      testID="dictate-button"
+      icon="mic-none"
+      size={32}
       color={colorScheme.primary}
-      onPress={dictate} 
+      onPress={toggleDictation}
     />
   );
 }
