@@ -1,15 +1,10 @@
-import { MaterialIconButton } from "@/components/buttons/icon-button";
-import { useChat, useLLM, useSystem } from "@/context";
-import getMetadata from "@/utilities/metadata";
-import { randomUUID } from "expo-crypto";
-import { addNode, getConversation, updateContent } from "message-nodes";
+import { useSystem } from "@/context";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import PromptButton from "../buttons/prompt-button";
 
 function PromptInput() {
-  const { mappings, setMappings, root, setRoot } = useChat();
-  const { colorScheme, systemPrompt } = useSystem();
-  const LLM = useLLM();
+  const { colorScheme } = useSystem();
 
   const [promptText, setPromptText] = useState<string>("");
 
@@ -66,78 +61,6 @@ function PromptInput() {
     }
   });
 
-  const onPrompt = () => {
-    if (!LLM.ready) return;
-
-    let next = mappings;
-    let parent: string | undefined = undefined;
-    if (root) {
-      const thread = getConversation(mappings, root);
-      parent = thread[thread.length - 1].id;
-    }
-    else {
-      parent = randomUUID();
-      next = addNode<string>(
-        next,
-        parent,
-        "system",
-        systemPrompt || "You are a helpful assistant.",
-        parent,
-        undefined,
-        undefined,
-        {
-          title: "New Chat",
-          ...getMetadata(),
-        }
-      );
-    }
-
-    const id = randomUUID();
-    next = addNode<string>(
-      next,
-      id,
-      "user",
-      promptText,
-      root || parent,
-      parent,
-      undefined,
-      getMetadata()
-    );
-    
-    setPromptText("");
-
-    const responseId = randomUUID();
-    next = addNode<string>(
-      next,
-      responseId,
-      "assistant",
-      "",
-      root || parent,
-      id,
-      undefined,
-      {
-        ...getMetadata(),
-        ...LLM.parameters,
-        provider: LLM.type.toLowerCase().replace(" ", "-"),
-        model: LLM.model || LLM.modelFileKey,
-      }
-    );
-    
-    setMappings(next);
-    setRoot(root || parent);
-
-    const conversation = getConversation(next, root || parent);
-    
-    let buffer = "";
-    LLM.prompt(
-      conversation,
-      (chunk: string) => {
-        buffer += chunk;
-        setMappings(updateContent(next, responseId, buffer, (meta) => ({ ...meta, updateTime: new Date().toISOString() })));
-      }
-    );
-  };
-
   return (
     <View
       style={styles.root}
@@ -161,14 +84,7 @@ function PromptInput() {
           value={promptText}
           onChangeText={setPromptText}
         />
-        <MaterialIconButton
-          testID="send-button"
-          icon="send"
-          size={32}
-          color={colorScheme.primary}
-          onPress={onPrompt}
-          disabled={promptText.length == 0 || !LLM.ready}
-        />
+        <PromptButton promptText={promptText} setPromptText={setPromptText} />
       </View>
     </View>
   );

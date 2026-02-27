@@ -73,6 +73,14 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
         enableOpenCLAndHexagon: true
       },
     ],
+    [
+      "expo-speech-recognition",
+      {
+        microphonePermission: "Allow $(PRODUCT_NAME) to use the microphone.",
+        speechRecognitionPermission: "Allow $(PRODUCT_NAME) to use speech recognition.",
+        androidSpeechServicePackages: ["com.google.android.googlequicksearchbox"]
+      }
+    ]
   ],
 
   experiments: {

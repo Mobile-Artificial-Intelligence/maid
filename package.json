@@ -16,13 +16,17 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "setupFiles": ["<rootDir>/jest.env.js"],
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
+    "setupFiles": [
+      "<rootDir>/jest.env.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|expo-router|escape-string-regexp|react-navigation|@react-navigation/.*|@material/material-color-utilities)"
     ],
     "moduleNameMapper": {
-      "\\.(png|jpg|jpeg|gif|webp|svg)$": "<rootDir>/__tests__/utilities/file-mock.js" 
+      "\\.(png|jpg|jpeg|gif|webp|svg)$": "<rootDir>/__tests__/utilities/file-mock.js"
     },
     "testMatch": [
       "**/__tests__/**/*.test.ts",
@@ -60,6 +64,7 @@
     "expo-router": "~5.1.6",
     "expo-secure-store": "~14.2.4",
     "expo-speech": "~13.1.7",
+    "expo-speech-recognition": "^3.1.1",
     "expo-splash-screen": "~0.30.10",
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.5",
