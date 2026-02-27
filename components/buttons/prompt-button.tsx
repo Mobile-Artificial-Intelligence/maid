@@ -156,8 +156,8 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
     return (
       <MaterialIconButton
         testID="stop-dictate-button"
-        icon="mic"
-        size={32}
+        icon="mic-off"
+        size={28}
         color={colorScheme.primary}
         onPress={() => ExpoSpeechRecognitionModule.stop()}
       />
@@ -169,7 +169,7 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
       <MaterialIconButton
         testID="send-button"
         icon="send"
-        size={32}
+        size={28}
         color={colorScheme.primary}
         onPress={prompt}
         disabled={!LLM.ready}
@@ -180,8 +180,8 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
   return (
     <MaterialIconButton
       testID="dictate-button"
-      icon="mic-none"
-      size={32}
+      icon="mic"
+      size={28}
       color={colorScheme.primary}
       onPress={toggleDictation}
     />
