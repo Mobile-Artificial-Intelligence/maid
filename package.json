@@ -23,7 +23,7 @@
       "<rootDir>/jest.setup.js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|expo-router|escape-string-regexp|react-navigation|@react-navigation/.*|@material/material-color-utilities)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@novastera-oss/.*|expo-router|escape-string-regexp|react-navigation|@react-navigation/.*|@material/material-color-utilities)"
     ],
     "moduleNameMapper": {
       "\\.(png|jpg|jpeg|gif|webp|svg)$": "<rootDir>/__tests__/utilities/file-mock.js",
