@@ -5,10 +5,8 @@
 # Android/IntelliJ
 #
 build/
-app/src/main/assets/
 .idea
 .gradle
-.kotlin
 local.properties
 *.iml
 *.hprof
