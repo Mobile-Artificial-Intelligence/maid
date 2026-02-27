@@ -2,6 +2,7 @@ import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
 import getMetadata from "@/utilities/metadata";
 import { randomUUID } from "expo-crypto";
+import { getLocales } from 'expo-localization';
 import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
 import { addNode, getConversation, updateContent } from "message-nodes";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
@@ -98,8 +99,10 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
 
     dictationBaseRef.current = promptText; // capture current typed text
 
+    const locales = getLocales();
+
     ExpoSpeechRecognitionModule.start({
-      lang: "en-US",
+      lang: locales[0].languageTag,
       addsPunctuation: true,
       androidIntentOptions: {
         EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
