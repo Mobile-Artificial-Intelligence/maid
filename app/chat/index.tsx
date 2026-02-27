@@ -1,4 +1,4 @@
-import PromptInput from "@/components/fields/prompt-input";
+import PromptInputGroup from "@/components/groups/prompt-input-group";
 import MessageView from "@/components/views/message/message-view";
 import { useChat, useSystem } from "@/context";
 import { randomUUID } from "expo-crypto";
@@ -44,7 +44,7 @@ function Chat() {
         keyExtractor={(item) => item.id?.toString() ?? randomUUID()}
         renderItem={renderItem}
       /> : <View style={styles.list} />}
-      <PromptInput />
+      <PromptInputGroup />
     </View>
   );
 }
