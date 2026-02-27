@@ -1,11 +1,13 @@
 import { useSystem } from "@/context";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import PromptButton from "../buttons/prompt-button";
 import PromptInputField from "../fields/prompt-input-field";
 
 function PromptInputGroup() {
   const { colorScheme } = useSystem();
+  const insets = useSafeAreaInsets();
 
   const [promptText, setPromptText] = useState<string>("");
 
@@ -13,6 +15,7 @@ function PromptInputGroup() {
     root: {
       flexDirection: "column",
       alignItems: "center",
+      paddingBottom: insets.bottom,
     },
     inputView: {
       backgroundColor: colorScheme.surfaceVariant,

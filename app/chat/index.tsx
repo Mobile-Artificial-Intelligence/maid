@@ -4,15 +4,17 @@ import { useChat, useSystem } from "@/context";
 import { randomUUID } from "expo-crypto";
 import { getConversation, hasNode, MessageNode } from "message-nodes";
 import { FlatList, StyleSheet, View } from "react-native";
+import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 
 function Chat() {
   const { colorScheme } = useSystem();
   const { mappings, root } = useChat();
+  const keyboard = useAnimatedKeyboard();
 
   const renderItem = ({ item }: { item: MessageNode }) => (
-    <MessageView 
-      key={item.id} 
-      message={item} 
+    <MessageView
+      key={item.id}
+      message={item}
     />
   );
 
@@ -21,7 +23,6 @@ function Chat() {
       flex: 1,
       flexDirection: "column",
       backgroundColor: colorScheme.surface,
-      padding: 8,
     },
     list: {
       flex: 1,
@@ -29,14 +30,18 @@ function Chat() {
     },
   });
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    paddingBottom: keyboard.height.value,
+  }));
+
   if (root && !hasNode(mappings, root)) {
     console.warn(`No conversation found for id ${root}`);
   }
 
   return (
-    <View
+    <Animated.View
       testID="chat-page"
-      style={styles.view}
+      style={[styles.view, animatedStyle]}
     >
       {root ? <FlatList
         data={getConversation(mappings, root).slice(1)}
@@ -45,7 +50,7 @@ function Chat() {
         renderItem={renderItem}
       /> : <View style={styles.list} />}
       <PromptInputGroup />
-    </View>
+    </Animated.View>
   );
 }
 

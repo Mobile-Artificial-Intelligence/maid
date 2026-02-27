@@ -5,10 +5,12 @@ import ModelDropdown from "@/components/dropdowns/model-dropdown";
 import { useLLM, useSystem } from "@/context";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
 import { StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function Header(props: DrawerHeaderProps) {
   const { type } = useLLM();
   const { colorScheme } = useSystem();
+  const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     root: {
@@ -16,7 +18,7 @@ function Header(props: DrawerHeaderProps) {
       justifyContent: "space-between",
       alignItems: "center",
       paddingHorizontal: 8,
-      paddingTop: 12,
+      paddingTop: insets.top + 12,
       paddingBottom: 4,
       backgroundColor: colorScheme.surface,
     },

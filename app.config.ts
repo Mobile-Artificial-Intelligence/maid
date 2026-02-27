@@ -9,7 +9,6 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
   icon: "./assets/images/icon.png",
   scheme: "maid",
   userInterfaceStyle: "automatic",
-  newArchEnabled: true,
 
   ios: {
     supportsTablet: true,
@@ -26,6 +25,7 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
       "android.permission.RECORD_AUDIO",
       "android.permission.MODIFY_AUDIO_SETTINGS",
     ],
+    softwareKeyboardLayoutMode: "resize"
   },
 
   web: {
