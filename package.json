@@ -26,7 +26,8 @@
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|expo-router|escape-string-regexp|react-navigation|@react-navigation/.*|@material/material-color-utilities)"
     ],
     "moduleNameMapper": {
-      "\\.(png|jpg|jpeg|gif|webp|svg)$": "<rootDir>/__tests__/utilities/file-mock.js"
+      "\\.(png|jpg|jpeg|gif|webp|svg)$": "<rootDir>/__tests__/utilities/file-mock.js",
+      "^expo-speech-recognition$": "<rootDir>/__tests__/utilities/expo-speech-recognition-mock.js"
     },
     "testMatch": [
       "**/__tests__/**/*.test.ts",

@@ -17,6 +17,9 @@ describe("Chat page", () => {
   });
 
   it("should render the send button", async () => {
+    const input = await screen.findByTestId("prompt-input");
+    fireEvent.changeText(input, "Hello");
+
     const sendButton = await screen.findByTestId("send-button");
     expect(sendButton).toBeOnTheScreen();
     expect(sendButton.type).toBe("View");

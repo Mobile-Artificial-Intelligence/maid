@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import { addNode, getRoots } from "message-nodes";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-function DrawerContent() {
+function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void } }) {
   const router = useRouter();
   const [authenticated, anonymous] = useAuthentication();
   const { mappings, setMappings, setRoot } = useChat();
@@ -144,20 +144,20 @@ function DrawerContent() {
       <View style={styles.divider} />
       <View style={styles.account}>
         {authenticated && !anonymous ? (
-          <TouchableOpacity testID="account-button" onPress={() => router.push("/account")}>
+          <TouchableOpacity testID="account-button" onPress={() => { navigation?.closeDrawer(); router.push("/account"); }}>
             <Text style={styles.accountText}>Account</Text>
           </TouchableOpacity>
         ) : (
           <>
             <TouchableOpacity
               testID="login-button"
-              onPress={() => router.push("/account/login")}
+              onPress={() => { navigation?.closeDrawer(); router.push("/account/login"); }}
             >
                 <Text style={styles.accountText}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
               testID="register-button"
-              onPress={() => router.push("/account/register")}
+              onPress={() => { navigation?.closeDrawer(); router.push("/account/register"); }}
             >
               <Text style={styles.accountText}>Register</Text>
             </TouchableOpacity>
