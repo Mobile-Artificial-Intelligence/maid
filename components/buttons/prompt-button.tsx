@@ -2,7 +2,6 @@ import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
 import getMetadata from "@/utilities/metadata";
 import { randomUUID } from "expo-crypto";
-import { getLocales } from 'expo-localization';
 import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
 import { addNode, getConversation, updateContent } from "message-nodes";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
@@ -83,44 +82,37 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
     });
   };
 
-  const startDictation = async () => {
-    const available = ExpoSpeechRecognitionModule.isRecognitionAvailable();
-    if (!available) {
-      console.warn("Speech recognition is not available on this device.");
-      return;
-    }
-
-    const { granted } = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
-
-    if (!granted) {
-      console.warn("Microphone permission denied.");
-      return;
-    }
-
-    dictationBaseRef.current = promptText; // capture current typed text
-
-    const locales = getLocales();
-
-    ExpoSpeechRecognitionModule.start({
-      lang: locales[0].languageTag,
-      addsPunctuation: true,
-      androidIntentOptions: {
-        EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
-        EXTRA_MASK_OFFENSIVE_WORDS: false,
-      },
-    });
-  };
-
-  const toggleDictation = async () => {
-    if (dictating) {
-      ExpoSpeechRecognitionModule.stop();
-      return;
-    }
+  const dictate = async () => {
     try {
-      await startDictation();
-    } catch (e) {
-      console.error("Dictation failed to start:", e);
-      setDictating(false);
+      let granted = false;
+      const perms = await ExpoSpeechRecognitionModule.getPermissionsAsync();
+      if (perms.granted) {
+        granted = true;
+      }
+      else if (perms.canAskAgain) {
+        const request = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+        granted = request.granted;
+      }
+      else {
+        console.warn("Microphone permission denied and cannot ask again.");
+        return;
+      }
+
+      if (!granted) {
+        console.warn("Microphone permission denied.");
+        return;
+      }
+
+      ExpoSpeechRecognitionModule.start({ 
+        lang: "en-US",
+        addsPunctuation: true,
+        androidIntentOptions: {
+          EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
+          EXTRA_MASK_OFFENSIVE_WORDS: false,
+        } 
+      });
+    } catch (error) {
+      console.error("Error requesting microphone permission:", error);
     }
   };
 
@@ -166,8 +158,7 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
       />
     );
   }
-
-  if (promptText.trim().length > 0) {
+  else if (promptText.trim().length > 0) {
     return (
       <MaterialIconButton
         testID="send-button"
@@ -186,7 +177,7 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
       icon="mic"
       size={28}
       color={colorScheme.primary}
-      onPress={toggleDictation}
+      onPress={dictate} 
     />
   );
 }
