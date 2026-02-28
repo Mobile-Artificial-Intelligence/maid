@@ -4,7 +4,7 @@ import getMetadata from "@/utilities/metadata";
 import { randomUUID } from "expo-crypto";
 import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
 import { addNode, getConversation, updateContent } from "message-nodes";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface PromptButtonProps {
   promptText: string; 
@@ -17,9 +17,6 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
   const LLM = useLLM();
 
   const [dictating, setDictating] = useState(false);
-
-  // When dictation starts, we capture what the user already typed so we can append to it.
-  const dictationBaseRef = useRef<string>("");
 
   const prompt = () => {
     if (!LLM.ready) return;
@@ -126,11 +123,12 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
     });
 
     const resultListener = ExpoSpeechRecognitionModule.addListener("result", (event) => {
-      const transcript = event.results?.[0]?.transcript ?? "";
-      // append onto baseline (and keep a space if needed)
-      const base = dictationBaseRef.current;
-      const glue = base.trim().length > 0 ? " " : "";
-      setPromptText(base + glue + transcript);
+      setPromptText(prev => {
+        const transcript = event.results?.[0]?.transcript ?? "";
+        const glue = prev.trim().length > 0 ? " " : "";
+        return prev + glue + transcript;
+      });
+      ExpoSpeechRecognitionModule.stop();
     });
 
     // If the lib supports it, this is worth having:
