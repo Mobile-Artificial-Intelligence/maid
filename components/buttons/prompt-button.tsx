@@ -174,7 +174,7 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
         testID="stop-button"
         icon="stop-circle"
         size={28}
-        color={colorScheme.primary}
+        color={colorScheme.onError}
         onPress={LLM.stop}
       />
     );
