@@ -3,12 +3,13 @@ import useStoredString from "@/hooks/use-stored-string";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import { Ollama } from "ollama/browser";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { OllamaContextProps } from "./types";
 
 const OllamaContext = createContext<OllamaContextProps | undefined>(undefined);
 
 export function OllamaProvider({ children }: { children: React.ReactNode }) {
+  const stopRef = useRef<boolean>(false);
   const [busy, setBusy] = useState<boolean>(false);
 
   const [baseURL, setBaseURL] = useStoredString("ollama-base-url");
@@ -82,23 +83,34 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
     });
 
     for await (const chunk of response) {
+      if (stopRef.current) {
+        ollama.abort();
+        stopRef.current = false;
+        break;
+      }
+
       onUpdate(chunk.message.content);
     }
     setBusy(false);
   };
 
-  const value = { 
+  const stop = async () => {
+    stopRef.current = true;
+  };
+
+  const value = {
     ready: !!ollama && !!model,
     busy,
     baseURL,
     setBaseURL,
     headers,
     setHeaders,
-    model, 
-    setModel,  
-    parameters, 
+    model,
+    setModel,
+    parameters,
     setParameters,
     prompt,
+    stop,
     models
   };
 

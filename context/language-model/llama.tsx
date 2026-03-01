@@ -180,6 +180,19 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
     setBusy(false);
   };
 
+  const stop = async () => {
+    if (!llama) {
+      console.warn("LLM not initialized");
+      return;
+    }
+
+    try {
+      await llama.stopCompletion();
+    } catch (error) {
+      console.error("Error stopping model:", error);
+    }
+  };
+
   const value = {
     ready: !!llama,
     busy,
@@ -191,6 +204,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
     parameters,
     setParameters,
     prompt,
+    stop,
   };
 
   return (

@@ -3,12 +3,13 @@ import useStoredString from "@/hooks/use-stored-string";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import OpenAI from 'openai';
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { DeepSeekContextProps } from "./types";
 
 const DeepSeekContext = createContext<DeepSeekContextProps | undefined>(undefined);
 
 export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
+  const stopRef = useRef<boolean>(false);
   const [busy, setBusy] = useState<boolean>(false);
 
   const [apiKey, setApiKey] = useStoredString("deepseek-api-key");
@@ -81,12 +82,22 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
 
     
     for await (const event of stream) {
+      if (stopRef.current) {
+        stream.controller.abort();
+        stopRef.current = false;
+        break;
+      }
+
       const chunk = event.choices[0]?.delta?.content;
       if (chunk) {
         onUpdate(chunk);
       }
     }
     setBusy(false);
+  };
+
+  const stop = async () => {
+    stopRef.current = true;
   };
 
   const value = {
@@ -101,7 +112,8 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
     setParameters,
     headers,
     setHeaders,
-    prompt
+    prompt,
+    stop
   };
 
   return (

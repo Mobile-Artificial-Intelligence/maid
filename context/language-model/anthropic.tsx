@@ -3,7 +3,7 @@ import useStoredString from '@/hooks/use-stored-string';
 import Anthropic from '@anthropic-ai/sdk';
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { AnthropicContextProps } from "./types";
 
 const DEFAULT_BASE_URL = "https://api.anthropic.com";
@@ -11,6 +11,7 @@ const DEFAULT_BASE_URL = "https://api.anthropic.com";
 const AnthropicContext = createContext<AnthropicContextProps | undefined>(undefined);
 
 export function AnthropicProvider({ children }: { children: React.ReactNode }) {
+  const stopRef = useRef<boolean>(false);
   const [busy, setBusy] = useState<boolean>(false);
 
   const [baseURL, setBaseURL] = useStoredString("anthropic-base-url", DEFAULT_BASE_URL);
@@ -85,7 +86,7 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
     setBusy(true);
 
     try {
-      await anthropic.messages.stream({
+      const stream = await anthropic.messages.stream({
         model,
         max_tokens: 1024,
         stream: true,
@@ -93,15 +94,29 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
           role: msg.role as "user" | "assistant",
           content: msg.content,
         })),
-      }).on("text", (text) => {
-        onUpdate(text);
       });
+
+      for await (const chunk of stream) {
+        if (stopRef.current) {
+          stream.abort();
+          stopRef.current = false;
+          break;
+        }
+
+        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+          onUpdate(chunk.delta.text);
+        }
+      }
     } 
     catch (error) {
       console.error("Error prompting model:", error);
     }
 
     setBusy(false);
+  };
+
+  const stop = async () => {
+    stopRef.current = true;
   };
 
   const resetBaseURL = () => {
@@ -123,7 +138,8 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
     setParameters,
     headers,
     setHeaders,
-    prompt
+    prompt,
+    stop
   };
 
   return (

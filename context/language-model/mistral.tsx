@@ -3,7 +3,7 @@ import useStoredString from '@/hooks/use-stored-string';
 import { Mistral } from '@mistralai/mistralai';
 import { TextChunk } from "@mistralai/mistralai/models/components";
 import { MessageNode } from 'message-nodes';
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { MistralContextProps } from "./types";
 
 const DEFAULT_BASE_URL = "https://api.mistral.ai";
@@ -11,6 +11,7 @@ const DEFAULT_BASE_URL = "https://api.mistral.ai";
 const MistralContext = createContext<MistralContextProps | undefined>(undefined);
 
 export function MistralProvider({ children }: { children: React.ReactNode }) {
+  const stopRef = useRef<boolean>(false);
   const [busy, setBusy] = useState<boolean>(false);
 
   const [baseURL, setBaseURL] = useStoredString("mistral-base-url", DEFAULT_BASE_URL);
@@ -91,11 +92,20 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
       onUpdate(content);
     } else {
       for await (const chunk of content) {
+        if (stopRef.current) {
+          stopRef.current = false;
+          break;
+        }
+
         if (chunk.type !== "text") continue;
         onUpdate((chunk as TextChunk).text);
       }
     }
     setBusy(false);
+  };
+
+  const stop = async () => {
+    stopRef.current = true;
   };
 
   const resetBaseURL = () => {
@@ -115,7 +125,8 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
     models,
     parameters,
     setParameters,
-    prompt
+    prompt,
+    stop
   };
 
   return (

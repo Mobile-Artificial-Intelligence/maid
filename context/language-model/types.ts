@@ -19,7 +19,8 @@ interface LanguageModelBaseProps {
   prompt: (
     messages: Array<MessageNode>, 
     onUpdate: (message: string) => void
-  ) => Promise<void | undefined>;
+  ) => Promise<void>;
+  stop: () => Promise<void>
 }
 
 interface ModelMixin {

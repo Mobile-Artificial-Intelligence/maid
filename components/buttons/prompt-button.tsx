@@ -168,6 +168,17 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
       />
     );
   }
+  else if (LLM.ready && LLM.busy) {
+    return (
+      <MaterialIconButton
+        testID="stop-button"
+        icon="stop-circle"
+        size={28}
+        color={colorScheme.primary}
+        onPress={LLM.stop}
+      />
+    );
+  }
 
   return (
     <MaterialIconButton
