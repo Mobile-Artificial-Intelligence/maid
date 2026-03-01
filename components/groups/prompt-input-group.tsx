@@ -25,11 +25,8 @@ function PromptInputGroup() {
       alignSelf: "stretch",
     },
     clearButtonText: { 
-      color: colorScheme.onPrimary, 
-      backgroundColor: colorScheme.primary,
+      color: colorScheme.primary, 
       paddingVertical: 8,
-      paddingHorizontal: 16,
-      borderRadius: 20,
       fontSize: 14
     },
   });
