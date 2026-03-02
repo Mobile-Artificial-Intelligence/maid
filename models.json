@@ -16,6 +16,22 @@
     }
   },
   {
+    "id": "lfm-2.5-1.2b-instruct",
+    "name": "LFM 2.5 1.2B Instruct",
+    "repo": "LiquidAI/LFM2.5-1.2B-Instruct-GGUF",
+    "parameters": 1.2,
+    "branch": "main",
+    "tags": {
+      "Q4_0": "LFM2.5-1.2B-Instruct-Q4_0.gguf",
+      "Q4_K_M": "LFM2.5-1.2B-Instruct-Q4_K_M.gguf",
+      "Q5_K_M": "LFM2.5-1.2B-Instruct-Q5_K_M.gguf",
+      "Q6_K": "LFM2.5-1.2B-Instruct-Q6_K.gguf",
+      "Q8_0": "LFM2.5-1.2B-Instruct-Q8_0.gguf",
+      "BF16": "LFM2.5-1.2B-Instruct-BF16.gguf",
+      "F16": "LFM2.5-1.2B-Instruct-F16.gguf"
+    }
+  },
+  {
     "id": "qwen3-4B",
     "name": "Qwen3 4B",
     "repo": "Qwen/Qwen3-4B-GGUF",
