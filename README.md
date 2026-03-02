@@ -90,6 +90,23 @@ The output APK will be located in the `android/app/build/outputs/apk/release` di
 
 Maid is distributed under the MIT licence and is provided without warranty of any kind, express or implied. Maid is not affiliated with Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company providing a model compatible with this application.
 
+## Signing
+
+### Signing Key Fingerprint
+
+>MD5: `BE:AC:29:41:F5:41:D2:26:42:DD:D1:A3:85:21:E1:16`
+
+>SHA-1: `48:F6:DC:73:09:CE:19:C6:A9:70:7E:A2:9A:B7:6F:42:2D:41:32:30`
+
+>SHA-256: `83:5E:D2:2E:D8:95:C4:C2:72:D6:98:AA:6E:4E:48:DB:0B:4E:36:DC:CF:70:10:D5:DE:15:03:4A:C9:E1:B9:6F`
+
+### Upload Key Fingerprint
+
+>MD5: `C0:86:A0:F3:E8:E5:4D:46:60:8A:37:4E:DB:11:CC:C7`
+
+>SHA-1: `77:FC:77:2B:21:5E:9F:36:31:79:09:DF:7D:F4:1F:CA:96:0C:39:17`
+
+>SHA-256: `54:EE:B9:9F:14:38:D9:68:9B:C2:C6:7F:F9:DD:A3:E3:D8:28:D3:80:76:46:B7:24:46:71:9F:61:D9:63:E6:98`
 
 ## License
 
