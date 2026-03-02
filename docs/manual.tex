@@ -389,7 +389,44 @@ Model   & Yes & — \\
 \end{center}
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Message Functionality}
+\section{Prompt Input}
+
+The prompt input bar is located at the bottom of the chat screen. It consists of a multiline text field and a context-sensitive action button on the right.
+
+\subsection{Text Field}
+
+Tap the text field to open the keyboard and type a message. The field grows vertically as you type to accommodate longer messages. While the field is empty its placeholder reads \emph{``Type a message\ldots''}.
+
+\subsection{Clear Prompt}
+
+When the text field contains any text, a \textbf{Clear Prompt} link appears above the input bar. Tapping it instantly empties the field.
+
+\subsection{Action Button}
+
+The button on the right of the input bar changes depending on the current state:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Send} — Shown when the field contains text. Tap to submit the message and start a model response. The button is disabled if the selected provider is not ready (e.g.\ no model loaded or no API key set).
+    \item \textbf{Stop} — Shown while the model is generating a response. Tap to cancel the in-progress generation.
+    \item \textbf{Microphone} — Shown when the field is empty and the model is not generating. Tap to begin voice dictation (see Section~\ref{sec:dictation}).
+    \item \textbf{Microphone off} — Shown while voice dictation is active. Tap to stop listening; the transcribed text is appended to the field.
+\end{itemize}
+
+\subsection{Sending a Message}
+
+Type your message and tap \textbf{Send} (or tap the microphone to dictate it). Maid appends a user message node and an empty assistant message node to the conversation tree, then streams the model response into the assistant node in real time. The input field is cleared immediately after the message is submitted.
+
+If this is the first message in a new chat, a system prompt node is created automatically using the system prompt configured in Settings (defaulting to \emph{``You are a helpful assistant.''}).
+
+\subsection{Voice Dictation}
+\label{sec:dictation}
+
+Tap the \textbf{microphone} icon to dictate your message by voice. Maid will request microphone permission on first use; if permission has been permanently denied, dictation will not start. Once listening begins, the button switches to a \textbf{microphone off} icon which you can tap to stop early. When recognition finishes, the transcript is appended to any text already in the field, with a space inserted between existing text and the new transcript.
+
+Dictation uses the device's on-board speech recognition engine and is performed in English (en-US) with punctuation added automatically.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Messages}
 
 Each message in the chat view has a row of controls displayed in the top-right corner of the message. The controls available depend on whether the message is from the user or the assistant.
 

@@ -156,6 +156,17 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
       />
     );
   }
+  else if (LLM.ready && LLM.busy) {
+    return (
+      <MaterialIconButton
+        testID="stop-button"
+        icon="stop-circle"
+        size={28}
+        color={colorScheme.onError}
+        onPress={LLM.stop}
+      />
+    );
+  }
   else if (promptText.trim().length > 0) {
     return (
       <MaterialIconButton
@@ -165,17 +176,6 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
         color={colorScheme.primary}
         onPress={prompt}
         disabled={!LLM.ready}
-      />
-    );
-  }
-  else if (LLM.ready && LLM.busy) {
-    return (
-      <MaterialIconButton
-        testID="stop-button"
-        icon="stop-circle"
-        size={28}
-        color={colorScheme.onError}
-        onPress={LLM.stop}
       />
     );
   }
