@@ -389,6 +389,73 @@ Model   & Yes & — \\
 \end{center}
 
 % ─────────────────────────────────────────────────────────────────────────────
+\section{Message Functionality}
+
+Each message in the chat view has a row of controls displayed in the top-right corner of the message. The controls available depend on whether the message is from the user or the assistant.
+
+\subsection{Branch Navigation}
+
+Every message in Maid is part of a tree rather than a flat list. When a response is regenerated or a user message is edited, a new branch is created rather than overwriting the existing message. The branch navigator lets you move between these branches.
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Left arrow} (\texttt{menu-left}) — Switch to the previous sibling of this message.
+    \item \textbf{Counter} — Displays the current branch position as \emph{current} / \emph{total} (e.g.\ \texttt{2 / 3}).
+    \item \textbf{Right arrow} (\texttt{menu-right}) — Switch to the next sibling of this message.
+\end{itemize}
+
+The arrows are disabled when there is only one branch, when a message is being edited, or while the model is generating a response.
+
+\subsection{Assistant Message Controls}
+
+The following controls are shown on \textbf{assistant} messages only.
+
+\subsubsection{Regenerate}
+
+Tap the \textbf{reload} icon to regenerate an assistant message. A new branch is created under the parent user message and the model is prompted again with the current conversation up to that point, using the active provider and parameters. The existing response is preserved and accessible via the branch navigator.
+
+Regeneration is disabled while another message is being edited or while the model is busy.
+
+\subsubsection{Text-to-Speech}
+
+If a voice has been selected in Settings (via the Maise companion app), a speaker icon appears on assistant messages.
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Volume high} icon — Tap to read the assistant message aloud using the selected voice. If the message contains a reasoning block, only the final response (not the internal reasoning) is spoken.
+    \item \textbf{Volume off} icon — Shown while speech is playing. Tap to stop playback immediately.
+\end{itemize}
+
+TTS is disabled while a message is being edited or while the model is generating a response.
+
+\subsubsection{Feedback (Upvote / Downvote)}
+
+Once an assistant message has finished generating, a pair of thumbs icons appears at the bottom of the message content.
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Thumbs up} — Marks the response as good. The message content, provider name, and model name are submitted to the developer as a positive report.
+    \item \textbf{Thumbs down} — Marks the response as poor. The same information is submitted as a negative report.
+\end{itemize}
+
+Reports are submitted anonymously via Supabase. If no existing session is found, an anonymous sign-in is performed automatically before the report is inserted. A confirmation dialog is shown on success, or an error alert if the submission fails.
+
+No personally identifying information beyond the anonymous session identifier is attached to the report. The purpose of these reports is to help the developer assess model quality across different providers and configurations.
+
+\subsection{User Message Controls}
+
+The following control is shown on \textbf{user} messages only.
+
+\subsubsection{Edit}
+
+Tap the \textbf{pencil} icon to edit a user message. The message content becomes editable in-place. Submitting the edited message creates a new branch from the parent of the original message, preserving the original text in the previous branch. The branch navigator can then be used to switch between the original and the edited version.
+
+Editing is disabled while another message is already being edited or while the model is generating.
+
+\subsection{Delete}
+
+The \textbf{delete} (trash) icon is available on all messages. Tapping it removes the message and all of its descendants from the conversation tree. This action cannot be undone, so use it with care.
+
+Delete is disabled while a message is being edited or while the model is busy.
+
+% ─────────────────────────────────────────────────────────────────────────────
 \section{Advanced Configuration}
 
 \subsection{Model Parameters}
