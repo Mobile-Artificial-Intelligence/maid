@@ -48,6 +48,11 @@ For text to speech functionality check out Maid's companion app [Maise](https://
 - **Material You theming** — light and dark themes that follow your system preference
 - **Fully open source** — MIT licensed, no telemetry, no ads
 
+## Manual
+
+The user manual is available from releases in PDF format, or can be built from source using the instructions below.
+[Manual PDF](https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/latest/maid-manual.pdf)
+
 ## Cloning
 To clone the repository, use the following command:
 
