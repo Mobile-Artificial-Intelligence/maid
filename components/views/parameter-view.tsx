@@ -103,7 +103,7 @@ function parseValue(value: string): string | number | boolean {
     parsedValue = true;
   } else if (value.toLowerCase() === "false") {
     parsedValue = false;
-  } else if (!isNaN(Number(value))) {
+  } else if (value.trim() !== '' && !isNaN(Number(value))) {
     parsedValue = Number(value);
   }
 
@@ -139,25 +139,25 @@ function ParameterViewItem(props: ParameterViewItemProps) {
     }
   });
 
-  const updateKey = () => {
-    if (key.trim() === "" || key === oldKey) return;
-
-    const parsedValue = parseValue(value);
-
-    setParameters((prev: Record<string, string | number | boolean>) => { 
-      const updated = { ...prev };
-      delete updated[oldKey];
-      return { ...updated, [key]: parsedValue };
-    });
-
-    setOldKey(key);
-  }
-
   useEffect(() => {
-    const handler = setTimeout(updateKey, 500);
+    const handler = setTimeout(() => {
+      if (key.trim() === "" || key === oldKey) {
+        return;
+      }
+
+      const parsedValue = parseValue(value);
+
+      setParameters((prev: Record<string, string | number | boolean>) => {
+        const updated = { ...prev };
+        delete updated[oldKey];
+        return { ...updated, [key]: parsedValue };
+      });
+
+      setOldKey(key);
+    }, 500);
 
     return () => clearTimeout(handler);
-  }, [key]);
+  }, [key, oldKey, value, setParameters]);
 
   const updateParameter = (newValue: string) => {
     if (key.trim() === "") return;
