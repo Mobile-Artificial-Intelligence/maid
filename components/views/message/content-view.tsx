@@ -26,7 +26,7 @@ export async function insertReport(
       const authAny = getSupabase().auth as any;
 
       if (typeof authAny.signInAnonymously !== "function") {
-        console.error("signInAnonymously() not available. UpdategetSupabase-js and enable anonymous sign-ins in Supabase.");
+        console.error("signInAnonymously() not available. Update getSupabase-js and enable anonymous sign-ins in Supabase.");
         Alert.alert("Couldn’t submit report", "Sign-in isn’t available right now.");
         return;
       }
@@ -137,6 +137,11 @@ function MessageContentView({ message }: { message: MessageNode }) {
   });
 
   const onEdit = () => {
+    if (!message.root) {
+      Alert.alert("Error", "Cannot edit this message because its conversation root is missing.");
+      return;
+    }
+
     const id = randomUUID();
     let next = branchNode<string>(
       mappings, 
@@ -165,14 +170,23 @@ function MessageContentView({ message }: { message: MessageNode }) {
 
     setMappings(next);
 
-    let buffer = "";
-    LLM.prompt(
-      getConversation(next, message.root!),
-      (chunk: string) => {
-        buffer += chunk;
-        setMappings(updateContent(next, responseId, buffer, (meta) => ({ ...meta, updateTime: new Date().toISOString() })));
-      }
-    );
+    const chunks: string[] = [];
+    const updateMeta = (meta: any) => ({ ...meta, updateTime: new Date().toISOString() });
+    try {
+      LLM.prompt(
+        getConversation(next, message.root),
+        (chunk: string) => {
+          chunks.push(chunk);
+          const buffer = chunks.join("");
+          setMappings(updateContent(next, responseId, buffer, updateMeta));
+        }
+      );
+    } catch (error) {
+      Alert.alert(
+        "Edit failed",
+        "There was a problem requesting an updated response. Please try again."
+      );
+    }
 
     onEditDone();
   };
