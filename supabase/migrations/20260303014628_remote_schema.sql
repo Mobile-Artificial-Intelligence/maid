@@ -85,7 +85,7 @@ begin
     -- Check if both parent and child are NULL
     if new.parent is null and new.child is null then
         -- Delete the row
-        delete from messages where id = old.id;
+        delete from messages where id = new.id;
     end if;
     -- Return the new row (or NULL if you don't want to update it)
     return new;
@@ -170,7 +170,7 @@ ALTER TABLE ONLY "public"."messages"
 
 
 ALTER TABLE ONLY "public"."messages"
-    ADD CONSTRAINT "chat_messages_root_fkey" FOREIGN KEY ("root") REFERENCES "public"."messages"("id");
+    ADD CONSTRAINT "chat_messages_root_fkey" FOREIGN KEY ("root") REFERENCES "public"."messages"("id") ON DELETE CASCADE;
 
 
 
@@ -197,6 +197,18 @@ CREATE POLICY "Deny updates" ON "public"."reports" FOR UPDATE TO "authenticated"
 
 ALTER TABLE "public"."messages" ENABLE ROW LEVEL SECURITY;
 
+
+-- Row Level Security is enabled on ollama_cloud; define policies to control access
+CREATE POLICY "Allow users to access their own ollama_cloud rows"
+    ON "public"."ollama_cloud"
+    USING ((("auth"."uid"() = "user_id") AND ((("auth"."jwt"() ->> 'is_anonymous'::"text"))::boolean = false)))
+    WITH CHECK ((("auth"."uid"() = "user_id") AND ((("auth"."jwt"() ->> 'is_anonymous'::"text"))::boolean = false)));
+
+CREATE POLICY "Deny deletes from ollama_cloud"
+    ON "public"."ollama_cloud"
+    FOR DELETE
+    TO "authenticated", "anon"
+    USING (false);
 
 ALTER TABLE "public"."ollama_cloud" ENABLE ROW LEVEL SECURITY;
 
@@ -440,7 +452,6 @@ GRANT ALL ON TABLE "public"."messages" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."ollama_cloud" TO "anon";
 GRANT ALL ON TABLE "public"."ollama_cloud" TO "authenticated";
 GRANT ALL ON TABLE "public"."ollama_cloud" TO "service_role";
 
