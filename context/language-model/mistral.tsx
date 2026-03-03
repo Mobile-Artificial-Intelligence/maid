@@ -140,7 +140,7 @@ export function useMistral() {
   const context = useContext(MistralContext);
 
   if (!context) {
-    throw new Error("useMistral must be used within an OpenAIProvider");
+    throw new Error("useMistral must be used within a MistralProvider");
   }
 
   return context;
