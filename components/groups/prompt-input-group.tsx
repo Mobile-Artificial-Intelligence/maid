@@ -1,5 +1,5 @@
 import { useSystem } from "@/context";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import PromptButton from "../buttons/prompt-button";
 import PromptInputField from "../fields/prompt-input-field";
@@ -9,27 +9,31 @@ function PromptInputGroup() {
 
   const [promptText, setPromptText] = useState<string>("");
 
-  const styles = StyleSheet.create({
-    root: {
-      flexDirection: "column",
-      alignItems: "center",
-    },
-    inputView: {
-      backgroundColor: colorScheme.surfaceVariant,
-      borderRadius: 30,
-      flexDirection: "row",
-      alignItems: "center",
-      paddingVertical: 4,
-      paddingHorizontal: 12,
-      marginTop: 8,
-      alignSelf: "stretch",
-    },
-    clearButtonText: { 
-      color: colorScheme.primary, 
-      paddingVertical: 8,
-      fontSize: 14
-    },
-  });
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          flexDirection: "column",
+          alignItems: "center",
+        },
+        inputView: {
+          backgroundColor: colorScheme.surfaceVariant,
+          borderRadius: 30,
+          flexDirection: "row",
+          alignItems: "center",
+          paddingVertical: 4,
+          paddingHorizontal: 12,
+          marginTop: 8,
+          alignSelf: "stretch",
+        },
+        clearButtonText: {
+          color: colorScheme.primary,
+          paddingVertical: 8,
+          fontSize: 14,
+        },
+      }),
+    [colorScheme],
+  );
 
   return (
     <View
