@@ -186,11 +186,17 @@ OLLAMA_HOST=0.0.0.0 ollama serve
 
 Ensure your firewall allows inbound connections on port \texttt{11434} from your phone's network.
 
+\subsection{Find Ollama}
+
+Instead of entering the Base URL manually, tap the \textbf{Find Ollama} button to have Maid scan your local network automatically. Maid determines the device's current IP address, derives the subnet, and simultaneously probes every host on that subnet at port \texttt{11434}. The first responding host is set as the Base URL. An alert is shown if no Ollama instance is found.
+
+This requires both the phone and the Ollama host to be on the same local network, and Ollama must be configured to accept remote connections (see Section above).
+
 \subsection{Configuration in Maid}
 
 \begin{enumerate}
     \item Go to \textbf{Settings} and select \textbf{Ollama} from the API dropdown.
-    \item Enter the \textbf{Base URL} of your Ollama server, e.g.:
+    \item Enter the \textbf{Base URL} of your Ollama server manually, or tap \textbf{Find Ollama} to detect it automatically (see above). Example URL:
 \begin{lstlisting}
 http://192.168.1.100:11434
 \end{lstlisting}
