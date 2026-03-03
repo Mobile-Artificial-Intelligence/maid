@@ -167,7 +167,7 @@ function ParameterViewItem(props: ParameterViewItemProps) {
     setParameters((prev: Record<string, string | number | boolean>) => ({ ...prev, [key]: parsedValue }));
 
     setValue(newValue);
-  }
+  };
 
   return (
     <View style={styles.container}>
