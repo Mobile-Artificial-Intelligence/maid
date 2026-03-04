@@ -20,7 +20,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
       alignItems: "center",
     },
     counter: {
-      color: colorScheme.onSurface,
+      color: colorScheme.secondary,
       fontSize: 14,
       marginHorizontal: 4
     }
@@ -112,6 +112,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
           icon="volume-high"
           onPress={onSpeak}
           disabled={!speakEnabled}
+          color={colorScheme.secondary}
         />
       }
       {message.role === "assistant" && voice && speaking &&
@@ -119,6 +120,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
           icon="volume-off"
           onPress={onSpeakCancel}
           disabled={!speakEnabled}
+          color={colorScheme.secondary}
         />
       }
       {message.role === "assistant" &&
@@ -126,6 +128,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
           icon="reload"
           onPress={onRegenerate}
           disabled={!!editing || LLM.busy}
+          color={colorScheme.secondary}
         />
       }
       {message.role === "user" &&
@@ -133,12 +136,14 @@ function MessageControlsView({ message }: { message: MessageNode }) {
           icon="pencil"
           onPress={() => setEditing(message.id)}
           disabled={!!editing || LLM.busy}
+          color={colorScheme.secondary}
         />
       }
       <MaterialCommunityIconButton
         icon="menu-left"
         onPress={() => setMappings((prev) => lastChild(prev, message.parent!))}
         disabled={index <= 0 || !!editing || LLM.busy}
+        color={colorScheme.secondary}
       />
       <Text
         style={styles.counter}
@@ -149,11 +154,13 @@ function MessageControlsView({ message }: { message: MessageNode }) {
         icon="menu-right"
         onPress={() => setMappings((prev) => nextChild(prev, message.parent!))}
         disabled={index === siblings.length - 1 || !!editing || LLM.busy}
+        color={colorScheme.secondary}
       />
       <MaterialCommunityIconButton
         icon="delete"
         onPress={() => deleteMessage(message.id)}
         disabled={!!editing || LLM.busy}
+        color={colorScheme.secondary}
       />
     </View>
   );

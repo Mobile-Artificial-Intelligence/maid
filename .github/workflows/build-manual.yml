@@ -16,7 +16,7 @@ on:
       - 'docs/**'
 
 jobs:
-  build:
+  build-manual:
     runs-on: ubuntu-latest
     permissions:
       contents: read

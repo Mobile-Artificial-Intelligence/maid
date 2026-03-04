@@ -23,7 +23,7 @@ function AssistantImageView({ size }: AssistantImageViewProps) {
       <Icon
         name="assistant"
         size={size}
-        color={colorScheme.onSurface}
+        color={colorScheme.secondary}
       />
     );
   }

@@ -23,7 +23,7 @@ function UserImageView({ size }: UserImageViewProps) {
       <Icon
         name="account"
         size={size}
-        color={colorScheme.onSurface}
+        color={colorScheme.secondary}
       />
     );
   }
