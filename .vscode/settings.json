@@ -7,6 +7,5 @@
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
-  "java.configuration.updateBuildConfiguration": "automatic",
-  "deno.enable": true
+  "java.configuration.updateBuildConfiguration": "automatic"
 }

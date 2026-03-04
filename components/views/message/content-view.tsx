@@ -240,11 +240,13 @@ function MessageContentView({ message }: { message: MessageNode }) {
             icon="thumb-up"
             size={22}
             onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelFileKey || "", true)}
+            color={colorScheme.secondary}
           />
           <MaterialCommunityIconButton
             icon="thumb-down"
             size={22}
             onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelFileKey || "", false)}
+            color={colorScheme.secondary}
           />
         </View>
       )}
