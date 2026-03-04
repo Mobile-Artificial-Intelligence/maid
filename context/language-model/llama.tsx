@@ -80,12 +80,10 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
       const currentLoadId = ++loadIdRef.current;
 
       timeout = setTimeout(async () => {
-        if (busy) {
-          while (busy) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            if (cancelled || currentLoadId !== loadIdRef.current) {
-              return;
-            }
+        while (busy) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          if (cancelled || currentLoadId !== loadIdRef.current) {
+            return;
           }
         }
 
