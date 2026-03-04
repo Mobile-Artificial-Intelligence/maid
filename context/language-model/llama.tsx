@@ -52,6 +52,7 @@ const LlamaContext = createContext<LlamaContextProps | undefined>(undefined);
 export function LlamaProvider({ children }: { children: ReactNode }) {
   const loadIdRef = useRef<number>(0);
   const [busy, setBusy] = useState<boolean>(false);
+  const [imagesSupported, setImagesSupported] = useState<boolean>(false);
 
   const [modelKey, setModelKey] = useStoredString("llama-model-file-key");
   const [modelFiles, setModelFiles] = useStoredRecord<string, string>("llama-model-files");
@@ -115,10 +116,6 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
             });
 
             console.log("Projector loaded: ", projectorLoaded);
-
-            const support = await llamaContext.getMultimodalSupport();
-            console.log("Vision support: ", support.vision);
-            console.log("Audio support: ", support.audio);
           }
 
           console.log("Multimodal enabled: ", await llamaContext.isMultimodalEnabled());
@@ -130,6 +127,16 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
           }
 
           setLlama(llamaContext);
+
+          if (useProjector) {
+            const support = await llamaContext.getMultimodalSupport();
+            console.log("Vision support: ", support.vision);
+            //console.log("Audio support: ", support.audio);
+            setImagesSupported(support.vision);
+          }
+          else {
+            setImagesSupported(false);
+          }
         } catch (error) {
           console.error("Error initializing model:", error);
         } finally {
@@ -248,6 +255,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
   const value = {
     ready: !!llama,
     busy,
+    imagesSupported,
     modelKey,
     pickModelFile,
     setModelKey,

@@ -1,4 +1,4 @@
-import { useSystem } from "@/context";
+import { useLLM, useSystem } from "@/context";
 import * as ImagePicker from 'expo-image-picker';
 import { ImagePickerAsset } from "expo-image-picker";
 import { Dispatch, SetStateAction } from "react";
@@ -9,6 +9,7 @@ interface PromptImageButtonProps {
 };
 
 function PromptImageButton({ setImages }: PromptImageButtonProps) {
+  const { imagesSupported } = useLLM();
   const { colorScheme } = useSystem();
 
   const onImagePress = async () => {
@@ -35,7 +36,7 @@ function PromptImageButton({ setImages }: PromptImageButtonProps) {
       size={28}
       color={colorScheme.primary}
       onPress={onImagePress}
-      disabled={true}
+      disabled={!imagesSupported}
     />
   );
 };

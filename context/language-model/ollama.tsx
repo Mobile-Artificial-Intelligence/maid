@@ -101,6 +101,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
   const value = {
     ready: !!ollama && !!model,
     busy,
+    imagesSupported: false,
     baseURL,
     setBaseURL,
     headers,

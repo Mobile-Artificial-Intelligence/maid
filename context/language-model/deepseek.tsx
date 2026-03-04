@@ -103,6 +103,7 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
   const value = {
     ready: !!deepSeek && !!model,
     busy,
+    imagesSupported: false,
     apiKey,
     setApiKey,
     model,

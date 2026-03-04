@@ -126,6 +126,7 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
   const value = {
     ready: !!anthropic && !!model,
     busy,
+    imagesSupported: false,
     baseURL,
     setBaseURL,
     resetBaseURL,

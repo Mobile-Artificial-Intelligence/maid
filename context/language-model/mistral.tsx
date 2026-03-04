@@ -115,6 +115,7 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
   const value = {
     ready: !!mistral && !!model,
     busy,
+    imagesSupported: false,
     baseURL,
     setBaseURL,
     resetBaseURL,
