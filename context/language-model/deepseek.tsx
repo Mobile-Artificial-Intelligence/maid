@@ -1,6 +1,6 @@
 import useStoredRecord from "@/hooks/use-stored-record";
 import useStoredString from "@/hooks/use-stored-string";
-import { simplifyMessages, StandardMessageNode } from "@/utilities/mappings";
+import { StandardMessageNode } from "@/utilities/mappings";
 import { fetch as expoFetch } from "expo/fetch";
 import OpenAI from 'openai';
 import { createContext, useContext, useEffect, useRef, useState } from "react";
@@ -70,10 +70,7 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
 
     const stream = await deepSeek.chat.completions.create({
       model,
-      messages: simplifyMessages(messages).map((msg) => ({
-        role: msg.role as "system" | "user" | "assistant",
-        content: msg.content,
-      })),
+      messages: messages as Array<OpenAI.ChatCompletionMessageParam>,
       stream: true,
       ...parameters,
     }, {

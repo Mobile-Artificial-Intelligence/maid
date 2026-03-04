@@ -3,7 +3,6 @@ import useStoredString from "@/hooks/use-stored-string";
 import { StandardMessageNode } from "@/utilities/mappings";
 import { fetch as expoFetch } from "expo/fetch";
 import OpenAI from 'openai';
-import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { OpenAIContextProps } from "./types";
 
@@ -83,7 +82,7 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
 
     const stream = await openai.chat.completions.create({
       model,
-      messages: messages as Array<ChatCompletionMessageParam>,
+      messages: messages as Array<OpenAI.ChatCompletionMessageParam>,
       stream: true,
       ...parameters,
     }, {

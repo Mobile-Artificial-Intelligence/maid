@@ -1,6 +1,6 @@
 import useStoredRecord from '@/hooks/use-stored-record';
 import useStoredString from '@/hooks/use-stored-string';
-import { simplifyMessages, StandardMessageNode } from '@/utilities/mappings';
+import { StandardMessageNode } from '@/utilities/mappings';
 import Anthropic from '@anthropic-ai/sdk';
 import { fetch as expoFetch } from "expo/fetch";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
@@ -90,10 +90,7 @@ export function AnthropicProvider({ children }: { children: React.ReactNode }) {
         model,
         max_tokens: 1024,
         stream: true,
-        messages: simplifyMessages(messages).map((msg) => ({
-          role: msg.role as "user" | "assistant",
-          content: msg.content,
-        })),
+        messages: messages as Array<Anthropic.MessageParam>,
       });
 
       for await (const chunk of stream) {
