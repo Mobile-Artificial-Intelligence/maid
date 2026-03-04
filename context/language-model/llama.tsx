@@ -97,13 +97,31 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
           const ctx_key = Object.keys(info).find(key => key.toLowerCase().endsWith("context_length"));
           const n_ctx = ctx_key ? Number(info[ctx_key]) : 2048;
 
+          const useProjector = projectorKey && projectorFiles[projectorKey];
+
           const llamaContext = await initLlama({
             model: modelFile,
             use_mlock: true,
             n_ctx,
             n_gpu_layers: 99,
             ...parameters,
+            ctx_shift: !useProjector
           });
+
+          if (useProjector) {
+            const projectorLoaded = await llamaContext.initMultimodal({
+              path: projectorFiles[projectorKey],
+              use_gpu: true
+            });
+
+            console.log("Projector loaded: ", projectorLoaded);
+
+            const support = await llamaContext.getMultimodalSupport();
+            console.log("Vision support: ", support.vision);
+            console.log("Audio support: ", support.audio);
+          }
+
+          console.log("Multimodal enabled: ", await llamaContext.isMultimodalEnabled());
 
           // if a newer load started, ignore this one
           if (cancelled || currentLoadId !== loadIdRef.current) {
@@ -130,7 +148,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
         clearTimeout(timeout);
       }
     };
-  }, [modelKey, modelFiles, parameters]);
+  }, [modelKey, modelFiles, projectorKey, projectorFiles, parameters]);
 
   const pickModelFile = async () => {
     const file = await getDocumentAsync({
