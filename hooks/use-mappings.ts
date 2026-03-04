@@ -32,6 +32,7 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
       child: node.child ?? null,
       metadata: {
         ...node.metadata,
+        images: null, // Don't save images
         createTime: node.metadata?.createTime || new Date().toISOString(),
         updateTime: node.metadata?.updateTime || new Date().toISOString(),
       }

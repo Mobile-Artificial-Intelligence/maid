@@ -2,6 +2,7 @@ import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
 import getMetadata from "@/utilities/metadata";
 import { randomUUID } from "expo-crypto";
+import { ImagePickerAsset } from "expo-image-picker";
 import { ExpoSpeechRecognitionModule } from "expo-speech-recognition";
 import { addNode, getConversation, updateContent } from "message-nodes";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -9,9 +10,11 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 interface PromptButtonProps {
   promptText: string; 
   setPromptText: Dispatch<SetStateAction<string>>;
+  images: Array<ImagePickerAsset>;
+  setImages: Dispatch<SetStateAction<Array<ImagePickerAsset>>>;
 };
 
-function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
+function PromptButton({ promptText, setPromptText, images, setImages }: PromptButtonProps) {
   const { mappings, setMappings, root, setRoot } = useChat();
   const { colorScheme, systemPrompt } = useSystem();
   const LLM = useLLM();
@@ -44,6 +47,22 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
     const id = randomUUID();
     next = addNode<string>(next, id, "user", promptText, root || parent, parent, undefined, getMetadata());
     setPromptText("");
+
+    if (images.length > 0) {
+      const filePaths: Array<string> = [];
+
+      for (const image of images) {
+        if (image.uri) {
+          filePaths.push(image.uri);
+        }
+      }
+
+      next = updateContent(next, id, prev => prev, meta => ({
+        ...meta,
+        images: filePaths,
+      }));
+      setImages([]);
+    }
 
     const responseId = randomUUID();
     next = addNode<string>(
