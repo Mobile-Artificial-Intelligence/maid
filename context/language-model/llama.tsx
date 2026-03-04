@@ -80,7 +80,14 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
       const currentLoadId = ++loadIdRef.current;
 
       timeout = setTimeout(async () => {
-        if (busy) return;
+        if (busy) {
+          while (busy) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            if (cancelled || currentLoadId !== loadIdRef.current) {
+              return;
+            }
+          }
+        }
 
         setBusy(true);
 
@@ -102,8 +109,6 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
             await llamaContext.release?.(); // optional cleanup if API supports
             return;
           }
-
-          const support = await llamaContext
 
           setLlama(llamaContext);
         } catch (error) {
