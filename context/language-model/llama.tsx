@@ -103,6 +103,8 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
             return;
           }
 
+          const support = await llamaContext
+
           setLlama(llamaContext);
         } catch (error) {
           console.error("Error initializing model:", error);
