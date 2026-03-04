@@ -47,25 +47,6 @@ export interface ColorScheme {
   inversePrimary: string;
 }
 
-function enforceDeeperDark(scheme: ColorScheme): ColorScheme {
-  if (scheme.brightness !== "dark") return scheme;
-
-  return {
-    ...scheme,
-
-    // true dark surfaces
-    surface: "#0b0b0c",
-    surfaceVariant: "#121316",
-
-    // improve contrast
-    inverseSurface: "#e6e6e6",
-    outlineVariant: "#2a2b30",
-
-    // darker overlay
-    scrim: "#000000",
-  };
-}
-
 export function createColorScheme(seedColor: string, brightness: Brightness = "light"): ColorScheme {
   const cleanedSeedColor = `#${seedColor.replace(/^#/, '').slice(0, 6)}`;
 
@@ -73,7 +54,7 @@ export function createColorScheme(seedColor: string, brightness: Brightness = "l
 
   const scheme = brightness === "light" ? theme.schemes.light : theme.schemes.dark;
 
-  return enforceDeeperDark({
+  return {
     brightness,
     primary: hexFromArgb(scheme.primary),
     onPrimary: hexFromArgb(scheme.onPrimary),
@@ -91,9 +72,9 @@ export function createColorScheme(seedColor: string, brightness: Brightness = "l
     onError: hexFromArgb(scheme.onError),
     errorContainer: hexFromArgb(scheme.errorContainer),
     onErrorContainer: hexFromArgb(scheme.onErrorContainer),
-    surface: hexFromArgb(scheme.surface),
+    surface: hexFromArgb(scheme.surface - 0x00101010),
     onSurface: hexFromArgb(scheme.onSurface),
-    surfaceVariant: hexFromArgb(scheme.surfaceVariant),
+    surfaceVariant: hexFromArgb(scheme.surfaceVariant - 0x00303030),
     onSurfaceVariant: hexFromArgb(scheme.onSurfaceVariant),
     outline: hexFromArgb(scheme.outline),
     outlineVariant: hexFromArgb(scheme.outlineVariant),
@@ -102,5 +83,5 @@ export function createColorScheme(seedColor: string, brightness: Brightness = "l
     inverseSurface: hexFromArgb(scheme.inverseSurface),
     inverseOnSurface: hexFromArgb(scheme.inverseOnSurface),
     inversePrimary: hexFromArgb(scheme.inversePrimary),
-  });
+  };
 }
