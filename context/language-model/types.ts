@@ -24,9 +24,9 @@ interface LanguageModelBaseProps {
 }
 
 interface ModelMixin {
+  models: Array<string>;
   model: string | undefined;
   setModel: React.Dispatch<React.SetStateAction<string | undefined>>;
-  models: Array<string>;
 }
 
 interface HeadersMixin {
@@ -46,11 +46,16 @@ interface ApiKeyMixin {
 }
 
 interface ModelFilesMixin {
-  modelFileKey: string | undefined;
   pickModelFile: () => Promise<void>;
-  setModelFileKey: React.Dispatch<React.SetStateAction<string | undefined>>;
+  modelKey: string | undefined;
+  setModelKey: React.Dispatch<React.SetStateAction<string | undefined>>;
   modelFiles: Record<string, string>;
   setModelFiles: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  pickProjectorFile: () => Promise<void>;
+  projectorKey: string | undefined;
+  setProjectorKey: React.Dispatch<React.SetStateAction<string | undefined>>;
+  projectorFiles: Record<string, string>;
+  setProjectorFiles: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
 export type LlamaContextProps = LanguageModelBaseProps & ModelFilesMixin;

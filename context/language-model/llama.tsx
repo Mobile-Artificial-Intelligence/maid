@@ -53,8 +53,11 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
   const loadIdRef = useRef<number>(0);
   const [busy, setBusy] = useState<boolean>(false);
 
+  const [modelKey, setModelKey] = useStoredString("llama-model-file-key");
   const [modelFiles, setModelFiles] = useStoredRecord<string, string>("llama-model-files");
-  const [modelFileKey, setModelFileKey] = useStoredString("llama-model-file-key");
+
+  const [projectorKey, setProjectorKey] = useStoredString("llama-projector-file-key");
+  const [projectorFiles, setProjectorFiles] = useStoredRecord<string, string>("llama-projector-files");
 
   const [parameters, setParameters] = useStoredRecord("llama-parameters");
 
@@ -65,11 +68,11 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
     let timeout: ReturnType<typeof setTimeout> | null = null;
 
     const loadModel = async () => {
-      if (!modelFileKey || !modelFiles[modelFileKey]) {
+      if (!modelKey || !modelFiles[modelKey]) {
         return;
       }
 
-      const modelFile = modelFiles[modelFileKey];
+      const modelFile = modelFiles[modelKey];
 
       // Ensure the selected file is a GGUF model before proceeding
       const isGguf = await isGGUF(modelFile);
@@ -127,7 +130,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
         clearTimeout(timeout);
       }
     };
-  }, [modelFileKey, modelFiles, parameters]);
+  }, [modelKey, modelFiles, parameters]);
 
   const pickModelFile = async () => {
     const file = await getDocumentAsync({
@@ -152,8 +155,34 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
     const updatedModelFiles = await cleanupLocalModelFiles(modelFiles);
 
     setModelFiles({ ...updatedModelFiles, [name]: newPath });
-    setModelFileKey(name);
+    setModelKey(name);
   };
+
+  const pickProjectorFile = async () => {
+    const file = await getDocumentAsync({
+      multiple: false,
+    });
+    if (file.assets === null) return;
+    const asset = file.assets[0];
+
+    if (!/\.mmproj$/i.test(asset.uri) && !/\.gguf$/i.test(asset.uri)) {
+      alert("Please select a multimodel projector file");
+      return;
+    }
+
+    const name = `${asset.name.replace(/\.[^/.]+$/, "")} (local)`;
+    const newPath = FileSystem.documentDirectory + asset.name;
+
+    await FileSystem.moveAsync({
+      from: asset.uri,
+      to: newPath,
+    });
+
+    const updatedProjectorFiles = await cleanupLocalModelFiles(projectorFiles);
+
+    setProjectorFiles({ ...updatedProjectorFiles, [name]: newPath });
+    setProjectorKey(name);
+  }
 
   const prompt = async (
     messages: Array<MessageNode>, 
@@ -201,11 +230,16 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
   const value = {
     ready: !!llama,
     busy,
-    modelFileKey,
+    modelKey,
     pickModelFile,
-    setModelFileKey,
+    setModelKey,
     modelFiles,
     setModelFiles,
+    pickProjectorFile,
+    projectorKey,
+    setProjectorKey,
+    projectorFiles,
+    setProjectorFiles,
     parameters,
     setParameters,
     prompt,

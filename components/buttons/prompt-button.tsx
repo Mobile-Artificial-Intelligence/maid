@@ -58,7 +58,7 @@ function PromptButton({ promptText, setPromptText }: PromptButtonProps) {
         ...getMetadata(),
         ...LLM.parameters,
         provider: LLM.type.toLowerCase().replace(" ", "-"),
-        model: LLM.model || LLM.modelFileKey,
+        model: LLM.model || LLM.modelKey,
       }
     );
 

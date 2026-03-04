@@ -164,7 +164,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
         ...getMetadata(),
         ...LLM.parameters,
         provider: LLM.type.toLowerCase().replace(" ", "-"),
-        model: LLM.model || LLM.modelFileKey,
+        model: LLM.model || LLM.modelKey,
       }
     );
 
@@ -239,13 +239,13 @@ function MessageContentView({ message }: { message: MessageNode }) {
           <MaterialCommunityIconButton
             icon="thumb-up"
             size={22}
-            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelFileKey || "", true)}
+            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelKey || "", true)}
             color={colorScheme.secondary}
           />
           <MaterialCommunityIconButton
             icon="thumb-down"
             size={22}
-            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelFileKey || "", false)}
+            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelKey || "", false)}
             color={colorScheme.secondary}
           />
         </View>

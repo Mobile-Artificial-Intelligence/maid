@@ -2,7 +2,7 @@ import { useLLM, useSystem } from "@/context";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 function ModelFileButtons() {
-  const { modelFileKey, pickModelFile } = useLLM();
+  const { modelKey, pickModelFile, projectorKey, pickProjectorFile } = useLLM();
   const { colorScheme } = useSystem();
 
   const styles = StyleSheet.create({
@@ -28,11 +28,17 @@ function ModelFileButtons() {
 
   return (
     <View style={styles.view}>
-      {modelFileKey && <Text style={styles.label}>{modelFileKey}</Text>}
+      {modelKey && <Text style={styles.label}>{modelKey}</Text>}
       <TouchableOpacity
         onPress={pickModelFile}
       >
         <Text style={styles.button}>Load Model</Text>
+      </TouchableOpacity>
+      {projectorKey && <Text style={styles.label}>{projectorKey}</Text>}
+      <TouchableOpacity
+        onPress={pickProjectorFile}
+      >
+        <Text style={styles.button}>Load Projector</Text>
       </TouchableOpacity>
     </View>
   );

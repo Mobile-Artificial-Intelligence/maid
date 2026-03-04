@@ -4,18 +4,18 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
-  findNodeHandle,
-  LayoutRectangle,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    findNodeHandle,
+    LayoutRectangle,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from "react-native";
 
 function ModelButton() {
   const router = useRouter();
   const { colorScheme } = useSystem();
-  const { modelFileKey, pickModelFile } = useLLM();
+  const { modelKey, pickModelFile } = useLLM();
 
   const [visible, setVisible] = useState(false);
   const [anchor, setAnchor] = useState<LayoutRectangle | null>(null);
@@ -74,7 +74,7 @@ function ModelButton() {
       <TouchableOpacity testID="model-button" style={styles.button} onPress={open} activeOpacity={0.8}>
         <Icon name="chevron-triple-left" size={20} color={colorScheme.onPrimary} />
         <Text style={styles.text} numberOfLines={1}>
-          {modelFileKey ? modelFileKey : "Load Model"}
+          {modelKey ? modelKey : "Load Model"}
         </Text>
         <Icon name="chevron-triple-right" size={20} color={colorScheme.onPrimary} />
       </TouchableOpacity>

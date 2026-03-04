@@ -19,7 +19,7 @@ interface HuggingfaceModel {
 const HuggingfaceModels = HuggingfaceModelsRaw as Array<HuggingfaceModel>;
 
 function ModelDownload({ source }: { source: HuggingfaceModel }) {
-  const { modelFiles, setModelFiles, modelFileKey, setModelFileKey } = useLLM();
+  const { modelFiles, setModelFiles, modelKey, setModelKey } = useLLM();
   const { colorScheme } = useSystem();
   const { id, name, repo, branch, tags } = source;
 
@@ -89,13 +89,13 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
       // Component might be gone now; still save if setters exist, but guard state writes
       if (mountedRef.current) {
         setModelFiles?.((prev) => ({ ...prev, [currentKey]: result?.uri ?? fileUri }));
-        setModelFileKey?.(currentKey);
+        setModelKey?.(currentKey);
         setProgress(undefined);
       } else {
         // Even if unmounted, it can be useful to persist completion elsewhere (context/store)
         // If you want that, move model file persistence into your LLM context instead of local state.
         setModelFiles?.((prev) => ({ ...prev, [currentKey]: result?.uri ?? fileUri }));
-        setModelFileKey?.(currentKey);
+        setModelKey?.(currentKey);
       }
     } catch (error) {
       console.error("Download failed:", error);
@@ -127,7 +127,7 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
         delete updated[currentKey];
         return updated;
       });
-      setModelFileKey?.(undefined);
+      setModelKey?.(undefined);
     } catch (error) {
       console.error("Delete failed:", error);
     }
@@ -139,7 +139,7 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
       console.warn("Model file not found, cannot select");
       return;
     }
-    setModelFileKey?.(currentKey);
+    setModelKey?.(currentKey);
   };
 
   useEffect(() => {
@@ -198,8 +198,8 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
       color: colorScheme.secondary,
     },
     textButton: {
-      color: modelFileKey === currentKey ? colorScheme.onPrimary : colorScheme.onPrimaryContainer,
-      backgroundColor: modelFileKey === currentKey ? colorScheme.primary : colorScheme.primaryContainer,
+      color: modelKey === currentKey ? colorScheme.onPrimary : colorScheme.onPrimaryContainer,
+      backgroundColor: modelKey === currentKey ? colorScheme.primary : colorScheme.primaryContainer,
       paddingVertical: 4,
       paddingHorizontal: 12,
       borderRadius: 20,
