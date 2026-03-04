@@ -1,4 +1,4 @@
-import { MessageNode } from "message-nodes";
+import { StandardMessageNode } from "@/utilities/mappings";
 
 export const LanguageModelTypes = [
   "Llama",
@@ -18,7 +18,7 @@ interface LanguageModelBaseProps {
   parameters: Record<string, string | number | boolean>;
   setParameters: React.Dispatch<React.SetStateAction<Record<string, string | number | boolean>>>;
   prompt: (
-    messages: Array<MessageNode>, 
+    messages: Array<StandardMessageNode>, 
     onUpdate: (message: string) => void
   ) => Promise<void>;
   stop: () => Promise<void>

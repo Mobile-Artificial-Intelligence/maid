@@ -1,7 +1,8 @@
 import useMappings from "@/hooks/use-mappings";
 import useStoredString from "@/hooks/use-stored-string";
+import { StandardMessageNode } from "@/utilities/mappings";
 import getSupabase from "@/utilities/supabase";
-import { deleteNode, MessageNode } from "message-nodes";
+import { deleteNode } from "message-nodes";
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
 
 interface ChatContextProps {
@@ -9,8 +10,8 @@ interface ChatContextProps {
   setEditing: Dispatch<SetStateAction<string | undefined>>;
   root: string | undefined;
   setRoot: Dispatch<SetStateAction<string | undefined>>;
-  mappings: Record<string, MessageNode<string>>;
-  setMappings: Dispatch<SetStateAction<Record<string, MessageNode<string>>>>;
+  mappings: Record<string, StandardMessageNode>;
+  setMappings: Dispatch<SetStateAction<Record<string, StandardMessageNode>>>;
   deleteMessage: (id: string) => void;
 }
 

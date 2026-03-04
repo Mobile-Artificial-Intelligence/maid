@@ -1,10 +1,58 @@
 import { randomUUID } from 'expo-crypto';
 import { getRoots, MessageNode } from 'message-nodes';
 
-function validateMappings(mappings: Record<string, MessageNode<string>>): Record<string, MessageNode<string>> {
-  const validMappings: Record<string, MessageNode<string>> = mappings;
+export interface TextPart {
+  type: "text";
+  text: string;
+};
 
-  const invalidMessages = Object.values(mappings).filter(node => (!node.role || !node.content || node.role.trim().length === 0 || node.content.trim().length === 0) && node.id !== node.root);
+export interface ImagePart {
+  type: 'image_url';
+  image_url: string;
+};
+
+export type StandardMessageContent = string | Array<TextPart | ImagePart>;
+
+export type StandardMessageNode = MessageNode<StandardMessageContent, Record<string, any>>;
+
+function messageEmpty(node: StandardMessageNode): boolean {
+  if (typeof node.content === "string") {
+    return node.content.trim().length === 0;
+  } 
+  else if (Array.isArray(node.content)) {
+    return node.content.every(part => {
+      if (part.type === "text") {
+        return part.text.trim().length === 0;
+      } else if (part.type === "image_url") {
+        return part.image_url.trim().length === 0;
+      }
+      return true;
+    });
+  }
+  return true;
+};
+
+export function simplifyMessages(messages: Array<StandardMessageNode>): Array<MessageNode<string, Record<string, any>>> {
+  return messages.map(node => {
+    if (Array.isArray(node.content)) {
+      const textContent = node.content
+        .filter(part => part.type === "text")
+        .map(part => part.text.trim())
+        .join('\n\n');
+
+      return {
+        ...node,
+        content: textContent,
+      };
+    }
+    return node;
+  }) as Array<MessageNode<string, Record<string, any>>>;
+};
+
+export function validateMappings(mappings: Record<string, StandardMessageNode>): Record<string, StandardMessageNode> {
+  const validMappings: Record<string, StandardMessageNode> = mappings;
+
+  const invalidMessages = Object.values(mappings).filter(node => (!node.role || !node.content || node.role.trim().length === 0 || messageEmpty(node)) && node.id !== node.root);
   invalidMessages.forEach(node => {
     delete validMappings[node.id];
 
@@ -17,10 +65,10 @@ function validateMappings(mappings: Record<string, MessageNode<string>>): Record
     }
   });
 
-  const invalidRoots = getRoots<string>(validMappings).filter(root => validMappings[root.id].role !== "system");
+  const invalidRoots = getRoots<StandardMessageContent>(validMappings).filter(root => validMappings[root.id].role !== "system");
   invalidRoots.forEach(root => {
 
-    const newRoot: MessageNode<string> = {
+    const newRoot: StandardMessageNode = {
       id: root.id,
       role: "system",
       content: "You are a helpful assistant.",
@@ -40,17 +88,15 @@ function validateMappings(mappings: Record<string, MessageNode<string>>): Record
     validMappings[root.id] = root;
   });
 
-  const emptyRoots = getRoots<string>(validMappings).filter(root => !root.content || root.content.trim().length === 0);
+  const emptyRoots = getRoots<StandardMessageContent>(validMappings).filter(root => !root.content || messageEmpty(root));
   emptyRoots.forEach(root => {
     validMappings[root.id].content = "You are a helpful assistant.";
   });
 
-  const childlessRoots = getRoots<string>(validMappings).filter(root => !root.child);
+  const childlessRoots = getRoots<StandardMessageContent>(validMappings).filter(root => !root.child);
   childlessRoots.forEach(root => {
     delete validMappings[root.id];
   });
 
   return validMappings;
 }
-
-export default validateMappings;

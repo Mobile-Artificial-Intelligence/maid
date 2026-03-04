@@ -139,7 +139,7 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
       </View>
       <View style={styles.divider} />
       <ScrollView style={styles.sessions}>
-        {getRoots<string>(mappings).map((root, index) => <ChatButton testID={`chat-button-${index}`} key={root.id} node={root} />)}
+        {getRoots<StandardMessageContent>(mappings).map((root, index) => <ChatButton testID={`chat-button-${index}`} key={root.id} node={root} />)}
       </ScrollView>
       <View style={styles.divider} />
       <View style={styles.account}>

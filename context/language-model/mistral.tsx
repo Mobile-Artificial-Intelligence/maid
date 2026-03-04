@@ -1,8 +1,8 @@
 import useStoredRecord from '@/hooks/use-stored-record';
 import useStoredString from '@/hooks/use-stored-string';
+import { simplifyMessages, StandardMessageNode } from '@/utilities/mappings';
 import { Mistral } from '@mistralai/mistralai';
 import { TextChunk } from "@mistralai/mistralai/models/components";
-import { MessageNode } from 'message-nodes';
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { MistralContextProps } from "./types";
 
@@ -62,7 +62,7 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
   }, [mistral]);
 
   const prompt = async (
-    messages: Array<MessageNode>,
+    messages: Array<StandardMessageNode>,
     onUpdate: (message: string) => void
   ) => {
     if (!mistral) {
@@ -79,7 +79,7 @@ export function MistralProvider({ children }: { children: React.ReactNode }) {
 
     const response = await mistral.chat.complete({
       model,
-      messages: messages.map((msg) => ({
+      messages: simplifyMessages(messages).map((msg) => ({
         role: msg.role as "system" | "user" | "assistant",
         content: msg.content,
       })),

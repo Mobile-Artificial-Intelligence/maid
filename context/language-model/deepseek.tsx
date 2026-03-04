@@ -1,7 +1,7 @@
 import useStoredRecord from "@/hooks/use-stored-record";
 import useStoredString from "@/hooks/use-stored-string";
+import { simplifyMessages, StandardMessageNode } from "@/utilities/mappings";
 import { fetch as expoFetch } from "expo/fetch";
-import { MessageNode } from "message-nodes";
 import OpenAI from 'openai';
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { DeepSeekContextProps } from "./types";
@@ -53,7 +53,7 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
   }, [deepSeek]);
 
   const prompt = async (
-    messages: Array<MessageNode>,
+    messages: Array<StandardMessageNode>,
     onUpdate: (message: string) => void
   ) => {
     if (!deepSeek) {
@@ -70,7 +70,7 @@ export function DeepSeekProvider({ children }: { children: React.ReactNode }) {
 
     const stream = await deepSeek.chat.completions.create({
       model,
-      messages: messages.map((msg) => ({
+      messages: simplifyMessages(messages).map((msg) => ({
         role: msg.role as "system" | "user" | "assistant",
         content: msg.content,
       })),

@@ -1,13 +1,13 @@
 import useAuthentication from '@/hooks/use-authentication';
-import validateMappings from '@/utilities/mappings';
+import { simplifyMessages, StandardMessageNode, validateMappings } from '@/utilities/mappings';
 import getSupabase from '@/utilities/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MessageNode } from 'message-nodes';
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-function useMappings(): [Record<string, MessageNode<string, Record<string, any>>>, Dispatch<SetStateAction<Record<string, MessageNode<string, Record<string, any>>>>>] {
+function useMappings(): [Record<string, StandardMessageNode>, Dispatch<SetStateAction<Record<string, StandardMessageNode>>>] {
   const [authenticated, anonymous] = useAuthentication();
-  const [mappings, setMappings] = useState<Record<string, MessageNode<string>>>({});
+  const [mappings, setMappings] = useState<Record<string, StandardMessageNode>>({});
 
   const saveSupabaseMappings = async () => {
     const { data: { user }, error: userErr } = await getSupabase().auth.getUser();
@@ -20,7 +20,7 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
       return;
     }
 
-    const nodes = Object.values(mappings);
+    const nodes = simplifyMessages(Object.values(mappings));
 
     const upsertData = nodes.map(node => ({
       id: node.id,
@@ -32,7 +32,6 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
       child: node.child ?? null,
       metadata: {
         ...node.metadata,
-        images: null, // Don't save images
         createTime: node.metadata?.createTime || new Date().toISOString(),
         updateTime: node.metadata?.updateTime || new Date().toISOString(),
       }
@@ -125,7 +124,7 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
     try {
       const storedMappings = await AsyncStorage.getItem("mappings");
       if (storedMappings) {
-        const parsed = JSON.parse(storedMappings) as Record<string, MessageNode<string>>;
+        const parsed = JSON.parse(storedMappings) as Record<string, StandardMessageNode>;
         setMappings(prev => ({ ...prev, ...parsed }));
       }
     } catch (error) {

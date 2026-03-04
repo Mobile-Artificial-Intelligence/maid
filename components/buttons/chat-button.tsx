@@ -1,11 +1,12 @@
 import Popover from "@/components/views/popover-view";
 import { useChat, useSystem } from "@/context";
+import { StandardMessageContent, StandardMessageNode } from "@/utilities/mappings";
 import * as FileSystem from "expo-file-system";
-import { deleteNode, getRootMapping, MessageNode, updateContent } from "message-nodes";
+import { deleteNode, getRootMapping, updateContent } from "message-nodes";
 import { useEffect, useRef, useState } from "react";
 import { LayoutRectangle, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
-function ChatButton({ node, testID }: { node: MessageNode<string>, testID?: string }) {
+function ChatButton({ node, testID }: { node: StandardMessageNode, testID?: string }) {
   const { root, setRoot, mappings, setMappings } = useChat();
   const { colorScheme } = useSystem();
   const [visible, setVisible] = useState<boolean>(false);
@@ -30,12 +31,12 @@ function ChatButton({ node, testID }: { node: MessageNode<string>, testID?: stri
   };
 
   const renameChat = (title: string) => {
-    setMappings((prev) => updateContent<string, Record<string, any>>(prev, node.id, c => c, m => ({ ...m, title })));
+    setMappings((prev) => updateContent<StandardMessageContent>(prev, node.id, c => c, m => ({ ...m, title })));
     setRename(false);
   };
 
   const exportChat = async () => {
-    const rootMapping = getRootMapping<string>(mappings, node.id);
+    const rootMapping = getRootMapping<StandardMessageContent>(mappings, node.id);
 
     const filename = `${node.metadata?.title || "New Chat"}.json`;
 

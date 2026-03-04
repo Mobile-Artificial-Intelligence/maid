@@ -1,9 +1,9 @@
 import useStoredRecord from '@/hooks/use-stored-record';
 import useStoredString from '@/hooks/use-stored-string';
+import { StandardMessageNode } from '@/utilities/mappings';
 import { getDocumentAsync } from "expo-document-picker";
 import * as FileSystem from 'expo-file-system';
-import { initLlama, LlamaContext as LlamaRnContext, loadLlamaModelInfo } from 'llama.rn';
-import { MessageNode } from 'message-nodes';
+import { initLlama, LlamaContext as LlamaRnContext, loadLlamaModelInfo, RNLlamaOAICompatibleMessage } from 'llama.rn';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { LlamaContextProps } from "./types";
 
@@ -210,7 +210,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
   }
 
   const prompt = async (
-    messages: Array<MessageNode>, 
+    messages: Array<StandardMessageNode>, 
     onUpdate: (message: string) => void
   ) => {
     if (!llama) {
@@ -227,7 +227,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
 
     try {
       const result = await llama.completion({
-        messages: messages
+        messages: messages as Array<RNLlamaOAICompatibleMessage>
       }, (data) => onUpdate(data.token));
     
       console.log('Timings:', result.timings);

@@ -1,5 +1,6 @@
 import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
+import { ImagePart, StandardMessageContent } from "@/utilities/mappings";
 import getMetadata from "@/utilities/metadata";
 import { randomUUID } from "expo-crypto";
 import { ImagePickerAsset } from "expo-image-picker";
@@ -32,7 +33,7 @@ function PromptButton({ promptText, setPromptText, images, setImages }: PromptBu
       parent = thread[thread.length - 1].id;
     } else {
       parent = randomUUID();
-      next = addNode<string>(
+      next = addNode<StandardMessageContent>(
         next,
         parent,
         "system",
@@ -44,28 +45,29 @@ function PromptButton({ promptText, setPromptText, images, setImages }: PromptBu
       );
     }
 
-    const id = randomUUID();
-    next = addNode<string>(next, id, "user", promptText, root || parent, parent, undefined, getMetadata());
-    setPromptText("");
-
+    let promptContent: StandardMessageContent = promptText.trim();
     if (images.length > 0) {
       const filePaths: Array<string> = [];
 
       for (const image of images) {
         if (image.uri) {
-          filePaths.push(image.uri);
+          filePaths.push(image.base64 ? `data:${image.type};base64,${image.base64}` : image.uri);
         }
       }
 
-      next = updateContent(next, id, prev => prev, meta => ({
-        ...meta,
-        images: filePaths,
-      }));
+      promptContent = [
+        { type: "text", text: promptText.trim() },
+        ...filePaths.map(uri => ({ type: "image_url", image_url: uri } as ImagePart)),
+      ]
       setImages([]);
     }
 
+    const id = randomUUID();
+    next = addNode<StandardMessageContent>(next, id, "user", promptContent, root || parent, parent, undefined, getMetadata());
+    setPromptText("");
+
     const responseId = randomUUID();
-    next = addNode<string>(
+    next = addNode<StandardMessageContent>(
       next,
       responseId,
       "assistant",
@@ -90,7 +92,7 @@ function PromptButton({ promptText, setPromptText, images, setImages }: PromptBu
     LLM.prompt(conversation, (chunk: string) => {
       buffer += chunk;
       setMappings(prev =>
-        updateContent(prev, responseId, buffer, meta => ({
+        updateContent<StandardMessageContent>(prev, responseId, buffer, meta => ({
           ...meta,
           updateTime: new Date().toISOString(),
         }))

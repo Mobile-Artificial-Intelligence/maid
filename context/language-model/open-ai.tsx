@@ -1,8 +1,9 @@
 import useStoredRecord from "@/hooks/use-stored-record";
 import useStoredString from "@/hooks/use-stored-string";
+import { StandardMessageNode } from "@/utilities/mappings";
 import { fetch as expoFetch } from "expo/fetch";
-import { MessageNode } from "message-nodes";
 import OpenAI from 'openai';
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { OpenAIContextProps } from "./types";
 
@@ -65,7 +66,7 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
   }, [openai]);
 
   const prompt = async (
-    messages: Array<MessageNode>,
+    messages: Array<StandardMessageNode>,
     onUpdate: (message: string) => void
   ) => {
     if (!openai) {
@@ -82,10 +83,7 @@ export function OpenAIProvider({ children }: { children: React.ReactNode }) {
 
     const stream = await openai.chat.completions.create({
       model,
-      messages: messages.map((msg) => ({
-        role: msg.role as "system" | "user" | "assistant",
-        content: msg.content,
-      })),
+      messages: messages as Array<ChatCompletionMessageParam>,
       stream: true,
       ...parameters,
     }, {

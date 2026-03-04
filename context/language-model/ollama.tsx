@@ -1,7 +1,7 @@
 import useStoredRecord from "@/hooks/use-stored-record";
 import useStoredString from "@/hooks/use-stored-string";
+import { simplifyMessages, StandardMessageNode } from "@/utilities/mappings";
 import { fetch as expoFetch } from "expo/fetch";
-import { MessageNode } from "message-nodes";
 import { Ollama } from "ollama/browser";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { OllamaContextProps } from "./types";
@@ -61,7 +61,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
   }, [ollama]);
 
   const prompt = async (
-    messages: Array<MessageNode>, 
+    messages: Array<StandardMessageNode>, 
     onUpdate: (message: string) => void
   ) => {
     if (!ollama) {
@@ -77,7 +77,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
 
     const response = await ollama.chat({
       model,
-      messages,
+      messages: simplifyMessages(messages),
       stream: true,
       ...parameters,
     });
