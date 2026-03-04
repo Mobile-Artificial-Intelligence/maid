@@ -165,7 +165,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
     }
 
     if (busy) {
-      console.warn("Prompt already in progress");
+      console.warn("LLM is busy");
       return;
     }
 
