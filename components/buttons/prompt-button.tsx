@@ -52,8 +52,8 @@ function PromptButton({ promptText, setPromptText, images, setImages }: PromptBu
       const filePaths: Array<string> = [];
 
       for (const image of images) {
-        if (image.uri) {
-          filePaths.push(image.uri);
+        if (image.base64 && image.mimeType) {
+          filePaths.push(`data:${image.mimeType};base64,${image.base64}`);
         }
       }
 

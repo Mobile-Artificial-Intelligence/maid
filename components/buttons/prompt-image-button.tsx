@@ -23,6 +23,7 @@ function PromptImageButton({ setImages }: PromptImageButtonProps) {
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       quality: 1,
+      base64: true,
     });
 
     if (!pickerResult.canceled) {
