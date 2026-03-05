@@ -7,7 +7,7 @@ import Markdown from '@novastera-oss/react-native-markdown-display';
 import { randomUUID } from "expo-crypto";
 import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
 import { useState } from "react";
-import { Alert, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
+import { Alert, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 
 export async function insertReport(
   content: string,
@@ -223,8 +223,17 @@ function MessageContentView({ message }: { message: MessageNode }) {
     );
   }
 
+  const images: string[] = message.metadata?.images ?? [];
+
   return (
     <View style={styles.view}>
+      {images.map((b64, i) => (
+        <Image
+          key={i}
+          source={{ uri: b64 }}
+          style={{ width: "100%", aspectRatio: 1, borderRadius: 8, resizeMode: "contain" }}
+        />
+      ))}
       {reasoning && (
         <TouchableHighlight style={styles.showReasoningButton} onPress={() => setShowReasoning(!showReasoning)}>
           <Text style={styles.showReasoningButtonText}>{showReasoning ? "Hide Reasoning" : "Show Reasoning"}</Text>
