@@ -1,7 +1,7 @@
 import { randomUUID } from 'expo-crypto';
 import { getRoots, MessageNode } from 'message-nodes';
 
-function validateMappings(mappings: Record<string, MessageNode<string>>): Record<string, MessageNode<string>> {
+export function validateMappings(mappings: Record<string, MessageNode<string>>): Record<string, MessageNode<string>> {
   const validMappings: Record<string, MessageNode<string>> = mappings;
 
   const invalidMessages = Object.values(mappings).filter(node => (!node.role || !node.content || node.role.trim().length === 0 || node.content.trim().length === 0) && node.id !== node.root);
@@ -51,6 +51,4 @@ function validateMappings(mappings: Record<string, MessageNode<string>>): Record
   });
 
   return validMappings;
-}
-
-export default validateMappings;
+};

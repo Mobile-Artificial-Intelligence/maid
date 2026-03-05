@@ -1,5 +1,5 @@
 import useAuthentication from '@/hooks/use-authentication';
-import validateMappings from '@/utilities/mappings';
+import { validateMappings } from '@/utilities/mappings';
 import getSupabase from '@/utilities/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MessageNode } from 'message-nodes';
