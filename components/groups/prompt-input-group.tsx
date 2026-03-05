@@ -72,6 +72,8 @@ function PromptInputGroup() {
         <PromptButton 
           promptText={promptText} 
           setPromptText={setPromptText} 
+          images={images} 
+          setImages={setImages} 
         />
       </View>
     </View>
