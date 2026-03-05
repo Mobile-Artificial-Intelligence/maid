@@ -11,6 +11,7 @@ const OllamaContext = createContext<OllamaContextProps | undefined>(undefined);
 export function OllamaProvider({ children }: { children: React.ReactNode }) {
   const stopRef = useRef<boolean>(false);
   const [busy, setBusy] = useState<boolean>(false);
+  const [imagesSupported, setImagesSupported] = useState<boolean>(false);
 
   const [baseURL, setBaseURL] = useStoredString("ollama-base-url");
   const [model, setModel] = useStoredString("ollama-model");
@@ -60,6 +61,22 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
     fetchModels();
   }, [ollama]);
 
+  useEffect(() => {
+    const checkImageSupport = async () => {
+      if (!ollama || !model) return;
+
+      try {
+        const modelInfo = await ollama.show({model});
+        const visionSupported = modelInfo.capabilities.includes("vision");
+        setImagesSupported(visionSupported);
+      } catch (error) {
+        console.error("Error checking image support:", error);
+      }
+    };
+
+    checkImageSupport();
+  }, [ollama, model]);
+
   const prompt = async (
     messages: Array<MessageNode>, 
     onUpdate: (message: string) => void
@@ -101,7 +118,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
   const value = {
     ready: !!ollama && !!model,
     busy,
-    imagesSupported: false,
+    imagesSupported,
     baseURL,
     setBaseURL,
     headers,
