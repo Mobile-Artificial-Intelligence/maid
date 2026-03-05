@@ -231,7 +231,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
         <Image
           key={i}
           source={{ uri: b64 }}
-          style={{ width: "100%", aspectRatio: 1, borderRadius: 8, resizeMode: "contain" }}
+          style={{ width: "80%", alignSelf: "center", borderRadius: 8, aspectRatio: 1, resizeMode: "cover", marginVertical: 16 }}
         />
       ))}
       {reasoning && (
