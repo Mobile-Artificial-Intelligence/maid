@@ -1,10 +1,36 @@
 import useStoredRecord from "@/hooks/use-stored-record";
 import useStoredString from "@/hooks/use-stored-string";
+import * as FileSystem from "expo-file-system";
 import { fetch as expoFetch } from "expo/fetch";
 import { MessageNode } from "message-nodes";
 import { Ollama } from "ollama/browser";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { OllamaContextProps } from "./types";
+
+async function parseMessages(messages: Array<MessageNode>) {
+  return Promise.all(messages.map(async (message) => {
+    const images: Array<string> | undefined = (message.metadata as any)?.images;
+
+    if (images && images.length > 0) {
+      const base64Images = await Promise.all(
+        images.map((uri) =>
+          FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 })
+        )
+      );
+
+      return {
+        role: message.role,
+        content: message.content as string,
+        images: base64Images,
+      };
+    }
+
+    return {
+      role: message.role,
+      content: message.content as string,
+    };
+  }));
+}
 
 const OllamaContext = createContext<OllamaContextProps | undefined>(undefined);
 
@@ -94,7 +120,7 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
 
     const response = await ollama.chat({
       model,
-      messages,
+      messages: await parseMessages(messages),
       stream: true,
       ...parameters,
     });
