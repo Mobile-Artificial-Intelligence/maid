@@ -1,6 +1,6 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
-import { getTextContent, StandardMessageContent, StandardMessageNode } from "@/utilities/mappings";
+import { getTextContent, ImagePart, StandardMessageContent, StandardMessageNode } from "@/utilities/mappings";
 import getMetadata from "@/utilities/metadata";
 import splitReasoning from "@/utilities/reasoning";
 import getSupabase from "@/utilities/supabase";
@@ -8,7 +8,7 @@ import Markdown from '@novastera-oss/react-native-markdown-display';
 import { randomUUID } from "expo-crypto";
 import { addNode, branchNode, getConversation, updateContent } from "message-nodes";
 import { useState } from "react";
-import { Alert, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
+import { Alert, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 
 export async function insertReport(
   content: string,
@@ -63,9 +63,17 @@ export async function insertReport(
   }
 }
 
+function getImageParts(message: StandardMessageNode): ImagePart[] {
+  if (Array.isArray(message.content)) {
+    return message.content.filter((part): part is ImagePart => part.type === 'image_url');
+  }
+  return [];
+}
+
 function MessageContentView({ message }: { message: StandardMessageNode }) {
   const [ showReasoning, setShowReasoning ] = useState<boolean>(false);
   const [ editText, setEditText ] = useState<string>(getTextContent(message));
+  const [ editImages, setEditImages ] = useState<ImagePart[]>(getImageParts(message));
   const { mappings, setMappings, editing, setEditing } = useChat();
   const { colorScheme } = useSystem();
   const LLM = useLLM();
@@ -101,6 +109,26 @@ function MessageContentView({ message }: { message: StandardMessageNode }) {
       color: colorScheme.onSurface,
       fontSize: 14,
       paddingHorizontal: 0,
+    },
+    imagesRow: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      gap: 8,
+      width: "100%",
+    },
+    imageWrapper: {
+      position: "relative",
+    },
+    image: {
+      width: 200,
+      height: 200,
+      borderRadius: 12,
+    },
+    removeImageButton: {
+      position: "absolute",
+      top: 4,
+      right: 4,
     },
   });
 
@@ -144,11 +172,14 @@ function MessageContentView({ message }: { message: StandardMessageNode }) {
     }
 
     const id = randomUUID();
+    const newContent: StandardMessageContent = editImages.length > 0
+      ? [...editImages, { type: "text", text: editText }]
+      : editText;
     let next = branchNode<StandardMessageContent>(
-      mappings, 
+      mappings,
       message.id,
       id,
-      editText,
+      newContent,
       getMetadata()
     );
 
@@ -195,6 +226,7 @@ function MessageContentView({ message }: { message: StandardMessageNode }) {
   const onEditDone = () => {
     setEditing(undefined);
     setEditText(getTextContent(message));
+    setEditImages(getImageParts(message));
   };
 
   const [content, reasoning] = splitReasoning(getTextContent(message));
@@ -202,15 +234,29 @@ function MessageContentView({ message }: { message: StandardMessageNode }) {
   if (editing === message.id) {
     return (
       <View style={styles.view}>
+        {editImages.length > 0 && (
+          <View style={styles.imagesRow}>
+            {editImages.map((img, i) => (
+              <View key={i} style={styles.imageWrapper}>
+                <Image source={{ uri: img.image_url }} style={styles.image} />
+                <View style={styles.removeImageButton}>
+                  <MaterialCommunityIconButton
+                    icon="close-circle"
+                    size={22}
+                    onPress={() => setEditImages(editImages.filter((_, j) => j !== i))}
+                  />
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
         <TextInput
           style={styles.content}
           value={editText}
           onChangeText={(text) => setEditText(text)}
           multiline
         />
-        <View
-          style={styles.controls}
-        >
+        <View style={styles.controls}>
           <MaterialCommunityIconButton
             icon="check"
             onPress={onEdit}
@@ -224,8 +270,17 @@ function MessageContentView({ message }: { message: StandardMessageNode }) {
     );
   }
 
+  const imageParts = getImageParts(message);
+
   return (
     <View style={styles.view}>
+      {imageParts.length > 0 && (
+        <View style={styles.imagesRow}>
+          {imageParts.map((img, i) => (
+            <Image key={i} source={{ uri: img.image_url }} style={styles.image} />
+          ))}
+        </View>
+      )}
       {reasoning && (
         <TouchableHighlight style={styles.showReasoningButton} onPress={() => setShowReasoning(!showReasoning)}>
           <Text style={styles.showReasoningButtonText}>{showReasoning ? "Hide Reasoning" : "Show Reasoning"}</Text>
