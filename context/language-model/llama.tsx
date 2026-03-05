@@ -119,7 +119,13 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
           const ctx_key = Object.keys(info).find(key => key.toLowerCase().endsWith("context_length"));
           const n_ctx = ctx_key ? Number(info[ctx_key]) : 2048;
 
-          const useProjector = projectorKey && projectorFiles[projectorKey];
+          const useProjector = 
+            projectorKey && 
+            projectorFiles[projectorKey] && 
+            (
+              projectorKey === modelKey || 
+              modelKey.endsWith("(local)")
+            );
 
           const llamaContext = await initLlama({
             model: modelFile,
