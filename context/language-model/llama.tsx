@@ -136,17 +136,6 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
             ctx_shift: !useProjector
           });
 
-          if (useProjector) {
-            const projectorLoaded = await llamaContext.initMultimodal({
-              path: projectorFiles[projectorKey],
-              use_gpu: true
-            });
-
-            console.log("Projector loaded: ", projectorLoaded);
-          }
-
-          console.log("Multimodal enabled: ", await llamaContext.isMultimodalEnabled());
-
           // if a newer load started, ignore this one
           if (cancelled || currentLoadId !== loadIdRef.current) {
             await llamaContext.release?.(); // optional cleanup if API supports
@@ -157,7 +146,6 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
 
           if (useProjector) {
             const support = await llamaContext.getMultimodalSupport();
-            console.log("Vision support: ", support.vision);
             //console.log("Audio support: ", support.audio);
             setImagesSupported(support.vision);
           }
