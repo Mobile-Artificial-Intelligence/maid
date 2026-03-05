@@ -1,11 +1,11 @@
 import MessageContentView from "@/components/views/message/content-view";
 import MessageControlsView from "@/components/views/message/controls-view";
 import MessageRoleView from "@/components/views/message/role-view";
-import { MessageNode } from "message-nodes";
+import { StandardMessageNode } from "@/utilities/mappings";
 import { StyleSheet, View } from "react-native";
 
 
-function MessageView({ message }: { message: MessageNode }) {
+function MessageView({ message }: { message: StandardMessageNode }) {
   const styles = StyleSheet.create({
     view: {
       flexDirection: "column",

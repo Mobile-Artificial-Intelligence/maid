@@ -1,14 +1,15 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
+import { getTextContent, StandardMessageContent, StandardMessageNode } from "@/utilities/mappings";
 import getMetadata from "@/utilities/metadata";
 import splitReasoning from "@/utilities/reasoning";
 import { randomUUID } from "expo-crypto";
 import * as Speech from "expo-speech";
-import { branchNode, getChildren, getConversation, lastChild, MessageNode, nextChild, updateContent } from "message-nodes";
+import { branchNode, getChildren, getConversation, lastChild, nextChild, updateContent } from "message-nodes";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-function MessageControlsView({ message }: { message: MessageNode }) {
+function MessageControlsView({ message }: { message: StandardMessageNode }) {
   const [ speaking, setSpeaking ] = useState<boolean>(false);
   const { mappings, setMappings, editing, setEditing, deleteMessage } = useChat();
   const { colorScheme, voice } = useSystem();
@@ -28,7 +29,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
 
   const onRegenerate = () => {
     const responseId = randomUUID();
-    const next = branchNode<string>(
+    const next = branchNode<StandardMessageContent>(
       mappings,
       message.id,
       responseId,
@@ -48,7 +49,7 @@ function MessageControlsView({ message }: { message: MessageNode }) {
       getConversation(next, message.root!),
       (chunk: string) => {
         buffer += chunk;
-        setMappings(updateContent(next, responseId, buffer, (meta) => ({ ...meta, updateTime: new Date().toISOString() })));
+        setMappings(updateContent<StandardMessageContent>(next, responseId, buffer, (meta) => ({ ...meta, updateTime: new Date().toISOString() })));
       }
     );
   };
@@ -65,7 +66,8 @@ function MessageControlsView({ message }: { message: MessageNode }) {
     }
 
     try {
-      Speech.speak(splitReasoning(message)[0] ?? message.content, { voice: voice!.identifier });
+      const textContent = getTextContent(message);
+      Speech.speak(splitReasoning(textContent)[0] ?? textContent, { voice: voice!.identifier });
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const isSpeaking = await Speech.isSpeakingAsync();

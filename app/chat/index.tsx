@@ -1,15 +1,16 @@
 import PromptInputGroup from "@/components/groups/prompt-input-group";
 import MessageView from "@/components/views/message/message-view";
 import { useChat, useSystem } from "@/context";
+import { StandardMessageNode } from "@/utilities/mappings";
 import { randomUUID } from "expo-crypto";
-import { getConversation, hasNode, MessageNode } from "message-nodes";
+import { getConversation, hasNode } from "message-nodes";
 import { FlatList, StyleSheet, View } from "react-native";
 
 function Chat() {
   const { colorScheme } = useSystem();
   const { mappings, root } = useChat();
 
-  const renderItem = ({ item }: { item: MessageNode }) => (
+  const renderItem = ({ item }: { item: StandardMessageNode }) => (
     <MessageView 
       key={item.id} 
       message={item} 

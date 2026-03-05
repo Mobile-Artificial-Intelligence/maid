@@ -32,20 +32,25 @@ function messageEmpty(node: StandardMessageNode): boolean {
   return true;
 };
 
+export function getTextContent(node: StandardMessageNode): string {
+  if (typeof node.content === "string") {
+    return node.content;
+  } 
+  else if (Array.isArray(node.content)) {
+    return node.content
+      .filter(part => part.type === "text")
+      .map(part => part.text.trim())
+      .join('\n\n');
+  }
+  return "";
+};
+
 export function simplifyMessages(messages: Array<StandardMessageNode>): Array<MessageNode<string, Record<string, any>>> {
   return messages.map(node => {
-    if (Array.isArray(node.content)) {
-      const textContent = node.content
-        .filter(part => part.type === "text")
-        .map(part => part.text.trim())
-        .join('\n\n');
-
-      return {
-        ...node,
-        content: textContent,
-      };
-    }
-    return node;
+    return {
+      ...node,
+      content: getTextContent(node),
+    };
   }) as Array<MessageNode<string, Record<string, any>>>;
 };
 

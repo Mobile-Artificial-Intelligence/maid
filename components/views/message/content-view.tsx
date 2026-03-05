@@ -1,11 +1,12 @@
 import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
+import { getTextContent, StandardMessageContent, StandardMessageNode } from "@/utilities/mappings";
 import getMetadata from "@/utilities/metadata";
 import splitReasoning from "@/utilities/reasoning";
 import getSupabase from "@/utilities/supabase";
 import Markdown from '@novastera-oss/react-native-markdown-display';
 import { randomUUID } from "expo-crypto";
-import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
+import { addNode, branchNode, getConversation, updateContent } from "message-nodes";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 
@@ -62,9 +63,9 @@ export async function insertReport(
   }
 }
 
-function MessageContentView({ message }: { message: MessageNode }) {
+function MessageContentView({ message }: { message: StandardMessageNode }) {
   const [ showReasoning, setShowReasoning ] = useState<boolean>(false);
-  const [ editText, setEditText ] = useState<string>(message.content);
+  const [ editText, setEditText ] = useState<string>(getTextContent(message));
   const { mappings, setMappings, editing, setEditing } = useChat();
   const { colorScheme } = useSystem();
   const LLM = useLLM();
@@ -143,7 +144,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
     }
 
     const id = randomUUID();
-    let next = branchNode<string>(
+    let next = branchNode<StandardMessageContent>(
       mappings, 
       message.id,
       id,
@@ -152,7 +153,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
     );
 
     const responseId = randomUUID();
-    next = addNode<string>(
+    next = addNode<StandardMessageContent>(
       next,
       responseId,
       "assistant",
@@ -178,7 +179,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
         (chunk: string) => {
           chunks.push(chunk);
           const buffer = chunks.join("");
-          setMappings(updateContent(next, responseId, buffer, updateMeta));
+          setMappings(updateContent<StandardMessageContent>(next, responseId, buffer, updateMeta));
         }
       );
     } catch (error) {
@@ -193,10 +194,10 @@ function MessageContentView({ message }: { message: MessageNode }) {
 
   const onEditDone = () => {
     setEditing(undefined);
-    setEditText(message.content);
+    setEditText(getTextContent(message));
   };
 
-  const [content, reasoning] = splitReasoning(message);
+  const [content, reasoning] = splitReasoning(getTextContent(message));
 
   if (editing === message.id) {
     return (
@@ -232,20 +233,20 @@ function MessageContentView({ message }: { message: MessageNode }) {
       )}
       {reasoning && showReasoning && <Text style={styles.reasoning}>{reasoning}</Text>}
       {content && <Markdown style={markdownStyle}>{content}</Markdown>}
-      {message.role === "assistant" && message.content.length > 0 && (
+      {message.role === "assistant" && getTextContent(message).length > 0 && (
         <View
           style={styles.controls}
         >
           <MaterialCommunityIconButton
             icon="thumb-up"
             size={22}
-            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelKey || "", true)}
+            onPress={() => insertReport(getTextContent(message), LLM.type, LLM.model || LLM.modelKey || "", true)}
             color={colorScheme.secondary}
           />
           <MaterialCommunityIconButton
             icon="thumb-down"
             size={22}
-            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelKey || "", false)}
+            onPress={() => insertReport(getTextContent(message), LLM.type, LLM.model || LLM.modelKey || "", false)}
             color={colorScheme.secondary}
           />
         </View>

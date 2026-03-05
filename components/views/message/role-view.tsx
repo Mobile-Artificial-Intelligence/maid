@@ -1,12 +1,12 @@
 import AssistantImageView from "@/components/views/assistant-image-view";
 import UserImageView from "@/components/views/user-image-view";
 import { useSystem } from "@/context";
+import { StandardMessageNode } from "@/utilities/mappings";
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import { MessageNode } from "message-nodes";
 import { StyleSheet, Text, View } from "react-native";
 
 
-function MessageRoleView({ message }: { message: MessageNode }) {
+function MessageRoleView({ message }: { message: StandardMessageNode }) {
   const { userName, assistantName, colorScheme } = useSystem();
 
   const styles = StyleSheet.create({

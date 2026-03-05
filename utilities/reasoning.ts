@@ -1,7 +1,6 @@
-import { MessageNode } from "message-nodes";
 
-function splitReasoningHelper(message: MessageNode, openTag: string, closeTag: string): [string | undefined, string | undefined] {
-  let content: string | undefined = message.content.trim();
+function splitReasoningHelper(input: string, openTag: string, closeTag: string): [string | undefined, string | undefined] {
+  let content: string | undefined = input.trim();
   let reasoning: string | undefined;
 
   const openIndex = content.indexOf(openTag);
@@ -33,14 +32,14 @@ function splitReasoningHelper(message: MessageNode, openTag: string, closeTag: s
   return [content, reasoning];
 }
 
-function splitReasoning(message: MessageNode): [string | undefined, string | undefined] {
-  if (message.content.includes("<think>")) {
-    return splitReasoningHelper(message, "<think>", "</think>");
+function splitReasoning(content: string): [string | undefined, string | undefined] {
+  if (content.includes("<think>")) {
+    return splitReasoningHelper(content, "<think>", "</think>");
   }
-  else if (message.content.includes("<reasoning>")) {
-    return splitReasoningHelper(message, "<reasoning>", "</reasoning>");
+  else if (content.includes("<reasoning>")) {
+    return splitReasoningHelper(content, "<reasoning>", "</reasoning>");
   }
-  return [message.content, undefined];
+  return [content, undefined];
 }
 
 export default splitReasoning;
