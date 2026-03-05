@@ -2,7 +2,7 @@ import useStoredRecord from '@/hooks/use-stored-record';
 import useStoredString from '@/hooks/use-stored-string';
 import { getDocumentAsync } from "expo-document-picker";
 import * as FileSystem from 'expo-file-system';
-import { initLlama, LlamaContext as LlamaRnContext, loadLlamaModelInfo } from 'llama.rn';
+import { initLlama, LlamaContext as LlamaRnContext, loadLlamaModelInfo, RNLlamaOAICompatibleMessage } from 'llama.rn';
 import { MessageNode } from 'message-nodes';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { LlamaContextProps } from "./types";
@@ -29,7 +29,7 @@ async function isGGUF(fileUri: string): Promise<boolean> {
   } catch {
     return false;
   }
-}
+};
 
 async function cleanupLocalModelFiles(modelFiles: Record<string, string>) {
   const updated = { ...modelFiles };
@@ -45,6 +45,27 @@ async function cleanupLocalModelFiles(modelFiles: Record<string, string>) {
   }
 
   return updated;
+};
+
+function parseMessages(messages: Array<MessageNode>): Array<RNLlamaOAICompatibleMessage> {
+  return messages.map((message) => {
+    const images: Array<string> | undefined = (message.metadata as any)?.images;
+
+    if (images && images.length > 0) {
+      return {
+        role: message.role,
+        content: [
+          { type: "text", text: message.content as string },
+          ...images.map((uri) => ({
+            type: "image_url" as const,
+            image_url: { url: uri },
+          })),
+        ],
+      } as RNLlamaOAICompatibleMessage;
+    }
+
+    return message as unknown as RNLlamaOAICompatibleMessage;
+  });
 }
 
 const LlamaContext = createContext<LlamaContextProps | undefined>(undefined);
@@ -227,7 +248,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
 
     try {
       const result = await llama.completion({
-        messages: messages
+        messages: parseMessages(messages)
       }, (data) => onUpdate(data.token));
     
       console.log('Timings:', result.timings);
