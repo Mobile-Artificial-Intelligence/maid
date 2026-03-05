@@ -13,23 +13,23 @@ interface HuggingfaceModel {
   repo: string;
   branch: string;
   parameters: number;
-  tags: Record<string, string | undefined>;
+  tags: Record<string, string | Array<string> | undefined>;
 }
 
 const HuggingfaceModels = HuggingfaceModelsRaw as Array<HuggingfaceModel>;
 
 function ModelDownload({ source }: { source: HuggingfaceModel }) {
-  const { modelFiles, setModelFiles, modelKey, setModelKey } = useLLM();
+  const { modelFiles, setModelFiles, modelKey, setModelKey, projectorFiles, setProjectorFiles, projectorKey, setProjectorKey } = useLLM();
   const { colorScheme } = useSystem();
   const { id, name, repo, branch, tags } = source;
 
   const [progress, setProgress] = useState<FileSystem.DownloadProgressData | undefined>(undefined);
+  const [projectorProgress, setProjectorProgress] = useState<FileSystem.DownloadProgressData | undefined>(undefined);
   const [tag, setTag] = useState<string>(Object.keys(tags)[0]);
-
-  const downloaded = !!modelFiles?.[`${id}:${tag}`];
 
   // Holds the active download even across re-renders
   const downloadRef = useRef<FileSystem.DownloadResumable | null>(null);
+  const projectorDownloadRef = useRef<FileSystem.DownloadResumable | null>(null);
 
   // Prevent setState after navigate-away / unmount
   const mountedRef = useRef(true);
@@ -47,27 +47,34 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
   }, []);
 
   const currentKey = useMemo(() => `${id}:${tag}`, [id, tag]);
-  const fileName = tags[tag];
-  const url = useMemo(() => `https://huggingface.co/${repo}/resolve/${branch}/${fileName}`, [repo, branch, fileName]);
-  const fileUri = useMemo(() => `${FileSystem.documentDirectory}${fileName}`, [fileName]);
+
+  const modelFileName = useMemo(() => Array.isArray(tags[tag]) ? tags[tag][0] : tags[tag], [tags, tag]);
+  const modelUrl = useMemo(() => `https://huggingface.co/${repo}/resolve/${branch}/${modelFileName}`, [repo, branch, modelFileName]);
+  const modelFilePath = useMemo(() => `${FileSystem.documentDirectory}${modelFileName}`, [modelFileName]);
+
+  const projectorFileName = useMemo(() => Array.isArray(tags[tag]) ? tags[tag][1] : undefined, [tags, tag]);
+  const projectorUrl = useMemo(() => projectorFileName ? `https://huggingface.co/${repo}/resolve/${branch}/${projectorFileName}` : undefined, [repo, branch, projectorFileName]);
+  const projectorFilePath = useMemo(() => projectorFileName ? `${FileSystem.documentDirectory}${projectorFileName}` : undefined, [projectorFileName]);
+
+  const downloaded = !!modelFiles?.[currentKey] && (!projectorFileName || !!projectorFiles?.[currentKey]);
 
   const downloadModel = async () => {
-    // already downloaded
     if (downloaded) return;
 
     // if something is already downloading, don't start another
     if (downloadRef.current && activeKeyRef.current === currentKey) {
-      // optionally try resuming if paused
       try {
         await downloadRef.current.resumeAsync();
       } catch {
         // ignore; might already be running
       }
+      if (projectorDownloadRef.current) {
+        try { await projectorDownloadRef.current.resumeAsync(); } catch {}
+      }
       return;
     }
 
-    // If a different tag/model is downloading, you can either block or cancel it.
-    // Here we block to avoid losing the other download.
+    // If a different tag/model is downloading, block to avoid losing the other download.
     if (downloadRef.current && activeKeyRef.current !== currentKey) {
       console.warn("Another download is already running; not starting a second one.");
       return;
@@ -75,33 +82,47 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
 
     activeKeyRef.current = currentKey;
 
-    const onProgress = (downloadProgress: FileSystem.DownloadProgressData) => {
-      if (!mountedRef.current) return;
-      setProgress(downloadProgress);
-    };
+    const modelResumable = FileSystem.createDownloadResumable(
+      modelUrl, modelFilePath, {},
+      (p) => { if (mountedRef.current) setProgress(p); }
+    );
+    downloadRef.current = modelResumable;
 
-    const downloadResumable = FileSystem.createDownloadResumable(url, fileUri, {}, onProgress);
-    downloadRef.current = downloadResumable;
+    const downloads: Promise<FileSystem.FileSystemDownloadResult | undefined>[] = [modelResumable.downloadAsync()];
+
+    if (projectorUrl && projectorFilePath) {
+      const projectorResumable = FileSystem.createDownloadResumable(
+        projectorUrl, projectorFilePath, {},
+        (p) => { if (mountedRef.current) setProjectorProgress(p); }
+      );
+      projectorDownloadRef.current = projectorResumable;
+      downloads.push(projectorResumable.downloadAsync());
+    }
 
     try {
-      const result = await downloadResumable.downloadAsync();
+      const [modelResult, projectorResult] = await Promise.all(downloads);
 
-      // Component might be gone now; still save if setters exist, but guard state writes
+      setModelFiles?.((prev) => ({ ...prev, [currentKey]: modelResult?.uri ?? modelFilePath }));
+      setModelKey?.(currentKey);
+
+      if (projectorResult && projectorFilePath) {
+        setProjectorFiles?.((prev) => ({ ...prev, [currentKey]: projectorResult.uri ?? projectorFilePath }));
+        setProjectorKey?.(currentKey);
+      }
+
       if (mountedRef.current) {
-        setModelFiles?.((prev) => ({ ...prev, [currentKey]: result?.uri ?? fileUri }));
-        setModelKey?.(currentKey);
         setProgress(undefined);
-      } else {
-        // Even if unmounted, it can be useful to persist completion elsewhere (context/store)
-        // If you want that, move model file persistence into your LLM context instead of local state.
-        setModelFiles?.((prev) => ({ ...prev, [currentKey]: result?.uri ?? fileUri }));
-        setModelKey?.(currentKey);
+        setProjectorProgress(undefined);
       }
     } catch (error) {
       console.error("Download failed:", error);
-      if (mountedRef.current) setProgress(undefined);
+      if (mountedRef.current) {
+        setProgress(undefined);
+        setProjectorProgress(undefined);
+      }
     } finally {
       downloadRef.current = null;
+      projectorDownloadRef.current = null;
       activeKeyRef.current = null;
     }
   };
@@ -112,12 +133,17 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
 
     // If THIS file is downloading, cancel first so you don't delete mid-stream
     if (downloadRef.current && activeKeyRef.current === currentKey) {
-      try {
-        await downloadRef.current.cancelAsync();
-      } catch {}
+      try { await downloadRef.current.cancelAsync(); } catch {}
+      if (projectorDownloadRef.current) {
+        try { await projectorDownloadRef.current.cancelAsync(); } catch {}
+        projectorDownloadRef.current = null;
+      }
       downloadRef.current = null;
       activeKeyRef.current = null;
-      if (mountedRef.current) setProgress(undefined);
+      if (mountedRef.current) {
+        setProgress(undefined);
+        setProjectorProgress(undefined);
+      }
     }
 
     try {
@@ -128,6 +154,17 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
         return updated;
       });
       setModelKey?.(undefined);
+
+      const existingProjector = projectorFiles?.[currentKey];
+      if (existingProjector) {
+        await FileSystem.deleteAsync(existingProjector, { idempotent: true });
+        setProjectorFiles?.((prev) => {
+          const updated = { ...prev };
+          delete updated[currentKey];
+          return updated;
+        });
+        setProjectorKey?.(undefined);
+      }
     } catch (error) {
       console.error("Delete failed:", error);
     }
@@ -140,6 +177,11 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
       return;
     }
     setModelKey?.(currentKey);
+    if (projectorFiles?.[currentKey]) {
+      setProjectorKey?.(currentKey);
+    } else {
+      setProjectorKey?.(undefined);
+    }
   };
 
   useEffect(() => {
@@ -211,6 +253,11 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
       ? Math.round((progress.totalBytesWritten / progress.totalBytesExpectedToWrite) * 100)
       : undefined;
 
+  const projectorPercent =
+    projectorProgress?.totalBytesExpectedToWrite
+      ? Math.round((projectorProgress.totalBytesWritten / projectorProgress.totalBytesExpectedToWrite) * 100)
+      : undefined;
+
   return (
     <View style={styles.view}>
       <View style={styles.titleView}>
@@ -222,7 +269,11 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
         />
       </View>
 
-      {percent !== undefined && <Text style={styles.name}>{percent}%</Text>}
+      {percent !== undefined && (
+        <Text style={styles.name}>
+          {projectorFileName ? `Model: ${percent}%  Proj: ${projectorPercent ?? 0}%` : `${percent}%`}
+        </Text>
+      )}
 
       {!progress && !downloaded && (
         <MaterialIconButton
