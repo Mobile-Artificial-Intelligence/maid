@@ -1,3 +1,4 @@
+import useStateRef from '@/hooks/use-state-ref';
 import useStoredRecord from '@/hooks/use-stored-record';
 import useStoredString from '@/hooks/use-stored-string';
 import { getDocumentAsync } from "expo-document-picker";
@@ -83,7 +84,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
 
   const [parameters, setParameters] = useStoredRecord("llama-parameters");
 
-  const [llama, setLlama] = useState<LlamaRnContext | undefined>(undefined);
+  const [llama, llamaRef, setLlama] = useStateRef<LlamaRnContext | undefined>(undefined);
 
   useEffect(() => {
     let cancelled = false;
@@ -115,15 +116,20 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
         setBusy(true);
 
         try {
+          // Release the previous context before loading a new one
+          const oldContext = llamaRef.current;
+          setLlama(undefined);
+          await oldContext?.release();
+
           const info = await loadLlamaModelInfo(modelFile) as Record<string, any>;
           const ctx_key = Object.keys(info).find(key => key.toLowerCase().endsWith("context_length"));
           const n_ctx = ctx_key ? Number(info[ctx_key]) : 2048;
 
-          const useProjector = 
-            projectorKey && 
-            projectorFiles[projectorKey] && 
+          const useProjector =
+            projectorKey &&
+            projectorFiles[projectorKey] &&
             (
-              projectorKey === modelKey || 
+              projectorKey === modelKey ||
               modelKey.endsWith("(local)")
             );
 
@@ -138,7 +144,7 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
 
           // if a newer load started, ignore this one
           if (cancelled || currentLoadId !== loadIdRef.current) {
-            await llamaContext.release?.(); // optional cleanup if API supports
+            await llamaContext.release();
             return;
           }
 
