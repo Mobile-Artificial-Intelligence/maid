@@ -1,6 +1,6 @@
 AntiFeatures:
   NonFreeNet:
-    en-US: Optional use of OpenAI, DeepSeek, Anthropic or Mistral APIs. 
+    en-US: Optional use of OpenAI, DeepSeek, Anthropic, Mistral or Novita APIs. 
   NonFreeDep:
     en-US: Depends on Qualcomm Hexagon SDK which is not open source. Binary is not included in release.
 Categories:

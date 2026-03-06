@@ -49,7 +49,7 @@
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Introduction}
 
-Maid (Mobile Artificial Intelligence Distribution) is a free and open-source application for interfacing with AI language models on Android. It supports both fully local inference via \texttt{llama.cpp} and remote inference through the APIs of Anthropic, DeepSeek, Mistral, Ollama, and OpenAI.
+Maid (Mobile Artificial Intelligence Distribution) is a free and open-source application for interfacing with AI language models on Android. It supports both fully local inference via \texttt{llama.cpp} and remote inference through the APIs of Anthropic, DeepSeek, Mistral, Novita, Ollama, and OpenAI.
 
 All settings are stored locally on your device using encrypted application storage — no API keys or personal data are sent anywhere other than the provider you configure.
 
@@ -74,6 +74,7 @@ OpenAI   & Yes & Yes & Yes & No  \\
 Anthropic & Yes & Yes & Yes & No  \\
 Mistral  & Yes & Yes & No  & No  \\
 DeepSeek & Yes & No  & Yes & No  \\
+Novita   & Yes & No  & Yes & No  \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -89,6 +90,7 @@ On the Settings screen, tap the \textbf{API} dropdown at the top of the page to 
     \item \textbf{Anthropic} — Anthropic Claude cloud API
     \item \textbf{Mistral} — Mistral AI cloud API
     \item \textbf{DeepSeek} — DeepSeek cloud API
+    \item \textbf{Novita} — Novita AI cloud API
 \end{itemize}
 
 After selecting a provider, the settings panel will update to show the fields relevant to that provider.
@@ -394,6 +396,44 @@ Model   & Yes & — \\
 \end{tabular}
 \end{center}
 
+\section{Novita}
+
+\subsection{Overview}
+
+The Novita provider connects to Novita AI's cloud API. Novita provides high-performance inference for a wide variety of open-source models through an OpenAI-compatible interface.
+
+\subsection{Obtaining an API Key}
+
+\begin{enumerate}
+    \item Create an account at \url{https://novita.ai}.
+    \item Navigate to your dashboard and generate an API key.
+\end{enumerate}
+
+\subsection{Configuration in Maid}
+
+\begin{enumerate}
+    \item Go to \textbf{Settings} and select \textbf{Novita} from the API dropdown.
+    \item Paste your API key into the \textbf{API Key} field.
+    \item Maid will automatically fetch and populate the \textbf{Model} dropdown.
+    \item Select a model from the available list.
+    \item Optionally configure \textbf{Custom Headers} and \textbf{Parameters} (see Sections~\ref{sec:headers} and~\ref{sec:parameters}).
+\end{enumerate}
+
+\textbf{Note:} The Novita provider always connects to \texttt{https://api.novita.ai/openai}. The base URL is not configurable.
+
+\subsection{Required Fields}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Field} & \textbf{Required} & \textbf{Default} \\
+\midrule
+API Key & Yes & — \\
+Model   & Yes & — \\
+\bottomrule
+\end{tabular}
+\end{center}
+
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Prompt Input}
 
@@ -526,7 +566,7 @@ Parameters that are left blank are omitted from the API request, allowing each p
 \subsection{Custom HTTP Headers}
 \label{sec:headers}
 
-The OpenAI, Anthropic, DeepSeek, and Ollama providers allow you to supply additional HTTP headers. This is useful for:
+The OpenAI, Anthropic, DeepSeek, Novita, and Ollama providers allow you to supply additional HTTP headers. This is useful for:
 
 \begin{itemize}[noitemsep]
     \item Passing organisation or project identifiers required by a corporate proxy.
