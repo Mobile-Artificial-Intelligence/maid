@@ -260,7 +260,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
           />
         </View>
       )}
-      <NeuralNetworkAnimation />
+      <NeuralNetworkAnimation repeat={true} />
     </View>
   );
 };
