@@ -30,14 +30,14 @@
 </a>
 </div>
 
-Maid is a free and open source application for interfacing with llama.cpp models locally, and with Anthropic, DeepSeek, Ollama, Mistral and OpenAI models remotely. Maid is built using React Native and is available for Android. The application is designed to be fast, efficient and user-friendly, making it easy for users to interact with their models on the go.
+Maid is a free and open source application for interfacing with llama.cpp models locally, and with Anthropic, DeepSeek, Mistral, Novita, Ollama and OpenAI models remotely. Maid is built using React Native and is available for Android. The application is designed to be fast, efficient and user-friendly, making it easy for users to interact with their models on the go.
 
-For text to speech functionality check out Maid's companion app [Maise](https://github.com/Mobile-Artificial-Intelligence/maise).
+For text to speech functionality check out Maid's companion app [Maise](https://github.com/Mobile-Artificial-Intelligence-maise).
 
 ## Features
 
 - **Local inference** — run GGUF models fully on-device via llama.cpp; no internet required
-- **Remote providers** — connect to Anthropic, DeepSeek, Mistral, Ollama, and OpenAI with your own API key
+- **Remote providers** — connect to Anthropic, DeepSeek, Mistral, Novita, Ollama, and OpenAI with your own API key
 - **One-tap model downloads** — browse and download curated Hugging Face models (Qwen, Phi, LFM, TinyLlama, and more) directly from the app
 - **Bring your own model** — load any GGUF file from local storage
 - **Conversation management** — create, rename, delete, export, and import chats as JSON

@@ -4,6 +4,7 @@ import { AnthropicProvider, useAnthropic } from "./anthropic";
 import { DeepSeekProvider, useDeepSeek } from "./deepseek";
 import { LlamaProvider, useLlama } from "./llama";
 import { MistralProvider, useMistral } from "./mistral";
+import { NovitaProvider, useNovita } from "./novita";
 import { OllamaProvider, useOllama } from "./ollama";
 import { OpenAIProvider, useOpenAI } from "./open-ai";
 import { LanguageModelContextProps, LanguageModelProps, LanguageModelType, LanguageModelTypes } from "./types";
@@ -17,6 +18,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
   const anthropic = useAnthropic();
   const mistral = useMistral();
   const deepSeek = useDeepSeek();
+  const novita = useNovita();
   const [type, setType] = useState<LanguageModelType>("Llama");
 
   const loadType = async () => {
@@ -64,6 +66,8 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
         return mistral;
       case "DeepSeek":
         return deepSeek;
+      case "Novita":
+        return novita;
       default:
         throw new Error(`Unsupported model type: ${type}`);
     }
@@ -73,7 +77,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
     type,
     setType,
     ...getProps(),
-  }), [type, llama, ollama, openAI, anthropic, mistral, deepSeek]);
+  }), [type, llama, ollama, openAI, anthropic, mistral, deepSeek, novita]);
 
   return (
     <LanguageModelContext.Provider value={values}>
@@ -90,9 +94,11 @@ export function LanguageModelProvider({ children }: { children: React.ReactNode 
           <AnthropicProvider>
             <MistralProvider>
               <DeepSeekProvider>
-                <LanguageModelManagementProvider>
-                  {children}
-                </LanguageModelManagementProvider>
+                <NovitaProvider>
+                  <LanguageModelManagementProvider>
+                    {children}
+                  </LanguageModelManagementProvider>
+                </NovitaProvider>
               </DeepSeekProvider>
             </MistralProvider>
           </AnthropicProvider>
