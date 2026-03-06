@@ -260,7 +260,12 @@ function MessageContentView({ message }: { message: MessageNode }) {
           />
         </View>
       )}
-      <NeuralNetworkAnimation repeat={true} />
+      {message.content.length === 0 && !message.child && (
+        LLM.busy ? 
+          <NeuralNetworkAnimation repeat={true} /> : 
+          <Text style={styles.reasoning}>[No content]</Text>
+        )
+      }
     </View>
   );
 };
