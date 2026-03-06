@@ -8,6 +8,7 @@ import { randomUUID } from "expo-crypto";
 import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
 import { useState } from "react";
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
+import NeuralNetworkAnimation from "../neural-network-animation";
 
 export async function insertReport(
   content: string,
@@ -259,6 +260,7 @@ function MessageContentView({ message }: { message: MessageNode }) {
           />
         </View>
       )}
+      <NeuralNetworkAnimation />
     </View>
   );
 };
