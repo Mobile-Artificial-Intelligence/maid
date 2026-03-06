@@ -142,6 +142,13 @@ export function LlamaProvider({ children }: { children: ReactNode }) {
             ctx_shift: !useProjector
           });
 
+          if (useProjector) {
+            await llamaContext.initMultimodal({
+              path: projectorFiles[projectorKey],
+              use_gpu: true
+            });
+          }
+
           // if a newer load started, ignore this one
           if (cancelled || currentLoadId !== loadIdRef.current) {
             await llamaContext.release();
