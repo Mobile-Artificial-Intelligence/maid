@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
 import { useSystem } from "@/context";
+import { useEffect, useRef, useState } from "react";
 import Svg, { Circle, Line } from "react-native-svg";
 
 function shuffle<T>(arr: T[]): T[] {
@@ -21,10 +21,10 @@ const L34 = ["3E-4E", "3E-4D", "3E-4C", "3E-4B", "3E-4A", "3D-4E", "3D-4D", "3D-
 const L5 = ["5A", "5B", "5C"];
 const L45 = ["4E-5C", "4E-5B", "4E-5A", "4D-5C", "4D-5B", "4D-5A", "4C-5C", "4C-5B", "4C-5A", "4B-5C", "4B-5B", "4B-5A", "4A-5C", "4A-5B", "4A-5A"];
 
-// 9 phases over ~2s: 50ms initial pause, 220ms between phases, 150ms spread within each phase
+// 9 phases over ~4s: 50ms initial pause, 460ms between phases, 250ms spread within each phase
 const INITIAL_DELAY = 50;
-const PHASE_GAP = 220;
-const PHASE_SPREAD = 150;
+const PHASE_GAP = 460;
+const PHASE_SPREAD = 250;
 
 type Props = {
   onDone?: () => void;
@@ -92,7 +92,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={229.52361} y1={95.908183}
        x2={180.50348} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -101,7 +101,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={229.52361} y1={70.094273}
        x2={180.50348} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -110,7 +110,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={121.72209}
        x2={229.52361} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -119,7 +119,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={95.908193}
        x2={229.52361} y2={95.908183}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -128,7 +128,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={95.908193}
        x2={229.52361} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -137,7 +137,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={229.52361} y1={44.280363}
        x2={180.50348} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -146,7 +146,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={70.094273}
        x2={229.52361} y2={95.908183}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -155,7 +155,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={229.52361} y1={70.094273}
        x2={180.50348} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -164,7 +164,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={229.52361} y1={44.280363}
        x2={180.50348} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -173,7 +173,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={229.52361} y1={95.908183}
        x2={180.50348} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -182,7 +182,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={44.280363}
        x2={229.52361} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -191,7 +191,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={44.280363}
        x2={229.52361} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -200,7 +200,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={18.466453}
        x2={229.52361} y2={95.908183}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -209,7 +209,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={229.52361} y1={70.094273}
        x2={180.50348} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -218,7 +218,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={229.52361} y1={44.280363}
        x2={180.50348} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -251,7 +251,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={121.72209}
        x2={128.23124} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -260,7 +260,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={95.908193}
        x2={128.23124} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -269,7 +269,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={121.72209}
        x2={180.50348} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -278,7 +278,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={44.280363}
        x2={128.23124} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -287,7 +287,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={121.72209}
        x2={180.50348} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -296,7 +296,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={95.908193}
        x2={180.50348} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -305,7 +305,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={95.908193}
        x2={180.50348} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -314,7 +314,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={70.094273}
        x2={128.23124} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -323,7 +323,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={95.908193}
        x2={180.50348} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -332,7 +332,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={95.908193}
        x2={180.50348} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -341,7 +341,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={70.094273}
        x2={180.50348} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -350,7 +350,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={70.094273}
        x2={180.50348} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -359,7 +359,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={70.094273}
        x2={128.23124} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -368,7 +368,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={44.280363}
        x2={128.23124} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -377,7 +377,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={18.466453}
        x2={128.23124} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -386,7 +386,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={121.72209}
        x2={128.23124} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -395,7 +395,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={44.280363}
        x2={180.50348} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -404,7 +404,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={44.280363}
        x2={180.50348} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -413,7 +413,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={44.280363}
        x2={180.50348} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -422,7 +422,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={18.466453}
        x2={128.23124} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -431,7 +431,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={121.72209}
        x2={128.23124} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -440,7 +440,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={95.908193}
        x2={128.23124} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -449,7 +449,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={70.094273}
        x2={128.23124} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -458,7 +458,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={18.466453}
        x2={180.50348} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -467,7 +467,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={180.50348} y1={18.466453}
        x2={128.23124} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -516,7 +516,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={121.72209}
        x2={75.958993} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -525,7 +525,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={95.908193}
        x2={75.958992} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -534,7 +534,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958992} y1={121.72209}
        x2={128.23124} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -543,7 +543,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={44.280363}
        x2={75.958992} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -552,7 +552,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958992} y1={121.72209}
        x2={128.23124} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -561,7 +561,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958992} y1={95.908193}
        x2={128.23124} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -570,7 +570,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958993} y1={95.908193}
        x2={128.23124} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -579,7 +579,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={70.094273}
        x2={75.958992} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -588,7 +588,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958992} y1={95.908193}
        x2={128.23124} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -597,7 +597,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={18.466453}
        x2={75.958992} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -606,7 +606,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958995} y1={70.094273}
        x2={128.23124} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -615,7 +615,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958992} y1={70.094273}
        x2={128.23124} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -624,7 +624,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={70.094273}
        x2={75.958993} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -633,7 +633,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={44.280363}
        x2={75.958992} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -642,7 +642,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={18.466453}
        x2={75.958995} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -651,7 +651,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={121.72209}
        x2={75.958995} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -660,7 +660,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958995} y1={44.280363}
        x2={128.23124} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -669,7 +669,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958992} y1={44.280363}
        x2={128.23124} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -678,7 +678,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958993} y1={44.280363}
        x2={128.23124} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -687,7 +687,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={18.466453}
        x2={75.958992} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -696,7 +696,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={121.72209}
        x2={75.958995} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -705,7 +705,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958995} y1={18.466453}
        x2={128.23124} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -714,7 +714,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={70.094273}
        x2={75.958995} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -723,7 +723,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958995} y1={18.466453}
        x2={128.23124} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -732,7 +732,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={128.23124} y1={18.466453}
        x2={75.958993} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -781,7 +781,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958993} y1={121.72209}
        x2={26.938867} y2={95.908183}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -790,7 +790,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={26.938867} y1={95.908183}
        x2={75.958995} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -799,7 +799,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958995} y1={70.094273}
        x2={26.938867} y2={95.908183}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -808,7 +808,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={26.938867} y1={95.908183}
        x2={75.958995} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -817,7 +817,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958995} y1={18.466453}
        x2={26.938867} y2={95.908183}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -826,7 +826,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958995} y1={121.72209}
        x2={26.938867} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -835,7 +835,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={26.938867} y1={70.094273}
        x2={75.958993} y2={95.908193}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -844,7 +844,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958993} y1={70.094273}
        x2={26.938867} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -853,7 +853,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958995} y1={44.280363}
        x2={26.938867} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -862,7 +862,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={26.938867} y1={70.094273}
        x2={75.958995} y2={18.466453}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -871,7 +871,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={26.938867} y1={44.280363}
        x2={75.958995} y2={121.72209}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -880,7 +880,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958995} y1={95.908193}
        x2={26.938867} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -889,7 +889,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={26.938867} y1={44.280363}
        x2={75.958995} y2={70.094273}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -898,7 +898,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={26.938867} y1={44.280363}
        x2={75.958993} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
@@ -907,7 +907,7 @@ function NeuralNetworkAnimation({ onDone, repeat = false }: Props) {
     <Line
        x1={75.958993} y1={18.466453}
        x2={26.938867} y2={44.280363}
-       stroke={colorScheme.surfaceVariant}
+       stroke={colorScheme.onPrimaryContainer}
        strokeWidth={1.5}
        strokeLinecap="square"
        strokeOpacity={1}
