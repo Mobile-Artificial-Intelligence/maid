@@ -14,7 +14,7 @@ function parseMessages(messages: Array<MessageNode>) {
       return {
         role: message.role,
         content: message.content as string,
-        images: images,
+        images: images.map(img => img.replace(/^data:[^;]+;base64,/, "")),
       };
     }
 
