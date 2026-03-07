@@ -37,6 +37,7 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
   plugins: [
     "expo-asset",
     "expo-router",
+    "expo-sqlite",
     [
       "expo-splash-screen",
       {

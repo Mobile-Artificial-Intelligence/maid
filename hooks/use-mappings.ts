@@ -1,7 +1,7 @@
 import useAuthentication from '@/hooks/use-authentication';
+import { loadLocalMessages, saveLocalMessages } from '@/utilities/local-db';
 import { validateMappings } from '@/utilities/mappings';
 import getSupabase from '@/utilities/supabase';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MessageNode } from 'message-nodes';
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
@@ -107,7 +107,7 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
 
   const saveLocalMappings = async () => {
     try {
-      await AsyncStorage.setItem("mappings", JSON.stringify(mappings));
+      await saveLocalMessages(mappings);
     } catch (error) {
       console.error("Error saving mappings:", error);
     }
@@ -123,10 +123,9 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
 
   const loadLocalMappings = async () => {
     try {
-      const storedMappings = await AsyncStorage.getItem("mappings");
-      if (storedMappings) {
-        const parsed = JSON.parse(storedMappings) as Record<string, MessageNode<string>>;
-        setMappings(prev => ({ ...prev, ...parsed }));
+      const loaded = await loadLocalMessages();
+      if (Object.keys(loaded).length > 0) {
+        setMappings(prev => ({ ...prev, ...loaded }));
       }
     } catch (error) {
       console.error("Error loading mappings:", error);
