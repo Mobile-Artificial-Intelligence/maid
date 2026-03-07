@@ -766,7 +766,7 @@ Builds:
     versionCode: 26141
     commit: 2d22f5952367914643db1b4bcd731760063e5963
     output: android/app/build/outputs/apk/release/app-arm64-v8a-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a.apk
+    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a-no-hexagon.apk
     sudo:
       - apt-get update
       - apt-get install -y curl xz-utils ca-certificates
@@ -781,7 +781,6 @@ Builds:
     prebuild:
       - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
       - yes | sdkmanager --licenses || true
-      - bash scripts/install-hexagon.sh
       - |
           FILE="./android/gradle.properties"
           LINE="rnllamaBuildFromSource=true"
@@ -804,7 +803,7 @@ Builds:
     versionCode: 26142
     commit: 2d22f5952367914643db1b4bcd731760063e5963
     output: android/app/build/outputs/apk/release/app-x86_64-release.apk
-    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64.apk
+    binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64-no-hexagon.apk
     sudo:
       - apt-get update
       - apt-get install -y curl xz-utils ca-certificates
@@ -819,7 +818,6 @@ Builds:
     prebuild:
       - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
       - yes | sdkmanager --licenses || true
-      - bash scripts/install-hexagon.sh
       - |
           FILE="./android/gradle.properties"
           LINE="rnllamaBuildFromSource=true"

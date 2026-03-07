@@ -140,7 +140,7 @@ jobs:
           path: release/maid-android-bundle.aab
           if-no-files-found: error
 
-  build-source:
+  build-no-hexagon:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -223,9 +223,9 @@ jobs:
       - name: Rename APK
         run: |
           mkdir -p release
-          mv android/app/build/outputs/apk/release/app-universal-release.apk release/maid-android-universal.apk
-          mv android/app/build/outputs/apk/release/app-arm64-v8a-release.apk release/maid-android-arm64-v8a.apk
-          mv android/app/build/outputs/apk/release/app-x86_64-release.apk release/maid-android-x86_64.apk
+          mv android/app/build/outputs/apk/release/app-universal-release.apk release/maid-android-universal-no-hexagon.apk
+          mv android/app/build/outputs/apk/release/app-arm64-v8a-release.apk release/maid-android-arm64-v8a-no-hexagon.apk
+          mv android/app/build/outputs/apk/release/app-x86_64-release.apk release/maid-android-x86_64-no-hexagon.apk
 
       - name: Build AAB (bundleRelease)
         run: |
@@ -235,39 +235,39 @@ jobs:
       - name: Rename AAB
         run: |
           mkdir -p release
-          mv android/app/build/outputs/bundle/release/app-release.aab release/maid-android-bundle.aab
+          mv android/app/build/outputs/bundle/release/app-release.aab release/maid-android-bundle-no-hexagon.aab
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-source
+          name: maid-android-no-hexagon
           path: release
           if-no-files-found: error
 
       - name: Upload ARM64 APK
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-source-arm64-v8a
-          path: release/maid-android-arm64-v8a.apk
+          name: maid-android-arm64-v8a-no-hexagon
+          path: release/maid-android-arm64-v8a-no-hexagon.apk
           if-no-files-found: error
 
       - name: Upload x86_64 APK
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-source-x86_64
-          path: release/maid-android-x86_64.apk
+          name: maid-android-x86_64-no-hexagon
+          path: release/maid-android-x86_64-no-hexagon.apk
           if-no-files-found: error
 
       - name: Upload Universal APK
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-source-universal
-          path: release/maid-android-universal.apk
+          name: maid-android-universal-no-hexagon
+          path: release/maid-android-universal-no-hexagon.apk
           if-no-files-found: error
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
-          name: maid-android-source-bundle
-          path: release/maid-android-bundle.aab
+          name: maid-android-bundle-no-hexagon
+          path: release/maid-android-bundle-no-hexagon.aab
           if-no-files-found: error
