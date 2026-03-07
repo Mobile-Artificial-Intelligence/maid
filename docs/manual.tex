@@ -64,17 +64,17 @@ For text-to-speech functionality, Maid has a companion app called \textbf{Maise}
 \subsection{Feature Comparison}
 
 \begin{center}
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccccc}
 \toprule
-\textbf{Provider} & \textbf{API Key} & \textbf{Custom Base URL} & \textbf{Custom Headers} & \textbf{Local} \\
+\textbf{Provider} & \textbf{API Key} & \textbf{Custom Base URL} & \textbf{Custom Headers} & \textbf{Local} & \textbf{Vision} \\
 \midrule
-Llama    & No  & No  & No  & Yes \\
-Ollama   & No  & Yes & Yes & Yes \\
-OpenAI   & Yes & Yes & Yes & No  \\
-Anthropic & Yes & Yes & Yes & No  \\
-Mistral  & Yes & Yes & No  & No  \\
-DeepSeek & Yes & No  & Yes & No  \\
-Novita   & Yes & No  & Yes & No  \\
+Llama    & No  & No  & No  & Yes & Yes (requires projector) \\
+Ollama   & No  & Yes & Yes & Yes & Yes (model-dependent) \\
+OpenAI   & Yes & Yes & Yes & No  & No  \\
+Anthropic & Yes & Yes & Yes & No  & No  \\
+Mistral  & Yes & Yes & No  & No  & No  \\
+DeepSeek & Yes & No  & Yes & No  & No  \\
+Novita   & Yes & No  & Yes & No  & No  \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -152,12 +152,41 @@ To use a GGUF model file you have obtained separately:
     \item Once added, select the file from the \textbf{Model} dropdown.
 \end{enumerate}
 
+\subsection{Vision Support (Multimodal)}
+\label{sec:llama-vision}
+
+The Llama provider supports image input for vision-capable models. To enable this, you must load a \textbf{multimodal projector} file alongside the base model.
+
+\subsubsection{What is a Projector?}
+
+A multimodal projector (also called a clip or vision adapter) is a small auxiliary model file that bridges the image encoder and the language model. It is distributed separately from the base GGUF model and typically has the file extension \texttt{.mmproj} or \texttt{.gguf}.
+
+\subsubsection{Loading a Projector File}
+
+\begin{enumerate}
+    \item Transfer the projector file to your device.
+    \item In Maid, go to \textbf{Settings} and select \textbf{Llama} as the API.
+    \item Tap \textbf{Add Projector File} and select the file using the file picker. Both \texttt{.mmproj} and \texttt{.gguf} files are accepted.
+    \item The projector is automatically linked to the currently active model.
+\end{enumerate}
+
+The projector must correspond to the loaded base model — mismatched pairs will not produce useful results. Once a compatible projector is loaded and vision is confirmed, the image attachment button becomes active in the prompt input bar.
+
+\subsubsection{Projector Matching Rules}
+
+The projector is used when:
+\begin{itemize}[noitemsep]
+    \item The selected projector key matches the selected model key exactly, \textbf{or}
+    \item The model was loaded from a local file (model key ends in \texttt{(local)}).
+\end{itemize}
+
 \subsection{Configuration}
 
 No API key or server address is needed. The only configurable items are:
 
 \begin{itemize}[noitemsep]
     \item \textbf{Model} — The GGUF model file to load.
+    \item \textbf{Projector} — Optional multimodal projector file for vision support (see Section~\ref{sec:llama-vision}).
     \item \textbf{Parameters} — Optional inference parameters (see Section~\ref{sec:parameters}).
 \end{itemize}
 
@@ -206,6 +235,16 @@ http://192.168.1.100:11434
     \item Select a model from the \textbf{Model} dropdown.
     \item Optionally configure \textbf{Custom Headers} and \textbf{Parameters} (see Sections~\ref{sec:headers} and~\ref{sec:parameters}).
 \end{enumerate}
+
+\subsection{Vision Support}
+
+Vision support in Ollama is \textbf{automatic} — Maid queries the selected model's capabilities when you choose a model. If the model reports vision support (e.g.\ \texttt{llava}, \texttt{bakllava}, \texttt{moondream}, \texttt{llama3.2-vision}), the image attachment button is enabled in the prompt input bar. No additional configuration is required.
+
+To use a vision-capable model, pull it with Ollama on the host machine and then select it from the \textbf{Model} dropdown in Maid:
+
+\begin{lstlisting}[language=bash]
+ollama pull llava
+\end{lstlisting}
 
 \subsection{Required Fields}
 
@@ -457,6 +496,22 @@ The button on the right of the input bar changes depending on the current state:
     \item \textbf{Microphone} — Shown when the field is empty and the model is not generating. Tap to begin voice dictation (see Section~\ref{sec:dictation}).
     \item \textbf{Microphone off} — Shown while voice dictation is active. Tap to stop listening; the transcribed text is appended to the field.
 \end{itemize}
+
+\subsection{Attaching Images}
+\label{sec:images}
+
+When the active provider and model support vision (currently \textbf{Llama} with a projector loaded and \textbf{Ollama} with a vision-capable model), an \textbf{image} icon appears to the left of the action button in the prompt input bar. The button is disabled when vision is not available.
+
+To attach images:
+
+\begin{enumerate}[noitemsep]
+    \item Tap the \textbf{image} icon. Maid will request photo library access on first use.
+    \item Select one or more images from your photo library.
+    \item The selected images appear as thumbnails in a horizontal strip above the input field. Tap the \textbf{×} on any thumbnail to remove it before sending.
+    \item Type your message (optional) and tap \textbf{Send}. The images are included with your message and passed to the model alongside the text.
+\end{enumerate}
+
+Images are encoded as base64 and attached to the message metadata. They are sent only to the configured provider and are not stored or transmitted anywhere else.
 
 \subsection{Sending a Message}
 
