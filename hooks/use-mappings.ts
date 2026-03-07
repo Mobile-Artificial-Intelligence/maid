@@ -116,7 +116,7 @@ function useMappings(): [Record<string, MessageNode<string, Record<string, any>>
   useEffect(() => {
     const timeout = setTimeout(() => {
       saveLocalMappings();
-    }, 5000); // 5 seconds
+    }, 500);
 
     return () => clearTimeout(timeout);
   }, [mappings]);
