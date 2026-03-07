@@ -193,9 +193,6 @@ jobs:
           echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
 
-      - name: Install Hexagon SDK
-        run: ./scripts/install-hexagon.sh
-
       - name: Enable rnllama build from source
         run: |
           FILE="./android/gradle.properties"
