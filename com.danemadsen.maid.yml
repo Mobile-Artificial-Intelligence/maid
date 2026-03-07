@@ -776,12 +776,21 @@ Builds:
       - tar -xJf "node-v${NODE_VER}-linux-x64.tar.xz"
       - cp -a "node-v${NODE_VER}-linux-x64/." /usr/local/
       - npm install -g yarn@1.22.22
+      - mkdir -p /home/runner
+      - chown vagrant /home/runner
     prebuild:
+      - export repo=/home/runner/work/maid
+      - mkdir -p $repo
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
       - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
       - yes | sdkmanager --licenses || true
       - touch ./android/gradle.properties
       - grep -qxF "rnllamaBuildFromSource=true" ./android/gradle.properties || printf "\n%s\n" "rnllamaBuildFromSource=true" >> ./android/gradle.properties
       - yarn install --frozen-lockfile
+      - popd
+      - mv $repo/maid com.danemadsen.maid
     scandelete:
       - node_modules/
     scanignore:
@@ -812,12 +821,21 @@ Builds:
       - tar -xJf "node-v${NODE_VER}-linux-x64.tar.xz"
       - cp -a "node-v${NODE_VER}-linux-x64/." /usr/local/
       - npm install -g yarn@1.22.22
+      - mkdir -p /home/runner
+      - chown vagrant /home/runner
     prebuild:
+      - export repo=/home/runner/work/maid
+      - mkdir -p $repo
+      - cd ..
+      - mv com.danemadsen.maid $repo/maid
+      - pushd $repo/maid
       - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
       - yes | sdkmanager --licenses || true
       - touch ./android/gradle.properties
       - grep -qxF "rnllamaBuildFromSource=true" ./android/gradle.properties || printf "\n%s\n" "rnllamaBuildFromSource=true" >> ./android/gradle.properties
       - yarn install --frozen-lockfile
+      - popd
+      - mv $repo/maid com.danemadsen.maid
     scandelete:
       - node_modules/
     scanignore:
