@@ -779,13 +779,8 @@ Builds:
     prebuild:
       - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
       - yes | sdkmanager --licenses || true
-      - |
-          FILE="./android/gradle.properties"
-          LINE="rnllamaBuildFromSource=true"
-          touch "$FILE"
-          if ! grep -qxF "$LINE" "$FILE"; then
-            printf "\n%s\n" "$LINE" >> "$FILE"
-          fi
+      - touch ./android/gradle.properties
+      - grep -qxF "rnllamaBuildFromSource=true" ./android/gradle.properties || printf "\n%s\n" "rnllamaBuildFromSource=true" >> ./android/gradle.properties
       - yarn install --frozen-lockfile
     scandelete:
       - node_modules/
@@ -816,13 +811,8 @@ Builds:
     prebuild:
       - sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;35.0.0" "ndk;27.1.12297006"
       - yes | sdkmanager --licenses || true
-      - |
-          FILE="./android/gradle.properties"
-          LINE="rnllamaBuildFromSource=true"
-          touch "$FILE"
-          if ! grep -qxF "$LINE" "$FILE"; then
-            printf "\n%s\n" "$LINE" >> "$FILE"
-          fi
+      - touch ./android/gradle.properties
+      - grep -qxF "rnllamaBuildFromSource=true" ./android/gradle.properties || printf "\n%s\n" "rnllamaBuildFromSource=true" >> ./android/gradle.properties
       - yarn install --frozen-lockfile
     scandelete:
       - node_modules/
