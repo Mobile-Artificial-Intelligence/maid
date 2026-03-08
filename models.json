@@ -1,5 +1,35 @@
 [
   {
+    "id": "qwen-3.5-0.8b",
+    "name": "Qwen 3.5 0.8B",
+    "repo": "unsloth/Qwen3.5-0.8B-GGUF",
+    "branch": "main",
+    "tags": {
+      "UD-IQ2_M": "Qwen3.5-0.8B-UD-IQ2_M.gguf",
+      "UD-IQ2_XXS": "Qwen3.5-0.8B-UD-IQ2_XXS.gguf",
+      "UD-IQ3_XXS": "Qwen3.5-0.8B-UD-IQ3_XXS.gguf",
+      "UD-Q2_K_XL": "Qwen3.5-0.8B-UD-Q2_K_XL.gguf",
+      "UD-Q3_K_XL": "Qwen3.5-0.8B-UD-Q3_K_XL.gguf",
+      "UD-Q4_K_XL": "Qwen3.5-0.8B-UD-Q4_K_XL.gguf",
+      "UD-Q5_K_XL": "Qwen3.5-0.8B-UD-Q5_K_XL.gguf",
+      "UD-Q6_K_XL": "Qwen3.5-0.8B-UD-Q6_K_XL.gguf",
+      "UD-Q8_K_XL": "Qwen3.5-0.8B-UD-Q8_K_XL.gguf",
+      "Q3_K_M": "Qwen3.5-0.8B-Q3_K_M.gguf",
+      "Q3_K_S": "Qwen3.5-0.8B-Q3_K_S.gguf",
+      "IQ4_NL": "Qwen3.5-0.8B-IQ4_NL.gguf",
+      "IQ4_XS": "Qwen3.5-0.8B-IQ4_XS.gguf",
+      "Q4_0": "Qwen3.5-0.8B-Q4_0.gguf",
+      "Q4_1": "Qwen3.5-0.8B-Q4_1.gguf",
+      "Q4_K_M": "Qwen3.5-0.8B-Q4_K_M.gguf",
+      "Q4_K_S": "Qwen3.5-0.8B-Q4_K_S.gguf",
+      "Q5_K_M": "Qwen3.5-0.8B-Q5_K_M.gguf",
+      "Q5_K_S": "Qwen3.5-0.8B-Q5_K_S.gguf",
+      "Q6_K": "Qwen3.5-0.8B-Q6_K.gguf",
+      "Q8_0": "Qwen3.5-0.8B-Q8_0.gguf",
+      "BF16": "Qwen3.5-0.8B-BF16.gguf"
+    }
+  },
+  {
     "id": "lfm-2.5-1.2b-thinking",
     "name": "LFM 2.5 1.2B Thinking",
     "repo": "LiquidAI/LFM2.5-1.2B-Thinking-GGUF",
