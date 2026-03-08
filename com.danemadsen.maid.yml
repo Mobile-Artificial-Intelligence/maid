@@ -761,8 +761,8 @@ Builds:
       - mv $repo/maid com.danemadsen.maid
 
   - versionName: 3.0.0
-    versionCode: 27461
-    commit: 0db2c44d032151f96148894d6113f51f57b84670
+    versionCode: 27561
+    commit: ee1cdf9044d875f5ad00edda7c7b65cf0b002624
     output: android/app/build/outputs/apk/release/app-arm64-v8a-release.apk
     binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-arm64-v8a-no-hexagon.apk
     sudo:
@@ -806,8 +806,8 @@ Builds:
       - mv $repo/maid com.danemadsen.maid
 
   - versionName: 3.0.0
-    versionCode: 27462
-    commit: 0db2c44d032151f96148894d6113f51f57b84670
+    versionCode: 27562
+    commit: ee1cdf9044d875f5ad00edda7c7b65cf0b002624
     output: android/app/build/outputs/apk/release/app-x86_64-release.apk
     binary: https://github.com/Mobile-Artificial-Intelligence/maid/releases/download/v%v/maid-android-x86_64-no-hexagon.apk
     sudo:
@@ -859,4 +859,4 @@ VercodeOperation:
   - '%c * 10 + 2'
 UpdateCheckData: package.json|"version":\s*"([^"]+)"|.|"build":\s*(\d+)
 CurrentVersion: 3.0.0
-CurrentVersionCode: 27462
+CurrentVersionCode: 27562
