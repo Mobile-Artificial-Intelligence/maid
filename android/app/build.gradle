@@ -189,8 +189,8 @@ android {
         release {
             // If you have a real keystore, use it; otherwise fall back to debug signing
             signingConfig isBundleBuild
-            ? signingConfigs.bundleUpload
-            : signingConfigs.apkRelease
+            ? signingConfigs.upload
+            : signingConfigs.release
     
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds
