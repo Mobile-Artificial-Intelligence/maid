@@ -182,13 +182,9 @@ android {
     
         release {
             // If you have a real keystore, use it; otherwise fall back to debug signing
-            signingConfig (keystorePropertiesFile.exists()
-                    && keystoreProperties['storeFile']
-                    && keystoreProperties['storePassword']
-                    && keystoreProperties['releaseAlias']
-                    && keystoreProperties['releasePassword']
-                ? signingConfigs.release
-                : signingConfigs.debug)
+            signingConfig isBundleBuild
+            ? signingConfigs.bundleUpload
+            : signingConfigs.apkRelease
     
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds
