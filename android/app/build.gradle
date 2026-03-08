@@ -136,15 +136,32 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+
+        upload {
+            if (keystorePropertiesFile.exists()
+                    && keystoreProperties['uploadKey']
+                    && keystoreProperties['storePassword']
+                    && keystoreProperties['uploadAlias']
+                    && keystoreProperties['uploadPassword']) {
+                    
+                storeFile file(keystoreProperties['uploadKey'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['uploadAlias']
+                keyPassword keystoreProperties['uploadPassword']
+            } else {
+                println("⚠️ Keystore properties not found or incomplete; upload builds will use debug signing unless you add key.properties.")
+                // NOTE: don't set signingConfig here
+            }
+        }
     
         release {
             if (keystorePropertiesFile.exists()
-                    && keystoreProperties['storeFile']
+                    && keystoreProperties['signingKey']
                     && keystoreProperties['storePassword']
                     && keystoreProperties['releaseAlias']
                     && keystoreProperties['releasePassword']) {
                     
-                storeFile file(keystoreProperties['storeFile'])
+                storeFile file(keystoreProperties['signingKey'])
                 storePassword keystoreProperties['storePassword']
                 keyAlias keystoreProperties['releaseAlias']
                 keyPassword keystoreProperties['releasePassword']
@@ -154,6 +171,8 @@ android {
             }
         }
     }
+
+    def isBundleBuild = project.gradle.startParameter.taskNames.any { it.toLowerCase().contains("bundle") }
     
     buildTypes {
         debug {
