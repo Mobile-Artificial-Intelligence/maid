@@ -185,14 +185,20 @@ jobs:
             "ndk;27.1.12297006"
           yes | sdkmanager --licenses
 
-      - name: Decode Keystore File
+      - name: Decode Upload Keystore File
         env:
-          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
-        run: echo "$KEYSTORE" | base64 --decode > android/app/key.jks
+          KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE }}
+        run: echo "$KEYSTORE" | base64 --decode > android/app/upload.jks
+
+      - name: Decode Signing Keystore File
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_SIGNING_KEYSTORE }}
+        run: echo "$KEYSTORE" | base64 --decode > android/app/signing.jks
 
       - name: Create key.properties
         run: |
-          echo "storeFile=key.jks" > android/key.properties
+          echo "signingKey=signing.jks" > android/key.properties
+          echo "uploadKey=upload.jks" >> android/key.properties
           echo "storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}" >> android/key.properties
           echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
           echo "releasePassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
