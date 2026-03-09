@@ -5,7 +5,7 @@ import HuggingfaceModelsRaw from "@/models.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from 'expo-file-system';
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface HuggingfaceModel {
   id: string;
@@ -18,7 +18,7 @@ interface HuggingfaceModel {
 
 const HuggingfaceModels = HuggingfaceModelsRaw as Array<HuggingfaceModel>;
 
-function ModelDownload({ source, downloadDirectory }: { source: HuggingfaceModel; downloadDirectory: string | null }) {
+function ModelDownload({ source }: { source: HuggingfaceModel }) {
   const { modelFiles, setModelFiles, modelKey, setModelKey, projectorFiles, setProjectorFiles, projectorKey, setProjectorKey } = useLLM();
   const { colorScheme } = useSystem();
   const { id, name, repo, branch, tags } = source;
@@ -50,11 +50,11 @@ function ModelDownload({ source, downloadDirectory }: { source: HuggingfaceModel
 
   const modelFileName = useMemo(() => Array.isArray(tags[tag]) ? tags[tag][0] : tags[tag], [tags, tag]);
   const modelUrl = useMemo(() => `https://huggingface.co/${repo}/resolve/${branch}/${modelFileName}`, [repo, branch, modelFileName]);
-  const tempModelFilePath = useMemo(() => `${FileSystem.documentDirectory}${modelFileName}`, [modelFileName]);
+  const modelFilePath = useMemo(() => `${FileSystem.documentDirectory}${modelFileName}`, [modelFileName]);
 
   const projectorFileName = useMemo(() => Array.isArray(tags[tag]) ? tags[tag][1] : undefined, [tags, tag]);
   const projectorUrl = useMemo(() => projectorFileName ? `https://huggingface.co/${repo}/resolve/${branch}/${projectorFileName}` : undefined, [repo, branch, projectorFileName]);
-  const tempProjectorFilePath = useMemo(() => projectorFileName ? `${FileSystem.documentDirectory}${projectorFileName}` : undefined, [projectorFileName]);
+  const projectorFilePath = useMemo(() => projectorFileName ? `${FileSystem.documentDirectory}${projectorFileName}` : undefined, [projectorFileName]);
 
   const downloaded = !!modelFiles?.[currentKey] && (!projectorFileName || !!projectorFiles?.[currentKey]);
 
@@ -83,16 +83,16 @@ function ModelDownload({ source, downloadDirectory }: { source: HuggingfaceModel
     activeKeyRef.current = currentKey;
 
     const modelResumable = FileSystem.createDownloadResumable(
-      modelUrl, tempModelFilePath, {},
+      modelUrl, modelFilePath, {},
       (p) => { if (mountedRef.current) setProgress(p); }
     );
     downloadRef.current = modelResumable;
 
     const downloads: Promise<FileSystem.FileSystemDownloadResult | undefined>[] = [modelResumable.downloadAsync()];
 
-    if (projectorUrl && tempProjectorFilePath) {
+    if (projectorUrl && projectorFilePath) {
       const projectorResumable = FileSystem.createDownloadResumable(
-        projectorUrl, tempProjectorFilePath, {},
+        projectorUrl, projectorFilePath, {},
         (p) => { if (mountedRef.current) setProjectorProgress(p); }
       );
       projectorDownloadRef.current = projectorResumable;
@@ -102,38 +102,11 @@ function ModelDownload({ source, downloadDirectory }: { source: HuggingfaceModel
     try {
       const [modelResult, projectorResult] = await Promise.all(downloads);
 
-      let finalModelPath = modelResult?.uri ?? tempModelFilePath;
-      let finalProjectorPath = projectorResult ? (projectorResult.uri ?? tempProjectorFilePath) : undefined;
-
-      if (downloadDirectory) {
-        try {
-          const safModelUri = await FileSystem.StorageAccessFramework.createFileAsync(
-            downloadDirectory, modelFileName!, 'application/octet-stream'
-          );
-          const modelBase64 = await FileSystem.readAsStringAsync(finalModelPath, { encoding: FileSystem.EncodingType.Base64 });
-          await FileSystem.StorageAccessFramework.writeAsStringAsync(safModelUri, modelBase64, { encoding: FileSystem.EncodingType.Base64 });
-          await FileSystem.deleteAsync(finalModelPath, { idempotent: true });
-          finalModelPath = safModelUri;
-
-          if (projectorFileName && finalProjectorPath) {
-            const safProjectorUri = await FileSystem.StorageAccessFramework.createFileAsync(
-              downloadDirectory, projectorFileName, 'application/octet-stream'
-            );
-            const projectorBase64 = await FileSystem.readAsStringAsync(finalProjectorPath, { encoding: FileSystem.EncodingType.Base64 });
-            await FileSystem.StorageAccessFramework.writeAsStringAsync(safProjectorUri, projectorBase64, { encoding: FileSystem.EncodingType.Base64 });
-            await FileSystem.deleteAsync(finalProjectorPath, { idempotent: true });
-            finalProjectorPath = safProjectorUri;
-          }
-        } catch (safError) {
-          console.error("SAF move failed, keeping file in documentDirectory:", safError);
-        }
-      }
-
-      setModelFiles?.((prev) => ({ ...prev, [currentKey]: finalModelPath }));
+      setModelFiles?.((prev) => ({ ...prev, [currentKey]: modelResult?.uri ?? modelFilePath }));
       setModelKey?.(currentKey);
 
-      if (finalProjectorPath && tempProjectorFilePath) {
-        setProjectorFiles?.((prev) => ({ ...prev, [currentKey]: finalProjectorPath! }));
+      if (projectorResult && projectorFilePath) {
+        setProjectorFiles?.((prev) => ({ ...prev, [currentKey]: projectorResult.uri ?? projectorFilePath }));
         setProjectorKey?.(currentKey);
       }
 
@@ -332,31 +305,7 @@ function ModelDownload({ source, downloadDirectory }: { source: HuggingfaceModel
 
 function Download() {
   const { colorScheme } = useSystem();
-  const [downloadDirectory, setDownloadDirectory] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (Platform.OS !== 'android') return;
-
-    const checkDirectory = async () => {
-      try {
-        const stored = await AsyncStorage.getItem('download_directory');
-        if (stored) {
-          setDownloadDirectory(stored);
-          return;
-        }
-        const result = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-        if (result.granted) {
-          await AsyncStorage.setItem('download_directory', result.directoryUri);
-          setDownloadDirectory(result.directoryUri);
-        }
-      } catch (error) {
-        console.error("Error setting download directory:", error);
-      }
-    };
-
-    checkDirectory();
-  }, []);
-
+  
   const styles = StyleSheet.create({
     view: {
       flex: 1,
@@ -374,10 +323,9 @@ function Download() {
       style={styles.view}
     >
       {HuggingfaceModels.map((model, index) => (
-        <ModelDownload
+        <ModelDownload 
           key={index}
           source={model}
-          downloadDirectory={downloadDirectory}
         />
       ))}
     </ScrollView>
