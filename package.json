@@ -105,6 +105,13 @@
     "supabase": "^2.76.15",
     "typescript": "~5.8.3"
   },
+  "expo": {
+    "autolinking": {
+      "android": {
+        "buildFromSource": [".*"]
+      }
+    }
+  },
   "private": true,
   "resolutions": {
     "minimatch": ">=3.1.3"
