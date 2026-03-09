@@ -110,7 +110,8 @@ function ModelDownload({ source, downloadDirectory }: { source: HuggingfaceModel
           const safModelUri = await FileSystem.StorageAccessFramework.createFileAsync(
             downloadDirectory, modelFileName!, 'application/octet-stream'
           );
-          await FileSystem.copyAsync({ from: finalModelPath, to: safModelUri });
+          const modelBase64 = await FileSystem.readAsStringAsync(finalModelPath, { encoding: FileSystem.EncodingType.Base64 });
+          await FileSystem.StorageAccessFramework.writeAsStringAsync(safModelUri, modelBase64, { encoding: FileSystem.EncodingType.Base64 });
           await FileSystem.deleteAsync(finalModelPath, { idempotent: true });
           finalModelPath = safModelUri;
 
@@ -118,7 +119,8 @@ function ModelDownload({ source, downloadDirectory }: { source: HuggingfaceModel
             const safProjectorUri = await FileSystem.StorageAccessFramework.createFileAsync(
               downloadDirectory, projectorFileName, 'application/octet-stream'
             );
-            await FileSystem.copyAsync({ from: finalProjectorPath, to: safProjectorUri });
+            const projectorBase64 = await FileSystem.readAsStringAsync(finalProjectorPath, { encoding: FileSystem.EncodingType.Base64 });
+            await FileSystem.StorageAccessFramework.writeAsStringAsync(safProjectorUri, projectorBase64, { encoding: FileSystem.EncodingType.Base64 });
             await FileSystem.deleteAsync(finalProjectorPath, { idempotent: true });
             finalProjectorPath = safProjectorUri;
           }
