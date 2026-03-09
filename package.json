@@ -2,7 +2,7 @@
   "name": "maid",
   "main": "expo-router/entry",
   "version": "3.0.0",
-  "build": 27732,
+  "build": 2774,
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
