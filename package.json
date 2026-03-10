@@ -49,6 +49,7 @@
     "@supabase/supabase-js": "^2.57.4",
     "buffer": "^6.0.3",
     "expo": "53.0.22",
+    "expo-modules-autolinking": "~2.1.11",
     "expo-application": "~6.1.5",
     "expo-audio": "~0.4.9",
     "expo-blur": "~14.1.5",
