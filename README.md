@@ -1,4 +1,4 @@
-<div align="center" id = "top">
+yarn test<div align="center" id = "top">
   <img alt="logo" height="200px" src="https://raw.githubusercontent.com/Mobile-Artificial-Intelligence/maid/main/assets/graphics/logo.svg">
 </div>
 
