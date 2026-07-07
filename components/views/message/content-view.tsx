@@ -112,6 +112,16 @@ function MessageContentView({ message }: { message: MessageNode }) {
     link: {
       color: colorScheme.primary,
     },
+    blockquote: {
+      borderLeftWidth: 4,
+      borderLeftColor: colorScheme.primary,
+      paddingLeft: 12,
+      marginLeft: 8,
+      backgroundColor: colorScheme.surfaceVariant,
+      color: colorScheme.onSurface,
+      borderRadius: 4,
+      paddingVertical: 8,
+    },
     code_inline: {
       backgroundColor: colorScheme.surfaceVariant,
       color: colorScheme.onSurface,
