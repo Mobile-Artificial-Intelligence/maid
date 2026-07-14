@@ -67,35 +67,54 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
     view: {
       flex: 1,
       flexDirection: "column",
+      backgroundColor: colorScheme.surface,
+    },
+    brandHeader: {
+      paddingHorizontal: 18,
+      paddingTop: 24,
+      paddingBottom: 8,
+    },
+    brandTitle: {
+      color: colorScheme.onSurface,
+      fontSize: 20,
+      fontWeight: "900",
+      letterSpacing: 0.5,
+    },
+    brandSubtitle: {
+      color: colorScheme.primary,
+      fontSize: 12,
+      fontWeight: "700",
+      marginTop: 2,
     },
     divider: {
-      height: 2,
-      backgroundColor: colorScheme.outline,
+      height: 1,
+      backgroundColor: colorScheme.outlineVariant,
       marginHorizontal: 18,
-      marginVertical: 12,
-      borderRadius: 1,
+      marginVertical: 8,
     },
     header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
       paddingHorizontal: 18,
-      paddingTop: 16,
+      paddingTop: 8,
     },
     controlsText: {
       color: colorScheme.onSurface,
       fontSize: 16,
+      fontWeight: "bold",
     },
     controls: {
       flexDirection: "row",
       alignItems: "center",
     },
     button: {
-      marginHorizontal: 8,
+      marginHorizontal: 6,
     },
     sessions: {
       flex: 1,
-      flexDirection: "column"
+      flexDirection: "column",
+      marginTop: 4,
     },
     account: {
       flexDirection: "row",
@@ -106,26 +125,34 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
     },
     accountText: {
       color: colorScheme.primary,
+      fontWeight: "600",
     }
   });
     
   return (
     <View testID="drawer-content" style={styles.view}>
+      <View style={styles.brandHeader}>
+        <Text style={styles.brandTitle}>Prime AI ☠️💀</Text>
+        <Text style={styles.brandSubtitle}>Uncensored Intelligence Hub</Text>
+      </View>
+      <View style={styles.divider} />
       <View style={styles.header}>
-        <Text style={styles.controlsText}>Chats</Text>
+        <Text style={styles.controlsText}>Chats & Vault</Text>
         <View style={styles.controls}>
           <MaterialIconButton
             testID="load-mappings-button"
             icon="folder-open"
             style={styles.button}
-            size={24}
+            size={22}
+            color={colorScheme.onSurfaceVariant}
             onPress={loadMappings}
           />
           <MaterialIconButton
             testID="clear-chats-button"
             icon="delete"
             style={styles.button}
-            size={24}
+            size={22}
+            color={colorScheme.onErrorContainer}
             onPress={clearChats}
           />
           <MaterialIconButton
@@ -133,6 +160,7 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
             icon="add"
             style={styles.button}
             size={24}
+            color={colorScheme.primary}
             onPress={createChat}
           />
         </View>

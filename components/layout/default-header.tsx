@@ -36,15 +36,18 @@ function DefaultHeader(props: NativeStackHeaderProps) {
       name = name.substring(0, name.indexOf("/"));
     }
 
+    if (name.toLowerCase() === "download") return "Model Vault ☠️💀";
+    if (name.toLowerCase() === "settings") return "Settings & Presets ⚙️";
+    if (name.toLowerCase() === "about") return "About Prime AI ☠️💀";
+    if (name.toLowerCase() === "account") return "Account & Sync 🔄";
+
     name = name.charAt(0).toUpperCase() + name.slice(1);
 
     return name;
-  }
+  };
 
   return (
-    <View 
-      style={styles.root}
-    >
+    <View style={styles.root}>
       <MaterialIconButton
         testID="back-button"
         icon="arrow-back"
@@ -52,9 +55,7 @@ function DefaultHeader(props: NativeStackHeaderProps) {
         style={styles.backButton}
         onPress={() => props.navigation.goBack()}
       />
-      <Text
-        style={styles.title}
-      >
+      <Text style={styles.title}>
         {getTitle()}
       </Text>
     </View>

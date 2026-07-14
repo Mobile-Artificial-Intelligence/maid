@@ -1,117 +1,81 @@
-<div align="center" id = "top">
-  <img alt="logo" height="200px" src="https://raw.githubusercontent.com/Mobile-Artificial-Intelligence/maid/main/assets/graphics/logo.svg">
-</div>
-
-# Maid - Mobile Artificial Intelligence Distribution
-
-<div align="center">
-  
-[![Build Android](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-android.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-android.yml)
-[![Build Manual](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-manual.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/build-manual.yml)
-[![Test](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/test.yml/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/test.yml)
-[![Code Quality](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Mobile-Artificial-Intelligence/maid/actions/workflows/github-code-scanning/codeql)
-
+<div align="center" id="top">
+  <h1>Prime AI Uncensored ☠️💀</h1>
+  <h3>Unrestricted Mobile & Desktop Artificial Intelligence Suite</h3>
 </div>
 
 <div align="center">
-<a href="https://github.com/Mobile-Artificial-Intelligence/maid/releases/latest">
-<img
-  src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/refs/heads/main/badge_github.png"
-  alt="Get it on GitHub"
-  width="210" 
-/>
-</a>
-<a href='https://play.google.com/store/apps/details?id=com.danemadsen.maid&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
-<img 
-  src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'
-  alt='Get it on Google Play'
-  height="80"
-/>
-</a>
+
+[![Build Android](https://github.com/primeag004/Prime-ai-unc/actions/workflows/build-android.yml/badge.svg)](https://github.com/primeag004/Prime-ai-unc/actions/workflows/build-android.yml)
+[![Test](https://github.com/primeag004/Prime-ai-unc/actions/workflows/test.yml/badge.svg)](https://github.com/primeag004/Prime-ai-unc/actions/workflows/test.yml)
+[![Code Quality](https://github.com/primeag004/Prime-ai-unc/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/primeag004/Prime-ai-unc/actions/workflows/github-code-scanning/codeql)
+
 </div>
 
-Maid is a free and open source application for interfacing with llama.cpp models locally, and with Anthropic, DeepSeek, Mistral, Novita, Ollama and OpenAI models remotely. Maid is built using React Native and is available for Android. The application is designed to be fast, efficient and user-friendly, making it easy for users to interact with their models on the go.
+**Prime AI Uncensored (`Prime AI ☠️💀`)** is a powerful, open-source application designed for high-performance **local and remote unrestricted AI inference**. Built using React Native and Expo, Prime AI enables zero-censorship local GGUF model execution via `llama.rn` (`llama.cpp`) directly on-device, alongside seamless connections to Ollama, OpenAI, DeepSeek, Mistral, Anthropic, Novita, and custom local endpoints.
 
-For text to speech functionality check out Maid's companion app [Maise](https://github.com/Mobile-Artificial-Intelligence/maise).
+## ☠️ What's New in Prime AI Uncensored Suite
 
-## Features
+- **Curated Uncensored Model Vault (`27+ Models`)** — One-tap download of the top uncensored, abliterated, and roleplay models directly inside the app:
+  - `Dolphin 2.9.4 Llama 3.1 8B ☠️` & `Dolphin 2.9 Qwen2 1.5B ☠️`
+  - `Llama 3 8B Instruct Abliterated ☠️` & `Llama 3.1 8B Lexi Uncensored ☠️`
+  - `Gemma 2 9B & 2B IT Abliterated ☠️`
+  - `WizardLM 2 7B Abliterated ☠️` & `Samantha 1.1 Westlake 7B ☠️`
+  - `OpenHermes 2.5 Mistral 7B ☠️` & `StarCoder2 3B Coding Specialist 💻`
+  - Plus standard Instruct (`Qwen 3.5`, `Llama 3.2`), Thinking (`LFM 2.5 Thinking`), and Vision models.
+- **Model Vault Search & Category Filter Tabs** — Quickly filter models by `☠️ Uncensored`, `⚡ Instruct`, `💻 Coding`, `🧠 Thinking`, `👁️ Vision`, or `📥 Downloaded` status, with full parameter search.
+- **Jailbreak & Persona Preset Vault (`System Settings`)** — Instant one-tap persona and jailbreak preset selector:
+  - *DAN / Absolute Uncensored ☠️*: Direct, objective, non-refusal instruction follower.
+  - *Cyber Red-Team Specialist 💀*: Penetration testing, vulnerability vector analysis, and code diagnostics without censorship.
+  - *Unfettered Codemaster 💻*: Zero-truncation, full production-grade code generation.
+  - *Unrestricted Storyteller 🎭*: Immersive creative writing without filters.
+  - *Deep Analytical Thinker 🧠*: Exhaustive step-by-step reasoning.
+- **Quick Sampling Parameter Profiles (`Parameter Settings`)** — Instant sampling presets tailored to your generation goal (`🎯 Creative / Uncensored`, `💻 Precision Coding`, `🔍 Balanced Analyst`).
+- **Cyber OLED Hacker Themes (`Accent Presets`)** — Dedicated high-contrast OLED dark aesthetics with quick-switch color palettes (`🟢 Cyber Green`, `🔴 Blood Red`, `🟣 Cyber Purple`, `🔵 Electric Cyan`, `🟡 Terminal Amber`).
+- **Uncensored Status Indicators** — Real-time header badges (`☠️ UNCENSORED` vs `⚡ AI SUITE`) indicating when unrestricted system prompts and models are active.
 
-- **Local inference** — run GGUF models fully on-device via llama.cpp; no internet required
-- **Remote providers** — connect to Anthropic, DeepSeek, Mistral, Novita, Ollama, and OpenAI with your own API key
-- **One-tap model downloads** — browse and download curated Hugging Face models (Qwen, Phi, LFM, TinyLlama, and more) directly from the app
-- **Bring your own model** — load any GGUF file from local storage
-- **Conversation management** — create, rename, delete, export, and import chats as JSON
-- **Customisable parameters** — tune temperature, top-p, top-k, context length, and other generation parameters per session
-- **Custom system prompt** — set a global system prompt and assistant persona
-- **Voice output** — pair with [Maise](https://github.com/Mobile-Artificial-Intelligence/maise) for text-to-speech
-- **Optional account sync** — register / log in to back up settings and chat history via Supabase
-- **Material You theming** — light and dark themes that follow your system preference
-- **Fully open source** — MIT licensed, no telemetry, no ads
+## Core Features
 
-## Manual
+- **100% Local On-Device Inference** — Run GGUF models fully offline via `llama.rn`; zero internet connection required.
+- **Remote Providers & Custom Endpoints** — Connect to Anthropic, DeepSeek, Mistral, Novita, Ollama, and OpenAI API-compatible servers with custom headers and base URLs.
+- **Bring Your Own Model (BYOM)** — Load any `.gguf` model file directly from local storage.
+- **Conversation Management** — Create, branch, rename, export, and import chat histories with full message tree navigation.
+- **Customizable Generation Parameters** — Fine-tune `temperature`, `top_p`, `top_k`, `repeat_penalty`, and context length per session.
+- **Voice Output & Dictation** — Built-in speech recognition for voice prompting and text-to-speech audio output.
+- **Zero Telemetry & MIT Licensed** — Open-source, private, and free.
 
-The user manual is available from [releases](https://github.com/Mobile-Artificial-Intelligence/maid/releases/latest) in PDF format, or can be built from source using the instructions below.
+## Cloning & Setup
 
-## Cloning
-To clone the repository, use the following command:
+To clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/Mobile-Artificial-Intelligence/maid.git
-```
-
-## Setup
-Run the following command to install dependencies:
-
-```bash
+git clone https://github.com/primeag004/Prime-ai-unc.git
+cd Prime-ai-unc
 yarn install
 ```
 
-## Testing
-Run the test suite with:
+## Running & Building
+
+To run locally in development mode:
 
 ```bash
-yarn test
+# Start Expo development server
+yarn start
+
+# Run on Android
+yarn android
+
+# Run on Web
+yarn web
 ```
 
-## Building
-To build the project, use the following command:
+To build a release APK for Android:
 
 ```bash
 yarn build-android
 ```
 
-The output APK will be located in the `android/app/build/outputs/apk/release` directory.
-
-## Star History
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Mobile-Artificial-Intelligence/maid&type=Date&theme=dark" />
-  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Mobile-Artificial-Intelligence/maid&type=Date" />
-  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Mobile-Artificial-Intelligence/maid&type=Date" />
-</picture>
-
-## Disclaimer
-
-Maid is distributed under the MIT licence and is provided without warranty of any kind, express or implied. Maid is not affiliated with Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company providing a model compatible with this application.
-
-## Signing
-
-### Signing Key Fingerprint
-
->MD5: `BE:AC:29:41:F5:41:D2:26:42:DD:D1:A3:85:21:E1:16`
-
->SHA-1: `48:F6:DC:73:09:CE:19:C6:A9:70:7E:A2:9A:B7:6F:42:2D:41:32:30`
-
->SHA-256: `83:5E:D2:2E:D8:95:C4:C2:72:D6:98:AA:6E:4E:48:DB:0B:4E:36:DC:CF:70:10:D5:DE:15:03:4A:C9:E1:B9:6F`
-
-### Upload Key Fingerprint
-
->MD5: `C0:86:A0:F3:E8:E5:4D:46:60:8A:37:4E:DB:11:CC:C7`
-
->SHA-1: `77:FC:77:2B:21:5E:9F:36:31:79:09:DF:7D:F4:1F:CA:96:0C:39:17`
-
->SHA-256: `54:EE:B9:9F:14:38:D9:68:9B:C2:C6:7F:F9:DD:A3:E3:D8:28:D3:80:76:46:B7:24:46:71:9F:61:D9:63:E6:98`
+The output APK will be generated in `android/app/build/outputs/apk/release`.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+Distributed under the [MIT License](LICENSE).

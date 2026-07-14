@@ -5,27 +5,38 @@ import HuggingfaceModelsRaw from "@/models.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from 'expo-file-system';
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 interface HuggingfaceModel {
   id: string;
   name: string;
   repo: string;
   branch: string;
-  parameters: number;
+  parameters?: number;
+  category?: string;
   tags: Record<string, string | Array<string> | undefined>;
 }
 
 const HuggingfaceModels = HuggingfaceModelsRaw as Array<HuggingfaceModel>;
 
+const CATEGORIES = [
+  "All 🌐",
+  "☠️ Uncensored",
+  "⚡ Instruct",
+  "💻 Coding",
+  "🧠 Thinking",
+  "👁️ Vision",
+  "📥 Downloaded"
+];
+
 function ModelDownload({ source }: { source: HuggingfaceModel }) {
   const { modelFiles, setModelFiles, modelKey, setModelKey, projectorFiles, setProjectorFiles, projectorKey, setProjectorKey } = useLLM();
   const { colorScheme } = useSystem();
-  const { id, name, repo, branch, tags } = source;
+  const { id, name, repo, branch, tags, parameters, category } = source;
 
   const [progress, setProgress] = useState<FileSystem.DownloadProgressData | undefined>(undefined);
   const [projectorProgress, setProjectorProgress] = useState<FileSystem.DownloadProgressData | undefined>(undefined);
-  const [tag, setTag] = useState<string>(Object.keys(tags)[0]);
+  const [tag, setTag] = useState<string>(Object.keys(tags)[0] || "");
 
   // Holds the active download even across re-renders
   const downloadRef = useRef<FileSystem.DownloadResumable | null>(null);
@@ -41,8 +52,6 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
-      // IMPORTANT: we do NOT cancel here, because you want it to keep going.
-      // Just stop UI updates.
     };
   }, []);
 
@@ -61,12 +70,10 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
   const downloadModel = async () => {
     if (downloaded) return;
 
-    // if something is already downloading, don't start another
     if (downloadRef.current && activeKeyRef.current === currentKey) {
       try {
         await downloadRef.current.resumeAsync();
       } catch {
-        // ignore; might already be running
       }
       if (projectorDownloadRef.current) {
         try { await projectorDownloadRef.current.resumeAsync(); } catch {}
@@ -74,7 +81,6 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
       return;
     }
 
-    // If a different tag/model is downloading, block to avoid losing the other download.
     if (downloadRef.current && activeKeyRef.current !== currentKey) {
       console.warn("Another download is already running; not starting a second one.");
       return;
@@ -131,7 +137,6 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
     const existing = modelFiles?.[currentKey];
     if (!existing) return;
 
-    // If THIS file is downloading, cancel first so you don't delete mid-stream
     if (downloadRef.current && activeKeyRef.current === currentKey) {
       try { await downloadRef.current.cancelAsync(); } catch {}
       if (projectorDownloadRef.current) {
@@ -199,7 +204,7 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
   useEffect(() => {
     const saveTag = async () => {
       try {
-        await AsyncStorage.setItem(`model-${id}-selected-tag`, tag);
+        if (tag) await AsyncStorage.setItem(`model-${id}-selected-tag`, tag);
       } catch (error) {
         console.error("Error saving selected tag:", error);
       }
@@ -208,13 +213,52 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
   }, [id, tag]);
 
   const styles = StyleSheet.create({
-    view: {
+    card: {
+      flexDirection: "column",
+      backgroundColor: colorScheme.surfaceVariant,
+      borderRadius: 12,
+      padding: 14,
+      marginBottom: 10,
+      gap: 10,
+    },
+    topRow: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      borderBottomColor: colorScheme.outlineVariant,
-      borderBottomWidth: 1,
-      padding: 16,
+    },
+    titleView: {
+      flexDirection: "column",
+      flex: 1,
+      marginRight: 8,
+    },
+    name: {
+      color: colorScheme.onSurface,
+      fontSize: 16,
+      fontWeight: "bold",
+    },
+    metaRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginTop: 4,
+    },
+    badge: {
+      backgroundColor: colorScheme.surface,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: colorScheme.outline,
+    },
+    badgeText: {
+      color: colorScheme.primary,
+      fontSize: 11,
+      fontWeight: "600",
+    },
+    bottomRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     downloadedOptions: {
       flexDirection: "row",
@@ -222,29 +266,27 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
       gap: 8,
     },
     button: {
-      backgroundColor: colorScheme.primaryContainer,
-      borderRadius: 16,
-      padding: 4,
+      backgroundColor: colorScheme.primary,
+      borderRadius: 20,
+      padding: 6,
     },
     deleteButton: {
       backgroundColor: colorScheme.errorContainer,
-      borderRadius: 16,
-      padding: 4,
-    },
-    titleView: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 8,
-    },
-    name: {
-      color: colorScheme.secondary,
+      borderRadius: 20,
+      padding: 6,
     },
     textButton: {
       color: modelKey === currentKey ? colorScheme.onPrimary : colorScheme.onPrimaryContainer,
       backgroundColor: modelKey === currentKey ? colorScheme.primary : colorScheme.primaryContainer,
-      paddingVertical: 4,
-      paddingHorizontal: 12,
+      paddingVertical: 6,
+      paddingHorizontal: 16,
       borderRadius: 20,
+      fontWeight: "600",
+    },
+    statusText: {
+      color: colorScheme.secondary,
+      fontSize: 13,
+      fontWeight: "500",
     },
   });
 
@@ -258,10 +300,33 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
       ? Math.round((projectorProgress.totalBytesWritten / projectorProgress.totalBytesExpectedToWrite) * 100)
       : undefined;
 
+  const getCategoryBadgeColor = (cat?: string) => {
+    if (cat?.includes("Uncensored")) return { borderColor: "#FF0033", color: "#FF4D6D" };
+    if (cat?.includes("Thinking")) return { borderColor: "#9900FF", color: "#C77DFF" };
+    if (cat?.includes("Coding")) return { borderColor: "#00FF66", color: "#00FF66" };
+    return { borderColor: colorScheme.outline, color: colorScheme.primary };
+  };
+
+  const badgeStyle = getCategoryBadgeColor(category);
+
   return (
-    <View style={styles.view}>
-      <View style={styles.titleView}>
-        <Text style={styles.name}>{name}</Text>
+    <View style={styles.card}>
+      <View style={styles.topRow}>
+        <View style={styles.titleView}>
+          <Text style={styles.name}>{name}</Text>
+          <View style={styles.metaRow}>
+            {category && (
+              <View style={[styles.badge, { borderColor: badgeStyle.borderColor }]}>
+                <Text style={[styles.badgeText, { color: badgeStyle.color }]}>{category}</Text>
+              </View>
+            )}
+            {parameters && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{parameters}B</Text>
+              </View>
+            )}
+          </View>
+        </View>
         <Dropdown
           items={Object.keys(tags).map((key) => ({ label: key, value: key }))}
           selectedValue={tag}
@@ -269,66 +334,168 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
         />
       </View>
 
-      {percent !== undefined && (
-        <Text style={styles.name}>
-          {projectorFileName ? `Model: ${percent}%  Proj: ${projectorPercent ?? 0}%` : `${percent}%`}
-        </Text>
-      )}
+      <View style={styles.bottomRow}>
+        {percent !== undefined ? (
+          <Text style={styles.statusText}>
+            {projectorFileName ? `Downloading Model: ${percent}% | Proj: ${projectorPercent ?? 0}%` : `Downloading: ${percent}%`}
+          </Text>
+        ) : (
+          <Text style={styles.statusText}>
+            {downloaded ? "✅ Downloaded & Ready" : `Quant: ${tag}`}
+          </Text>
+        )}
 
-      {!progress && !downloaded && (
-        <MaterialIconButton
-          icon="download"
-          size={18}
-          style={styles.button}
-          color={colorScheme.onPrimaryContainer}
-          onPress={downloadModel}
-        />
-      )}
-
-      {downloaded && (
-        <View style={styles.downloadedOptions}>
+        {!progress && !downloaded && (
           <MaterialIconButton
-            icon="delete"
-            size={18}
-            style={styles.deleteButton}
-            color={colorScheme.onErrorContainer}
-            onPress={deleteModel}
+            icon="download"
+            size={20}
+            style={styles.button}
+            color={colorScheme.onPrimary}
+            onPress={downloadModel}
           />
-          <TouchableOpacity onPress={selectModel}>
-            <Text style={styles.textButton}>Select</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+        )}
+
+        {downloaded && (
+          <View style={styles.downloadedOptions}>
+            <MaterialIconButton
+              icon="delete"
+              size={20}
+              style={styles.deleteButton}
+              color={colorScheme.onErrorContainer}
+              onPress={deleteModel}
+            />
+            <TouchableOpacity onPress={selectModel}>
+              <Text style={styles.textButton}>
+                {modelKey === currentKey ? "Selected ★" : "Select"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
     </View>
   );
 }
 
 function Download() {
   const { colorScheme } = useSystem();
+  const { modelFiles } = useLLM();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("All 🌐");
   
   const styles = StyleSheet.create({
-    view: {
+    container: {
       flex: 1,
-      flexDirection: "column",
       backgroundColor: colorScheme.surface,
       paddingHorizontal: 16,
-      paddingVertical: 8,
-      gap: 8
+      paddingTop: 12,
+    },
+    searchBox: {
+      color: colorScheme.onSurface,
+      backgroundColor: colorScheme.surfaceVariant,
+      borderRadius: 24,
+      paddingVertical: 10,
+      paddingHorizontal: 18,
+      fontSize: 15,
+      marginBottom: 12,
+    },
+    tabsScrollView: {
+      flexGrow: 0,
+      marginBottom: 12,
+    },
+    tabButton: {
+      paddingVertical: 6,
+      paddingHorizontal: 14,
+      borderRadius: 20,
+      marginRight: 8,
+      borderWidth: 1,
+      borderColor: colorScheme.outline,
+      backgroundColor: colorScheme.surface,
+    },
+    activeTabButton: {
+      backgroundColor: colorScheme.primary,
+      borderColor: colorScheme.primary,
+    },
+    tabText: {
+      color: colorScheme.onSurface,
+      fontSize: 13,
+      fontWeight: "600",
+    },
+    activeTabText: {
+      color: colorScheme.onPrimary,
+    },
+    listContent: {
+      paddingBottom: 24,
+    },
+    emptyText: {
+      color: colorScheme.secondary,
+      textAlign: "center",
+      marginTop: 32,
+      fontSize: 15,
     }
   });
 
+  const filteredModels = useMemo(() => {
+    return HuggingfaceModels.filter((model) => {
+      const matchesSearch =
+        searchQuery.trim() === "" ||
+        model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (model.category?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+        model.id.toLowerCase().includes(searchQuery.toLowerCase());
+
+      if (!matchesSearch) return false;
+
+      if (activeTab === "All 🌐") return true;
+      if (activeTab === "📥 Downloaded") {
+        return Object.keys(model.tags).some((tagKey) => {
+          const key = `${model.id}:${tagKey}`;
+          return !!modelFiles?.[key];
+        });
+      }
+      return model.category === activeTab;
+    });
+  }, [searchQuery, activeTab, modelFiles]);
+
   return (
-    <ScrollView
-      testID="download-page"
-      style={styles.view}
-    >
-      {HuggingfaceModels.map((model, index) => (
-        <ModelDownload 
-          key={index}
-          source={model}
-        />
-      ))}
-    </ScrollView>
+    <View style={styles.container} testID="download-page">
+      <TextInput
+        style={styles.searchBox}
+        placeholder="Search 27 models by name, category (☠️ Uncensored)..."
+        placeholderTextColor={colorScheme.outline}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.tabsScrollView}
+      >
+        {CATEGORIES.map((cat) => {
+          const isActive = activeTab === cat;
+          return (
+            <TouchableOpacity
+              key={cat}
+              style={[styles.tabButton, isActive && styles.activeTabButton]}
+              onPress={() => setActiveTab(cat)}
+            >
+              <Text style={[styles.tabText, isActive && styles.activeTabText]}>
+                {cat}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+
+      <ScrollView contentContainerStyle={styles.listContent}>
+        {filteredModels.length > 0 ? (
+          filteredModels.map((model, index) => (
+            <ModelDownload key={`${model.id}-${index}`} source={model} />
+          ))
+        ) : (
+          <Text style={styles.emptyText}>No models match your filter / search.</Text>
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
