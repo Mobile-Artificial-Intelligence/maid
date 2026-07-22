@@ -92,6 +92,38 @@
     }
   },
   {
+    "id": "lfm-2.5-230M",
+    "name": "LFM 2.5 230M",
+    "repo": "LiquidAI/LFM2.5-230M-GGUF",
+    "parameters": 0.23,
+    "branch": "main",
+    "tags": {
+      "Q4_0": "LFM2.5-230M-Q4_0.gguf",
+      "Q4_K_M": "LFM2.5-230M-Q4_K_M.gguf",
+      "Q5_K_M": "LFM2.5-230M-Q5_K_M.gguf",
+      "Q6_K": "LFM2.5-230M-Q6_K.gguf",
+      "Q8_0": "LFM2.5-230M-Q8_0.gguf",
+      "BF16": "LFM2.5-230M-BF16.gguf",
+      "F16": "LFM2.5-230M-F16.gguf"
+    }
+  },
+  {
+    "id": "lfm-2.5-350M",
+    "name": "LFM 2.5 350M",
+    "repo": "LiquidAI/LFM2.5-350M-GGUF",
+    "parameters": 0.35,
+    "branch": "main",
+    "tags": {
+      "Q4_0": "LFM2.5-350M-Q4_0.gguf",
+      "Q4_K_M": "LFM2.5-350M-Q4_K_M.gguf",
+      "Q5_K_M": "LFM2.5-350M-Q5_K_M.gguf",
+      "Q6_K": "LFM2.5-350M-Q6_K.gguf",
+      "Q8_0": "LFM2.5-350M-Q8_0.gguf",
+      "BF16": "LFM2.5-350M-BF16.gguf",
+      "F16": "LFM2.5-350M-F16.gguf"
+    }
+  },
+  {
     "id": "lfm-2.5-1.2b-thinking",
     "name": "LFM 2.5 1.2B Thinking",
     "repo": "LiquidAI/LFM2.5-1.2B-Thinking-GGUF",
