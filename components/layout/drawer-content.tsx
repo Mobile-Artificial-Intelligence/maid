@@ -181,8 +181,7 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
         confirmTestID="clear-chats-confirm-button"
         cancelTestID="clear-chats-cancel-button"
         visible={showClearConfirm}
-        message={`This will permanently delete all ${roots.length} ${roots.length === 1 ? "chat" : "chats"}. Continue?`}
-        destructive
+        message="Are you sure you want to clear all chats? This action cannot be undone."
         onConfirm={clearChats}
         onCancel={() => setShowClearConfirm(false)}
       />

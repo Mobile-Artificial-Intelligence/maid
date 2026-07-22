@@ -9,8 +9,6 @@ interface ConfirmViewProps {
   message: string;
   confirmLabel?: string;
   cancelLabel?: string;
-  /** Styles the confirm button with the error colours to signal a destructive action */
-  destructive?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -23,7 +21,6 @@ function ConfirmView({
   message,
   confirmLabel = "Yes",
   cancelLabel = "No",
-  destructive = false,
   onConfirm,
   onCancel,
 }: ConfirmViewProps) {
@@ -94,7 +91,7 @@ function ConfirmView({
               <Text
                 style={[
                   styles.buttonTextBase,
-                  destructive ? styles.buttonTextDanger : styles.buttonTextPrimary
+                  styles.buttonTextPrimary
                 ]}
               >
                 {confirmLabel}
