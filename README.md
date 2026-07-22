@@ -82,14 +82,6 @@ yarn build-android
 
 The output APK will be located in the `android/app/build/outputs/apk/release` directory.
 
-## Star History
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Mobile-Artificial-Intelligence/maid&type=Date&theme=dark" />
-  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Mobile-Artificial-Intelligence/maid&type=Date" />
-  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Mobile-Artificial-Intelligence/maid&type=Date" />
-</picture>
-
 ## Disclaimer
 
 Maid is distributed under the MIT licence and is provided without warranty of any kind, express or implied. Maid is not affiliated with Huggingface, Meta (Facebook), MistralAi, OpenAI, Google, Microsoft or any other company providing a model compatible with this application.
