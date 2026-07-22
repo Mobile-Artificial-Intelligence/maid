@@ -8,7 +8,6 @@ on:
       - main
     paths:
       - '.github/workflows/test.yml'
-      - 'android/**'
       - '**/*.ts'
       - '**/*.tsx'
       - '*.js'
@@ -19,7 +18,6 @@ on:
       - main
     paths:
       - '.github/workflows/test.yml'
-      - 'android/**'
       - '**/*.ts'
       - '**/*.tsx'
       - '*.js'
@@ -34,12 +32,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Setup Node (Yarn cache)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.19.4
           cache: yarn

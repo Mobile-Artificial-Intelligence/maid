@@ -8,7 +8,6 @@ on:
       - main
     paths:
       - '.github/workflows/build-android.yml'
-      - 'android/**'
       - '**/*.ts'
       - '**/*.tsx'
       - '*.js'
@@ -19,7 +18,6 @@ on:
       - main
     paths:
       - '.github/workflows/build-android.yml'
-      - 'android/**'
       - '**/*.ts'
       - '**/*.tsx'
       - '*.js'
@@ -33,29 +31,39 @@ jobs:
       contents: read
 
     steps:
+      # fetch-depth: 0 so `git rev-list --count HEAD` can derive the versionCode.
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Setup Node (Yarn cache)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.19.4
           cache: yarn
 
-      - name: Setup Java (Gradle cache)
-        uses: actions/setup-java@v4
+      - name: Install JS deps
+        run: |
+          yarn install --frozen-lockfile
+
+      # android/ is not committed, so everything below depends on this step.
+      - name: Prebuild Android
+        run: |
+          yarn prebuild
+          chmod +x android/gradlew
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
-          cache: gradle
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Install Android SDK components
         run: |
@@ -85,15 +93,6 @@ jobs:
           echo "releasePassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
-
-      - name: Install JS deps
-        run: |
-          yarn install --frozen-lockfile
-
-      - name: Prebuild Android
-        run: |
-          yarn prebuild
-          chmod +x android/gradlew
 
       - name: Build APK (assembleRelease)
         run: |
@@ -108,7 +107,6 @@ jobs:
 
       - name: Build AAB (bundleRelease)
         run: |
-          chmod +x android/gradlew
           yarn build-android-bundle
 
       - name: Rename AAB
@@ -117,35 +115,35 @@ jobs:
           mv android/app/build/outputs/bundle/release/app-release.aab release/maid-android-bundle.aab
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android
           path: release
           if-no-files-found: error
 
       - name: Upload ARM64 APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android-arm64-v8a
           path: release/maid-android-arm64-v8a.apk
           if-no-files-found: error
 
       - name: Upload x86_64 APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android-x86_64
           path: release/maid-android-x86_64.apk
           if-no-files-found: error
 
       - name: Upload Universal APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android-universal
           path: release/maid-android-universal.apk
           if-no-files-found: error
 
       - name: Upload AAB
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android-bundle
           path: release/maid-android-bundle.aab
@@ -157,29 +155,39 @@ jobs:
       contents: read
 
     steps:
+      # fetch-depth: 0 so `git rev-list --count HEAD` can derive the versionCode.
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Setup Node (Yarn cache)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20.19.4
           cache: yarn
 
-      - name: Setup Java (Gradle cache)
-        uses: actions/setup-java@v4
+      - name: Install JS deps
+        run: |
+          yarn install --frozen-lockfile
+
+      # android/ is not committed, so everything below depends on this step.
+      - name: Prebuild Android
+        run: |
+          yarn prebuild
+          chmod +x android/gradlew
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
-          cache: gradle
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Install Android SDK components
         run: |
@@ -210,6 +218,7 @@ jobs:
           echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
 
+      # Must run after prebuild: `--clean` rewrites gradle.properties.
       - name: Enable rnllama build from source
         run: |
           FILE="./android/gradle.properties"
@@ -217,10 +226,6 @@ jobs:
 
           echo "🔧 Updating $FILE"
 
-          # Ensure file exists
-          touch "$FILE"
-
-          # Add only if it doesn't already exist
           if ! grep -qxF "$LINE" "$FILE"; then
             echo "" >> "$FILE"
             echo "$LINE" >> "$FILE"
@@ -229,12 +234,8 @@ jobs:
             echo "Property already present"
           fi
 
-      - name: Install JS deps
-        run: yarn install --frozen-lockfile
-
       - name: Build APK (assembleRelease)
         run: |
-          chmod +x android/gradlew
           yarn build-android
 
       - name: Rename APK
@@ -246,7 +247,6 @@ jobs:
 
       - name: Build AAB (bundleRelease)
         run: |
-          chmod +x android/gradlew
           yarn build-android-bundle
 
       - name: Rename AAB
@@ -255,35 +255,35 @@ jobs:
           mv android/app/build/outputs/bundle/release/app-release.aab release/maid-android-bundle-no-hexagon.aab
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android-no-hexagon
           path: release
           if-no-files-found: error
 
       - name: Upload ARM64 APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android-arm64-v8a-no-hexagon
           path: release/maid-android-arm64-v8a-no-hexagon.apk
           if-no-files-found: error
 
       - name: Upload x86_64 APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android-x86_64-no-hexagon
           path: release/maid-android-x86_64-no-hexagon.apk
           if-no-files-found: error
 
       - name: Upload Universal APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android-universal-no-hexagon
           path: release/maid-android-universal-no-hexagon.apk
           if-no-files-found: error
 
       - name: Upload AAB
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: maid-android-bundle-no-hexagon
           path: release/maid-android-bundle-no-hexagon.aab
