@@ -83,7 +83,7 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
     ],
     // Keeps the release signing, ABI splits and version code logic reproducible
     // across `expo prebuild --clean`.
-    "./plugins/with-maid-android",
+    "./plugins/maid-android",
   ],
 
   experiments: {
