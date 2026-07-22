@@ -4710,10 +4710,10 @@ linkify-it@^5.0.0:
   dependencies:
     uc.micro "^2.0.0"
 
-llama.rn@^0.11.3:
-  version "0.11.3"
-  resolved "https://registry.yarnpkg.com/llama.rn/-/llama.rn-0.11.3.tgz#a4720b58e075ca8a8d06b082871eb963db67b8ca"
-  integrity sha512-op4re/djQDYmtnxdO1FwdkJQsXsPIYHfrvr03nIFbxNzhVyMiFi96+c84+P6t9/Cxuxe4ckAJaMsqfGpK2j/Nw==
+llama.rn@^0.12.6:
+  version "0.12.6"
+  resolved "https://registry.yarnpkg.com/llama.rn/-/llama.rn-0.12.6.tgz#1049b64428e72fdd8e8aac9dc2602baa14a09998"
+  integrity sha512-qh8ysRykn0IQqN6kO7xirKhuZnZYzuI3fQWs9cFoQHpQeYfCfkhqgRuhzTw1Bh/A1H8Z2PPu5PFS45R2jfszTA==
 
 locate-path@^5.0.0:
   version "5.0.0"
