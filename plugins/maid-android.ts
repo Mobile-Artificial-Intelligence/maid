@@ -140,6 +140,15 @@ android {
         }
     }
 
+    lint {
+        // \`assembleRelease\`/\`bundleRelease\` otherwise run lintVital across every
+        // module, including all of node_modules. Analysing third-party Kotlin we
+        // do not own buys nothing, costs several minutes, and reliably exhausts
+        // the daemon's metaspace on CI (lint loads a fresh classloader stack per
+        // module, and dies inside async-storage's StorageSupplier.kt).
+        checkReleaseBuilds false
+    }
+
     splits {
         abi {
             // AGP refuses to build an app bundle while per-ABI APK splits are on
@@ -217,8 +226,10 @@ const GRADLE_PROPERTIES: Record<string, string> = {
   // Only ship the two ABIs we actually support.
   reactNativeArchitectures: "arm64-v8a,x86_64",
   // The default 2g heap intermittently fails `packageRelease` while zipping the
-  // ~190 MB universal APK alongside the per-ABI ones.
-  "org.gradle.jvmargs": "-Xmx4096m -XX:MaxMetaspaceSize=512m",
+  // ~190 MB universal APK alongside the per-ABI ones. The 512m metaspace default
+  // is likewise too tight for a ~1500-task build: class metadata from AGP, R8 and
+  // the Kotlin/UAST stack runs the daemon out of metaspace.
+  "org.gradle.jvmargs": "-Xmx4096m -XX:MaxMetaspaceSize=1024m",
   // SDK 56 renamed `android.enableProguardInReleaseBuilds` to this. Resource
   // shrinking is an AGP error unless code shrinking is on too, so they move
   // together.
