@@ -11,10 +11,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ResetPassword() {
   const router = useRouter();
   const { colorScheme } = useSystem();
+  const insets = useSafeAreaInsets();
 
   const [step, setStep] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState<string>("");
@@ -109,13 +112,20 @@ export default function ResetPassword() {
   };
 
   const styles = StyleSheet.create({
-    view: {
-      justifyContent: "center",
-      alignItems: "center",
+    container: {
       flex: 1,
+      backgroundColor: colorScheme.surface,
+    },
+    content: {
+      flexGrow: 1,
+      justifyContent: "center",
+      // Edge-to-edge: keep the form clear of the navigation bar.
+      paddingBottom: insets.bottom,
+    },
+    view: {
+      alignItems: "center",
       flexDirection: "column",
       gap: 16,
-      backgroundColor: colorScheme.surface,
       paddingHorizontal: 48,
       paddingBottom: 64,
     },
@@ -162,103 +172,115 @@ export default function ResetPassword() {
 
   if (step === "email") {
     return (
-      <View testID="reset-password-page" style={styles.view}>
-        <Text style={styles.title}>Reset Password</Text>
+      <KeyboardAwareScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        bottomOffset={16}
+      >
+        <View testID="reset-password-page" style={styles.view}>
+          <Text style={styles.title}>Reset Password</Text>
+          <Text style={styles.subtitle}>
+            Enter your email and we'll send you a code to reset your password.
+          </Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            placeholderTextColor={colorScheme.onSurfaceVariant}
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            autoComplete="email"
+          />
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleSendOtp}
+            disabled={submitting}
+          >
+            {submitting ? (
+              <ActivityIndicator color={colorScheme.onPrimary} />
+            ) : (
+              <Text style={styles.buttonText}>Send Code</Text>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.back()}>
+            <Text style={styles.linkText}>Back to Login</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
+    );
+  }
+
+  return (
+    <KeyboardAwareScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      bottomOffset={16}
+    >
+      <View testID="reset-password-otp-page" style={styles.view}>
+        <Text style={styles.title}>Enter Code</Text>
         <Text style={styles.subtitle}>
-          Enter your email and we'll send you a code to reset your password.
+          We sent a code to {email}. Enter it below along with your new password.
         </Text>
 
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder="6-digit code"
           placeholderTextColor={colorScheme.onSurfaceVariant}
-          value={email}
-          onChangeText={setEmail}
+          value={otp}
+          onChangeText={setOtp}
+          keyboardType="number-pad"
           autoCapitalize="none"
-          keyboardType="email-address"
-          autoComplete="email"
+          autoCorrect={false}
+          textContentType="oneTimeCode"
+          autoComplete="one-time-code"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="New Password"
+          placeholderTextColor={colorScheme.onSurfaceVariant}
+          value={newPassword}
+          onChangeText={setNewPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="newPassword"
+          autoComplete="new-password"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm New Password"
+          placeholderTextColor={colorScheme.onSurfaceVariant}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="newPassword"
+          autoComplete="new-password"
         />
 
         <TouchableOpacity
           style={styles.button}
-          onPress={handleSendOtp}
+          onPress={handleResetPassword}
           disabled={submitting}
         >
           {submitting ? (
             <ActivityIndicator color={colorScheme.onPrimary} />
           ) : (
-            <Text style={styles.buttonText}>Send Code</Text>
+            <Text style={styles.buttonText}>Reset Password</Text>
           )}
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.linkText}>Back to Login</Text>
+        <TouchableOpacity onPress={() => setStep("email")}>
+          <Text style={styles.linkText}>Resend code</Text>
         </TouchableOpacity>
       </View>
-    );
-  }
-
-  return (
-    <View testID="reset-password-otp-page" style={styles.view}>
-      <Text style={styles.title}>Enter Code</Text>
-      <Text style={styles.subtitle}>
-        We sent a code to {email}. Enter it below along with your new password.
-      </Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="6-digit code"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={otp}
-        onChangeText={setOtp}
-        keyboardType="number-pad"
-        autoCapitalize="none"
-        autoCorrect={false}
-        textContentType="oneTimeCode"
-        autoComplete="one-time-code"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="New Password"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={newPassword}
-        onChangeText={setNewPassword}
-        secureTextEntry
-        autoCapitalize="none"
-        autoCorrect={false}
-        textContentType="newPassword"
-        autoComplete="new-password"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm New Password"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-        autoCapitalize="none"
-        autoCorrect={false}
-        textContentType="newPassword"
-        autoComplete="new-password"
-      />
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleResetPassword}
-        disabled={submitting}
-      >
-        {submitting ? (
-          <ActivityIndicator color={colorScheme.onPrimary} />
-        ) : (
-          <Text style={styles.buttonText}>Reset Password</Text>
-        )}
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => setStep("email")}>
-        <Text style={styles.linkText}>Resend code</Text>
-      </TouchableOpacity>
-    </View>
+    </KeyboardAwareScrollView>
   );
 }

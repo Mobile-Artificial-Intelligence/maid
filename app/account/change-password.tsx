@@ -11,10 +11,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ChangePassword() {
   const router = useRouter();
   const { colorScheme } = useSystem();
+  const insets = useSafeAreaInsets();
 
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
@@ -84,13 +87,20 @@ export default function ChangePassword() {
   };
 
   const styles = StyleSheet.create({
-    view: {
-      justifyContent: "center",
-      alignItems: "center",
+    container: {
       flex: 1,
+      backgroundColor: colorScheme.surface,
+    },
+    content: {
+      flexGrow: 1,
+      justifyContent: "center",
+      // Edge-to-edge: keep the form clear of the navigation bar.
+      paddingBottom: insets.bottom,
+    },
+    view: {
+      alignItems: "center",
       flexDirection: "column",
       gap: 16,
-      backgroundColor: colorScheme.surface,
       paddingHorizontal: 48,
       paddingBottom: 64,
     },
@@ -130,63 +140,69 @@ export default function ChangePassword() {
   });
 
   return (
-    <View testID="change-password-page" style={styles.view}>
-      <Text style={styles.title}>Change Password</Text>
+    <KeyboardAwareScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      bottomOffset={16}
+    >
+      <View testID="change-password-page" style={styles.view}>
+        <Text style={styles.title}>Change Password</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Current Password"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={currentPassword}
-        onChangeText={setCurrentPassword}
-        secureTextEntry
-        autoCapitalize="none"
-        autoCorrect={false}
-        textContentType="password"
-        autoComplete="password"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Current Password"
+          placeholderTextColor={colorScheme.onSurfaceVariant}
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="password"
+          autoComplete="password"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="New Password"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={newPassword}
-        onChangeText={setNewPassword}
-        secureTextEntry
-        autoCapitalize="none"
-        autoCorrect={false}
-        textContentType="newPassword"
-        autoComplete="new-password"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="New Password"
+          placeholderTextColor={colorScheme.onSurfaceVariant}
+          value={newPassword}
+          onChangeText={setNewPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="newPassword"
+          autoComplete="new-password"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm New Password"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-        autoCapitalize="none"
-        autoCorrect={false}
-        textContentType="newPassword"
-        autoComplete="new-password"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm New Password"
+          placeholderTextColor={colorScheme.onSurfaceVariant}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="newPassword"
+          autoComplete="new-password"
+        />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleChangePassword}
-        disabled={submitting}
-      >
-        {submitting ? (
-          <ActivityIndicator color={colorScheme.onPrimary} />
-        ) : (
-          <Text style={styles.buttonText}>Update Password</Text>
-        )}
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleChangePassword}
+          disabled={submitting}
+        >
+          {submitting ? (
+            <ActivityIndicator color={colorScheme.onPrimary} />
+          ) : (
+            <Text style={styles.buttonText}>Update Password</Text>
+          )}
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text style={styles.linkText}>Cancel</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Text style={styles.linkText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAwareScrollView>
   );
 }

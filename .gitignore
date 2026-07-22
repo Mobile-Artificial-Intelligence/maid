@@ -17,6 +17,8 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+# Written by CI (and locally for release builds) with keystore passwords.
+android/key.properties
 
 # Metro
 .metro-health-check*

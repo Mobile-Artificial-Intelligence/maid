@@ -9,7 +9,6 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
   icon: "./assets/images/icon.png",
   scheme: "maid",
   userInterfaceStyle: "automatic",
-  newArchEnabled: true,
 
   ios: {
     supportsTablet: true,
@@ -81,7 +80,10 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
         speechRecognitionPermission: "Allow $(PRODUCT_NAME) to use speech recognition.",
         androidSpeechServicePackages: ["com.google.android.googlequicksearchbox", "com.google.android.tts"]
       }
-    ]
+    ],
+    // Keeps the release signing, ABI splits and version code logic reproducible
+    // across `expo prebuild --clean`.
+    "./plugins/with-maid-android",
   ],
 
   experiments: {

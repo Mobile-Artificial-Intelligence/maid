@@ -1,6 +1,6 @@
 import Popover from "@/components/views/popover-view";
 import { useChat, useSystem } from "@/context";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import { deleteNode, getRootMapping, MessageNode, updateContent } from "message-nodes";
 import { useEffect, useRef, useState } from "react";
 import { LayoutRectangle, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";

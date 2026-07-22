@@ -6,10 +6,12 @@ import ThemeSettingsGroup from "@/components/groups/theme-settings-group";
 import UserSettingsGroup from "@/components/groups/user-settings-group";
 import { useSystem } from "@/context";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function Settings() {
   const { colorScheme } = useSystem();
-  
+  const insets = useSafeAreaInsets();
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -18,7 +20,8 @@ function Settings() {
     },
     content: {
       flexDirection: "column",
-      paddingBottom: 16,
+      // Edge-to-edge: keep the last row clear of the navigation bar.
+      paddingBottom: insets.bottom + 16,
     },
     divider: {
       height: 2,

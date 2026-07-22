@@ -41,7 +41,7 @@ jobs:
       - name: Setup Node (Yarn cache)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20.19.4
           cache: yarn
 
       - name: Setup Java (Gradle cache)
@@ -61,8 +61,8 @@ jobs:
         run: |
           sdkmanager --install \
             "platform-tools" \
-            "platforms;android-35" \
-            "build-tools;35.0.0" \
+            "platforms;android-36" \
+            "build-tools;36.0.0" \
             "ndk;27.1.12297006"
           yes | sdkmanager --licenses
 
@@ -87,11 +87,16 @@ jobs:
           echo "releaseAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
 
       - name: Install JS deps
-        run: yarn install --frozen-lockfile
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: Prebuild Android
+        run: |
+          yarn prebuild
+          chmod +x android/gradlew
 
       - name: Build APK (assembleRelease)
         run: |
-          chmod +x android/gradlew
           yarn build-android
 
       - name: Rename APK
@@ -160,7 +165,7 @@ jobs:
       - name: Setup Node (Yarn cache)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20.19.4
           cache: yarn
 
       - name: Setup Java (Gradle cache)
@@ -180,8 +185,8 @@ jobs:
         run: |
           sdkmanager --install \
             "platform-tools" \
-            "platforms;android-35" \
-            "build-tools;35.0.0" \
+            "platforms;android-36" \
+            "build-tools;36.0.0" \
             "ndk;27.1.12297006"
           yes | sdkmanager --licenses
 

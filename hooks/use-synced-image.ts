@@ -1,7 +1,7 @@
 import getSupabase from "@/utilities/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Buffer } from "buffer";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import useAuthentication from "./use-authentication";
 

@@ -79,6 +79,7 @@ function ConfirmView({
       animationType="fade"
       onRequestClose={onCancel}
       statusBarTranslucent
+      navigationBarTranslucent
     >
       <View style={styles.overlay}>
         <View testID={testID} style={styles.card}>

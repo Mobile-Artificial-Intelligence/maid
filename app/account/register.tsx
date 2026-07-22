@@ -11,10 +11,13 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function Register() {
   const router = useRouter();
   const { colorScheme, userName, setUserName } = useSystem();
+  const insets = useSafeAreaInsets();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -81,13 +84,20 @@ function Register() {
   };
 
   const styles = StyleSheet.create({
-    view: {
-      justifyContent: "center",
-      alignItems: "center",
+    container: {
       flex: 1,
+      backgroundColor: colorScheme.surface,
+    },
+    content: {
+      flexGrow: 1,
+      justifyContent: "center",
+      // Edge-to-edge: keep the form clear of the navigation bar.
+      paddingBottom: insets.bottom,
+    },
+    view: {
+      alignItems: "center",
       flexDirection: "column",
       gap: 16,
-      backgroundColor: colorScheme.surface,
       paddingHorizontal: 48,
       paddingBottom: 64,
     },
@@ -127,70 +137,76 @@ function Register() {
   });
 
   return (
-    <View testID="register-page" style={styles.view}>
-      <Text style={styles.title}>Create An Account</Text>
+    <KeyboardAwareScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      bottomOffset={16}
+    >
+      <View testID="register-page" style={styles.view}>
+        <Text style={styles.title}>Create An Account</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={userName}
-        onChangeText={setUserName}
-        autoCapitalize="none"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          placeholderTextColor={colorScheme.onSurfaceVariant}
+          value={userName}
+          onChangeText={setUserName}
+          autoCapitalize="none"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor={colorScheme.onSurfaceVariant}
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        autoCapitalize="none"
-        autoCorrect={false}
-        textContentType="password"
-        autoComplete="password"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor={colorScheme.onSurfaceVariant}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="password"
+          autoComplete="password"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        placeholderTextColor={colorScheme.onSurfaceVariant}
-        value={passwordConfirm}
-        onChangeText={setPasswordConfirm}
-        secureTextEntry
-        autoCapitalize="none"
-        autoCorrect={false}
-        textContentType="password"
-        autoComplete="password"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          placeholderTextColor={colorScheme.onSurfaceVariant}
+          value={passwordConfirm}
+          onChangeText={setPasswordConfirm}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+          textContentType="password"
+          autoComplete="password"
+        />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleRegister}
-        disabled={submitting}
-      >
-        {submitting ? (
-          <ActivityIndicator color={colorScheme.onPrimary} />
-        ) : (
-          <Text style={styles.buttonText}>Register</Text>
-        )}
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleRegister}
+          disabled={submitting}
+        >
+          {submitting ? (
+            <ActivityIndicator color={colorScheme.onPrimary} />
+          ) : (
+            <Text style={styles.buttonText}>Register</Text>
+          )}
+        </TouchableOpacity>
 
-      <TouchableOpacity testID="login-link" onPress={() => router.replace("/account/login")}>
-        <Text style={styles.linkText}>Already have an account? Log in</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity testID="login-link" onPress={() => router.replace("/account/login")}>
+          <Text style={styles.linkText}>Already have an account? Log in</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAwareScrollView>
   );
 }
 

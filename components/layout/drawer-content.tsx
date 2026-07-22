@@ -6,17 +6,19 @@ import useAuthentication from "@/hooks/use-authentication";
 import { validateMappings } from "@/utilities/mappings";
 import { randomUUID } from "expo-crypto";
 import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import { useRouter } from "expo-router";
 import { addNode, getRoots } from "message-nodes";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void } }) {
   const router = useRouter();
   const [authenticated, anonymous] = useAuthentication();
   const { mappings, setMappings, setRoot } = useChat();
   const { colorScheme } = useSystem();
+  const insets = useSafeAreaInsets();
   const [showClearConfirm, setShowClearConfirm] = useState<boolean>(false);
 
   const roots = getRoots<string>(mappings);
@@ -86,7 +88,8 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
       alignItems: "center",
       justifyContent: "space-between",
       paddingHorizontal: 18,
-      paddingTop: 16,
+      // The drawer is full height under edge-to-edge, so it owns both insets.
+      paddingTop: insets.top + 16,
     },
     controlsText: {
       color: colorScheme.onSurface,
@@ -108,7 +111,7 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
       alignItems: "center",
       justifyContent: "space-around",
       paddingTop: 12,
-      paddingBottom: 24,
+      paddingBottom: insets.bottom + 24,
     },
     accountText: {
       color: colorScheme.primary,

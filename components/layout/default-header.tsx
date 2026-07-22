@@ -1,17 +1,20 @@
 import { MaterialIconButton } from "@/components/buttons/icon-button";
 import { useSystem } from "@/context";
-import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import { type NativeStackHeaderProps } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function DefaultHeader(props: NativeStackHeaderProps) {
   const { colorScheme } = useSystem();
+  const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     root: {
       flexDirection: "row",
       justifyContent: "flex-start",
       paddingHorizontal: 8,
-      paddingTop: 12,
+      // Edge-to-edge: the header draws behind the status bar, so clear it manually.
+      paddingTop: insets.top + 12,
       paddingBottom: 4,
       backgroundColor: colorScheme.surface,
       alignItems: "center",

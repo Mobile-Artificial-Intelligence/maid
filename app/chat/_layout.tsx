@@ -1,8 +1,7 @@
 import Header from "@/components/layout/chat-header";
 import DrawerContent from "@/components/layout/drawer-content";
 import { useSystem } from "@/context";
-import { DrawerHeaderProps } from "@react-navigation/drawer";
-import Drawer from "expo-router/drawer";
+import Drawer, { type DrawerHeaderProps } from "expo-router/drawer";
 
 function ChatLayout() {
   const { colorScheme } = useSystem();
