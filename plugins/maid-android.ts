@@ -65,6 +65,34 @@ if (keystorePropertiesFile.exists()) {
 // Play Store artifacts are AABs, which must be signed with the upload key.
 def isBundleBuild = project.gradle.startParameter.taskNames.any { it.toLowerCase().contains("bundle") }
 
+// The upload keystore may carry its own store password; fall back to the shared
+// one when it does not.
+def uploadStorePassword = keystoreProperties['uploadStorePassword'] ?: keystoreProperties['storePassword']
+def missingUploadKeys = ['uploadKey', 'uploadAlias', 'uploadPassword'].findAll { !keystoreProperties[it] }
+if (!uploadStorePassword) {
+    missingUploadKeys = missingUploadKeys + 'storePassword'
+}
+def hasUploadKey = keystorePropertiesFile.exists() && missingUploadKeys.isEmpty()
+
+def releaseStorePassword = keystoreProperties['storePassword']
+def missingReleaseKeys = ['signingKey', 'releaseAlias', 'releasePassword'].findAll { !keystoreProperties[it] }
+if (!releaseStorePassword) {
+    missingReleaseKeys = missingReleaseKeys + 'storePassword'
+}
+def hasReleaseKey = keystorePropertiesFile.exists() && missingReleaseKeys.isEmpty()
+
+// An AAB exists only to be uploaded to Play, and Play rejects a bundle signed with
+// anything other than the upload key. Fail here rather than quietly emitting a
+// debug-signed artifact. assembleRelease deliberately keeps falling back, so
+// F-Droid and contributors can still build with no keystore at all.
+if (isBundleBuild && !hasUploadKey) {
+    throw new GradleException(
+        keystorePropertiesFile.exists()
+            ? "Refusing to build an unsigned-for-Play app bundle: android/key.properties is missing \${missingUploadKeys.join(', ')}."
+            : "Refusing to build an unsigned-for-Play app bundle: android/key.properties does not exist."
+    )
+}
+
 android {
     defaultConfig {
         versionCode versionCodeFromGit
@@ -86,18 +114,15 @@ android {
         }
 
         upload {
-            if (keystorePropertiesFile.exists()
-                    && keystoreProperties['uploadKey']
-                    && keystoreProperties['storePassword']
-                    && keystoreProperties['uploadAlias']
-                    && keystoreProperties['uploadPassword']) {
-
+            if (hasUploadKey) {
                 storeFile file(keystoreProperties['uploadKey'])
-                storePassword keystoreProperties['storePassword']
+                storePassword uploadStorePassword
                 keyAlias keystoreProperties['uploadAlias']
                 keyPassword keystoreProperties['uploadPassword']
             } else {
-                println("⚠️ Keystore properties not found or incomplete; upload builds will use debug signing unless you add key.properties.")
+                // Unreachable for bundle builds - the guard above already failed.
+                // This only keeps the config valid so assembleRelease can still be
+                // configured on a machine with no keystores.
                 storeFile file('debug.keystore')
                 storePassword 'android'
                 keyAlias 'androiddebugkey'
@@ -106,18 +131,15 @@ android {
         }
 
         release {
-            if (keystorePropertiesFile.exists()
-                    && keystoreProperties['signingKey']
-                    && keystoreProperties['storePassword']
-                    && keystoreProperties['releaseAlias']
-                    && keystoreProperties['releasePassword']) {
-
+            if (hasReleaseKey) {
                 storeFile file(keystoreProperties['signingKey'])
-                storePassword keystoreProperties['storePassword']
+                storePassword releaseStorePassword
                 keyAlias keystoreProperties['releaseAlias']
                 keyPassword keystoreProperties['releasePassword']
             } else {
-                println("⚠️ Keystore properties not found or incomplete; release builds will use debug signing unless you add key.properties.")
+                println(keystorePropertiesFile.exists()
+                        ? "⚠️ android/key.properties is missing \${missingReleaseKeys.join(', ')}; release APKs will use debug signing."
+                        : "⚠️ android/key.properties not found; release APKs will use debug signing.")
                 storeFile file('debug.keystore')
                 storePassword 'android'
                 keyAlias 'androiddebugkey'

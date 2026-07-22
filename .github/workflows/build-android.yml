@@ -93,6 +93,11 @@ jobs:
           echo "releasePassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+          # The upload key signs the AAB. Without these two the plugin cannot
+          # resolve the upload signing config and the bundle build fails.
+          echo "uploadAlias=${{ secrets.ANDROID_UPLOAD_KEY_ALIAS || secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+          echo "uploadPassword=${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD || secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+          echo "uploadStorePassword=${{ secrets.ANDROID_UPLOAD_STORE_PASSWORD || secrets.ANDROID_STORE_PASSWORD }}" >> android/key.properties
 
       - name: Build APK (assembleRelease)
         run: |
@@ -217,6 +222,11 @@ jobs:
           echo "releasePassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
           echo "releaseAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+          # The upload key signs the AAB. Without these two the plugin cannot
+          # resolve the upload signing config and the bundle build fails.
+          echo "uploadAlias=${{ secrets.ANDROID_UPLOAD_KEY_ALIAS || secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+          echo "uploadPassword=${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD || secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+          echo "uploadStorePassword=${{ secrets.ANDROID_UPLOAD_STORE_PASSWORD || secrets.ANDROID_STORE_PASSWORD }}" >> android/key.properties
 
       # Must run after prebuild: `--clean` rewrites gradle.properties.
       - name: Enable rnllama build from source
