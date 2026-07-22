@@ -10,7 +10,8 @@ import * as FileSystem from "expo-file-system/legacy";
 import { useRouter } from "expo-router";
 import { addNode, getRoots } from "message-nodes";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void } }) {
@@ -148,9 +149,10 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
         </View>
       </View>
       <View style={styles.divider} />
-      <ScrollView style={styles.sessions}>
+      {/* Aware rather than plain: renaming a chat focuses a TextInput in this list. */}
+      <KeyboardAwareScrollView style={styles.sessions} bottomOffset={16}>
         {roots.map((root, index) => <ChatButton testID={`chat-button-${index}`} key={root.id} node={root} />)}
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <View style={styles.divider} />
       <View style={styles.account}>
         {authenticated && !anonymous ? (
