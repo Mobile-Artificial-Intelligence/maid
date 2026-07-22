@@ -5,12 +5,14 @@ import * as Application from "expo-application";
 import * as Device from "expo-device";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function About() {
   const { colorScheme } = useSystem();
+  const insets = useSafeAreaInsets();
 
   const logs = getLogs();
-  
+
   const styles = StyleSheet.create({
     view: {
       flex: 1,
@@ -18,6 +20,8 @@ function About() {
       backgroundColor: colorScheme.surface,
       paddingHorizontal: 16,
       paddingVertical: 8,
+      // Edge-to-edge: the log panel would otherwise run under the navigation bar.
+      paddingBottom: insets.bottom + 8,
       gap: 16
     },
     row: {

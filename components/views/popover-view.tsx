@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const EDGE_PADDING = 8;
 const GAP = 6;
@@ -48,7 +49,10 @@ function Popover({
   children,
 }: PopoverViewProps) {
   const { colorScheme } = useSystem();
+  // Under edge-to-edge these dimensions span the whole screen, system bars
+  // included, so the clamps below have to subtract the insets themselves.
   const { width: screenW, height: screenH } = Dimensions.get("window");
+  const insets = useSafeAreaInsets();
   const [popoverH, setPopoverH] = useState(0);
 
   const onPopoverLayout = (e: LayoutChangeEvent) => {
@@ -61,7 +65,10 @@ function Popover({
     const offY = offset?.y ?? 0;
 
     if (!anchor) {
-      return { top: EDGE_PADDING + offY, left: EDGE_PADDING + offX };
+      return {
+        top: insets.top + EDGE_PADDING + offY,
+        left: insets.left + EDGE_PADDING + offX,
+      };
     }
 
     // Horizontal align helpers (for top/bottom)
@@ -106,11 +113,19 @@ function Popover({
         break;
     }
 
-    left = clamp(left + offX, EDGE_PADDING, screenW - width - EDGE_PADDING);
-    top = clamp(top + offY, EDGE_PADDING, screenH - popoverH - EDGE_PADDING);
+    left = clamp(
+      left + offX,
+      insets.left + EDGE_PADDING,
+      screenW - insets.right - width - EDGE_PADDING,
+    );
+    top = clamp(
+      top + offY,
+      insets.top + EDGE_PADDING,
+      screenH - insets.bottom - popoverH - EDGE_PADDING,
+    );
 
     return { left, top };
-  }, [anchor, position, align, offset?.x, offset?.y, popoverH, screenW, screenH]);
+  }, [anchor, position, align, offset?.x, offset?.y, popoverH, screenW, screenH, insets]);
 
   const styles = useMemo(
     () =>
@@ -136,6 +151,7 @@ function Popover({
       animationType="fade"
       onRequestClose={onClose}
       statusBarTranslucent
+      navigationBarTranslucent
     >
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.overlay}>

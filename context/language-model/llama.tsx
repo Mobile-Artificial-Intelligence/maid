@@ -2,7 +2,7 @@ import useStateRef from '@/hooks/use-state-ref';
 import useStoredRecord from '@/hooks/use-stored-record';
 import useStoredString from '@/hooks/use-stored-string';
 import { getDocumentAsync } from "expo-document-picker";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { initLlama, LlamaContext as LlamaRnContext, loadLlamaModelInfo, RNLlamaOAICompatibleMessage } from 'llama.rn';
 import { MessageNode } from 'message-nodes';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";

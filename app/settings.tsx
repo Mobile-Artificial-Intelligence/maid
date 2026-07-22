@@ -5,11 +5,14 @@ import SystemSettingsGroup from "@/components/groups/system-settings-group";
 import ThemeSettingsGroup from "@/components/groups/theme-settings-group";
 import UserSettingsGroup from "@/components/groups/user-settings-group";
 import { useSystem } from "@/context";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function Settings() {
   const { colorScheme } = useSystem();
-  
+  const insets = useSafeAreaInsets();
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -18,7 +21,8 @@ function Settings() {
     },
     content: {
       flexDirection: "column",
-      paddingBottom: 16,
+      // Edge-to-edge: keep the last row clear of the navigation bar.
+      paddingBottom: insets.bottom + 16,
     },
     divider: {
       height: 2,
@@ -30,10 +34,11 @@ function Settings() {
   });
 
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       testID="settings-page"
-      style={styles.container} 
+      style={styles.container}
       contentContainerStyle={styles.content}
+      bottomOffset={16}
     >
       <ModelSettingsGroup />
       <View style={styles.divider} />
@@ -46,7 +51,7 @@ function Settings() {
       <ThemeSettingsGroup />
       <View style={styles.divider} />
       <ClearButtons />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
 

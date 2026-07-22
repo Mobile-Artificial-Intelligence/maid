@@ -3,9 +3,10 @@ import Dropdown from "@/components/dropdowns/dropdown";
 import { useLLM, useSystem } from "@/context";
 import HuggingfaceModelsRaw from "@/models.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface HuggingfaceModel {
   id: string;
@@ -305,7 +306,8 @@ function ModelDownload({ source }: { source: HuggingfaceModel }) {
 
 function Download() {
   const { colorScheme } = useSystem();
-  
+  const insets = useSafeAreaInsets();
+
   const styles = StyleSheet.create({
     view: {
       flex: 1,
@@ -314,6 +316,10 @@ function Download() {
       paddingHorizontal: 16,
       paddingVertical: 8,
       gap: 8
+    },
+    content: {
+      // Edge-to-edge: keep the last model card clear of the navigation bar.
+      paddingBottom: insets.bottom + 8,
     }
   });
 
@@ -321,6 +327,7 @@ function Download() {
     <ScrollView
       testID="download-page"
       style={styles.view}
+      contentContainerStyle={styles.content}
     >
       {HuggingfaceModels.map((model, index) => (
         <ModelDownload 
