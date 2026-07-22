@@ -123,7 +123,7 @@ describe("Chat page", () => {
     expect(chatButton).toBeOnTheScreen();
   });
 
-  it("should clear all chats when the clear chats button is pressed", async () => {
+  it("should show a confirmation without deleting when the clear chats button is pressed", async () => {
     const openDrawerButton = await screen.findByTestId("open-drawer-button");
     fireEvent.press(openDrawerButton);
 
@@ -135,6 +135,51 @@ describe("Chat page", () => {
 
     const clearChatsButton = await screen.findByTestId("clear-chats-button");
     fireEvent.press(clearChatsButton);
+
+    const confirmModal = await screen.findByTestId("clear-chats-confirm-modal");
+    expect(confirmModal).toBeOnTheScreen();
+
+    expect(chatButton).toBeOnTheScreen();
+  });
+
+  it("should keep all chats when the clear chats confirmation is cancelled", async () => {
+    const openDrawerButton = await screen.findByTestId("open-drawer-button");
+    fireEvent.press(openDrawerButton);
+
+    const newChatButton = await screen.findByTestId("new-chat-button");
+    fireEvent.press(newChatButton);
+
+    const chatButton = await screen.findByTestId("chat-button-0");
+    expect(chatButton).toBeOnTheScreen();
+
+    const clearChatsButton = await screen.findByTestId("clear-chats-button");
+    fireEvent.press(clearChatsButton);
+
+    const confirmModal = await screen.findByTestId("clear-chats-confirm-modal");
+    expect(confirmModal).toBeOnTheScreen();
+
+    const cancelButton = await screen.findByTestId("clear-chats-cancel-button");
+    fireEvent.press(cancelButton);
+
+    expect(confirmModal).not.toBeOnTheScreen();
+    expect(chatButton).toBeOnTheScreen();
+  });
+
+  it("should clear all chats when the clear chats confirmation is accepted", async () => {
+    const openDrawerButton = await screen.findByTestId("open-drawer-button");
+    fireEvent.press(openDrawerButton);
+
+    const newChatButton = await screen.findByTestId("new-chat-button");
+    fireEvent.press(newChatButton);
+
+    const chatButton = await screen.findByTestId("chat-button-0");
+    expect(chatButton).toBeOnTheScreen();
+
+    const clearChatsButton = await screen.findByTestId("clear-chats-button");
+    fireEvent.press(clearChatsButton);
+
+    const confirmButton = await screen.findByTestId("clear-chats-confirm-button");
+    fireEvent.press(confirmButton);
 
     expect(chatButton).not.toBeOnTheScreen();
   });

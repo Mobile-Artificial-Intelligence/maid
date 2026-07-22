@@ -1,8 +1,9 @@
+import ConfirmView from '@/components/views/confirm-view';
 import { useSystem } from '@/context';
 import getSupabase from '@/utilities/supabase';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function Index() {
   const router = useRouter();
@@ -116,53 +117,18 @@ export default function Index() {
           </Text>
         </TouchableOpacity>
       </View>
-      <Modal
+      <ConfirmView
+        testID="delete-confirm-modal"
+        confirmTestID="delete-confirm-button"
+        cancelTestID="delete-cancel-button"
         visible={showDeleteConfirm}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowDeleteConfirm(false)}
-      >
-        <View style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "rgba(0,0,0,0.5)"
-        }}>
-          <View testID="delete-confirm-modal" style={{
-            backgroundColor: colorScheme.surfaceVariant,
-            padding: 32,
-            borderRadius: 32,
-            width: "80%",
-            alignItems: "center",
-            gap: 48
-          }}>
-            <Text style={{ color: colorScheme.onSurface, fontSize: 18, fontWeight: "bold", textAlign: "center" }}>
-              Are you sure you want to delete your account?
-            </Text>
-            <View style={{ flexDirection: "row", gap: 16 }}>
-              <TouchableOpacity
-                testID="delete-confirm-button"
-                onPress={() => {
-                  setShowDeleteConfirm(false);
-                  deleteAccount();
-                }}
-              >
-                <Text style={[styles.buttonTextBase, styles.buttonTextPrimary]}>
-                  Yes
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                testID="delete-cancel-button"
-                onPress={() => setShowDeleteConfirm(false)}
-              >
-                <Text style={[styles.buttonTextBase, styles.buttonTextPrimary]}>
-                  No
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        message="Are you sure you want to delete your account?"
+        onConfirm={() => {
+          setShowDeleteConfirm(false);
+          deleteAccount();
+        }}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </View>
   );
 }

@@ -1,5 +1,6 @@
 import ChatButton from "@/components/buttons/chat-button";
 import { MaterialIconButton } from "@/components/buttons/icon-button";
+import ConfirmView from "@/components/views/confirm-view";
 import { useChat, useSystem } from "@/context";
 import useAuthentication from "@/hooks/use-authentication";
 import { validateMappings } from "@/utilities/mappings";
@@ -8,6 +9,7 @@ import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { useRouter } from "expo-router";
 import { addNode, getRoots } from "message-nodes";
+import { useState } from "react";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void } }) {
@@ -15,7 +17,10 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
   const [authenticated, anonymous] = useAuthentication();
   const { mappings, setMappings, setRoot } = useChat();
   const { colorScheme } = useSystem();
-  
+  const [showClearConfirm, setShowClearConfirm] = useState<boolean>(false);
+
+  const roots = getRoots<string>(mappings);
+
   const loadMappings = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -41,6 +46,7 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
   };
 
   const clearChats = () => {
+    setShowClearConfirm(false);
     setRoot(undefined);
     setMappings({});
   };
@@ -126,7 +132,8 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
             icon="delete"
             style={styles.button}
             size={24}
-            onPress={clearChats}
+            disabled={roots.length === 0}
+            onPress={() => setShowClearConfirm(true)}
           />
           <MaterialIconButton
             testID="new-chat-button"
@@ -139,7 +146,7 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
       </View>
       <View style={styles.divider} />
       <ScrollView style={styles.sessions}>
-        {getRoots<string>(mappings).map((root, index) => <ChatButton testID={`chat-button-${index}`} key={root.id} node={root} />)}
+        {roots.map((root, index) => <ChatButton testID={`chat-button-${index}`} key={root.id} node={root} />)}
       </ScrollView>
       <View style={styles.divider} />
       <View style={styles.account}>
@@ -164,6 +171,16 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
           </>
         )}
       </View>
+      <ConfirmView
+        testID="clear-chats-confirm-modal"
+        confirmTestID="clear-chats-confirm-button"
+        cancelTestID="clear-chats-cancel-button"
+        visible={showClearConfirm}
+        message={`This will permanently delete all ${roots.length} ${roots.length === 1 ? "chat" : "chats"}. Continue?`}
+        destructive
+        onConfirm={clearChats}
+        onCancel={() => setShowClearConfirm(false)}
+      />
     </View>
   );
 }
