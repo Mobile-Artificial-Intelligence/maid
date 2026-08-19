@@ -18,7 +18,7 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
   const router = useRouter();
   const [authenticated, anonymous] = useAuthentication();
   const { mappings, setMappings, setRoot } = useChat();
-  const { colorScheme } = useSystem();
+  const { colorScheme, systemPrompt } = useSystem();
   const insets = useSafeAreaInsets();
   const [showClearConfirm, setShowClearConfirm] = useState<boolean>(false);
 
@@ -61,7 +61,7 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
       prev,
       id,
       "system",
-      "New Chat",
+      systemPrompt || "You are a helpful assistant.",
       id,
       undefined,
       undefined,
