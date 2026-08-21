@@ -30,14 +30,14 @@
 </a>
 </div>
 
-Maid is a free and open source application for interfacing with llama.cpp models locally, and with Anthropic, DeepSeek, Mistral, Novita, Ollama and OpenAI models remotely. Maid is built using React Native and is available for Android. The application is designed to be fast, efficient and user-friendly, making it easy for users to interact with their models on the go.
+Maid is a free and open source application for interfacing with llama.cpp models locally, and with Anthropic, DeepSeek, Mistral, Novita, Ollama, [OrcaRouter](https://www.orcarouter.ai) and OpenAI models remotely. Maid is built using React Native and is available for Android. The application is designed to be fast, efficient and user-friendly, making it easy for users to interact with their models on the go.
 
 For text to speech functionality check out Maid's companion app [Maise](https://github.com/Mobile-Artificial-Intelligence/maise).
 
 ## Features
 
 - **Local inference** — run GGUF models fully on-device via llama.cpp; no internet required
-- **Remote providers** — connect to Anthropic, DeepSeek, Mistral, Novita, Ollama, and OpenAI with your own API key
+- **Remote providers** — connect to Anthropic, DeepSeek, Mistral, Novita, Ollama, OrcaRouter, and OpenAI with your own API key
 - **One-tap model downloads** — browse and download curated Hugging Face models (Qwen, Phi, LFM, TinyLlama, and more) directly from the app
 - **Bring your own model** — load any GGUF file from local storage
 - **Conversation management** — create, rename, delete, export, and import chats as JSON
@@ -47,6 +47,16 @@ For text to speech functionality check out Maid's companion app [Maise](https://
 - **Optional account sync** — register / log in to back up settings and chat history via Supabase
 - **Material You theming** — light and dark themes that follow your system preference
 - **Fully open source** — MIT licensed, no telemetry, no ads
+
+## Remote providers
+
+Maid connects to Anthropic, DeepSeek, Mistral, Novita, Ollama, OpenAI, and [OrcaRouter](https://www.orcarouter.ai) with your own API key.
+
+### OrcaRouter
+
+[OrcaRouter](https://www.orcarouter.ai) is a unified gateway to models from DeepSeek, Qwen, OpenAI, Anthropic, Google, and more through a single OpenAI-compatible endpoint. It also runs gateway-level, zero-trust security for AI agents on the same endpoint — screening every prompt/response and governing every tool call on a default-deny basis, with no application code changes.
+
+To use it, select **OrcaRouter** in the Language Model API dropdown, enter your `sk-orca-` API key, and pick a model (e.g. `orcarouter/auto`). The default base URL is `https://api.orcarouter.ai/v1`.
 
 ## Manual
 
