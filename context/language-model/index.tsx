@@ -7,6 +7,7 @@ import { MistralProvider, useMistral } from "./mistral";
 import { NovitaProvider, useNovita } from "./novita";
 import { OllamaProvider, useOllama } from "./ollama";
 import { OpenAIProvider, useOpenAI } from "./open-ai";
+import { OrcaRouterProvider, useOrcaRouter } from "./orcarouter";
 import { LanguageModelContextProps, LanguageModelProps, LanguageModelType, LanguageModelTypes } from "./types";
 
 const LanguageModelContext = createContext<LanguageModelContextProps | undefined>(undefined);
@@ -19,6 +20,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
   const mistral = useMistral();
   const deepSeek = useDeepSeek();
   const novita = useNovita();
+  const orcaRouter = useOrcaRouter();
   const [type, setType] = useState<LanguageModelType>("Llama");
 
   const loadType = async () => {
@@ -68,6 +70,8 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
         return deepSeek;
       case "Novita":
         return novita;
+      case "OrcaRouter":
+        return orcaRouter;
       default:
         throw new Error(`Unsupported model type: ${type}`);
     }
@@ -77,7 +81,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
     type,
     setType,
     ...getProps(),
-  }), [type, llama, ollama, openAI, anthropic, mistral, deepSeek, novita]);
+  }), [type, llama, ollama, openAI, anthropic, mistral, deepSeek, novita, orcaRouter]);
 
   return (
     <LanguageModelContext.Provider value={values}>
@@ -95,9 +99,11 @@ export function LanguageModelProvider({ children }: { children: React.ReactNode 
             <MistralProvider>
               <DeepSeekProvider>
                 <NovitaProvider>
-                  <LanguageModelManagementProvider>
-                    {children}
-                  </LanguageModelManagementProvider>
+                  <OrcaRouterProvider>
+                    <LanguageModelManagementProvider>
+                      {children}
+                    </LanguageModelManagementProvider>
+                  </OrcaRouterProvider>
                 </NovitaProvider>
               </DeepSeekProvider>
             </MistralProvider>
