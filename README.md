@@ -48,16 +48,6 @@ For text to speech functionality check out Maid's companion app [Maise](https://
 - **Material You theming** — light and dark themes that follow your system preference
 - **Fully open source** — MIT licensed, no telemetry, no ads
 
-## Remote providers
-
-Maid connects to Anthropic, DeepSeek, Mistral, Novita, Ollama, OpenAI, and [OrcaRouter](https://www.orcarouter.ai) with your own API key.
-
-### OrcaRouter
-
-[OrcaRouter](https://www.orcarouter.ai) is a unified gateway to models from DeepSeek, Qwen, OpenAI, Anthropic, Google, and more through a single OpenAI-compatible endpoint. It also runs gateway-level, zero-trust security for AI agents on the same endpoint — screening every prompt/response and governing every tool call on a default-deny basis, with no application code changes.
-
-To use it, select **OrcaRouter** in the Language Model API dropdown, enter your `sk-orca-` API key, and pick a model (e.g. `orcarouter/auto`). The default base URL is `https://api.orcarouter.ai/v1`.
-
 ## Manual
 
 The user manual is available from [releases](https://github.com/Mobile-Artificial-Intelligence/maid/releases/latest) in PDF format, or can be built from source using the instructions below.
