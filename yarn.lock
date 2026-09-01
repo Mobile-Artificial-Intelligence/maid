@@ -3553,10 +3553,10 @@ expo-server@^57.0.1:
   resolved "https://registry.yarnpkg.com/expo-server/-/expo-server-57.0.1.tgz#2362bf576e97250490209ac550c2610b88ba4cc1"
   integrity sha512-sBfVDH6dmKVHZxqUxbfkzS00PZELMZt1IpnHKxcOTMZtR/t7CtRAFrbXcisG+EyzeqHSVDacZT+1tbYfZt5D8w==
 
-expo-speech-recognition@56.0.1:
-  version "56.0.1"
-  resolved "https://registry.yarnpkg.com/expo-speech-recognition/-/expo-speech-recognition-56.0.1.tgz#09dbce63257c70013e1b580a4d0f54c158f0c04a"
-  integrity sha512-TpP1KCiq3vYfSQF0XpUkWLXp4mTw6MLuyMGPzVVKwqzs7oiKlJ/e0q3PNNjfqs058X47ftqT+31lTaWRWRbmPg==
+expo-speech-recognition@57.0.0:
+  version "57.0.0"
+  resolved "https://registry.yarnpkg.com/expo-speech-recognition/-/expo-speech-recognition-57.0.0.tgz#d579758f5d329ced85caa08b42527971ced6e3b6"
+  integrity sha512-eUHnlNPhYemXIYi2y/bGigDjefE8y0hySAx+tAbaKwEVStYJxJKPHDYWll0z3ELHFLzdyx22V8qhZic9Q6yhNA==
 
 expo-speech@~57.0.1:
   version "57.0.1"

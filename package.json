@@ -67,7 +67,7 @@
     "expo-router": "~57.0.8",
     "expo-secure-store": "~57.0.1",
     "expo-speech": "~57.0.1",
-    "expo-speech-recognition": "56.0.1",
+    "expo-speech-recognition": "57.0.0",
     "expo-splash-screen": "~57.0.5",
     "expo-sqlite": "~57.0.1",
     "expo-status-bar": "~57.0.1",

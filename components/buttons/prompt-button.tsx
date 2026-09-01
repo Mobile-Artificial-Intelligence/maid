@@ -118,17 +118,22 @@ function PromptButton({ promptText, setPromptText, images, setImages }: PromptBu
         console.warn("Microphone permission denied.");
         return;
       }
+    } catch (error) {
+      console.error("Error requesting microphone permission:", error);
+      return;
+    }
 
-      ExpoSpeechRecognitionModule.start({ 
+    try {
+      ExpoSpeechRecognitionModule.start({
         lang: "en-US",
         addsPunctuation: true,
         androidIntentOptions: {
           EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
           EXTRA_MASK_OFFENSIVE_WORDS: false,
-        } 
+        }
       });
     } catch (error) {
-      console.error("Error requesting microphone permission:", error);
+      console.error("Error starting speech recognition:", error);
     }
   };
 
