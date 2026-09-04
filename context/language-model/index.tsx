@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { AnthropicProvider, useAnthropic } from "./anthropic";
 import { DeepSeekProvider, useDeepSeek } from "./deepseek";
 import { LlamaProvider, useLlama } from "./llama";
+import { LlmmanProvider, useLlmman } from "./llmman";
 import { MistralProvider, useMistral } from "./mistral";
 import { NovitaProvider, useNovita } from "./novita";
 import { OllamaProvider, useOllama } from "./ollama";
@@ -15,6 +16,7 @@ const LanguageModelContext = createContext<LanguageModelContextProps | undefined
 function LanguageModelManagementProvider({ children }: { children: React.ReactNode }) {
   const llama = useLlama();
   const ollama = useOllama();
+  const llmman = useLlmman();
   const openAI = useOpenAI();
   const anthropic = useAnthropic();
   const mistral = useMistral();
@@ -60,6 +62,8 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
         return llama;
       case "Ollama":
         return ollama;
+      case "llmman":
+        return llmman;
       case "Open AI":
         return openAI;
       case "Anthropic":
@@ -81,7 +85,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
     type,
     setType,
     ...getProps(),
-  }), [type, llama, ollama, openAI, anthropic, mistral, deepSeek, novita, orcaRouter]);
+  }), [type, llama, ollama, llmman, openAI, anthropic, mistral, deepSeek, novita, orcaRouter]);
 
   return (
     <LanguageModelContext.Provider value={values}>
@@ -94,21 +98,23 @@ export function LanguageModelProvider({ children }: { children: React.ReactNode 
   return (
     <LlamaProvider>
       <OllamaProvider>
-        <OpenAIProvider>
-          <AnthropicProvider>
-            <MistralProvider>
-              <DeepSeekProvider>
-                <NovitaProvider>
-                  <OrcaRouterProvider>
-                    <LanguageModelManagementProvider>
-                      {children}
-                    </LanguageModelManagementProvider>
-                  </OrcaRouterProvider>
-                </NovitaProvider>
-              </DeepSeekProvider>
-            </MistralProvider>
-          </AnthropicProvider>
-        </OpenAIProvider>
+        <LlmmanProvider>
+          <OpenAIProvider>
+            <AnthropicProvider>
+              <MistralProvider>
+                <DeepSeekProvider>
+                  <NovitaProvider>
+                    <OrcaRouterProvider>
+                      <LanguageModelManagementProvider>
+                        {children}
+                      </LanguageModelManagementProvider>
+                    </OrcaRouterProvider>
+                  </NovitaProvider>
+                </DeepSeekProvider>
+              </MistralProvider>
+            </AnthropicProvider>
+          </OpenAIProvider>
+        </LlmmanProvider>
       </OllamaProvider>
     </LlamaProvider>
   );

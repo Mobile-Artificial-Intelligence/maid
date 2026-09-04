@@ -27,16 +27,30 @@ function parseMessages(messages: Array<MessageNode>) {
 
 const OllamaContext = createContext<OllamaContextProps | undefined>(undefined);
 
-export function OllamaProvider({ children }: { children: React.ReactNode }) {
+export interface OllamaProviderProps {
+  children: React.ReactNode;
+  /** Context to publish into; lets Ollama-API-compatible servers (e.g. llmman) reuse this provider. */
+  context?: React.Context<OllamaContextProps | undefined>;
+  /** Prefix for persisted settings keys. */
+  storagePrefix?: string;
+  defaultBaseURL?: string;
+}
+
+export function OllamaProvider({
+  children,
+  context: Context = OllamaContext,
+  storagePrefix = "ollama",
+  defaultBaseURL,
+}: OllamaProviderProps) {
   const stopRef = useRef<boolean>(false);
   const [busy, setBusy] = useState<boolean>(false);
   const [imagesSupported, setImagesSupported] = useState<boolean>(false);
 
-  const [baseURL, setBaseURL] = useStoredString("ollama-base-url");
-  const [model, setModel] = useStoredString("ollama-model");
+  const [baseURL, setBaseURL] = useStoredString(`${storagePrefix}-base-url`, defaultBaseURL);
+  const [model, setModel] = useStoredString(`${storagePrefix}-model`);
 
-  const [headers, setHeaders] = useStoredRecord<string, string>("ollama-headers");
-  const [parameters, setParameters] = useStoredRecord("ollama-parameters");
+  const [headers, setHeaders] = useStoredRecord<string, string>(`${storagePrefix}-headers`);
+  const [parameters, setParameters] = useStoredRecord(`${storagePrefix}-parameters`);
 
   const [ollama, setOllama] = useState<Ollama | undefined>(undefined);
   const [models, setModels] = useState<Array<string>>([]);
@@ -152,9 +166,9 @@ export function OllamaProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <OllamaContext.Provider value={value}>
+    <Context.Provider value={value}>
       {children}
-    </OllamaContext.Provider>
+    </Context.Provider>
   );
 }
 
