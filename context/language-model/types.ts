@@ -3,6 +3,7 @@ import { MessageNode } from "message-nodes";
 export const LanguageModelTypes = [
   "Llama",
   "Ollama",
+  "llmman",
   "Open AI",
   "Anthropic",
   "Mistral",

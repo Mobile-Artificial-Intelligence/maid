@@ -6,7 +6,10 @@ function FindOllamaButton() {
   const { type, setBaseURL } = useLLM();
   const { colorScheme } = useSystem();
 
-  if (type !== "Ollama" || !setBaseURL) return null;
+  // llmman serves the Ollama API on 17434 (https://github.com/llmmanorg/llmman)
+  const port = type === "llmman" ? 17434 : 11434;
+
+  if ((type !== "Ollama" && type !== "llmman") || !setBaseURL) return null;
 
   const styles = StyleSheet.create({
     button: { 
@@ -27,7 +30,7 @@ function FindOllamaButton() {
     const probes = [];
     for (let i = 2; i < 255; i++) {
       const target = `${subnetPrefix}.${i}`;
-      const url = `http://${target}:11434`;
+      const url = `http://${target}:${port}`;
   
       const probe = fetch(url, { method: "GET" })
         .then((res) => {
@@ -48,13 +51,13 @@ function FindOllamaButton() {
       foundHost = await Promise.any(probes);
     } 
     catch {
-      console.log("No Ollama instance found on the local network.");
+      console.log(`No ${type} instance found on the local network.`);
     }
 
     if (foundHost) {
       setBaseURL(foundHost);
     } else {
-      alert("Could not find Ollama on the local network.");
+      alert(`Could not find ${type} on the local network.`);
     }
   };
 
@@ -63,7 +66,7 @@ function FindOllamaButton() {
       onPress={onPress}
     >
       <Text style={styles.button}>
-        Find Ollama
+        Find {type}
       </Text>
     </TouchableOpacity>
   );

@@ -49,7 +49,7 @@
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Introduction}
 
-Maid (Mobile Artificial Intelligence Distribution) is a free and open-source application for interfacing with AI language models on Android. It supports both fully local inference via \texttt{llama.cpp} and remote inference through the APIs of Anthropic, DeepSeek, Mistral, Novita, Ollama, and OpenAI.
+Maid (Mobile Artificial Intelligence Distribution) is a free and open-source application for interfacing with AI language models on Android. It supports both fully local inference via \texttt{llama.cpp} and remote inference through the APIs of Anthropic, DeepSeek, Mistral, Novita, Ollama, llmman, and OpenAI.
 
 All settings are stored locally on your device using encrypted application storage — no API keys or personal data are sent anywhere other than the provider you configure.
 
@@ -70,6 +70,7 @@ For text-to-speech functionality, Maid has a companion app called \textbf{Maise}
 \midrule
 Llama    & No  & No  & No  & Yes & Yes (requires projector) \\
 Ollama   & No  & Yes & Yes & Yes & Yes (model-dependent) \\
+llmman   & No  & Yes & Yes & Yes & Yes (model-dependent) \\
 OpenAI   & Yes & Yes & Yes & No  & No  \\
 Anthropic & Yes & Yes & Yes & No  & No  \\
 Mistral  & Yes & Yes & No  & No  & No  \\
@@ -86,6 +87,7 @@ On the Settings screen, tap the \textbf{API} dropdown at the top of the page to 
 \begin{itemize}[noitemsep]
     \item \textbf{Llama} — Local inference on-device (no internet required)
     \item \textbf{Ollama} — Local or self-hosted server
+    \item \textbf{llmman} — Local or self-hosted server (Ollama-compatible API)
     \item \textbf{OpenAI} — OpenAI cloud API (and compatible endpoints)
     \item \textbf{Anthropic} — Anthropic Claude cloud API
     \item \textbf{Mistral} — Mistral AI cloud API
@@ -263,6 +265,18 @@ Model    & Yes & — \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+\subsection{llmman}
+
+\href{https://github.com/llmmanorg/llmman}{llmman} is a local model runner that serves the Ollama API (alongside OpenAI- and Anthropic-compatible ones) on port \texttt{17434}. The \textbf{llmman} provider in Maid behaves exactly like the Ollama provider described above, with the Base URL defaulting to \texttt{http://localhost:17434} and \textbf{Find llmman} probing port \texttt{17434}. Install it, start the server and pull a model with:
+
+\begin{lstlisting}[language=bash]
+curl -fsSL https://raw.githubusercontent.com/llmmanorg/llmman/main/install.sh | sh
+llmman serve
+llmman pull gemma4
+\end{lstlisting}
+
+To accept connections from other devices, set \texttt{LLMMAN\_HOST=0.0.0.0} before running \texttt{llmman serve}.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{OpenAI}
