@@ -8,6 +8,7 @@ import { MistralProvider, useMistral } from "./mistral";
 import { NovitaProvider, useNovita } from "./novita";
 import { OllamaProvider, useOllama } from "./ollama";
 import { OpenAIProvider, useOpenAI } from "./open-ai";
+import { ApiRouteProvider, useApiRoute } from "./api-route";
 import { OrcaRouterProvider, useOrcaRouter } from "./orcarouter";
 import { LanguageModelContextProps, LanguageModelProps, LanguageModelType, LanguageModelTypes } from "./types";
 
@@ -23,6 +24,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
   const deepSeek = useDeepSeek();
   const novita = useNovita();
   const orcaRouter = useOrcaRouter();
+  const apiRoute = useApiRoute();
   const [type, setType] = useState<LanguageModelType>("Llama");
 
   const loadType = async () => {
@@ -76,6 +78,8 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
         return novita;
       case "OrcaRouter":
         return orcaRouter;
+      case "API Route":
+        return apiRoute;
       default:
         throw new Error(`Unsupported model type: ${type}`);
     }
@@ -85,7 +89,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
     type,
     setType,
     ...getProps(),
-  }), [type, llama, ollama, llmman, openAI, anthropic, mistral, deepSeek, novita, orcaRouter]);
+  }), [type, llama, ollama, llmman, openAI, anthropic, mistral, deepSeek, novita, orcaRouter, apiRoute]);
 
   return (
     <LanguageModelContext.Provider value={values}>
@@ -105,9 +109,11 @@ export function LanguageModelProvider({ children }: { children: React.ReactNode 
                 <DeepSeekProvider>
                   <NovitaProvider>
                     <OrcaRouterProvider>
-                      <LanguageModelManagementProvider>
+                      <ApiRouteProvider>
+                        <LanguageModelManagementProvider>
                         {children}
                       </LanguageModelManagementProvider>
+                      </ApiRouteProvider>
                     </OrcaRouterProvider>
                   </NovitaProvider>
                 </DeepSeekProvider>

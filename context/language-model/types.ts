@@ -10,6 +10,7 @@ export const LanguageModelTypes = [
   "DeepSeek",
   "Novita",
   "OrcaRouter",
+  "API Route",
 ] as const;
 
 export type LanguageModelType = typeof LanguageModelTypes[number];
@@ -74,6 +75,8 @@ export type NovitaContextProps = LanguageModelBaseProps & ModelMixin & HeadersMi
 
 export type OrcaRouterContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
 
+export type ApiRouteContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
+
 export type AnthropicContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
 
 export type MistralContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & ApiKeyMixin;
@@ -86,7 +89,8 @@ export type LanguageModelProps =
 | MistralContextProps
 | DeepSeekContextProps
 | NovitaContextProps
-| OrcaRouterContextProps;
+| OrcaRouterContextProps
+| ApiRouteContextProps;
 
 export type LanguageModelContextProps = 
 & LanguageModelBaseProps 
