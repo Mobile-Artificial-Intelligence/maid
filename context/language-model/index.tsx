@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { AnthropicProvider, useAnthropic } from "./anthropic";
+import { DaoXEProvider, useDaoXE } from "./daoxe";
 import { DeepSeekProvider, useDeepSeek } from "./deepseek";
 import { LlamaProvider, useLlama } from "./llama";
 import { LlmmanProvider, useLlmman } from "./llmman";
@@ -22,6 +23,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
   const anthropic = useAnthropic();
   const mistral = useMistral();
   const deepSeek = useDeepSeek();
+  const daoXE = useDaoXE();
   const novita = useNovita();
   const orcaRouter = useOrcaRouter();
   const apiRoute = useApiRoute();
@@ -74,6 +76,8 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
         return mistral;
       case "DeepSeek":
         return deepSeek;
+      case "DaoXE":
+        return daoXE;
       case "Novita":
         return novita;
       case "OrcaRouter":
@@ -89,7 +93,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
     type,
     setType,
     ...getProps(),
-  }), [type, llama, ollama, llmman, openAI, anthropic, mistral, deepSeek, novita, orcaRouter, apiRoute]);
+  }), [type, llama, ollama, llmman, openAI, anthropic, mistral, deepSeek, daoXE, novita, orcaRouter, apiRoute]);
 
   return (
     <LanguageModelContext.Provider value={values}>
@@ -107,15 +111,17 @@ export function LanguageModelProvider({ children }: { children: React.ReactNode 
             <AnthropicProvider>
               <MistralProvider>
                 <DeepSeekProvider>
-                  <NovitaProvider>
-                    <OrcaRouterProvider>
-                      <ApiRouteProvider>
-                        <LanguageModelManagementProvider>
-                        {children}
-                      </LanguageModelManagementProvider>
-                      </ApiRouteProvider>
-                    </OrcaRouterProvider>
-                  </NovitaProvider>
+                  <DaoXEProvider>
+                    <NovitaProvider>
+                      <OrcaRouterProvider>
+                        <ApiRouteProvider>
+                          <LanguageModelManagementProvider>
+                            {children}
+                          </LanguageModelManagementProvider>
+                        </ApiRouteProvider>
+                      </OrcaRouterProvider>
+                    </NovitaProvider>
+                  </DaoXEProvider>
                 </DeepSeekProvider>
               </MistralProvider>
             </AnthropicProvider>
