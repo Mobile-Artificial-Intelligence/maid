@@ -1,11 +1,11 @@
-import { MessageNode } from "message-nodes";
+import type { MessageNode } from "message-nodes";
 
 function splitReasoningHelper(message: MessageNode, openTag: string, closeTag: string): [string | undefined, string | undefined] {
   let content: string | undefined = message.content.trim();
   let reasoning: string | undefined;
 
   const openIndex = content.indexOf(openTag);
-  const closeIndex = content.indexOf(closeTag);
+  const closeIndex = content.indexOf(closeTag, openIndex + openTag.length);
 
   if (openIndex === -1) {
     return [content, undefined];
