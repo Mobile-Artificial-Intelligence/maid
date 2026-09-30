@@ -12,6 +12,7 @@ export const LanguageModelTypes = [
   "Novita",
   "OrcaRouter",
   "AtlasCloud",
+  "Cheaper Inference",
   "API Route",
 ] as const;
 
@@ -81,6 +82,8 @@ export type OrcaRouterContextProps = LanguageModelBaseProps & ModelMixin & BaseU
 
 export type AtlasCloudContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
 
+export type CheaperInferenceContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
+
 export type ApiRouteContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
 
 export type AnthropicContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
@@ -98,6 +101,7 @@ export type LanguageModelProps =
 | DaoXEContextProps
 | OrcaRouterContextProps
 | AtlasCloudContextProps
+| CheaperInferenceContextProps
 | ApiRouteContextProps;
 
 export type LanguageModelContextProps = 
