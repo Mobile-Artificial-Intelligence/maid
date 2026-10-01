@@ -11,6 +11,7 @@ import { OllamaProvider, useOllama } from "./ollama";
 import { OpenAIProvider, useOpenAI } from "./open-ai";
 import { ApiRouteProvider, useApiRoute } from "./api-route";
 import { OrcaRouterProvider, useOrcaRouter } from "./orcarouter";
+import { AtlasCloudProvider, useAtlasCloud } from "./atlascloud";
 import { LiteLLMProvider, useLiteLLM } from "./litellm";
 import { LanguageModelContextProps, LanguageModelProps, LanguageModelType, LanguageModelTypes } from "./types";
 
@@ -27,6 +28,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
   const daoXE = useDaoXE();
   const novita = useNovita();
   const orcaRouter = useOrcaRouter();
+  const atlasCloud = useAtlasCloud();
   const liteLLM = useLiteLLM();
   const apiRoute = useApiRoute();
   const [type, setType] = useState<LanguageModelType>("Llama");
@@ -84,6 +86,8 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
         return novita;
       case "OrcaRouter":
         return orcaRouter;
+      case "AtlasCloud":
+        return atlasCloud;
       case "LiteLLM":
         return liteLLM;
       case "API Route":
@@ -97,7 +101,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
     type,
     setType,
     ...getProps(),
-  }), [type, llama, ollama, llmman, openAI, anthropic, mistral, deepSeek, daoXE, novita, orcaRouter, liteLLM, apiRoute]);
+  }), [type, llama, ollama, llmman, openAI, anthropic, mistral, deepSeek, daoXE, novita, orcaRouter, atlasCloud, liteLLM, apiRoute]);
 
   return (
     <LanguageModelContext.Provider value={values}>
@@ -118,13 +122,15 @@ export function LanguageModelProvider({ children }: { children: React.ReactNode 
                   <DaoXEProvider>
                     <NovitaProvider>
                       <OrcaRouterProvider>
-                        <LiteLLMProvider>
-                          <ApiRouteProvider>
-                            <LanguageModelManagementProvider>
-                              {children}
-                            </LanguageModelManagementProvider>
-                          </ApiRouteProvider>
-                        </LiteLLMProvider>
+                        <AtlasCloudProvider>
+                          <LiteLLMProvider>
+                            <ApiRouteProvider>
+                              <LanguageModelManagementProvider>
+                                {children}
+                              </LanguageModelManagementProvider>
+                            </ApiRouteProvider>
+                          </LiteLLMProvider>
+                        </AtlasCloudProvider>
                       </OrcaRouterProvider>
                     </NovitaProvider>
                   </DaoXEProvider>
