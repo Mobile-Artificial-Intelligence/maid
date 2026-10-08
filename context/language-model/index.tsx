@@ -14,6 +14,7 @@ import { OrcaRouterProvider, useOrcaRouter } from "./orcarouter";
 import { AtlasCloudProvider, useAtlasCloud } from "./atlascloud";
 import { LiteLLMProvider, useLiteLLM } from "./litellm";
 import { CheaperInferenceProvider, useCheaperInference } from "./cheaperinference";
+import { OpperProvider, useOpper } from "./opper";
 import { LanguageModelContextProps, LanguageModelProps, LanguageModelType, LanguageModelTypes } from "./types";
 
 const LanguageModelContext = createContext<LanguageModelContextProps | undefined>(undefined);
@@ -32,6 +33,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
   const atlasCloud = useAtlasCloud();
   const liteLLM = useLiteLLM();
   const cheaperInference = useCheaperInference();
+  const opper = useOpper();
   const apiRoute = useApiRoute();
   const [type, setType] = useState<LanguageModelType>("Llama");
 
@@ -94,6 +96,8 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
         return liteLLM;
       case "Cheaper Inference":
         return cheaperInference;
+      case "Opper":
+        return opper;
       case "API Route":
         return apiRoute;
       default:
@@ -105,7 +109,7 @@ function LanguageModelManagementProvider({ children }: { children: React.ReactNo
     type,
     setType,
     ...getProps(),
-  }), [type, llama, ollama, llmman, openAI, anthropic, mistral, deepSeek, daoXE, novita, orcaRouter, atlasCloud, liteLLM, cheaperInference, apiRoute]);
+  }), [type, llama, ollama, llmman, openAI, anthropic, mistral, deepSeek, daoXE, novita, orcaRouter, atlasCloud, liteLLM, cheaperInference, opper, apiRoute]);
 
   return (
     <LanguageModelContext.Provider value={values}>
@@ -129,11 +133,13 @@ export function LanguageModelProvider({ children }: { children: React.ReactNode 
                         <AtlasCloudProvider>
                           <LiteLLMProvider>
                           <CheaperInferenceProvider>
-                            <ApiRouteProvider>
-                              <LanguageModelManagementProvider>
-                                {children}
-                              </LanguageModelManagementProvider>
-                            </ApiRouteProvider>
+                            <OpperProvider>
+                              <ApiRouteProvider>
+                                <LanguageModelManagementProvider>
+                                  {children}
+                                </LanguageModelManagementProvider>
+                              </ApiRouteProvider>
+                            </OpperProvider>
                             </CheaperInferenceProvider>
                           </LiteLLMProvider>
                           
