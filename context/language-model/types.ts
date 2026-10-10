@@ -14,6 +14,7 @@ export const LanguageModelTypes = [
   "AtlasCloud",
   "LiteLLM",
   "Cheaper Inference",
+  "Opper",
   "API Route",
 ] as const;
 
@@ -87,6 +88,8 @@ export type LiteLLMContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlM
 
 export type CheaperInferenceContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
 
+export type OpperContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
+
 export type ApiRouteContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
 
 export type AnthropicContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
@@ -106,6 +109,7 @@ export type LanguageModelProps =
 | AtlasCloudContextProps
 | LiteLLMContextProps
 | CheaperInferenceContextProps
+| OpperContextProps
 | ApiRouteContextProps;
 
 export type LanguageModelContextProps = 
