@@ -1,7 +1,7 @@
 import { render, fireEvent, screen } from "@testing-library/react-native";
 import { Button, Text } from "react-native";
 import { LanguageModelProvider, useLLM, LanguageModelTypes } from "@/context/language-model";
-import { LLMMAN_DEFAULT_BASE_URL } from "@/context/language-model/llmman";
+import { LLMMAN_DEFAULT_BASE_URL } from "@/context/language-model/providers";
 
 function Probe() {
   const { type, setType, baseURL } = useLLM();

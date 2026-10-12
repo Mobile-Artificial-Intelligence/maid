@@ -1,7 +1,8 @@
 import { render, fireEvent, screen, waitFor } from "@testing-library/react-native";
 import { Button, Text } from "react-native";
 import { LanguageModelProvider, useLLM, LanguageModelTypes } from "@/context/language-model";
-import { discoverLiteLLMModels, proxyRoot, toChatMessages } from "@/context/language-model/litellm";
+import { discoverLiteLLMModels, proxyRoot } from "@/context/language-model/litellm";
+import { toChatMessages } from "@/context/language-model/openai";
 
 const LITELLM_DEFAULT_BASE_URL = "http://localhost:4000/v1";
 

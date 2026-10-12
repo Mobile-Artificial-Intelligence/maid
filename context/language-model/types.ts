@@ -20,14 +20,78 @@ export const LanguageModelTypes = [
 
 export type LanguageModelType = typeof LanguageModelTypes[number];
 
+export type ModelParameters = Record<string, string | number | boolean>;
+
+/** Everything a provider can persist; each provider declares the subset it uses. */
+export interface LanguageModelSettings {
+  baseURL?: string;
+  apiKey?: string;
+  model?: string;
+  headers: Record<string, string>;
+  parameters: ModelParameters;
+  modelKey?: string;
+  modelFiles: Record<string, string>;
+  projectorKey?: string;
+  projectorFiles: Record<string, string>;
+}
+
+export type LanguageModelSetting = keyof LanguageModelSettings;
+
+export interface PromptRequest {
+  model: string;
+  messages: Array<MessageNode>;
+  parameters: ModelParameters;
+  imagesSupported: boolean;
+  onUpdate: (message: string) => void;
+  shouldStop: () => boolean;
+}
+
+export interface ModelList {
+  models: Array<string>;
+  /** Which models accept images, when the server reports it. */
+  vision?: Record<string, boolean>;
+}
+
+/** A connection to one provider, built from that provider's settings. */
+export interface LanguageModelClient {
+  /** Set when image support is known for the whole connection (e.g. a local model with a projector). */
+  imagesSupported?: boolean;
+  listModels?: () => Promise<ModelList>;
+  supportsImages?: (model: string) => Promise<boolean>;
+  prompt: (request: PromptRequest) => Promise<void>;
+  stop?: () => Promise<void>;
+  /** Frees whatever the client holds outside the JS heap (e.g. a loaded model). */
+  release?: () => Promise<void>;
+}
+
+export interface LanguageModelDefinition {
+  /** Settings are stored as `<storagePrefix>-<setting>`, e.g. `open-ai-api-key`. */
+  storagePrefix: string;
+  defaultBaseURL?: string;
+  /** The settings this provider stores and exposes for editing. */
+  settings: ReadonlyArray<LanguageModelSetting>;
+  /** The settings the client is built from; changing one rebuilds it. */
+  connectWith: ReadonlyArray<LanguageModelSetting>;
+  connect: (settings: LanguageModelSettings, name: string) => Promise<LanguageModelClient | undefined>;
+}
+
+export function isValidURL(url: string | undefined): url is string {
+  try {
+    new URL(url ?? "");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 interface LanguageModelBaseProps {
   ready: boolean;
   busy: boolean;
   imagesSupported: boolean;
-  parameters: Record<string, string | number | boolean>;
-  setParameters: React.Dispatch<React.SetStateAction<Record<string, string | number | boolean>>>;
+  parameters: ModelParameters;
+  setParameters: React.Dispatch<React.SetStateAction<ModelParameters>>;
   prompt: (
-    messages: Array<MessageNode>, 
+    messages: Array<MessageNode>,
     onUpdate: (message: string) => void
   ) => Promise<void>;
   stop: () => Promise<void>
@@ -68,55 +132,11 @@ interface ModelFilesMixin {
   setProjectorFiles: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
-export type LlamaContextProps = LanguageModelBaseProps & ModelFilesMixin;
-
-export type OllamaContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin;
-
-export type OpenAIContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
-
-export type DeepSeekContextProps = LanguageModelBaseProps & ModelMixin & HeadersMixin & ApiKeyMixin;
-
-export type NovitaContextProps = LanguageModelBaseProps & ModelMixin & HeadersMixin & ApiKeyMixin;
-
-export type DaoXEContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
-
-export type OrcaRouterContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
-
-export type AtlasCloudContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
-
-export type LiteLLMContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
-
-export type CheaperInferenceContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
-
-export type OpperContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
-
-export type ApiRouteContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
-
-export type AnthropicContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & HeadersMixin & ApiKeyMixin;
-
-export type MistralContextProps = LanguageModelBaseProps & ModelMixin & BaseUrlMixin & ApiKeyMixin;
-
-export type LanguageModelProps =
-| LlamaContextProps
-| OllamaContextProps
-| OpenAIContextProps
-| AnthropicContextProps
-| MistralContextProps
-| DeepSeekContextProps
-| NovitaContextProps
-| DaoXEContextProps
-| OrcaRouterContextProps
-| AtlasCloudContextProps
-| LiteLLMContextProps
-| CheaperInferenceContextProps
-| OpperContextProps
-| ApiRouteContextProps;
-
-export type LanguageModelContextProps = 
-& LanguageModelBaseProps 
-& Partial<ModelFilesMixin> 
-& Partial<ModelMixin> 
-& Partial<BaseUrlMixin> 
+export type LanguageModelContextProps =
+& LanguageModelBaseProps
+& Partial<ModelFilesMixin>
+& Partial<ModelMixin>
+& Partial<BaseUrlMixin>
 & Partial<ApiKeyMixin>
 & Partial<HeadersMixin>
 & {
