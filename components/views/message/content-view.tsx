@@ -2,66 +2,12 @@ import { MaterialCommunityIconButton } from "@/components/buttons/icon-button";
 import { useChat, useLLM, useSystem } from "@/context";
 import getMetadata from "@/utilities/metadata";
 import splitReasoning from "@/utilities/reasoning";
-import getSupabase from "@/utilities/supabase";
 import Markdown from '@novastera-oss/react-native-markdown-display';
 import { randomUUID } from "expo-crypto";
 import { addNode, branchNode, getConversation, MessageNode, updateContent } from "message-nodes";
 import { useState } from "react";
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 import NeuralNetworkAnimation from "../neural-network-animation";
-
-export async function insertReport(
-  content: string,
-  provider: string,
-  model: string,
-  upvoted: boolean = false
-): Promise<void> {
-  try {
-    // 1) Ensure we have a signed-in user (anonymous if needed)
-    const { data: sessionRes, error: sessionErr } = await getSupabase().auth.getSession();
-    if (sessionErr) console.warn("getSession error:", sessionErr);
-
-    let userId = sessionRes?.session?.user?.id;
-
-    if (!userId) {
-      const authAny = getSupabase().auth as any;
-
-      if (typeof authAny.signInAnonymously !== "function") {
-        console.error("signInAnonymously() not available. Update getSupabase-js and enable anonymous sign-ins in Supabase.");
-        Alert.alert("Couldn’t submit report", "Sign-in isn’t available right now.");
-        return;
-      }
-
-      const { data: anonRes, error: anonErr } = await authAny.signInAnonymously();
-      if (anonErr || !anonRes?.user?.id) {
-        console.error("Anonymous sign-in failed:", anonErr);
-        Alert.alert("Couldn’t submit report", "Sign-in failed. Please try again.");
-        return;
-      }
-    }
-
-    // 2) Insert report
-    const { error } = await getSupabase().from("reports").insert({
-      content,
-      provider,
-      model,
-      upvoted
-    });
-
-    if (error) {
-      console.error("Error inserting report:", error);
-      Alert.alert("Couldn’t submit report", error.message);
-      return;
-    }
-
-    Alert.alert("Report Submitted", "Thank you for your feedback!", [{ text: "OK" }], {
-      cancelable: true,
-    });
-  } catch (e) {
-    console.error("insertReport unexpected error:", e);
-    Alert.alert("Couldn’t submit report", "Unexpected error. Please try again.");
-  }
-}
 
 function MessageContentView({ message }: { message: MessageNode }) {
   const [ showReasoning, setShowReasoning ] = useState<boolean>(false);
@@ -252,24 +198,6 @@ function MessageContentView({ message }: { message: MessageNode }) {
       )}
       {reasoning && showReasoning && <Text style={styles.reasoning}>{reasoning}</Text>}
       {content && <Markdown style={markdownStyle}>{content}</Markdown>}
-      {message.role === "assistant" && message.content.length > 0 && (
-        <View
-          style={styles.controls}
-        >
-          <MaterialCommunityIconButton
-            icon="thumb-up"
-            size={22}
-            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelKey || "", true)}
-            color={colorScheme.secondary}
-          />
-          <MaterialCommunityIconButton
-            icon="thumb-down"
-            size={22}
-            onPress={() => insertReport(message.content, LLM.type, LLM.model || LLM.modelKey || "", false)}
-            color={colorScheme.secondary}
-          />
-        </View>
-      )}
       {message.content.length === 0 && !message.child && (
         LLM.busy ? 
           <NeuralNetworkAnimation repeat={true} /> : 
