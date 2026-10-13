@@ -1,5 +1,4 @@
-import useSyncedImage from '@/hooks/use-synced-image';
-import useSyncedString from '@/hooks/use-synced-string';
+import useStoredString from '@/hooks/use-stored-string';
 import useTheme from '@/hooks/use-theme';
 import useVoice from '@/hooks/use-voice';
 import { ColorScheme } from '@/utilities/color-scheme';
@@ -28,28 +27,13 @@ interface SystemContextProps {
 const SystemContext = createContext<SystemContextProps | undefined>(undefined);
 
 export function SystemContextProvider({ children }: { children: ReactNode }) {
-  const [userName, setUserName] = useSyncedString({
-    key: "user_name",
-    defaultValue: "User",
-  });
-  const [userImage, setUserImage] = useSyncedImage({
-    key: "user-image",
-    bucket: "user-images"
-  });
+  const [userName, setUserName] = useStoredString("user_name", "User");
+  const [userImage, setUserImage] = useStoredString("user-image");
 
-  const [assistantName, setAssistantName] = useSyncedString({
-    key: "assistant_name",
-    defaultValue: "Assistant",
-  });
-  const [assistantImage, setAssistantImage] = useSyncedImage({
-    key: "assistant-image",
-    bucket: "assistant-images"
-  });
+  const [assistantName, setAssistantName] = useStoredString("assistant_name", "Assistant");
+  const [assistantImage, setAssistantImage] = useStoredString("assistant-image");
 
-  const [systemPrompt, setSystemPrompt] = useSyncedString({
-    key: "system_prompt",
-    defaultValue: "",
-  });
+  const [systemPrompt, setSystemPrompt] = useStoredString("system_prompt", "");
 
   const [voice, setVoice] = useVoice();
   const { colorScheme, accentColor, setAccentColor } = useTheme();

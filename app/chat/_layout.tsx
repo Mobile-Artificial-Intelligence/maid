@@ -17,7 +17,7 @@ function ChatLayout() {
           backgroundColor: colorScheme.surface,
         },
       }}
-      drawerContent={(props: any) => <DrawerContent navigation={props.navigation} />}
+      drawerContent={() => <DrawerContent />}
     >
       <Drawer.Screen name="index" />
     </Drawer>

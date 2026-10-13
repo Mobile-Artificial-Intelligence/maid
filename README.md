@@ -44,7 +44,6 @@ For text to speech functionality check out Maid's companion app [Maise](https://
 - **Customisable parameters** — tune temperature, top-p, top-k, context length, and other generation parameters per session
 - **Custom system prompt** — set a global system prompt and assistant persona
 - **Voice output** — pair with [Maise](https://github.com/Mobile-Artificial-Intelligence/maise) for text-to-speech
-- **Optional account sync** — register / log in to back up settings and chat history via Supabase
 - **Material You theming** — light and dark themes that follow your system preference
 - **Fully open source** — MIT licensed, no telemetry, no ads
 

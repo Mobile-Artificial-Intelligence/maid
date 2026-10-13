@@ -51,12 +51,6 @@ function RootLayoutContent() {
               }}
             />
             <Stack.Screen
-              name="account"
-              options={{
-                headerShown: true
-              }}
-            />
-            <Stack.Screen
               name="download"
               options={{
                 headerShown: true

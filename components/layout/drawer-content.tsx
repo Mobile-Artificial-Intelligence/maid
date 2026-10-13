@@ -2,21 +2,17 @@ import ChatButton from "@/components/buttons/chat-button";
 import { MaterialIconButton } from "@/components/buttons/icon-button";
 import ConfirmView from "@/components/views/confirm-view";
 import { useChat, useSystem } from "@/context";
-import useAuthentication from "@/hooks/use-authentication";
 import { validateMappings } from "@/utilities/mappings";
 import { randomUUID } from "expo-crypto";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system/legacy";
-import { useRouter } from "expo-router";
 import { addNode, getRoots } from "message-nodes";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void } }) {
-  const router = useRouter();
-  const [authenticated, anonymous] = useAuthentication();
+function DrawerContent() {
   const { mappings, setMappings, setRoot } = useChat();
   const { colorScheme, systemPrompt } = useSystem();
   const insets = useSafeAreaInsets();
@@ -107,16 +103,10 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
       flex: 1,
       flexDirection: "column"
     },
-    account: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-around",
-      paddingTop: 12,
-      paddingBottom: insets.bottom + 24,
+    sessionsContent: {
+      // Edge-to-edge: keep the last chat clear of the navigation bar.
+      paddingBottom: insets.bottom + 16,
     },
-    accountText: {
-      color: colorScheme.primary,
-    }
   });
     
   return (
@@ -150,32 +140,9 @@ function DrawerContent({ navigation }: { navigation?: { closeDrawer: () => void 
       </View>
       <View style={styles.divider} />
       {/* Aware rather than plain: renaming a chat focuses a TextInput in this list. */}
-      <KeyboardAwareScrollView style={styles.sessions} bottomOffset={16}>
+      <KeyboardAwareScrollView style={styles.sessions} contentContainerStyle={styles.sessionsContent} bottomOffset={16}>
         {roots.map((root, index) => <ChatButton testID={`chat-button-${index}`} key={root.id} node={root} />)}
       </KeyboardAwareScrollView>
-      <View style={styles.divider} />
-      <View style={styles.account}>
-        {authenticated && !anonymous ? (
-          <TouchableOpacity testID="account-button" onPress={() => { navigation?.closeDrawer(); router.push("/account"); }}>
-            <Text style={styles.accountText}>Account</Text>
-          </TouchableOpacity>
-        ) : (
-          <>
-            <TouchableOpacity
-              testID="login-button"
-              onPress={() => { navigation?.closeDrawer(); router.push("/account/login"); }}
-            >
-                <Text style={styles.accountText}>Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              testID="register-button"
-              onPress={() => { navigation?.closeDrawer(); router.push("/account/register"); }}
-            >
-              <Text style={styles.accountText}>Register</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </View>
       <ConfirmView
         testID="clear-chats-confirm-modal"
         confirmTestID="clear-chats-confirm-button"
