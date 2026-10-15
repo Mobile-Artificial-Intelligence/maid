@@ -1,5 +1,5 @@
 import useStoredString from '@/hooks/use-stored-string';
-import useTheme from '@/hooks/use-theme';
+import useTheme, { ThemeMode } from '@/hooks/use-theme';
 import useVoice from '@/hooks/use-voice';
 import { ColorScheme } from '@/utilities/color-scheme';
 import { Voice } from 'expo-speech';
@@ -22,6 +22,8 @@ interface SystemContextProps {
   setVoice: Dispatch<SetStateAction<Voice | undefined>>;
   accentColor: string;
   setAccentColor: (color: string) => void;
+  themeMode: ThemeMode;
+  setThemeMode: (mode: ThemeMode) => void;
 }
 
 const SystemContext = createContext<SystemContextProps | undefined>(undefined);
@@ -36,7 +38,7 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
   const [systemPrompt, setSystemPrompt] = useStoredString("system_prompt", "");
 
   const [voice, setVoice] = useVoice();
-  const { colorScheme, accentColor, setAccentColor } = useTheme();
+  const { colorScheme, accentColor, setAccentColor, themeMode, setThemeMode } = useTheme();
   
   const value = {
     userName,
@@ -53,7 +55,9 @@ export function SystemContextProvider({ children }: { children: ReactNode }) {
     setVoice,
     colorScheme,
     accentColor,
-    setAccentColor
+    setAccentColor,
+    themeMode,
+    setThemeMode
   };
 
   return (
