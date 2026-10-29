@@ -16,6 +16,7 @@ export const LanguageModelTypes = [
   "Cheaper Inference",
   "Opper",
   "API Route",
+  "Runcrate",
 ] as const;
 
 export type LanguageModelType = typeof LanguageModelTypes[number];
