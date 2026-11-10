@@ -85,4 +85,5 @@ export const LanguageModelDefinitions: Record<LanguageModelType, LanguageModelDe
   "Opper": openAICompatible("opper", "https://api.opper.ai/v3/compat"),
   "API Route": openAICompatible("apiroute", "https://global.api-route.com/v1"),
   "Runcrate": openAICompatible("runcrate", "https://api.runcrate.ai/v1"),
+  "UberLLM": openAICompatible("uberllm", "https://api.uberllm.dev/v1"),
 };
