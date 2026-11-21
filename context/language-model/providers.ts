@@ -85,4 +85,7 @@ export const LanguageModelDefinitions: Record<LanguageModelType, LanguageModelDe
   "Opper": openAICompatible("opper", "https://api.opper.ai/v3/compat"),
   "API Route": openAICompatible("apiroute", "https://global.api-route.com/v1"),
   "Runcrate": openAICompatible("runcrate", "https://api.runcrate.ai/v1"),
+  // Cloud endpoint, since a phone cannot reach a daemon on 127.0.0.1. On a
+  // desktop the Base URL can be set to the local daemon, http://127.0.0.1:8787/v1.
+  "OpenLLM": openAICompatible("openllm", "https://www.openllm.sh/v1"),
 };
