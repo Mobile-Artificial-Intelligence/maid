@@ -2,7 +2,7 @@ import { render, fireEvent, screen } from "@testing-library/react-native";
 import { Button, Text } from "react-native";
 import { LanguageModelProvider, useLLM, LanguageModelTypes } from "@/context/language-model";
 
-const UBERLLM_DEFAULT_BASE_URL = "https://api.uberllm.dev/v1";
+const MARTLLM_DEFAULT_BASE_URL = "https://api.martllm.com/v1";
 
 function Probe() {
   const { type, setType, baseURL } = useLLM();
@@ -12,9 +12,9 @@ function Probe() {
       <Text testID="type">{type}</Text>
       <Text testID="baseURL">{baseURL ?? "undefined"}</Text>
       <Button
-        testID="select-uberllm"
-        title="Select UberLLM"
-        onPress={() => setType("UberLLM")}
+        testID="select-martllm"
+        title="Select MartLLM"
+        onPress={() => setType("MartLLM")}
       />
     </>
   );
@@ -28,17 +28,17 @@ function renderProbe() {
   );
 }
 
-describe("UberLLM provider", () => {
+describe("MartLLM provider", () => {
   it("should be a registered language model type", () => {
-    expect(LanguageModelTypes).toContain("UberLLM");
+    expect(LanguageModelTypes).toContain("MartLLM");
   });
 
-  it("should expose the UberLLM default base URL when selected", async () => {
+  it("should expose the MartLLM default base URL when selected", async () => {
     renderProbe();
 
-    fireEvent.press(screen.getByTestId("select-uberllm"));
+    fireEvent.press(screen.getByTestId("select-martllm"));
 
-    expect(await screen.findByTestId("type")).toHaveTextContent("UberLLM");
-    expect(screen.getByTestId("baseURL")).toHaveTextContent(UBERLLM_DEFAULT_BASE_URL);
+    expect(await screen.findByTestId("type")).toHaveTextContent("MartLLM");
+    expect(screen.getByTestId("baseURL")).toHaveTextContent(MARTLLM_DEFAULT_BASE_URL);
   });
 });

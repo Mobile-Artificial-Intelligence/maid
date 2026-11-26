@@ -17,7 +17,7 @@ export const LanguageModelTypes = [
   "Opper",
   "API Route",
   "Runcrate",
-  "UberLLM",
+  "MartLLM",
 ] as const;
 
 export type LanguageModelType = typeof LanguageModelTypes[number];
